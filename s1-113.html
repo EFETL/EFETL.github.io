@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>113 學測第一大題練習（第 1–10 題）</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", sans-serif;
+      background: #f0f4f8;
+      color: #1a202c;
+      padding: 24px 16px 60px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #065f46;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #718096;
+      margin-bottom: 32px;
+    }
+
+    .progress-bar-wrap {
+      max-width: 720px;
+      margin: 0 auto 8px;
+      background: #cbd5e0;
+      border-radius: 999px;
+      height: 10px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #10b981, #059669);
+      border-radius: 999px;
+      transition: width 0.4s ease;
+    }
+
+    .progress-text {
+      text-align: center;
+      font-size: 0.82rem;
+      color: #718096;
+      margin-top: 6px;
+      margin-bottom: 28px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      max-width: 720px;
+      margin: 0 auto 28px;
+      padding: 28px 28px 24px;
+      border-left: 5px solid #10b981;
+      transition: border-color 0.3s;
+    }
+
+    .card.correct { border-left-color: #22c55e; }
+    .card.wrong   { border-left-color: #ef4444; }
+
+    .q-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .q-num {
+      background: #10b981;
+      color: #fff;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .q-text {
+      font-size: 1rem;
+      line-height: 1.75;
+      color: #2d3748;
+    }
+
+    .q-text em {
+      font-style: normal;
+      color: #718096;
+      font-size: 0.9rem;
+    }
+
+    .options {
+      list-style: none;
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option-btn {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      cursor: pointer;
+      background: #f7fafc;
+      text-align: left;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: #2d3748;
+      transition: background 0.18s, border-color 0.18s;
+      width: 100%;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      background: #ecfdf5;
+      border-color: #6ee7b7;
+    }
+
+    .option-btn:disabled { cursor: default; }
+
+    .option-btn.selected-correct {
+      background: #dcfce7;
+      border-color: #22c55e;
+      color: #166534;
+      font-weight: 600;
+    }
+
+    .option-btn.selected-wrong {
+      background: #fee2e2;
+      border-color: #ef4444;
+      color: #991b1b;
+    }
+
+    .option-btn.reveal-correct {
+      background: #dcfce7;
+      border-color: #22c55e;
+      color: #166534;
+    }
+
+    .option-tag { font-weight: 700; min-width: 22px; }
+
+    .result-icon { display: inline-block; margin-left: 8px; font-size: 1.1rem; }
+
+    /* 解析 */
+    .analysis-box {
+      margin-top: 18px;
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      border-radius: 10px;
+      padding: 16px 18px;
+      display: none;
+    }
+
+    .analysis-box.visible { display: block; }
+
+    .analysis-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #065f46;
+      letter-spacing: 0.04em;
+      margin-bottom: 8px;
+    }
+
+    .analysis-text {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: #064e3b;
+    }
+
+    /* 查看更多補充 */
+    .more-btn {
+      margin-top: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 18px;
+      background: #d1fae5;
+      color: #065f46;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.18s;
+    }
+
+    .more-btn:hover { background: #a7f3d0; }
+
+    .supplement-box {
+      margin-top: 12px;
+      background: #faf5ff;
+      border: 1px solid #ddd6fe;
+      border-radius: 10px;
+      padding: 16px 18px;
+      display: none;
+    }
+
+    .supplement-box.visible { display: block; }
+
+    .supplement-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #7c3aed;
+      letter-spacing: 0.04em;
+      margin-bottom: 10px;
+    }
+
+    .vocab-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .vocab-list li {
+      font-size: 0.88rem;
+      line-height: 1.7;
+      color: #3b2f6e;
+      padding-left: 16px;
+      position: relative;
+    }
+
+    .vocab-list li::before {
+      content: "●";
+      position: absolute;
+      left: 0;
+      color: #7c3aed;
+      font-size: 0.65rem;
+      top: 5px;
+    }
+
+    /* Summary */
+    #summary {
+      display: none;
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: center;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.1);
+      padding: 40px 32px;
+    }
+
+    #summary h2 { font-size: 1.6rem; color: #065f46; margin-bottom: 12px; }
+    #summary .score-big { font-size: 3rem; font-weight: 800; color: #10b981; margin-bottom: 8px; }
+    #summary p { color: #4a5568; font-size: 1rem; margin-bottom: 24px; }
+
+    .reset-btn {
+      padding: 12px 32px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .reset-btn:hover { opacity: 0.88; }
+
+    @media (max-width: 600px) {
+      .card { padding: 20px 16px 18px; }
+    }
+  </style>
+</head>
+<body>
+
+<h1>113 學測第一大題練習</h1>
+<p class="subtitle">第 1–10 題｜選出最適合填入的詞彙</p>
+
+<div class="progress-bar-wrap">
+  <div class="progress-bar-fill" id="progressBar" style="width:0%"></div>
+</div>
+<p class="progress-text" id="progressText">已作答 0 / 10 題</p>
+
+<div id="quiz-container"></div>
+
+<div id="summary">
+  <h2>🎉 練習完成！</h2>
+  <div class="score-big" id="scoreDisplay"></div>
+  <p id="scoreMsg"></p>
+  <button class="reset-btn" onclick="resetQuiz()">再練習一次</button>
+</div>
+
+<script>
+const questions = [
+  {
+    id: 1,
+    stem: `People who desire a ______ figure should exercise regularly and maintain healthy eating habits.`,
+    stem_zh: `渴望擁有 ______ 體態的人應該規律運動並保持健康的飲食習慣。`,
+    options: [
+      { label: "A", text: "spicy",    hint: "（辛辣的）adj" },
+      { label: "B", text: "slender",  hint: "（苗條的）adj" },
+      { label: "C", text: "slight",   hint: "（輕微的）adj" },
+      { label: "D", text: "slippery", hint: "（滑的）adj" }
+    ],
+    answer: "B",
+    analysis: `句子提到「規律運動並保持健康飲食」，這通常是為了維持「苗條的 (slender)」體態。`,
+    vocab: [
+      `desire V/N 渴望（= long for / crave）；desirable adj 令人嚮往的`,
+      `figure N 體態/數字/人物（public figure 公眾人物）/圖表`,
+      `exercise V/N 運動（作「運動」時為不可數；作「練習題」時可數）`,
+      `regular adj 規律的/定期的；regularly adv 規律地`,
+      `maintain V 維持/保養；maintenance N 維護/保養`,
+      `habit N 習慣；eating habits 飲食習慣`,
+      `spice N 香料；spicy adj 辛辣的`,
+      `slender adj 苗條的（= slim，帶有正面讚美的意味）`,
+      `slight adj 輕微的/微小的；slightly adv 稍微地`,
+      `slip V 滑倒；slippery adj 濕滑的（slippery floor 濕滑的地板）`
+    ]
+  },
+  {
+    id: 2,
+    stem: `Watching the sun ______ from a sea of clouds is a must-do activity for all visitors to Ali Mountain.`,
+    stem_zh: `觀看太陽從雲海中 ______ 是所有阿里山遊客必做的活動。`,
+    options: [
+      { label: "A", text: "emerging", hint: "（出現/浮現）V emerge" },
+      { label: "B", text: "flashing", hint: "（閃爍）V flash" },
+      { label: "C", text: "rushing",  hint: "（衝擊/匆忙）V rush" },
+      { label: "D", text: "floating", hint: "（漂浮）V float" }
+    ],
+    answer: "A",
+    analysis: `「太陽從雲海中浮現 / 升起」的畫面，最適合用動詞 emerge（出現 / 浮現）。Watch + O. + V-ing（感官動詞用法）：看著太陽正在浮現的過程，用 emerging 最為生動。`,
+    vocab: [
+      `Watch + O. + V-ing / VR（感官動詞用法：看著某人/物正在做...）`,
+      `a sea of clouds 雲海（優美意象詞）`,
+      `must-do adj 必做的（名詞可作 a must）`,
+      `visitor N 遊客/訪客；visit V 拜訪`,
+      `emerge V 出現/浮現；emerge from... 從...之中出現；emergency N 緊急情況`,
+      `flash V 閃爍 N 閃光燈；flash drive 隨身碟`,
+      `rush V 衝/匆忙 N 匆忙；rush hour 尖峰時刻`,
+      `float V 漂浮；floating adj 漂浮的`
+    ]
+  },
+  {
+    id: 3,
+    stem: `Do you know what time the next bus is ______? I've been waiting here for more than 30 minutes.`,
+    stem_zh: `你知道下一班公車什麼時候 ______ 嗎？我已經在這裡等了 30 多分鐘了。`,
+    options: [
+      { label: "A", text: "apt",   hint: "（易於...的）adj" },
+      { label: "B", text: "due",   hint: "（預期到達的）adj" },
+      { label: "C", text: "bound", hint: "（準備前往...的）adj" },
+      { label: "D", text: "docked", hint: "（靠港/停泊）V dock" }
+    ],
+    answer: "B",
+    analysis: `"due" 在此處作形容詞，意思是「預定應到達的 / 預期發生的」。"The bus is due." 意思是公車預定要到了。注意 what time the next bus is due 為間接問句，is 移至主詞 the next bus 後。`,
+    vocab: [
+      `what time the next bus is due 此為「間接問句」，將原本的 is 移到主詞 the next bus 後面`,
+      `wait for 等待...`,
+      `apt adj 有...傾向的/易於...的；be apt to V 易於做某事（= be prone to）`,
+      `due adj 預定到達的/到期的/應支付的；due to + N 由於...（= because of）`,
+      `bound adj 開往...的/必然的；be bound for + 地方 準備前往某地；be bound to V 肯定會...`,
+      `dock V 靠港/停泊 N 碼頭`
+    ]
+  },
+  {
+    id: 4,
+    stem: `The roasting heat and high ______ made me feel hot and sticky, no matter what I did to cool off.`,
+    stem_zh: `炙熱的高溫與高 ______ 讓我覺得又熱又黏，無論我做什麼來消暑都沒用。`,
+    options: [
+      { label: "A", text: "density",     hint: "（密度）N dense" },
+      { label: "B", text: "humidity",    hint: "（濕度）N humid" },
+      { label: "C", text: "circulation", hint: "（循環/流通）N circulate" },
+      { label: "D", text: "atmosphere",  hint: "（大氣/氣氛）N" }
+    ],
+    answer: "B",
+    analysis: `關鍵字是 "sticky（黏黏的）" 和 "heat（高溫）"。夏天讓人覺得悶熱又黏，是因為「高濕度 (high humidity)」。`,
+    vocab: [
+      `roasting adj 炙烤的/極熱的；roast V 烘烤`,
+      `sticky adj 黏的；stick V 黏貼 N 樹枝`,
+      `no matter what + S + V 無論...（= whatever）`,
+      `cool off V 消暑/冷靜下來`,
+      `dense adj 密集的/稠密的；density N 密度（population density 人口密度）`,
+      `humid adj 潮濕的；humidity N 濕氣/濕度`,
+      `circulate V 循環/流通；circulation N 循環（blood circulation 血液循環）`,
+      `atmosphere N 大氣層/氣氛（friendly atmosphere 友善的氣氛）`
+    ]
+  },
+  {
+    id: 5,
+    stem: `Artwork created by truly great artists such as Picasso and Monet will no doubt ______ the test of time.`,
+    stem_zh: `真正偉大的藝術家（如畢卡索和莫內）所創作的藝術品，無疑將能 ______ 時間的考驗。`,
+    options: [
+      { label: "A", text: "stay",  hint: "（停留）V" },
+      { label: "B", text: "take",  hint: "（拿/花費）V" },
+      { label: "C", text: "serve", hint: "（服務/供應）V" },
+      { label: "D", text: "stand", hint: "（承受/經受）V" }
+    ],
+    answer: "D",
+    analysis: `"stand the test of time" 是一個非常經典的英文慣用語，意思是「經得起時間的考驗」。stand 在這裡作及物動詞，意思是「承受 / 忍受」。`,
+    vocab: [
+      `Artwork (which is) created by... 分詞構句，省略了關係代名詞與 be 動詞`,
+      `no doubt 無疑地/肯定地（= undoubtedly）`,
+      `stand V 站立/忍受（can't stand N/V-ing 無法忍受）；stand out 突出/顯眼`,
+      `serve V 服務/提供（食物）；service N 服務`
+    ]
+  },
+  {
+    id: 6,
+    stem: `In some countries, military service is ______ for men only; women do not have to serve in the military.`,
+    stem_zh: `在某些國家，男性服兵役是 ______ 的；女性則不必服兵役。`,
+    options: [
+      { label: "A", text: "forceful",    hint: "（強而有力的）adj" },
+      { label: "B", text: "realistic",   hint: "（現實的/逼真的）adj" },
+      { label: "C", text: "compulsory",  hint: "（強制的/義務的）adj" },
+      { label: "D", text: "distinctive", hint: "（獨特的）adj" }
+    ],
+    answer: "C",
+    analysis: `後半句提到女性「不必 (do not have to)」服兵役，對比之下，男性的兵役規定就是「強制的、義務的 (compulsory)」。`,
+    vocab: [
+      `military adj 軍事的 N 軍隊；military service 兵役`,
+      `serve V 服役/服務`,
+      `force N 力量 V 強迫；forceful adj 強而有力的（通常指講話或力道）`,
+      `real adj 真實的；realistic adj 現實的/實際的；reality N 現實`,
+      `compel V 強迫；compulsory adj 強制的/必修的（compulsory education 義務教育）`,
+      `distinct adj 明顯不同的；distinctive adj 獨特的/與眾不同的`
+    ]
+  },
+  {
+    id: 7,
+    stem: `The team complained that its leader always took the ______ for all the hard work done by the team members.`,
+    stem_zh: `團隊抱怨他們的領導者總是把團隊成員辛苦工作的成果據為己有（搶走 ______）。`,
+    options: [
+      { label: "A", text: "advantage", hint: "（優勢/好處）N" },
+      { label: "B", text: "revenge",   hint: "（報復）N" },
+      { label: "C", text: "remedy",    hint: "（療法/補救方法）N" },
+      { label: "D", text: "credit",    hint: "（功勞/信用）N" }
+    ],
+    answer: "D",
+    analysis: `"take the credit for..." 是一個固定片語，意思是「因...而邀功 / 把...的功勞歸於自己」。`,
+    vocab: [
+      `complain V 抱怨；complaint N 抱怨/投訴`,
+      `leader N 領導者；lead V 引導/領導`,
+      `done by... 過去分詞作形容詞，修飾前面的 hard work`,
+      `advantage N 優勢/好處；take advantage of sb/sth 利用某人/佔某事物的便宜`,
+      `revenge N 報仇；Take revenge on sb 對某人報仇`,
+      `remedy N 治療法/補救辦法`,
+      `credit N 功勞/學分/信用（credit card 信用卡）；Take the credit for 搶功勞`
+    ]
+  },
+  {
+    id: 8,
+    stem: `Located at the center of the city, the business hotel ______ not only good service but also convenient public transport.`,
+    stem_zh: `這家商務旅館位於市中心，不僅 ______ 良好的服務，還提供便利的大眾運輸。`,
+    options: [
+      { label: "A", text: "proposes", hint: "（提議/求婚）V" },
+      { label: "B", text: "contains", hint: "（包含/容納）V" },
+      { label: "C", text: "promises", hint: "（承諾/保證會有）V" },
+      { label: "D", text: "confirms", hint: "（確認/證實）V" }
+    ],
+    answer: "C",
+    analysis: `旅館「保證會提供、承諾擁有」良好的服務與交通，promise 除了口頭答應，也可以用來指某事物「預示著 / 保證會帶來」某種好處。`,
+    vocab: [
+      `Located at... 被動式分詞構句，省略了 Because it is located at...；locate V 使座落於；location N 地點`,
+      `not only A but also B 不僅 A 而且 B（A 和 B 詞性必須對稱）`,
+      `convenient adj 方便的；convenience N 方便（convenience store 便利商店）`,
+      `transport / transportation N 運輸/交通`,
+      `propose V 提議/求婚；proposal N 提案`,
+      `contain V 包含（裡面裝有...）；container N 容器`,
+      `promise V/N 承諾/保證`,
+      `confirm V 確認；confirmation N 確認信/證實`
+    ]
+  },
+  {
+    id: 9,
+    stem: `As blood supplies have fallen to a critically low level, many hospitals are making an ______ for the public to donate blood.`,
+    stem_zh: `由於血液庫存已降至極度危急的低水位，許多醫院正向大眾發出捐血的 ______。`,
+    options: [
+      { label: "A", text: "appeal",      hint: "（呼籲/懇求）N" },
+      { label: "B", text: "approach",    hint: "（方法/接近）N" },
+      { label: "C", text: "operation",   hint: "（手術/運作）N" },
+      { label: "D", text: "observation", hint: "（觀察）N" }
+    ],
+    answer: "A",
+    analysis: `"make an appeal for..." 是一個正式用語，意思是「強烈呼籲 / 懇求大眾做某事」。`,
+    vocab: [
+      `As 連接詞：因為（= because / since）`,
+      `supply N 供應量/物資 V 供給；blood supplies 血液庫存`,
+      `critical adj 危急的/關鍵的/批評的；critically adv 極度地/危急地`,
+      `make an appeal for sb to V 呼籲某人做...`,
+      `donate V 捐贈；donation N 捐款/捐贈；donor N 捐贈者（blood donor 捐血者）`,
+      `appeal N/V 呼籲/吸引力；appeal to sb 吸引某人（注意與 appear 出現 拼法不同）`,
+      `approach N 方法/途徑 V 接近`,
+      `operate V 操作/動手術；operation N 手術/運作；operator N 操作員`,
+      `observe V 觀察/遵守；observation N 觀察`
+    ]
+  },
+  {
+    id: 10,
+    stem: `David felt disappointed when he found out that he could not choose his study partners, but would be ______ placed in a study group.`,
+    stem_zh: `當大衛發現他不能自己選擇讀書夥伴，而是會被 ______ 分發到讀書小組時，他感到很失望。`,
+    options: [
+      { label: "A", text: "eligibly",      hint: "（合格地）adv eligible" },
+      { label: "B", text: "randomly",      hint: "（隨機地）adv random" },
+      { label: "C", text: "apparently",    hint: "（顯然地）adv apparent" },
+      { label: "D", text: "consequently",  hint: "（因此/結果）adv consequence" }
+    ],
+    answer: "B",
+    analysis: `前半句提到他「無法自己選擇 (could not choose)」，代表分組方式是不挑人的、看運氣的，因此是「隨機地 (randomly)」。`,
+    vocab: [
+      `disappoint V 使失望；disappointed adj 感到失望的（修飾人）；disappointing adj 令人失望的（修飾物）`,
+      `find out 發現/查明`,
+      `place V 放置/分派`,
+      `eligible adj 具備資格的；be eligible for + N / to V 有資格...`,
+      `random adj 隨機的；randomly adv 隨機地；at random 隨機地`,
+      `apparent adj 明顯的；apparently adv 顯然地（= obviously）`,
+      `consequence N 後果/結果；consequently adv 因此（= as a result / therefore）`
+    ]
+  }
+];
+
+let answered = 0;
+let correct  = 0;
+const total  = questions.length;
+
+function buildQuiz() {
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = '';
+
+  questions.forEach((q, idx) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.id = `card-${idx}`;
+
+    const optionsHTML = q.options.map(opt => `
+      <li>
+        <button class="option-btn" id="btn-${idx}-${opt.label}"
+          onclick="selectAnswer(${idx}, '${opt.label}')">
+          <span class="option-tag">(${opt.label})</span>
+          <span><strong>${opt.text}</strong>　${opt.hint}</span>
+        </button>
+      </li>
+    `).join('');
+
+    card.innerHTML = `
+      <div class="q-header">
+        <div class="q-num">${q.id}</div>
+        <div class="q-text">
+          ${q.stem}<br>
+          <em>${q.stem_zh}</em>
+        </div>
+      </div>
+      <ul class="options">${optionsHTML}</ul>
+      <div class="analysis-box" id="analysis-${idx}">
+        <div class="analysis-label">📖 解析</div>
+        <div class="analysis-text">${q.analysis}</div>
+        <button class="more-btn" id="morebtn-${idx}" onclick="toggleSupp(${idx})">
+          查看更多補充 <span class="arrow">▼</span>
+        </button>
+        <div class="supplement-box" id="supp-${idx}">
+          <div class="supplement-label">📚 單字補充</div>
+          <ul class="vocab-list">
+            ${q.vocab.map(v => `<li>${v}</li>`).join('')}
+          </ul>
+        </div>
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+
+  updateProgress();
+}
+
+function selectAnswer(idx, chosen) {
+  const q = questions[idx];
+  const card = document.getElementById(`card-${idx}`);
+  const analysis = document.getElementById(`analysis-${idx}`);
+
+  q.options.forEach(opt => {
+    document.getElementById(`btn-${idx}-${opt.label}`).disabled = true;
+  });
+
+  const chosenBtn = document.getElementById(`btn-${idx}-${chosen}`);
+  const isCorrect = chosen === q.answer;
+
+  if (isCorrect) {
+    chosenBtn.classList.add('selected-correct');
+    chosenBtn.innerHTML += `<span class="result-icon">✅</span>`;
+    card.classList.add('correct');
+    correct++;
+  } else {
+    chosenBtn.classList.add('selected-wrong');
+    chosenBtn.innerHTML += `<span class="result-icon">❌</span>`;
+    card.classList.add('wrong');
+    const correctBtn = document.getElementById(`btn-${idx}-${q.answer}`);
+    correctBtn.classList.add('reveal-correct');
+    correctBtn.innerHTML += `<span class="result-icon">✅</span>`;
+  }
+
+  analysis.classList.add('visible');
+  answered++;
+  updateProgress();
+
+  if (answered === total) {
+    setTimeout(showSummary, 600);
+  }
+}
+
+function toggleSupp(idx) {
+  const supp = document.getElementById(`supp-${idx}`);
+  const btn  = document.getElementById(`morebtn-${idx}`);
+  const isOpen = supp.classList.contains('visible');
+  supp.classList.toggle('visible', !isOpen);
+  btn.innerHTML = isOpen
+    ? `查看更多補充 <span class="arrow">▼</span>`
+    : `收起補充 <span class="arrow">▲</span>`;
+  btn.setAttribute('onclick', `toggleSupp(${idx})`);
+}
+
+function updateProgress() {
+  document.getElementById('progressBar').style.width = (answered / total * 100) + '%';
+  document.getElementById('progressText').textContent = `已作答 ${answered} / ${total} 題`;
+}
+
+function showSummary() {
+  document.getElementById('summary').style.display = 'block';
+  document.getElementById('scoreDisplay').textContent = `${correct} / ${total}`;
+  const pct = Math.round(correct / total * 100);
+  document.getElementById('scoreMsg').textContent =
+    pct === 100 ? `正確率 ${pct}%　太厲害了！全部答對！🏆`
+    : pct >= 70  ? `正確率 ${pct}%　表現不錯！繼續保持！💪`
+    :              `正確率 ${pct}%　多複習解析和補充，下次一定更好！📖`;
+  document.getElementById('summary').scrollIntoView({ behavior: 'smooth' });
+}
+
+function resetQuiz() {
+  answered = 0;
+  correct  = 0;
+  document.getElementById('summary').style.display = 'none';
+  buildQuiz();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+buildQuiz();
+</script>
+</body>
+</html>
