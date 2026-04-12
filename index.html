@@ -3,698 +3,225 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>115 學測第一大題練習（第 1–10 題）</title>
+  <title>高中學測歷屆英文試題練習</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       font-family: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", sans-serif;
-      background: #f0f4f8;
+      background: linear-gradient(135deg, #e8f0fe 0%, #f0f4f8 60%, #faf5ff 100%);
+      min-height: 100vh;
+      padding: 40px 16px 80px;
       color: #1a202c;
-      padding: 24px 16px 60px;
     }
-
-    h1 {
+    .hero {
       text-align: center;
-      font-size: 1.5rem;
-      font-weight: 700;
+      margin-bottom: 48px;
+    }
+    .hero h1 {
+      font-size: 2rem;
+      font-weight: 800;
       color: #2b4c8c;
-      margin-bottom: 8px;
-    }
-
-    .subtitle {
-      text-align: center;
-      font-size: 0.9rem;
-      color: #718096;
-      margin-bottom: 32px;
-    }
-
-    .progress-bar-wrap {
-      max-width: 720px;
-      margin: 0 auto 28px;
-      background: #cbd5e0;
-      border-radius: 999px;
-      height: 10px;
-      overflow: hidden;
-    }
-
-    .progress-bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #3b82f6, #6366f1);
-      border-radius: 999px;
-      transition: width 0.4s ease;
-    }
-
-    .progress-text {
-      text-align: center;
-      font-size: 0.82rem;
-      color: #718096;
-      margin-top: 6px;
-      margin-bottom: 24px;
-    }
-
-    .card {
-      background: #fff;
-      border-radius: 14px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-      max-width: 720px;
-      margin: 0 auto 28px;
-      padding: 28px 28px 24px;
-      border-left: 5px solid #3b82f6;
-      transition: border-color 0.3s;
-    }
-
-    .card.correct { border-left-color: #22c55e; }
-    .card.wrong   { border-left-color: #ef4444; }
-
-    .q-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-
-    .q-num {
-      background: #3b82f6;
-      color: #fff;
-      border-radius: 50%;
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 0.95rem;
-      flex-shrink: 0;
-    }
-
-    .q-text {
-      font-size: 1rem;
-      line-height: 1.7;
-      color: #2d3748;
-    }
-
-    .q-text em {
-      font-style: normal;
-      color: #718096;
-      font-size: 0.9rem;
-    }
-
-    .options {
-      list-style: none;
-      margin-top: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .option-btn {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      padding: 12px 16px;
-      border: 2px solid #e2e8f0;
-      border-radius: 10px;
-      cursor: pointer;
-      background: #f7fafc;
-      text-align: left;
-      font-size: 0.95rem;
-      line-height: 1.6;
-      color: #2d3748;
-      transition: background 0.18s, border-color 0.18s;
-      width: 100%;
-    }
-
-    .option-btn:hover:not(:disabled) {
-      background: #ebf4ff;
-      border-color: #93c5fd;
-    }
-
-    .option-btn:disabled { cursor: default; }
-
-    .option-btn.selected-correct {
-      background: #dcfce7;
-      border-color: #22c55e;
-      color: #166534;
-      font-weight: 600;
-    }
-
-    .option-btn.selected-wrong {
-      background: #fee2e2;
-      border-color: #ef4444;
-      color: #991b1b;
-    }
-
-    .option-btn.reveal-correct {
-      background: #dcfce7;
-      border-color: #22c55e;
-      color: #166534;
-    }
-
-    .option-tag {
-      font-weight: 700;
-      min-width: 22px;
-    }
-
-    .result-icon {
-      display: inline-block;
-      margin-left: 8px;
-      font-size: 1.1rem;
-    }
-
-    /* ── 解析區 ── */
-    .analysis-box {
-      margin-top: 18px;
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      border-radius: 10px;
-      padding: 16px 18px;
-      display: none;
-    }
-
-    .analysis-box.visible { display: block; }
-
-    .analysis-label {
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: #2563eb;
-      letter-spacing: 0.04em;
-      margin-bottom: 8px;
-      text-transform: uppercase;
-    }
-
-    .analysis-text {
-      font-size: 0.95rem;
-      line-height: 1.8;
-      color: #1e3a5f;
-    }
-
-    /* ── 查看更多補充 ── */
-    .more-btn {
-      margin-top: 14px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 18px;
-      background: #e0e7ff;
-      color: #3730a3;
-      border: none;
-      border-radius: 8px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.18s;
-    }
-
-    .more-btn:hover { background: #c7d2fe; }
-
-    .more-btn .arrow {
-      font-size: 0.75rem;
-      transition: transform 0.25s;
-    }
-
-    .more-btn.open .arrow { transform: rotate(180deg); }
-
-    .supplement-box {
-      margin-top: 12px;
-      background: #faf5ff;
-      border: 1px solid #ddd6fe;
-      border-radius: 10px;
-      padding: 16px 18px;
-      display: none;
-    }
-
-    .supplement-box.visible { display: block; }
-
-    .supplement-label {
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: #7c3aed;
-      letter-spacing: 0.04em;
       margin-bottom: 10px;
+      letter-spacing: 0.02em;
     }
-
-    .vocab-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
+    .hero p {
+      color: #718096;
+      font-size: 0.95rem;
     }
-
-    .vocab-list li {
-      font-size: 0.88rem;
-      line-height: 1.7;
-      color: #3b2f6e;
-      padding-left: 16px;
-      position: relative;
-    }
-
-    .vocab-list li::before {
-      content: "●";
-      position: absolute;
-      left: 0;
-      color: #7c3aed;
-      font-size: 0.65rem;
-      top: 5px;
-    }
-
-    /* ── Summary ── */
-    #summary {
-      display: none;
+    .sections {
       max-width: 720px;
       margin: 0 auto;
-      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+    .section-card {
       background: #fff;
-      border-radius: 14px;
-      box-shadow: 0 2px 16px rgba(0,0,0,0.1);
-      padding: 40px 32px;
+      border-radius: 16px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+      overflow: hidden;
     }
-
-    #summary h2 {
-      font-size: 1.6rem;
-      color: #2b4c8c;
-      margin-bottom: 12px;
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 28px;
+      cursor: pointer;
+      user-select: none;
+      border-bottom: 2px solid transparent;
+      transition: background 0.18s;
     }
-
-    #summary .score-big {
-      font-size: 3rem;
-      font-weight: 800;
-      color: #3b82f6;
-      margin-bottom: 8px;
+    .section-header:hover { background: #f7fafc; }
+    .section-header.open { border-bottom-color: #e2e8f0; }
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 14px;
     }
-
-    #summary p { color: #4a5568; font-size: 1rem; margin-bottom: 24px; }
-
-    .reset-btn {
-      padding: 12px 32px;
+    .section-badge {
       background: linear-gradient(135deg, #3b82f6, #6366f1);
       color: #fff;
-      border: none;
       border-radius: 10px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: opacity 0.2s;
+      padding: 6px 14px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      white-space: nowrap;
     }
-
-    .reset-btn:hover { opacity: 0.88; }
-
-    @media (max-width: 600px) {
-      .card { padding: 20px 16px 18px; }
+    .section-badge.purple {
+      background: linear-gradient(135deg, #7c3aed, #a855f7);
+    }
+    .section-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #2d3748;
+    }
+    .section-sub {
+      font-size: 0.85rem;
+      color: #718096;
+      margin-top: 2px;
+    }
+    .chevron {
+      font-size: 1.1rem;
+      color: #a0aec0;
+      transition: transform 0.25s;
+    }
+    .section-header.open .chevron { transform: rotate(180deg); }
+    .year-grid {
+      display: none;
+      padding: 20px 28px 24px;
+      display: none;
+    }
+    .year-grid.visible { display: block; }
+    .year-grid-inner {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 10px;
+    }
+    .year-btn {
+      display: block;
+      text-align: center;
+      padding: 12px 8px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: 2px solid #e2e8f0;
+      background: #f7fafc;
+      color: #4a5568;
+      transition: all 0.18s;
+      cursor: default;
+      position: relative;
+    }
+    .year-btn.available {
+      background: linear-gradient(135deg, #eff6ff, #f0f4ff);
+      border-color: #93c5fd;
+      color: #1d4ed8;
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(59,130,246,0.12);
+    }
+    .year-btn.available:hover {
+      background: linear-gradient(135deg, #dbeafe, #e0e7ff);
+      border-color: #3b82f6;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(59,130,246,0.2);
+    }
+    .year-btn .coming {
+      display: block;
+      font-size: 0.65rem;
+      font-weight: 400;
+      color: #a0aec0;
+      margin-top: 3px;
+    }
+    .year-btn.available .coming { display: none; }
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 1.5rem; }
+      .section-header { padding: 18px 20px; }
+      .year-grid { padding: 16px 20px 20px; }
     }
   </style>
 </head>
 <body>
 
-<h1>115 學測第一大題練習</h1>
-<p class="subtitle">第 1–10 題｜選出最適合填入的詞彙</p>
-
-<div class="progress-bar-wrap">
-  <div class="progress-bar-fill" id="progressBar" style="width:0%"></div>
+<div class="hero">
+  <h1>高中學測歷屆英文試題練習</h1>
+  <p>點選大題，展開年份選單，開始練習</p>
 </div>
-<p class="progress-text" id="progressText">已作答 0 / 10 題</p>
 
-<div id="quiz-container"></div>
-<div id="summary">
-  <h2>🎉 練習完成！</h2>
-  <div class="score-big" id="scoreDisplay"></div>
-  <p id="scoreMsg"></p>
-  <button class="reset-btn" onclick="resetQuiz()">再練習一次</button>
+<div class="sections">
+
+  <!-- 第一大題 -->
+  <div class="section-card">
+    <div class="section-header" id="hdr1" onclick="toggle(1)">
+      <div class="section-title">
+        <span class="section-badge">第一大題</span>
+        <div>
+          <div class="section-name">詞彙題</div>
+          <div class="section-sub">選出最適合填入空格的詞語</div>
+        </div>
+      </div>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="year-grid" id="grid1">
+      <div class="year-grid-inner" id="inner1"></div>
+    </div>
+  </div>
+
+  <!-- 第二大題 -->
+  <div class="section-card">
+    <div class="section-header" id="hdr2" onclick="toggle(2)">
+      <div class="section-title">
+        <span class="section-badge purple">第二大題</span>
+        <div>
+          <div class="section-name">綜合測驗</div>
+          <div class="section-sub">選出最適合填入空格的詞語或句子</div>
+        </div>
+      </div>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="year-grid" id="grid2">
+      <div class="year-grid-inner" id="inner2"></div>
+    </div>
+  </div>
+
 </div>
 
 <script>
-const questions = [
-  {
-    id: 1,
-    stem: `The mayor has such a ______ schedule that it takes weeks to arrange an interview with her.`,
-    stem_zh: `市長的行程如此 ______，以至於安排與她面談需要花上幾個星期的時間。`,
-    options: [
-      { label: "A", text: "hasty", hint: "（匆忙的）adj 倉促的" },
-      { label: "B", text: "tight", hint: "（緊湊的）adv 牢固的" },
-      { label: "C", text: "diligent", hint: "（勤勉的）adj 只能修飾人" },
-      { label: "D", text: "routine", hint: "（例行的）N 例行公事" }
-    ],
-    answer: "B",
-    analysis: `題幹提到「需要幾個星期才能安排面談」，代表市長的行程排得很滿。英文中形容行程很滿、很緊湊，固定用法是 "a tight schedule"，因此 (B) 為正確答案。`,
-    vocab: [
-      `mayor N 市長；governor N 州長；govern V 統治；government N 政府；ruler N 統治者/尺；administrator N 行政官員`,
-      `major adj 主要的 V/N 主修（拼法和 mayor 很像）；minor adj 較小的 V 副修 N 未成年者`,
-      `such + (a/an) + adj + N + that + S + V 如此...以至於... = so + adj/adv + that + S + V`,
-      `schedule N 時間表/課程表 V 安排；on schedule 準時；behind schedule 進度落後`,
-      `it takes + 時間 + to V 花時間做某事；It takes + 人 + 時間 + to V = It takes + 時間 + for 人 + to V`,
-      `arrange V 排列/安排（常見）；arrange for + 人 + to V 安排某人做...`,
-      `interview V 面談 N 採訪；interviewer N 面試官；interviewee N 被面試者；a job interview 求職面試`,
-      `haste N 急忙；hastily adv 匆忙地；hurry V/N 趕快`,
-      `tight adj 緊湊的/緊的；a tight budget 吃緊的預算；Sleep tight. 睡個好覺；tighten V 變緊/緊繃`,
-      `loose adj 鬆弛的；come loose 鬆開；loosen V 解開`,
-      `diligence N 勤勉；industry N 企業/勤奮；industrious adj 勤奮的`,
-      `daily routine 日常作息`
-    ]
-  },
-  {
-    id: 2,
-    stem: `Jane started as an ______ art designer, but now she has a professional studio of her own.`,
-    stem_zh: `Jane 一開始是個 ______ 的藝術設計師，但現在她擁有自己的專業工作室。`,
-    options: [
-      { label: "A", text: "official", hint: "（官方的）N 官員" },
-      { label: "B", text: "instant", hint: "（立即的）N 瞬間" },
-      { label: "C", text: "amateur", hint: "（業餘的）N 業餘愛好者" },
-      { label: "D", text: "elementary", hint: "（基本的）adj 初級的" }
-    ],
-    answer: "C",
-    analysis: `句子前後使用了 "but"（但是）來表示對比，後半句提到她現在擁有「專業的 (professional)」工作室，也就是「業餘的 (amateur)。`,
-    vocab: [
-      `start as + N 一開始作為...（身分/職業）`,
-      `profession N 專業/職業；professional adj 專業的 N 專業人士；professor N 教授`,
-      `studio N 工作室/攝影棚`,
-      `office N 辦公室；official adj 官方的/正式的 N 官員；officer N 軍官/警官`,
-      `instant adj 立即的；instantly adv 立即地（= immediately）；instant noodles 泡麵`,
-      `amateur adj 業餘的 N 業餘愛好者（反義詞：professional）`,
-      `element N 元素/要素；elementary adj 基本的/初級的；elementary school 小學`
-    ]
-  },
-  {
-    id: 3,
-    stem: `The teaching ______ at the famous high school soon attracted more than a dozen well-qualified applicants.`,
-    stem_zh: `這所著名高中的教學 ______ 很快就吸引了十幾位資格完全符合的申請者。`,
-    options: [
-      { label: "A", text: "career", hint: "（職業）N 生涯" },
-      { label: "B", text: "vacancy", hint: "（職缺）N 空缺" },
-      { label: "C", text: "expectation", hint: "（期望）N 預期" },
-      { label: "D", text: "inspiration", hint: "（靈感）N 鼓舞" }
-    ],
-    answer: "B",
-    analysis: `句子提到吸引了許多「申請者 (applicants)」，代表學校釋出了工作機會。"vacancy" 指的是職缺或空缺，"teaching vacancy"（教職缺）完全符合語意。`,
-    vocab: [
-      `attract V 吸引；attractive adj 有吸引力的；attraction N 吸引力/景點（tourist attraction）`,
-      `a dozen 一打（12個）；dozens of + N（複數）數十個.../許多的...`,
-      `qualify V 使具備資格；qualified adj 合格的/勝任的；well-qualified adj 資格非常符合的`,
-      `apply V 申請/應用；apply for a job 申請工作；applicant N 申請者；application N 申請/應用程式（App）`,
-      `career N 職業生涯（對比：job 工作 / occupation 職業）`,
-      `vacant adj 空置的；vacancy N 職缺/空房（job vacancy 職缺）`,
-      `expect V 期望/預期；expectation N 期望；live up to one's expectations 符合某人的期望`,
-      `inspire V 啟發/鼓舞；inspiration N 靈感；inspiring adj 激勵人心的`
-    ]
-  },
-  {
-    id: 4,
-    stem: `Designed by a young engineer, the new product has created far more profit than ______ expected.`,
-    stem_zh: `由一位年輕工程師所設計，這項新產品創造了比 ______ 預期還要...多釺許多的利潤。`,
-    options: [
-      { label: "A", text: "initially", hint: "（最初）adj initial" },
-      { label: "B", text: "genuinely", hint: "（真誠地）adj genuine" },
-      { label: "C", text: "alternatively", hint: "（二擇一地）N alternative" },
-      { label: "D", text: "fundamentally", hint: "（根本上地）N fundamental" }
-    ],
-    answer: "A",
-    analysis: `"than initially expected" 是一個常見的搭配詞組，意思是「比最初預期的還要...」。產品創造的利潤超越了一開始的預估，因此選 (A)。`,
-    vocab: [
-      `Designed by... 為分詞構句（被動），還原為 Because it was designed by...`,
-      `design V/N 設計；designer N 設計師`,
-      `engine N 引擎；engineer N 工程師；engineering N 工程學`,
-      `create V 創造；creative adj 有創造力的；creation N 創造/創作品；creature N 生物`,
-      `profit N 利潤 V 獲利；profitable adj 盈利的`,
-      `far more 修飾比較級（far, much, even, still, a lot 皆可修飾比較級，代表「...得多」）`,
-      `initial adj 最初的；initially adv 最初/一開始（= at first）`,
-      `genuine adj 真正的/真誠的（= real / authentic）；反義詞：fake（假的）`,
-      `alternate V 交替；alternative N 替代方案 adj 替代的（have no alternative but to V 只能...別無選擇）`,
-      `fundamental adj 基礎的/根本的（= basic / essential）`
-    ]
-  },
-  {
-    id: 5,
-    stem: `It has been confirmed that a balanced ______ of fruit and vegetables is a key element to good health.`,
-    stem_zh: `已經證實，均衡地 ______ 蔬果是保持身體健康的關鍵要素。`,
-    options: [
-      { label: "A", text: "dimension", hint: "（尺寸）N 維度" },
-      { label: "B", text: "integration", hint: "（整合）V integrate" },
-      { label: "C", text: "provision", hint: "（提供）V provide" },
-      { label: "D", text: "consumption", hint: "（消耗）V consume" }
-    ],
-    answer: "D",
-    analysis: `這裡討論的是飲食健康。"consumption" 除了有消耗、消費的意思，在飲食語境中指的就是「吃、喝、攝取」。"consumption of fruit and vegetables" 即為攝取蔬果。`,
-    vocab: [
-      `confirm V 證實/確認；confirmation N 確認`,
-      `balance N/V 平衡；a balanced diet 均衡的飲食`,
-      `key element to + N/V-ing ...的關鍵要素（這裡的 to 是介系詞，後面要接名詞或動名詞）`,
-      `dimension N 尺寸/維度（3D 電影的 D 就是 Dimension：Three-dimensional）`,
-      `integrate V 整合/融入；integration N 整合`,
-      `provide V 提供；provide sb with sth = provide sth for sb 提供某物給某人；provision N 提供/準備`,
-      `consume V 消耗/消費/吃喝；consumer N 消費者；consumption N 消耗/攝取量；time-consuming adj 耗時的`
-    ]
-  },
-  {
-    id: 6,
-    stem: `As a shy boy afraid of making public appearances, Timmy ______ the thought of speaking before large audiences.`,
-    stem_zh: `身為一個害怕公開露面的害羞男孩，Timmy 對於要在廣大觀眾面前講話的想法感到 ______。`,
-    options: [
-      { label: "A", text: "dreads", hint: "（害怕）N 畏懼" },
-      { label: "B", text: "stresses", hint: "（強調）N 壓力" },
-      { label: "C", text: "wanders", hint: "（漫遊）V 徘徊" },
-      { label: "D", text: "escapes", hint: "（逃跑）N 逃避" }
-    ],
-    answer: "A",
-    analysis: `前半句提到 Timmy 害怕（afraid）公開露面，因此對於在人群前說話，他自然感到「畏懼、害怕」，動詞 dread 最符合語境。`,
-    vocab: [
-      `shy adj 害羞的`,
-      `afraid adj 害怕的；be afraid of + N/V-ing 害怕...`,
-      `appear V 出現/似乎；appearance N 出現/外貌；make a public appearance 公開露面`,
-      `dread V/N 害怕/恐懼；dread + V-ing 害怕做某事；dreadful adj 可怕的（= terrible）`,
-      `stress N 壓力 V 強調；stressful adj 充滿壓力的（修飾事物）；stressed (out) adj 感到有壓力的（修飾人）`,
-      `wander V 漫遊/徘徊（易混淆字：wonder V 想知道/納悶）`,
-      `escape V/N 逃跑；escape from... 從...逃出`,
-      `audience N 觀眾（聽眾為主，常作集合名詞）；spectator N 觀眾（體育賽事的現場觀眾）`
-    ]
-  },
-  {
-    id: 7,
-    stem: `To the newly-crowned winner of the piano competition, music is his life's ______, which he has devoted himself to whole-heartedly.`,
-    stem_zh: `對於這位新加冕的鋼琴比賽冠軍來說，音樂是他生命的 ______，他已經全心全意地投入其中。`,
-    options: [
-      { label: "A", text: "resource", hint: "（資源）N 財力" },
-      { label: "B", text: "impact", hint: "（影響）V 衝擊" },
-      { label: "C", text: "passion", hint: "（熱情）adj passionate" },
-      { label: "D", text: "emphasis", hint: "（強与）V emphasize" }
-    ],
-    answer: "C",
-    analysis: `句子後半段補充說明他對音樂「全心全意地投入」，能讓人如此投入的事物，通常是一生熱愛所在，因此選 "passion"（熱情/酷愛）。`,
-    vocab: [
-      `crown N 皇冠 V 為...加冕；newly-crowned adj 新加冕的（新誕生的）`,
-      `win V 贏得；winner N 贏家/冠軍（反義詞：loser）`,
-      `compete V 競爭；competition N 競爭/比賽；competitive adj 競爭激烈的；competitor N 競爭者`,
-      `devote V 奉獻/投入；devote oneself to + N/V-ing 全心投入於...（= dedicate oneself to）`,
-      `whole-heartedly adv 全心全意地`,
-      `source N 來源；resource N 資源（natural resources 自然資源）`,
-      `impact N/V 影響/衝擊；have an impact on... 對...有影響（= have an effect/influence on）`,
-      `passion N 熱情；passionate adj 熱情的（be passionate about 對...有熱情）`,
-      `emphasize V 強調（= stress）；emphasis N 強調；put/place emphasis on 強調...`
-    ]
-  },
-  {
-    id: 8,
-    stem: `The drunk driver who shouted at passers-by and ______ them with glass bottles was quickly arrested by the police.`,
-    stem_zh: `那名對著路人叫囂並用玻璃瓶 ______ 他們的酒駕司機，很快就被警察逮捕了。`,
-    options: [
-      { label: "A", text: "shattered", hint: "（粉碎）adj 破碎的" },
-      { label: "B", text: "assaulted", hint: "（攻擊）N 襲擊" },
-      { label: "C", text: "overturned", hint: "（推翻）V 翻倒" },
-      { label: "D", text: "condemned", hint: "（譴責）V 判刑" }
-    ],
-    answer: "B",
-    analysis: `該名司機對路人叫囂，並「用玻璃瓶 (with glass bottles)」對他們做出某個動作導致被逮捕。符合邏輯的惡意動作是「攻擊 (assaulted)」。`,
-    vocab: [
-      `drink and drive 酒駕（動詞片語）；drunk driver 酒駕者；drunk driving N 酒駕`,
-      `shout V 吼叫；shout at sb 對某人吼叫（帶有生氣的情緒）`,
-      `passer-by N 路人（複數型態為 passers-by，加在 passer 上）`,
-      `arrest V/N 逮捕；be placed under arrest 被逮捕`,
-      `shatter V 粉碎/打碎；shattered glass 碎玻璃`,
-      `assault V/N 攻擊/襲擊（= attack）`,
-      `overturn V 翻倒/推翻（overturn a decision 推翻決定）`,
-      `condemn V 譴責/判刑；condemn sb for sth 因某事譴責某人`
-    ]
-  },
-  {
-    id: 9,
-    stem: `There were so many people at the bus station that I had to ______ my way through the crowd to board the bus in time.`,
-    stem_zh: `公車站有這麼多人，以至於我必須在人群中 ______ 前進，才能及時搭上公車。`,
-    options: [
-      { label: "A", text: "crash", hint: "（碰撞）N 墜毀" },
-      { label: "B", text: "tumble", hint: "（跌倒）V 滾下" },
-      { label: "C", text: "elbow", hint: "（用手肘推擠）N 手肘" },
-      { label: "D", text: "struggle", hint: "（掙扎）N 努力" }
-    ],
-    answer: "C",
-    analysis: `"elbow one's way through" 是一個常見的生動片語，意思是「在人群中用手肘推擠出一條路來」。形容在擁擠的人潮中辛苦前進的畫面。`,
-    vocab: [
-      `so + adj/adv + that... 如此...以至於...（與第一題的 such...that 呼應）`,
-      `station N 車站（bus station/train station）`,
-      `board V 登機/上車 N 木板/董事會；board a bus/plane 上公車/登機`,
-      `in time 及時（趕上最後一刻）；on time 準時（照著預定時間）`,
-      `crowd N 人群 V 擠滿；crowded adj 擁擠的`,
-      `crash V/N 碰撞/墜毀/電腦當機；car crash 車禍`,
-      `tumble V 跌倒/滾下（= fall）`,
-      `elbow N 手肘 V 用手肘推`,
-      `struggle V/N 掙扎/努力；struggle to V 努力/掙扎著去做某事`
-    ]
-  },
-  {
-    id: 10,
-    stem: `Deadly shootings on US campuses have raised ______ concerns about how to prevent such tragic incidents from happening again.`,
-    stem_zh: `美國校園內的致命槍擊事件引發了對於如佥防止此類悲慘事件再次發生的 ______ 擔憂。`,
-    options: [
-      { label: "A", text: "swift", hint: "（迅速的）adv swiftly" },
-      { label: "B", text: "brutal", hint: "（殘忍的）N brutality" },
-      { label: "C", text: "harsh", hint: "（嚴厲的）adj 刺耳的" },
-      { label: "D", text: "grave", hint: "（嚴重的）N 墳墓" }
-    ],
-    answer: "D",
-    analysis: `針對致命槍擊案這種悲慘事件，社會大眾所引發的擔憂必然是「非常嚴重、深切的」。"grave concerns" 是固定搭配，表示「嚴重的擔憂/關切」。`,
-    vocab: [
-      `deadly adj 致命的（= fatal / lethal）`,
-      `shoot V 射擊（過去式/過去分詞為 shot）；shooting N 槍擊事件`,
-      `campus N 校園；on campus 在校園內（介系詞用 on）`,
-      `raise concerns 引發擔憂/引起關注（raise 在此為「引起/喚起」）`,
-      `prevent V 預防/阻止；prevent + O. + from + V-ing 阻止...發生（= stop/keep... from V-ing）`,
-      `tragedy N 悲劇；tragic adj 悲慘的`,
-      `incident N 事件（通常指不尋常或負面的事件）；accident N 意外；event N 重大活動/事件`,
-      `swift adj 迅速的（= fast / rapid）`,
-      `brutal adj 殘忍的/野蠻的（= cruel）；brutality N 殘忍行為`,
-      `harsh adj 嚴厲的/惡劣的（harsh weather 惡劣天氣）`,
-      `grave adj 嚴重的（= serious / severe）N 墳墓`
-    ]
-  }
-];
+// 可用題目設定 (key: "section-year", value: 檔案路徑)
+const available = {
+  's1-115': 's1-115.html'
+};
 
-let answered = 0;
-let correct = 0;
+const years = [115,114,113,112,111,110,109,108,107];
 
-function buildQuiz() {
-  const container = document.getElementById('quiz-container');
-  container.innerHTML = '';
-
-  questions.forEach((q, idx) => {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.id = `card-${idx}`;
-
-    const optionsHTML = q.options.map(opt => `
-      <li>
-        <button class="option-btn" id="btn-${idx}-${opt.label}"
-          onclick="selectAnswer(${idx}, '${opt.label}')">
-          <span class="option-tag">(${opt.label})</span>
-          <span><strong>${opt.text}</strong>　${opt.hint}</span>
-        </button>
-      </li>
-    `).join('');
-
-    card.innerHTML = `
-      <div class="q-header">
-        <div class="q-num">${q.id}</div>
-        <div class="q-text">
-          ${q.stem}<br>
-          <em>${q.stem_zh}</em>
-        </div>
-      </div>
-      <ul class="options">${optionsHTML}</ul>
-
-      <div class="analysis-box" id="analysis-${idx}">
-        <div class="analysis-label">📖 解析</div>
-        <div class="analysis-text">${q.analysis}</div>
-        <button class="more-btn" id="morebtn-${idx}" onclick="toggleSupp(${idx})">
-          查看更多補充 <span class="arrow">▼</span>
-        </button>
-        <div class="supplement-box" id="supp-${idx}">
-          <div class="supplement-label">📚 單字補充</div>
-          <ul class="vocab-list">
-            ${q.vocab.map(v => `<li>${v}</li>`).join('')}
-          </ul>
-        </div>
-      </div>
-    `;
-
-    container.appendChild(card);
+function buildGrid(section, innerId) {
+  const inner = document.getElementById(innerId);
+  years.forEach(y => {
+    const key = 's' + section + '-' + y;
+    const path = available[key];
+    const btn = document.createElement('a');
+    btn.className = 'year-btn' + (path ? ' available' : '');
+    btn.textContent = y + '年';
+    if (path) {
+      btn.href = path;
+    }
+    const sub = document.createElement('span');
+    sub.className = 'coming';
+    sub.textContent = '即將推出';
+    btn.appendChild(sub);
+    inner.appendChild(btn);
   });
-
-  updateProgress();
 }
 
-function selectAnswer(idx, chosen) {
-  const q = questions[idx];
-  const card = document.getElementById(`card-${idx}`);
-  const analysis = document.getElementById(`analysis-${idx}`);
+buildGrid(1, 'inner1');
+buildGrid(2, 'inner2');
 
-  // Disable all buttons for this question
-  q.options.forEach(opt => {
-    const btn = document.getElementById(`btn-${idx}-${opt.label}`);
-    btn.disabled = true;
-  });
-
-  const chosenBtn = document.getElementById(`btn-${idx}-${chosen}`);
-  const isCorrect = chosen === q.answer;
-
-  if (isCorrect) {
-    chosenBtn.classList.add('selected-correct');
-    chosenBtn.innerHTML += `<span class="result-icon">✅</span>`;
-    card.classList.add('correct');
-    correct++;
-  } else {
-    chosenBtn.classList.add('selected-wrong');
-    chosenBtn.innerHTML += `<span class="result-icon">❌</span>`;
-    card.classList.add('wrong');
-    // Reveal correct answer
-    const correctBtn = document.getElementById(`btn-${idx}-${q.answer}`);
-    correctBtn.classList.add('reveal-correct');
-    correctBtn.innerHTML += `<span class="result-icon">✅</span>`;
-  }
-
-  // Always show analysis
-  analysis.classList.add('visible');
-  answered++;
-  updateProgress();
-
-  if (answered === questions.length) {
-    setTimeout(showSummary, 600);
-  }
+function toggle(n) {
+  const hdr = document.getElementById('hdr' + n);
+  const grid = document.getElementById('grid' + n);
+  const isOpen = hdr.classList.contains('open');
+  hdr.classList.toggle('open', !isOpen);
+  grid.classList.toggle('visible', !isOpen);
 }
-
-function toggleSupp(idx) {
-  const supp = document.getElementById(`supp-${idx}`);
-  const btn  = document.getElementById(`morebtn-${idx}`);
-  const isOpen = supp.classList.contains('visible');
-  supp.classList.toggle('visible', !isOpen);
-  btn.classList.toggle('open', !isOpen);
-  btn.querySelector('.arrow').textContent = isOpen ? '▼' : '▲';
-  btn.childNodes[0].textContent = isOpen ? '查看更多補充 ' : '收起補充 ';
-}
-
-function updateProgress() {
-  const pct = (answered / questions.length) * 100;
-  document.getElementById('progressBar').style.width = pct + '%';
-  document.getElementById('progressText').textContent =
-    `已作答 ${answered} / ${questions.length} 題`;
-}
-
-function showSummary() {
-  document.getElementById('summary').style.display = 'block';
-  document.getElementById('scoreDisplay').textContent = `${correct} / ${questions.length}`;
-  const pct = Math.round(correct / questions.length * 100);
-  let msg = '';
-  if (pct === 100) msg = '太厲害了！全部答對！🏆';
-  else if (pct >= 70) msg = '表現不錯！繼續保持！💪';
-  else msg = '多複習解析和補充，下次一定更好！📖';
-  document.getElementById('scoreMsg').textContent = `正確率 ${pct}%　${msg}`;
-  document.getElementById('summary').scrollIntoView({ behavior: 'smooth' });
-}
-
-function resetQuiz() {
-  answered = 0;
-  correct  = 0;
-  document.getElementById('summary').style.display = 'none';
-  buildQuiz();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-buildQuiz();
 </script>
 </body>
 </html>
