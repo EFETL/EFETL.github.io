@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>111 學測第一大題練習（第 1–10 題）</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", sans-serif;
+      background: #f0f4f8;
+      color: #1a202c;
+      padding: 24px 16px 60px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #5b21b6;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #718096;
+      margin-bottom: 32px;
+    }
+
+    .progress-bar-wrap {
+      max-width: 720px;
+      margin: 0 auto 8px;
+      background: #cbd5e0;
+      border-radius: 999px;
+      height: 10px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #8b5cf6, #6d28d9);
+      border-radius: 999px;
+      transition: width 0.4s ease;
+    }
+
+    .progress-text {
+      text-align: center;
+      font-size: 0.82rem;
+      color: #718096;
+      margin-top: 6px;
+      margin-bottom: 28px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      max-width: 720px;
+      margin: 0 auto 28px;
+      padding: 28px 28px 24px;
+      border-left: 5px solid #8b5cf6;
+      transition: border-color 0.3s;
+    }
+
+    .card.correct { border-left-color: #22c55e; }
+    .card.wrong   { border-left-color: #ef4444; }
+
+    .q-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .q-num {
+      background: #8b5cf6;
+      color: #fff;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .q-text {
+      font-size: 1rem;
+      line-height: 1.75;
+      color: #2d3748;
+    }
+
+    .q-text em {
+      font-style: normal;
+      color: #718096;
+      font-size: 0.9rem;
+    }
+
+    .options {
+      list-style: none;
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option-btn {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      cursor: pointer;
+      background: #f7fafc;
+      text-align: left;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: #2d3748;
+      transition: background 0.18s, border-color 0.18s;
+      width: 100%;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      background: #f5f3ff;
+      border-color: #c4b5fd;
+    }
+
+    .option-btn:disabled { cursor: default; }
+
+    .option-btn.selected-correct {
+      background: #dcfce7;
+      border-color: #22c55e;
+      color: #166534;
+      font-weight: 600;
+    }
+
+    .option-btn.selected-wrong {
+      background: #fee2e2;
+      border-color: #ef4444;
+      color: #991b1b;
+    }
+
+    .option-btn.reveal-correct {
+      background: #dcfce7;
+      border-color: #22c55e;
+      color: #166534;
+    }
+
+    .option-tag { font-weight: 700; min-width: 22px; }
+    .result-icon { display: inline-block; margin-left: 8px; font-size: 1.1rem; }
+
+    /* 解析 */
+    .analysis-box {
+      margin-top: 18px;
+      background: #f5f3ff;
+      border: 1px solid #ddd6fe;
+      border-radius: 10px;
+      padding: 16px 18px;
+      display: none;
+    }
+
+    .analysis-box.visible { display: block; }
+
+    .analysis-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #5b21b6;
+      letter-spacing: 0.04em;
+      margin-bottom: 8px;
+    }
+
+    .analysis-text {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: #3b1f7a;
+    }
+
+    /* 查看更多補充 */
+    .more-btn {
+      margin-top: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 18px;
+      background: #ede9fe;
+      color: #5b21b6;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.18s;
+    }
+
+    .more-btn:hover { background: #ddd6fe; }
+
+    .supplement-box {
+      margin-top: 12px;
+      background: #faf5ff;
+      border: 1px solid #ddd6fe;
+      border-radius: 10px;
+      padding: 16px 18px;
+      display: none;
+    }
+
+    .supplement-box.visible { display: block; }
+
+    .supplement-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #7c3aed;
+      letter-spacing: 0.04em;
+      margin-bottom: 10px;
+    }
+
+    .vocab-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .vocab-list li {
+      font-size: 0.88rem;
+      line-height: 1.7;
+      color: #3b2f6e;
+      padding-left: 16px;
+      position: relative;
+    }
+
+    .vocab-list li::before {
+      content: "●";
+      position: absolute;
+      left: 0;
+      color: #7c3aed;
+      font-size: 0.65rem;
+      top: 5px;
+    }
+
+    /* Summary */
+    #summary {
+      display: none;
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: center;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.1);
+      padding: 40px 32px;
+    }
+
+    #summary h2 { font-size: 1.6rem; color: #5b21b6; margin-bottom: 12px; }
+    #summary .score-big { font-size: 3rem; font-weight: 800; color: #8b5cf6; margin-bottom: 8px; }
+    #summary p { color: #4a5568; font-size: 1rem; margin-bottom: 24px; }
+
+    .reset-btn {
+      padding: 12px 32px;
+      background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .reset-btn:hover { opacity: 0.88; }
+
+    @media (max-width: 600px) {
+      .card { padding: 20px 16px 18px; }
+    }
+  </style>
+</head>
+<body>
+
+<h1>111 學測第一大題練習</h1>
+<p class="subtitle">第 1–10 題｜選出最適合填入的詞彙</p>
+
+<div class="progress-bar-wrap">
+  <div class="progress-bar-fill" id="progressBar" style="width:0%"></div>
+</div>
+<p class="progress-text" id="progressText">已作答 0 / 10 題</p>
+
+<div id="quiz-container"></div>
+
+<div id="summary">
+  <h2>🎉 練習完成！</h2>
+  <div class="score-big" id="scoreDisplay"></div>
+  <p id="scoreMsg"></p>
+  <button class="reset-btn" onclick="resetQuiz()">再練習一次</button>
+</div>
+
+<script>
+const questions = [
+  {
+    id: 1,
+    stem: `When Jeffery doesn't feel like cooking, he often orders pizza online and has it ______ to his house.`,
+    stem_zh: `當 Jeffery 不想做飯時，他經常在網路上訂披薩，並讓人將它 ______ 到他家。`,
+    options: [
+      { label: "A", text: "advanced",  hint: "（進階的/前進的）adj/V" },
+      { label: "B", text: "delivered", hint: "（運送）V" },
+      { label: "C", text: "offered",   hint: "（提供）V" },
+      { label: "D", text: "stretched", hint: "（伸展）V" }
+    ],
+    answer: "B",
+    analysis: `題意提到他在網路上點披薩，通常點完披薩的動作就是請人「外送 / 遞送」到家裡，故選 (B) delivered。`,
+    vocab: [
+      `feel like + V-ing 想要...（= want to V）`,
+      `order V/N 點餐/命令/秩序（out of order 故障）`,
+      `have + O + p.p.（過去分詞）讓某物被...（has it delivered 讓披薩被運送）`,
+      `advance V/N 前進/進步；advanced adj 進階的/先進的（advanced technology 先進科技）`,
+      `deliver V 運送/遞送/發表（deliver a speech 發表演說）；delivery N 運送/外送`,
+      `offer V/N 提供（= provide）`,
+      `stretch V/N 伸展/延伸`
+    ]
+  },
+  {
+    id: 2,
+    stem: `Jane is the best ______ I have ever had. I cannot imagine running my office without her help.`,
+    stem_zh: `Jane 是我有過最好的 ______。我無法想像沒有她的幫忙要如何管理我的辦公室。`,
+    options: [
+      { label: "A", text: "assistant",   hint: "（助理）N" },
+      { label: "B", text: "influence",   hint: "（影響）N/V" },
+      { label: "C", text: "contribution",hint: "（貢獻）N" },
+      { label: "D", text: "politician",  hint: "（政治人物）N" }
+    ],
+    answer: "A",
+    analysis: `句子後半段提到「沒有她的幫忙無法管理辦公室」，代表 Jane 是在辦公室輔助他的人，因此是「助理（assistant）」。`,
+    vocab: [
+      `imagine + V-ing 想像做某事（後面必須接動名詞）`,
+      `run V 跑步/經營/管理（run an office / run a business 經營事業）`,
+      `assist V 協助；assistant N 助理；assistance N 協助`,
+      `influence V/N 影響；influential adj 有影響力的`,
+      `contribute V 貢獻/促成；contribution N 貢獻（make a contribution to... 對...做出貢獻）`,
+      `politics N 政治；political adj 政治的；politician N 政治人物`
+    ]
+  },
+  {
+    id: 3,
+    stem: `The temple celebrated Mazu Festival by hosting ten days of lion dances, Taiwanese operas, and traditional hand ______ shows.`,
+    stem_zh: `這座廟宇藉由舉辦為期十天的舞獅、歌仔戲以及傳統布袋（手套）______ 表演來慶祝媽祖生。`,
+    options: [
+      { label: "A", text: "chat",    hint: "（聊天）N/V" },
+      { label: "B", text: "quiz",    hint: "（小測驗）N" },
+      { label: "C", text: "puppet",  hint: "（木偶/布袋戲偶）N" },
+      { label: "D", text: "variety", hint: "（多樣化/綜藝）N" }
+    ],
+    answer: "C",
+    analysis: `結合前文的台灣傳統文化「舞獅（lion dances）」、「歌仔戲（Taiwanese operas）」，"hand puppet shows" 也就是台灣著名的傳統藝術「布袋戲」。`,
+    vocab: [
+      `celebrate V 慶祝；celebration N 慶祝活動`,
+      `host V 主辦 N 主持人/主人`,
+      `opera N 歌劇（Taiwanese opera 歌仔戲）`,
+      `chat V/N 聊天（chat with sb 與某人聊天）`,
+      `quiz N 小測驗（pop quiz 突擊測驗）`,
+      `puppet N 木偶/傀儡；hand puppet show 布袋戲`,
+      `vary V 變化；various adj 各式各樣的；variety N 多樣化（variety show 綜藝節目）`
+    ]
+  },
+  {
+    id: 4,
+    stem: `The new vaccine was banned by the Food and Drug Administration due to its ______ fatal side effects.`,
+    stem_zh: `這款新疫苗被食品藥物管理局禁用，因為它有 ______ 致命的副作用。`,
+    options: [
+      { label: "A", text: "potentially",   hint: "（潛在地）adv" },
+      { label: "B", text: "delicately",    hint: "（精緻地/微妙地）adv" },
+      { label: "C", text: "ambiguously",   hint: "（含糊不清地）adv" },
+      { label: "D", text: "optionally",    hint: "（可選擇地）adv" }
+    ],
+    answer: "A",
+    analysis: `疫苗被禁用是因為副作用可能會致死，這是一種潛在的危險，故選 (A) potentially（潛在地 / 有可能地）。`,
+    vocab: [
+      `vaccine N 疫苗`,
+      `ban V/N 禁止（be banned by... 被...禁止）`,
+      `due to + N 由於...（= because of = owing to）`,
+      `fatal adj 致命的（= deadly / lethal）`,
+      `side effect N 副作用`,
+      `potential adj 潛在的 N 潛力；potentially adv 潛在地`,
+      `delicate adj 精緻的/脆弱的/微妙的；delicately adv 精緻地/小心地`,
+      `ambiguous adj 模稜兩可的/含糊的；ambiguity N 模糊不清`,
+      `option N 選擇；optional adj 可選擇的/非強制的（反義詞：compulsory 必修的/強制的）`
+    ]
+  },
+  {
+    id: 5,
+    stem: `______ the photos with dates and keywords help you sort them easily in your file.`,
+    stem_zh: `用日期和關鍵字 ______ 照片，有助於你輕鬆地在檔案中對它們進行分類。`,
+    options: [
+      { label: "A", text: "Tagging",  hint: "（標記）V-ing" },
+      { label: "B", text: "Flocking", hint: "（聚集）V-ing" },
+      { label: "C", text: "Rolling",  hint: "（滾動）V-ing" },
+      { label: "D", text: "Snapping", hint: "（拍快照/折斷）V-ing" }
+    ],
+    answer: "A",
+    analysis: `整理照片時加上日期和關鍵字，這個動作稱為「標記（Tagging）」，方便之後分類尋找。`,
+    vocab: [
+      `sort V 分類 N 種類（sort them easily 輕鬆分類）`,
+      `tag V 標記 N 標籤（tag a friend in a post 在貼文中標記朋友）`,
+      `flock V 聚集 N 羊群/鳥群（Birds of a feather flock together 物以類聚）`,
+      `roll V 滾動/捲`,
+      `snap V 突然折斷/拍快照（snap a photo 拍快照）`
+    ]
+  },
+  {
+    id: 6,
+    stem: `An ______ person is usually pleasant and easy to get along with, but don't expect that he or she will always say "yes" to everything.`,
+    stem_zh: `一個 ______ 的人通常很令人愉快且容易相處，但別指望他或她總是對每一件事都說「好」。`,
+    options: [
+      { label: "A", text: "enormous",  hint: "（巨大的）adj" },
+      { label: "B", text: "intimate",  hint: "（親密的）adj" },
+      { label: "C", text: "agreeable", hint: "（隨和的/令人愉快的）adj" },
+      { label: "D", text: "ultimate",  hint: "（最終的）adj" }
+    ],
+    answer: "C",
+    analysis: `前面提到這個人「令人愉快且容易相處（pleasant and easy to get along with）」，這正是「隨和的（agreeable）」的人的特質。`,
+    vocab: [
+      `pleasant adj 令人愉快的（反義詞：unpleasant 令人不快的）`,
+      `get along with 和...相處融洽`,
+      `expect V 預期/期待；expectation N 期望（live up to one's expectations 符合某人的期望）`,
+      `enormous adj 巨大的（= huge / massive）`,
+      `intimate adj 親密的 N 密友；intimacy N 親密`,
+      `agree V 同意；agreeable adj 隨和的/令人愉快的；agreement N 同意/協定`,
+      `ultimate adj 最終的/極限的；ultimately adv 最終地（= finally）`
+    ]
+  },
+  {
+    id: 7,
+    stem: `Hidden deep in a small alley among various tiny shops, the entrance of the Michelin star restaurant is barely ______ to passersby.`,
+    stem_zh: `隱藏在各種小店之間的一條小巷深處，這家米其林星級餐廳的入口對路人來說幾乎是 ______。`,
+    options: [
+      { label: "A", text: "identical",   hint: "（完全相同的）adj" },
+      { label: "B", text: "visible",     hint: "（可見的）adj" },
+      { label: "C", text: "available",   hint: "（可獲得的/有空的）adj" },
+      { label: "D", text: "remarkable",  hint: "（非凡的/顯著的）adj" }
+    ],
+    answer: "B",
+    analysis: `句子前半段強調餐廳隱藏在巷弄深處（Hidden deep in...），因此對路人來說，入口幾乎是「看不見的」。barely 有「幾乎不」的意思，搭配 visible（可見的）即為「幾乎不可見」。`,
+    vocab: [
+      `Hidden deep in... 分詞構句（被動式），省略了 Because it is hidden...`,
+      `alley N 小巷/弄（blind alley 死胡同）`,
+      `various adj 各式各樣的`,
+      `entrance N 入口（反義詞：exit 出口）`,
+      `barely adv 幾乎不（= hardly / scarcely）`,
+      `passerby N 路人（複數為 passersby）`,
+      `identify V 辨識；identical adj 完全相同的`,
+      `vision N 視力/願景；visible adj 可見的（反義詞：invisible 不可見的）`,
+      `avail V 有用；available adj 可獲得的/有空的`,
+      `remark V/N 評論；remarkable adj 非凡的/顯著的（= extraordinary）`
+    ]
+  },
+  {
+    id: 8,
+    stem: `The original budget for my round-island trip was NT$5,000, but the ______ cost is likely to be 50 percent higher.`,
+    stem_zh: `我環島旅行的最初預算是 5,000 新台幣，但 ______ 的成本可能會高出 50%。`,
+    options: [
+      { label: "A", text: "moderate",  hint: "（適度的/溫和的）adj" },
+      { label: "B", text: "absolute",  hint: "（絕對的）adj" },
+      { label: "C", text: "promising", hint: "（有前途的）adj" },
+      { label: "D", text: "eventual",  hint: "（最終的）adj" }
+    ],
+    answer: "D",
+    analysis: `句子用了 "but" 形成對比：「最初的預算（original budget）」對應「最終的成本（eventual cost）」。一開始抓 5,000 元，但最後花費可能會更高。`,
+    vocab: [
+      `original adj 最初的/原創的；origin N 起源/來源`,
+      `budget N 預算（on a tight budget 預算吃緊）`,
+      `round-island adj 環島的`,
+      `be likely to V 有可能...`,
+      `moderate adj 適度的/溫和的（moderate exercise 適度運動）`,
+      `absolute adj 絕對的；absolutely adv 絕對地/完全地`,
+      `promise V/N 承諾；promising adj 有希望的/有前途的（a promising young man 有前途的年輕人）`,
+      `event N 事件；eventual adj 最終的；eventually adv 最終地（= finally / ultimately）`
+    ]
+  },
+  {
+    id: 9,
+    stem: `After watching a TV program on natural history, Adam decided to go on a ______ for dinosaur fossils in South Dakota.`,
+    stem_zh: `看完關於自然史的電視節目後，Adam 決定前往南達科他州展開尋找恐龍化石的 ______。`,
+    options: [
+      { label: "A", text: "trial",  hint: "（審判/試驗）N" },
+      { label: "B", text: "route",  hint: "（路線）N" },
+      { label: "C", text: "strike", hint: "（罷工/打擊）N/V" },
+      { label: "D", text: "quest",  hint: "（尋求/探索）N" }
+    ],
+    answer: "D",
+    analysis: `尋找恐龍化石是一種帶有探險性質的尋求。英文中 "go on a quest for..." 是一個固定說法，意思是「展開尋找...的探索旅程」。`,
+    vocab: [
+      `decide to V 決定做...；decision N 決定（make a decision 做出決定）`,
+      `dinosaur N 恐龍`,
+      `fossil N 化石`,
+      `try V 嘗試；trial N 審判/試驗（on trial 受審；trial and error 嘗試錯誤法）`,
+      `route N 路線`,
+      `strike V/N 罷工/打擊（go on strike 罷工）`,
+      `quest N 尋求/探索（a quest for truth 追求真理）`
+    ]
+  },
+  {
+    id: 10,
+    stem: `With pink cherry blossoms blooming everywhere, the valley ______ like a young bride under the bright spring sunshine.`,
+    stem_zh: `粉紅色的櫻花到處綻放，山谷在明媚的春日陽光下，就像一位年輕的新娘一樣 ______。`,
+    options: [
+      { label: "A", text: "bounces",  hint: "（彈跳）V" },
+      { label: "B", text: "blushes",  hint: "（臉紅）V" },
+      { label: "C", text: "polishes", hint: "（擦亮）V" },
+      { label: "D", text: "transfers",hint: "（轉移）V" }
+    ],
+    answer: "B",
+    analysis: `句子運用了擬人法的修辭。滿山遍野盛開的「粉紅色」櫻花，讓山谷看起來就像是一位「泛起紅暈、臉紅（blushes）」的年輕新娘。`,
+    vocab: [
+      `With + O + V-ing/p.p./adj/介系詞片語 附帶狀況的介系詞片語（With pink cherry blossoms blooming 伴隨著粉紅櫻花盛開...）`,
+      `cherry blossom N 櫻花`,
+      `bloom V/N 盛開/開花（in full bloom 盛開中）`,
+      `valley N 山谷`,
+      `bride N 新娘；groom N 新郎`,
+      `bounce V 彈跳（bounce back 觸底反彈/恢復）`,
+      `blush V 臉紅（泛指因為害羞或激動而臉頰泛紅）`,
+      `polish V 擦亮/修改潤飾（polish one's skills 磨練技巧）`,
+      `transfer V/N 轉移/轉車/轉學`
+    ]
+  }
+];
+
+let answered = 0;
+let correct  = 0;
+const total  = questions.length;
+
+function buildQuiz() {
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = '';
+
+  questions.forEach((q, idx) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.id = `card-${idx}`;
+
+    const optionsHTML = q.options.map(opt => `
+      <li>
+        <button class="option-btn" id="btn-${idx}-${opt.label}"
+          onclick="selectAnswer(${idx}, '${opt.label}')">
+          <span class="option-tag">(${opt.label})</span>
+          <span><strong>${opt.text}</strong>　${opt.hint}</span>
+        </button>
+      </li>
+    `).join('');
+
+    card.innerHTML = `
+      <div class="q-header">
+        <div class="q-num">${q.id}</div>
+        <div class="q-text">
+          ${q.stem}<br>
+          <em>${q.stem_zh}</em>
+        </div>
+      </div>
+      <ul class="options">${optionsHTML}</ul>
+      <div class="analysis-box" id="analysis-${idx}">
+        <div class="analysis-label">📖 解析</div>
+        <div class="analysis-text">${q.analysis}</div>
+        <button class="more-btn" id="morebtn-${idx}" onclick="toggleSupp(${idx})">
+          查看更多補充 <span class="arrow">▼</span>
+        </button>
+        <div class="supplement-box" id="supp-${idx}">
+          <div class="supplement-label">📚 單字補充</div>
+          <ul class="vocab-list">
+            ${q.vocab.map(v => `<li>${v}</li>`).join('')}
+          </ul>
+        </div>
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+
+  updateProgress();
+}
+
+function selectAnswer(idx, chosen) {
+  const q = questions[idx];
+  const card = document.getElementById(`card-${idx}`);
+  const analysis = document.getElementById(`analysis-${idx}`);
+
+  q.options.forEach(opt => {
+    document.getElementById(`btn-${idx}-${opt.label}`).disabled = true;
+  });
+
+  const chosenBtn = document.getElementById(`btn-${idx}-${chosen}`);
+  const isCorrect = chosen === q.answer;
+
+  if (isCorrect) {
+    chosenBtn.classList.add('selected-correct');
+    chosenBtn.innerHTML += `<span class="result-icon">✅</span>`;
+    card.classList.add('correct');
+    correct++;
+  } else {
+    chosenBtn.classList.add('selected-wrong');
+    chosenBtn.innerHTML += `<span class="result-icon">❌</span>`;
+    card.classList.add('wrong');
+    const correctBtn = document.getElementById(`btn-${idx}-${q.answer}`);
+    correctBtn.classList.add('reveal-correct');
+    correctBtn.innerHTML += `<span class="result-icon">✅</span>`;
+  }
+
+  analysis.classList.add('visible');
+  answered++;
+  updateProgress();
+
+  if (answered === total) setTimeout(showSummary, 600);
+}
+
+function toggleSupp(idx) {
+  const supp = document.getElementById(`supp-${idx}`);
+  const btn  = document.getElementById(`morebtn-${idx}`);
+  const isOpen = supp.classList.contains('visible');
+  supp.classList.toggle('visible', !isOpen);
+  btn.innerHTML = isOpen
+    ? `查看更多補充 <span class="arrow">▼</span>`
+    : `收起補充 <span class="arrow">▲</span>`;
+  btn.setAttribute('onclick', `toggleSupp(${idx})`);
+}
+
+function updateProgress() {
+  document.getElementById('progressBar').style.width = (answered / total * 100) + '%';
+  document.getElementById('progressText').textContent = `已作答 ${answered} / ${total} 題`;
+}
+
+function showSummary() {
+  document.getElementById('summary').style.display = 'block';
+  document.getElementById('scoreDisplay').textContent = `${correct} / ${total}`;
+  const pct = Math.round(correct / total * 100);
+  document.getElementById('scoreMsg').textContent =
+    pct === 100 ? `正確率 ${pct}%　太厲害了！全部答對！🏆`
+    : pct >= 70  ? `正確率 ${pct}%　表現不錯！繼續保持！💪`
+    :              `正確率 ${pct}%　多複習解析和補充，下次一定更好！📖`;
+  document.getElementById('summary').scrollIntoView({ behavior: 'smooth' });
+}
+
+function resetQuiz() {
+  answered = 0;
+  correct  = 0;
+  document.getElementById('summary').style.display = 'none';
+  buildQuiz();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+buildQuiz();
+</script>
+</body>
+</html>
