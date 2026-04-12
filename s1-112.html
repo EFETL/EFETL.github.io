@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>112 學測第一大題練習（第 1–10 題）</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", sans-serif;
+      background: #f0f4f8;
+      color: #1a202c;
+      padding: 24px 16px 60px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #92400e;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #718096;
+      margin-bottom: 32px;
+    }
+
+    .progress-bar-wrap {
+      max-width: 720px;
+      margin: 0 auto 8px;
+      background: #cbd5e0;
+      border-radius: 999px;
+      height: 10px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #f59e0b, #d97706);
+      border-radius: 999px;
+      transition: width 0.4s ease;
+    }
+
+    .progress-text {
+      text-align: center;
+      font-size: 0.82rem;
+      color: #718096;
+      margin-top: 6px;
+      margin-bottom: 28px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      max-width: 720px;
+      margin: 0 auto 28px;
+      padding: 28px 28px 24px;
+      border-left: 5px solid #f59e0b;
+      transition: border-color 0.3s;
+    }
+
+    .card.correct { border-left-color: #22c55e; }
+    .card.wrong   { border-left-color: #ef4444; }
+
+    .q-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .q-num {
+      background: #f59e0b;
+      color: #fff;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .q-text {
+      font-size: 1rem;
+      line-height: 1.75;
+      color: #2d3748;
+    }
+
+    .q-text em {
+      font-style: normal;
+      color: #718096;
+      font-size: 0.9rem;
+    }
+
+    .options {
+      list-style: none;
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option-btn {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      cursor: pointer;
+      background: #f7fafc;
+      text-align: left;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: #2d3748;
+      transition: background 0.18s, border-color 0.18s;
+      width: 100%;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      background: #fffbeb;
+      border-color: #fcd34d;
+    }
+
+    .option-btn:disabled { cursor: default; }
+
+    .option-btn.selected-correct {
+      background: #dcfce7;
+      border-color: #22c55e;
+      color: #166534;
+      font-weight: 600;
+    }
+
+    .option-btn.selected-wrong {
+      background: #fee2e2;
+      border-color: #ef4444;
+      color: #991b1b;
+    }
+
+    .option-btn.reveal-correct {
+      background: #dcfce7;
+      border-color: #22c55e;
+      color: #166534;
+    }
+
+    .option-tag { font-weight: 700; min-width: 22px; }
+    .result-icon { display: inline-block; margin-left: 8px; font-size: 1.1rem; }
+
+    /* 解析 */
+    .analysis-box {
+      margin-top: 18px;
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 10px;
+      padding: 16px 18px;
+      display: none;
+    }
+
+    .analysis-box.visible { display: block; }
+
+    .analysis-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #92400e;
+      letter-spacing: 0.04em;
+      margin-bottom: 8px;
+    }
+
+    .analysis-text {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: #78350f;
+    }
+
+    /* 查看更多補充 */
+    .more-btn {
+      margin-top: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 18px;
+      background: #fef3c7;
+      color: #92400e;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.18s;
+    }
+
+    .more-btn:hover { background: #fde68a; }
+
+    .supplement-box {
+      margin-top: 12px;
+      background: #faf5ff;
+      border: 1px solid #ddd6fe;
+      border-radius: 10px;
+      padding: 16px 18px;
+      display: none;
+    }
+
+    .supplement-box.visible { display: block; }
+
+    .supplement-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #7c3aed;
+      letter-spacing: 0.04em;
+      margin-bottom: 10px;
+    }
+
+    .vocab-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .vocab-list li {
+      font-size: 0.88rem;
+      line-height: 1.7;
+      color: #3b2f6e;
+      padding-left: 16px;
+      position: relative;
+    }
+
+    .vocab-list li::before {
+      content: "●";
+      position: absolute;
+      left: 0;
+      color: #7c3aed;
+      font-size: 0.65rem;
+      top: 5px;
+    }
+
+    /* Summary */
+    #summary {
+      display: none;
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: center;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.1);
+      padding: 40px 32px;
+    }
+
+    #summary h2 { font-size: 1.6rem; color: #92400e; margin-bottom: 12px; }
+    #summary .score-big { font-size: 3rem; font-weight: 800; color: #f59e0b; margin-bottom: 8px; }
+    #summary p { color: #4a5568; font-size: 1rem; margin-bottom: 24px; }
+
+    .reset-btn {
+      padding: 12px 32px;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .reset-btn:hover { opacity: 0.88; }
+
+    @media (max-width: 600px) {
+      .card { padding: 20px 16px 18px; }
+    }
+  </style>
+</head>
+<body>
+
+<h1>112 學測第一大題練習</h1>
+<p class="subtitle">第 1–10 題｜選出最適合填入的詞彙</p>
+
+<div class="progress-bar-wrap">
+  <div class="progress-bar-fill" id="progressBar" style="width:0%"></div>
+</div>
+<p class="progress-text" id="progressText">已作答 0 / 10 題</p>
+
+<div id="quiz-container"></div>
+
+<div id="summary">
+  <h2>🎉 練習完成！</h2>
+  <div class="score-big" id="scoreDisplay"></div>
+  <p id="scoreMsg"></p>
+  <button class="reset-btn" onclick="resetQuiz()">再練習一次</button>
+</div>
+
+<script>
+const questions = [
+  {
+    id: 1,
+    stem: `The bus driver often complains about chewing gum found under passenger seats because it is ______ and very hard to remove.`,
+    stem_zh: `公車司機經常抱怨在乘客座位下發現的口香糖，因為它很 ______ 而且非常難以清除。`,
+    options: [
+      { label: "A", text: "sticky",  hint: "（黏的）adj" },
+      { label: "B", text: "greasy",  hint: "（油膩的）adj" },
+      { label: "C", text: "clumsy",  hint: "（笨拙的）adj" },
+      { label: "D", text: "mighty",  hint: "（強大的）adj" }
+    ],
+    answer: "A",
+    analysis: `題意提到口香糖（chewing gum）且「很難清除（hard to remove）」，這自然是因為口香糖具有「黏性」，故選 (A) sticky。`,
+    vocab: [
+      `complain V 抱怨；complain about + N 抱怨某事；complaint N 抱怨`,
+      `chew V 咀嚼；chewing gum N 口香糖`,
+      `passenger N 乘客（passenger seat 乘客座位）`,
+      `remove V 移除/清除；removal N 移除`,
+      `stick V 黏貼/刺入 N 樹枝；sticky adj 黏的；sticker N 貼紙`,
+      `grease N 油脂；greasy adj 油膩的（greasy food 油膩的食物）`,
+      `clumsy adj 笨拙的（clumsy fingers 笨手笨腳）`,
+      `might N 力量；mighty adj 強大的（Almighty 全能的）`
+    ]
+  },
+  {
+    id: 2,
+    stem: `Jesse is a talented model. He can easily adopt an elegant ______ for a camera shoot.`,
+    stem_zh: `Jesse 是一位有才華的模特兒。他可以為了拍攝輕鬆地擺出優雅的 ______。`,
+    options: [
+      { label: "A", text: "clap",  hint: "（拍手）V/N" },
+      { label: "B", text: "toss",  hint: "（拋/擲）V/N" },
+      { label: "C", text: "pose",  hint: "（姿勢）N/V" },
+      { label: "D", text: "snap",  hint: "（快照/折斷）V/N" }
+    ],
+    answer: "C",
+    analysis: `題幹提到 Jesse 是「模特兒（model）」以及「為了拍攝（for a camera shoot）」，模特兒為了拍照會擺出「姿勢（pose）」，故選 (C)。`,
+    vocab: [
+      `talent N 天賦；talented adj 有天賦的（= gifted）`,
+      `model N 模特兒/模型/模範`,
+      `adopt V 採用/收養（adopt a pose 擺出姿勢）；adoption N 採用/收養（易混淆字：adapt V 適應/改編）`,
+      `elegant adj 優雅的（= graceful）；elegance N 優雅`,
+      `shoot V/N 拍攝/射擊；camera shoot 攝影/拍照`,
+      `clap V/N 拍手（clap one's hands 拍手）`,
+      `toss V/N 拋/擲（toss a coin 擲硬幣）`,
+      `pose N 姿勢 V 擺姿勢（strike/adopt a pose 擺姿勢）`,
+      `snap V 突然折斷/猛咬 N 快照（snap a photo 拍快照）`
+    ]
+  },
+  {
+    id: 3,
+    stem: `In order to draw her family tree, Mary tried to trace her ______ back to their arrival in North America.`,
+    stem_zh: `為了畫出她的族譜，Mary 試圖追溯她的 ______，一直到他們抵達北美的時候。`,
+    options: [
+      { label: "A", text: "siblings",    hint: "（手足）N" },
+      { label: "B", text: "commuters",   hint: "（通勤者）N" },
+      { label: "C", text: "ancestors",   hint: "（祖先）N" },
+      { label: "D", text: "instructors", hint: "（指導者）N" }
+    ],
+    answer: "C",
+    analysis: `題幹提到要畫「族譜（family tree）」並「追溯（trace back）」，通常是要往上追溯家族的「祖先（ancestors）」，因此選 (C)。`,
+    vocab: [
+      `in order to + V 為了...（= so as to + V）`,
+      `family tree N 族譜/家譜`,
+      `trace V 追蹤/追溯 N 痕跡；trace A back to B 將 A 追溯至 B`,
+      `arrive V 抵達；arrival N 抵達（upon one's arrival 在某人抵達時）`,
+      `sibling N 手足（兄弟姊妹的統稱）`,
+      `commute V 通勤；commuter N 通勤者`,
+      `ancestor N 祖先（= forefather）；ancestry N 祖先（總稱）/血統（反義詞：descendant 後代）`,
+      `instruct V 指導/指示；instructor N 指導者/教練；instruction N 指示/說明`
+    ]
+  },
+  {
+    id: 4,
+    stem: `Upon the super typhoon warning, Nancy rushed to the supermarket—only to find the shelves almost ______ and the stock nearly gone.`,
+    stem_zh: `一收到超級颱風警報，Nancy 就衝到超市——結果卻發現貨架幾乎是 ______ 的，存貨也快沒了。`,
+    options: [
+      { label: "A", text: "blank",  hint: "（空白的）adj" },
+      { label: "B", text: "bare",   hint: "（空無一物的/裸露的）adj" },
+      { label: "C", text: "hollow", hint: "（中空的）adj" },
+      { label: "D", text: "queer",  hint: "（奇怪的）adj" }
+    ],
+    answer: "B",
+    analysis: `題意提到颱風來襲，超市「存貨幾乎沒了（stock nearly gone）」，代表貨架是被掃空、空無一物的狀態，英文常用 "bare shelves" 形容空蕩蕩的貨架，故選 (B)。`,
+    vocab: [
+      `upon + N / V-ing 一...就...（= as soon as + S + V）`,
+      `warn V 警告；warning N 警告/警報（typhoon warning 颱風警報）`,
+      `rush V 衝/趕緊；rush to + 地方 衝向某地`,
+      `only to + V 不料卻.../結果卻...（表出乎意料或令人失望的結果）`,
+      `shelf N 貨架/架子（單數結尾為 f，複數去 f 加上 ves：shelves）`,
+      `stock N 存貨/股票 V 囤積（out of stock 缺貨；in stock 有貨）`,
+      `blank adj 空白的（blank paper 白紙 / a blank expression 茫然的表情）`,
+      `bare adj 裸露的/空的/勉強的（bare feet 赤腳；bare shelves 空貨架）；barely adv 幾乎不`,
+      `hollow adj 中空的/虛偽的（a hollow tree 中空的樹）`,
+      `queer adj 奇怪的（= strange / odd）`
+    ]
+  },
+  {
+    id: 5,
+    stem: `Even though Jack said "Sorry!" to me in person, I did not feel any ______ in his apology.`,
+    stem_zh: `儘管 Jack 親自對我說「對不起！」，但我感覺不到他道歉裡有任何 ______。`,
+    options: [
+      { label: "A", text: "liability",  hint: "（責任）N" },
+      { label: "B", text: "generosity", hint: "（慷慨）N" },
+      { label: "C", text: "integrity",  hint: "（正直）N" },
+      { label: "D", text: "sincerity",  hint: "（真誠）N" }
+    ],
+    answer: "D",
+    analysis: `題幹提到對方雖然「說了對不起」，但作者卻沒有感覺到對方道歉時應有的態度。道歉最需要的就是「真誠（sincerity）」，故選 (D)。`,
+    vocab: [
+      `even though 儘管/雖然（= although）`,
+      `in person 親自/本人（= personally）`,
+      `apologize V 道歉；apology N 道歉（make an apology to sb 向某人道歉）`,
+      `liable adj 負有法律責任的；liability N 責任/負債`,
+      `generous adj 慷慨的；generosity N 慷慨`,
+      `integrate V 整合；integrity N 正直/誠實/完整性`,
+      `sincere adj 真誠的；sincerity N 真誠/誠心`
+    ]
+  },
+  {
+    id: 6,
+    stem: `My grandfather has astonishing powers of ______. He can still vividly describe his first day at school as a child.`,
+    stem_zh: `我祖父擁有驚人的 ______ 能力。他仍然能生動地描述他小時候第一天上學的情景。`,
+    options: [
+      { label: "A", text: "resolve",   hint: "（決心/解決）N/V" },
+      { label: "B", text: "fraction",  hint: "（小部分）N" },
+      { label: "C", text: "privilege", hint: "（特權）N" },
+      { label: "D", text: "recall",    hint: "（記憶力/回想）N/V" }
+    ],
+    answer: "D",
+    analysis: `句子後方提到祖父能「生動地描述（vividly describe）」很久以前的事情，代表他的「記憶力、回想能力（powers of recall）」非常驚人，故選 (D)。`,
+    vocab: [
+      `astonish V 使驚訝；astonishing adj 令人驚訝的（= amazing / surprising）`,
+      `power N 力量/能力（powers of recall 記憶力）`,
+      `vivid adj 生動的/鮮明的；vividly adv 生動地`,
+      `describe V 描述；description N 描述`,
+      `resolve V 解決/下決心 N 決心；resolution N 決心/解析度`,
+      `fraction N 小部分/分數（a fraction of... 一小部分...）`,
+      `privilege N 特權/殊榮`,
+      `recall V/N 回想/召回/記憶力（= memory / remember）`
+    ]
+  },
+  {
+    id: 7,
+    stem: `Recent research has found lots of evidence to ______ the drug company's claims about its "miracle" tablets for curing cancer.`,
+    stem_zh: `最近的研究發現了許多證據來 ______ 這家藥廠關於其能治癒癌症的「奇蹟」藥丸的說法。`,
+    options: [
+      { label: "A", text: "provoke", hint: "（激怒/引起）V" },
+      { label: "B", text: "counter", hint: "（反擊/反駁）V" },
+      { label: "C", text: "expose",  hint: "（暴露/揭露）V" },
+      { label: "D", text: "convert", hint: "（轉換）V" }
+    ],
+    answer: "B",
+    analysis: `藥廠宣稱有「治癌奇蹟藥（miracle tablets for curing cancer）」，這種誇大說詞通常會被科學研究的證據給「反駁（counter）」，故選 (B)。`,
+    vocab: [
+      `recent adj 最近的；recently adv 最近地`,
+      `research N/V 研究（不可數名詞）`,
+      `evidence N 證據（不可數名詞）`,
+      `drug N 藥物/毒品（drug company 藥廠）`,
+      `claim V/N 宣稱/要求`,
+      `miracle N 奇蹟；miraculous adj 奇蹟般的`,
+      `tablet N 藥丸/平板電腦（= pill）`,
+      `cure V/N 治癒（cure sb of a disease 治癒某人的疾病）`,
+      `provoke V 激怒/引起；provocative adj 挑釁的`,
+      `counter V 反駁/反擊 adj 相反的（counter the claims 反駁主張）；counter-attack 反擊`,
+      `expose V 暴露/揭露（expose A to B 使 A 暴露於 B）；exposure N 暴露`,
+      `convert V 轉換/改變信仰（convert A into B 把 A 轉換成 B）；conversion N 轉換`
+    ]
+  },
+  {
+    id: 8,
+    stem: `Corrupt officials and misguided policies have ______ the country's economy and burdened its people with enormous foreign debts.`,
+    stem_zh: `貪腐的官員和被誤導的政策已經 ______ 了該國的經濟，並使其人民背負了龐大的外債。`,
+    options: [
+      { label: "A", text: "crippled",     hint: "（削弱/使殘廢）V" },
+      { label: "B", text: "accelerated",  hint: "（加速）V" },
+      { label: "C", text: "rendered",     hint: "（使成為/提供）V" },
+      { label: "D", text: "ventured",     hint: "（冒險）V" }
+    ],
+    answer: "A",
+    analysis: `句子的主詞是「貪腐官員和錯誤政策」，對國家經濟造成的影響必然是負面的。後文又提到「背負龐大外債」，代表經濟被嚴重「削弱 / 破壞（crippled）」，故選 (A)。`,
+    vocab: [
+      `corrupt adj 貪腐的 V 使腐敗；corruption N 貪汙`,
+      `official N 官員 adj 官方的`,
+      `misguided adj 被誤導的/錯誤的；guide V 引導`,
+      `policy N 政策`,
+      `economy N 經濟；economic adj 經濟的`,
+      `burden N 負擔 V 使負擔（burden sb with sth 使某人負擔...）`,
+      `enormous adj 龐大的（= huge / massive）`,
+      `debt N 債務（in debt 負債）`,
+      `cripple V 使殘廢/嚴重削弱（cripple the economy 削弱經濟）；crippled adj 殘廢的`,
+      `accelerate V 加速（反義詞：decelerate 減速）；acceleration N 加速`,
+      `render V 使成為/提供（render aid 提供援助 / render sb speechless 使人啞口無言）`,
+      `venture N/V 冒險（joint venture 合資企業）`
+    ]
+  },
+  {
+    id: 9,
+    stem: `As a record number of fans showed up for the baseball final, the highways around the stadium were ______ with traffic all day.`,
+    stem_zh: `由於創紀錄數量的球迷出現觀看棒球決賽，體育場周圍的高速公路整天都 ______ 了交通。`,
+    options: [
+      { label: "A", text: "choked",    hint: "（阻塞/窒息）V" },
+      { label: "B", text: "disturbed", hint: "（打擾）V" },
+      { label: "C", text: "enclosed",  hint: "（圍住/隨信附上）V" },
+      { label: "D", text: "injected",  hint: "（注射）V" }
+    ],
+    answer: "A",
+    analysis: `前半句提到有「破紀錄數量的球迷」，所以高速公路上的交通一定是非常擁擠、塞車。"choked with traffic"（被交通阻塞 / 塞滿）為常見的生動搭配用法，故選 (A)。`,
+    vocab: [
+      `a record number of... 創紀錄數量的...`,
+      `show up 出現（= turn up / appear）`,
+      `final N 決賽 adj 最終的`,
+      `highway N 高速公路`,
+      `stadium N 體育場`,
+      `choke V 窒息/阻塞（be choked with 被...塞滿/阻塞）`,
+      `disturb V 打擾；disturbance N 打擾/騷亂`,
+      `enclose V 圍住/（信件中）附上；enclosure N 附件/圍欄`,
+      `inject V 注射/注入；injection N 注射`
+    ]
+  },
+  {
+    id: 10,
+    stem: `Studies show that the ______ unbiased media are in fact often deeply influenced by political ideology.`,
+    stem_zh: `研究顯示，那些 ______ 公正的媒體實際上往往深受政治意識形態的影響。`,
+    options: [
+      { label: "A", text: "undoubtedly",    hint: "（毫無疑問地）adv" },
+      { label: "B", text: "roughly",        hint: "（大約/粗略地）adv" },
+      { label: "C", text: "understandably", hint: "（可理解地）adv" },
+      { label: "D", text: "supposedly",     hint: "（據稱/理應）adv" }
+    ],
+    answer: "D",
+    analysis: `句子後半段有 "in fact（事實上）"作為語氣轉折，表示前面的狀態與實際情況不符。那些「據稱、理應（supposedly）」公正的媒體，其實是有政治立場的，故選 (D)。`,
+    vocab: [
+      `study N 研究 V 讀書`,
+      `bias N 偏見；biased adj 有偏見的；unbiased adj 公正的/無偏見的（= impartial / objective）`,
+      `media N 媒體（medium 的複數）`,
+      `in fact 事實上（= actually / as a matter of fact）`,
+      `influence V/N 影響`,
+      `political adj 政治的；politics N 政治`,
+      `ideology N 意識形態`,
+      `doubt N/V 懷疑；undoubtedly adv 毫無疑問地（= certainly）`,
+      `rough adj 粗糙的/大略的；roughly adv 大約/粗略地（= approximately）`,
+      `understand V 理解；understandably adv 可以理解地`,
+      `suppose V 假設/認為；supposedly adv 據稱/照理說`
+    ]
+  }
+];
+
+let answered = 0;
+let correct  = 0;
+const total  = questions.length;
+
+function buildQuiz() {
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = '';
+
+  questions.forEach((q, idx) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.id = `card-${idx}`;
+
+    const optionsHTML = q.options.map(opt => `
+      <li>
+        <button class="option-btn" id="btn-${idx}-${opt.label}"
+          onclick="selectAnswer(${idx}, '${opt.label}')">
+          <span class="option-tag">(${opt.label})</span>
+          <span><strong>${opt.text}</strong>　${opt.hint}</span>
+        </button>
+      </li>
+    `).join('');
+
+    card.innerHTML = `
+      <div class="q-header">
+        <div class="q-num">${q.id}</div>
+        <div class="q-text">
+          ${q.stem}<br>
+          <em>${q.stem_zh}</em>
+        </div>
+      </div>
+      <ul class="options">${optionsHTML}</ul>
+      <div class="analysis-box" id="analysis-${idx}">
+        <div class="analysis-label">📖 解析</div>
+        <div class="analysis-text">${q.analysis}</div>
+        <button class="more-btn" id="morebtn-${idx}" onclick="toggleSupp(${idx})">
+          查看更多補充 <span class="arrow">▼</span>
+        </button>
+        <div class="supplement-box" id="supp-${idx}">
+          <div class="supplement-label">📚 單字補充</div>
+          <ul class="vocab-list">
+            ${q.vocab.map(v => `<li>${v}</li>`).join('')}
+          </ul>
+        </div>
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+
+  updateProgress();
+}
+
+function selectAnswer(idx, chosen) {
+  const q = questions[idx];
+  const card = document.getElementById(`card-${idx}`);
+  const analysis = document.getElementById(`analysis-${idx}`);
+
+  q.options.forEach(opt => {
+    document.getElementById(`btn-${idx}-${opt.label}`).disabled = true;
+  });
+
+  const chosenBtn = document.getElementById(`btn-${idx}-${chosen}`);
+  const isCorrect = chosen === q.answer;
+
+  if (isCorrect) {
+    chosenBtn.classList.add('selected-correct');
+    chosenBtn.innerHTML += `<span class="result-icon">✅</span>`;
+    card.classList.add('correct');
+    correct++;
+  } else {
+    chosenBtn.classList.add('selected-wrong');
+    chosenBtn.innerHTML += `<span class="result-icon">❌</span>`;
+    card.classList.add('wrong');
+    const correctBtn = document.getElementById(`btn-${idx}-${q.answer}`);
+    correctBtn.classList.add('reveal-correct');
+    correctBtn.innerHTML += `<span class="result-icon">✅</span>`;
+  }
+
+  analysis.classList.add('visible');
+  answered++;
+  updateProgress();
+
+  if (answered === total) setTimeout(showSummary, 600);
+}
+
+function toggleSupp(idx) {
+  const supp = document.getElementById(`supp-${idx}`);
+  const btn  = document.getElementById(`morebtn-${idx}`);
+  const isOpen = supp.classList.contains('visible');
+  supp.classList.toggle('visible', !isOpen);
+  btn.innerHTML = isOpen
+    ? `查看更多補充 <span class="arrow">▼</span>`
+    : `收起補充 <span class="arrow">▲</span>`;
+  btn.setAttribute('onclick', `toggleSupp(${idx})`);
+}
+
+function updateProgress() {
+  document.getElementById('progressBar').style.width = (answered / total * 100) + '%';
+  document.getElementById('progressText').textContent = `已作答 ${answered} / ${total} 題`;
+}
+
+function showSummary() {
+  document.getElementById('summary').style.display = 'block';
+  document.getElementById('scoreDisplay').textContent = `${correct} / ${total}`;
+  const pct = Math.round(correct / total * 100);
+  document.getElementById('scoreMsg').textContent =
+    pct === 100 ? `正確率 ${pct}%　太厲害了！全部答對！🏆`
+    : pct >= 70  ? `正確率 ${pct}%　表現不錯！繼續保持！💪`
+    :              `正確率 ${pct}%　多複習解析和補充，下次一定更好！📖`;
+  document.getElementById('summary').scrollIntoView({ behavior: 'smooth' });
+}
+
+function resetQuiz() {
+  answered = 0;
+  correct  = 0;
+  document.getElementById('summary').style.display = 'none';
+  buildQuiz();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+buildQuiz();
+</script>
+</body>
+</html>
