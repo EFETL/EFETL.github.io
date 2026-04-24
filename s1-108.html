@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>108 學測第一大題練習（第 1–15 題）</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", sans-serif;
+      background: #f0f4f8;
+      color: #1a202c;
+      padding: 24px 16px 60px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #4338ca;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #718096;
+      margin-bottom: 32px;
+    }
+
+    .progress-bar-wrap {
+      max-width: 720px;
+      margin: 0 auto 8px;
+      background: #cbd5e0;
+      border-radius: 999px;
+      height: 10px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #6366f1, #4338ca);
+      border-radius: 999px;
+      transition: width 0.4s ease;
+    }
+
+    .progress-text {
+      text-align: center;
+      font-size: 0.82rem;
+      color: #718096;
+      margin-top: 6px;
+      margin-bottom: 28px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      max-width: 720px;
+      margin: 0 auto 28px;
+      padding: 28px 28px 24px;
+      border-left: 5px solid #6366f1;
+      transition: border-color 0.3s;
+    }
+
+    .card.correct { border-left-color: #22c55e; }
+    .card.wrong   { border-left-color: #ef4444; }
+
+    .q-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .q-num {
+      background: #6366f1;
+      color: #fff;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .q-text {
+      font-size: 1rem;
+      line-height: 1.75;
+      color: #2d3748;
+    }
+
+    .q-text em {
+      font-style: normal;
+      color: #718096;
+      font-size: 0.9rem;
+    }
+
+    .options {
+      list-style: none;
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option-btn {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      cursor: pointer;
+      background: #f7fafc;
+      text-align: left;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: #2d3748;
+      transition: background 0.18s, border-color 0.18s;
+      width: 100%;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      background: #eef2ff;
+      border-color: #a5b4fc;
+    }
+
+    .option-btn:disabled { cursor: default; }
+
+    .option-btn.selected-correct {
+      background: #dcfce7;
+      border-color: #22c55e;
+      color: #166534;
+      font-weight: 600;
+    }
+
+    .option-btn.selected-wrong {
+      background: #fee2e2;
+      border-color: #ef4444;
+      color: #991b1b;
+    }
+
+    .option-btn.reveal-correct {
+      background: #dcfce7;
+      border-color: #22c55e;
+      color: #166534;
+    }
+
+    .option-tag { font-weight: 700; min-width: 22px; }
+    .result-icon { display: inline-block; margin-left: 8px; font-size: 1.1rem; }
+
+    .analysis-box {
+      margin-top: 18px;
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      border-radius: 10px;
+      padding: 16px 18px;
+      display: none;
+    }
+
+    .analysis-box.visible { display: block; }
+
+    .analysis-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #4338ca;
+      letter-spacing: 0.04em;
+      margin-bottom: 8px;
+    }
+
+    .analysis-text {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: #312e81;
+    }
+
+    .more-btn {
+      margin-top: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 18px;
+      background: #e0e7ff;
+      color: #4338ca;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.18s;
+    }
+
+    .more-btn:hover { background: #c7d2fe; }
+
+    .supplement-box {
+      margin-top: 12px;
+      background: #faf5ff;
+      border: 1px solid #ddd6fe;
+      border-radius: 10px;
+      padding: 16px 18px;
+      display: none;
+    }
+
+    .supplement-box.visible { display: block; }
+
+    .supplement-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #7c3aed;
+      letter-spacing: 0.04em;
+      margin-bottom: 10px;
+    }
+
+    .vocab-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .vocab-list li {
+      font-size: 0.88rem;
+      line-height: 1.7;
+      color: #3b2f6e;
+      padding-left: 16px;
+      position: relative;
+    }
+
+    .vocab-list li::before {
+      content: "●";
+      position: absolute;
+      left: 0;
+      color: #7c3aed;
+      font-size: 0.65rem;
+      top: 5px;
+    }
+
+    #summary {
+      display: none;
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: center;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.1);
+      padding: 40px 32px;
+    }
+
+    #summary h2 { font-size: 1.6rem; color: #4338ca; margin-bottom: 12px; }
+    #summary .score-big { font-size: 3rem; font-weight: 800; color: #6366f1; margin-bottom: 8px; }
+    #summary p { color: #4a5568; font-size: 1rem; margin-bottom: 24px; }
+
+    .reset-btn {
+      padding: 12px 32px;
+      background: linear-gradient(135deg, #6366f1, #4338ca);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .reset-btn:hover { opacity: 0.88; }
+
+    @media (max-width: 600px) {
+      .card { padding: 20px 16px 18px; }
+    }
+  </style>
+</head>
+<body>
+<a href="/" style="position:fixed;top:14px;left:14px;background:#2b4c8c;color:#fff;padding:7px 16px;border-radius:8px;text-decoration:none;font-size:0.9rem;font-weight:600;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,0.18);"><body>#8592; <body>#22238;<body>#39318;<body>#39052;</a>
+
+<h1>108 學測第一大題練習</h1>
+<p class="subtitle">第 1–15 題｜選出最適合填入的詞彙</p>
+
+<div class="progress-bar-wrap">
+  <div class="progress-bar-fill" id="progressBar" style="width:0%"></div>
+</div>
+<p class="progress-text" id="progressText">已作答 0 / 15 題</p>
+
+<div id="quiz-container"></div>
+
+<div id="summary">
+  <h2>🎉 練習完成！</h2>
+  <div class="score-big" id="scoreDisplay"></div>
+  <p id="scoreMsg"></p>
+  <button class="reset-btn" onclick="resetQuiz()">再練習一次</button>
+</div>
+
+<script>
+const questions = [
+  {
+    id: 1,
+    stem: `Bobby cared a lot about his _____ at home and asked his parents not to go through his things without his permission.`,
+    stem_zh: `巴比非常重視他在家的_____，要求父母未經他許可不得翻動他的東西。`,
+    options: [
+      { label: "A", text: "discipline", hint: "（紀律；管教）" },
+      { label: "B", text: "facility", hint: "（設施；才能）" },
+      { label: "C", text: "privacy", hint: "（隱私；私密）✓" },
+      { label: "D", text: "representation", hint: "（代表；描述）" }
+    ],
+    answer: "C",
+    analysis: `【句型結構】主詞（Bobby）+ 動詞（cared a lot about）+ 受詞（his _____ at home）。後接 asked his parents not to go through his things without permission 作進一步說明。\n\n【關鍵線索】not to go through his things without his permission（未經許可不得翻動他的東西）→ 強調個人「隱私」不受侵犯，選 privacy（C）。`,
+    vocab: [
+      "privacy (n.) 隱私、私密性；in private 私下地；private (adj.)",
+      "【近義詞】confidentiality（機密性）、seclusion（隔絕、隱居）",
+      "【延伸搭配】right to privacy（隱私權）、invasion of privacy（侵犯隱私）、privacy policy（隱私政策）"
+    ]
+  },
+  {
+    id: 2,
+    stem: `The new manager is a real gentleman. He is kind and humble, totally different from the former manager, who was _____ and bossy.`,
+    stem_zh: `新經理是個真正的紳士。他親切謙遜，與前任經理完全不同，前任經理_____且專橫。`,
+    options: [
+      { label: "A", text: "eager", hint: "（渴望的；熱切的）" },
+      { label: "B", text: "liberal", hint: "（自由的；慷慨的）" },
+      { label: "C", text: "mean", hint: "（刻薄的；吝嗇的）✓" },
+      { label: "D", text: "inferior", hint: "（較差的；下等的）" }
+    ],
+    answer: "C",
+    analysis: `【句型結構】關係子句（who was _____ and bossy）修飾前任經理（the former manager）。空格與 bossy（專橫的）形成對等連接，且與前句的 kind and humble 形成對比。\n\n【關鍵線索】totally different from（截然不同）+ kind（親切）and humble（謙遜）→ 前任經理應是反義詞，bossy（專橫）配對 mean（刻薄），選 mean（C）。`,
+    vocab: [
+      "mean (adj.) 刻薄的、卑鄙的、吝嗇的；mean (n./v.) 平均/意思/意味",
+      "【近義詞】unkind（不親切的）、cruel（殘忍的）、nasty（討厭的）",
+      "【延伸搭配】mean-spirited（小氣的）、a mean trick（惡意的把戲）"
+    ]
+  },
+  {
+    id: 3,
+    stem: `The weather bureau _____ that the typhoon would bring strong winds and heavy rains, and warned everyone of the possible danger.`,
+    stem_zh: `氣象局_____颱風將帶來強風和豪雨，並警告所有人注意可能的危險。`,
+    options: [
+      { label: "A", text: "conveyed", hint: "（傳達；傳遞）" },
+      { label: "B", text: "associated", hint: "（聯繫；關聯）" },
+      { label: "C", text: "interpreted", hint: "（詮釋；解釋）" },
+      { label: "D", text: "predicted", hint: "（預測；預報）✓" }
+    ],
+    answer: "D",
+    analysis: `【句型結構】主詞（The weather bureau）+ 動詞過去式（填空）+ that 名詞子句。後接 warned everyone of the possible danger（警告眾人）與空格動作並列。\n\n【關鍵線索】weather bureau（氣象局）+ typhoon would bring...（颱風將帶來...）→ 氣象局的功能是「預測」天氣，選 predicted（D）。`,
+    vocab: [
+      "predict (v.) 預測；prediction (n.)；predictable (adj.)",
+      "【近義詞】forecast（預報）、anticipate（預期）、foresee（預見）",
+      "【延伸搭配】predict the weather（預測天氣）、weather prediction（天氣預報）、accurately predicted（準確預測）"
+    ]
+  },
+  {
+    id: 4,
+    stem: `Different airlines have different _____ for carry-on luggage, but many international airlines limit a carry-on piece to 7 kilograms.`,
+    stem_zh: `不同航空公司對手提行李有不同的_____，但許多國際航空公司將手提行李限制在 7 公斤。`,
+    options: [
+      { label: "A", text: "landmarks", hint: "（地標；里程碑）" },
+      { label: "B", text: "restrictions", hint: "（限制；規定）✓" },
+      { label: "C", text: "percentages", hint: "（百分比）" },
+      { label: "D", text: "circumstances", hint: "（情況；環境）" }
+    ],
+    answer: "B",
+    analysis: `【句型結構】主句（Different airlines have different _____ for carry-on luggage）。空格為名詞，被 different 修飾，且後句說明 limit a carry-on piece to 7 kilograms（限重 7 公斤）。\n\n【關鍵線索】limit...to 7 kilograms（限制為 7 公斤）→ 暗示空格為表示「限制/規定」的名詞，選 restrictions（B）。`,
+    vocab: [
+      "restriction (n.) 限制、規定；restrict (v.)；restrictive (adj.)",
+      "【近義詞】limitation（限制）、regulation（規定）、constraint（約束）",
+      "【延伸搭配】baggage restrictions（行李規定）、impose restrictions（施加限制）、lift restrictions（解除限制）"
+    ]
+  },
+  {
+    id: 5,
+    stem: `Many people were happy that the government had finally _____ Children's Day as a national holiday.`,
+    stem_zh: `許多人很高興政府終於_____兒童節為國定假日。`,
+    options: [
+      { label: "A", text: "appointed", hint: "（任命；指定）" },
+      { label: "B", text: "declared", hint: "（宣布；聲明）✓" },
+      { label: "C", text: "performed", hint: "（表演；執行）" },
+      { label: "D", text: "involved", hint: "（牽涉；包含）" }
+    ],
+    answer: "B",
+    analysis: `【句型結構】過去完成式（had finally _____）表示在過去某個時間點完成的動作。受詞為 Children's Day as a national holiday，空格動詞需接 NP + as + NP 結構。\n\n【關鍵線索】Children's Day as a national holiday（兒童節為國定假日）→ 政府「宣布」某日為假日，選 declared（B）。declare...as 是固定搭配。`,
+    vocab: [
+      "declare (v.) 宣布、申報；declare war 宣戰；declaration (n.)",
+      "【近義詞】announce（宣布）、proclaim（宣告）",
+      "【延伸搭配】declare a holiday（宣布假期）、declare independence（宣布獨立）、Customs declaration（海關申報）"
+    ]
+  },
+  {
+    id: 6,
+    stem: `To reach the goal of making her company a market leader, Michelle _____ a plan to open ten new stores around the country this year.`,
+    stem_zh: `為了達成讓公司成為市場領導者的目標，米歇爾_____了一個今年在全國開設十家新店的計畫。`,
+    options: [
+      { label: "A", text: "advised", hint: "（建議；忠告）" },
+      { label: "B", text: "occupied", hint: "（佔領；使忙碌）" },
+      { label: "C", text: "proposed", hint: "（提出；提議）✓" },
+      { label: "D", text: "recognized", hint: "（認可；認識）" }
+    ],
+    answer: "C",
+    analysis: `【句型結構】目的副詞（To reach the goal...）+ 主句（Michelle _____ a plan to open ten new stores...）。空格為動詞過去式，受詞為 a plan。\n\n【關鍵線索】a plan（一個計畫）→ 需要與 plan 搭配的動詞，propose a plan（提出計畫，C）是自然搭配。`,
+    vocab: [
+      "propose (v.) 提議、求婚；proposal (n.) 提案、求婚",
+      "【近義詞】suggest（建議）、put forward（提出）、present（呈現）",
+      "【延伸搭配】propose a plan（提出計畫）、marriage proposal（求婚）、propose a toast（提議乾杯）"
+    ]
+  },
+  {
+    id: 7,
+    stem: `Silence in some way is as _____ as speech. It can be used to show, for example, disagreement or lack of interest.`,
+    stem_zh: `沉默在某種程度上與語言一樣_____。它可以用來表達，例如，不同意或缺乏興趣。`,
+    options: [
+      { label: "A", text: "sociable", hint: "（善交際的；友好的）" },
+      { label: "B", text: "expressive", hint: "（富有表現力的）✓" },
+      { label: "C", text: "reasonable", hint: "（合理的；理性的）" },
+      { label: "D", text: "objective", hint: "（客觀的；目標）" }
+    ],
+    answer: "B",
+    analysis: `【句型結構】等比較結構（as _____ as speech）。空格為形容詞，與 silence 的性質相關，且後句說明沉默能「表達」不同意或興趣缺缺。\n\n【關鍵線索】It can be used to show...disagreement or lack of interest（用來表達不同意或興趣缺缺）→ 沉默和語言一樣富有「表現力」，選 expressive（B）。`,
+    vocab: [
+      "expressive (adj.) 富表現力的；express (v.) 表達；expression (n.)",
+      "【近義詞】communicative（善於溝通的）、meaningful（富含意義的）、articulate（表達清晰的）",
+      "【延伸搭配】expressive eyes（有神的眼睛）、facial expression（表情）、freely expressive（自由表達的）"
+    ]
+  },
+  {
+    id: 8,
+    stem: `This TV program is designed for children, _____ for those under five. It contains no violence or strong language.`,
+    stem_zh: `這個電視節目是為兒童設計的，_____是五歲以下的兒童。節目中不含任何暴力或粗俗語言。`,
+    options: [
+      { label: "A", text: "particularly", hint: "（尤其；特別）✓" },
+      { label: "B", text: "sensibly", hint: "（明智地；合理地）" },
+      { label: "C", text: "moderately", hint: "（適度地；溫和地）" },
+      { label: "D", text: "considerably", hint: "（相當地；大量地）" }
+    ],
+    answer: "A",
+    analysis: `【句型結構】主句（This TV program is designed for children）+ 逗點後的副詞修飾語（_____ for those under five）。空格為副詞，強調「更特別」的目標受眾。\n\n【關鍵線索】designed for children...for those under five（為兒童設計，尤其是五歲以下）→ 選表示「特別/尤其」的 particularly（A）。`,
+    vocab: [
+      "particularly (adv.) 尤其、特別；particular (adj.) 特別的；in particular 尤其是",
+      "【近義詞】especially（尤其）、specifically（特別地）、notably（值得注意地）",
+      "【延伸搭配】particularly important（尤其重要）、not particularly（並不特別）"
+    ]
+  },
+  {
+    id: 9,
+    stem: `Tommy, please put away the toys in the box, or you might _____ on them and hurt yourself.`,
+    stem_zh: `湯米，請把玩具收進箱子裡，否則你可能會_____在上面而傷到自己。`,
+    options: [
+      { label: "A", text: "stumble", hint: "（絆倒；失足）✓" },
+      { label: "B", text: "graze", hint: "（放牧；擦傷）" },
+      { label: "C", text: "navigate", hint: "（導航；駕駛）" },
+      { label: "D", text: "dwell", hint: "（居住；深思）" }
+    ],
+    answer: "A",
+    analysis: `【句型結構】or 連接條件後果（or you might _____ on them and hurt yourself）。空格為動詞原形（接在 might 後），與介詞 on（在...上絆倒）搭配。\n\n【關鍵線索】toys（玩具）+ hurt yourself（傷到自己）→ 玩具散落地上，人可能「絆倒」在上面，選 stumble（A）。stumble on/over 是固定搭配。`,
+    vocab: [
+      "stumble (v.) 絆倒、失足；stumble on/upon 偶然發現；stumble across 碰巧遇見",
+      "【近義詞】trip（絆倒）、fall（跌倒）、stumble over（絆過）",
+      "【延伸搭配】stumble over one's words（說話結巴）、stumble upon a discovery（偶然發現）"
+    ]
+  },
+ #{
+    id: 10,
+    stem: `The _____ costume party, held every September, is one of the biggest events of the school year.`,
+    stem_zh: `每年九月舉辦的_____服裝派對，是學年中最盛大的活動之一。`,
+    options: [
+      { label: "A", text: "initial", hint: "（最初的；首字母）" },
+      { label: "B", text: "annual", hint: "（一年一度的；年度的）✓" },
+      { label: "C", text: "evident", hint: "（明顯的；顯而易見的）" },
+      { label: "D", text: "occasional", hint: "（偶爾的；特殊場合的）" }
+    ],
+    answer: "B",
+    analysis: `【句型結構】名詞片語（The _____ costume party）+ 同位語（held every September）+ 動詞（is）。空格為形容詞，受後置分詞片語 held every September 修飾。\n\n【關鍵線索】held every September（每年九月舉辦）→ 每年一次，選 annual（一年一度的，B）。annual event（年度活動）是固定搭配。`,
+    vocab: [
+      "annual (adj.) 年度的、一年一次的；annually (adv.) 每年地；annual report 年度報告",
+      "【近義詞】yearly（每年的）、once-a-year（一年一次的）",
+      "【延伸搭配】annual meeting（年度會議）、annual salary（年薪）、annual festival（年度節慶）"
+    ]
+  },
+  {
+    id: 11,
+    stem: `In a job interview, attitude and personality are usually important _____ that influence the decision of the interviewers.`,
+    stem_zh: `在工作面試中，態度和個性通常是影響面試官決定的重要_____。`,
+    options: [
+      { label: "A", text: "factors", hint: "（因素；要素）✓" },
+      { label: "B", text: "outcomes", hint: "（結果；成果）" },
+      { label: "C", text: "missions", hint: "（任務；使命）" },
+      { label: "D", text: "identities", hint: "（身份；特性）" }
+    ],
+    answer: "A",
+    analysis: `【句型結構】主詞（attitude and personality）+ 連綴動詞（are）+ 補語（usually important _____）+ that 關係子句修飾空格名詞。\n\n【關鍵線索】influence the decision of the interviewers（影響面試官的決定）→ 態度和個性是影響決定的「因素」，選 factors（A）。`,
+    vocab: [
+      "factor (n.) 因素、要素；a contributing factor 促成因素",
+      "【近義詞】element（要素）、component（組成部分）、variable（變數）",
+      "【延伸搭配】key factor（關鍵因素）、risk factor（風險因子）、contributing factor（促成因素）"
+    ]
+  },
+ #{
+    id: 12,
+    stem: `The snow-capped mountain is described so _____ in the book that the scene seems to come alive in front of the reader's eyes.`,
+    stem_zh: `書中對雪山的描述如此_____，以至於場景似乎在讀者眼前栩栩如生。`,
+    options: [
+      { label: "A", text: "distantly", hint: "（遙遠地；冷漠地）" },
+      { label: "B", text: "meaningfully", hint: "（有意義地）" },
+      { label: "C", text: "cheerfully", hint: "（愉快地；開朗地）" },
+      { label: "D", text: "vividly", hint: "（生動地；鮮明地）✓" }
+    ],
+    answer: "D",
+    analysis: `【句型結構】so...that 結果副詞子句（described so _____ that the scene seems to come alive）。空格為副詞修飾 described。\n\n【關鍵線索】the scene seems to come alive in front of the reader's eyes（場景似乎栩栩如生）→ 描述「生動鮮明」，選 vividly（D）。`,
+    vocab: [
+      "vividly (adv.) 生動地；vivid (adj.) 生動的、鮮明的；vividness (n.)",
+      "【近義詞】graphically（生動地）、colorfully（豐富多彩地）、realistically（逼真地）",
+      "【延伸搭配】vividly described（描述生動）、vivid imagination（豐富的想象力）、vivid memory（鮮明的記憶）"
+    ]
+  },
+ #{
+    id: 13,
+    stem: `Surrounded by flowers blooming and birds _____ merrily, the Wangs had a good time hiking in the national park.`,
+    stem_zh: `在盛開的花朵和鳥兒_____聲中，王一家人在國家公園健行，玩得十分愉快。`,
+    options: [
+      { label: "A", text: "napping", hint: "（打盹；小睡）" },
+      { label: "B", text: "scooping", hint: "（舀取；挖出）" },
+      { label: "C", text: "flipping", hint: "（翻轉；快速翻閱）" },
+      { label: "D", text: "chirping", hint: "（鳥）啁啾；（蟲）唧唧叫 ✓" }
+    ],
+    answer: "D",
+    analysis: `【句型結構】分詞構句（Surrounded by flowers blooming and birds _____ merrily）修飾主句（the Wangs had a good time hiking）。birds _____ merrily 是 with + N + V-ing 的結構，空格填入現在分詞。\n\n【關鍵線索】flowers blooming（花朵盛開）+ birds...merrily（鳥兒...愉快地）+ 國家公園郊遊的場景 → 鳥兒「啁啾歌唱」，選 chirping（D）。`,
+    vocab: [
+      "chirp (v./n.) （鳥、蟲）啁啾、嗚叫；chirping 現在分詞或形容詞",
+      "【相關詞】tweet（鳥鳴/推文）、sing（歌唱）、twitter（啁啾）",
+      "【延伸搭配】birds chirping（鳥兒啁啾）、crickets chirping（蟋蟀鳴叫）"
+    ]
+  },
+ #{
+    id: 14,
+    stem: `It is essential for us to maintain constant _____ with our friends to ensure that we have someone to talk to in times of need.`,
+    stem_zh: `對我們來說，與朋友保持持續的_____至關重要，以確保在需要時有人傾訴。`,
+    options: [
+      { label: "A", text: "benefit", hint: "（利益；好處）" },
+      { label: "B", text: "contact", hint: "（聯繫；接觸）✓" },
+      { label: "C", text: "gesture", hint: "（姿勢；表示）" },
+      { label: "D", text: "favor", hint: "（好感；幫忙）" }
+    ],
+    answer: "B",
+    analysis: `【句型結構】It is essential for us + to maintain + 受詞（constant _____）+ with our friends。空格為名詞，與動詞 maintain 和介詞 with 搭配。\n\n【關鍵線索】maintain...with friends（與朋友保持...）+ in times of need（在需要時）→ 需要持續保持的是「聯繫/聯絡」，選 contact（B）。maintain contact with 是固定搭配。`,
+    vocab: [
+      "contact (n.) 聯繫、接觸；keep/stay in contact with 與...保持聯繫；contact (v.) 聯繫",
+      "【近義詞】connection（連繫）、touch（聯絡）；stay in touch（保持聯繫）",
+      "【延伸搭配】make contact（建立聯繫）、lose contact（失去聯繫）、contact information（聯絡資訊）"
+    ]
+  },
+  {
+    id: 15,
+    stem: `The young generation in this country has shown less interest in factory work and other _____ labor jobs, such as house construction and fruit picking.`,
+    stem_zh: `這個國家的年輕世代對工廠工作和其他_____勞動工作的興趣越來越少，例如建築施工和採摘水果。`,
+    options: [
+      { label: "A", text: "causal", hint: "（因果的；原因的）" },
+      { label: "B", text: "durable", hint: "（耐用的；持久的）" },
+      { label: "C", text: "manual", hint: "（體力的；手動的）✓" },
+      { label: "D", text: "violent", hint: "（暴力的；激烈的）" }
+    ],
+    answer: "C",
+    analysis: `【句型結構】主句（The young generation has shown less interest in factory work and other _____ labor jobs）+ such as 列舉。空格為形容詞修飾 labor jobs，且後方舉例 house construction and fruit picking（建築施工和採摘水果）為體力工作。\n\n【關鍵線索】factory work（工廠工作）、house construction（建築施工）、fruit picking（採摘水果）→ 都是需要體力的工作，選 manual（體力的，C）。manual labor 是固定搭配。`,
+    vocab: [
+      "manual (adj.) 體力的、手動的；manual labor 體力勞動；manual (n.) 說明書、手冊",
+      "【近義詞】physical（體力的）、hands-on（實際操作的）",
+      "【延伸搭配】manual work（體力工作）、automatic vs. manual（自動對手動）、instruction manual（使用說明書）"
+    ]
+  }
+];
+
+let answered = 0;
+let score = 0;
+const total = questions.length;
+
+function selectAnswer(idx, chosen) {
+  const q = questions[idx];
+  const card = document.getElementById(`card-${idx}`);
+  const btns = card.querySelectorAll('.option-btn');
+  const analysisBox = document.getElementById(`analysis-${idx}`);
+  const moreBtn = document.getElementById(`more-btn-${idx}`);
+
+  btns.forEach(btn => { btn.disabled = true; });
+
+  const isCorrect = chosen === q.answer;
+  if (isCorrect) {
+    score++;
+    card.classList.add('correct');
+  } else {
+    card.classList.add('wrong');
+  }
+
+  btns.forEach(btn => {
+    const label = btn.getAttribute('data-label');
+    if (label === chosen) {
+      btn.classList.add(isCorrect ? 'selected-correct' : 'selected-wrong');
+      const icon = btn.querySelector('.result-icon');
+      if (icon) icon.textContent = isCorrect ? ' ✓' : ' ✗';
+    }
+    if (!isCorrect && label === q.answer) {
+      btn.classList.add('reveal-correct');
+    }
+  });
+
+  analysisBox.classList.add('visible');
+  if (moreBtn) moreBtn.style.display = 'inline-flex';
+
+  answered++;
+  const pct = Math.round((answered / total) * 100);
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `已作答 ${answered} / ${total} 題`;
+
+  if (answered === total) {
+    setTimeout(showSummary, 600);
+  }
+}
+
+function toggleSupp(idx) {
+  const box = document.getElementById(`supp-${idx}`);
+  const btn = document.getElementById(`more-btn-${idx}`);
+  const visible = box.classList.toggle('visible');
+  btn.textContent = visible ? '▲ 收起補充' : '▼ 查看更多補充';
+}
+
+function buildQuiz() {
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = '';
+  questions.forEach((q, idx) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.id = `card-${idx}`;
+
+    const analysisLines = q.analysis.split('\n\n').map(s => `<p style="margin-bottom:8px">${s.replace(/\n/g,'<br>')}</p>`).join('');
+    const vocabItems = q.vocab.map(v => `<li>${v}</li>`).join('');
+    const optionsHTML = q.options.map(opt => `
+      <button class="option-btn" data-label="${opt.label}" onclick="selectAnswer(${idx},'${opt.label}')">
+        <span class="option-tag">${opt.label}</span>
+        <span>${opt.text} <em>${opt.hint}</em></span>
+        <span class="result-icon"></span>
+      </button>`).join('');
+
+    card.innerHTML = `
+      <div class="q-header">
+        <div class="q-num">${q.id}</div>
+        <div class="q-text">
+          ${q.stem}<br>
+          <em>${q.stem_zh}</em>
+        </div>
+      </div>
+      <ul class="options">${optionsHTML}</ul>
+      <div class="analysis-box" id="analysis-${idx}">
+        <div class="analysis-label">📖 解析</div>
+        <div class="analysis-text">${analysisLines}</div>
+        <button class="more-btn" id="more-btn-${idx}" style="display:none" onclick="toggleSupp(${idx})">▼ 查看更多補充</button>
+        <div class="supplement-box" id="supp-${idx}">
+          <div class="supplement-label">📚 補充說明</div>
+          <ul class="vocab-list">${vocabItems}</ul>
+        </div>
+      </div>`;
+    container.appendChild(card);
+  });
+}
+
+function showSummary() {
+  document.getElementById('quiz-container').style.display = 'none';
+  document.getElementById('progressBar').parentElement.style.display = 'none';
+  document.getElementById('progressText').style.display = 'none';
+  const summary = document.getElementById('summary');
+  summary.style.display = 'block';
+  document.getElementById('scoreDisplay').textContent = `${score} / ${total}`;
+  const pct = Math.round((score / total) * 100);
+  let msg = '';
+  if (pct === 100) msg = '完美！全部答對，實力超強！🏆';
+  else if (pct >= 80) msg = '表現優異！再努力一點就完美了！💪';
+  else if (pct >= 60) msg = '還不錯！繼續加油，多複習幾次！📖';
+  else msg = '別灰心，再練習一次，你一定能進步！🌟';
+  document.getElementById('scoreMsg').textContent = msg;
+}
+
+function resetQuiz() {
+  answered = 0; score = 0;
+  document.getElementById('progressBar').style.width = '0%';
+  document.getElementById('progressText').textContent = `已作答 0 / ${total} 題`;
+  document.getElementById('progressBar').parentElement.style.display = '';
+  document.getElementById('progressText').style.display = '';
+  document.getElementById('summary').style.display = 'none';
+  document.getElementById('quiz-container').style.display = '';
+  buildQuiz();
+}
+
+buildQuiz();
+</script>
+</body>
+</html>
