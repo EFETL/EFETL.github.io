@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>é«ä¸­å­¸æ¸¬æ­·å±è±æè©¦é¡ç·´ç¿</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", sans-serif; background: linear-gradient(135deg, #e8f0fe 0%, #f0f4f8 60%, #faf5ff 100%); min-height: 100vh; padding: 40px 16px 80px; color: #1a202c; }
+.hero { text-align: center; margin-bottom: 48px; }
+.hero h1 { font-size: 2rem; font-weight: 800; color: #2b4c8c; margin-bottom: 10px; letter-spacing: 0.02em; }
+.hero p { color: #718096; font-size: 0.95rem; }
+.sections { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+.section-card { background: #fff; border-radius: 16px; box-shadow: 0 2px 16px rgba(0,0,0,0.08); overflow: hidden; }
+.section-header { display: flex; align-items: center; justify-content: space-between; padding: 22px 28px; cursor: pointer; user-select: none; border-bottom: 2px solid transparent; transition: background 0.18s; }
+.section-header:hover { background: #f7fafc; }
+.section-header.open { border-bottom-color: #e2e8f0; }
+.section-title { display: flex; align-items: center; gap: 14px; }
+.section-badge { background: linear-gradient(135deg, #3b82f6, #6366f1); color: #fff; border-radius: 10px; padding: 6px 14px; font-size: 0.85rem; font-weight: 700; white-space: nowrap; }
+.section-badge.purple { background: linear-gradient(135deg, #7c3aed, #a855f7); }
+.section-name { font-size: 1.15rem; font-weight: 700; color: #2d3748; }
+.section-sub { font-size: 0.85rem; color: #718096; margin-top: 2px; }
+.chevron { font-size: 1.1rem; color: #a0aec0; transition: transform 0.25s; }
+.section-header.open .chevron { transform: rotate(180deg); }
+.year-grid { display: none; padding: 20px 28px 24px; display: none; }
+.year-grid.visible { display: block; }
+.year-grid-inner { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
+.year-btn { display: block; text-align: center; padding: 12px 8px; border-radius: 10px; font-size: 0.95rem; font-weight: 600; text-decoration: none; border: 2px solid #e2e8f0; background: #f7fafc; color: #4a5568; transition: all 0.18s; cursor: default; position: relative; }
+.year-btn.available { background: linear-gradient(135deg, #eff6ff, #f0f4ff); border-color: #93c5fd; color: #1d4ed8; cursor: pointer; box-shadow: 0 1px 4px rgba(59,130,246,0.12); }
+.year-btn.available:hover { background: linear-gradient(135deg, #dbeafe, #e0e7ff); border-color: #3b82f6; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(59,130,246,0.2); }
+.year-btn .coming { display: block; font-size: 0.65rem; font-weight: 400; color: #a0aec0; margin-top: 3px; }
+.year-btn.available .coming { display: none; }
+@media (max-width: 480px) { .hero h1 { font-size: 1.5rem; } .section-header { padding: 18px 20px; } .year-grid { padding: 16px 20px 20px; } }
+</style>
+</head>
+<body>
+<a href="/" style="position:fixed;top:14px;left:14px;background:#2b4c8c;color:#fff;padding:7px 16px;border-radius:8px;text-decoration:none;font-size:0.9rem;font-weight:600;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,0.18);">&#8592; &#22238;&#39318;&#39052;</a>
+<div class="hero">
+  <h1>é«ä¸­å­¸æ¸¬æ­·å±è±æè©¦é¡ç·´ç¿</h1>
+  <p>é»é¸å¤§é¡ï¼å±éå¹´ä»½é¸å®ï¼éå§ç·´ç¿</p>
+</div>
+<div class="sections">
+  <!-- ç¬¬ä¸å¤§é¡ -->
+  <div class="section-card">
+    <div class="section-header" id="hdr1" onclick="toggle(1)">
+      <div class="section-title">
+        <span class="section-badge">ç¬¬ä¸å¤§é¡</span>
+        <div>
+          <div class="section-name">è©å½é¡</div>
+          <div class="section-sub">é¸åºæé©åå¡«å¥ç©ºæ ¼çè©èª</div>
+        </div>
+      </div>
+      <span class="chevron">â¾</span>
+    </div>
+    <div class="year-grid" id="grid1">
+      <div class="year-grid-inner" id="inner1"></div>
+    </div>
+  </div>
+  <!-- ç¬¬äºå¤§é¡ -->
+  <div class="section-card">
+    <div class="section-header" id="hdr2" onclick="toggle(2)">
+      <div class="section-title">
+        <span class="section-badge purple">ç¬¬äºå¤§é¡</span>
+        <div>
+          <div class="section-name">ç¶åæ¸¬é©</div>
+          <div class="section-sub">é¸åºæé©åå¡«å¥ç©ºæ ¼çè©èªæå¥å­</div>
+        </div>
+      </div>
+      <span class="chevron">â¾</span>
+    </div>
+    <div class="year-grid" id="grid2">
+      <div class="year-grid-inner" id="inner2"></div>
+    </div>
+  </div>
+</div>
+<script>
+// å¯ç¨é¡ç®è¨­å® (key: "section-year", value: æªæ¡è·¯å¾)
+const available = {
+  's1-111': 's1-111.html',
+  's1-112': 's1-112.html',
+  's1-113': 's1-113.html',
+  's1-114': 's1-114.html',
+  's1-115': 's1-115.html'
+};
+const years = [115,114,113,112,111,110,109,108,107];
+function buildGrid(section, innerId) {
+  const inner = document.getElementById(innerId);
+  years.forEach(y => {
+    const key = 's' + section + '-' + y;
+    const path = available[key];
+    const btn = document.createElement('a');
+    btn.className = 'year-btn' + (path ? ' available' : '');
+    btn.textContent = y + 'å¹´';
+    if (path) { btn.href = path; }
+    const sub = document.createElement('span');
+    sub.className = 'coming';
+    sub.textContent = 'å³å°æ¨åº';
+    btn.appendChild(sub);
+    inner.appendChild(btn);
+  });
+}
+buildGrid(1, 'inner1');
+buildGrid(2, 'inner2');
+function toggle(n) {
+  const hdr = document.getElementById('hdr' + n);
+  const grid = document.getElementById('grid' + n);
+  const isOpen = hdr.classList.contains('open');
+  hdr.classList.toggle('open', !isOpen);
+  grid.classList.toggle('visible', !isOpen);
+}
+</script>
+</body>
+</html>
