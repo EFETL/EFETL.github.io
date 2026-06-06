@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L9 Quiz A Explained — The Story behind Eponyms</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 16px;
+    background: #f0f2ff;
+    color: #1a1a2e;
+    min-height: 100vh;
+    padding-bottom: 40px;
+  }
+
+  /* ── Sticky top bar ── */
+  #topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    box-shadow: 0 2px 8px rgba(102,126,234,0.4);
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  #topbar h1 { font-size: 15px; font-weight: 700; letter-spacing: 0.3px; }
+  #topbar .top-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  #topbar .stats { font-size: 13px; display: flex; gap: 8px; }
+  #topbar .stats span { background: rgba(255,255,255,0.2); border-radius: 20px; padding: 3px 10px; }
+  #reveal-all-btn {
+    background: rgba(255,255,255,0.25);
+    border: 1.5px solid rgba(255,255,255,0.6);
+    color: #fff;
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.15s;
+  }
+  #reveal-all-btn:active { background: rgba(255,255,255,0.4); }
+
+  /* ── Section header ── */
+  .section-header {
+    margin: 24px 16px 12px;
+    padding: 10px 14px;
+    background: linear-gradient(135deg, #667eea22, #764ba222);
+    border-left: 4px solid #764ba2;
+    border-radius: 0 8px 8px 0;
+    font-weight: 700;
+    font-size: 15px;
+    color: #4a3580;
+  }
+
+  /* ── Passage box ── */
+  .passage {
+    margin: 0 16px 16px;
+    padding: 14px;
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid #d8d0f0;
+    font-size: 15px;
+    line-height: 1.7;
+    color: #333;
+  }
+  .passage strong { color: #764ba2; }
+
+  /* ── Question card ── */
+  .q-card {
+    background: #fff;
+    border-radius: 12px;
+    margin: 10px 16px;
+    padding: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    border: 2px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .q-card.correct  { border-color: #22c55e; background: #f0fdf4; }
+  .q-card.wrong    { border-color: #ef4444; background: #fff5f5; }
+
+  .q-num {
+    font-size: 12px;
+    font-weight: 700;
+    color: #764ba2;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .q-text {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 12px;
+    color: #1a1a2e;
+  }
+
+  /* ── Options ── */
+  .opts { display: flex; flex-direction: column; gap: 8px; }
+  .opt-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f5f3ff;
+    border: 1.5px solid #c4b5fd;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 15px;
+    color: #1a1a2e;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s, border-color 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .opt-btn:active { background: #ede9fe; }
+  .opt-btn .label {
+    min-width: 24px; height: 24px;
+    background: #764ba2;
+    color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; flex-shrink: 0;
+  }
+  .opt-btn.chosen-correct { background: #dcfce7; border-color: #22c55e; }
+  .opt-btn.chosen-correct .label { background: #22c55e; }
+  .opt-btn.chosen-wrong   { background: #fee2e2; border-color: #ef4444; }
+  .opt-btn.chosen-wrong   .label { background: #ef4444; }
+  .opt-btn.reveal-correct { background: #dcfce7; border-color: #22c55e; }
+  .opt-btn.reveal-correct .label { background: #22c55e; }
+  .opt-btn:disabled { cursor: default; opacity: 0.85; }
+
+  /* ── Feedback ── */
+  .feedback {
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.ok   { color: #16a34a; }
+  .feedback.err  { color: #dc2626; }
+
+  /* ── Explanation panel ── */
+  .exp-panel {
+    display: none;
+    margin-top: 12px;
+    padding: 12px 14px;
+    background: linear-gradient(135deg, #e8eeff, #f0e8ff);
+    border-radius: 10px;
+    border: 1px solid #c4b5fd;
+    font-size: 15px;
+    line-height: 1.7;
+    color: #333;
+  }
+  .exp-panel.show { display: block; }
+  .exp-panel .exp-header {
+    font-size: 14px;
+    font-weight: 700;
+    color: #5b3fa0;
+    margin-bottom: 6px;
+  }
+  .exp-key {
+    color: #4f46e5;
+    font-weight: 700;
+  }
+
+  /* ── Submit ── */
+  #submit-area {
+    margin: 28px 16px 10px;
+    text-align: center;
+  }
+  #submit-btn {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    padding: 14px 48px;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(118,75,162,0.45);
+    transition: opacity 0.2s, transform 0.1s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #submit-btn:active { opacity: 0.85; transform: scale(0.97); }
+
+  /* ── Result card ── */
+  #result-card {
+    display: none;
+    margin: 20px 16px;
+    background: #fff;
+    border-radius: 16px;
+    padding: 28px 20px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(118,75,162,0.2);
+  }
+  #result-card .grade-emoji { font-size: 52px; margin-bottom: 8px; }
+  #result-card .grade-label {
+    font-size: 22px; font-weight: 800;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 6px;
+  }
+  #result-card .score-text { font-size: 16px; color: #555; margin-bottom: 20px; }
+  #reset-btn {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff; border: none; border-radius: 30px;
+    padding: 12px 40px; font-size: 16px; font-weight: 700;
+    cursor: pointer; box-shadow: 0 4px 14px rgba(118,75,162,0.35);
+  }
+
+  /* ── Unanswered warning ── */
+  #warn { color: #dc2626; font-size: 14px; margin-top: 8px; min-height: 20px; }
+</style>
+</head>
+<body>
+<a href="/" style="position:fixed;top:14px;left:14px;background:#2b4c8c;color:#fff;padding:7px 16px;border-radius:8px;text-decoration:none;font-size:0.9rem;font-weight:600;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,0.18);">&#8592; &#22238;&#39318;&#39052;</a>
+
+<!-- Sticky top bar -->
+<div id="topbar">
+  <h1>L9 Quiz A — Eponyms（解析版）</h1>
+  <div class="top-right">
+    <div class="stats">
+      <span id="stat-answered">已答 0/50</span>
+      <span id="stat-score">得分 0</span>
+    </div>
+    <button id="reveal-all-btn">📖 顯示全部解析</button>
+  </div>
+</div>
+
+<div id="quiz-container"></div>
+
+<div id="submit-area">
+  <button id="submit-btn">繳交答案</button>
+  <div id="warn"></div>
+</div>
+
+<div id="result-card">
+  <div class="grade-emoji" id="res-emoji"></div>
+  <div class="grade-label" id="res-grade"></div>
+  <div class="score-text" id="res-text"></div>
+  <button id="reset-btn">重新作答</button>
+</div>
+
+<script>
+const sections = [
+  {
+    title: "Section 1：字彙選擇（第 1–15 題）",
+    passage: null,
+    questions: [
+      { q: "The use of smartphones has become _______ around the globe, with billions of users today.", opts: ["widespread","constant","alternative","digital"], ans: "A", exp: "<span class='exp-key'>widespread（廣泛的）</span>──智慧型手機使用在全球已變得「廣泛」，widespread 形容詞，課文詞彙。<br>❌ constant = 持續的；alternative = 替代的；digital = 數位的，均不符。" },
+      { q: "Scientists _______ the original drug formula to reduce its harmful side effects.", opts: ["released","derived","modified","featured"], ans: "C", exp: "<span class='exp-key'>modified（修改；改良）</span>──科學家「修改」藥方以減少副作用，modify = 修改，課文詞彙。<br>❌ released = 發行；derived = 衍生；featured = 以⋯為特色，均不符語境。" },
+      { q: "The dish is a perfect _______ of Eastern and Western cooking styles.", opts: ["edition","combination","usage","gossip"], ans: "B", exp: "<span class='exp-key'>combination（結合；組合）</span>──東西方烹飪風格的完美「結合」，combination = 組合，課文詞彙。<br>❌ edition = 版本；usage = 用法；gossip = 八卦，均不符。" },
+      { q: "This week's magazine _______ an exclusive interview with the award-winning director.", opts: ["modifies","chases","reveals","features"], ans: "D", exp: "<span class='exp-key'>features（以⋯為特色；刊載）</span>──雜誌「刊載」了導演的專訪，feature = 以⋯為特色，課文原詞。<br>❌ modifies = 修改；chases = 追逐；reveals = 揭露，均不符「刊載」語境。" },
+      { q: "My neighbors are always spreading _______ about other people in the community.", opts: ["gossip","standard","brand","image"], ans: "A", exp: "<span class='exp-key'>gossip（八卦；閒話）</span>──鄰居傳播關於他人的「八卦」，gossip = 閒話，課文核心詞彙。<br>❌ standard = 標準；brand = 品牌；image = 影像，均不符。" },
+      { q: "The new app allows users to _______ videos directly from their phones.", opts: ["derive","chase","release","combine"], ans: "C", exp: "<span class='exp-key'>release（發行；釋放）</span>──App 讓使用者「發布」影片，release = 發行，課文詞彙。<br>❌ derive = 衍生；chase = 追逐；combine = 結合，均不符「發布」語境。" },
+      { q: "If you don't like coffee, herbal tea makes a wonderful _______.", opts: ["modification","edition","existence","alternative"], ans: "D", exp: "<span class='exp-key'>alternative（替代品；選擇）</span>──不喜歡咖啡，草藥茶是絕佳的「替代品」，alternative = 替代物，課文詞彙。<br>❌ modification = 修改；edition = 版本；existence = 存在，均不符。" },
+      { q: "Detectives _______ the suspect across the city before finally catching him.", opts: ["modified","chased","derived","combined"], ans: "B", exp: "<span class='exp-key'>chased（追逐）</span>──偵探「追逐」嫌疑人，chase = 追逐，課文原詞（chase celebrities around）。<br>❌ modified = 修改；derived = 衍生；combined = 結合，均不符「追逐」動作。" },
+      { q: "The word 'paparazzi' is _______ from the name of a character in an Italian film.", opts: ["featured","released","derived","revealed"], ans: "C", exp: "<span class='exp-key'>derived（衍生；源自）</span>──「paparazzi」這個詞「衍生自」義大利電影角色名，derived from = 源自，課文原句。<br>❌ featured = 以⋯為特色；released = 發行；revealed = 揭露，均不符。" },
+      { q: "The company has set a high _______ for quality that all products must meet.", opts: ["usage","gossip","standard","image"], ans: "C", exp: "<span class='exp-key'>standard（標準；規格）</span>──公司為產品品質設定高「標準」，standard = 基準，課文詞彙。<br>❌ usage = 用法；gossip = 八卦；image = 影像，均不符「品質基準」語境。" },
+      { q: "The detective's careful work finally _______ the truth behind the mystery.", opts: ["released","modified","chased","revealed"], ans: "D", exp: "<span class='exp-key'>revealed（揭露；揭示）</span>──偵探的工作最終「揭露」了真相，reveal = 揭露，課文原詞（reveal the secret lives）。<br>❌ released = 發行；modified = 修改；chased = 追逐，均不符「揭露真相」語境。" },
+      { q: "After years of hard work, the band finally _______ their debut album.", opts: ["released","derived","featured","combined"], ans: "A", exp: "<span class='exp-key'>released（發行）</span>──樂團終於「發行」了首張專輯，release an album = 發行專輯，課文詞彙。<br>❌ derived = 衍生；featured = 刊載；combined = 結合，均不符「發行」語境。" },
+      { q: "When a word _______ a new meaning, it often reflects changes in society.", opts: ["takes on","thinks up","plays a role","gives up"], ans: "A", exp: "<span class='exp-key'>takes on（呈現；承擔）</span>──當一個詞「呈現」新的含義，課文原句：took on a more general meaning later on。<br>❌ thinks up = 想出；plays a role = 發揮作用；gives up = 放棄，均不符「獲得新義」語境。" },
+      { q: "Scientists constantly _______ new ideas to solve the world's most pressing problems.", opts: ["think up","take on","give up","look up"], ans: "A", exp: "<span class='exp-key'>think up（想出；發明）</span>──科學家不斷「想出」新點子，think up = 發明/構思，課文結尾片語。<br>❌ take on = 承擔；give up = 放棄；look up = 查詢，均不符「發明新點子」語境。" },
+      { q: "Computers now _______ an important role in almost every aspect of modern life.", opts: ["think","play","take","make"], ans: "B", exp: "<span class='exp-key'>play（發揮；扮演）</span>──play an important role = 發揮重要作用，課文原句：eponyms play an important role。<br>❌ think/take/make 均不構成「play a role」的固定片語。" }
+    ]
+  },
+  {
+    title: "Section 2：文法選擇（第 16–30 題）",
+    passage: null,
+    questions: [
+      { q: "An eponym is a word which usually started out as a name but _______ a more general meaning later on.", opts: ["takes on","took on","has taken on","taking on"], ans: "B", exp: "<span class='exp-key'>took on（過去式）</span>──故事背景為過去，與前句 started out 時態一致，用過去式 took on，課文原句。<br>❌ takes on = 現在式；has taken on = 現在完成式；taking on = 現在分詞，均時態不符。" },
+      { q: "An example of an eponym _______ from a person's name is 'paparazzi.'", opts: ["derived","derives","deriving","to derive"], ans: "A", exp: "<span class='exp-key'>derived（過去分詞片語）</span>──derived from a person's name 修飾 eponym，表示「衍生自某人名字的」，被動含義。<br>❌ derives = 動詞第三人稱；deriving = 現在分詞（主動）；to derive = 不定詞，均不符。" },
+      { q: "The film is about the writer of a popular newspaper column _______ celebrity gossip.", opts: ["feature","to feature","featured","featuring"], ans: "D", exp: "<span class='exp-key'>featuring（現在分詞，分詞構句）</span>──featuring celebrity gossip 修飾 column，表示「以名人八卦為特色的」，課文原句：a column featuring celebrity gossip。<br>❌ feature = 原形；to feature = 不定詞；featured = 過去分詞（被動）。" },
+      { q: "After the film _______ in 1960, people began to use 'paparazzo' to refer to photographers.", opts: ["was released","released","has released","is released"], ans: "A", exp: "<span class='exp-key'>was released（過去式被動）</span>──電影「被發行」於1960年，被動語態，有明確過去時間點 1960，用過去式。<br>❌ released = 過去式主動；has released = 現在完成式；is released = 現在被動。" },
+      { q: "Paparazzo is a photographer who works with the writer to _______ the secret lives of celebrities.", opts: ["revealing","reveals","reveal","revealed"], ans: "C", exp: "<span class='exp-key'>reveal（原形不定詞）</span>──works with the writer to reveal = 不定詞 to V 表目的，to 後接原形動詞。<br>❌ revealing = 動名詞；reveals = 第三人稱現在式；revealed = 過去式，均不符 to V 句型。" },
+      { q: "Photoshop has become the standard software _______ by photographers around the world.", opts: ["use","uses","using","used"], ans: "D", exp: "<span class='exp-key'>used（過去分詞片語）</span>──used by photographers = 被攝影師使用的，過去分詞修飾 software，被動含義，課文原句。<br>❌ use/uses = 主動動詞；using = 現在分詞（主動），均不符被動修飾語境。" },
+      { q: "It became so widely known _______ people began to use 'Photoshop' as a verb.", opts: ["which","that","what","when"], ans: "B", exp: "<span class='exp-key'>that（so...that = 如此...以至於）</span>──so widely known that... = 如此廣為人知以至於⋯，固定句型，課文原句。<br>❌ which = 關係代名詞；what = 什麼；when = 當⋯時，均不符 so...that 句型。" },
+      { q: "Adobe was not pleased _______ people were using their product name to describe other companies' work.", opts: ["which","when","that","where"], ans: "C", exp: "<span class='exp-key'>that（not pleased that = 不高興⋯）</span>──pleased that + 子句 = 對⋯感到高興，that 引導名詞子句，課文原句。<br>❌ which = 關係代名詞；when = 時間子句；where = 地點子句，均不符。" },
+      { q: "The eponym has become _______ popular for Adobe to stop its widespread usage.", opts: ["so","very","too","such"], ans: "C", exp: "<span class='exp-key'>too（too...to... = 太...以至於無法）</span>──too popular for them to stop = 太受歡迎以至於無法阻止，課文片語 too...to...。<br>❌ so/very/such 均不構成 too...to 的固定結構。" },
+      { q: "_______ it was first released in 1987, Photoshop has become the standard software for editing.", opts: ["After","Before","Since","When"], ans: "C", exp: "<span class='exp-key'>Since（自從）</span>──Since...has become = 自從⋯已成為，since 引導時間副詞子句，搭配現在完成式，課文原句。<br>❌ After/Before/When 均不搭配現在完成式表示「從過去到現在持續的狀態」。" },
+      { q: "Language is constantly changing _______ the adoption of new words and alternative uses.", opts: ["for","at","by","with"], ans: "D", exp: "<span class='exp-key'>with（伴隨著）</span>──with the adoption of = 伴隨著⋯的採用，with 表示伴隨，課文原句用法。<br>❌ for = 為了；at = 在；by = 由⋯，均不搭配「伴隨著採用」的語義。" },
+      { q: "The word 'paparazzi' is said _______ from the name of a fictional character.", opts: ["to derive","deriving","derived","to be derived"], ans: "D", exp: "<span class='exp-key'>to be derived（被動不定詞）</span>──is said to be derived = 據說是衍生自⋯，be said to be + past participle = 據說被⋯，被動語態，課文句型。<br>❌ to derive = 主動不定詞；deriving = 分詞；derived = 過去分詞（缺 to be）。" },
+      { q: "_______ in Rome, the film tells the story of a journalist who covers celebrities.", opts: ["Set","Setting","To set","Sets"], ans: "A", exp: "<span class='exp-key'>Set（分詞構句，過去分詞）</span>──Set in Rome = 以羅馬為背景，過去分詞構句修飾主語 the film，課文原句：Set in Rome, the film is about...。<br>❌ Setting = 現在分詞（主動）；To set = 不定詞；Sets = 第三人稱動詞。" },
+      { q: "People began to use 'Photoshop' as a verb _______ 'to edit a photo.'", opts: ["mean","means","to mean","meaning"], ans: "C", exp: "<span class='exp-key'>to mean（不定詞）</span>──use...as a verb to mean = 用作動詞表示...，to mean 作不定詞補語，課文原句：to use 'Photoshop' as a verb to mean 'to edit a photo.'<br>❌ mean/means = 主動動詞；meaning = 動名詞，均不符此句型。" },
+      { q: "No matter _______ software program is actually used, you could say the picture has been photoshopped.", opts: ["which","what","how","where"], ans: "B", exp: "<span class='exp-key'>what（no matter what = 不管什麼）</span>──no matter what software = 不管使用什麼軟體，what 引導讓步子句，課文原句：no matter what software program is actually used。<br>❌ which = 哪一個（需先行詞）；how = 如何；where = 在哪裡，均不符。" }
+    ]
+  },
+  {
+    title: "Section 3：克漏字（第 31–40 題）",
+    passage: "An eponym is a word that (31) _______ from the name of a person or product and takes on a broader meaning. The word 'paparazzi,' for example, is (32) _______ from a character in the Italian film <em>La Dolce Vita</em>. The film (33) _______ a photographer who works with a journalist to reveal celebrity secrets. After the film was (34) _______ in 1960, the word became widely used to describe photographers who (35) _______ celebrities. Another well-known eponym is 'Photoshop.' Since it was first (36) _______ in 1987, the software has become (37) _______ in the field of image editing. It became so (38) _______ known that people started using 'Photoshop' as a verb. In the beginning, Adobe was (39) _______ pleased about this, but the eponym became too popular to stop. Eponyms play an important (40) _______ in creating new words in our language.",
+    questions: [
+      { q: "An eponym is a word that _______ from the name of a person or product.", opts: ["derives","reveals","releases","modifies"], ans: "A", exp: "<span class='exp-key'>derives（衍生；來源於）</span>──eponym is a word that derives from a name = 源自某個名稱，課文核心動詞 derive，現在式陳述事實。<br>❌ reveals = 揭露；releases = 發行；modifies = 修改，均不符「詞源」語境。" },
+      { q: "The word 'paparazzi' is _______ from a character in La Dolce Vita.", opts: ["modified","derived","featured","combined"], ans: "B", exp: "<span class='exp-key'>derived（衍生自，過去分詞）</span>──is derived from = 衍生自⋯，被動語態，課文原句：an eponym that is derived from a person's name。<br>❌ modified = 被修改；featured = 被呈現；combined = 被結合，均不符。" },
+      { q: "The film _______ a photographer who works with a journalist.", opts: ["releases","modifies","features","derives"], ans: "C", exp: "<span class='exp-key'>features（以⋯為特色）</span>──The film features a photographer = 電影以一位攝影師為主角，feature = 以⋯為特色，課文詞彙。<br>❌ releases = 發行；modifies = 修改；derives = 衍生，均不符「電影呈現⋯」語境。" },
+      { q: "After the film was _______ in 1960, the word became widely used.", opts: ["modified","derived","featured","released"], ans: "D", exp: "<span class='exp-key'>released（發行，被動語態）</span>──After the film was released = 電影發行後，release = 發行，課文原句：after the film was released in 1960。<br>❌ modified = 修改；derived = 衍生；featured = 以⋯為特色，均不符「電影發行」語境。" },
+      { q: "...to describe photographers who _______ celebrities.", opts: ["modify","derive","combine","chase"], ans: "D", exp: "<span class='exp-key'>chase（追逐）</span>──photographers who chase celebrities = 追逐名人的攝影師，chase = 追逐，課文原句：photographers who chase celebrities around。<br>❌ modify = 修改；derive = 衍生；combine = 結合，均不符「追逐名人」語境。" },
+      { q: "Since it was first _______ in 1987, the software has become the standard.", opts: ["released","modified","revealed","combined"], ans: "A", exp: "<span class='exp-key'>released（發行）</span>──Since it was first released in 1987 = 自1987年首次發行以來，課文原句，release = 發行。<br>❌ modified = 修改；revealed = 揭露；combined = 結合，均不符「軟體發行」語境。" },
+      { q: "...the software has become _______ in the field of image editing.", opts: ["the alternative","the standard","the constant","the widespread"], ans: "B", exp: "<span class='exp-key'>the standard（標準；業界標準）</span>──has become the standard = 已成為標準，課文原句：Photoshop has become the standard software，the standard = 行業標準。<br>❌ the alternative = 替代方案；the constant = 常量；the widespread = 廣泛的（形容詞），均不符。" },
+      { q: "It became so _______ known that people started using 'Photoshop' as a verb.", opts: ["constantly","alternatively","widely","generally"], ans: "C", exp: "<span class='exp-key'>widely（廣泛地）</span>──so widely known = 如此廣為人知，widely 修飾 known，課文原句：It became so widely known。<br>❌ constantly = 持續地；alternatively = 替代地；generally = 普遍地，均不符「廣泛知名」語境。" },
+      { q: "In the beginning, Adobe was _______ pleased about this.", opts: ["not","too","so","very"], ans: "A", exp: "<span class='exp-key'>not（不）</span>──Adobe was not pleased = Adobe 不高興，課文原句：Adobe was not pleased that...。<br>❌ too/so/very 均不構成「不高興」的否定句。" },
+      { q: "Eponyms play an important _______ in creating new words in our language.", opts: ["standard","gossip","role","usage"], ans: "C", exp: "<span class='exp-key'>role（角色；作用）</span>──play an important role = 扮演重要角色，課文原句：eponyms play an important role in creating new words。<br>❌ standard = 標準；gossip = 八卦；usage = 用法，均不構成 play a role 的固定搭配。" }
+    ]
+  },
+  {
+    title: "Section 4：閱讀測驗（第 41–50 題）",
+    passage: "Have you ever heard the term 'paparazzi'? Or how about 'Photoshop' used as a verb? Both of these are examples of eponyms — words that usually started out as names but took on more general meanings. The word 'paparazzi' is derived from a character called Paparazzo in the Italian film <em>La Dolce Vita</em>, set in Rome. The film features a photographer who reveals the secret lives of celebrities for a newspaper column. After the film was released in 1960, the word became widely used to describe photographers who chase celebrities. Photoshop is an image-editing software created by Adobe Inc. Since it was first released in 1987, it has become the standard software used by photographers and designers worldwide. It became so widely known that people began using it as a verb meaning 'to edit a photo.' In the beginning, Adobe was not pleased about this, but the eponym has become too popular to stop. Eponyms play an important role in creating new words. Language is constantly changing with the adoption of new words and alternative uses for existing words. Who knows what new words we will think up next?",
+    questions: [
+      { q: "What is an eponym?", opts: ["A word borrowed from another language without change","A word that originally was a name but gained a broader meaning","A word invented by scientists for technical purposes","A word used only in formal writing"], ans: "B", exp: "<span class='exp-key'>B</span>──課文原句：An eponym is a word which usually started out as the name of someone or something but took on a more general meaning（一個通常起源於某人或某事物名稱、後來獲得更普遍含義的詞）。<br>❌ A/C/D 均未在課文中提及。" },
+      { q: "Where does the word 'paparazzi' originally come from?", opts: ["A real photographer's name from Italy","A character in the Italian film La Dolce Vita","An Italian newspaper column","A brand name created by a media company"], ans: "B", exp: "<span class='exp-key'>B</span>──課文原句：this word came from a character called Paparazzo in the Italian film La Dolce Vita（源自義大利電影《甜蜜生活》中的角色 Paparazzo）。<br>❌ A = 真實攝影師；C = 義大利報紙；D = 媒體公司，均錯誤。" },
+      { q: "What city is the film La Dolce Vita set in?", opts: ["Milan","Venice","Naples","Rome"], ans: "D", exp: "<span class='exp-key'>D（Rome）</span>──課文原句：Set in Rome, the film is about the writer...（電影以羅馬為背景）。Rome = 羅馬。<br>❌ Milan = 米蘭；Venice = 威尼斯；Naples = 那不勒斯，均非課文提及的城市。" },
+      { q: "What does Paparazzo do in the film?", opts: ["He writes a celebrity gossip column.","He is a film director.","He is a photographer who reveals celebrities' secret lives with a journalist.","He is an actor in Hollywood films."], ans: "C", exp: "<span class='exp-key'>C</span>──課文原句：Paparazzo is a photographer who works with the writer to reveal the secret lives of celebrities（與記者合作揭露名人私生活的攝影師）。<br>❌ A = 他寫專欄（不正確）；B = 電影導演；D = 好萊塢演員，均錯誤。" },
+      { q: "When was Photoshop first released?", opts: ["1960","1978","1987","1997"], ans: "C", exp: "<span class='exp-key'>C（1987年）</span>──課文原句：Since it was first released in 1987。1960是電影《甜蜜生活》的發行年，注意區別。<br>❌ A = 1960（電影年份）；B/D = 課文未提及。" },
+      { q: "What does it mean when a photo 'has been photoshopped'?", opts: ["The photo was taken with Photoshop software.","The photo was edited or digitally altered.","The photo was printed using a special machine.","The photo was shared online."], ans: "B", exp: "<span class='exp-key'>B（照片被編輯或數位修改）</span>──課文原句：people began to use 'Photoshop' as a verb to mean 'to edit a photo'（當動詞使用，意思是「編輯照片」）。<br>❌ A/C/D 均與課文說明不符。" },
+      { q: "How did Adobe initially react to people using 'Photoshop' as a verb?", opts: ["They were pleased and encouraged it.","They were not pleased about it.","They paid people to use the word.","They had no reaction to it."], ans: "B", exp: "<span class='exp-key'>B（Adobe 最初不高興）</span>──課文原句：In the beginning, Adobe was not pleased that people were using their product name to describe other companies' work。<br>❌ A = 高興並鼓勵（相反）；C/D 均未提及。" },
+      { q: "Why couldn't Adobe stop the widespread use of 'Photoshop' as a verb?", opts: ["The word had been trademarked by another company.","Adobe stopped caring about the issue.","The eponym had become too popular to stop.","The government passed a law protecting eponyms."], ans: "C", exp: "<span class='exp-key'>C（eponym 太受歡迎無法阻止）</span>──課文原句：the eponym has become too popular for them to stop its widespread usage（too popular to stop）。<br>❌ A/B/D 均為課文未提及的原因。" },
+      { q: "According to the passage, what role do eponyms play in society?", opts: ["They cause confusion in communication.","They reduce the need for technical vocabulary.","They help create new words in the language.","They protect brand names from being misused."], ans: "C", exp: "<span class='exp-key'>C（eponyms 幫助創造語言中的新詞）</span>──課文原句：eponyms play an important role in creating new words in our society。<br>❌ A = 造成混亂；B = 減少技術詞彙；D = 保護品牌名稱，均與課文不符。" },
+      { q: "What is the main idea of this passage?", opts: ["Adobe and Photoshop have changed photography forever.","Paparazzi photographers are a problem in modern society.","Eponyms are words derived from names that take on broader meanings and shape language development.","All words in English are originally derived from proper names."], ans: "C", exp: "<span class='exp-key'>C</span>──文章核心：介紹什麼是 eponym（源自人名或品牌名）、舉 paparazzi 和 Photoshop 兩例，並說明 eponyms 在語言發展中的重要角色。<br>❌ A/B 過於片面；D = 所有英文詞都源自專有名詞（錯誤的絕對陳述）。" }
+    ]
+  }
+];
+
+// ── State ──
+let qIndex = 0;
+let userAnswers = {};
+let answered = 0;
+let liveScore = 0;
+
+// ── Build DOM ──
+const container = document.getElementById("quiz-container");
+const statAnswered = document.getElementById("stat-answered");
+const statScore = document.getElementById("stat-score");
+const LABELS = ["A","B","C","D"];
+
+sections.forEach((sec, si) => {
+  const hdr = document.createElement("div");
+  hdr.className = "section-header";
+  hdr.textContent = sec.title;
+  container.appendChild(hdr);
+
+  if (sec.passage) {
+    const p = document.createElement("div");
+    p.className = "passage";
+    p.innerHTML = sec.passage;
+    container.appendChild(p);
+  }
+
+  sec.questions.forEach((item, qi) => {
+    const gIdx = qIndex++;
+    const card = document.createElement("div");
+    card.className = "q-card";
+    card.id = "q" + gIdx;
+
+    const numDiv = document.createElement("div");
+    numDiv.className = "q-num";
+    numDiv.textContent = "第 " + (gIdx + 1) + " 題";
+    card.appendChild(numDiv);
+
+    const qDiv = document.createElement("div");
+    qDiv.className = "q-text";
+    qDiv.innerHTML = item.q;
+    card.appendChild(qDiv);
+
+    const optsDiv = document.createElement("div");
+    optsDiv.className = "opts";
+
+    item.opts.forEach((opt, oi) => {
+      const btn = document.createElement("button");
+      btn.className = "opt-btn";
+      btn.dataset.label = LABELS[oi];
+      btn.dataset.gidx = gIdx;
+      btn.innerHTML = `<span class="label">${LABELS[oi]}</span>${opt}`;
+      btn.addEventListener("click", () => handleAnswer(gIdx, LABELS[oi], item.ans, item.exp));
+      optsDiv.appendChild(btn);
+    });
+
+    card.appendChild(optsDiv);
+
+    const fb = document.createElement("div");
+    fb.className = "feedback";
+    fb.id = "fb" + gIdx;
+    card.appendChild(fb);
+
+    // Explanation panel
+    const expPanel = document.createElement("div");
+    expPanel.className = "exp-panel";
+    expPanel.id = "exp" + gIdx;
+    expPanel.innerHTML = `<div class="exp-header">💡 解析</div><div>${item.exp}</div>`;
+    card.appendChild(expPanel);
+
+    container.appendChild(card);
+  });
+});
+
+function handleAnswer(gIdx, chosen, correct, exp) {
+  const card = document.getElementById("q" + gIdx);
+  const fb   = document.getElementById("fb" + gIdx);
+  const expPanel = document.getElementById("exp" + gIdx);
+  const btns = card.querySelectorAll(".opt-btn");
+
+  if (userAnswers[gIdx] !== undefined) return;
+
+  const wasAnswered = userAnswers[gIdx] === undefined;
+  userAnswers[gIdx] = chosen;
+
+  btns.forEach(b => b.disabled = true);
+
+  if (chosen === correct) {
+    card.classList.add("correct");
+    btns.forEach(b => { if (b.dataset.label === chosen) b.classList.add("chosen-correct"); });
+    fb.textContent = "✓ 答對了！";
+    fb.className = "feedback show ok";
+    liveScore++;
+  } else {
+    card.classList.add("wrong");
+    btns.forEach(b => {
+      if (b.dataset.label === chosen)  b.classList.add("chosen-wrong");
+      if (b.dataset.label === correct) b.classList.add("reveal-correct");
+    });
+    fb.textContent = `✗ 答錯了。正確答案是 ${correct}。`;
+    fb.className = "feedback show err";
+  }
+
+  // Show explanation panel
+  expPanel.classList.add("show");
+
+  if (wasAnswered) answered++;
+  statAnswered.textContent = "已答 " + answered + "/50";
+  statScore.textContent    = "得分 " + liveScore;
+
+  const nextCard = document.getElementById("q" + (gIdx + 1));
+  if (nextCard) setTimeout(() => nextCard.scrollIntoView({ behavior: "smooth", block: "center" }), 300);
+}
+
+// ── Reveal All ──
+document.getElementById("reveal-all-btn").addEventListener("click", () => {
+  // For each question that hasn't been answered, force reveal correct answer
+  for (let i = 0; i < 50; i++) {
+    if (userAnswers[i] !== undefined) {
+      // Already answered — just show exp panel if not shown
+      document.getElementById("exp" + i).classList.add("show");
+      continue;
+    }
+
+    // Find the question data
+    let globalCount = 0;
+    let foundItem = null;
+    for (const sec of sections) {
+      for (const item of sec.questions) {
+        if (globalCount === i) { foundItem = item; break; }
+        globalCount++;
+      }
+      if (foundItem) break;
+    }
+    if (!foundItem) continue;
+
+    const card = document.getElementById("q" + i);
+    const fb   = document.getElementById("fb" + i);
+    const expPanel = document.getElementById("exp" + i);
+    const btns = card.querySelectorAll(".opt-btn");
+
+    userAnswers[i] = "__revealed__";
+    btns.forEach(b => {
+      b.disabled = true;
+      if (b.dataset.label === foundItem.ans) b.classList.add("reveal-correct");
+    });
+    card.classList.add("correct");
+    fb.textContent = `📌 正確答案：${foundItem.ans}`;
+    fb.className = "feedback show ok";
+    expPanel.classList.add("show");
+  }
+
+  // Recalculate answered count (revealed but not answered by user)
+  answered = Object.keys(userAnswers).length;
+  statAnswered.textContent = "已答 " + Math.min(answered, 50) + "/50";
+});
+
+// ── Submit ──
+document.getElementById("submit-btn").addEventListener("click", () => {
+  const realAnswered = Object.keys(userAnswers).filter(k => userAnswers[k] !== "__revealed__").length;
+  if (realAnswered < 50) {
+    document.getElementById("warn").textContent = "⚠ 還有 " + (50 - realAnswered) + " 題未作答，請繼續作答後再繳交。";
+    for (let i = 0; i < 50; i++) {
+      if (userAnswers[i] === undefined || userAnswers[i] === "__revealed__") {
+        document.getElementById("q" + i).scrollIntoView({ behavior: "smooth", block: "center" });
+        break;
+      }
+    }
+    return;
+  }
+  document.getElementById("warn").textContent = "";
+  showResult();
+});
+
+function showResult() {
+  const pct = Math.round((liveScore / 50) * 100);
+  let grade, emoji;
+  if (pct >= 80)      { grade = "優秀"; emoji = "🏆"; }
+  else if (pct >= 60) { grade = "良好"; emoji = "👍"; }
+  else                { grade = "需加強"; emoji = "📚"; }
+
+  document.getElementById("res-emoji").textContent = emoji;
+  document.getElementById("res-grade").textContent = grade;
+  document.getElementById("res-text").textContent  =
+    `你答對了 ${liveScore} 題，共 50 題（${pct}%）`;
+
+  document.getElementById("result-card").style.display = "block";
+  document.getElementById("submit-area").style.display = "none";
+  document.getElementById("result-card").scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+document.getElementById("reset-btn").addEventListener("click", () => {
+  userAnswers = {};
+  answered = 0;
+  liveScore = 0;
+  statAnswered.textContent = "已答 0/50";
+  statScore.textContent    = "得分 0";
+
+  document.querySelectorAll(".q-card").forEach(c => {
+    c.classList.remove("correct","wrong");
+  });
+  document.querySelectorAll(".opt-btn").forEach(b => {
+    b.disabled = false;
+    b.classList.remove("chosen-correct","chosen-wrong","reveal-correct");
+  });
+  document.querySelectorAll(".feedback").forEach(f => {
+    f.className = "feedback";
+    f.textContent = "";
+  });
+  document.querySelectorAll(".exp-panel").forEach(p => {
+    p.classList.remove("show");
+  });
+
+  document.getElementById("result-card").style.display = "none";
+  document.getElementById("submit-area").style.display = "block";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+</script>
+</body>
+</html>

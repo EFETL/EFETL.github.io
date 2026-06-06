@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L1 卷A 解析版 — The Day I Broke the Rules</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 17px; line-height: 1.7;
+  background: #f0f2f5; color: #1d1d1f;
+  padding-bottom: 48px;
+}
+header {
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  color: white; padding: 20px 16px; text-align: center;
+}
+header h1 { font-size: 20px; margin-bottom: 4px; }
+header p { font-size: 14px; opacity: 0.75; }
+.top-bar {
+  background: white; padding: 10px 14px;
+  display: flex; justify-content: space-between; align-items: center;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1); gap: 8px;
+}
+.top-bar .score-info { font-size: 15px; font-weight: bold; color: #1a1a2e; white-space: nowrap; }
+.btn-reveal {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white; border: none; border-radius: 10px;
+  padding: 8px 14px; font-size: 14px; font-weight: bold;
+  cursor: pointer; white-space: nowrap; -webkit-tap-highlight-color: transparent;
+}
+.progress-bar { height: 4px; background: #e0e0e0; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); transition: width 0.3s; width: 0%; }
+.section {
+  background: white; margin: 14px 10px 0;
+  border-radius: 16px; overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+.section-header {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white; padding: 13px 16px; font-size: 16px; font-weight: bold;
+}
+.section-header .pts { font-size: 12px; opacity: 0.85; font-weight: normal; }
+.question { padding: 15px 16px; border-bottom: 1px solid #f0f0f0; }
+.question:last-child { border-bottom: none; }
+.q-text { font-size: 16px; margin-bottom: 11px; font-weight: 500; line-height: 1.6; }
+.q-num { color: #667eea; font-weight: bold; margin-right: 4px; }
+.options { display: flex; flex-direction: column; gap: 7px; }
+.option {
+  display: flex; align-items: flex-start; gap: 9px;
+  padding: 10px 13px; border: 2px solid #e0e0e0; border-radius: 11px;
+  cursor: pointer; transition: all 0.15s; font-size: 16px; line-height: 1.5;
+  background: #fafafa; -webkit-tap-highlight-color: transparent;
+}
+.option:active { transform: scale(0.98); }
+.option.selected { border-color: #667eea; background: #f0f0ff; }
+.option.correct { border-color: #34c759; background: #f0fff4; }
+.option.wrong   { border-color: #ff3b30; background: #fff5f5; }
+.option.reveal-correct { border-color: #34c759; background: #f0fff4; }
+.option-label { font-weight: bold; color: #667eea; min-width: 22px; flex-shrink: 0; }
+.option.correct .option-label, .option.reveal-correct .option-label { color: #34c759; }
+.option.wrong .option-label { color: #ff3b30; }
+
+/* Explanation panel */
+.explanation {
+  display: none; margin-top: 10px;
+  background: #fafbff; border-radius: 10px;
+  border: 1px solid #dde3ff; overflow: hidden;
+}
+.explanation.show { display: block; }
+.exp-header {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 13px; font-size: 14px; font-weight: bold;
+  background: #eef1ff; color: #667eea;
+}
+.exp-body { padding: 10px 13px; font-size: 15px; line-height: 1.7; color: #333; }
+.exp-key { color: #2e7d32; font-weight: bold; }
+.exp-wrong-key { color: #c62828; }
+
+/* Passage */
+.passage {
+  background: #f8f9ff; border-left: 4px solid #667eea;
+  padding: 13px 15px; margin: 0 16px 10px;
+  border-radius: 0 8px 8px 0; font-size: 15px; line-height: 1.75;
+}
+.passage-label { font-weight: bold; color: #667eea; margin-bottom: 7px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* Buttons */
+.btn-submit {
+  display: block; width: calc(100% - 28px); margin: 18px auto 0;
+  padding: 15px; background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white; border: none; border-radius: 13px;
+  font-size: 17px; font-weight: bold; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-submit:active { opacity: 0.9; transform: scale(0.98); }
+
+/* Result */
+.result-box {
+  display: none; margin: 14px 10px;
+  background: white; border-radius: 16px; padding: 22px 18px;
+  text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+.result-box.show { display: block; }
+.result-score { font-size: 50px; font-weight: bold; color: #667eea; line-height: 1.1; }
+.result-total { font-size: 20px; color: #666; margin-bottom: 10px; }
+.result-grade { font-size: 18px; font-weight: bold; padding: 7px 18px; border-radius: 18px; display: inline-block; margin-bottom: 14px; }
+.grade-a { background: #f0fff4; color: #1a7a3c; }
+.grade-b { background: #fff9e6; color: #b7791f; }
+.grade-c { background: #fff5f5; color: #c0392b; }
+.btn-reset {
+  display: inline-block; padding: 11px 26px;
+  background: #f0f0f7; color: #667eea;
+  border: none; border-radius: 11px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 6px;
+}
+</style>
+</head>
+<body>
+<a href="/" style="position:fixed;top:14px;left:14px;background:#2b4c8c;color:#fff;padding:7px 16px;border-radius:8px;text-decoration:none;font-size:0.9rem;font-weight:600;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,0.18);">&#8592; &#22238;&#39318;&#39052;</a>
+<header>
+  <h1>L1 測驗卷 A ── 解析版</h1>
+  <p>The Day I Broke the Rules｜選完即顯示解析</p>
+</header>
+<div class="top-bar">
+  <span class="score-info">進度 <span id="answered-count">0</span>/50 ｜ 得分 <span id="live-score">0</span>/100</span>
+  <button class="btn-reveal" onclick="revealAll()">📖 顯示全部解析</button>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+
+<div id="quiz-container"></div>
+
+<button class="btn-submit" onclick="submitAll()">📝 交卷 / 查看成績</button>
+
+<div class="result-box" id="result-box">
+  <div class="result-score" id="result-score">0</div>
+  <div class="result-total">/ 100 分</div>
+  <div class="result-grade" id="result-grade"></div>
+  <div style="color:#666;font-size:15px;margin-bottom:14px;" id="result-detail"></div>
+  <button class="btn-reset" onclick="resetAll()">🔄 重新作答</button>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────
+const sections = [
+  {
+    title: '第一大題：字彙選擇',
+    pts: '15 題 × 2 分 = 30 分',
+    questions: [
+      { q: 'The old man was so _______ that he could barely lift a spoon.',
+        opts: ['drowsy','frail','terminal','tremendous'],
+        ans: 'B',
+        exp: '<span class="exp-key">frail（虛弱的）</span>──老人虛弱到連湯匙都拿不動，完全符合。<br>❌ drowsy = 昏昏欲睡；terminal = 末期的；tremendous = 巨大的，語境均不符。' },
+      { q: 'She works for a large _______ that has offices in over 30 countries.',
+        opts: ['employment','illness','corporation','warmth'],
+        ans: 'C',
+        exp: '<span class="exp-key">corporation（企業；股份有限公司）</span>──在30多個國家設有辦公室的大型公司。<br>❌ employment = 就業；illness = 疾病；warmth = 溫暖，不適用。' },
+      { q: 'The nurse reminded everyone that touching the patient might _______ germs to him.',
+        opts: ['pass on','turn down','cheer up','make a difference'],
+        ans: 'A',
+        exp: '<span class="exp-key">pass on...to...（傳遞…給…）</span>──pass on germs to sb. 將病菌傳給某人，課文原句用法。<br>❌ turn down = 拒絕；cheer up = 振作；make a difference = 有影響，均不搭配。' },
+      { q: 'After taking the medicine, the child became _______ and fell asleep quickly.',
+        opts: ['frail','corporate','drowsy','prompt'],
+        ans: 'C',
+        exp: '<span class="exp-key">drowsy（昏昏欲睡的）</span>──吃藥後昏昏欲睡並迅速入睡，前後語境完全吻合。<br>❌ frail = 虛弱的；corporate = 企業的；prompt = 立即的，均不符合。' },
+      { q: 'Nothing could _______ the sad boy after he lost his pet.',
+        opts: ['confine','cheer up','pass away','hesitate'],
+        ans: 'B',
+        exp: '<span class="exp-key">cheer up（使振作；使高興起來）</span>──cheer sb. up，讓傷心的男孩振奮起來。<br>❌ confine = 限制；pass away = 去世；hesitate = 猶豫，均不符。' },
+      { q: 'The doctor told the family that their father was suffering from a _______ illness.',
+        opts: ['frail','terminal','drowsy','tremendous'],
+        ans: 'B',
+        exp: '<span class="exp-key">terminal（末期的；致命的）</span>──terminal illness = 末期疾病，課文核心詞彙。<br>❌ frail = 虛弱的；drowsy = 昏昏欲睡；tremendous = 巨大的。' },
+      { q: 'The little girl _______ out her arms and asked her mother for a hug.',
+        opts: ['frightened','sparkled','stretched','confined'],
+        ans: 'C',
+        exp: '<span class="exp-key">stretched（伸展；伸出）</span>──stretch out one\'s arms = 伸出手臂，課文原句 Billy stretched out his tiny arms。<br>❌ frightened = 驚嚇；sparkled = 閃耀；confined = 限制，均不搭配。' },
+      { q: 'The _______ of the crowd filled the room and made everyone feel happy.',
+        opts: ['laughter','refusal','germ','fright'],
+        ans: 'A',
+        exp: '<span class="exp-key">laughter（笑聲）</span>──人群的笑聲充滿房間，使大家都快樂，符合課文主旨。<br>❌ refusal = 拒絕；germ = 細菌；fright = 驚恐，語境均不符。' },
+      { q: 'Grandma _______ away peacefully in her sleep at the age of 95.',
+        opts: ['passed','turned','cheered','stretched'],
+        ans: 'A',
+        exp: '<span class="exp-key">passed（pass away = 去世）</span>──pass away 是「去世」的委婉說法，課文結尾也用此片語。<br>❌ turned down = 拒絕；cheered up = 振作；stretched out = 伸展，均不符。' },
+      { q: 'He was _______ by the loud noise and hid under his bed.',
+        opts: ['prompted','confined','employed','frightened'],
+        ans: 'D',
+        exp: '<span class="exp-key">frightened（被嚇到）</span>──be frightened by = 被…所嚇到，嚇到躲到床底下。<br>❌ prompted = 促使；confined = 限制；employed = 雇用，均不符語境。' },
+      { q: 'A kind word can truly _______ in someone\'s life.',
+        opts: ['make a difference','pass away','turn down','be about to'],
+        ans: 'A',
+        exp: '<span class="exp-key">make a difference（有影響；有意義）</span>──一句善言能在某人的生命中產生真正的影響，課文最後一個核心片語。<br>❌ pass away = 去世；turn down = 拒絕；be about to = 即將，均不符。' },
+      { q: 'Don\'t _______ to call me if you need any help.',
+        opts: ['refuse','hesitate','confine','frighten'],
+        ans: 'B',
+        exp: '<span class="exp-key">hesitate（猶豫）</span>──Don\'t hesitate to do... = 別猶豫，隨時做…。課文原句：told them not to hesitate to call me。<br>❌ refuse = 拒絕；confine = 限制；frighten = 驚嚇，均不搭配此句型。' },
+      { q: 'The patient was _______ to the hospital for two weeks.',
+        opts: ['employed','stretched','confined','prompted'],
+        ans: 'C',
+        exp: '<span class="exp-key">confined（被限制；被困）</span>──be confined to = 被限制在某地，如 confined to a hospital bed。<br>❌ employed = 雇用；stretched = 伸展；prompted = 促使，均不符。' },
+      { q: 'She gave the crying baby a _______ to calm him down.',
+        opts: ['sparkle','hug','fright','germ'],
+        ans: 'B',
+        exp: '<span class="exp-key">hug（擁抱）</span>──給哭泣的嬰兒一個擁抱，讓他平靜下來，與課文主旨呼應。<br>❌ sparkle = 閃光；fright = 驚恐；germ = 細菌，均不符語境。' },
+      { q: 'There was a _______ of excitement in her eyes when she heard the good news.',
+        opts: ['warmth','hesitation','sparkle','refusal'],
+        ans: 'C',
+        exp: '<span class="exp-key">sparkle（閃光；閃耀）</span>──a sparkle in one\'s eyes = 眼中的光芒，課文原句：A sparkle soon came to his eyes。<br>❌ warmth = 溫暖；hesitation = 猶豫；refusal = 拒絕，均不符。' },
+    ]
+  },
+  {
+    title: '第二大題：文法選擇',
+    pts: '15 題 × 2 分 = 30 分',
+    questions: [
+      { q: 'I was employed _______ the McDonald\'s Corporation a few years ago.',
+        opts: ['for','by','from','with'],
+        ans: 'B',
+        exp: '<span class="exp-key">by</span>──被動語態用 by 引出施事者。be employed by = 被（某公司/人）雇用。<br>❌ for/from/with 均不與 employed 搭配用於被動句施事。' },
+      { q: '_______ I was leaving the hospital, I heard a voice from a half-open door.',
+        opts: ['Before','After','As','Though'],
+        ans: 'C',
+        exp: '<span class="exp-key">As（正當⋯的時候）</span>──as 引導時間副詞子句，表示兩個動作「同時發生」。課文原句：as I was leaving the hospital。<br>❌ Before = 在…之前；After = 在…之後（不同時）；Though = 雖然（讓步），均改變語義。' },
+      { q: 'I wasn\'t permitted _______ any physical contact with the children.',
+        opts: ['have','having','to have','had'],
+        ans: 'C',
+        exp: '<span class="exp-key">to have</span>──be permitted to do = 被允許做某事，permit 後接不定詞 to V。<br>❌ have（原形）、having（動名詞）、had（過去式）均不符合 be permitted 的固定搭配。' },
+      { q: 'I would dress up _______ Ronald McDonald on "Ronald Day."',
+        opts: ['for','like','as','into'],
+        ans: 'C',
+        exp: '<span class="exp-key">as（作為；打扮成）</span>──dress up as = 打扮成（某角色），固定片語。<br>❌ for = 為了；like = 像（介係詞）；into = 進入，均不搭配 dress up。' },
+      { q: 'The voice was so frail that it _______ me to push open the door.',
+        opts: ['prompted','was prompting','had prompted','would prompt'],
+        ans: 'A',
+        exp: '<span class="exp-key">prompted（過去式）</span>──整篇故事用過去式敘述，prompt sb. to do = 促使某人做某事。<br>❌ was prompting（過去進行式，強調動作持續）、had prompted（過去完成式）在此語境不必要；would prompt 為假設語氣。' },
+      { q: 'Though I understood the rules, I _______ that warmth could not be replaced by anything.',
+        opts: ['also feeling','also felt','also feel','was also feeling'],
+        ans: 'B',
+        exp: '<span class="exp-key">also felt（過去式）</span>──主要子句需要完整謂語動詞，時態與前句 understood 一致，用過去式 felt。<br>❌ also feeling（缺少助動詞）、also feel（現在式，時態不一致）、was also feeling（不必要的進行式）。' },
+      { q: 'It _______ that Billy knew he would never be going home.',
+        opts: ['seemed','seems','is seemed','was seemed'],
+        ans: 'A',
+        exp: '<span class="exp-key">seemed（過去式主動）</span>──It seemed that... 是固定句型，seemed 為主動語態。故事為過去式，用 seemed。<br>❌ seems = 現在式；is seemed / was seemed 為錯誤的被動形式，seem 不用被動。' },
+      { q: 'She wanted to thank me _______ making a difference in Billy\'s life.',
+        opts: ['about','with','of','for'],
+        ans: 'D',
+        exp: '<span class="exp-key">for</span>──thank sb. for doing = 感謝某人做了某事，固定介係詞搭配。<br>❌ about/with/of 均不與 thank 搭配。' },
+      { q: 'I _______ refuse again, but then I saw the look of hope in his eyes.',
+        opts: ['was about to','was used to','used to','am about to'],
+        ans: 'A',
+        exp: '<span class="exp-key">was about to（過去的「即將」）</span>──be about to + V = 即將要做，was about to 表示「過去那一刻正要做但尚未做」。<br>❌ was used to / used to = 過去習慣；am about to = 現在即將（時態錯誤）。' },
+      { q: 'He confided his worries _______ me after we talked for a long time.',
+        opts: ['with','about','to','for'],
+        ans: 'C',
+        exp: '<span class="exp-key">to</span>──confide...to sb. = 向某人傾訴/吐露，固定介係詞為 to。<br>❌ with/about/for 均不與 confide 搭配。' },
+      { q: 'He told his mom _______ he had hugged Ronald.',
+        opts: ['what','that','which','whether'],
+        ans: 'B',
+        exp: '<span class="exp-key">that</span>──told her that... = 告訴她（某事），that 引導名詞子句作 told 的直接受詞。<br>❌ what 引導的子句需有不完整結構；which = 哪一個；whether = 是否（表疑問），均不符語境。' },
+      { q: 'Some things in life, _______ all, were more important than rules.',
+        opts: ['for','with','after','at'],
+        ans: 'C',
+        exp: '<span class="exp-key">after（after all = 畢竟；終究）</span>──after all 為固定片語，表示「畢竟，說到底」。課文原句：Some things in life, after all, were more important。<br>❌ for all / with all / at all 均非此片語的正確用法。' },
+      { q: 'I gave Billy\'s parents my number and told them not _______ to call me.',
+        opts: ['hesitate','hesitating','hesitated','to hesitate'],
+        ans: 'D',
+        exp: '<span class="exp-key">to hesitate</span>──tell sb. not to do = 告訴某人不要做某事，not 後接不定詞 to V。<br>❌ hesitate（原形）、hesitating（動名詞）、hesitated（過去式）均不符合此句型結構。' },
+      { q: 'The boy _______ in bed and looked extremely weak and pale.',
+        opts: ['was lying','was laid','is lying','had lain'],
+        ans: 'A',
+        exp: '<span class="exp-key">was lying（過去進行式）</span>──表示男孩「當時正躺在」床上，lie（躺）的過去進行式 was lying。<br>❌ was laid（被動，lay 放置）含義不同；is lying（現在式）時態不符；had lain（過去完成式）語境不必要。' },
+      { q: 'Two days _______, I received a call from Billy\'s mom.',
+        opts: ['before','ago','later','soon'],
+        ans: 'C',
+        exp: '<span class="exp-key">later（之後）</span>──two days later = 兩天後（從過去某時間點算起）。課文指探視 Billy 的兩天後。<br>❌ ago = 從現在算起的「以前」（two days ago）；before = 之前（需有參照時間）；soon 不與 two days 搭配。' },
+    ]
+  },
+  {
+    title: '第三大題：克漏字填充',
+    pts: '10 題 × 2 分 = 20 分',
+    passage: 'A few years ago, I was <strong>(31)</strong> by the McDonald\'s Corporation. On "Ronald Day," I would dress up as Ronald McDonald and <strong>(32)</strong> the community hospital\'s sick children. Most were suffering <strong>(33)</strong> terminal illnesses. I found it <strong>(34)</strong> rewarding to bring laughter to them.<br><br>One rule stated I couldn\'t have any physical <strong>(35)</strong> with the children. I also felt that nothing could <strong>(36)</strong> love and warmth like a heartfelt hug. Once, a <strong>(37)</strong> voice called my name. I found Billy <strong>(38)</strong> to a hospital bed. I tried to cheer him up with magic tricks. When he asked for a hug, I first <strong>(39)</strong> him down. But I later <strong>(40)</strong> I no longer cared about the rules.',
+    questions: [
+      { q: 'A few years ago, I was _______ by the McDonald\'s Corporation.',
+        opts: ['frightened','employed','confined','prompted'],
+        ans: 'B',
+        exp: '<span class="exp-key">employed（被雇用）</span>──be employed by = 被（某公司）雇用，課文開頭第一句。<br>❌ frightened = 被嚇到；confined = 被限制；prompted = 被促使，語境不符。' },
+      { q: 'I would dress up as Ronald McDonald and _______ the community hospital\'s sick children.',
+        opts: ['visit','hesitate','refuse','stretch'],
+        ans: 'A',
+        exp: '<span class="exp-key">visit（拜訪）</span>──到社區醫院拜訪生病的孩子們，課文直接動詞。<br>❌ hesitate = 猶豫；refuse = 拒絕；stretch = 伸展，均不符「拜訪」的語境。' },
+      { q: 'Most were suffering _______ terminal illnesses.',
+        opts: ['for','about','from','with'],
+        ans: 'C',
+        exp: '<span class="exp-key">from</span>──suffer from = 患有（某疾病），固定介係詞搭配，不可替換。<br>❌ suffer for/about/with 均非正確搭配。' },
+      { q: 'I found it _______ rewarding to bring laughter to the kids.',
+        opts: ['frailty','tremendously','drowsily','terminally'],
+        ans: 'B',
+        exp: '<span class="exp-key">tremendously（極大地；非常地）</span>──副詞修飾形容詞 rewarding，tremendously = 非常。課文原詞。<br>❌ frailty = 虛弱（名詞，不能修飾形容詞）；drowsily = 昏昏欲睡地；terminally = 末期地（修飾 ill）。' },
+      { q: 'One rule stated I couldn\'t have any physical _______ with the children.',
+        opts: ['warmth','sparkle','contact','fright'],
+        ans: 'C',
+        exp: '<span class="exp-key">contact（接觸）</span>──physical contact = 肢體接觸，課文核心詞組，不可與其他詞替換。<br>❌ warmth = 溫暖；sparkle = 閃光；fright = 驚恐，均不構成此搭配。' },
+      { q: 'I also felt that nothing could _______ love and warmth like a heartfelt hug.',
+        opts: ['pass away','turn down','convey','confine'],
+        ans: 'C',
+        exp: '<span class="exp-key">convey（傳達；傳遞）</span>──convey love and warmth = 傳達愛與溫暖，課文原句動詞。<br>❌ pass away = 去世；turn down = 拒絕；confine = 限制，均不符「傳達情感」的語境。' },
+      { q: 'Once, a _______ voice called my name from a half-open door.',
+        opts: ['tremendous','frail','drowsy','corporate'],
+        ans: 'B',
+        exp: '<span class="exp-key">frail（虛弱的；細弱的）</span>──Billy 病重，聲音微弱。課文原句："Ronald," the frail voice called。<br>❌ tremendous = 巨大的（Billy 的聲音應是微弱而非洪亮）；drowsy = 昏昏欲睡；corporate = 企業的。' },
+      { q: 'I found Billy _______ to a hospital bed.',
+        opts: ['confined','frightened','employed','prompted'],
+        ans: 'A',
+        exp: '<span class="exp-key">confined（被限制；被困）</span>──be confined to a hospital bed = 被困在病床上，Billy 病重無法起床。課文原句對應。<br>❌ frightened = 被嚇到；employed = 被雇用；prompted = 被促使，均不符。' },
+      { q: 'When he asked for a hug, I first _______ him down.',
+        opts: ['cheered','turned','passed','made'],
+        ans: 'B',
+        exp: '<span class="exp-key">turned（turn down = 拒絕）</span>──turn sb. down = 拒絕某人的請求，Billy 求擁抱，敘述者先拒絕了他。<br>❌ cheered up = 振作；passed on = 傳遞；made a difference = 有影響，均不符。' },
+      { q: 'I _______ I no longer cared about the rules.',
+        opts: ['realized','hesitated','refused','stretched'],
+        ans: 'A',
+        exp: '<span class="exp-key">realized（意識到；體悟到）</span>──課文原句：Suddenly, I realized I no longer cared if I was caught breaking the rules。<br>❌ hesitated = 猶豫；refused = 拒絕；stretched = 伸展，均不符「頓悟」的語境。' },
+    ]
+  },
+  {
+    title: '第四大題：閱讀測驗',
+    pts: '10 題 × 2 分 = 20 分',
+    passage: 'A few years ago, I was employed by the McDonald\'s Corporation. On "Ronald Day," I would dress up as Ronald McDonald and visit the community hospital\'s sick children. Most of these young patients were suffering from terminal illnesses. I found it tremendously rewarding to be able to bring some laughter to the kids.<br><br>One of the rules was never to have physical contact with the children, since doing so might pass on germs to them. Once, I heard a frail voice calling "Ronald" from a half-open door. I found Billy, a five-year-old boy lying in bed, looking extremely weak and pale. I cheered him up with magic tricks, but when he asked for a hug, I had to turn him down. Later, as he stretched out his tiny arms, I realized some things were more important than rules, and I held him. He confided his worries to me — he was afraid his little brother would have no one to play with and that his dog would go hungry.<br><br>Two days later, Billy\'s mom called to tell me her son had passed away. She wanted to thank me for making a difference in his life. Billy had told her: "Mommy, I don\'t mind if I can\'t see Santa this year because I\'ve hugged Ronald."',
+    questions: [
+      { q: 'What was the narrator\'s job?',
+        opts: ['A hospital doctor','A McDonald\'s employee who dressed as Ronald McDonald','A nurse who took care of sick children','A clown who performed at birthday parties'],
+        ans: 'B',
+        exp: '<span class="exp-key">B</span>──課文開頭說：I was employed by the McDonald\'s Corporation，在「Ronald Day」扮成 Ronald McDonald 拜訪醫院的生病孩子。<br>❌ 他是 McDonald\'s 員工，不是醫生、護士或生日小丑。' },
+      { q: 'Why was the narrator not allowed to visit children alone?',
+        opts: ['He might get lost in the hospital.','His painted face and red wig might frighten them.','He needed a nurse to help him with magic tricks.','The children might not recognize Ronald McDonald.'],
+        ans: 'B',
+        exp: '<span class="exp-key">B</span>──課文明確指出：he might frighten them with his painted face and red wig（他那畫了妝的臉和紅色假髮可能嚇到孩子們）。<br>❌ 其他選項均為文章未提及的原因。' },
+      { q: 'Why was physical contact with children against the rules?',
+        opts: ['The children were too weak to be touched.','The narrator was not trained to handle children.','Physical contact might pass on germs to the sick children.','The hospital did not allow any visitors to touch patients.'],
+        ans: 'C',
+        exp: '<span class="exp-key">C</span>──課文原句：doing so might pass on germs to them（肢體接觸可能將病菌傳給他們）。<br>❌ A 為推測，B/D 均為文章未提及的理由。' },
+      { q: 'How did the narrator first try to cheer Billy up?',
+        opts: ['By giving him a hug','By doing some magic tricks','By reading him a story','By bringing him food from McDonald\'s'],
+        ans: 'B',
+        exp: '<span class="exp-key">B</span>──課文說：I stayed and did some magic tricks for him（我留下來為他表演魔術）。<br>❌ 擁抱是 Billy 後來請求的；課文未提閱讀故事或帶食物。' },
+      { q: 'What did Billy ask the narrator for?',
+        opts: ['A magic show','Some food','A hug','A toy'],
+        ans: 'C',
+        exp: '<span class="exp-key">C</span>──課文原句：Billy replied, "Ronald, can I have a hug?"（Ronald，我可以要一個擁抱嗎？）<br>❌ 魔術是敘述者主動表演的；課文未提食物或玩具。' },
+      { q: 'Why did the narrator finally decide to hug Billy?',
+        opts: ['He was ordered to do so by the hospital staff.','Billy\'s parents begged him to.','He saw the look of hope in Billy\'s eyes and realized some things mattered more than rules.','He forgot that it was against the rules.'],
+        ans: 'C',
+        exp: '<span class="exp-key">C</span>──課文原句：I was about to refuse again, but then I saw the look of hope in his eyes. Suddenly, I realized I no longer cared if I was caught breaking the rules。<br>❌ 無醫院命令、父母求請或忘記規定，是他主動的道德選擇。' },
+      { q: 'What were Billy\'s worries that he confided to the narrator?',
+        opts: ['He was worried about missing Santa Claus.','He was worried his little brother would have no one to play with and his dog would go hungry.','He was afraid of the narrator\'s painted face.','He was scared he would never see his parents again.'],
+        ans: 'B',
+        exp: '<span class="exp-key">B</span>──課文說：He was afraid that his little brother would have no one to play with. Also, he was scared that his dog would go hungry because he had hidden all its bones。<br>❌ Santa Claus 是最後媽媽說的，不是 Billy 對敘述者說的憂慮。' },
+      { q: 'What does Billy\'s behavior in the story suggest about his character?',
+        opts: ['He was selfish and demanding.','He was scared and angry.','He was selfless and caring about others even in his final days.','He was too young to understand his situation.'],
+        ans: 'C',
+        exp: '<span class="exp-key">C</span>──即使快離世，Billy 擔心的是弟弟和狗，課文更說：he was only thinking of others（他只想著別人）。這顯示他無私、體貼的性格。<br>❌ A/B 與課文描述相反；D 忽略了 Billy 似乎明白自己不會回家的暗示。' },
+      { q: 'What does "making a difference" mean in the last paragraph?',
+        opts: ['Changing the rules of the hospital','Having a positive impact on someone\'s life','Making Billy feel different from other children','Teaching Billy about Santa Claus'],
+        ans: 'B',
+        exp: '<span class="exp-key">B</span>──make a difference = 產生正面影響、有所不同。Billy 的媽媽感謝敘述者對兒子的生命有意義，那個擁抱讓 Billy 心滿意足。<br>❌ A/C/D 均非此片語的正確語義。' },
+      { q: 'What is the main message of this story?',
+        opts: ['Rules should always be followed no matter what.','McDonald\'s is a generous corporation.','A simple act of compassion can bring great meaning to someone\'s life.','Children in hospitals should always receive visitors.'],
+        ans: 'C',
+        exp: '<span class="exp-key">C</span>──故事核心：敘述者因一個擁抱打破規則，卻讓 Billy 在生命的最後感到幸福。Billy 說「我抱過 Ronald 了」，簡單的同情之舉帶來深遠的意義。<br>❌ A 與故事精神相反；B/D 過於片面，非主旨。' },
+    ]
+  }
+];
+
+// ── RENDER ────────────────────────────────────────────────
+let globalQNum = 0;
+const qMap = {}; // qNum → { ans, revealed }
+const userAnswers = {};
+let submitted = false;
+
+const container = document.getElementById('quiz-container');
+
+sections.forEach((sec, si) => {
+  const secDiv = document.createElement('div');
+  secDiv.className = 'section';
+  let html = `<div class="section-header">${sec.title} <span class="pts">（${sec.pts}）</span></div>`;
+  if (sec.passage) {
+    html += `<div class="passage"><div class="passage-label">📖 閱讀文章</div>${sec.passage}</div>`;
+  }
+  sec.questions.forEach((q, qi) => {
+    globalQNum++;
+    const n = globalQNum;
+    qMap[n] = { ans: q.ans, exp: q.exp };
+    const labels = ['A','B','C','D'];
+    let optHtml = '';
+    q.opts.forEach((o, i) => {
+      optHtml += `<div class="option" id="opt-${n}-${labels[i]}" onclick="choose(${n},'${labels[i]}')">`
+        + `<span class="option-label">(${labels[i]})</span>${o}</div>`;
+    });
+    html += `<div class="question" id="q${n}">
+      <div class="q-text"><span class="q-num">${n}.</span> ${q.q}</div>
+      <div class="options">${optHtml}</div>
+      <div class="explanation" id="exp${n}">
+        <div class="exp-header">💡 解析</div>
+        <div class="exp-body">${q.exp}</div>
+      </div>
+    </div>`;
+  });
+  secDiv.innerHTML = html;
+  container.appendChild(secDiv);
+});
+
+// ── LOGIC ─────────────────────────────────────────────────
+function choose(n, chosen) {
+  if (submitted) return;
+  const prevChosen = userAnswers[n];
+  userAnswers[n] = chosen;
+  const ans = qMap[n].ans;
+  const labels = ['A','B','C','D'];
+
+  labels.forEach(l => {
+    const el = document.getElementById(`opt-${n}-${l}`);
+    el.classList.remove('selected','correct','wrong');
+    if (l === chosen) {
+      if (chosen === ans) el.classList.add('correct');
+      else el.classList.add('wrong');
+    } else if (l === ans && chosen !== ans) {
+      el.classList.add('reveal-correct');
+    }
+  });
+
+  // Show explanation immediately
+  document.getElementById(`exp${n}`).classList.add('show');
+  updateTopBar();
+}
+
+function updateTopBar() {
+  const count = Object.keys(userAnswers).length;
+  document.getElementById('answered-count').textContent = count;
+  document.getElementById('progress-fill').style.width = (count / 50 * 100) + '%';
+  let score = 0;
+  for (let q in userAnswers) { if (userAnswers[q] === qMap[q].ans) score += 2; }
+  document.getElementById('live-score').textContent = score;
+}
+
+function revealAll() {
+  for (let n = 1; n <= 50; n++) {
+    const ans = qMap[n].ans;
+    const labels = ['A','B','C','D'];
+    labels.forEach(l => {
+      const el = document.getElementById(`opt-${n}-${l}`);
+      el.classList.remove('selected','correct','wrong','reveal-correct');
+      if (l === ans) el.classList.add('reveal-correct');
+      else if (userAnswers[n] === l && l !== ans) el.classList.add('wrong');
+    });
+    document.getElementById(`exp${n}`).classList.add('show');
+  }
+  updateTopBar();
+}
+
+function submitAll() {
+  submitted = true;
+  revealAll();
+  let score = 0;
+  for (let n = 1; n <= 50; n++) {
+    if (userAnswers[n] === qMap[n].ans) score += 2;
+  }
+  const rb = document.getElementById('result-box');
+  rb.classList.add('show');
+  document.getElementById('result-score').textContent = score;
+  const gr = document.getElementById('result-grade');
+  const det = document.getElementById('result-detail');
+  if (score >= 90) { gr.textContent = '🏆 優秀！'; gr.className = 'result-grade grade-a'; det.textContent = '表現卓越，繼續保持！'; }
+  else if (score >= 70) { gr.textContent = '👍 良好'; gr.className = 'result-grade grade-b'; det.textContent = '表現不錯，再複習錯誤的題目吧！'; }
+  else { gr.textContent = '📚 需加強'; gr.className = 'result-grade grade-c'; det.textContent = '多複習解析說明，你可以做到的！'; }
+  document.getElementById('answered-count').textContent = 50;
+  document.getElementById('live-score').textContent = score;
+  document.getElementById('progress-fill').style.width = '100%';
+  rb.scrollIntoView({ behavior: 'smooth' });
+}
+
+function resetAll() {
+  submitted = false;
+  for (let key in userAnswers) delete userAnswers[key];
+  for (let n = 1; n <= 50; n++) {
+    const labels = ['A','B','C','D'];
+    labels.forEach(l => {
+      document.getElementById(`opt-${n}-${l}`).classList.remove('selected','correct','wrong','reveal-correct');
+    });
+    document.getElementById(`exp${n}`).classList.remove('show');
+  }
+  document.getElementById('result-box').classList.remove('show');
+  document.getElementById('answered-count').textContent = '0';
+  document.getElementById('live-score').textContent = '0';
+  document.getElementById('progress-fill').style.width = '0%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
