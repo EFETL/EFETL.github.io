@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L5 卷C 解析版 — Venice: A Sinking City</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 17px; line-height: 1.7;
+  background: #f0f2f5; color: #1d1d1f;
+  padding-bottom: 48px;
+}
+header {
+  background: linear-gradient(135deg, #ff9966, #ff5e62);
+  color: white; padding: 20px 16px; text-align: center;
+}
+header h1 { font-size: 20px; margin-bottom: 4px; }
+header p { font-size: 14px; opacity: 0.9; }
+.top-bar {
+  background: white; padding: 10px 14px;
+  display: flex; justify-content: space-between; align-items: center;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1); gap: 8px;
+}
+.top-bar .score-info { font-size: 15px; font-weight: bold; color: #c0392b; white-space: nowrap; }
+.btn-reveal {
+  background: linear-gradient(135deg, #ff9966, #ff5e62);
+  color: white; border: none; border-radius: 10px;
+  padding: 8px 14px; font-size: 14px; font-weight: bold;
+  cursor: pointer; white-space: nowrap; -webkit-tap-highlight-color: transparent;
+}
+.progress-bar { height: 4px; background: #e0e0e0; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, #ff9966, #ff5e62); transition: width 0.3s; width: 0%; }
+.section {
+  background: white; margin: 14px 10px 0;
+  border-radius: 16px; overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+.section-header {
+  background: linear-gradient(135deg, #ff9966, #ff5e62);
+  color: white; padding: 13px 16px; font-size: 16px; font-weight: bold;
+}
+.section-header .pts { font-size: 12px; opacity: 0.9; font-weight: normal; }
+.question { padding: 15px 16px; border-bottom: 1px solid #f0f0f0; }
+.question:last-child { border-bottom: none; }
+.q-text { font-size: 16px; margin-bottom: 11px; font-weight: 500; line-height: 1.6; }
+.q-num { color: #ff5e62; font-weight: bold; margin-right: 4px; }
+.options { display: flex; flex-direction: column; gap: 7px; }
+.option {
+  display: flex; align-items: flex-start; gap: 9px;
+  padding: 10px 13px; border: 2px solid #e0e0e0; border-radius: 11px;
+  cursor: pointer; transition: all 0.15s; font-size: 16px; line-height: 1.5;
+  background: #fafafa; -webkit-tap-highlight-color: transparent;
+}
+.option:active { transform: scale(0.98); }
+.option.selected { border-color: #ff5e62; background: #fff0ee; }
+.option.correct { border-color: #34c759; background: #f0fff4; }
+.option.wrong   { border-color: #ff3b30; background: #fff5f5; }
+.option.reveal-correct { border-color: #34c759; background: #f0fff4; }
+.option-label { font-weight: bold; color: #ff5e62; min-width: 22px; flex-shrink: 0; }
+.option.correct .option-label, .option.reveal-correct .option-label { color: #34c759; }
+.option.wrong .option-label { color: #ff3b30; }
+
+/* Explanation panel */
+.explanation {
+  display: none; margin-top: 10px;
+  background: #fff8f5; border-radius: 10px;
+  border: 1px solid #ffd9cc; overflow: hidden;
+}
+.explanation.show { display: block; }
+.exp-header {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 13px; font-size: 14px; font-weight: bold;
+  background: #ffece6; color: #ff5e62;
+}
+.exp-body { padding: 10px 13px; font-size: 15px; line-height: 1.7; color: #333; }
+.exp-key { color: #2e7d32; font-weight: bold; }
+.exp-wrong-key { color: #c62828; }
+
+/* Passage */
+.passage {
+  background: #fff8f5; border-left: 4px solid #ff5e62;
+  padding: 13px 15px; margin: 0 16px 10px;
+  border-radius: 0 8px 8px 0; font-size: 15px; line-height: 1.75;
+}
+.passage-label { font-weight: bold; color: #ff5e62; margin-bottom: 7px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* Buttons */
+.btn-submit {
+  display: block; width: calc(100% - 28px); margin: 18px auto 0;
+  padding: 15px; background: linear-gradient(135deg, #ff9966, #ff5e62);
+  color: white; border: none; border-radius: 13px;
+  font-size: 17px; font-weight: bold; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-submit:active { opacity: 0.9; transform: scale(0.98); }
+
+/* Result */
+.result-box {
+  display: none; margin: 14px 10px;
+  background: white; border-radius: 16px; padding: 22px 18px;
+  text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+.result-box.show { display: block; }
+.result-score { font-size: 50px; font-weight: bold; color: #ff5e62; line-height: 1.1; }
+.result-total { font-size: 20px; color: #666; margin-bottom: 10px; }
+.result-grade { font-size: 18px; font-weight: bold; padding: 7px 18px; border-radius: 18px; display: inline-block; margin-bottom: 14px; }
+.grade-a { background: #f0fff4; color: #1a7a3c; }
+.grade-b { background: #fff9e6; color: #b7791f; }
+.grade-c { background: #fff5f5; color: #c0392b; }
+.btn-reset {
+  display: inline-block; padding: 11px 26px;
+  background: #fff0ee; color: #ff5e62;
+  border: none; border-radius: 11px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 6px;
+}
+</style>
+</head>
+<body>
+<a href="/" style="position:fixed;top:14px;left:14px;background:#2b4c8c;color:#fff;padding:7px 16px;border-radius:8px;text-decoration:none;font-size:0.9rem;font-weight:600;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,0.18);">&#8592; &#22238;&#39318;&#39052;</a>
+<a href="/" style="position:fixed;top:14px;left:14px;background:#2b4c8c;color:#fff;padding:7px 16px;border-radius:8px;text-decoration:none;font-size:0.9rem;font-weight:600;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,0.18);">&#8592; &#22238;&#39318;&#39052;</a>
+<header>
+  <h1>L5 Venice: A Sinking City — 卷C 解析版</h1>
+  <p>選完即顯示解析</p>
+</header>
+<div class="top-bar">
+  <span class="score-info">進度 <span id="answered-count">0</span>/50 ｜ 得分 <span id="live-score">0</span>/100</span>
+  <button class="btn-reveal" onclick="revealAll()">📖 顯示全部解析</button>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+
+<div id="quiz-container"></div>
+
+<button class="btn-submit" onclick="submitAll()">📝 交卷 / 查看成績</button>
+
+<div class="result-box" id="result-box">
+  <div class="result-score" id="result-score">0</div>
+  <div class="result-total">/ 100 分</div>
+  <div class="result-grade" id="result-grade"></div>
+  <div style="color:#666;font-size:15px;margin-bottom:14px;" id="result-detail"></div>
+  <button class="btn-reset" onclick="resetAll()">🔄 重新作答</button>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────
+const sections = [
+  {
+    title: '第一大題：字彙選擇',
+    pts: '15 題 × 2 分 = 30 分',
+    questions: [
+      { q: 'The architect was a _______ figure in the city, known for designing many famous buildings.',
+        opts: ['prominent','tranquil','vast','grim'],
+        ans: 'A',
+        exp: '<span class="exp-key">prominent（顯著的；卓越的）</span>──這位建築師在城市裡是位卓越的人物，設計了許多知名建築。<br>❌ tranquil = 寧靜的；vast = 廣大的；grim = 嚴峻的，皆不符合「人物地位」的語境。' },
+      { q: 'The port city has long been a center of international _______, attracting traders from around the world.',
+        opts: ['commerce','elevation','outlook','incidence'],
+        ans: 'A',
+        exp: '<span class="exp-key">commerce（商業；貿易）</span>──center of commerce = 商業中心，吸引世界各地的商人前來。<br>❌ elevation = 高度；outlook = 展望；incidence = 發生率，均與「商業活動」無關。' },
+      { q: 'After the noisy festival ended, the village returned to its usual _______ atmosphere.',
+        opts: ['tranquil','excessive','grim','joint'],
+        ans: 'A',
+        exp: '<span class="exp-key">tranquil（寧靜的；平靜的）</span>──喧鬧的節慶結束後，村莊恢復了平日寧靜的氛圍。<br>❌ excessive = 過度的；grim = 嚴峻的；joint = 聯合的，皆不符語境。' },
+      { q: 'Beneath the city lies a _______ network of underground tunnels connecting every district.',
+        opts: ['vast','solid','polar','literal'],
+        ans: 'A',
+        exp: '<span class="exp-key">vast（廣大的；巨大的）</span>──a vast network = 廣大的網絡，描述地下隧道系統的規模龐大。<br>❌ solid = 堅固的；polar = 極地的；literal = 字面的，皆不符合「規模」的描述。' },
+      { q: 'He was so exhausted that he _______ fell asleep the moment his head touched the pillow.',
+        opts: ['literally','overall','jointly','excessively'],
+        ans: 'A',
+        exp: '<span class="exp-key">literally（照字面地；確實地）</span>──強調「真的、確實地」一頭碰到枕頭就睡著了。<br>❌ overall = 整體而言；jointly = 共同地；excessively = 過度地，皆不符語境。' },
+      { q: 'During the storm, the _______ rose so high that several streets were flooded.',
+        opts: ['tide','outlook','incidence','elevation'],
+        ans: 'A',
+        exp: '<span class="exp-key">tide（潮汐）</span>──暴風雨期間潮水上漲，導致多條街道淹水，呼應課文 winter tides。<br>❌ outlook = 展望；incidence = 發生率；elevation = 高度，皆與「海水上漲」無直接關聯。' },
+      { q: 'The reservoir can no longer hold the increasing _______ of rainwater during the monsoon season.',
+        opts: ['volume','likelihood','curb','generation'],
+        ans: 'A',
+        exp: '<span class="exp-key">volume（量；體積）</span>──水庫無法再容納季風季節持續增加的雨水量。<br>❌ likelihood = 可能性；curb = 抑制；generation = 世代，均不符合「容量」的語境。' },
+      { q: 'A sudden _______ in tourist numbers overwhelmed the small island\'s resources.',
+        opts: ['surge','elevation','contend','acknowledgement'],
+        ans: 'A',
+        exp: '<span class="exp-key">surge（激增；湧現）</span>──遊客數量的激增使小島的資源不堪負荷。<br>❌ elevation = 高度；contend = 應付（動詞，詞性不符）；acknowledgement = 承認，皆不符語境。' },
+      { q: 'Given the heavy rainfall this week, there is a high _______ of flooding in low-lying areas.',
+        opts: ['likelihood','elevation','outlook','curb'],
+        ans: 'A',
+        exp: '<span class="exp-key">likelihood（可能性）</span>──likelihood of flooding = 發生洪水的可能性，本週降雨量大，低窪地區淹水可能性高。<br>❌ elevation = 高度；outlook = 展望；curb = 抑制，均不符合「可能性」的概念。' },
+      { q: 'The bridge was built on a _______ foundation of rock, allowing it to withstand earthquakes.',
+        opts: ['solid','tranquil','grim','joint'],
+        ans: 'A',
+        exp: '<span class="exp-key">solid（堅固的；固體的）</span>──solid foundation = 堅固的地基，使橋梁能承受地震。<br>❌ tranquil = 寧靜的；grim = 嚴峻的；joint = 聯合的，皆不符合「地基」的描述。' },
+      { q: 'There has been a noticeable _______ in public opinion regarding renewable energy in recent years.',
+        opts: ['shift','curb','acceleration','acknowledgement'],
+        ans: 'A',
+        exp: '<span class="exp-key">shift（轉變；移動）</span>──近年來大眾對再生能源的看法出現明顯的轉變。<br>❌ curb = 抑制；acceleration = 加速；acknowledgement = 承認，均不符合「觀念轉變」的語境。' },
+      { q: 'The old bridge could no longer _______ the weight of heavy trucks and had to be closed.',
+        opts: ['sustain','curb','acknowledge','cease'],
+        ans: 'A',
+        exp: '<span class="exp-key">sustain（維持；承受）</span>──老舊的橋梁無法再承受重型卡車的重量，因而關閉。<br>❌ curb = 抑制；acknowledge = 承認；cease = 停止，皆不符合「承受重量」的語境。' },
+      { q: 'New technology has helped to _______ the production process, cutting delivery time in half.',
+        opts: ['accelerate','curb','cease','sustain'],
+        ans: 'A',
+        exp: '<span class="exp-key">accelerate（加速）</span>──新科技使生產流程加速，將交貨時間縮短一半。<br>❌ curb = 抑制；cease = 停止；sustain = 維持，皆與「加快流程」相反或不符。' },
+      { q: 'Many countries are struggling to _______ with the rising cost of energy this year.',
+        opts: ['contend','acknowledge','curb','sustain'],
+        ans: 'A',
+        exp: '<span class="exp-key">contend with（應付；對付）</span>──許多國家正努力應付今年不斷上漲的能源成本。<br>❌ acknowledge = 承認；curb = 抑制；sustain = 維持，均不搭配 with 表示「應付」之意。' },
+      { q: 'Burning coal and oil for energy _______ the rapid increase in greenhouse gases.',
+        opts: ['fuels','curbs','ceases','acknowledges'],
+        ans: 'A',
+        exp: '<span class="exp-key">fuels（助長；加燃料於）</span>──燃燒煤與石油作為能源助長了溫室氣體的快速增加。<br>❌ curbs = 抑制（語意相反）；ceases = 停止；acknowledges = 承認，均不符語境。' },
+      { q: 'Scientists _______ that global temperatures have increased significantly over the past decade.',
+        opts: ['confirm','cease','curb','elevate'],
+        ans: 'A',
+        exp: '<span class="exp-key">confirm（證實；確認）</span>──科學家證實過去十年全球氣溫顯著上升，呼應課文 Scientists confirm that...。<br>❌ cease = 停止；curb = 抑制；elevate = 提升，皆不符合「證實事實」的語境。' },
+    ]
+  },
+  {
+    title: '第二大題：文法選擇',
+    pts: '15 題 × 2 分 = 30 分',
+    questions: [
+      { q: 'This ancient city, _______ on a series of small islands, is connected by hundreds of bridges.',
+        opts: ['build','built','building','to build'],
+        ans: 'B',
+        exp: '<span class="exp-key">built（過去分詞，表被動）</span>──分詞構句修飾 city，城市「被建造」於小島上，故用過去分詞 built，課文原句：Built on the sea more than a thousand years ago, Venice has long been admired...。<br>❌ build（原形）、building（現在分詞，表主動）、to build（不定詞）均不符合被動關係。' },
+      { q: 'The lake _______ admired for its clear water and surrounding mountains for centuries.',
+        opts: ['has long been','is long being','was long','had long'],
+        ans: 'A',
+        exp: '<span class="exp-key">has long been admired（現在完成式被動）</span>──表示從過去持續到現在的狀態，「長久以來一直受到讚賞」，課文原句：has long been admired for its magnificence。<br>❌ is long being 文法錯誤；was long 缺乏動詞 admired；had long 須接 been admired 才完整。' },
+      { q: '_______ a major trading hub in the past, the town is now a quiet fishing village.',
+        opts: ['Once','Although','Despite','Unless'],
+        ans: 'A',
+        exp: '<span class="exp-key">Once（曾經，作副詞引導分詞片語）</span>──Once + 名詞片語，表示「曾經是…」，課文原句：Once a prominent center of commerce, the city is famous for...。<br>❌ Although 須接子句（主詞+動詞）；Despite 須接名詞但語意不符；Unless = 除非，語意不通。' },
+      { q: 'The region today is _______ a serious problem: its water supply is rapidly running out.',
+        opts: ['facing','faced','face','to face'],
+        ans: 'A',
+        exp: '<span class="exp-key">facing（現在進行式）</span>──be facing = 正面臨，主詞 region 主動「面臨」問題，課文原句：Venice today is facing a serious threat。<br>❌ faced 為被動分詞；face 原形不可直接接 be 動詞後作主要動詞；to face 不定詞不符進行式結構。' },
+      { q: 'This decline can be _______ to a combination of poor management and falling demand.',
+        opts: ['attributed','attribute','attributing','attributes'],
+        ans: 'A',
+        exp: '<span class="exp-key">attributed（過去分詞，被動語態）</span>──be attributed to = 被歸因於，課文原句：This flooding can be attributed to two natural factors。<br>❌ attribute（原形）、attributing（現在分詞）、attributes（第三人稱單數）均不符合 be + p.p. 被動結構。' },
+      { q: '_______ the locals call "monsoon season" usually lasts from June to September.',
+        opts: ['What','That','Which','Where'],
+        ans: 'A',
+        exp: '<span class="exp-key">What（關係代名詞，引導名詞子句作主詞）</span>──What the locals call... = 當地人所稱的…，what 兼具先行詞與受詞功能，課文原句：what the locals call "acqua alta"。<br>❌ That 不能作此種無先行詞的關代用法；Which/Where 需要先行詞或表地點，皆不符。' },
+      { q: 'The flood occurs when strong winds and heavy rain _______ to overwhelm the drainage system.',
+        opts: ['combine','combines','combined','combining'],
+        ans: 'A',
+        exp: '<span class="exp-key">combine（原形動詞，與複數主詞一致）</span>──主詞 strong winds and heavy rain 為複數，動詞用原形 combine，課文原句：winter tides, strong winds, and waves combine to push sea water into the city。<br>❌ combines 為單數動詞；combined 為過去式/分詞；combining 為現在分詞，皆不符主詞動詞一致原則。' },
+      { q: 'The damage to the coral reef occurs _______ the area was used for decades as a dumping ground.',
+        opts: ['because','because of','due to','owing to'],
+        ans: 'A',
+        exp: '<span class="exp-key">because（連接詞，後接子句）</span>──because + 主詞 + 動詞（完整子句），課文原句：because Venice was built on a foundation of weak, soft marshland。<br>❌ because of / due to / owing to 皆為介系詞片語，須接名詞或動名詞，不可直接接完整子句。' },
+      { q: 'This erosion is also _______ by changes in ocean currents near the coastline.',
+        opts: ['caused','causing','cause','to cause'],
+        ans: 'A',
+        exp: '<span class="exp-key">caused（過去分詞，被動語態）</span>──be caused by = 由…造成，課文原句：This subsidence is also caused by a shift in the Apennine Plate。<br>❌ causing 為主動現在分詞；cause 原形不可直接接 be 動詞後；to cause 不定詞不符被動結構。' },
+      { q: 'In the 1990s, large quantities of natural gas _______ from beneath the seabed for energy production.',
+        opts: ['were extracted','extracted','have extracted','extract'],
+        ans: 'A',
+        exp: '<span class="exp-key">were extracted（過去式被動）</span>──描述過去發生的被動事件，主詞 quantities 為複數，課文原句：large amounts of groundwater were pumped out from beneath the city。<br>❌ extracted 為主動過去式，主詞無法「主動開採」；have extracted 為現在完成主動；extract 為原形，皆不符。' },
+      { q: '_______ this policy was introduced years ago, its effects are still being felt today.',
+        opts: ['Although','Despite','Because','Since'],
+        ans: 'A',
+        exp: '<span class="exp-key">Although（雖然，連接詞接子句）</span>──雖然這項政策多年前就已推行，但其影響至今仍可感受到，課文原句：Although this practice was banned in the 1970s, the damage had already been done。<br>❌ Despite 為介系詞，須接名詞；Because = 因為，語意不符；Since 雖可接子句但語意為「自從／因為」，與「雖然」對比語氣不符。' },
+      { q: 'The release of harmful chemicals into the river has _______ to the deaths of thousands of fish.',
+        opts: ['contributed','contribute','contributing','contributes'],
+        ans: 'A',
+        exp: '<span class="exp-key">contributed（過去分詞，與 has 構成現在完成式）</span>──has contributed to = 已經造成；助長了，課文原句：Climate change is another major contributor／causing global temperatures to rise 概念呼應。<br>❌ contribute（原形）、contributing（現在分詞）、contributes（單數現在式）皆不符合 has + p.p. 結構。' },
+      { q: 'As a result of the drought, crop yields are expected to drop by _______ much as 30 percent this year.',
+        opts: ['as','so','such','too'],
+        ans: 'A',
+        exp: '<span class="exp-key">as much as（多達；高達）</span>──as + 形容詞/副詞 + as = 與…一樣，as much as 30 percent = 多達30%，課文原句：sea levels could rise by as much as 53 centimeters。<br>❌ so much as 用於否定句中表「甚至」；such much 不存在此用法；too much 表「太多」，語意不符。' },
+      { q: 'A massive wildfire _______ through the forest last summer, destroying thousands of acres of trees.',
+        opts: ['swept','sweeps','has swept','sweeping'],
+        ans: 'A',
+        exp: '<span class="exp-key">swept（過去式）</span>──描述去年夏天發生的過去事件，sweep（橫掃）的過去式為 swept，課文原句：A flood that swept through the city in November 1966 reached a record height。<br>❌ sweeps 為現在式；has swept 為現在完成式，與 last summer 明確過去時間衝突；sweeping 為現在分詞，缺乏主要動詞。' },
+      { q: 'If the trend continues, this species _______ extinct within the next fifty years.',
+        opts: ['may become','may became','may becoming','may be become'],
+        ans: 'A',
+        exp: '<span class="exp-key">may become（情態助動詞 + 原形動詞）</span>──may + 原形動詞 V，表示「可能會」，課文原句：Venice may cease to exist by the 22nd century。<br>❌ may became 時態錯誤（助動詞後須接原形）；may becoming／may be become 文法結構皆錯誤。' },
+    ]
+  },
+  {
+    title: '第三大題：克漏字填充',
+    pts: '10 題 × 2 分 = 20 分',
+    passage: 'Amsterdam is a city that has had to <strong>(31)</strong> with the threat of rising water for centuries. Much of the city was built on land that is below sea level, and a <strong>(32)</strong> network of canals runs through every neighborhood. <strong>(33)</strong> a result, the Dutch developed advanced systems of dikes and pumps to keep the water out.<br><br>However, climate change has made the situation more <strong>(34)</strong>. Rising sea levels and more frequent storms have <strong>(35)</strong> the volume of water that the city\'s defenses must handle. Engineers <strong>(36)</strong> that without further investment, the risk of severe flooding will only increase.<br><br>The government has therefore <strong>(37)</strong> billions of dollars to strengthening the city\'s flood barriers. Some experts believe that these efforts can <strong>(38)</strong> the rate of damage, but they cannot stop the sea from rising <strong>(39)</strong>. In the long run, they argue, only a <strong>(40)</strong> international effort to reduce carbon emissions can truly protect cities like Amsterdam.',
+    questions: [
+      { q: 'Amsterdam is a city that has had to _______ with the threat of rising water for centuries.',
+        opts: ['contend','acknowledge','cease','elevate'],
+        ans: 'A',
+        exp: '<span class="exp-key">contend（with）（應付；對付）</span>──contend with = 應付，阿姆斯特丹數百年來必須應付海水上升的威脅。<br>❌ acknowledge = 承認；cease = 停止；elevate = 提升，皆不與 with 搭配表示「應付」之意。' },
+      { q: 'Much of the city was built on land that is below sea level, and a _______ network of canals runs through every neighborhood.',
+        opts: ['vast','tranquil','grim','solid'],
+        ans: 'A',
+        exp: '<span class="exp-key">vast（廣大的；巨大的）</span>──a vast network of canals = 廣大的運河網絡，遍布每個社區。<br>❌ tranquil = 寧靜的；grim = 嚴峻的；solid = 堅固的，皆不符合「網絡規模」的描述。' },
+      { q: '_______ a result, the Dutch developed advanced systems of dikes and pumps to keep the water out.',
+        opts: ['As','For','By','With'],
+        ans: 'A',
+        exp: '<span class="exp-key">As a result（結果；因此）</span>──固定片語，表示「因此」，引導後句的結果。<br>❌ For/By/With a result 均非正確的固定用法。' },
+      { q: 'However, climate change has made the situation more _______.',
+        opts: ['grim','tranquil','prominent','solid'],
+        ans: 'A',
+        exp: '<span class="exp-key">grim（嚴峻的；令人擔憂的）</span>──氣候變遷使情況變得更加嚴峻，呼應課文 The outlook is grim。<br>❌ tranquil = 寧靜的；prominent = 顯著的；solid = 堅固的，皆不符合「情況惡化」的語境。' },
+      { q: 'Rising sea levels and more frequent storms have _______ the volume of water that the city\'s defenses must handle.',
+        opts: ['increased','decreased','curbed','ceased'],
+        ans: 'A',
+        exp: '<span class="exp-key">increased（增加）</span>──海平面上升與更頻繁的暴風雨增加了城市防洪設施須處理的水量，呼應課文 sea levels are rising overall。<br>❌ decreased = 減少；curbed = 抑制；ceased = 停止，語意皆與文意相反或不符。' },
+      { q: 'Engineers _______ that without further investment, the risk of severe flooding will only increase.',
+        opts: ['confirm','cease','curb','sustain'],
+        ans: 'A',
+        exp: '<span class="exp-key">confirm（證實；確認）</span>──工程師證實，若無進一步投資，嚴重洪災的風險只會增加，呼應課文 Scientists confirm that...。<br>❌ cease = 停止；curb = 抑制；sustain = 維持，皆不符合「證實看法」的語境。' },
+      { q: 'The government has therefore _______ billions of dollars to strengthening the city\'s flood barriers.',
+        opts: ['committed','ceased','curbed','acknowledged'],
+        ans: 'A',
+        exp: '<span class="exp-key">committed（投入；承諾投入）</span>──commit money to + V-ing = 投入資金於某事，政府已投入數十億美元來強化防洪設施。<br>❌ ceased = 停止；curbed = 抑制；acknowledged = 承認，皆不符合「投入資金」的語境。' },
+      { q: 'Some experts believe that these efforts can _______ the rate of damage, but they cannot stop the sea from rising entirely.',
+        opts: ['curb','accelerate','fuel','confirm'],
+        ans: 'A',
+        exp: '<span class="exp-key">curb（抑制；約束）</span>──這些努力可以抑制損害的速度，但無法完全阻止海平面上升。<br>❌ accelerate = 加速（語意相反）；fuel = 助長；confirm = 證實，皆不符語境。' },
+      { q: 'In the long run, they argue, only a _______ international effort to reduce carbon emissions can truly protect cities like Amsterdam.',
+        opts: ['joint','tranquil','grim','literal'],
+        ans: 'A',
+        exp: '<span class="exp-key">joint（聯合的；共同的）</span>──joint international effort = 聯合的國際努力，呼應課文 require all humans to...work toward the common goal。<br>❌ tranquil = 寧靜的；grim = 嚴峻的；literal = 字面的，皆不符合「共同合作」的語境。' },
+      { q: 'In the long run, they argue, only a joint international effort to reduce carbon emissions can truly _______ cities like Amsterdam.',
+        opts: ['protect','cease','curb','confirm'],
+        ans: 'A',
+        exp: '<span class="exp-key">protect（保護）</span>──唯有聯合的國際努力才能真正保護像阿姆斯特丹這樣的城市，呼應課文 preserving our beloved Earth。<br>❌ cease = 停止；curb = 抑制；confirm = 證實，皆不符語境，且文法上需接受詞「城市」做受詞。' },
+    ]
+  },
+  {
+    title: '第四大題：閱讀測驗',
+    pts: '10 題 × 2 分 = 20 分',
+    passage: 'Built on the sea more than a thousand years ago, Venice has long been admired for its magnificence. Once a prominent center of commerce, the city is famous for its tranquil lagoons, ancient bridges, and a vast network of canals. However, Venice today is facing a serious threat: the water levels around the city are literally rising, and flooding has become an increasingly common occurrence.<br><br>This flooding can be attributed to two natural factors. The first is what the locals call "acqua alta," or "high water," which occurs when winter tides, strong winds, and waves combine to push sea water into the city. The second factor is natural subsidence—the gradual sinking of land—which occurs because Venice was built on a foundation of weak, soft marshland that cannot fully support the weight of the city. This subsidence is also caused by a shift in the Apennine Plate, on which Venice sits.<br><br>In addition to these natural factors, there is also a human factor contributing to the problem. In the 1930s, large amounts of groundwater were pumped out from beneath the city for industrial use, which accelerated the rate of subsidence. Although this practice was banned in the 1970s, the damage had already been done, and Venice has sunk by about 25 centimeters over the past century.<br><br>Climate change is another major contributor. The burning of fossil fuels has released excessive amounts of carbon dioxide into the atmosphere, causing global temperatures to rise. As a result, polar ice caps are melting, and sea levels are rising overall. Scientists confirm that sea levels could rise by as much as 53 centimeters by the year 2100.<br><br>Combined, these factors have caused the incidence of flooding to increase dramatically: a century ago, Venice experienced fewer than 10 floods a year, but now it experiences more than 60. A flood that swept through the city in November 1966 reached a record height of 194 centimeters and submerged Venice for 22 hours. In 2019, a flood reached 187 centimeters—the first of five extraordinary floods of over 140 centimeters that year alone.<br><br>Some scientists predict that, if nothing changes, Venice may cease to exist by the 22nd century. The outlook is grim, largely because of the human factors driving sea level rise. Venice has therefore become a test case for humanity, showing what can happen when nations fail to curb the effects of climate change through joint efforts. Saving Venice cannot be achieved by one country acting alone. Instead, they require all humans to acknowledge what is happening and to work toward the common goal of preserving our beloved Earth for future generations.',
+    questions: [
+      { q: 'What was Venice once known as?',
+        opts: ['A military fortress','A prominent center of commerce','A center of agriculture','An isolated fishing village'],
+        ans: 'B',
+        exp: '<span class="exp-key">B</span>──課文原句：Once a prominent center of commerce, the city is famous for its tranquil lagoons, ancient bridges, and a vast network of canals。<br>❌ A、C、D 均非課文所述的歷史身分。' },
+      { q: 'According to the passage, what is "acqua alta"?',
+        opts: ['A type of fish found only in Venice','A festival celebrated every winter','A term for high water caused by tides, winds, and waves combining','A new flood prevention system'],
+        ans: 'C',
+        exp: '<span class="exp-key">C</span>──課文原句：what the locals call "acqua alta," or "high water," which occurs when winter tides, strong winds, and waves combine to push sea water into the city。<br>❌ A、B、D 均為文章未提及的內容。' },
+      { q: 'Why is Venice particularly vulnerable to subsidence?',
+        opts: ['It is located near an active volcano.','It was built on a foundation of weak, soft marshland.','It has no canals to drain excess water.','Its buildings are too tall and heavy for modern standards.'],
+        ans: 'B',
+        exp: '<span class="exp-key">B</span>──課文原句：Venice was built on a foundation of weak, soft marshland that cannot fully support the weight of the city。<br>❌ A、C、D 均非課文所述原因。' },
+      { q: 'What human activity in the 1930s accelerated Venice\'s subsidence?',
+        opts: ['Construction of new bridges','Pumping groundwater out from beneath the city','Building a new airport','Increasing tourism'],
+        ans: 'B',
+        exp: '<span class="exp-key">B</span>──課文原句：In the 1930s, large amounts of groundwater were pumped out from beneath the city for industrial use, which accelerated the rate of subsidence。<br>❌ A、C、D 均為文章未提及的活動。' },
+      { q: 'According to the passage, how much has Venice sunk over the past century?',
+        opts: ['About 10 centimeters','About 25 centimeters','About 53 centimeters','About 100 centimeters'],
+        ans: 'B',
+        exp: '<span class="exp-key">B</span>──課文原句：Venice has sunk by about 25 centimeters over the past century。<br>❌ A、C、D 的數字皆與課文不符；53 公分是預測 2100 年海平面可能上升的高度，並非沉降量。' },
+      { q: 'What is one effect of the burning of fossil fuels mentioned in the passage?',
+        opts: ['It has reduced the volume of ocean water.','It has caused global temperatures to rise, melting polar ice caps.','It has slowed down the rate of subsidence.','It has made Venice\'s canals cleaner.'],
+        ans: 'B',
+        exp: '<span class="exp-key">B</span>──課文原句：The burning of fossil fuels has released excessive amounts of carbon dioxide into the atmosphere, causing global temperatures to rise. As a result, polar ice caps are melting。<br>❌ A、C、D 均與課文敘述相反或無關。' },
+      { q: 'How does the frequency of flooding today compare to a century ago, according to the passage?',
+        opts: ['It is roughly the same.','Venice now experiences fewer floods than before.','Venice now experiences more than 60 floods a year, compared to fewer than 10 a century ago.','Flooding has stopped completely in recent years.'],
+        ans: 'C',
+        exp: '<span class="exp-key">C</span>──課文原句：a century ago, Venice experienced fewer than 10 floods a year, but now it experiences more than 60。<br>❌ A、B、D 均與課文數據不符。' },
+      { q: 'What happened during the flood of November 1966?',
+        opts: ['It reached a record height of 194 centimeters and submerged Venice for 22 hours.','It was the first flood ever recorded in Venice.','It caused the government to ban groundwater pumping.','It only affected the outskirts of the city.'],
+        ans: 'A',
+        exp: '<span class="exp-key">A</span>──課文原句：A flood that swept through the city in November 1966 reached a record height of 194 centimeters and submerged Venice for 22 hours。<br>❌ B、C、D 均為文章未提及或與時序不符的內容。' },
+      { q: 'What do some scientists predict could happen to Venice by the 22nd century?',
+        opts: ['It will become a major tourist destination.','It may cease to exist.','It will be rebuilt on higher ground.','It will become the new capital of Italy.'],
+        ans: 'B',
+        exp: '<span class="exp-key">B</span>──課文原句：Some scientists predict that, if nothing changes, Venice may cease to exist by the 22nd century。<br>❌ A、C、D 均為文章未提及的推測。' },
+      { q: 'What is the main message of the passage\'s conclusion?',
+        opts: ['Venice should be abandoned as soon as possible.','Saving Venice requires joint international efforts to address climate change.','Only Italy is responsible for solving Venice\'s problems.','The flooding problem in Venice has already been solved.'],
+        ans: 'B',
+        exp: '<span class="exp-key">B</span>──課文原句：Saving Venice cannot be achieved by one country acting alone. Instead, they require all humans to acknowledge what is happening and to work toward the common goal of preserving our beloved Earth for future generations。<br>❌ A、C、D 均與文章結論的精神相反或不符。' },
+    ]
+  }
+];
+
+// ── RENDER ────────────────────────────────────────────────
+let globalQNum = 0;
+const qMap = {}; // qNum → { ans, revealed }
+const userAnswers = {};
+let submitted = false;
+
+const container = document.getElementById('quiz-container');
+
+sections.forEach((sec, si) => {
+  const secDiv = document.createElement('div');
+  secDiv.className = 'section';
+  let html = `<div class="section-header">${sec.title} <span class="pts">（${sec.pts}）</span></div>`;
+  if (sec.passage) {
+    html += `<div class="passage"><div class="passage-label">📖 閱讀文章</div>${sec.passage}</div>`;
+  }
+  sec.questions.forEach((q, qi) => {
+    globalQNum++;
+    const n = globalQNum;
+    qMap[n] = { ans: q.ans, exp: q.exp };
+    const labels = ['A','B','C','D'];
+    let optHtml = '';
+    q.opts.forEach((o, i) => {
+      optHtml += `<div class="option" id="opt-${n}-${labels[i]}" onclick="choose(${n},'${labels[i]}')">`
+        + `<span class="option-label">(${labels[i]})</span>${o}</div>`;
+    });
+    html += `<div class="question" id="q${n}">
+      <div class="q-text"><span class="q-num">${n}.</span> ${q.q}</div>
+      <div class="options">${optHtml}</div>
+      <div class="explanation" id="exp${n}">
+        <div class="exp-header">💡 解析</div>
+        <div class="exp-body">${q.exp}</div>
+      </div>
+    </div>`;
+  });
+  secDiv.innerHTML = html;
+  container.appendChild(secDiv);
+});
+
+// ── LOGIC ─────────────────────────────────────────────────
+function choose(n, chosen) {
+  if (submitted) return;
+  userAnswers[n] = chosen;
+  const ans = qMap[n].ans;
+  const labels = ['A','B','C','D'];
+
+  labels.forEach(l => {
+    const el = document.getElementById(`opt-${n}-${l}`);
+    el.classList.remove('selected','correct','wrong','reveal-correct');
+    if (l === chosen) {
+      if (chosen === ans) el.classList.add('correct');
+      else el.classList.add('wrong');
+    } else if (l === ans && chosen !== ans) {
+      el.classList.add('reveal-correct');
+    }
+  });
+
+  document.getElementById(`exp${n}`).classList.add('show');
+  updateTopBar();
+}
+
+function updateTopBar() {
+  const count = Object.keys(userAnswers).length;
+  document.getElementById('answered-count').textContent = count;
+  document.getElementById('progress-fill').style.width = (count / 50 * 100) + '%';
+  let score = 0;
+  for (let q in userAnswers) { if (userAnswers[q] === qMap[q].ans) score += 2; }
+  document.getElementById('live-score').textContent = score;
+}
+
+function revealAll() {
+  for (let n = 1; n <= 50; n++) {
+    const ans = qMap[n].ans;
+    const labels = ['A','B','C','D'];
+    labels.forEach(l => {
+      const el = document.getElementById(`opt-${n}-${l}`);
+      el.classList.remove('selected','correct','wrong','reveal-correct');
+      if (l === ans) el.classList.add('reveal-correct');
+      else if (userAnswers[n] === l && l !== ans) el.classList.add('wrong');
+    });
+    document.getElementById(`exp${n}`).classList.add('show');
+  }
+  updateTopBar();
+}
+
+function submitAll() {
+  submitted = true;
+  revealAll();
+  let score = 0;
+  for (let n = 1; n <= 50; n++) {
+    if (userAnswers[n] === qMap[n].ans) score += 2;
+  }
+  const rb = document.getElementById('result-box');
+  rb.classList.add('show');
+  document.getElementById('result-score').textContent = score;
+  const gr = document.getElementById('result-grade');
+  const det = document.getElementById('result-detail');
+  if (score >= 90) { gr.textContent = '🏆 優秀！'; gr.className = 'result-grade grade-a'; det.textContent = '表現卓越，繼續保持！'; }
+  else if (score >= 70) { gr.textContent = '👍 良好'; gr.className = 'result-grade grade-b'; det.textContent = '表現不錯，再複習錯誤的題目吧！'; }
+  else { gr.textContent = '📚 需加強'; gr.className = 'result-grade grade-c'; det.textContent = '多複習解析說明，你可以做到的！'; }
+  document.getElementById('answered-count').textContent = 50;
+  document.getElementById('live-score').textContent = score;
+  document.getElementById('progress-fill').style.width = '100%';
+  rb.scrollIntoView({ behavior: 'smooth' });
+}
+
+function resetAll() {
+  submitted = false;
+  for (let key in userAnswers) delete userAnswers[key];
+  for (let n = 1; n <= 50; n++) {
+    const labels = ['A','B','C','D'];
+    labels.forEach(l => {
+      document.getElementById(`opt-${n}-${l}`).classList.remove('selected','correct','wrong','reveal-correct');
+    });
+    document.getElementById(`exp${n}`).classList.remove('show');
+  }
+  document.getElementById('result-box').classList.remove('show');
+  document.getElementById('answered-count').textContent = '0';
+  document.getElementById('live-score').textContent = '0';
+  document.getElementById('progress-fill').style.width = '0%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

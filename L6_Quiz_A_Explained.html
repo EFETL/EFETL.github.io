@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L6 卷A 解析版 — I Have a Dream</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 17px; line-height: 1.7;
+  background: #f0f2f5; color: #1d1d1f;
+  padding-bottom: 48px;
+}
+header {
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  color: white; padding: 20px 16px; text-align: center;
+}
+header h1 { font-size: 20px; margin-bottom: 4px; }
+header p { font-size: 14px; opacity: 0.75; }
+.top-bar {
+  background: white; padding: 10px 14px;
+  display: flex; justify-content: space-between; align-items: center;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1); gap: 8px;
+}
+.top-bar .score-info { font-size: 15px; font-weight: bold; color: #1a1a2e; white-space: nowrap; }
+.btn-reveal {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white; border: none; border-radius: 10px;
+  padding: 8px 14px; font-size: 14px; font-weight: bold;
+  cursor: pointer; white-space: nowrap; -webkit-tap-highlight-color: transparent;
+}
+.progress-bar { height: 4px; background: #e0e0e0; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); transition: width 0.3s; width: 0%; }
+.section {
+  background: white; margin: 14px 10px 0;
+  border-radius: 16px; overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+.section-header {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white; padding: 13px 16px; font-size: 16px; font-weight: bold;
+}
+.section-header .pts { font-size: 12px; opacity: 0.85; font-weight: normal; }
+.question { padding: 15px 16px; border-bottom: 1px solid #f0f0f0; }
+.question:last-child { border-bottom: none; }
+.q-text { font-size: 16px; margin-bottom: 11px; font-weight: 500; line-height: 1.6; }
+.q-num { color: #667eea; font-weight: bold; margin-right: 4px; }
+.options { display: flex; flex-direction: column; gap: 7px; }
+.option {
+  display: flex; align-items: flex-start; gap: 9px;
+  padding: 10px 13px; border: 2px solid #e0e0e0; border-radius: 11px;
+  cursor: pointer; transition: all 0.15s; font-size: 16px; line-height: 1.5;
+  background: #fafafa; -webkit-tap-highlight-color: transparent;
+}
+.option:active { transform: scale(0.98); }
+.option.selected { border-color: #667eea; background: #f0f0ff; }
+.option.correct { border-color: #34c759; background: #f0fff4; }
+.option.wrong   { border-color: #ff3b30; background: #fff5f5; }
+.option.reveal-correct { border-color: #34c759; background: #f0fff4; }
+.option-label { font-weight: bold; color: #667eea; min-width: 22px; flex-shrink: 0; }
+.option.correct .option-label, .option.reveal-correct .option-label { color: #34c759; }
+.option.wrong .option-label { color: #ff3b30; }
+
+/* Explanation panel */
+.explanation {
+  display: none; margin-top: 10px;
+  background: #fafbff; border-radius: 10px;
+  border: 1px solid #dde3ff; overflow: hidden;
+}
+.explanation.show { display: block; }
+.exp-header {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 13px; font-size: 14px; font-weight: bold;
+  background: #eef1ff; color: #667eea;
+}
+.exp-body { padding: 10px 13px; font-size: 15px; line-height: 1.7; color: #333; }
+.exp-key { color: #2e7d32; font-weight: bold; }
+.exp-wrong-key { color: #c62828; }
+
+/* Passage */
+.passage {
+  background: #f8f9ff; border-left: 4px solid #667eea;
+  padding: 13px 15px; margin: 0 16px 10px;
+  border-radius: 0 8px 8px 0; font-size: 15px; line-height: 1.75;
+}
+.passage-label { font-weight: bold; color: #667eea; margin-bottom: 7px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* Buttons */
+.btn-submit {
+  display: block; width: calc(100% - 28px); margin: 18px auto 0;
+  padding: 15px; background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white; border: none; border-radius: 13px;
+  font-size: 17px; font-weight: bold; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-submit:active { opacity: 0.9; transform: scale(0.98); }
+
+/* Result */
+.result-box {
+  display: none; margin: 14px 10px;
+  background: white; border-radius: 16px; padding: 22px 18px;
+  text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+.result-box.show { display: block; }
+.result-score { font-size: 50px; font-weight: bold; color: #667eea; line-height: 1.1; }
+.result-total { font-size: 20px; color: #666; margin-bottom: 10px; }
+.result-grade { font-size: 18px; font-weight: bold; padding: 7px 18px; border-radius: 18px; display: inline-block; margin-bottom: 14px; }
+.grade-a { background: #f0fff4; color: #1a7a3c; }
+.grade-b { background: #fff9e6; color: #b7791f; }
+.grade-c { background: #fff5f5; color: #c0392b; }
+.btn-reset {
+  display: inline-block; padding: 11px 26px;
+  background: #f0f0f7; color: #667eea;
+  border: none; border-radius: 11px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 6px;
+}
+</style>
+</head>
+<body>
+<a href="/" style="position:fixed;top:14px;left:14px;background:#2b4c8c;color:#fff;padding:7px 16px;border-radius:8px;text-decoration:none;font-size:0.9rem;font-weight:600;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,0.18);">&#8592; &#22238;&#39318;&#39052;</a>
+<a href="/" style="position:fixed;top:14px;left:14px;background:#2b4c8c;color:#fff;padding:7px 16px;border-radius:8px;text-decoration:none;font-size:0.9rem;font-weight:600;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,0.18);">&#8592; &#22238;&#39318;&#39052;</a>
+<header>
+  <h1>L6 I Have a Dream — 卷A 解析版</h1>
+  <p>Martin Luther King, Jr.｜選完即顯示解析</p>
+</header>
+<div class="top-bar">
+  <span class="score-info">進度 <span id="answered-count">0</span>/50 ｜ 得分 <span id="live-score">0</span>/100</span>
+  <button class="btn-reveal" onclick="revealAll()">📖 顯示全部解析</button>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+
+<div id="quiz-container"></div>
+
+<button class="btn-submit" onclick="submitAll()">📝 交卷 / 查看成績</button>
+
+<div class="result-box" id="result-box">
+  <div class="result-score" id="result-score">0</div>
+  <div class="result-total">/ 100 分</div>
+  <div class="result-grade" id="result-grade"></div>
+  <div style="color:#666;font-size:15px;margin-bottom:14px;" id="result-detail"></div>
+  <button class="btn-reset" onclick="resetAll()">🔄 重新作答</button>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────
+const sections = [
+  {
+    title: '第一大題：字彙選擇',
+    pts: '15 題 × 2 分 = 30 分',
+    questions: [
+      { q: 'Thousands of protesters _______ through the city center to demand equal rights.',
+        opts: ['marched','outlined','withered','exiled'],
+        ans: 'A',
+        exp: '<span class="exp-key">marched（行進；遊行）</span>──數千名抗議者「遊行」穿過市中心要求平等權利，march 為動詞。<br>❌ outlined = 概述；withered = 凋謝；exiled = 流放，語境均不符。' },
+      { q: 'The Lincoln _______ in Washington, DC, attracts millions of visitors every year.',
+        opts: ['Captivity','Memorial','Segregation','Mobility'],
+        ans: 'B',
+        exp: '<span class="exp-key">Memorial（紀念碑）</span>──Lincoln Memorial（林肯紀念堂）為專有名詞，每年吸引大量遊客。<br>❌ Captivity = 囚禁；Segregation = 隔離；Mobility = 流動性，皆非地標名稱。' },
+      { q: 'In his speech, the mayor _______ his plans for improving public transportation.',
+        opts: ['outlined','cripple','grant','rob'],
+        ans: 'A',
+        exp: '<span class="exp-key">outlined（概述）</span>──市長在演說中「概述」其改善大眾運輸的計畫，outline 常接 plans/hopes 等受詞。<br>❌ cripple = 使殘廢；grant = 授予；rob = 搶劫，均不能搭配 plans。' },
+      { q: '_______ is a serious social problem that still affects many countries today.',
+        opts: ['Racism','Dignity','Fatigue','Eloquence'],
+        ans: 'A',
+        exp: '<span class="exp-key">Racism（種族主義）</span>──種族主義至今仍是許多國家嚴重的社會問題，符合課文主題。<br>❌ Dignity = 尊嚴；Fatigue = 疲勞；Eloquence = 口才，均與「社會問題」無關。' },
+      { q: 'The new policy will _______ equal pay to all employees regardless of gender.',
+        opts: ['grant','wither','exile','segregate'],
+        ans: 'A',
+        exp: '<span class="exp-key">grant（授予；准予）</span>──grant equal pay to sb. = 給予某人同等薪資，課文用法 grant new rights to African Americans。<br>❌ wither = 凋謝；exile = 流放；segregate = 隔離，語意均不合。' },
+      { q: 'The candle\'s _______ flickered weakly before finally going out.',
+        opts: ['flame','warrior','symphony','conscience'],
+        ans: 'A',
+        exp: '<span class="exp-key">flame（火焰）</span>──蠟燭的「火焰」微弱地閃爍後熄滅，符合語境。<br>❌ warrior = 戰士；symphony = 交響曲；conscience = 良心，均與蠟燭無關。' },
+      { q: 'Without water, the plants in the garden began to _______ within days.',
+        opts: ['wither','march','outline','rob'],
+        ans: 'A',
+        exp: '<span class="exp-key">wither（凋謝；枯萎）</span>──沒有水分，花園裡的植物幾天內便開始「枯萎」。<br>❌ march = 行進；outline = 概述；rob = 搶劫，均不符植物的狀態。' },
+      { q: 'After years in _______, the prisoner was finally released and reunited with his family.',
+        opts: ['captivity','memorial','symphony','mobility'],
+        ans: 'A',
+        exp: '<span class="exp-key">captivity（囚禁）</span>──in captivity = 被囚禁中，囚犯多年被囚後終於獲釋與家人團聚。<br>❌ memorial = 紀念碑；symphony = 交響曲；mobility = 流動性，均與囚禁無關。' },
+      { q: 'The car accident left him permanently _______ and unable to walk.',
+        opts: ['crippled','exiled','granted','outlined'],
+        ans: 'A',
+        exp: '<span class="exp-key">crippled（使殘廢的）</span>──車禍使他永久殘廢、無法行走，cripple 作過去分詞當形容詞。<br>❌ exiled = 被流放；granted = 被授予；outlined = 被概述，語意均不符。' },
+      { q: 'During apartheid, racial _______ kept black and white South Africans apart in daily life.',
+        opts: ['segregation','captivity','dignity','rhetoric'],
+        ans: 'A',
+        exp: '<span class="exp-key">segregation（隔離；種族隔離）</span>──種族隔離制度將南非黑人與白人在日常生活中分開，racial segregation 為課文核心詞彙。<br>❌ captivity = 囚禁；dignity = 尊嚴；rhetoric = 修辭，語意均不符。' },
+      { q: 'After losing everything in the war, the family found themselves alone in the _______ of a strange city.',
+        opts: ['midst','flame','warrior','symphony'],
+        ans: 'A',
+        exp: '<span class="exp-key">midst（中間；之中）</span>──in the midst of = 在…之中，課文原句 a lonely island ... in the midst of a vast ocean。<br>❌ flame = 火焰；warrior = 戰士；symphony = 交響曲，均不搭配 of a city。' },
+      { q: 'Many refugees live in _______, far from their homeland, hoping to return one day.',
+        opts: ['exile','captivity','dignity','fatigue'],
+        ans: 'A',
+        exp: '<span class="exp-key">exile（流亡；放逐）</span>──live in exile = 流亡在外，許多難民流亡他鄉，盼有朝一日返鄉。<br>❌ captivity = 囚禁；dignity = 尊嚴；fatigue = 疲勞，語意均不符。' },
+      { q: 'It was _______ of the company to fire workers just before the holidays.',
+        opts: ['shameful','eloquent','vicious','rhetorical'],
+        ans: 'A',
+        exp: '<span class="exp-key">shameful（可恥的；丟臉的）</span>──公司在假期前解雇員工的行為「可恥」，符合語境。<br>❌ eloquent = 雄辯的；vicious = 兇惡的；rhetorical = 修辭的，均不符道德評價語境。' },
+      { q: 'After the long flight, she felt extreme _______ and went straight to bed.',
+        opts: ['fatigue','dignity','oppression','mobility'],
+        ans: 'A',
+        exp: '<span class="exp-key">fatigue（疲勞；疲倦）</span>──長途飛行後感到極度疲勞，直接上床睡覺，課文原句 heavy with the fatigue of travel。<br>❌ dignity = 尊嚴；oppression = 壓迫；mobility = 流動性，語意均不符。' },
+      { q: 'The thief tried to _______ the old woman of her purse on the crowded train.',
+        opts: ['rob','wither','exile','segregate'],
+        ans: 'A',
+        exp: '<span class="exp-key">rob（搶劫；剝奪）</span>──rob sb. of sth. = 搶奪某人的某物，小偷企圖在擁擠的火車上搶老婦人的錢包。<br>❌ wither = 凋謝；exile = 流放；segregate = 隔離，均不接 sb. of sth. 結構。' },
+      { q: 'Every human being deserves to be treated with respect and _______, regardless of background.',
+        opts: ['dignity','captivity','fatigue','segregation'],
+        ans: 'A',
+        exp: '<span class="exp-key">dignity（尊嚴）</span>──每個人都應該被尊重且有尊嚴地對待，treated with dignity 為固定搭配，課文核心詞彙。<br>❌ captivity = 囚禁；fatigue = 疲勞；segregation = 隔離，語意均不符。' },
+    ]
+  },
+  {
+    title: '第二大題：文法選擇',
+    pts: '15 題 × 2 分 = 30 分',
+    questions: [
+      { q: '_______ Dr. King not made the speech, the civil rights movement might have progressed much more slowly.',
+        opts: ['Had','If','Should','Unless'],
+        ans: 'A',
+        exp: '<span class="exp-key">Had（與過去事實相反假設句的倒裝）</span>──Had + S + 過去分詞 = If + S + had + p.p. 的倒裝形式，課文原句：Had Dr. King not made the speech, the United States might not have introduced...。<br>❌ If 需搭配 had（If Dr. King had not made…）才完整；Should 用於條件句倒裝表「萬一」；Unless = 除非，均不符此倒裝結構。' },
+      { q: 'The crowd of over 250,000 people gathered _______ the Lincoln Memorial to hear the speech.',
+        opts: ['before','among','between','beneath'],
+        ans: 'A',
+        exp: '<span class="exp-key">before（在…前面）</span>──25萬人聚集在林肯紀念堂「前」聆聽演說，before 表示位置在…之前。<br>❌ among = 在（三者以上）之中；between = 在（兩者）之間；beneath = 在…正下方，均不符空間關係。' },
+      { q: 'The speech turned out _______ a turning point in American history.',
+        opts: ['to be','being','be','been'],
+        ans: 'A',
+        exp: '<span class="exp-key">to be</span>──turn out to be + N/adj. = 結果證明是…，固定句型，課文原句：That speech turned out to be a decisive moment。<br>❌ being（動名詞）、be（原形）、been（過去分詞）均不符合 turn out 的固定搭配。' },
+      { q: 'King hoped for a future in _______ people would be judged by their character, not their skin color.',
+        opts: ['which','that','where','what'],
+        ans: 'A',
+        exp: '<span class="exp-key">which（介係詞 + 關係代名詞）</span>──in which 引導形容詞子句修飾 a future，相當於 in that future。<br>❌ that 不可緊接在介係詞後；where 雖可表地方，但 future 為時間概念，搭配 in which 較正確；what 不能引導形容詞子句。' },
+      { q: '_______ rooted in the American dream, King\'s vision inspired generations of activists.',
+        opts: ['Deeply','Deep','Deepen','Deepness'],
+        ans: 'A',
+        exp: '<span class="exp-key">Deeply（深深地，副詞）</span>──副詞修飾過去分詞 rooted，deeply rooted in = 深植於，課文原句：It is a dream deeply rooted in the American dream。<br>❌ Deep（形容詞/副詞但較少修飾rooted）、Deepen（動詞）、Deepness（名詞），文法上均不適合修飾分詞。' },
+      { q: 'We will never be satisfied _______ injustice continues to exist in our society.',
+        opts: ['as long as','as soon as','even though','as if'],
+        ans: 'A',
+        exp: '<span class="exp-key">as long as（只要）</span>──表示條件持續存在，課文重複句型：We can never be satisfied as long as...。<br>❌ as soon as = 一…就…；even though = 雖然；as if = 彷彿，均不符「條件持續」的語意。' },
+      { q: 'King\'s speech _______ the consciences of millions of Americans who had ignored racial injustice.',
+        opts: ['awoke','awoken','awaking','awake'],
+        ans: 'A',
+        exp: '<span class="exp-key">awoke（awake 的過去式）</span>──全文以過去式敘述歷史事件，課文原句：his rhetorical skills awoke the consciences of many Americans。<br>❌ awoken（過去分詞，需搭配助動詞）、awaking（現在分詞）、awake（原形/形容詞），時態或詞性均不符。' },
+      { q: 'Although King\'s dream _______ yet to be fully realized, his words continue to inspire people today.',
+        opts: ['has','have','had','having'],
+        ans: 'A',
+        exp: '<span class="exp-key">has（現在完成式，主詞為 dream，第三人稱單數）</span>──have yet to V = 尚未…，課文原句：Although Dr. King\'s dream has yet to be fully realized。<br>❌ have 用於複數主詞或 I/you；had 為過去完成式，與「至今仍未實現」的現在完成語境不符；having 為動名詞，不能作句子主要動詞。' },
+      { q: '"I Have a Dream" was to civil rights supporters _______ a battle cry is to a warrior.',
+        opts: ['what','that','which','how'],
+        ans: 'A',
+        exp: '<span class="exp-key">what（A is to B what C is to D 句型）</span>──A be to B what C is to D = A對B而言，就如同C對D一樣，課文原句直接呈現此固定句型。<br>❌ that/which/how 均無法構成此「比喻關係」的固定句型。' },
+      { q: 'The speech will likely continue to inspire people _______ inequality exists in the world.',
+        opts: ['as long as','unless','although','in case'],
+        ans: 'A',
+        exp: '<span class="exp-key">as long as（只要）</span>──只要不平等仍然存在，這篇演說就會持續激勵世人，課文最後一句的同義改寫。<br>❌ unless = 除非；although = 雖然；in case = 以防萬一，語意邏輯均不符。' },
+      { q: 'A great American, _______ symbolic shadow the crowd stood, had signed the Emancipation Proclamation a century earlier.',
+        opts: ['in whose','in which','whose','who'],
+        ans: 'A',
+        exp: '<span class="exp-key">in whose（介係詞 + whose + 名詞）</span>──in whose symbolic shadow we stand = 我們站在他象徵性的身影之下，whose 表所有格，符合課文原句結構。<br>❌ in which 後不能直接接名詞 symbolic shadow（因 which 不具所有格功能）；whose 單獨使用前面缺介係詞；who 為主格，文法不合。' },
+      { q: 'It is essential that every citizen _______ treated equally under the law.',
+        opts: ['be','is','was','being'],
+        ans: 'A',
+        exp: '<span class="exp-key">be（虛擬語氣原形動詞）</span>──It is essential/important that + S + (should) + 原形動詞，表示「應該」之意，為虛擬語氣的固定句型。<br>❌ is/was 為直陳語氣的時態變化，不符虛擬語氣；being 為動名詞，不能作子句的主要動詞。' },
+      { q: 'Not until the law was passed _______ African Americans gain full voting rights.',
+        opts: ['did','had','have','were'],
+        ans: 'A',
+        exp: '<span class="exp-key">did（Not until 句首倒裝，借助動詞 did）</span>──Not until... + 助動詞 + S + 原形V，為否定副詞片語置於句首引發的倒裝句。<br>❌ had/have 為完成式助動詞，與此句時態不搭；were 為be動詞過去式，不能搭配原形 gain。' },
+      { q: 'The protesters, _______ numbers had grown to thousands, marched peacefully through the streets.',
+        opts: ['whose','who','which','that'],
+        ans: 'A',
+        exp: '<span class="exp-key">whose（所有格關係代名詞）</span>──whose numbers had grown = 其人數已增長到…，whose 修飾 protesters 並表示其所有關係。<br>❌ who/which/that 均為主格或受格關係代名詞，無法表達「人數的所有關係」。' },
+      { q: 'King urged his followers _______ give up hope, no matter how difficult the road ahead might be.',
+        opts: ['not to','to not','not','no to'],
+        ans: 'A',
+        exp: '<span class="exp-key">not to（urge sb. not to V）</span>──urge sb. (not) to V = 敦促某人（不要）做某事，否定詞 not 應置於 to 之前。<br>❌ to not 為非標準語序（雖偶見於口語但不建議）；not 後缺 to；no to 文法錯誤。' },
+    ]
+  },
+  {
+    title: '第三大題：克漏字填充',
+    pts: '10 題 × 2 分 = 20 分',
+    passage: 'On August 28, 1963, Martin Luther King, Jr., (31) <strong>marched</strong> to the Lincoln Memorial in Washington, DC, and delivered a speech (32) <strong>before</strong> a crowd of over 250,000 people. In that speech, he (33) <strong>outlined</strong> his hopes for a future free of racism. King declared that, one hundred years after the Emancipation Proclamation, African Americans were still (34) <strong>not</strong> free, and that their lives remained (35) <strong>crippled</strong> by segregation and discrimination. He said the nation could never be (36) <strong>satisfied</strong> as long as such injustice continued. Yet King refused to (37) <strong>wallow</strong> in despair. Instead, he shared his dream that one day people would be judged not by the (38) <strong>color</strong> of their skin but by the content of their character, and that all of God\'s children would be able to (39) <strong>join</strong> hands and sing together. Although King\'s dream has yet to be fully (40) <strong>realized</strong>, his words continue to inspire people around the world.',
+    questions: [
+      { q: '(31)',
+        opts: ['marched','withered','exiled','robbed'],
+        ans: 'A',
+        exp: '<span class="exp-key">marched（行進；遊行）</span>──King 於1963年8月28日「遊行」至林肯紀念堂，課文開頭的核心動詞。<br>❌ withered = 枯萎；exiled = 流放；robbed = 搶劫，語意均不符。' },
+      { q: '(32)',
+        opts: ['before','between','among','beneath'],
+        ans: 'A',
+        exp: '<span class="exp-key">before（在…面前）</span>──delivered a speech before a crowd = 在群眾面前發表演說，before 表「在…前方」。<br>❌ between = 在兩者之間；among = 在三者以上之中；beneath = 在…下方，均不符空間關係。' },
+      { q: '(33)',
+        opts: ['outlined','cured','granted','crippled'],
+        ans: 'A',
+        exp: '<span class="exp-key">outlined（概述）</span>──King 在演說中「概述」他對未來的盼望，outline one\'s hopes 為課文原句結構。<br>❌ cured = 治癒；granted = 授予；crippled = 使殘廢，均不符 hopes 的搭配。' },
+      { q: '(34)',
+        opts: ['not','already','hardly ever','seldom'],
+        ans: 'A',
+        exp: '<span class="exp-key">not（still is not free）</span>──課文原句：one hundred years later, the Negro still is not free，強調「仍然沒有」自由。<br>❌ already = 已經；hardly ever / seldom 雖表否定頻率，但與 still is ... free 的句型不搭配。' },
+      { q: '(35)',
+        opts: ['crippled','employed','outlined','granted'],
+        ans: 'A',
+        exp: '<span class="exp-key">crippled（被嚴重損害的）</span>──課文原句：the life of the Negro is still sadly crippled by the manacles of segregation。<br>❌ employed = 被雇用；outlined = 被概述；granted = 被授予，均不符「生活受嚴重損害」的語境。' },
+      { q: '(36)',
+        opts: ['satisfied','frightened','employed','exiled'],
+        ans: 'A',
+        exp: '<span class="exp-key">satisfied（滿足的）</span>──We can never be satisfied as long as... 為演說中重複出現的核心句型。<br>❌ frightened = 害怕的；employed = 被雇用的；exiled = 被流放的，均不符語境。' },
+      { q: '(37)',
+        opts: ['wallow','march','convey','grant'],
+        ans: 'A',
+        exp: '<span class="exp-key">wallow（沉溺；陷於）</span>──wallow in the valley of despair = 沉溺於絕望的深淵，課文原句：Let us not wallow in the valley of despair。<br>❌ march = 行進；convey = 傳達；grant = 授予，均不搭配 in despair。' },
+      { q: '(38)',
+        opts: ['color','shape','shadow','flame'],
+        ans: 'A',
+        exp: '<span class="exp-key">color（顏色）</span>──the color of their skin = 他們的膚色，課文核心句：not be judged by the color of their skin but by the content of their character。<br>❌ shape = 形狀；shadow = 陰影；flame = 火焰，均不符「膚色」語境。' },
+      { q: '(39)',
+        opts: ['join','rob','exile','wither'],
+        ans: 'A',
+        exp: '<span class="exp-key">join（join hands = 攜手）</span>──join hands and sing together = 攜手同唱，課文片語 join hands (with) 的應用。<br>❌ rob = 搶劫；exile = 流放；wither = 凋謝，均不搭配 hands。' },
+      { q: '(40)',
+        opts: ['realized','segregated','captured','oppressed'],
+        ans: 'A',
+        exp: '<span class="exp-key">realized（實現）</span>──has yet to be fully realized = 尚未完全實現，課文原句直接引用。<br>❌ segregated = 被隔離；captured = 被捕獲；oppressed = 被壓迫，均不符「夢想尚未實現」的語境。' },
+    ]
+  },
+  {
+    title: '第四大題：閱讀測驗',
+    pts: '10 題 × 2 分 = 20 分',
+    passage: 'On August 28, 1963, Martin Luther King, Jr., marched to the Lincoln Memorial in Washington, DC, and delivered a historic speech before a crowd of over 250,000 people. In that speech, King outlined his hopes for the future—a time when racism would end and African Americans would be treated by whites as equals. That speech turned out to be a decisive moment in the civil rights movement. Had Dr. King not made the speech, the United States might not have introduced a series of laws to grant new rights to African Americans within just a few years.<br><br>In the speech, King pointed out that one hundred years after the Emancipation Proclamation freed enslaved people, African Americans were still not free. Their lives were still crippled by segregation and discrimination, and many lived in poverty in the midst of a wealthy nation. King declared that people could never be satisfied as long as such injustice continued—as long as African Americans suffered police brutality, could not find lodging in motels and hotels, or were denied the right to vote.<br><br>Despite these hardships, King urged his audience not to wallow in despair. He shared his dream that one day his four children would live in a nation where they would be judged not by the color of their skin but by the content of their character. He dreamed that people of all races and religions would one day join hands and sing together: "Free at last! Free at last! Thank God Almighty, we are free at last!"<br><br>Although King\'s dream has yet to be fully realized, his eloquence and rhetorical skills awoke the consciences of many Americans who had ignored or condoned racial oppression. "I Have a Dream" was to civil rights supporters what a battle cry is to a warrior, and the speech continues to inspire people to this day.',
+    questions: [
+      { q: 'Where did Martin Luther King, Jr., deliver his famous speech?',
+        opts: ['At the White House','At the Lincoln Memorial','At the Capitol Building','At a local church'],
+        ans: 'B',
+        exp: '<span class="exp-key">B</span>──課文第一句明確指出：King marched to the Lincoln Memorial in Washington, DC, and delivered a historic speech。<br>❌ White House、Capitol Building、教堂均未在文中提及為演講地點。' },
+      { q: 'According to the passage, what might have happened if King had not made the speech?',
+        opts: ['The crowd would have been smaller.','The United States might not have introduced new civil rights laws so quickly.','The Lincoln Memorial would not have been built.','African Americans would have left the country.'],
+        ans: 'B',
+        exp: '<span class="exp-key">B</span>──課文原句：Had Dr. King not made the speech, the United States might not have introduced a series of laws to grant new rights to African Americans within just a few years。<br>❌ A/C/D 均為文章未提及的推論。' },
+      { q: 'What does the phrase "the Negro still is not free" refer to, one hundred years after the Emancipation Proclamation?',
+        opts: ['African Americans were still legally enslaved.','African Americans still faced segregation, discrimination, and poverty.','African Americans were not allowed to live in the United States.','African Americans had no access to education at all.'],
+        ans: 'B',
+        exp: '<span class="exp-key">B</span>──課文說明：Their lives were still crippled by segregation and discrimination, and many lived in poverty，並非法律上的奴役。<br>❌ A 與史實不符（解放宣言已廢除奴隸制）；C/D 為文章未提及的內容。' },
+      { q: 'Which of the following is NOT mentioned as an injustice that King refers to in his speech?',
+        opts: ['Police brutality against African Americans','Being denied lodging in motels and hotels','Being denied the right to vote','Being forced to pay higher taxes than white citizens'],
+        ans: 'D',
+        exp: '<span class="exp-key">D</span>──課文提到 police brutality、無法在汽車旅館/旅館投宿、無法投票，但完全未提及「繳納較高的稅」。<br>❌ A/B/C 均為文章中明確提到的不公義事項。' },
+      { q: 'What did King urge his audience to do despite the hardships they faced?',
+        opts: ['Give up and accept their situation.','Not to wallow in despair and to keep hope alive.','Move to another country for a better life.','Wait quietly for the government to act.'],
+        ans: 'B',
+        exp: '<span class="exp-key">B</span>──課文原句：King urged his audience not to wallow in despair，並接著分享他的夢想，鼓勵大家保持希望。<br>❌ A/C/D 均與課文「不要放棄、保持信念」的精神相反或無關。' },
+      { q: 'In his dream, King hoped his children would be judged by what standard?',
+        opts: ['Their wealth and social status','The color of their skin','The content of their character','Their level of education'],
+        ans: 'C',
+        exp: '<span class="exp-key">C</span>──課文核心句：he shared his dream that one day his four children would ... be judged not by the color of their skin but by the content of their character。<br>❌ A/D 為文章未提及；B 正是 King 希望「不要」被用來評判的標準。' },
+      { q: 'What does the phrase "Free at last! Free at last!" represent in King\'s dream?',
+        opts: ['A line from a popular song of the time','The hope that all people of different races and religions could one day be united and free','A slogan used by the police','A quote from the Emancipation Proclamation'],
+        ans: 'B',
+        exp: '<span class="exp-key">B</span>──課文說 King dreamed that people of all races and religions would one day join hands and sing together: "Free at last!..."，象徵不同種族與信仰的人終將團結自由。<br>❌ A/C/D 均為文章未提及或錯誤的描述。' },
+      { q: 'According to the passage, has King\'s dream been fully realized?',
+        opts: ['Yes, completely.','No, it has yet to be fully realized.','It was realized immediately after the speech.','The passage does not discuss this.'],
+        ans: 'B',
+        exp: '<span class="exp-key">B</span>──課文明確指出：Although King\'s dream has yet to be fully realized，表示至今尚未完全實現。<br>❌ A/C 與課文相反；D 文章確實有討論此點。' },
+      { q: 'What effect did King\'s rhetorical skills have on many Americans?',
+        opts: ['They made people forget about racial issues.','They awoke the consciences of many Americans who had ignored or condoned racial oppression.','They convinced people to leave the civil rights movement.','They had little effect on public opinion.'],
+        ans: 'B',
+        exp: '<span class="exp-key">B</span>──課文原句：his eloquence and rhetorical skills awoke the consciences of many Americans who had ignored or condoned racial oppression。<br>❌ A/C/D 均與課文意思相反或無關。' },
+      { q: 'What is the overall significance of "I Have a Dream" according to the passage?',
+        opts: ['It was an interesting but historically unimportant speech.','It was a turning point that continues to inspire people fighting against inequality.','It only mattered to people living in Washington, DC.','It was quickly forgotten after 1963.'],
+        ans: 'B',
+        exp: '<span class="exp-key">B</span>──課文總結：That speech turned out to be a decisive moment...the speech continues to inspire people to this day and will likely do so as long as inequality exists。<br>❌ A/C/D 均與課文強調這篇演說「重大且歷久不衰的影響力」相反。' },
+    ]
+  }
+];
+
+// ── RENDER ────────────────────────────────────────────────
+let globalQNum = 0;
+const qMap = {}; // qNum → { ans, exp }
+const userAnswers = {};
+let submitted = false;
+
+const container = document.getElementById('quiz-container');
+
+sections.forEach((sec, si) => {
+  const secDiv = document.createElement('div');
+  secDiv.className = 'section';
+  let html = `<div class="section-header">${sec.title} <span class="pts">（${sec.pts}）</span></div>`;
+  if (sec.passage) {
+    html += `<div class="passage"><div class="passage-label">📖 閱讀文章</div>${sec.passage}</div>`;
+  }
+  sec.questions.forEach((q, qi) => {
+    globalQNum++;
+    const n = globalQNum;
+    qMap[n] = { ans: q.ans, exp: q.exp };
+    const labels = ['A','B','C','D'];
+    let optHtml = '';
+    q.opts.forEach((o, i) => {
+      optHtml += `<div class="option" id="opt-${n}-${labels[i]}" onclick="choose(${n},'${labels[i]}')">`
+        + `<span class="option-label">(${labels[i]})</span>${o}</div>`;
+    });
+    html += `<div class="question" id="q${n}">
+      <div class="q-text"><span class="q-num">${n}.</span> ${q.q}</div>
+      <div class="options">${optHtml}</div>
+      <div class="explanation" id="exp${n}">
+        <div class="exp-header">💡 解析</div>
+        <div class="exp-body">${q.exp}</div>
+      </div>
+    </div>`;
+  });
+  secDiv.innerHTML = html;
+  container.appendChild(secDiv);
+});
+
+// ── LOGIC ─────────────────────────────────────────────────
+function choose(n, chosen) {
+  if (submitted) return;
+  userAnswers[n] = chosen;
+  const ans = qMap[n].ans;
+  const labels = ['A','B','C','D'];
+
+  labels.forEach(l => {
+    const el = document.getElementById(`opt-${n}-${l}`);
+    el.classList.remove('selected','correct','wrong','reveal-correct');
+    if (l === chosen) {
+      if (chosen === ans) el.classList.add('correct');
+      else el.classList.add('wrong');
+    } else if (l === ans && chosen !== ans) {
+      el.classList.add('reveal-correct');
+    }
+  });
+
+  document.getElementById(`exp${n}`).classList.add('show');
+  updateTopBar();
+}
+
+function updateTopBar() {
+  const count = Object.keys(userAnswers).length;
+  document.getElementById('answered-count').textContent = count;
+  document.getElementById('progress-fill').style.width = (count / 50 * 100) + '%';
+  let score = 0;
+  for (let q in userAnswers) { if (userAnswers[q] === qMap[q].ans) score += 2; }
+  document.getElementById('live-score').textContent = score;
+}
+
+function revealAll() {
+  for (let n = 1; n <= 50; n++) {
+    const ans = qMap[n].ans;
+    const labels = ['A','B','C','D'];
+    labels.forEach(l => {
+      const el = document.getElementById(`opt-${n}-${l}`);
+      el.classList.remove('selected','correct','wrong','reveal-correct');
+      if (l === ans) el.classList.add('reveal-correct');
+      else if (userAnswers[n] === l && l !== ans) el.classList.add('wrong');
+    });
+    document.getElementById(`exp${n}`).classList.add('show');
+  }
+  updateTopBar();
+}
+
+function submitAll() {
+  submitted = true;
+  revealAll();
+  let score = 0;
+  for (let n = 1; n <= 50; n++) {
+    if (userAnswers[n] === qMap[n].ans) score += 2;
+  }
+  const rb = document.getElementById('result-box');
+  rb.classList.add('show');
+  document.getElementById('result-score').textContent = score;
+  const gr = document.getElementById('result-grade');
+  const det = document.getElementById('result-detail');
+  if (score >= 90) { gr.textContent = '🏆 優秀！'; gr.className = 'result-grade grade-a'; det.textContent = '表現卓越，繼續保持！'; }
+  else if (score >= 70) { gr.textContent = '👍 良好'; gr.className = 'result-grade grade-b'; det.textContent = '表現不錯，再複習錯誤的題目吧！'; }
+  else { gr.textContent = '📚 需加強'; gr.className = 'result-grade grade-c'; det.textContent = '多複習解析說明，你可以做到的！'; }
+  document.getElementById('answered-count').textContent = 50;
+  document.getElementById('live-score').textContent = score;
+  document.getElementById('progress-fill').style.width = '100%';
+  rb.scrollIntoView({ behavior: 'smooth' });
+}
+
+function resetAll() {
+  submitted = false;
+  for (let key in userAnswers) delete userAnswers[key];
+  for (let n = 1; n <= 50; n++) {
+    const labels = ['A','B','C','D'];
+    labels.forEach(l => {
+      document.getElementById(`opt-${n}-${l}`).classList.remove('selected','correct','wrong','reveal-correct');
+    });
+    document.getElementById(`exp${n}`).classList.remove('show');
+  }
+  document.getElementById('result-box').classList.remove('show');
+  document.getElementById('answered-count').textContent = '0';
+  document.getElementById('live-score').textContent = '0';
+  document.getElementById('progress-fill').style.width = '0%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
