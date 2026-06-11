@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L9 Quiz D Explained — The Story behind Eponyms</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 16px;
+    background: #eafffb;
+    color: #1a1a2e;
+    min-height: 100vh;
+    padding-bottom: 40px;
+  }
+
+  /* ── Sticky top bar ── */
+  #topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    box-shadow: 0 2px 8px rgba(17,153,142,0.4);
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  #topbar h1 { font-size: 15px; font-weight: 700; letter-spacing: 0.3px; text-shadow: 0 1px 2px rgba(0,0,0,0.15); }
+  #topbar .top-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  #topbar .stats { font-size: 13px; display: flex; gap: 8px; }
+  #topbar .stats span { background: rgba(255,255,255,0.22); border-radius: 20px; padding: 3px 10px; }
+  #reveal-all-btn {
+    background: rgba(255,255,255,0.25);
+    border: 1.5px solid rgba(255,255,255,0.7);
+    color: #fff;
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.15s;
+  }
+  #reveal-all-btn:active { background: rgba(255,255,255,0.45); }
+
+  /* ── Section header ── */
+  .section-header {
+    margin: 24px 16px 12px;
+    padding: 10px 14px;
+    background: linear-gradient(135deg, #11998e22, #38ef7d33);
+    border-left: 4px solid #11998e;
+    border-radius: 0 8px 8px 0;
+    font-weight: 700;
+    font-size: 15px;
+    color: #0d6e64;
+  }
+
+  /* ── Passage box ── */
+  .passage {
+    margin: 0 16px 16px;
+    padding: 14px;
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid #b8ece3;
+    font-size: 15px;
+    line-height: 1.7;
+    color: #333;
+  }
+  .passage strong { color: #11998e; }
+
+  /* ── Question card ── */
+  .q-card {
+    background: #fff;
+    border-radius: 12px;
+    margin: 10px 16px;
+    padding: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    border: 2px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .q-card.correct  { border-color: #22c55e; background: #f0fdf4; }
+  .q-card.wrong    { border-color: #ef4444; background: #fff5f5; }
+
+  .q-num {
+    font-size: 12px;
+    font-weight: 700;
+    color: #11998e;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .q-text {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 12px;
+    color: #1a1a2e;
+  }
+
+  /* ── Options ── */
+  .opts { display: flex; flex-direction: column; gap: 8px; }
+  .opt-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f0fffb;
+    border: 1.5px solid #9be8da;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 15px;
+    color: #1a1a2e;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s, border-color 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .opt-btn:active { background: #d7f9f0; }
+  .opt-btn .label {
+    min-width: 24px; height: 24px;
+    background: #11998e;
+    color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; flex-shrink: 0;
+  }
+  .opt-btn.chosen-correct { background: #dcfce7; border-color: #22c55e; }
+  .opt-btn.chosen-correct .label { background: #22c55e; }
+  .opt-btn.chosen-wrong   { background: #fee2e2; border-color: #ef4444; }
+  .opt-btn.chosen-wrong   .label { background: #ef4444; }
+  .opt-btn.reveal-correct { background: #dcfce7; border-color: #22c55e; }
+  .opt-btn.reveal-correct .label { background: #22c55e; }
+  .opt-btn:disabled { cursor: default; opacity: 0.85; }
+
+  /* ── Feedback ── */
+  .feedback {
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.ok   { color: #16a34a; }
+  .feedback.err  { color: #dc2626; }
+
+  /* ── Explanation panel ── */
+  .exp-panel {
+    display: none;
+    margin-top: 12px;
+    padding: 12px 14px;
+    background: linear-gradient(135deg, #e6fff8, #eafff0);
+    border-radius: 10px;
+    border: 1px solid #9be8da;
+    font-size: 15px;
+    line-height: 1.7;
+    color: #333;
+  }
+  .exp-panel.show { display: block; }
+  .exp-panel .exp-header {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0a7a6f;
+    margin-bottom: 6px;
+  }
+  .exp-panel .exp-body { font-size: 15px; }
+  .exp-key {
+    color: #0e8a7e;
+    font-weight: 700;
+  }
+
+  /* ── Submit ── */
+  #submit-area {
+    margin: 28px 16px 10px;
+    text-align: center;
+  }
+  #submit-btn {
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    padding: 14px 48px;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(17,153,142,0.45);
+    transition: opacity 0.2s, transform 0.1s;
+    -webkit-tap-highlight-color: transparent;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  }
+  #submit-btn:active { opacity: 0.85; transform: scale(0.97); }
+
+  /* ── Result card ── */
+  #result-card {
+    display: none;
+    margin: 20px 16px;
+    background: #fff;
+    border-radius: 16px;
+    padding: 28px 20px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(17,153,142,0.25);
+  }
+  #result-card .grade-emoji { font-size: 52px; margin-bottom: 8px; }
+  #result-card .grade-label {
+    font-size: 22px; font-weight: 800;
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 6px;
+  }
+  #result-card .score-text { font-size: 16px; color: #555; margin-bottom: 20px; }
+  #reset-btn {
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+    color: #fff; border: none; border-radius: 30px;
+    padding: 12px 40px; font-size: 16px; font-weight: 700;
+    cursor: pointer; box-shadow: 0 4px 14px rgba(17,153,142,0.35);
+  }
+
+  /* ── Unanswered warning ── */
+  #warn { color: #dc2626; font-size: 14px; margin-top: 8px; min-height: 20px; }
+</style>
+</head>
+<body>
+<a href="/" style="position:fixed;top:14px;left:14px;background:#2b4c8c;color:#fff;padding:7px 16px;border-radius:8px;text-decoration:none;font-size:0.9rem;font-weight:600;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,0.18);">&#8592; &#22238;&#39318;&#39052;</a>
+<a href="/" style="position:fixed;top:14px;left:14px;background:#2b4c8c;color:#fff;padding:7px 16px;border-radius:8px;text-decoration:none;font-size:0.9rem;font-weight:600;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,0.18);">&#8592; &#22238;&#39318;&#39052;</a>
+
+<a href="/" style="position:fixed;top:14px;left:14px;background:#2b4c8c;color:#fff;padding:7px 16px;border-radius:8px;text-decoration:none;font-size:0.9rem;font-weight:600;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,0.18);">&#8592; &#22238;&#39318;&#39052;</a>
+
+<!-- Sticky top bar -->
+<div id="topbar">
+  <h1>L9 The Story behind Eponyms — 卷D 解析版</h1>
+  <div class="top-right">
+    <div class="stats">
+      <span id="stat-answered">進度 0/50</span>
+      <span id="stat-score">得分 0/100</span>
+    </div>
+    <button id="reveal-all-btn">📖 顯示全部解析</button>
+  </div>
+</div>
+
+<div id="quiz-container"></div>
+
+<div id="submit-area">
+  <button id="submit-btn">📝 交卷 / 查看成績</button>
+  <div id="warn"></div>
+</div>
+
+<div id="result-card">
+  <div class="grade-emoji" id="res-emoji"></div>
+  <div class="grade-label" id="res-grade"></div>
+  <div class="score-text" id="res-text"></div>
+  <button id="reset-btn">重新作答</button>
+</div>
+
+<script>
+const sections = [
+  {
+    title: "第一大題：字彙選擇（第 1–15 題，每題 2 分）",
+    pts: 2,
+    passage: null,
+    questions: [
+      { q: "1. The use of electric scooters has become _______ in major cities around the world.", opts: ["widespread","digital","constant","alternative"], ans: "A", exp: "<span class='exp-key'>widespread（廣泛的）</span>──電動滑板車在全球各大城市的使用已變得「廣泛」，課文詞彙。<br>❌ digital = 數位的；constant = 持續的；alternative = 替代的，均不符。" },
+      { q: "2. The teacher _______ the lesson plan to make it easier for beginners.", opts: ["released","chased","modified","featured"], ans: "C", exp: "<span class='exp-key'>modified（修改、改良）</span>──老師「修改」教案以利初學者，modify = 修改，課文詞彙。<br>❌ released = 發行；chased = 追逐；featured = 以⋯為特色，均不符。" },
+      { q: "3. The new café offers a unique _______ of coffee and traditional tea flavors.", opts: ["usage","gossip","edition","combination"], ans: "D", exp: "<span class='exp-key'>combination（結合、組合）</span>──咖啡與傳統茶風味的獨特結合，課文詞彙。<br>❌ usage = 用法；gossip = 八卦；edition = 版本，均不符。" },
+      { q: "4. The documentary _______ interviews with scientists from around the globe.", opts: ["chases","features","modifies","derives"], ans: "B", exp: "<span class='exp-key'>features（以…為特色；收錄）</span>──紀錄片「收錄」全球科學家的訪談，feature = 以⋯為特色，課文原詞。<br>❌ chases = 追逐；modifies = 修改；derives = 衍生，均不符。" },
+      { q: "5. He avoids social media because he dislikes all the online _______.", opts: ["gossip","brand","image","standard"], ans: "A", exp: "<span class='exp-key'>gossip（八卦；閒話）</span>──online gossip（網路八卦），課文核心詞彙。<br>❌ brand = 品牌；image = 形象；standard = 標準，均不符。" },
+      { q: "6. The band plans to _______ their new single this Friday.", opts: ["derive","chase","combine","release"], ans: "D", exp: "<span class='exp-key'>release（發行）</span>──release a single（發行單曲），課文詞彙。<br>❌ derive = 衍生；chase = 追逐；combine = 結合，均不符。" },
+      { q: "7. For people who can't eat dairy, soy milk is a popular _______.", opts: ["modification","edition","alternative","existence"], ans: "C", exp: "<span class='exp-key'>alternative（替代品、選擇）</span>──a popular alternative，豆漿是熱門替代選項，課文詞彙。<br>❌ modification = 修改；edition = 版本；existence = 存在，均不符。" },
+      { q: "8. The dog _______ the ball across the yard every time it was thrown.", opts: ["modified","derived","chased","combined"], ans: "C", exp: "<span class='exp-key'>chased（追逐）</span>──chase a ball（追球），課文原詞（chase celebrities around）。<br>❌ modified = 修改；derived = 衍生；combined = 結合，均不符。" },
+      { q: "9. The custom is _______ from an old harvest festival celebrated centuries ago.", opts: ["featured","derived","released","revealed"], ans: "B", exp: "<span class='exp-key'>derived（衍生自）</span>──be derived from = 源自於，習俗源自古老豐收節慶，課文原句。<br>❌ featured = 以⋯為特色；released = 發行；revealed = 揭露，均不符。" },
+      { q: "10. The hospital maintains a high _______ of cleanliness in every room.", opts: ["gossip","image","standard","usage"], ans: "C", exp: "<span class='exp-key'>standard（標準；規格）</span>──maintain a high standard of cleanliness，課文詞彙。<br>❌ gossip = 八卦；image = 形象；usage = 用法，均不符。" },
+      { q: "11. The audit eventually _______ several errors in the company's accounts.", opts: ["released","revealed","chased","modified"], ans: "B", exp: "<span class='exp-key'>revealed（揭露）</span>──reveal errors，審計最終「揭露」帳目錯誤，課文原詞（reveal the secret lives）。<br>❌ released = 發行；chased = 追逐；modified = 修改，均不符。" },
+      { q: "12. The publisher will _______ the author's next novel in the spring.", opts: ["release","feature","derive","combine"], ans: "A", exp: "<span class='exp-key'>release（發行）</span>──release a novel（發行小說），課文詞彙。<br>❌ feature = 以⋯為特色；derive = 衍生；combine = 結合，均不符。" },
+      { q: "13. As society changes, certain words gradually _______ new meanings.", opts: ["give up","look up","take on","think up"], ans: "C", exp: "<span class='exp-key'>take on（呈現、獲得）</span>──take on new meanings，課文原句：took on a more general meaning later on。<br>❌ give up = 放棄；look up = 查閱；think up = 想出（主詞需是人），均不符。" },
+      { q: "14. Inventors must _______ creative solutions to everyday problems.", opts: ["take on","think up","give up","look up"], ans: "B", exp: "<span class='exp-key'>think up（想出、構思）</span>──think up creative solutions，課文結尾片語。<br>❌ take on = 承擔；give up = 放棄；look up = 查閱，均不符。" },
+      { q: "15. Teachers _______ a crucial role in shaping students' futures.", opts: ["make","take","think","play"], ans: "D", exp: "<span class='exp-key'>play（扮演）</span>──play a crucial role，課文原句：play an important role。<br>❌ make/take/think 均不與 role 構成標準搭配。" }
+    ]
+  },
+  {
+    title: "第二大題：文法選擇（第 16–30 題，每題 2 分）",
+    pts: 2,
+    passage: null,
+    questions: [
+      { q: "16. The custom started as a religious ritual but _______ a festive meaning over the centuries.", opts: ["takes on","took on","has taken on","taking on"], ans: "B", exp: "<span class='exp-key'>took on（過去式）</span>──前句 started（過去式）確立時態為過去，後句也應用過去式，課文句型：started out... but took on...。<br>❌ takes on = 現在式；has taken on = 現在完成式；taking on = 現在分詞，均不符。" },
+      { q: "17. The phrase _______ from a line in an old folk song is still popular today.", opts: ["derives","derived","deriving","to derive"], ans: "A", exp: "<span class='exp-key'>derives（現在式動詞）</span>──The phrase derives from... is still popular，derives 為主要動詞，主詞為單數第三人稱。<br>❌ derived/deriving 會使句子缺主要動詞；to derive 不能作主要動詞。" },
+      { q: "18. He works at a publishing house _______ books for young readers.", opts: ["feature","featured","to feature","featuring"], ans: "D", exp: "<span class='exp-key'>featuring（現在分詞，後位修飾）</span>──featuring books for young readers 修飾 publishing house，主動關係，課文句型：a column featuring celebrity gossip。<br>❌ feature = 原形；featured = 過去分詞（被動）；to feature = 不定詞，均不符。" },
+      { q: "19. After the law _______ last year, traffic accidents decreased significantly.", opts: ["was passed","passed","has passed","is passed"], ans: "A", exp: "<span class='exp-key'>was passed（過去被動式）</span>──法律「被通過」，且有明確過去時間 last year，課文句型：After the film was released in 1960。<br>❌ passed = 主動式；has passed = 現在完成式；is passed = 現在被動，均不符。" },
+      { q: "20. The committee met on Friday to _______ the proposal carefully.", opts: ["reviewing","reviews","review","reviewed"], ans: "C", exp: "<span class='exp-key'>review（原形動詞）</span>──to + 原形 = 不定詞表目的，課文句型：to reveal the secret lives of celebrities。<br>❌ reviewing/reviews/reviewed 均不符 to V 句型。" },
+      { q: "21. The product has become the item _______ by consumers in over fifty countries.", opts: ["choose","chooses","choosing","chosen"], ans: "D", exp: "<span class='exp-key'>chosen（過去分詞）</span>──chosen by consumers 過去分詞片語修飾 item，表被動，課文句型：the standard software used by photographers。<br>❌ choose/chooses = 缺連接詞；choosing = 主動分詞，均不符被動修飾。" },
+      { q: "22. The story spread _______ quickly that the entire town heard about it within a day.", opts: ["which","so","what","that"], ans: "B", exp: "<span class='exp-key'>so（so...that... = 如此…以至於…）</span>──固定結果副詞子句句型，課文句型：so widely known that...。<br>❌ which/what/that（單獨）均無法構成此句型。" },
+      { q: "23. The committee was concerned _______ the deadline could not be met.", opts: ["which","when","that","where"], ans: "C", exp: "<span class='exp-key'>that（be concerned that = 擔心…）</span>──that 引導名詞子句作補語，課文句型：Adobe was not pleased that...。<br>❌ which = 無先行詞；when/where 語意不如 that 精確。" },
+      { q: "24. The exam was _______ difficult for most students to finish on time.", opts: ["so","very","too","such"], ans: "C", exp: "<span class='exp-key'>too（too...to... = 太…而無法…）</span>──too difficult for...to finish，課文句型：too popular for them to stop。<br>❌ so/very/such 均不構成 too...to 結構。" },
+      { q: "25. _______ the rule was changed two years ago, fewer accidents have occurred.", opts: ["After","Before","Since","Although"], ans: "C", exp: "<span class='exp-key'>Since（自從）</span>──since + 過去時間點，主句用現在完成式，課文句型：Since it was first released in 1987, Photoshop has become...。<br>❌ After/Before/Although 均不符此因果語境。" },
+      { q: "26. The city is becoming more crowded _______ the growth of tourism.", opts: ["for","at","by","with"], ans: "D", exp: "<span class='exp-key'>with（伴隨）</span>──with the growth of tourism = 隨著觀光業成長，課文句型：changing with the adoption of new words。<br>❌ for/at/by 均不符「伴隨」語感。" },
+      { q: "27. The expression is said _______ from a phrase used by sailors long ago.", opts: ["to derive","deriving","derived","to be derived"], ans: "D", exp: "<span class='exp-key'>to be derived（被動不定詞）</span>──be said to be + p.p.，課文句型：is said to be derived from the name of a fictional character。<br>❌ to derive = 主動；deriving = 分詞；derived = 缺 to be，均不符。" },
+      { q: "28. _______ during the Industrial Revolution, the novel describes the hardships of factory workers.", opts: ["Setting","Set","To set","Sets"], ans: "B", exp: "<span class='exp-key'>Set（過去分詞，分詞構句）</span>──Set during... = (Being) set during...，表被動，課文句型：Set in Rome, the film is about...。<br>❌ Setting = 主動分詞；To set = 不定詞；Sets = 第二個限定動詞，均不符。" },
+      { q: "29. The team redesigned the packaging _______ the product more appealing.", opts: ["make","makes","to make","making"], ans: "C", exp: "<span class='exp-key'>to make（不定詞，表目的）</span>──課文句型：began to use 'Photoshop' as a verb to mean 'to edit a photo'。<br>❌ make/makes 缺連接詞；making 不如 to make 標準。" },
+      { q: "30. No matter _______ method you choose, the final result should be accurate.", opts: ["how","where","which","what"], ans: "D", exp: "<span class='exp-key'>what（no matter what = 不管什麼）</span>──what 作限定詞修飾 method，課文句型：no matter what software program is actually used。<br>❌ how 後接形容詞/副詞；where/which 均不符。" }
+    ]
+  },
+  {
+    title: "第三大題：克漏字填充（第 31–40 題，每題 2 分）",
+    pts: 2,
+    passage: "Some eponyms come not from people but from places. The word \"denim,\" for instance, (31) _______ from the French phrase \"de Nîmes,\" meaning \"from Nîmes,\" a city where the sturdy fabric was first produced. As the fabric became popular, it (32) _______ a name that traveled far beyond its original city. Another interesting case is the word \"tuxedo.\" It is (33) _______ from Tuxedo Park, a small community where the formal jacket was first worn at a fancy social event. After the style was (34) _______ at the event, wealthy guests who attended the party began to (35) _______ similar jackets to their own tailors. Since the style was first (36) _______ that night, it has become (37) _______ associated with formal evening wear. It became so (38) _______ accepted that few people today know the jacket's name comes from a place. In the beginning, some traditionalists were (39) _______ pleased with the new fashion, but it soon became too fashionable to ignore. Place names like these (40) _______ an important role in the history of everyday vocabulary.",
+    questions: [
+      { q: "31. The word 'denim' _______ from the French phrase 'de Nîmes.'", opts: ["derives","reveals","releases","modifies"], ans: "A", exp: "<span class='exp-key'>derives（衍生自）</span>──derives from 描述 denim 一詞的來源；主詞 the word 為單數第三人稱。<br>❌ reveals = 揭露；releases = 發行；modifies = 修改，均不符。" },
+      { q: "32. As the fabric became popular, it _______ a name that traveled far beyond its original city.", opts: ["released","revealed","took on","chased"], ans: "C", exp: "<span class='exp-key'>took on（呈現、獲得）</span>──took on a name，呼應課文核心句型 took on a more general meaning later on。<br>❌ released = 發行；revealed = 揭露；chased = 追逐，均不符。" },
+      { q: "33. The word 'tuxedo' is _______ from Tuxedo Park.", opts: ["modified","derived","featured","combined"], ans: "B", exp: "<span class='exp-key'>derived（衍生自，被動）</span>──be derived from = 衍生自，tuxedo 一詞源自 Tuxedo Park 這個地名。<br>❌ modified/featured/combined 均不符。" },
+      { q: "34. After the style was _______ at the event, wealthy guests began to request similar jackets.", opts: ["modified","derived","featured","worn"], ans: "D", exp: "<span class='exp-key'>worn（被穿著，過去分詞）</span>──the style was worn at the event = 這種款式在活動中「被穿上」，呼應文章描述：a young man wore a short formal jacket。<br>❌ modified/derived/featured 均不符。" },
+      { q: "35. Wealthy guests who attended the party began to _______ similar jackets to their own tailors.", opts: ["modify","request","release","chase"], ans: "B", exp: "<span class='exp-key'>request（要求、訂製）</span>──request similar jackets to their own tailors，符合文章描述客人爭相效仿的情節。<br>❌ modify/release/chase 均不符。" },
+      { q: "36. Since the style was first _______ that night, it has become closely associated with formal evening wear.", opts: ["released","worn","revealed","combined"], ans: "B", exp: "<span class='exp-key'>worn（被穿著）</span>──was first worn that night，呼應文章「一名年輕人首次穿著這種外套」，與課文句型 was first released（A 卷）結構相同，皆表「首次出現」。<br>❌ released = 服裝用「穿著」非「發行」；revealed/combined 均不符。" },
+      { q: "37. ...it has become _______ associated with formal evening wear.", opts: ["the alternative","the standard","closely","constantly"], ans: "C", exp: "<span class='exp-key'>closely（緊密地）</span>──closely associated with（與…緊密相關），become 後接副詞修飾過去分詞 associated。<br>❌ the alternative/the standard 為名詞，無法直接修飾 associated；constantly 不如 closely 貼切「密切關聯」。" },
+      { q: "38. It became so _______ accepted that few people today know the jacket's name comes from a place.", opts: ["constantly","alternatively","widely","generally"], ans: "C", exp: "<span class='exp-key'>widely（廣泛地）</span>──widely accepted（被廣泛接受），呼應課文原文：It became so widely known。<br>❌ constantly/alternatively/generally 均不如 widely accepted 自然。" },
+      { q: "39. In the beginning, some traditionalists were _______ pleased with the new fashion.", opts: ["too","so","not","very"], ans: "C", exp: "<span class='exp-key'>not（不）</span>──not pleased（不高興），呼應課文：Adobe was not pleased that...。<br>❌ too/so/very pleased 均表示「高興」，與文意相反。" },
+      { q: "40. Place names like these _______ an important role in the history of everyday vocabulary.", opts: ["think","take","play","make"], ans: "C", exp: "<span class='exp-key'>play（扮演）</span>──play an important role in，課文原句：eponyms play an important role in creating new words。<br>❌ think/take/make 均不與 role 構成標準搭配。" }
+    ]
+  },
+  {
+    title: "第四大題：閱讀測驗（第 41–50 題，每題 2 分）",
+    pts: 2,
+    passage: "Not all eponyms come from films, software, or famous people — some come from the names of places. Two well-known examples are \"denim\" and \"tuxedo,\" and both stories reveal how geography can quietly shape the words we use without us even noticing.<br><br>The word \"denim\" comes from the French phrase \"de Nîmes,\" which means \"from Nîmes.\" Nîmes is a city in southern France that was famous for producing a strong, durable cotton fabric. Originally, the fabric was called \"serge de Nîmes,\" but over time, English speakers shortened it to simply \"denim.\" Today, denim is used to make jeans, jackets, and many other types of clothing, and most people who wear it have never heard of the city where the name began.<br><br>\"Tuxedo\" has a similar story, but it comes from a place in the United States rather than Europe. Tuxedo Park is a small, wealthy community in New York State. According to one popular story, a young man wore a short, formal jacket without tails to a fancy autumn ball at the Tuxedo Park country club, instead of the traditional long-tailed coat that was expected. Guests were surprised, but many found the new style elegant and comfortable. Soon, similar jackets were requested by other guests, and the style spread to other social circles. Eventually, the jacket itself came to be called a \"tuxedo,\" even though most people wearing one today have no idea that the name refers to a place.<br><br>These two examples show that eponyms are not limited to people or brands. Cities, towns, and regions can also leave a lasting mark on language, often in ways that quietly disappear from public memory even as the words themselves remain in everyday use.",
+    questions: [
+      { q: "41. According to the passage, where does the word 'denim' come from?", opts: ["A type of sewing machine","The French phrase \"de Nîmes,\" meaning \"from Nîmes\"","A famous fashion designer's last name","An old English word for \"blue cloth\""], ans: "B", exp: "<span class='exp-key'>B</span>──文章：「The word 'denim' comes from the French phrase 'de Nîmes,' which means 'from Nîmes.'」<br>❌ A/C/D 均為文章未提及的說法。" },
+      { q: "42. What was Nîmes originally famous for?", opts: ["Producing a strong, durable cotton fabric","Hosting fashion shows","Inventing the tuxedo jacket","Manufacturing sewing needles"], ans: "A", exp: "<span class='exp-key'>A</span>──文章：「Nîmes is a city in southern France that was famous for producing a strong, durable cotton fabric.」<br>❌ B/D 均為文章未提及；C 與紐約的 Tuxedo Park 有關，與 Nîmes 無關。" },
+      { q: "43. What was the original name of the fabric before it became 'denim'?", opts: ["\"Cotton de Paris\"","\"Serge de Nîmes\"","\"Toile de Lyon\"","\"Soie de Nîmes\""], ans: "B", exp: "<span class='exp-key'>B</span>──文章：「Originally, the fabric was called 'serge de Nîmes,' but over time, English speakers shortened it to simply 'denim.'」<br>❌ A/C/D 均為文章未提及的虛構名稱。" },
+      { q: "44. Where is Tuxedo Park located?", opts: ["In southern France","In New York State","In London","In Rome"], ans: "B", exp: "<span class='exp-key'>B</span>──文章：「Tuxedo Park is a small, wealthy community in New York State.」<br>❌ A 是 Nîmes 的位置，非 Tuxedo Park；C/D 均為文章未提及。" },
+      { q: "45. According to the passage, what happened at the autumn ball?", opts: ["A young man wore a short formal jacket instead of a long-tailed coat.","A designer presented a new line of jeans.","Guests refused to wear formal clothing.","The event was canceled due to bad weather."], ans: "A", exp: "<span class='exp-key'>A</span>──文章：「a young man wore a short, formal jacket without tails to a fancy autumn ball... instead of the traditional long-tailed coat that was expected.」<br>❌ B/C/D 均為文章未提及。" },
+      { q: "46. How did other guests react to the new jacket style?", opts: ["They were angry and left the event.","Many found it elegant and asked for similar jackets.","They ignored it completely.","They reported it to the police."], ans: "B", exp: "<span class='exp-key'>B</span>──文章：「Guests were surprised, but many found the new style elegant and comfortable. Soon, similar jackets were requested by other guests…」<br>❌ A/C/D 均與文章不符。" },
+      { q: "47. What does the word 'elegant' most likely mean in this passage?", opts: ["Uncomfortable and old-fashioned","Graceful and stylish","Cheap and poorly made","Loud and colorful"], ans: "B", exp: "<span class='exp-key'>B</span>──「many found the new style elegant and comfortable」，elegant 與 comfortable 並列，描述正面評價，意指「優雅、有品味」。<br>❌ A 與 comfortable 相反；C/D 均與正面語境不符。" },
+      { q: "48. What do most people wearing denim or a tuxedo today probably NOT know?", opts: ["How to wash the clothing properly","The price of the original garments","That the names come from specific places","Who designed the modern versions"], ans: "C", exp: "<span class='exp-key'>C</span>──文章：「most people who wear it have never heard of the city where the name began」及「most people wearing one today have no idea that the name refers to a place.」<br>❌ A/B/D 均為文章未提及。" },
+      { q: "49. What is the main point of the last paragraph?", opts: ["Eponyms can also come from place names, and their origins are often forgotten over time.","Tuxedo Park is more famous than Nîmes.","Denim is more popular than tuxedos today.","Place names are no longer used in modern English."], ans: "A", exp: "<span class='exp-key'>A</span>──文章最後一段：「eponyms are not limited to people or brands. Cities, towns, and regions can also leave a lasting mark on language, often in ways that quietly disappear from public memory…」<br>❌ B/C 文章未做此比較；D 與「remain in everyday use」相反。" },
+      { q: "50. What is the best title for this passage?", opts: ["The History of French Fashion","From Places to Words: The Stories of Denim and Tuxedo","Why New York Is a Center of Fashion","The Invention of Cotton Fabric"], ans: "B", exp: "<span class='exp-key'>B</span>──全文圍繞「denim 與 tuxedo 兩個源自地名的詞彙故事」，B 最完整概括全文主旨。<br>❌ A 過於片面；C 文章未做此論述；D 過於片面，文章重點在詞彙由來而非布料發明。" }
+    ]
+  }
+];
+
+// ── State ──
+let qIndex = 0;
+let userAnswers = {};
+let answered = 0;
+let liveScore = 0;
+
+// ── Build DOM ──
+const container = document.getElementById("quiz-container");
+const statAnswered = document.getElementById("stat-answered");
+const statScore = document.getElementById("stat-score");
+const LABELS = ["A","B","C","D"];
+
+sections.forEach((sec, si) => {
+  const hdr = document.createElement("div");
+  hdr.className = "section-header";
+  hdr.textContent = sec.title;
+  container.appendChild(hdr);
+
+  if (sec.passage) {
+    const p = document.createElement("div");
+    p.className = "passage";
+    p.innerHTML = sec.passage;
+    container.appendChild(p);
+  }
+
+  sec.questions.forEach((item, qi) => {
+    const gIdx = qIndex++;
+    const card = document.createElement("div");
+    card.className = "q-card";
+    card.id = "q" + gIdx;
+
+    const numDiv = document.createElement("div");
+    numDiv.className = "q-num";
+    numDiv.textContent = "第 " + (gIdx + 1) + " 題";
+    card.appendChild(numDiv);
+
+    const qDiv = document.createElement("div");
+    qDiv.className = "q-text";
+    qDiv.innerHTML = item.q;
+    card.appendChild(qDiv);
+
+    const optsDiv = document.createElement("div");
+    optsDiv.className = "opts";
+
+    item.opts.forEach((opt, oi) => {
+      const btn = document.createElement("button");
+      btn.className = "opt-btn";
+      btn.dataset.label = LABELS[oi];
+      btn.dataset.gidx = gIdx;
+      btn.innerHTML = `<span class="label">${LABELS[oi]}</span>${opt}`;
+      btn.addEventListener("click", () => handleAnswer(gIdx, LABELS[oi], item.ans, item.exp, sec.pts));
+      optsDiv.appendChild(btn);
+    });
+
+    card.appendChild(optsDiv);
+
+    const fb = document.createElement("div");
+    fb.className = "feedback";
+    fb.id = "fb" + gIdx;
+    card.appendChild(fb);
+
+    // Explanation panel
+    const expPanel = document.createElement("div");
+    expPanel.className = "exp-panel";
+    expPanel.id = "exp" + gIdx;
+    expPanel.innerHTML = `<div class="exp-header">💡 解析</div><div class="exp-body">${item.exp}</div>`;
+    card.appendChild(expPanel);
+
+    container.appendChild(card);
+  });
+});
+
+function updateTopBar() {
+  statAnswered.textContent = "進度 " + Math.min(answered, 50) + "/50";
+  statScore.textContent    = "得分 " + liveScore + "/100";
+}
+
+function handleAnswer(gIdx, chosen, correct, exp, pts) {
+  const card = document.getElementById("q" + gIdx);
+  const fb   = document.getElementById("fb" + gIdx);
+  const expPanel = document.getElementById("exp" + gIdx);
+  const btns = card.querySelectorAll(".opt-btn");
+
+  if (userAnswers[gIdx] !== undefined) return;
+
+  userAnswers[gIdx] = chosen;
+  btns.forEach(b => b.disabled = true);
+
+  if (chosen === correct) {
+    card.classList.add("correct");
+    btns.forEach(b => { if (b.dataset.label === chosen) b.classList.add("chosen-correct"); });
+    fb.textContent = "✓ 答對了！";
+    fb.className = "feedback show ok";
+    liveScore += pts;
+  } else {
+    card.classList.add("wrong");
+    btns.forEach(b => {
+      if (b.dataset.label === chosen)  b.classList.add("chosen-wrong");
+      if (b.dataset.label === correct) b.classList.add("reveal-correct");
+    });
+    fb.textContent = `✗ 答錯了。正確答案是 ${correct}。`;
+    fb.className = "feedback show err";
+  }
+
+  expPanel.classList.add("show");
+
+  answered++;
+  updateTopBar();
+
+  const nextCard = document.getElementById("q" + (gIdx + 1));
+  if (nextCard) setTimeout(() => nextCard.scrollIntoView({ behavior: "smooth", block: "center" }), 300);
+}
+
+// ── Reveal All ──
+document.getElementById("reveal-all-btn").addEventListener("click", () => {
+  for (let i = 0; i < 50; i++) {
+    document.getElementById("exp" + i).classList.add("show");
+
+    if (userAnswers[i] !== undefined) continue;
+
+    let globalCount = 0;
+    let foundItem = null;
+    for (const sec of sections) {
+      for (const item of sec.questions) {
+        if (globalCount === i) { foundItem = item; break; }
+        globalCount++;
+      }
+      if (foundItem) break;
+    }
+    if (!foundItem) continue;
+
+    const card = document.getElementById("q" + i);
+    const fb   = document.getElementById("fb" + i);
+    const btns = card.querySelectorAll(".opt-btn");
+
+    btns.forEach(b => {
+      b.disabled = true;
+      if (b.dataset.label === foundItem.ans) b.classList.add("reveal-correct");
+    });
+    fb.textContent = `📌 正確答案：${foundItem.ans}`;
+    fb.className = "feedback show ok";
+  }
+});
+
+// ── Submit ──
+document.getElementById("submit-btn").addEventListener("click", () => {
+  if (answered < 50) {
+    document.getElementById("warn").textContent = "⚠ 還有 " + (50 - answered) + " 題未作答，請繼續作答後再交卷。";
+    for (let i = 0; i < 50; i++) {
+      if (userAnswers[i] === undefined) {
+        document.getElementById("q" + i).scrollIntoView({ behavior: "smooth", block: "center" });
+        break;
+      }
+    }
+    return;
+  }
+  document.getElementById("warn").textContent = "";
+  showResult();
+});
+
+function showResult() {
+  let grade, emoji;
+  if (liveScore >= 90)      { grade = "優秀"; emoji = "🏆"; }
+  else if (liveScore >= 70) { grade = "良好"; emoji = "👍"; }
+  else                      { grade = "需加強"; emoji = "📚"; }
+
+  document.getElementById("res-emoji").textContent = emoji;
+  document.getElementById("res-grade").textContent = grade;
+  document.getElementById("res-text").textContent  =
+    `你的得分是 ${liveScore} 分（滿分 100 分）`;
+
+  document.getElementById("result-card").style.display = "block";
+  document.getElementById("submit-area").style.display = "none";
+  document.getElementById("result-card").scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+document.getElementById("reset-btn").addEventListener("click", () => {
+  userAnswers = {};
+  answered = 0;
+  liveScore = 0;
+  updateTopBar();
+
+  document.querySelectorAll(".q-card").forEach(c => {
+    c.classList.remove("correct","wrong");
+  });
+  document.querySelectorAll(".opt-btn").forEach(b => {
+    b.disabled = false;
+    b.classList.remove("chosen-correct","chosen-wrong","reveal-correct");
+  });
+  document.querySelectorAll(".feedback").forEach(f => {
+    f.className = "feedback";
+    f.textContent = "";
+  });
+  document.querySelectorAll(".exp-panel").forEach(p => {
+    p.classList.remove("show");
+  });
+
+  document.getElementById("result-card").style.display = "none";
+  document.getElementById("submit-area").style.display = "block";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+</script>
+</body>
+</html>

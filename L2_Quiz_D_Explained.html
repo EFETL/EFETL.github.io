@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L2 卷D 解析版 — The Marshmallow Challenge</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 17px; line-height: 1.7; background: #f0f2f5; color: #1d1d1f; padding-bottom: 48px; }
+header { background: linear-gradient(135deg, #1a1a2e, #16213e); color: white; padding: 20px 16px; text-align: center; }
+header h1 { font-size: 20px; margin-bottom: 4px; }
+header p { font-size: 14px; opacity: 0.75; }
+.top-bar { background: white; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.1); gap: 8px; }
+.top-bar .score-info { font-size: 15px; font-weight: bold; color: #1a1a2e; white-space: nowrap; }
+.btn-reveal { background: linear-gradient(135deg, #11998e, #38ef7d); color: white; border: none; border-radius: 10px; padding: 8px 14px; font-size: 14px; font-weight: bold; cursor: pointer; white-space: nowrap; -webkit-tap-highlight-color: transparent; }
+.progress-bar { height: 4px; background: #e0e0e0; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, #11998e, #38ef7d); transition: width 0.3s; width: 0%; }
+.section { background: white; margin: 14px 10px 0; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
+.section-header { background: linear-gradient(135deg, #11998e, #38ef7d); color: white; padding: 13px 16px; font-size: 16px; font-weight: bold; }
+.section-header .pts { font-size: 12px; opacity: 0.85; font-weight: normal; }
+.question { padding: 15px 16px; border-bottom: 1px solid #f0f0f0; }
+.question:last-child { border-bottom: none; }
+.q-text { font-size: 16px; margin-bottom: 11px; font-weight: 500; line-height: 1.6; }
+.q-num { color: #11998e; font-weight: bold; margin-right: 4px; }
+.options { display: flex; flex-direction: column; gap: 7px; }
+.option { display: flex; align-items: flex-start; gap: 9px; padding: 10px 13px; border: 2px solid #e0e0e0; border-radius: 11px; cursor: pointer; transition: all 0.15s; font-size: 16px; line-height: 1.5; background: #fafafa; -webkit-tap-highlight-color: transparent; }
+.option:active { transform: scale(0.98); }
+.option.correct { border-color: #34c759; background: #f0fff4; }
+.option.wrong { border-color: #ff3b30; background: #fff5f5; }
+.option.reveal-correct { border-color: #34c759; background: #f0fff4; }
+.option-label { font-weight: bold; color: #11998e; min-width: 22px; flex-shrink: 0; }
+.option.correct .option-label, .option.reveal-correct .option-label { color: #34c759; }
+.option.wrong .option-label { color: #ff3b30; }
+.explanation { display: none; margin-top: 10px; background: #f0fbf9; border-radius: 10px; border: 1px solid #c8efe6; overflow: hidden; }
+.explanation.show { display: block; }
+.exp-header { display: flex; align-items: center; gap: 6px; padding: 8px 13px; font-size: 14px; font-weight: bold; background: #d6f5ee; color: #0f8a7e; }
+.exp-body { padding: 10px 13px; font-size: 15px; line-height: 1.7; color: #333; }
+.exp-key { color: #2e7d32; font-weight: bold; }
+.passage { background: #f0fbf9; border-left: 4px solid #11998e; padding: 13px 15px; margin: 0 16px 10px; border-radius: 0 8px 8px 0; font-size: 15px; line-height: 1.75; }
+.passage-label { font-weight: bold; color: #11998e; margin-bottom: 7px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+.btn-submit { display: block; width: calc(100% - 28px); margin: 18px auto 0; padding: 15px; background: linear-gradient(135deg, #11998e, #38ef7d); color: white; border: none; border-radius: 13px; font-size: 17px; font-weight: bold; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.result-box { display: none; margin: 14px 10px; background: white; border-radius: 16px; padding: 22px 18px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
+.result-box.show { display: block; }
+.result-score { font-size: 50px; font-weight: bold; color: #11998e; line-height: 1.1; }
+.result-total { font-size: 20px; color: #666; margin-bottom: 10px; }
+.result-grade { font-size: 18px; font-weight: bold; padding: 7px 18px; border-radius: 18px; display: inline-block; margin-bottom: 14px; }
+.grade-a { background: #f0fff4; color: #1a7a3c; }
+.grade-b { background: #fff9e6; color: #b7791f; }
+.grade-c { background: #fff5f5; color: #c0392b; }
+.btn-reset { display: inline-block; padding: 11px 26px; background: #e6f9f5; color: #11998e; border: none; border-radius: 11px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 6px; }
+</style>
+</head>
+<body>
+<a href="/" style="position:fixed;top:14px;left:14px;background:#2b4c8c;color:#fff;padding:7px 16px;border-radius:8px;text-decoration:none;font-size:0.9rem;font-weight:600;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,0.18);">&#8592; &#22238;&#39318;&#39052;</a>
+<a href="/" style="position:fixed;top:14px;left:14px;background:#2b4c8c;color:#fff;padding:7px 16px;border-radius:8px;text-decoration:none;font-size:0.9rem;font-weight:600;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,0.18);">&#8592; &#22238;&#39318;&#39052;</a>
+<a href="/" style="position:fixed;top:14px;left:14px;background:#2b4c8c;color:#fff;padding:7px 16px;border-radius:8px;text-decoration:none;font-size:0.9rem;font-weight:600;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,0.18);">&#8592; &#22238;&#39318;&#39052;</a>
+<header>
+  <h1>L2 測驗卷 D ── 解析版</h1>
+  <p>The Marshmallow Challenge｜選完即顯示解析</p>
+</header>
+<div class="top-bar">
+  <span class="score-info">進度 <span id="answered-count">0</span>/50 ｜ 得分 <span id="live-score">0</span>/100</span>
+  <button class="btn-reveal" onclick="revealAll()">📖 顯示全部解析</button>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+<div id="quiz-container"></div>
+<button class="btn-submit" onclick="submitAll()">📝 交卷 / 查看成績</button>
+<div class="result-box" id="result-box">
+  <div class="result-score" id="result-score">0</div>
+  <div class="result-total">/ 100 分</div>
+  <div class="result-grade" id="result-grade"></div>
+  <div style="color:#666;font-size:15px;margin-bottom:14px;" id="result-detail"></div>
+  <button class="btn-reset" onclick="resetAll()">🔄 重新作答</button>
+</div>
+
+<script>
+const sections = [
+  {
+    title: '第一大題：字彙選擇', pts: '15 題 × 2 分 = 30 分',
+    questions: [
+      { q: 'The festival featured several _______ inventions created by local high school students.', opts: ['elementary','slight','innovative','reliable'], ans: 'C', exp: '<span class="exp-key">innovative（創新的）</span>──學生發明的「創新」作品在園遊會展出，課文核心詞彙。<br>❌ elementary = 基本的；slight = 輕微的；reliable = 可靠的，均不符「創新發明」語境。' },
+      { q: 'The mayor _______ that the new park would open before summer.', opts: ['promised','ranked','adjusted','explored'], ans: 'A', exp: '<span class="exp-key">promised（承諾）</span>──市長「承諾」新公園將在夏天前開放，promise 課文詞彙（v. 有希望；保證）。<br>❌ ranked = 排名；adjusted = 調整；explored = 探索，均不符「承諾」語境。' },
+      { q: 'The workers gathered all the _______ they needed before starting construction.', opts: ['routes','materials','elements','feedbacks'], ans: 'B', exp: '<span class="exp-key">materials（材料；物資）</span>──工人在開始施工前收集所有所需的「材料」，課文原詞。<br>❌ routes = 路線；elements = 元素；feedbacks（不可數）= 回饋，均不符。' },
+      { q: 'The two schools agreed to _______ on a charity event for the local community.', opts: ['graduate','rank','collaborate','mention'], ans: 'C', exp: '<span class="exp-key">collaborate（合作）</span>──兩所學校同意「合作」舉辦社區慈善活動，課文核心詞彙。<br>❌ graduate = 畢業；rank = 排名；mention = 提及，均不符「合作舉辦」語境。' },
+      { q: 'The old wooden _______ had survived three major typhoons.', opts: ['graduation','exploration','structure','capability'], ans: 'C', exp: '<span class="exp-key">structure（結構；建築物）</span>──這座老舊木造「建築物」撐過了三次大颱風，課文關鍵詞。<br>❌ graduation = 畢業；exploration = 探索；capability = 能力，均不指「建築物」。' },
+      { q: 'His new score was only _______ higher than his previous one.', opts: ['uniquely','slightly','reliably','elementarily'], ans: 'B', exp: '<span class="exp-key">slightly（稍微；略微）</span>──他的新成績只「稍微」比之前高，slightly 修飾比較級 higher，課文原詞。<br>❌ uniquely = 獨特地；reliably = 可靠地；elementarily（罕用），均不符「些微差距」語境。' },
+      { q: 'In an emergency, you can _______ on your neighbors for help.', opts: ['mention','adjust','rank','rely'], ans: 'D', exp: '<span class="exp-key">rely（依靠；依賴）</span>──緊急情況下可以「依靠」鄰居幫忙，rely on 課文原片語。<br>❌ mention = 提及；adjust = 調整；rank = 排名，均不構成「依靠⋯」語境。' },
+      { q: 'The manager asked her assistant for honest _______ on the proposal.', opts: ['material','route','feedback','element'], ans: 'C', exp: '<span class="exp-key">feedback（回饋；反饋）</span>──經理向助理徵求對提案的誠實「回饋」，與課文 gives them immediate feedback 呼應。<br>❌ material = 材料；route = 路線；element = 元素，均不指「評語」。' },
+      { q: "The artist's painting style is so _______ that people can recognize her work instantly.", opts: ['stable','capable','unique','slight'], ans: 'C', exp: '<span class="exp-key">unique（獨特的；唯一的）</span>──這位藝術家的畫風如此「獨特」，人們一眼就能認出她的作品，與課文 unique way of working 同義。<br>❌ stable = 穩定的；capable = 有能力的；slight = 輕微的，均不符「獨一無二」語境。' },
+      { q: 'It can take months to fully _______ to living in a different country.', opts: ['explore','construct','promise','adjust'], ans: 'D', exp: '<span class="exp-key">adjust（調整；適應）</span>──需要數個月才能完全「適應」在另一個國家生活，adjust to 課文詞彙。<br>❌ explore = 探索；construct = 建造；promise = 承諾，均不表示「適應」。' },
+      { q: 'The bridge was designed with extra supports to increase its _______.', opts: ['stability','architecture','collaboration','graduation'], ans: 'A', exp: '<span class="exp-key">stability（穩定性）</span>──橋樑設計加裝額外支撐以增加其「穩定性」，課文用此詞描述結構穩定。<br>❌ architecture = 建築學；collaboration = 合作；graduation = 畢業，均不符「結構穩定」語境。' },
+      { q: 'The hikers wanted to _______ the hidden trails behind the mountain.', opts: ['mention','rank','explore','graduate'], ans: 'C', exp: '<span class="exp-key">explore（探索；探查）</span>──登山客想要「探索」山後隱藏的小徑，課文尾段詞彙。<br>❌ mention = 提及；rank = 排名；graduate = 畢業，均不符「主動探索」語境。' },
+      { q: 'Drivers were advised to take an alternative _______ because of the accident.', opts: ['element','feedback','adjustment','route'], ans: 'D', exp: '<span class="exp-key">route（路線；途徑）</span>──因為事故，駕駛被建議走替代「路線」，課文 routes to success 同詞。<br>❌ element = 元素；feedback = 回饋；adjustment = 調整，均不指「行駛路線」。' },
+      { q: 'After comparing several options, the committee finally managed to _______ which plan to choose.', opts: ['figure out','get down to','roll up their sleeves','rely on'], ans: 'A', exp: '<span class="exp-key">figure out（弄清楚；想出）</span>──比較數個選項後，委員會終於「想清楚」該選哪個方案，課文片語。<br>❌ get down to = 開始認真做；roll up sleeves = 捲起袖子；rely on = 依靠，均不表示「理解/解決問題」。' },
+      { q: 'Mastering a musical instrument involves a great deal of _______ over many years.', opts: ['in charge','trial and error','figure out','get down to'], ans: 'B', exp: '<span class="exp-key">trial and error（試錯）</span>──精通一項樂器需要多年的「試錯」過程，課文核心概念。<br>❌ in charge = 負責；figure out = 弄清楚；get down to = 開始做，均不符此語境。' },
+    ]
+  },
+  {
+    title: '第二大題：文法選擇', pts: '15 題 × 2 分 = 30 分',
+    questions: [
+      { q: 'A famous online encyclopedia _______ Wikipedia is edited by volunteers worldwide.', opts: ['known as','knowing as','known for','knowing for'], ans: 'A', exp: '<span class="exp-key">known as（被稱為）</span>──過去分詞片語修飾 encyclopedia，課文原句結構：an exercise known as the Marshmallow Challenge。<br>❌ knowing（現在分詞，主動）不用於此；known for = 以⋯聞名，語義不符。' },
+      { q: 'The new software is _______ thousands of requests at the same time.', opts: ['capable to handle','capable of handling','capable for handling','capable to handling'], ans: 'B', exp: '<span class="exp-key">capable of handling</span>──be capable of + V-ing = 有能力做某事，固定介係詞 of，後接動名詞，課文原句：structure capable of supporting the weight。<br>❌ capable to/for 均非正確介係詞用法。' },
+      { q: 'The festival _______ in this town every autumn for the past two decades.', opts: ['has organized','has been organized','organized','is organizing'], ans: 'B', exp: '<span class="exp-key">has been organized（現在完成式被動）</span>──這個慶典「被」舉辦了二十年，被動語態，課文原句用法（has been conducted）。<br>❌ has organized = 主動（主語需為人）；organized = 過去式；is organizing = 現在進行式。' },
+      { q: 'The author, _______ novels have sold millions of copies, rarely gives interviews.', opts: ['that','which','whose','whom'], ans: 'C', exp: '<span class="exp-key">whose（其的）</span>──whose 作所有格關係代名詞，修飾 author，課文原句結構：The kindergarten group, whose structures were taller。<br>❌ that/which 不能作所有格；whom 修飾人（作受詞）。' },
+      { q: 'Some people enjoy working under pressure, _______ others prefer a relaxed pace.', opts: ['because','although','whereas','unless'], ans: 'C', exp: '<span class="exp-key">whereas（然而；反之）</span>──whereas 引導對比子句，課文原詞：kids get started right away, whereas adults...。<br>❌ because = 因果；although = 讓步；unless = 條件，均改變邏輯關係。' },
+      { q: 'The committee did not announce the winner _______ all the votes had been counted.', opts: ['because','until','while','before'], ans: 'B', exp: '<span class="exp-key">until（直到⋯才）</span>──not...until = 直到⋯才，委員會直到「所有票數被算完」才宣布得獎人，課文語義。<br>❌ because = 因為；while = 當⋯時；before = 在⋯之前，均改變時序邏輯。' },
+      { q: '_______ his classmates, Tom finishes his homework right after school every day.', opts: ['Despite','Unlike','Although','Instead of'], ans: 'B', exp: '<span class="exp-key">Unlike（與⋯不同）</span>──unlike + 名詞片語，引出對比，課文原句：unlike adults, kindergarteners are quicker to change。<br>❌ Despite + 動名詞；Although + 子句；Instead of + 動名詞，結構均不符。' },
+      { q: '_______ losing the first match, the team went on to win the championship.', opts: ['Despite','Although','However','Instead'], ans: 'A', exp: '<span class="exp-key">Despite（儘管）</span>──despite + V-ing（動名詞），儘管輸了第一場比賽仍贏得冠軍。課文原句：despite working to create the best plan。<br>❌ Although 後接子句（需有主語）；However/Instead 為副詞，不引導片語。' },
+      { q: 'The siblings worked _______ to plan a surprise party for their parents.', opts: ['each other','one another','together','alone'], ans: 'C', exp: '<span class="exp-key">together（一起）</span>──work together = 共同合作，課文原句：more focused on working together to figure out。<br>❌ each other/one another 作受詞，不接在 worked 後；alone = 單獨（相反）。' },
+      { q: "The teacher's comments gave the students valuable _______ on how to improve their essays.", opts: ['feedback','adjustment','capability','mention'], ans: 'A', exp: '<span class="exp-key">feedback（回饋）</span>──課文原句：gives them immediate feedback about what design elements work。<br>❌ adjustment = 調整（動作非資訊）；capability = 能力；mention = 提及，均不符。' },
+      { q: '_______ save energy, the school turns off unused lights every evening.', opts: ['In order that','So that','In order to','So as that'], ans: 'C', exp: '<span class="exp-key">In order to（為了）</span>──in order to + V = 為了做某事，課文原句：In order to solve problems, we must...。<br>❌ In order that/So that 後接子句（需主語+動詞）；So as that 不是正確片語。' },
+      { q: "The data _______ during the experiment supported the team's hypothesis.", opts: ['collecting','to collect','collected','collect'], ans: 'C', exp: '<span class="exp-key">collected（過去分詞片語）</span>──collected during the experiment 修飾 data，表示「在實驗中被蒐集的數據」，被動含義，呼應課文 constructed in the study。<br>❌ collecting = 現在分詞（主動）；to collect = 目的；collect = 原形，均不符。' },
+      { q: 'She was quick _______ her schedule when the meeting time changed suddenly.', opts: ['adjust','adjusting','adjusted','to adjust'], ans: 'D', exp: '<span class="exp-key">to adjust</span>──be quick to do = 快速地做某事，形容詞後接不定詞 to V，課文原句：quicker to change their methods。<br>❌ adjust（原形，缺 to）；adjusting（動名詞，不接形容詞）；adjusted（過去式）均不符。' },
+      { q: 'People often _______ trust recommendations from their friends more than advertisements.', opts: ['tend that','tend to','are tending','tend for'], ans: 'B', exp: '<span class="exp-key">tend to（傾向於）</span>──tend to + V = 傾向於做某事，課文原句：children tend to collaborate freely and naturally。<br>❌ tend that 後接子句；are tending 不必要的進行式；tend for 非正確搭配。' },
+      { q: 'Many companies _______ a large amount of money training new employees.', opts: ['spend','take','cost','use'], ans: 'A', exp: '<span class="exp-key">spend</span>──spend money/time + V-ing = 花錢/花時間做某事，固定句型，呼應課文 spend most of the time planning。<br>❌ take time + to V；cost = 花費金錢（主語通常為事物）；use 不用於此句型。' },
+    ]
+  },
+  {
+    title: '第三大題：克漏字填充', pts: '10 題 × 2 分 = 20 分',
+    passage: 'A teacher once gave her students an <strong>(31)</strong> _______ assignment: build the tallest paper tower possible in just fifteen minutes. Each group had to <strong>(32)</strong> _______ a tower using only newspaper and tape.<br><br>The results were <strong>(33)</strong> _______ . The youngest group, <strong>(34)</strong> _______ having the least experience, built one of the tallest towers. The oldest group, <strong>(35)</strong> _______, spent so much time discussing the design that they barely had time to build anything.<br><br>The teacher explained that the younger students <strong>(36)</strong> _______ very little time talking about who would be <strong>(37)</strong> _______ . They simply started building right away. Whenever a tower fell over, they quickly <strong>(38)</strong> _______ building it again, using <strong>(39)</strong> _______ to find what worked. Each failed attempt gave them useful <strong>(40)</strong> _______ for the next try.',
+    questions: [
+      { q: 'A teacher once gave her students an _______ assignment: build the tallest paper tower possible.', opts: ['stable','slight','innovative','elementary'], ans: 'C', exp: '<span class="exp-key">innovative（創新的）</span>──呼應課文第二句：An innovative team-building exercise known as the Marshmallow Challenge。<br>❌ stable = 穩定的；slight = 輕微的；elementary = 初級的，均不符「創新性的任務」語境。' },
+      { q: 'Each group had to _______ a tower using only newspaper and tape.', opts: ['mention','explore','construct','rank'], ans: 'C', exp: '<span class="exp-key">construct（建造）</span>──呼應課文主題：建造最高的自立結構，construct 最直接。<br>❌ mention = 提及；explore = 探索；rank = 排名，均不符「建造」動作。' },
+      { q: 'The results were _______.', opts: ['surprising','explored','adjusted','mentioned'], ans: 'A', exp: '<span class="exp-key">surprising（令人驚訝的）</span>──呼應課文 the challenge has produced some surprising results 的語氣，年幼學生的表現出乎意料地好。<br>❌ explored/adjusted/mentioned 為過去分詞，文法與語意皆不符 be 動詞後的形容詞補語位置。' },
+      { q: 'The youngest group, _______ having the least experience, built one of the tallest towers.', opts: ['unlike','despite','although','whereas'], ans: 'B', exp: '<span class="exp-key">despite（儘管）</span>──despite + V-ing，儘管經驗最少，最年幼的組別卻蓋出最高的塔之一，課文原句結構：despite working to create the best plan。<br>❌ unlike 後接名詞（指對比的人/物）；although/whereas 後接子句，結構不符。' },
+      { q: 'The oldest group, _______, spent so much time discussing the design that they barely had time to build anything.', opts: ['however','similarly','amazingly','reliably'], ans: 'A', exp: '<span class="exp-key">however（然而）</span>──表示與前句（最年幼組表現出色）的轉折對比，最年長組卻把時間都花在討論設計上。<br>❌ similarly = 同樣地；amazingly = 令人驚訝地（用於描述孩童表現）；reliably = 可靠地，均不符轉折語氣。' },
+      { q: 'The younger students _______ very little time talking about who would be in charge.', opts: ['collaborated','explored','spent','adjusted'], ans: 'C', exp: '<span class="exp-key">spent（花費）</span>──spend time + V-ing = 花時間做某事（spent...talking），呼應課文 spend most of the time planning 的句型結構。<br>❌ collaborated = 合作；explored = 探索；adjusted = 調整，均不構成 spend time 的句型。' },
+      { q: '...about who would be _______ charge.', opts: ['for','on','in','at'], ans: 'C', exp: '<span class="exp-key">in（in charge = 負責）</span>──in charge = 負責；掌管，固定介係詞搭配，課文原句：deciding who is in charge。<br>❌ for/on/at 均不構成此片語。' },
+      { q: 'Whenever a tower fell over, they quickly _______ building it again.', opts: ['got down to','figured out','relied on','ranked up'], ans: 'A', exp: '<span class="exp-key">got down to（開始認真做）</span>──get down to + V-ing = 開始認真做某事，塔倒了之後立刻「重新動手」蓋，課文片語 get down to work。<br>❌ figured out（後接疑問詞或名詞，非 V-ing）；relied on = 依靠；ranked up 非正確片語。' },
+      { q: '...using _______ to find what worked.', opts: ['stability','trial and error','route','element'], ans: 'B', exp: '<span class="exp-key">trial and error（試錯）</span>──用「試錯法」找出有效的方法，課文核心概念：They rely on trial and error。<br>❌ stability = 穩定性；route = 路線；element = 元素，均不符。' },
+      { q: 'Each failed attempt gave them useful _______ for the next try.', opts: ['stability','feedback','route','element'], ans: 'B', exp: '<span class="exp-key">feedback（回饋）</span>──每次失敗的嘗試都提供有用的「回饋」，課文原句：gives them immediate feedback about what design elements work。<br>❌ stability = 穩定性；route = 路線；element = 元素，均不指「資訊回饋」。' },
+    ]
+  },
+  {
+    title: '第四大題：閱讀測驗', pts: '10 題 × 2 分 = 20 分',
+    passage: "The Marshmallow Challenge is a well-known team-building exercise. Each team receives the same simple materials: twenty sticks of dry spaghetti, a length of tape, a length of string, and one marshmallow. The goal is to build the tallest free-standing structure that can support the marshmallow on top within an 18-minute time limit.<br><br>Tom Wujec, a Canadian technology expert, popularized this activity and tested it with many groups around the world, from CEOs to lawyers to kindergarten students. According to his findings, the average structure reached about 20 inches in height. Architects and engineers, who are used to designing structures, achieved the best results, which was hardly surprising. Lawyers, however, ranked near the bottom, and business school graduates finished in last place even though they had spent a great deal of time creating detailed plans.<br><br>What surprised many people was that kindergarteners performed almost as well as the architects and engineers. Their secret was simple. Rather than spending time deciding on a perfect plan, they began building immediately. When their early attempts failed, they did not waste time figuring out who was to blame. Instead, they quickly adjusted their approach and tried again, learning something new from each attempt.<br><br>Adult teams, in contrast, often used most of their available time for planning and discussion. By the time they started building, there was little time left to test their ideas or fix mistakes if the structure could not hold the marshmallow.<br><br>The lesson from the Marshmallow Challenge is clear: careful planning alone does not guarantee success. Acting quickly, learning from failure, and cooperating without worrying about leadership often lead to better results.",
+    questions: [
+      { q: 'What materials does each team receive in the Marshmallow Challenge?', opts: ['Spaghetti, glue, scissors, and a marshmallow','Spaghetti, tape, string, and a marshmallow','Wood sticks, tape, paper, and a marshmallow','String, glue, paper clips, and a marshmallow'], ans: 'B', exp: '<span class="exp-key">B</span>──文中明確列出：twenty sticks of dry spaghetti, a length of tape, a length of string, and one marshmallow。其他選項材料均與原文不符。' },
+      { q: "According to Wujec's findings, what was the average height of the structures?", opts: ['About 8 inches','About 18 inches','About 20 inches','About 28 inches'], ans: 'C', exp: '<span class="exp-key">C（約20英寸）</span>──文中原句：the average structure reached about 20 inches in height。20英寸是研究數據，注意勿與18分鐘（時間限制）混淆。' },
+      { q: 'Which group ranked near the bottom in the challenge?', opts: ['Architects and engineers','Kindergarteners','Lawyers','CEOs'], ans: 'C', exp: '<span class="exp-key">C（Lawyers）</span>──文中原句：Lawyers, however, ranked near the bottom。建築師與工程師表現最佳，幼兒園學生表現幾乎與其相當，CEO 未被特別提及為墊底。' },
+      { q: 'Why was it surprising that business school graduates finished last?', opts: ['They had no materials to work with.','They spent a great deal of time creating detailed plans.','They refused to participate in the challenge.','They were not allowed to use the marshmallow.'], ans: 'B', exp: '<span class="exp-key">B</span>──文中原句：business school graduates finished in last place even though they had spent a great deal of time creating detailed plans。一般人會認為花時間詳細計畫應該表現更好，結果卻相反，因此令人意外。<br>❌ A/C/D 均未提及。' },
+      { q: 'What was the "secret" to the kindergarteners\' strong performance?', opts: ['They had more time than other teams.','They began building immediately instead of planning extensively.','They copied the designs of the architects.','They used different materials from other teams.'], ans: 'B', exp: '<span class="exp-key">B</span>──文中原句：Rather than spending time deciding on a perfect plan, they began building immediately。<br>❌ A/C/D 均未在文中提及，且不合理。' },
+      { q: 'How did kindergarteners respond when their early attempts failed?', opts: ['They blamed each other for the failure.','They stopped participating in the challenge.','They quickly adjusted their approach and tried again.','They asked the adults for a new plan.'], ans: 'C', exp: '<span class="exp-key">C</span>──文中原句：When their early attempts failed, they did not waste time figuring out who was to blame. Instead, they quickly adjusted their approach and tried again。<br>❌ A/B/D 均與文意相反或未提及。' },
+      { q: 'What does the word "popularized" most likely mean in the second paragraph?', opts: ['Made something widely known and used','Criticized something publicly','Kept something a secret','Made something more difficult'], ans: 'A', exp: '<span class="exp-key">A</span>──文中說 Tom Wujec popularized this activity and tested it with many groups around the world，意指他「使這項活動廣為人知並被廣泛使用」，符合 popularize（使普及、推廣）的語意。<br>❌ B/C/D 均與「推廣」的正面語意相反或不符。' },
+      { q: 'What problem did adult teams often face according to the passage?', opts: ['They had too many materials.','They spent most of their time planning, leaving little time to build and test.','They did not understand the goal of the challenge.','They built their structures too quickly.'], ans: 'B', exp: '<span class="exp-key">B</span>──文中原句：Adult teams...often used most of their available time for planning and discussion. By the time they started building, there was little time left to test their ideas or fix mistakes。<br>❌ A/C/D 均未提及。' },
+      { q: 'What is the main lesson of the Marshmallow Challenge, according to the last paragraph?', opts: ['Detailed planning always guarantees success.','Quick action, learning from failure, and cooperation often lead to better results.','Only architects and engineers can succeed at building tasks.','Kindergarteners should be in charge of all team projects.'], ans: 'B', exp: '<span class="exp-key">B</span>──文中結論：careful planning alone does not guarantee success. Acting quickly, learning from failure, and cooperating without worrying about leadership often lead to better results。<br>❌ A 與文章主旨相反；C/D 均過度推論。' },
+      { q: 'Based on the passage, what can be inferred about teams that focus only on creating a "perfect plan"?', opts: ['They are guaranteed to build the tallest structure.','They may run out of time to test and adjust their ideas.','They will always perform better than kindergarteners.','They do not need any materials to succeed.'], ans: 'B', exp: '<span class="exp-key">B</span>──文中提到 adult teams 因花太多時間在計畫與討論上，導致 there was little time left to test their ideas or fix mistakes，可推論一味追求「完美計畫」的團隊很可能沒有足夠時間測試與調整想法。<br>❌ A/C/D 均與文意相反或無根據。' },
+    ]
+  }
+];
+
+let globalQNum = 0;
+const qMap = {};
+const userAnswers = {};
+let submitted = false;
+
+const container = document.getElementById('quiz-container');
+sections.forEach(sec => {
+  const secDiv = document.createElement('div');
+  secDiv.className = 'section';
+  let html = `<div class="section-header">${sec.title} <span class="pts">（${sec.pts}）</span></div>`;
+  if (sec.passage) html += `<div class="passage"><div class="passage-label">📖 閱讀文章</div>${sec.passage}</div>`;
+  sec.questions.forEach(q => {
+    globalQNum++;
+    const n = globalQNum;
+    qMap[n] = { ans: q.ans, exp: q.exp };
+    const labels = ['A','B','C','D'];
+    let optHtml = q.opts.map((o,i) => `<div class="option" id="opt-${n}-${labels[i]}" onclick="choose(${n},'${labels[i]}')">`+`<span class="option-label">(${labels[i]})</span>${o}</div>`).join('');
+    html += `<div class="question" id="q${n}"><div class="q-text"><span class="q-num">${n}.</span> ${q.q}</div><div class="options">${optHtml}</div><div class="explanation" id="exp${n}"><div class="exp-header">💡 解析</div><div class="exp-body">${q.exp}</div></div></div>`;
+  });
+  secDiv.innerHTML = html;
+  container.appendChild(secDiv);
+});
+
+function choose(n, chosen) {
+  if (submitted) return;
+  userAnswers[n] = chosen;
+  const ans = qMap[n].ans;
+  ['A','B','C','D'].forEach(l => {
+    const el = document.getElementById(`opt-${n}-${l}`);
+    el.classList.remove('correct','wrong','reveal-correct');
+    if (l === chosen) el.classList.add(chosen === ans ? 'correct' : 'wrong');
+    else if (l === ans && chosen !== ans) el.classList.add('reveal-correct');
+  });
+  document.getElementById(`exp${n}`).classList.add('show');
+  updateTopBar();
+}
+
+function updateTopBar() {
+  const count = Object.keys(userAnswers).length;
+  document.getElementById('answered-count').textContent = count;
+  document.getElementById('progress-fill').style.width = (count / 50 * 100) + '%';
+  let score = 0;
+  for (let q in userAnswers) { if (userAnswers[q] === qMap[q].ans) score += 2; }
+  document.getElementById('live-score').textContent = score;
+}
+
+function revealAll() {
+  for (let n = 1; n <= 50; n++) {
+    const ans = qMap[n].ans;
+    ['A','B','C','D'].forEach(l => {
+      const el = document.getElementById(`opt-${n}-${l}`);
+      el.classList.remove('correct','wrong','reveal-correct');
+      if (l === ans) el.classList.add('reveal-correct');
+      else if (userAnswers[n] === l) el.classList.add('wrong');
+    });
+    document.getElementById(`exp${n}`).classList.add('show');
+  }
+  updateTopBar();
+}
+
+function submitAll() {
+  submitted = true;
+  revealAll();
+  let score = 0;
+  for (let n = 1; n <= 50; n++) { if (userAnswers[n] === qMap[n].ans) score += 2; }
+  const rb = document.getElementById('result-box');
+  rb.classList.add('show');
+  document.getElementById('result-score').textContent = score;
+  const gr = document.getElementById('result-grade');
+  const det = document.getElementById('result-detail');
+  if (score >= 90) { gr.textContent = '🏆 優秀！'; gr.className = 'result-grade grade-a'; det.textContent = '表現卓越，繼續保持！'; }
+  else if (score >= 70) { gr.textContent = '👍 良好'; gr.className = 'result-grade grade-b'; det.textContent = '表現不錯，再複習錯誤的題目吧！'; }
+  else { gr.textContent = '📚 需加強'; gr.className = 'result-grade grade-c'; det.textContent = '多複習解析說明，你可以做到的！'; }
+  document.getElementById('answered-count').textContent = 50;
+  document.getElementById('live-score').textContent = score;
+  document.getElementById('progress-fill').style.width = '100%';
+  rb.scrollIntoView({ behavior: 'smooth' });
+}
+
+function resetAll() {
+  submitted = false;
+  for (let key in userAnswers) delete userAnswers[key];
+  for (let n = 1; n <= 50; n++) {
+    ['A','B','C','D'].forEach(l => document.getElementById(`opt-${n}-${l}`).classList.remove('correct','wrong','reveal-correct'));
+    document.getElementById(`exp${n}`).classList.remove('show');
+  }
+  document.getElementById('result-box').classList.remove('show');
+  document.getElementById('answered-count').textContent = '0';
+  document.getElementById('live-score').textContent = '0';
+  document.getElementById('progress-fill').style.width = '0%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
