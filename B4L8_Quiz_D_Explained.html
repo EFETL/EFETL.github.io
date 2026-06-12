@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L8 Quiz D Explained — Too Much of a Good Thing: Overtourism in Barcelona</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 16px;
+    background: #eafffb;
+    color: #1a1a2e;
+    min-height: 100vh;
+    padding-bottom: 40px;
+  }
+
+  /* ── Sticky top bar ── */
+  #topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    box-shadow: 0 2px 8px rgba(17,153,142,0.4);
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  #topbar h1 { font-size: 15px; font-weight: 700; letter-spacing: 0.3px; text-shadow: 0 1px 2px rgba(0,0,0,0.15); }
+  #topbar .top-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  #topbar .stats { font-size: 13px; display: flex; gap: 8px; }
+  #topbar .stats span { background: rgba(255,255,255,0.22); border-radius: 20px; padding: 3px 10px; }
+  #reveal-all-btn {
+    background: rgba(255,255,255,0.25);
+    border: 1.5px solid rgba(255,255,255,0.7);
+    color: #fff;
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.15s;
+  }
+  #reveal-all-btn:active { background: rgba(255,255,255,0.45); }
+
+  /* ── Section header ── */
+  .section-header {
+    margin: 24px 16px 12px;
+    padding: 10px 14px;
+    background: linear-gradient(135deg, #11998e22, #38ef7d33);
+    border-left: 4px solid #11998e;
+    border-radius: 0 8px 8px 0;
+    font-weight: 700;
+    font-size: 15px;
+    color: #0d6e64;
+  }
+
+  /* ── Passage box ── */
+  .passage {
+    margin: 0 16px 16px;
+    padding: 14px;
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid #b8ece3;
+    font-size: 15px;
+    line-height: 1.7;
+    color: #333;
+  }
+  .passage strong { color: #11998e; }
+
+  /* ── Question card ── */
+  .q-card {
+    background: #fff;
+    border-radius: 12px;
+    margin: 10px 16px;
+    padding: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    border: 2px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .q-card.correct  { border-color: #22c55e; background: #f0fdf4; }
+  .q-card.wrong    { border-color: #ef4444; background: #fff5f5; }
+
+  .q-num {
+    font-size: 12px;
+    font-weight: 700;
+    color: #11998e;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .q-text {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 12px;
+    color: #1a1a2e;
+  }
+
+  /* ── Options ── */
+  .opts { display: flex; flex-direction: column; gap: 8px; }
+  .opt-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f0fffb;
+    border: 1.5px solid #9be8da;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 15px;
+    color: #1a1a2e;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s, border-color 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .opt-btn:active { background: #d7f9f0; }
+  .opt-btn .label {
+    min-width: 24px; height: 24px;
+    background: #11998e;
+    color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; flex-shrink: 0;
+  }
+  .opt-btn.chosen-correct { background: #dcfce7; border-color: #22c55e; }
+  .opt-btn.chosen-correct .label { background: #22c55e; }
+  .opt-btn.chosen-wrong   { background: #fee2e2; border-color: #ef4444; }
+  .opt-btn.chosen-wrong   .label { background: #ef4444; }
+  .opt-btn.reveal-correct { background: #dcfce7; border-color: #22c55e; }
+  .opt-btn.reveal-correct .label { background: #22c55e; }
+  .opt-btn:disabled { cursor: default; opacity: 0.85; }
+
+  /* ── Feedback ── */
+  .feedback {
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.ok   { color: #16a34a; }
+  .feedback.err  { color: #dc2626; }
+
+  /* ── Explanation panel ── */
+  .exp-panel {
+    display: none;
+    margin-top: 12px;
+    padding: 12px 14px;
+    background: linear-gradient(135deg, #e6fff8, #eafff0);
+    border-radius: 10px;
+    border: 1px solid #9be8da;
+    font-size: 15px;
+    line-height: 1.7;
+    color: #333;
+  }
+  .exp-panel.show { display: block; }
+  .exp-panel .exp-header {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0a7a6f;
+    margin-bottom: 6px;
+  }
+  .exp-panel .exp-body { font-size: 15px; }
+  .exp-key {
+    color: #0e8a7e;
+    font-weight: 700;
+  }
+
+  /* ── Submit ── */
+  #submit-area {
+    margin: 28px 16px 10px;
+    text-align: center;
+  }
+  #submit-btn {
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    padding: 14px 48px;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(17,153,142,0.45);
+    transition: opacity 0.2s, transform 0.1s;
+    -webkit-tap-highlight-color: transparent;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  }
+  #submit-btn:active { opacity: 0.85; transform: scale(0.97); }
+
+  /* ── Result card ── */
+  #result-card {
+    display: none;
+    margin: 20px 16px;
+    background: #fff;
+    border-radius: 16px;
+    padding: 28px 20px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(17,153,142,0.25);
+  }
+  #result-card .grade-emoji { font-size: 52px; margin-bottom: 8px; }
+  #result-card .grade-label {
+    font-size: 22px; font-weight: 800;
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 6px;
+  }
+  #result-card .score-text { font-size: 16px; color: #555; margin-bottom: 20px; }
+  #reset-btn {
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+    color: #fff; border: none; border-radius: 30px;
+    padding: 12px 40px; font-size: 16px; font-weight: 700;
+    cursor: pointer; box-shadow: 0 4px 14px rgba(17,153,142,0.35);
+  }
+
+  /* ── Unanswered warning ── */
+  #warn { color: #dc2626; font-size: 14px; margin-top: 8px; min-height: 20px; }
+</style>
+</head>
+<body>
+
+<a href="/" style="position:fixed;top:14px;left:14px;background:#2b4c8c;color:#fff;padding:7px 16px;border-radius:8px;text-decoration:none;font-size:0.9rem;font-weight:600;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,0.18);">&#8592; &#22238;&#39318;&#39052;</a>
+
+<!-- Sticky top bar -->
+<div id="topbar">
+  <h1>L8 Too Much of a Good Thing — 卷D 解析版</h1>
+  <div class="top-right">
+    <div class="stats">
+      <span id="stat-answered">進度 0/50</span>
+      <span id="stat-score">得分 0/100</span>
+    </div>
+    <button id="reveal-all-btn">📖 顯示全部解析</button>
+  </div>
+</div>
+
+<div id="quiz-container"></div>
+
+<div id="submit-area">
+  <button id="submit-btn">📝 交卷 / 查看成績</button>
+  <div id="warn"></div>
+</div>
+
+<div id="result-card">
+  <div class="grade-emoji" id="res-emoji"></div>
+  <div class="grade-label" id="res-grade"></div>
+  <div class="score-text" id="res-text"></div>
+  <button id="reset-btn">重新作答</button>
+</div>
+
+<script>
+const sections = [
+  {
+    title: "第一大題：字彙選擇（第 1–15 題，每題 2 分）",
+    pts: 2,
+    passage: null,
+    questions: [
+      { q: "1. During rush hour, the small café was so crowded that customers _______ onto the sidewalk outside.", opts: ["overflowed","declined","strove","concentrated"], ans: "A", exp: "<span class='exp-key'>overflowed（溢出、擠滿）</span>──店內人滿為患，客人「溢出」到外面人行道，overflow 課文詞彙。<br>❌ declined = 下降；strove = 努力（strive 過去式）；concentrated = 集中，均不符。" },
+      { q: "2. The hallway in the old building was too _______ for two people to pass each other comfortably.", opts: ["thorough","narrow","optional","negative"], ans: "B", exp: "<span class='exp-key'>narrow（狹窄的）</span>──走廊「狹窄」到兩人無法輕鬆通過，課文詞彙 narrow passageways。<br>❌ thorough = 徹底的；optional = 可選的；negative = 負面的，均不符。" },
+      { q: "3. The factory's pollution has reached such an _______ that nearby residents can no longer drink the local water.", opts: ["extent","option","measurement","concentration"], ans: "A", exp: "<span class='exp-key'>extent（程度、範圍）</span>──to such an extent that... = 到…的程度，課文片語。<br>❌ option = 選項；measurement = 測量；concentration = 專注，均不符。" },
+      { q: "4. Sales of the company's flagship product have _______ dramatically since the scandal broke.", opts: ["declined","flocked","expanded","invaded"], ans: "A", exp: "<span class='exp-key'>declined（下降）</span>──醜聞曝光後銷售「大幅下降」，decline 課文詞彙，與 dramatically 搭配。<br>❌ flocked = 群集；expanded = 擴張；invaded = 入侵，均不符。" },
+      { q: "5. Ticket prices for the concert have risen so _______ that many fans can no longer afford to attend.", opts: ["dramatically","thoroughly","partially","optionally"], ans: "A", exp: "<span class='exp-key'>dramatically（戲劇性地、大幅地）</span>──票價「大幅」上漲，dramatically 課文詞彙，常與動詞如 rise, decline 搭配。<br>❌ thoroughly = 徹底地；partially = 部分地；optionally = 可選地，均不符。" },
+      { q: "6. Every spring, thousands of birds _______ to the lake to feed before continuing their journey north.", opts: ["flock","decline","invade","rent"], ans: "A", exp: "<span class='exp-key'>flock（群集、蜂擁而至）</span>──鳥群「蜂擁」到湖邊覓食，flock 課文詞彙（flocking to the city）。<br>❌ decline = 下降；invade = 入侵；rent = 租用，均不符。" },
+      { q: "7. The company's rapid _______ into overseas markets required hiring hundreds of new employees.", opts: ["expansion","invasion","complaint","option"], ans: "A", exp: "<span class='exp-key'>expansion（擴張、擴展）</span>──公司快速「擴張」至海外市場，expansion 課文詞彙（expansion of tourism）。<br>❌ invasion = 入侵；complaint = 抱怨；option = 選項，均不符。" },
+      { q: "8. Residents described the sudden arrival of thousands of construction workers as a kind of _______ of their quiet neighborhood.", opts: ["invasion","expansion","measurement","concentration"], ans: "A", exp: "<span class='exp-key'>invasion（入侵、侵襲）</span>──大批工人突然到來被居民形容為對社區的「入侵」，invasion 課文詞彙（invasion of visitors）。<br>❌ expansion = 擴張；measurement = 測量；concentration = 專注，均不符。" },
+      { q: "9. After receiving several _______ about the noise from the construction site, the city ordered work to stop after 8 p.m.", opts: ["complaints","options","measures","extents"], ans: "A", exp: "<span class='exp-key'>complaints（抱怨、投訴）</span>──收到多起噪音「抱怨」後，市府下令禁止夜間施工，complaint 課文詞彙。<br>❌ options = 選項；measures = 措施；extents = 程度（不可數，少用複數），均不符。" },
+      { q: "10. It was _______ of him to leave his trash on the beach without a second thought for others.", opts: ["thoughtless","thoughtful","optional","measurable"], ans: "A", exp: "<span class='exp-key'>thoughtless（欠缺考慮的、不顧他人的）</span>──毫不考慮他人就把垃圾留在沙灘上，是「不顧他人」的行為，thoughtless 課文詞彙，與 thoughtful（體貼的）相反。<br>❌ thoughtful = 體貼的（語意相反）；optional = 可選的；measurable = 可測量的，均不符。" },
+      { q: "11. Because the building's owner raised the rent sharply, several long-term _______ decided to move out.", opts: ["tenants","landlords","options","measures"], ans: "A", exp: "<span class='exp-key'>tenants（房客、承租人）</span>──房東漲租後，「房客」決定搬走，tenant 課文詞彙，與 landlord（房東）相對。<br>❌ landlords = 房東（角色相反）；options = 選項；measures = 措施，均不符。" },
+      { q: "12. The _______ refused to fix the broken heater, even though several tenants had complained about the cold.", opts: ["landlord","tenant","license","measurement"], ans: "A", exp: "<span class='exp-key'>landlord（房東、地主）</span>──「房東」拒絕修理暖氣，landlord 課文詞彙，與 tenant（房客）相對。<br>❌ tenant = 房客（角色相反）；license = 執照；measurement = 測量，均不符。" },
+      { q: "13. The government introduced a _______ plan to reduce traffic congestion in the city center.", opts: ["thorough","narrow","partial","optional"], ans: "A", exp: "<span class='exp-key'>thorough（徹底的、完全的）</span>──政府提出「徹底」的計畫以減少市中心交通壅塞，thorough 課文詞彙（a thorough plan）。<br>❌ narrow = 狹窄的；partial = 偏袒的、部分的；optional = 可選的，均不符。" },
+      { q: "14. The company has _______ all of its efforts on developing new technology rather than expanding its stores.", opts: ["concentrated","declined","invaded","rented"], ans: "A", exp: "<span class='exp-key'>concentrated（集中、專心）</span>──公司將所有努力「集中」在開發新科技，concentrate 課文詞彙（concentrates less on promotion and more on...）。<br>❌ declined = 下降；invaded = 入侵；rented = 租用，均不符。" },
+      { q: "15. Despite facing many setbacks, the young scientist continued to _______ to find a cure for the disease.", opts: ["strive","decline","rent","overflow"], ans: "A", exp: "<span class='exp-key'>strive（努力、奮鬥）</span>──儘管遭遇許多挫折，科學家仍持續「努力」尋找治療方法，strive 課文詞彙（is striving to deal with...）。<br>❌ decline = 下降；rent = 租用；overflow = 溢出，均不符。" }
+    ]
+  },
+  {
+    title: "第二大題：文法選擇（第 16–30 題，每題 2 分）",
+    pts: 2,
+    passage: null,
+    questions: [
+      { q: "16. The hotel, _______ is located near the beach, attracts thousands of tourists every summer.", opts: ["it","which","what","who"], ans: "B", exp: "<span class='exp-key'>which（關係代詞，指物，限定/非限定子句皆可）</span>──which is located near the beach 為形容詞子句修飾 the hotel，先行詞為物，主格用 which。<br>❌ it = 不可作連接詞；what = 無先行詞；who = 指人，均不符。" },
+      { q: "17. The number of tourists visiting the old town has grown to almost three times as large as _______ ten years ago.", opts: ["it was","that was","it","that"], ans: "B", exp: "<span class='exp-key'>that was（代替前述名詞 the number...，as...as 句型）</span>──as large as that was ten years ago，that 代替 the number，課文句型：grew to almost five times as large as that in 1992。<br>❌ it was 不可代替「the number」這類比較對象（用 that）；it/that 單獨缺動詞，均不符。" },
+      { q: "18. _______ overrun with visitors, the small village has lost much of its peaceful charm.", opts: ["Become","Becoming","To become","Became"], ans: "B", exp: "<span class='exp-key'>Becoming（現在分詞，分詞構句，表主動／進行）</span>──Becoming overrun with visitors = As it has become overrun with visitors，分詞構句置於句首，主詞與主句一致。<br>❌ Become/Became 為動詞變化形，不可直接作分詞構句；To become 為不定詞，語意不符「正在變成」。" },
+      { q: "19. Only by introducing strict regulations _______ the city reduce the negative effects of overtourism.", opts: ["can","could","will","can did"], ans: "A", exp: "<span class='exp-key'>can（助動詞倒裝）</span>──Only by + V-ing 置於句首時，主句須倒裝，助動詞提前：can the city reduce...，課文句型：only by introducing practical measures can the impact... be reduced。<br>❌ could 時態不符（一般現在）；will 語意不符（表能力用 can）；can did 文法錯誤，均不符。" },
+      { q: "20. The new regulations, _______ by the city council last month, will take effect next year.", opts: ["approve","approving","approved","to approve"], ans: "C", exp: "<span class='exp-key'>approved（過去分詞，表被動）</span>──approved by the city council = (which were) approved by the city council，過去分詞片語修飾 regulations，表被動關係。<br>❌ approve = 原形；approving = 主動分詞（規定不會主動批准）；to approve = 不定詞，均不符。" },
+      { q: "21. _______ the city had built more public housing earlier, fewer residents would have been forced to move out.", opts: ["If","Unless","Because","Since"], ans: "A", exp: "<span class='exp-key'>If（與過去事實相反的假設語氣）</span>──If + had + p.p., ... would have + p.p.，表「過去若…，則…」，與事實相反。<br>❌ Unless = 除非（語意不通）；Because/Since 為直述語氣，不構成假設語氣句型。" },
+      { q: "22. The apartment building, the roof of _______ was damaged in the storm, is currently being repaired.", opts: ["that","its","which","whose"], ans: "D", exp: "<span class='exp-key'>whose（關係代詞所有格）</span>──the roof of which = whose roof，whose + 名詞 表示「…的」，連接兩個句子並表達所屬關係。<br>❌ that 不可接於介詞之後作此用法；its 為人稱代詞所有格，不可作連接詞；which 需搭配 of 但語序需調整（of which），單獨 which 不符。" },
+      { q: "23. The residents complained that the noise from the nightclub was _______ that they could not sleep at night.", opts: ["so loud","such loud","too loud","loud enough"], ans: "A", exp: "<span class='exp-key'>so loud（so + 形容詞 + that... = 如此…以致於…）</span>──so...that 句型，表「如此吵以致於無法入睡」。<br>❌ such loud 文法錯誤（such 須接 such + a/an + 形容詞 + 名詞）；too loud 後接 to V 而非 that 子句；loud enough 後接 to V，均不符。" },
+      { q: "24. The local government has banned large tour groups from _______ certain narrow streets during peak hours.", opts: ["enter","entering","entered","to enter"], ans: "B", exp: "<span class='exp-key'>entering（動名詞，作介詞 from 的受詞）</span>──ban A from V-ing = 禁止 A 做某事，from 為介詞，須接動名詞。<br>❌ enter = 原形動詞不可直接接於介詞後；entered = 過去式；to enter = 不定詞，均不符介詞後接動名詞的規則。" },
+      { q: "25. _______ the negative effects of overtourism, the city introduced a series of new policies.", opts: ["Reduce","Reduced","To reduce","Reducing"], ans: "C", exp: "<span class='exp-key'>To reduce（不定詞，表目的）</span>──To reduce... = In order to reduce...，置於句首表「為了減少…」，課文概念呼應 reduce the impact of overtourism。<br>❌ Reduce 為原形動詞，不可單獨置句首；Reduced 為過去式/分詞；Reducing 為動名詞/分詞構句，語意較弱於明確表目的的 to V，且在此句型中 to V 為標準答案。" },
+      { q: "26. Many residents are so fed up _______ the constant noise that they are considering moving away.", opts: ["of", "with", "for", "at"], ans: "B", exp: "<span class='exp-key'>with（be fed up with = 對…感到厭煩）</span>──固定搭配，be fed up with sth，課文片語。<br>❌ of/for/at 均不與 fed up 搭配。" },
+      { q: "27. The website was ordered to take down all listings _______ owners had not obtained a proper license.", opts: ["who","which","whose","whom"], ans: "C", exp: "<span class='exp-key'>whose（關係代詞所有格，指物）</span>──listings whose owners = 這些房源的房東們，whose + 名詞表所屬關係，先行詞 listings 為物。<br>❌ who/whom 用於指人；which 不可直接接名詞表所屬，均不符。" },
+      { q: "28. By the time the new policy takes effect next year, the number of unlicensed rentals _______ significantly.", opts: ["will have decreased","decreases","decreased","is decreasing"], ans: "A", exp: "<span class='exp-key'>will have decreased（未來完成式）</span>──By the time + 現在時態子句, 主句用未來完成式，表示「在那之前已經完成」的動作。<br>❌ decreases/decreased/is decreasing 均無法表達「到未來某時間點之前已完成」的概念。" },
+      { q: "29. _______ tourism brings significant economic benefits, it can also create serious problems for local residents.", opts: ["Although","Because","Unless","So that"], ans: "A", exp: "<span class='exp-key'>Although（雖然，表讓步）</span>──Although A, B = 雖然 A，但 B，呼應課文「double-edged sword」雙面性的概念：一方面帶來經濟利益，另一方面造成問題。<br>❌ Because = 因為（因果關係不符）；Unless = 除非；So that = 以便，均不符讓步語氣。" },
+      { q: "30. The city council had no choice but _______ stricter limits on the number of daily visitors to the cathedral.", opts: ["impose","imposing","to impose","imposed"], ans: "C", exp: "<span class='exp-key'>to impose（have no choice but to V = 除了…之外別無選擇）</span>──固定句型 have no choice but to V，但（but）之後須接不定詞。<br>❌ impose/imposing/imposed 均不符 but to V 的固定句型。" }
+    ]
+  },
+  {
+    title: "第三大題：綜合測驗（第 31–40 題，每題 2 分）",
+    pts: 2,
+    passage: "Cities around the world are increasingly struggling with the side effects of mass tourism. In many historic centers, the number of visitors has (31) _______ so quickly that narrow streets once used mainly by local residents are now (32) _______ with crowds of tourists every day. As a result, many long-time residents have grown (33) _______ with the constant noise and traffic, and some have even decided to move to quieter neighborhoods. Local officials are well aware that something must be done, and they have begun (34) _______ a number of measures to address the problem. For example, some cities have (35) _______ a limit on the number of visitors allowed to enter certain attractions at one time. Others have banned large tour buses from (36) _______ historic districts during the day. In addition, several cities have ordered short-term rental websites to (37) _______ listings for apartments that do not have a proper license, since such apartments often (38) _______ housing that would otherwise be available to local residents. Of course, tourism also (39) _______ many benefits, providing jobs and income for local businesses. For this reason, most experts agree that the goal should not be to eliminate tourism altogether, but rather to (40) _______ a balance between welcoming visitors and protecting the quality of life of the people who actually live in these cities.",
+    questions: [
+      { q: "31. ...the number of visitors has _______ so quickly that narrow streets...", opts: ["increased","declined","measured","rented"], ans: "A", exp: "<span class='exp-key'>increased（增加，現在完成式）</span>──has increased so quickly that... = 已經增加得如此快以致於…，所以…結構（so...that），語意與下文「街道擠滿遊客」一致。<br>❌ declined = 下降，語意相反；measured = 測量；rented = 租用，均不符。" },
+      { q: "32. ...narrow streets... are now _______ with crowds of tourists every day.", opts: ["overflowing","declining","striving","renting"], ans: "A", exp: "<span class='exp-key'>overflowing（溢出、擠滿，現在分詞作主動補語）</span>──be overflowing with = 充滿、擠滿著，呼應課文 overflow the sidewalks and streets。<br>❌ declining = 下降；striving = 努力；renting = 租用，均不符語意。" },
+      { q: "33. As a result, many long-time residents have grown _______ with the constant noise and traffic.", opts: ["fed up","thorough","optional","measurable"], ans: "A", exp: "<span class='exp-key'>fed up（be/grow fed up with = 對…感到厭煩）</span>──固定搭配 fed up with，課文片語，居民對持續的噪音與交通感到厭煩。<br>❌ thorough/optional/measurable 均不與 fed up 句型相符，且語意不通。" },
+      { q: "34. Local officials... have begun _______ a number of measures to address the problem.", opts: ["introducing","to introducing","introduce","introduced"], ans: "A", exp: "<span class='exp-key'>introducing（begin + V-ing/to V，皆可，此處後接 a number of measures 須為動名詞或不定詞；選項中 introducing 為動名詞，符合 begin 的用法）</span>──begin introducing measures = 開始推行措施，呼應課文 introducing practical measures。<br>❌ to introducing 文法錯誤（介詞+動名詞重複）；introduce 為原形，須搭配 to 或 -ing；introduced 為過去式，與 have begun 不搭配。" },
+      { q: "35. ...some cities have _______ a limit on the number of visitors allowed to enter certain attractions at one time.", opts: ["put","made","done","taken"], ans: "A", exp: "<span class='exp-key'>put（put a limit on = 對…加以限制）</span>──固定片語 put a limit on，課文片語。<br>❌ made/done/taken 均不與 a limit on 構成固定搭配。" },
+      { q: "36. Others have banned large tour buses from _______ historic districts during the day.", opts: ["entering","enter","entered","to enter"], ans: "A", exp: "<span class='exp-key'>entering（動名詞，作介詞 from 的受詞）</span>──ban A from V-ing，介詞 from 後須接動名詞。<br>❌ enter/entered/to enter 均不符介詞後接動名詞的規則。" },
+      { q: "37. ...several cities have ordered short-term rental websites to _______ listings for apartments that do not have a proper license.", opts: ["take down","take on","take over","take up"], ans: "A", exp: "<span class='exp-key'>take down（撤下、拆除）</span>──課文片語 take down，網站被要求撤下未取得執照公寓的房源。<br>❌ take on = 承擔、呈現；take over = 接管；take up = 開始從事，均不符。" },
+      { q: "38. ...such apartments often _______ housing that would otherwise be available to local residents.", opts: ["take away","give up","look up","think up"], ans: "A", exp: "<span class='exp-key'>take away（拿走、奪走）</span>──這些公寓常「奪走」原本可供當地居民使用的住房，符合上下文中「房客被迫搬離」的情境。<br>❌ give up = 放棄（主詞不符）；look up = 查閱；think up = 構想，均不符語意。" },
+      { q: "39. Of course, tourism also _______ many benefits, providing jobs and income for local businesses.", opts: ["brings","declines","invades","rents"], ans: "A", exp: "<span class='exp-key'>brings（帶來）</span>──tourism brings benefits = 觀光帶來利益，呼應課文「local business owners with great economic benefits」。<br>❌ declines = 下降；invades = 入侵；rents = 租用，均不符。" },
+      { q: "40. ...but rather to _______ a balance between welcoming visitors and protecting the quality of life of the people who actually live in these cities.", opts: ["strike","take","make","do"], ans: "A", exp: "<span class='exp-key'>strike（strike a balance between A and B = 在A與B之間取得平衡）</span>──課文片語 strike a balance between，全文主旨呼應。<br>❌ take/make/do 均不與 a balance between 構成固定搭配。" }
+    ]
+  },
+  {
+    title: "第四大題：閱讀測驗（第 41–50 題，每題 2 分）",
+    pts: 2,
+    passage: "Venice, one of the most famous cities in Europe, has become a striking example of overtourism in recent years. With a population of fewer than 50,000 residents living in its historic center, the city receives tens of millions of visitors annually — a ratio that dwarfs even Barcelona's well-known struggles with tourist numbers. On any given day during peak season, the narrow canals and bridges of Venice are so packed with tourists that locals often find it difficult to simply walk to work or carry groceries home.<br><br>The effects on daily life have been dramatic. Many small shops that once served residents — bakeries, hardware stores, pharmacies — have been replaced by souvenir stands and shops selling mass-produced glass trinkets. Rents have risen sharply as property owners increasingly convert apartments into short-term vacation rentals, pushing out long-term tenants who can no longer afford to live in the city center. As a result, the resident population of Venice's historic core has shrunk dramatically over the past few decades, leading some to warn that the city risks becoming little more than an open-air museum with no real community left.<br><br>In response, the city government has introduced a series of controversial measures. Large cruise ships, which once docked directly in the heart of the city, have been rerouted away from the most sensitive areas. Officials have also experimented with charging day-trippers an entrance fee during the busiest periods, a move that was met with mixed reactions — some praised it as a necessary step toward sustainable tourism, while others criticized it as turning a living city into a theme park that charges admission.<br><br>Despite these efforts, many experts argue that truly solving the problem will require a much broader rethinking of how the local economy depends on tourism. Until residents can once again afford to live, work, and raise families in the historic center, they warn, measures like entrance fees and rerouted cruise ships will only treat the symptoms of overtourism rather than its underlying causes.",
+    questions: [
+      { q: "41. According to the passage, what makes Venice's overtourism problem especially striking?", opts: ["Its canals are wider than those in other cities.","The ratio of visitors to residents is extremely high.","It has more cruise ships than any other port.","Its population has remained stable for centuries."], ans: "B", exp: "<span class='exp-key'>B</span>──文章：「With a population of fewer than 50,000 residents... the city receives tens of millions of visitors annually — a ratio that dwarfs even Barcelona's...」，強調遊客與居民比例極端懸殊。<br>❌ A/C/D 均為文章未支持的說法。" },
+      { q: "42. What has happened to many small shops in Venice's historic center?", opts: ["They have expanded into larger department stores.","They have been replaced by souvenir shops.","They have moved to the mainland.","They have been turned into museums."], ans: "B", exp: "<span class='exp-key'>B</span>──文章：「Many small shops that once served residents... have been replaced by souvenir stands and shops selling mass-produced glass trinkets.」<br>❌ A/C/D 均為文章未提及的說法。" },
+      { q: "43. Why have many long-term tenants left Venice's city center?", opts: ["They were forced out by rising rents caused by short-term rentals.","They were relocated by the government for safety reasons.","They preferred to live near the new cruise ship terminal.","They could not find work in the tourism industry."], ans: "A", exp: "<span class='exp-key'>A</span>──文章：「Rents have risen sharply as property owners increasingly convert apartments into short-term vacation rentals, pushing out long-term tenants who can no longer afford to live in the city center.」<br>❌ B/C/D 均為文章未提及的說法。" },
+      { q: "44. What does the phrase 'open-air museum' suggest about Venice's possible future?", opts: ["The city might build more museums for tourists.","The city could lose its living community and become just a tourist attraction.","The government plans to charge admission to enter the entire city.","Venice will be preserved exactly as it looked in the past."], ans: "B", exp: "<span class='exp-key'>B</span>──文章：「the city risks becoming little more than an open-air museum with no real community left.」意指威尼斯可能失去真正的居民與生活機能，只剩觀光功能。<br>❌ A/C/D 均過度推論或文章未明確支持。" },
+      { q: "45. How did people react to the entrance fee for day-trippers?", opts: ["Everyone agreed it was an excellent solution.","Reactions were mixed, with some support and some criticism.","Most people thought the fee was too low to matter.","No one paid attention to the new policy."], ans: "B", exp: "<span class='exp-key'>B</span>──文章：「a move that was met with mixed reactions — some praised it... while others criticized it...」<br>❌ A/C/D 均與文章描述的「mixed reactions」不符。" },
+      { q: "46. What do experts say is needed to truly solve Venice's overtourism problem?", opts: ["More cruise ships to spread out the tourist crowds","A complete ban on all tourism","A broader rethinking of the local economy's dependence on tourism","Higher entrance fees only during winter"], ans: "C", exp: "<span class='exp-key'>C</span>──文章：「many experts argue that truly solving the problem will require a much broader rethinking of how the local economy depends on tourism.」<br>❌ A/B/D 均為文章未提及或與文意不符。" },
+      { q: "47. What does the word 'dwarfs' most likely mean in this passage?", opts: ["Makes something seem small by comparison","Reduces the size of something physically","Increases slowly over time","Hides something from view"], ans: "A", exp: "<span class='exp-key'>A</span>──「a ratio that dwarfs even Barcelona's well-known struggles」，dwarf 在此作動詞，表示「使...顯得微不足道、相形見小」，即遊客與居民比例之懸殊「遠超過」巴塞隆納的情況。<br>❌ B/C/D 均非 dwarf 在此處的恰當語意。" },
+      { q: "48. According to the passage, what happened to large cruise ships in Venice?", opts: ["They were banned from docking anywhere near Italy.","They were rerouted away from the most sensitive areas of the city.","They were required to pay double the usual docking fees.","They were replaced entirely by smaller tour boats."], ans: "B", exp: "<span class='exp-key'>B</span>──文章：「Large cruise ships, which once docked directly in the heart of the city, have been rerouted away from the most sensitive areas.」<br>❌ A/C/D 均為文章未提及的說法。" },
+      { q: "49. What is the relationship between the situations in Venice and Barcelona, as suggested by the passage?", opts: ["They are completely unrelated problems.","Venice's situation is presented as an even more extreme example of the same kind of problem.","Barcelona's problem is far worse than Venice's.","Both cities have already solved their overtourism problems."], ans: "B", exp: "<span class='exp-key'>B</span>──文章開頭即將威尼斯與巴塞隆納相比較，並指出威尼斯的遊客與居民比例「dwarfs even Barcelona's well-known struggles」，暗示威尼斯的情況甚至更為極端，屬於同類問題的更嚴重案例。<br>❌ A/C/D 均與文章脈絡不符。" },
+      { q: "50. What is the best title for this passage?", opts: ["The History of Venice's Canals","Venice's Battle with Overtourism: Causes, Effects, and Responses","How to Plan the Perfect Trip to Venice","The Decline of the Cruise Ship Industry"], ans: "B", exp: "<span class='exp-key'>B</span>──全文涵蓋威尼斯過度觀光的原因（遊客比例懸殊）、影響（商店與居民流失）及應對措施（航線調整、入城費），B 最能概括全文主旨。<br>❌ A/C/D 均為文章未論述的主題或過於片面。" }
+    ]
+  }
+];
+
+// ── State ──
+let qIndex = 0;
+let userAnswers = {};
+let answered = 0;
+let liveScore = 0;
+
+// ── Build DOM ──
+const container = document.getElementById("quiz-container");
+const statAnswered = document.getElementById("stat-answered");
+const statScore = document.getElementById("stat-score");
+const LABELS = ["A","B","C","D"];
+
+function render() {
+  sections.forEach((sec, si) => {
+    const hdr = document.createElement("div");
+    hdr.className = "section-header";
+    hdr.textContent = sec.title;
+    container.appendChild(hdr);
+
+    if (sec.passage) {
+      const p = document.createElement("div");
+      p.className = "passage";
+      p.innerHTML = sec.passage;
+      container.appendChild(p);
+    }
+
+    sec.questions.forEach((item, qi) => {
+      const gIdx = qIndex++;
+      const card = document.createElement("div");
+      card.className = "q-card";
+      card.id = "q" + gIdx;
+
+      const numDiv = document.createElement("div");
+      numDiv.className = "q-num";
+      numDiv.textContent = "第 " + (gIdx + 1) + " 題";
+      card.appendChild(numDiv);
+
+      const qDiv = document.createElement("div");
+      qDiv.className = "q-text";
+      qDiv.innerHTML = item.q;
+      card.appendChild(qDiv);
+
+      const optsDiv = document.createElement("div");
+      optsDiv.className = "opts";
+
+      item.opts.forEach((opt, oi) => {
+        const btn = document.createElement("button");
+        btn.className = "opt-btn";
+        btn.dataset.label = LABELS[oi];
+        btn.dataset.gidx = gIdx;
+        btn.innerHTML = `<span class="label">${LABELS[oi]}</span>${opt}`;
+        btn.addEventListener("click", () => choose(gIdx, LABELS[oi], item.ans, item.exp, sec.pts));
+        optsDiv.appendChild(btn);
+      });
+
+      card.appendChild(optsDiv);
+
+      const fb = document.createElement("div");
+      fb.className = "feedback";
+      fb.id = "fb" + gIdx;
+      card.appendChild(fb);
+
+      // Explanation panel
+      const expPanel = document.createElement("div");
+      expPanel.className = "exp-panel";
+      expPanel.id = "exp" + gIdx;
+      expPanel.innerHTML = `<div class="exp-header">💡 解析</div><div class="exp-body">${item.exp}</div>`;
+      card.appendChild(expPanel);
+
+      container.appendChild(card);
+    });
+  });
+}
+
+function updateTopBar() {
+  statAnswered.textContent = "進度 " + Math.min(answered, 50) + "/50";
+  statScore.textContent    = "得分 " + liveScore + "/100";
+}
+
+function choose(gIdx, chosen, correct, exp, pts) {
+  const card = document.getElementById("q" + gIdx);
+  const fb   = document.getElementById("fb" + gIdx);
+  const expPanel = document.getElementById("exp" + gIdx);
+  const btns = card.querySelectorAll(".opt-btn");
+
+  if (userAnswers[gIdx] !== undefined) return;
+
+  userAnswers[gIdx] = chosen;
+  btns.forEach(b => b.disabled = true);
+
+  if (chosen === correct) {
+    card.classList.add("correct");
+    btns.forEach(b => { if (b.dataset.label === chosen) b.classList.add("chosen-correct"); });
+    fb.textContent = "✓ 答對了！";
+    fb.className = "feedback show ok";
+    liveScore += pts;
+  } else {
+    card.classList.add("wrong");
+    btns.forEach(b => {
+      if (b.dataset.label === chosen)  b.classList.add("chosen-wrong");
+      if (b.dataset.label === correct) b.classList.add("reveal-correct");
+    });
+    fb.textContent = `✗ 答錯了。正確答案是 ${correct}。`;
+    fb.className = "feedback show err";
+  }
+
+  expPanel.classList.add("show");
+
+  answered++;
+  updateTopBar();
+
+  const nextCard = document.getElementById("q" + (gIdx + 1));
+  if (nextCard) setTimeout(() => nextCard.scrollIntoView({ behavior: "smooth", block: "center" }), 300);
+}
+
+// ── Reveal All ──
+function revealAll() {
+  for (let i = 0; i < 50; i++) {
+    document.getElementById("exp" + i).classList.add("show");
+
+    if (userAnswers[i] !== undefined) continue;
+
+    let globalCount = 0;
+    let foundItem = null;
+    for (const sec of sections) {
+      for (const item of sec.questions) {
+        if (globalCount === i) { foundItem = item; break; }
+        globalCount++;
+      }
+      if (foundItem) break;
+    }
+    if (!foundItem) continue;
+
+    const card = document.getElementById("q" + i);
+    const fb   = document.getElementById("fb" + i);
+    const btns = card.querySelectorAll(".opt-btn");
+
+    btns.forEach(b => {
+      b.disabled = true;
+      if (b.dataset.label === foundItem.ans) b.classList.add("reveal-correct");
+    });
+    fb.textContent = `📌 正確答案：${foundItem.ans}`;
+    fb.className = "feedback show ok";
+  }
+}
+document.getElementById("reveal-all-btn").addEventListener("click", revealAll);
+
+// ── Submit ──
+function submitAll() {
+  if (answered < 50) {
+    document.getElementById("warn").textContent = "⚠ 還有 " + (50 - answered) + " 題未作答，請繼續作答後再交卷。";
+    for (let i = 0; i < 50; i++) {
+      if (userAnswers[i] === undefined) {
+        document.getElementById("q" + i).scrollIntoView({ behavior: "smooth", block: "center" });
+        break;
+      }
+    }
+    return;
+  }
+  document.getElementById("warn").textContent = "";
+  showResult();
+}
+document.getElementById("submit-btn").addEventListener("click", submitAll);
+
+function showResult() {
+  let grade, emoji;
+  if (liveScore >= 90)      { grade = "優秀"; emoji = "🏆"; }
+  else if (liveScore >= 70) { grade = "良好"; emoji = "👍"; }
+  else                      { grade = "需加強"; emoji = "📚"; }
+
+  document.getElementById("res-emoji").textContent = emoji;
+  document.getElementById("res-grade").textContent = grade;
+  document.getElementById("res-text").textContent  =
+    `你的得分是 ${liveScore} 分（滿分 100 分）`;
+
+  document.getElementById("result-card").style.display = "block";
+  document.getElementById("submit-area").style.display = "none";
+  document.getElementById("result-card").scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+function resetAll() {
+  userAnswers = {};
+  answered = 0;
+  liveScore = 0;
+  updateTopBar();
+
+  document.querySelectorAll(".q-card").forEach(c => {
+    c.classList.remove("correct","wrong");
+  });
+  document.querySelectorAll(".opt-btn").forEach(b => {
+    b.disabled = false;
+    b.classList.remove("chosen-correct","chosen-wrong","reveal-correct");
+  });
+  document.querySelectorAll(".feedback").forEach(f => {
+    f.className = "feedback";
+    f.textContent = "";
+  });
+  document.querySelectorAll(".exp-panel").forEach(p => {
+    p.classList.remove("show");
+  });
+
+  document.getElementById("result-card").style.display = "none";
+  document.getElementById("submit-area").style.display = "block";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+document.getElementById("reset-btn").addEventListener("click", resetAll);
+
+render();
+</script>
+</body>
+</html>

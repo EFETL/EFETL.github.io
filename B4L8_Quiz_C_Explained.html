@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L8 卷C 解析版 — Too Much of a Good Thing</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 17px; line-height: 1.7;
+  background: #f0f2f5; color: #1d1d1f;
+  padding-bottom: 48px;
+}
+header {
+  background: linear-gradient(135deg, #fa709a, #fee140);
+  color: white; padding: 20px 16px; text-align: center;
+}
+header h1 { font-size: 20px; margin-bottom: 4px; }
+header p { font-size: 14px; opacity: 0.9; }
+.top-bar {
+  background: white; padding: 10px 14px;
+  display: flex; justify-content: space-between; align-items: center;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1); gap: 8px;
+}
+.top-bar .score-info { font-size: 15px; font-weight: bold; color: #d6336c; white-space: nowrap; }
+.btn-reveal {
+  background: linear-gradient(135deg, #fa709a, #fee140);
+  color: white; border: none; border-radius: 10px;
+  padding: 8px 14px; font-size: 14px; font-weight: bold;
+  cursor: pointer; white-space: nowrap; -webkit-tap-highlight-color: transparent;
+}
+.progress-bar { height: 4px; background: #e0e0e0; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, #fa709a, #fee140); transition: width 0.3s; width: 0%; }
+.section {
+  background: white; margin: 14px 10px 0;
+  border-radius: 16px; overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+.section-header {
+  background: linear-gradient(135deg, #fa709a, #fee140);
+  color: white; padding: 13px 16px; font-size: 16px; font-weight: bold;
+}
+.section-header .pts { font-size: 12px; opacity: 0.9; font-weight: normal; }
+.question { padding: 15px 16px; border-bottom: 1px solid #f0f0f0; }
+.question:last-child { border-bottom: none; }
+.q-text { font-size: 16px; margin-bottom: 11px; font-weight: 500; line-height: 1.6; }
+.q-num { color: #fa709a; font-weight: bold; margin-right: 4px; }
+.options { display: flex; flex-direction: column; gap: 7px; }
+.option {
+  display: flex; align-items: flex-start; gap: 9px;
+  padding: 10px 13px; border: 2px solid #e0e0e0; border-radius: 11px;
+  cursor: pointer; transition: all 0.15s; font-size: 16px; line-height: 1.5;
+  background: #fafafa; -webkit-tap-highlight-color: transparent;
+}
+.option:active { transform: scale(0.98); }
+.option.selected { border-color: #fa709a; background: #fff0f5; }
+.option.correct { border-color: #34c759; background: #f0fff4; }
+.option.wrong   { border-color: #ff3b30; background: #fff5f5; }
+.option.reveal-correct { border-color: #34c759; background: #f0fff4; }
+.option-label { font-weight: bold; color: #fa709a; min-width: 22px; flex-shrink: 0; }
+.option.correct .option-label, .option.reveal-correct .option-label { color: #34c759; }
+.option.wrong .option-label { color: #ff3b30; }
+
+/* Explanation panel */
+.explanation {
+  display: none; margin-top: 10px;
+  background: #fff8fb; border-radius: 10px;
+  border: 1px solid #ffd6e8; overflow: hidden;
+}
+.explanation.show { display: block; }
+.exp-header {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 13px; font-size: 14px; font-weight: bold;
+  background: #ffe9f1; color: #fa709a;
+}
+.exp-body { padding: 10px 13px; font-size: 15px; line-height: 1.7; color: #333; }
+.exp-key { color: #2e7d32; font-weight: bold; }
+.exp-wrong-key { color: #c62828; }
+
+/* Passage */
+.passage {
+  background: #fff8fb; border-left: 4px solid #fa709a;
+  padding: 13px 15px; margin: 0 16px 10px;
+  border-radius: 0 8px 8px 0; font-size: 15px; line-height: 1.75;
+}
+.passage-label { font-weight: bold; color: #fa709a; margin-bottom: 7px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* Buttons */
+.btn-submit {
+  display: block; width: calc(100% - 28px); margin: 18px auto 0;
+  padding: 15px; background: linear-gradient(135deg, #fa709a, #fee140);
+  color: white; border: none; border-radius: 13px;
+  font-size: 17px; font-weight: bold; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-submit:active { opacity: 0.9; transform: scale(0.98); }
+
+/* Result */
+.result-box {
+  display: none; margin: 14px 10px;
+  background: white; border-radius: 16px; padding: 22px 18px;
+  text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+.result-box.show { display: block; }
+.result-score { font-size: 50px; font-weight: bold; color: #fa709a; line-height: 1.1; }
+.result-total { font-size: 20px; color: #666; margin-bottom: 10px; }
+.result-grade { font-size: 18px; font-weight: bold; padding: 7px 18px; border-radius: 18px; display: inline-block; margin-bottom: 14px; }
+.grade-a { background: #f0fff4; color: #1a7a3c; }
+.grade-b { background: #fff9e6; color: #b7791f; }
+.grade-c { background: #fff5f5; color: #c0392b; }
+.btn-reset {
+  display: inline-block; padding: 11px 26px;
+  background: #ffe9f1; color: #fa709a;
+  border: none; border-radius: 11px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 6px;
+}
+</style>
+</head>
+<body>
+<a href="/" style="position:fixed;top:14px;left:14px;background:#2b4c8c;color:#fff;padding:7px 16px;border-radius:8px;text-decoration:none;font-size:0.9rem;font-weight:600;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,0.18);">&#8592; &#22238;&#39318;&#39052;</a>
+<header>
+  <h1>L8 Too Much of a Good Thing — 卷C 解析版</h1>
+  <p>選完即顯示解析</p>
+</header>
+<div class="top-bar">
+  <span class="score-info">進度 <span id="answered-count">0</span>/50 ｜ 得分 <span id="live-score">0</span>/100</span>
+  <button class="btn-reveal" onclick="revealAll()">📖 顯示全部解析</button>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+
+<div id="quiz-container"></div>
+
+<button class="btn-submit" onclick="submitAll()">📝 交卷 / 查看成績</button>
+
+<div class="result-box" id="result-box">
+  <div class="result-score" id="result-score">0</div>
+  <div class="result-total">/ 100 分</div>
+  <div class="result-grade" id="result-grade"></div>
+  <div style="color:#666;font-size:15px;margin-bottom:14px;" id="result-detail"></div>
+  <button class="btn-reset" onclick="resetAll()">🔄 重新作答</button>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────
+const sections = [
+  {
+    title: '第一大題：字彙選擇',
+    pts: '15 題 × 2 分 = 30 分',
+    questions: [
+      { q: 'During rush hour, the small café was completely _______ with customers waiting for tables.',
+        opts: ['overflowed','narrowed','declined','concentrated'],
+        ans: 0,
+        exp: '<span class="exp-key">overflowed（溢出；擠滿，過去分詞作形容詞）</span>──尖峰時間，小咖啡廳擠滿了等待座位的顧客，呼應課文中 tourists overflow the sidewalks and streets。<br>❌ narrowed = 變窄的；declined = 下降的；concentrated = 集中的，皆不符合「擠滿」的語境。' },
+      { q: 'The old alley became so _______ that two people could barely walk side by side.',
+        opts: ['thorough','narrow','partial','optional'],
+        ans: 1,
+        exp: '<span class="exp-key">narrow（狹窄的，形容詞）</span>──這條老巷子變得如此狹窄，兩個人幾乎無法並肩行走，呼應課文中 crowding narrow passageways leading to markets。<br>❌ thorough = 徹底的；partial = 偏袒的；optional = 可選擇的，皆不符合「狹窄」的語境。' },
+      { q: 'Air pollution in the city has worsened to such an _______ that residents are advised to stay indoors.',
+        opts: ['option','expansion','extent','invasion'],
+        ans: 2,
+        exp: '<span class="exp-key">extent（程度；範圍，名詞）</span>──"to such an extent that..." 為固定句型，表示「惡化到…的程度」，呼應課文中 to such an extent that the local residents\' quality of life declines。<br>❌ option = 選擇；expansion = 擴張；invasion = 入侵，皆不符合「程度」的語境。' },
+      { q: 'Sales of the company\'s flagship product have _______ sharply since a cheaper rival appeared on the market.',
+        opts: ['flocked','declined','rented','strived'],
+        ans: 1,
+        exp: '<span class="exp-key">declined（下降；衰退，動詞）</span>──自從市場上出現更便宜的競爭對手後，該公司主打產品的銷量大幅下降，呼應課文中 the local residents\' quality of life declines dramatically。<br>❌ flocked = 群集；rented = 出租；strived = 努力，皆不符合「下降」的語境。' },
+      { q: 'After the merger was announced, the company\'s stock price changed _______, rising nearly 40% in a single day.',
+        opts: ['dramatically','thoroughly','partially','negatively'],
+        ans: 0,
+        exp: '<span class="exp-key">dramatically（戲劇性地；大幅地，副詞）</span>──合併消息公布後，公司股價單日大幅上漲近40%，呼應課文中 quality of life declines dramatically。<br>❌ thoroughly = 徹底地；partially = 部分地；negatively = 負面地，皆不符合「大幅地」的語境。' },
+      { q: 'Every winter, thousands of birds _______ to the warmer wetlands along the southern coast.',
+        opts: ['expand','flock','rent','invade'],
+        ans: 1,
+        exp: '<span class="exp-key">flock（群集；蜂擁而至，動詞）</span>──每年冬天，數千隻鳥蜂擁前往南部沿岸較溫暖的濕地，呼應課文中 the number of tourists flocking to the city。<br>❌ expand = 擴大；rent = 出租；invade = 入侵，皆不符合「蜂擁而至」的語境。' },
+      { q: 'The bakery\'s rapid _______ into three new cities has made it a household name nationwide.',
+        opts: ['expansion','invasion','complaint','option'],
+        ans: 0,
+        exp: '<span class="exp-key">expansion（擴張；擴展，名詞）</span>──這家烘焙店迅速擴展到三個新城市，使它成為全國知名品牌，呼應課文中 this expansion of tourism。<br>❌ invasion = 入侵；complaint = 抱怨；option = 選項，皆不符合「擴張」的語境。' },
+      { q: 'The sudden _______ of insects destroyed almost the entire crop within a week.',
+        opts: ['invasion','rental','measurement','concentration'],
+        ans: 0,
+        exp: '<span class="exp-key">invasion（入侵；侵襲，名詞）</span>──昆蟲的突然入侵在一週內幾乎摧毀了整片作物，呼應課文中 This invasion of visitors has resulted in various problems。<br>❌ rental = 租金；measurement = 測量；concentration = 集中，皆不符合「入侵」的語境。' },
+      { q: 'The hotel received several _______ from guests about the noise coming from the construction site next door.',
+        opts: ['complaints','licenses','tenants','options'],
+        ans: 0,
+        exp: '<span class="exp-key">complaints（抱怨；投訴，名詞）</span>──飯店收到多位房客對隔壁工地噪音的抱怨，呼應課文中 Complaints about problems caused by thoughtless visitors are common。<br>❌ licenses = 執照；tenants = 房客；options = 選項，皆不符合「抱怨」的語境。' },
+      { q: 'It was rather _______ of him to leave his luggage blocking the narrow aisle during the flight.',
+        opts: ['thoughtful','thoughtless','measurable','optional'],
+        ans: 1,
+        exp: '<span class="exp-key">thoughtless（欠缺考慮的；不顧他人的，形容詞）</span>──他把行李留在狹窄的走道上擋路，相當不顧他人，呼應課文中 problems caused by thoughtless visitors。<br>❌ thoughtful = 體貼的（語意相反）；measurable = 可測量的；optional = 可選擇的，皆不符語境。' },
+      { q: 'The new _______ refused to fix the leaking roof even after the residents complained for months.',
+        opts: ['tenant','landlord','option','license'],
+        ans: 1,
+        exp: '<span class="exp-key">landlord（房東；地主，名詞）</span>──即使房客抱怨了好幾個月，這位新房東仍拒絕修理漏水的屋頂，呼應課文中 landlords are partial to renting their places out through Airbnb。<br>❌ tenant = 房客；option = 選項；license = 執照，皆不符合「房東」的語境。' },
+      { q: 'Many parents are _______ to the idea of allowing their teenagers to choose their own university majors freely.',
+        opts: ['partial','thorough','negative','optional'],
+        ans: 0,
+        exp: '<span class="exp-key">partial to（偏好；偏袒，固定用法 be partial to）</span>──許多家長偏好讓孩子自由選擇自己的大學主修，呼應課文中 landlords are partial to renting their places out through Airbnb。<br>❌ thorough = 徹底的；negative = 負面的；optional = 可選擇的，皆不符合「偏好」的語境。' },
+      { q: 'After comparing several apartments, she finally decided which one to _______ for the next two years.',
+        opts: ['rent','strive','concentrate','decline'],
+        ans: 0,
+        exp: '<span class="exp-key">rent（租用，動詞）</span>──比較了幾間公寓後，她終於決定接下來兩年要租用哪一間，呼應單字表中 rent v./n. 租用；出租；租金。<br>❌ strive = 努力；concentrate = 專心；decline = 下降/拒絕，皆不符合「租用」的語境。' },
+      { q: 'City officials decided to _______ a limit on the number of large vehicles allowed downtown during rush hour.',
+        opts: ['strive','rent','put','flock'],
+        ans: 2,
+        exp: '<span class="exp-key">put a limit on（對…加以限制，固定片語）</span>──市府官員決定對尖峰時段允許進入市中心的大型車輛數量加以限制，呼應片語表 put a limit on。<br>❌ strive、rent、flock 皆無法與 "a limit on" 構成此固定片語。' },
+      { q: 'The committee conducted a _______ review of the proposal before approving the new policy.',
+        opts: ['thorough','partial','optional','negative'],
+        ans: 0,
+        exp: '<span class="exp-key">thorough（徹底的；完全的，形容詞）</span>──委員會在批准新政策前對該提案進行了徹底的審查，呼應課文中 a thorough plan that concentrates less on promotion and more on tourism management。<br>❌ partial = 偏袒的；optional = 可選擇的；negative = 負面的，皆不符合「徹底的」的語境。' },
+    ]
+  },
+  {
+    title: '第二大題：文法選擇',
+    pts: '15 題 × 2 分 = 30 分',
+    questions: [
+      { q: 'The narrow street, _______ with tourists every summer, has become almost impossible for locals to walk through.',
+        opts: ['crowd','crowded','crowding','to crowd'],
+        ans: 1,
+        exp: '<span class="exp-key">crowded（過去分詞，表被動）</span>──分詞構句修飾 the narrow street，這條街「被」遊客擠滿，故用過去分詞 crowded，呼應課文中 crowding narrow passageways（此處主詞為街道，被動關係用 crowded）。<br>❌ crowd（原形）、crowding（現在分詞，表主動）、to crowd（不定詞），皆不符合被動關係。' },
+      { q: 'The neighborhood _______ residents have long complained about noise is now considering new regulations for tourists.',
+        opts: ['who','whom','whose','which'],
+        ans: 2,
+        exp: '<span class="exp-key">whose（所有格關係代詞）</span>──"whose residents" 表示「該社區的居民」，修飾先行詞 the neighborhood，表所有關係，故用 whose。<br>❌ who 為主格；whom 為受格；which 用於指物但不表所有，皆不符。' },
+      { q: '_______ overrun with visitors, the small fishing village lost much of its quiet charm.',
+        opts: ['Become','Becoming','Became','To become'],
+        ans: 1,
+        exp: '<span class="exp-key">Becoming（現在分詞，表主動的分詞構句）</span>──分詞構句的主詞是 the small fishing village，村莊「變得」遊客過多，主詞與 become 為主動關係，故用現在分詞 Becoming。<br>❌ Become（原形）不可作分詞構句開頭；Became（過去式）不能作分詞構句；To become（不定詞）語意不符「正在變成」的狀態。' },
+      { q: 'No sooner _______ the new regulation than hundreds of landlords began removing their listings from the website.',
+        opts: ['the city announced','did the city announce','the city had announced','had the city announced'],
+        ans: 1,
+        exp: '<span class="exp-key">did the city announce（No sooner 倒裝句）</span>──No sooner 置於句首，主要子句須倒裝，用助動詞 did + 主詞 + 原形動詞，表示「該市一宣布新規定，數百名房東就開始從網站上撤下他們的房源」。<br>❌ 其餘選項未正確使用倒裝結構。' },
+      { q: 'If the government _______ stricter measures years ago, overtourism in the city might not be so severe today.',
+        opts: ['takes','took','had taken','would take'],
+        ans: 2,
+        exp: '<span class="exp-key">had taken（過去完成式，與過去事實相反的假設）</span>──If 子句用過去完成式 had taken，主要子句用 might not be，表示「如果政府多年前就採取更嚴格的措施（但事實上沒有），如今的過度旅遊問題可能不會這麼嚴重」。<br>❌ takes、took、would take 時態形式皆不符合與主要子句 might + 原形 的搭配。' },
+      { q: 'The mayor told the council, "_______ practical measures immediately, or the situation will only get worse."',
+        opts: ['Introduce','Introducing','To introduce','Introduced'],
+        ans: 0,
+        exp: '<span class="exp-key">Introduce（祈使句）</span>──祈使句以原形動詞開頭，表示命令或建議，「立刻引入實際的措施，否則情況只會變得更糟」，呼應課文中 introducing practical measures。<br>❌ Introducing（現在分詞）、To introduce（不定詞）、Introduced（過去式/分詞）皆不可作祈使句的句首動詞。' },
+      { q: 'The Sagrada Familia, _______ towers attract millions of visitors every year, is one of Barcelona\'s most famous landmarks.',
+        opts: ['that','which','whose','who'],
+        ans: 2,
+        exp: '<span class="exp-key">whose（所有格關係代詞）</span>──"whose towers" 表示「它的塔樓」，修飾先行詞 the Sagrada Familia，表所有關係，故用 whose。<br>❌ that 不可用於非限定關係子句（逗號後）；which 為主格/受格，不表所有；who 用於指人，皆不符。' },
+      { q: 'It was not until residents organized a public protest _______ the city government finally addressed the housing crisis.',
+        opts: ['than','that','when','which'],
+        ans: 1,
+        exp: '<span class="exp-key">that（It is/was not until... that... 句型）</span>──"It was not until + 事件 + that + 主詞 + 動詞" 表示「直到…才…」，強調 not until 之後的內容。<br>❌ than 用於比較句；when、which 不符合此強調句型結構。' },
+      { q: 'The local association, _______ has been fighting against unlicensed rentals for years, finally won the city\'s support.',
+        opts: ['that','what','which','whom'],
+        ans: 2,
+        exp: '<span class="exp-key">which（非限定關係代詞，指物/團體）</span>──逗號後的關係子句為補充說明，指代 the local association（協會，視為一個整體），用 which；that 不可用於非限定關係子句。<br>❌ that 不能接在逗號後引導非限定關係子句；what 本身已含先行詞；whom 用於指人，皆不符。' },
+      { q: 'Had the city not restricted new hotel construction, the downtown area _______ even more crowded than it is now.',
+        opts: ['would be','would have been','was','will be'],
+        ans: 1,
+        exp: '<span class="exp-key">would have been（與過去事實相反的假設，倒裝句）</span>──Had + 主詞 + 過去分詞 (=If 主詞 had + 過去分詞) 為過去完成式倒裝，主要子句須用 would have + 過去分詞，表示「如果這座城市沒有限制新飯店的建設（但事實上限制了），市中心可能會比現在更加擁擠」。<br>❌ would be 用於現在/未來假設；was、will be 時態不符。' },
+      { q: 'The policy, _______ controversial by many small business owners, was nonetheless approved by the city council.',
+        opts: ['considered','considering','to consider','consider'],
+        ans: 0,
+        exp: '<span class="exp-key">considered（過去分詞，表被動）</span>──分詞構句修飾 the policy，這項政策「被」許多小企業主認為具爭議性，故用過去分詞 considered。<br>❌ considering（現在分詞，表主動，常用作介詞「考慮到」）、to consider（不定詞）、consider（原形）皆不符合被動關係。' },
+      { q: 'The official spoke as _______ the new rules would solve the problem overnight, though most experts doubted it.',
+        opts: ['if','that','though','which'],
+        ans: 0,
+        exp: '<span class="exp-key">as if（假設語氣，好像）</span>──as if + 過去式動詞（would）表示「與事實相反的假設」，官員說話的樣子「好像」新規定能一夜之間解決問題，但多數專家懷疑這點。<br>❌ that、which 不構成此假設語氣結構；though 雖可表「雖然」，但語意與此句不符。' },
+      { q: 'Not only _______ the new law reduce illegal rentals, but it also encouraged landlords to apply for licenses.',
+        opts: ['did','was','the law did','does the law'],
+        ans: 0,
+        exp: '<span class="exp-key">did（Not only... but also... 倒裝句）</span>──Not only 置於句首時，主要子句須倒裝，一般動詞用 did + 主詞 + 原形動詞，"Not only did the new law reduce..., but it also encouraged..." 表示「這項新法不僅減少了非法租賃，還鼓勵房東申請執照」。<br>❌ was 用於 be 動詞的倒裝，此處為一般動詞 reduce；the law did、does the law 未正確倒裝，皆不符。' },
+      { q: 'The residents, _______ by years of noise and overcrowding, finally demanded that the government take action.',
+        opts: ['frustrate','frustrating','frustrated','to frustrate'],
+        ans: 2,
+        exp: '<span class="exp-key">frustrated（過去分詞，表被動）</span>──分詞構句修飾 the residents，居民們「因」多年的噪音與過度擁擠而感到挫折，故用過去分詞 frustrated，表示被動的情緒狀態。<br>❌ frustrate（原形）、frustrating（現在分詞，表主動，常形容事物「令人挫折的」）、to frustrate（不定詞）皆不符合被動關係。' },
+      { q: 'However serious the housing shortage seemed, officials insisted that a workable solution _______ within reach.',
+        opts: ['was','were','be','being'],
+        ans: 0,
+        exp: '<span class="exp-key">was（However + 形容詞 + 主詞 + 動詞，讓步副詞子句）</span>──"However serious the housing shortage seemed" 為讓步副詞子句，主要子句 officials insisted that a workable solution was within reach 在此句中陳述事實，用直述語氣動詞 was。<br>❌ were、be、being 不符合此句的時態與語法結構。' },
+    ]
+  },
+  {
+    title: '第三大題：綜合測驗',
+    pts: '10 題 × 2 分 = 20 分',
+    passage: `Across the world, many popular cities are now (31) ______ with a problem that was once seen as a sign of success: too many tourists. For decades, cities (32) ______ tourism as a reliable source of income, encouraging airlines, hotels, and travel agencies to bring in as many visitors as possible. However, once a destination becomes (33) ______ popular that its streets, public transportation, and historic sites can no longer handle the crowds, the benefits of tourism start to (34) ______ by serious downsides. Local residents often find their daily lives disrupted, (35) ______ they can no longer enjoy the cafés, parks, and markets that used to belong to their community. Rents also tend to rise sharply (36) ______ landlords discover that short-term rentals for tourists are far more profitable than long-term leases for local families. In response, some city governments have begun to (37) ______ a cap on the number of tourists allowed to enter certain neighborhoods each day. Others have introduced taxes specifically aimed (38) ______ short-term visitors, using the revenue to repair infrastructure damaged by heavy foot traffic. Critics argue that such measures may discourage tourism altogether, but supporters insist that without them, the very qualities (39) ______ make a city attractive — its culture, charm, and livability — will eventually disappear. Ultimately, finding a sustainable model for tourism (40) ______ one of the most pressing challenges facing cities today.`,
+    questions: [
+      { q: '(31)',
+        opts: ['faced','facing','face','to face'],
+        ans: 1,
+        exp: '<span class="exp-key">facing（現在分詞，與 be 動詞構成現在進行式的被動近似結構，此處作主動「面臨」）</span>──"are now facing a problem" 表示「現在正面臨一個問題」，facing 為現在分詞與 are 構成現在進行式，主詞 cities 主動「面臨」問題。<br>❌ faced 為過去分詞，與 are 搭配會構成被動語態，語意不符「正在面臨」；face（原形）、to face（不定詞）皆不能直接接在 are 後面構成進行式。' },
+      { q: '(32)',
+        opts: ['have viewed','view','viewing','to view'],
+        ans: 0,
+        exp: '<span class="exp-key">have viewed（現在完成式）</span>──"For decades, cities have viewed tourism as..." 表示「數十年來，城市一直將觀光業視為…」，for decades 常與現在完成式搭配，表示從過去持續到現在的狀態。<br>❌ view（現在簡單式）、viewing（現在分詞）、to view（不定詞）皆不能單獨作為句子的主要動詞並搭配 for decades 表示持續時間。' },
+      { q: '(33)',
+        opts: ['so','such','too','very'],
+        ans: 0,
+        exp: '<span class="exp-key">so（so + 形容詞 + that 句型）</span>──"so popular that..." 為固定句型，表示「如此受歡迎，以致於…」，so 後面直接接形容詞 popular。<br>❌ such 後面須接「形容詞+名詞」（such a popular destination）；too 與 to 搭配（too...to）；very 不能與 that 構成此固定句型。' },
+      { q: '(34)',
+        opts: ['be outweighed','outweigh','outweighing','outweighed'],
+        ans: 0,
+        exp: '<span class="exp-key">be outweighed（不定詞的被動式）</span>──"start to be outweighed by serious downsides" 表示「開始被嚴重的缺點所抵消／超過」，start to 後接不定詞，且 benefits 與 downsides 之間為被動關係（利益被缺點抵消），故用 to be outweighed。<br>❌ outweigh（主動原形）、outweighing（現在分詞）、outweighed（過去式/分詞，無法單獨接在 to 後面構成正確的不定詞被動式）皆不符合此被動關係。' },
+      { q: '(35)',
+        opts: ['so that','even though','as if','in case'],
+        ans: 0,
+        exp: '<span class="exp-key">so that（以致於；為了，表結果）</span>──"their daily lives disrupted, so that they can no longer enjoy..." 表示「他們的日常生活被打擾，以致於他們無法再享受…」，so that 在此表示結果。<br>❌ even though = 雖然；as if = 好像；in case = 以防，皆不符合此處表「結果」的語境。' },
+      { q: '(36)',
+        opts: ['as','despite','unless','although'],
+        ans: 0,
+        exp: '<span class="exp-key">as（當…時；由於，從屬連接詞）</span>──"Rents also tend to rise sharply as landlords discover that..." 表示「隨著／由於房東們發現…，租金也往往會大幅上漲」，as 在此引導原因或同時發生的狀況。<br>❌ despite 後接名詞，不可直接接子句；unless = 除非；although = 雖然，皆不符合語境。' },
+      { q: '(37)',
+        opts: ['put','make','take','set'],
+        ans: 0,
+        exp: '<span class="exp-key">put a cap on（對…設定上限，固定片語）</span>──"begun to put a cap on the number of tourists" 表示「開始對遊客人數設定上限」，呼應片語表中 put a limit on 的相同句型結構 (put a cap/limit on)。<br>❌ make、take、set 皆無法與 "a cap on" 構成此固定搭配。' },
+      { q: '(38)',
+        opts: ['at','for','with','on'],
+        ans: 0,
+        exp: '<span class="exp-key">aim at（以…為目標，固定搭配 aimed at）</span>──"taxes specifically aimed at short-term visitors" 表示「特別針對短期遊客的稅」，be aimed at 為常見固定搭配，表示「以…為對象/目標」。<br>❌ for、with、on 皆不是 aim 的常見固定搭配。' },
+      { q: '(39)',
+        opts: ['that','what','whom','whose'],
+        ans: 0,
+        exp: '<span class="exp-key">that（限定關係代詞，指物作主詞）</span>──"the very qualities that make a city attractive" 中 that 代替 qualities 作關係子句的主詞。<br>❌ what 本身已含先行詞，不可再接先行詞 qualities；whom 用於指人；whose 表所有格，皆不符。' },
+      { q: '(40)',
+        opts: ['remains','remain','remaining','to remain'],
+        ans: 0,
+        exp: '<span class="exp-key">remains（第三人稱單數現在式）</span>──句子主詞為 "finding a sustainable model for tourism"（動名詞片語作主詞，視為單數），故動詞用第三人稱單數 remains，"...remains one of the most pressing challenges..." 表示「…仍是當今城市面臨最緊迫的挑戰之一」。<br>❌ remain（複數動詞形式）、remaining（現在分詞）、to remain（不定詞）皆不符合單數主詞應搭配的動詞形式。' },
+    ]
+  },
+  {
+    title: '第四大題：閱讀理解',
+    pts: '10 題 × 2 分 = 20 分',
+    passage: `<b>Passage 1</b><br>
+Barcelona has become one of the clearest examples of overtourism in Europe. Every year, the city receives more than fifteen times as many visitors as its actual population, a number that has grown enormously since the 1992 Olympics first put the city on the international tourist map. By 2017, the number of annual visitors had grown to almost five times what it had been in 1992. While hotels, restaurants, and shops have benefited greatly from this surge, many residents feel that their quality of life has declined dramatically. Streets and sidewalks near famous landmarks such as the Sagrada Familia are often so crowded that locals find it difficult to go about their daily routines. Some residents have also complained that visitors play loud music late at night, leave garbage behind, and in some cases behave inappropriately outside nightclubs. For many longtime residents, the city they grew up in no longer feels like home.<br><br>
+<b>Passage 2</b><br>
+In response to growing complaints, Barcelona's city officials have introduced a series of measures aimed at managing, rather than simply promoting, tourism. These include limiting the number of visitors allowed at certain popular sites at one time and banning large tour groups from particularly crowded areas. The city has also restricted the construction of new hotels and ordered platforms such as Airbnb to remove listings for unlicensed guesthouses. This last measure addresses a related housing problem: because landlords can earn far more by renting to tourists through short-term platforms than by renting to long-term tenants, some local residents have been forced out of their own apartments. City officials hope that by combining these measures with a broader plan that focuses less on attracting new visitors and more on managing the ones who already come, Barcelona can eventually strike a balance between welcoming international travelers and protecting the quality of life of the people who call the city home.`,
+    questions: [
+      { q: '(41) According to Passage 1, what happened after the 1992 Olympics?',
+        opts: ['Barcelona\'s population decreased rapidly.','The number of tourists visiting Barcelona began to increase significantly.','Local businesses began to close down.','The Sagrada Familia was demolished.'],
+        ans: 1,
+        exp: '<span class="exp-key">B</span>──文中指出 "a number that has grown enormously since the 1992 Olympics first put the city on the international tourist map"，1992年奧運後遊客數量顯著增加。<br>❌ A、C、D 均與文章描述不符。' },
+      { q: '(42) How many times larger was the number of annual visitors in 2017 compared to 1992?',
+        opts: ['About fifteen times larger','About five times larger','About twice as large','It stayed roughly the same'],
+        ans: 1,
+        exp: '<span class="exp-key">B</span>──文中提到 "By 2017, the number of annual visitors had grown to almost five times what it had been in 1992"，2017年的遊客數量是1992年的近五倍。<br>❌ A 的「十五倍」是指目前遊客數量與居民人口的比例，並非1992年與2017年的比較；C、D 與文章不符。' },
+      { q: '(43) According to Passage 1, what is one complaint residents have about visitors\' behavior?',
+        opts: ['Visitors refuse to spend money in local shops.','Visitors play loud music late at night and leave garbage behind.','Visitors avoid famous landmarks.','Visitors rarely stay overnight in the city.'],
+        ans: 1,
+        exp: '<span class="exp-key">B</span>──文中明確提到 "visitors play loud music late at night, leave garbage behind, and in some cases behave inappropriately outside nightclubs"，這些都是居民的抱怨。<br>❌ A、C、D 均為文章未提及或與文章相反的內容。' },
+      { q: '(44) What does the phrase "the city they grew up in no longer feels like home" suggest about many longtime residents?',
+        opts: ['They are happy with the changes brought by tourism.','They feel disconnected from the city due to overtourism.','They have moved to Barcelona recently.','They work in the tourism industry.'],
+        ans: 1,
+        exp: '<span class="exp-key">B</span>──這句話表示長期居民因過度旅遊而感覺城市已不再像「家」，反映出與城市的疏離感，呼應文章整體描述居民生活品質下降的主題。<br>❌ A、C、D 均與文章語意不符。' },
+      { q: '(45) According to Passage 1, who has benefited from the surge in tourism?',
+        opts: ['Only the city government','Hotels, restaurants, and shops','Only long-term tenants','No one in Barcelona'],
+        ans: 1,
+        exp: '<span class="exp-key">B</span>──文中提到 "hotels, restaurants, and shops have benefited greatly from this surge"，飯店、餐廳和商店從這波旅遊熱潮中獲益。<br>❌ A、C、D 均與文章描述不符。' },
+      { q: '(46) According to Passage 2, what is one measure Barcelona has taken regarding tour groups?',
+        opts: ['Offering tour groups free transportation','Banning large tour groups from particularly crowded areas','Requiring tour groups to pay double the normal fees','Encouraging more tour groups to visit at night'],
+        ans: 1,
+        exp: '<span class="exp-key">B</span>──文中提到 "banning large tour groups from particularly crowded areas"，禁止大型旅行團進入特別擁擠的地區。<br>❌ A、C、D 均為文章未提及的內容。' },
+      { q: '(47) Why have some local residents been forced out of their apartments, according to Passage 2?',
+        opts: ['Their buildings were demolished for new hotels.','Landlords can earn more money renting to tourists through short-term platforms than to long-term tenants.','The city government seized their properties.','They voluntarily moved to cheaper neighborhoods.'],
+        ans: 1,
+        exp: '<span class="exp-key">B</span>──文中提到 "because landlords can earn far more by renting to tourists through short-term platforms than by renting to long-term tenants, some local residents have been forced out of their own apartments"，房東透過短期出租平台能賺更多錢，導致部分居民被迫搬離。<br>❌ A、C、D 均為文章未提及的內容。' },
+      { q: '(48) What action has the city ordered platforms like Airbnb to take?',
+        opts: ['Increase their service fees','Remove listings for unlicensed guesthouses','Provide free advertising for hotels','Stop operating in Barcelona entirely'],
+        ans: 1,
+        exp: '<span class="exp-key">B</span>──文中提到 "ordered platforms such as Airbnb to remove listings for unlicensed guesthouses"，要求平台撤下未經許可的民宿房源。<br>❌ A、C、D 均為文章未提及的內容。' },
+      { q: '(49) What is the overall goal of the city\'s broader plan, according to Passage 2?',
+        opts: ['To attract as many new visitors as possible','To focus less on attracting new visitors and more on managing existing ones','To completely ban tourism in the city','To relocate all residents to other cities'],
+        ans: 1,
+        exp: '<span class="exp-key">B</span>──文中提到 "a broader plan that focuses less on attracting new visitors and more on managing the ones who already come"，整體計畫的目標是減少招攬新遊客，轉而管理現有遊客。<br>❌ A、C、D 均與文章描述相反或不符。' },
+      { q: '(50) Which of the following best describes the relationship between Passage 1 and Passage 2?',
+        opts: ['Passage 1 and Passage 2 present unrelated topics about two different cities.','Passage 1 describes the problems caused by overtourism, while Passage 2 describes the city\'s responses to those problems.','Passage 1 argues against tourism entirely, while Passage 2 promotes it.','Passage 2 describes the problems, while Passage 1 describes the solutions.'],
+        ans: 1,
+        exp: '<span class="exp-key">B</span>──Passage 1 描述過度旅遊造成的問題（擁擠、噪音、居民生活品質下降），Passage 2 描述巴塞隆納市政府為應對這些問題所採取的措施，兩段文章構成「問題與對策」的關係。<br>❌ A、C、D 均不符合兩段文章的實際關係。' },
+    ]
+  }
+];
+
+// ── RENDER ────────────────────────────────────────────────
+let globalQNum = 0;
+const qMap = {}; // qNum → { ans, exp }
+const userAnswers = {};
+let submitted = false;
+
+const container = document.getElementById('quiz-container');
+const labels = ['A','B','C','D'];
+
+function render() {
+  sections.forEach((sec) => {
+    const secDiv = document.createElement('div');
+    secDiv.className = 'section';
+    let html = `<div class="section-header">${sec.title} <span class="pts">（${sec.pts}）</span></div>`;
+    if (sec.passage) {
+      html += `<div class="passage"><div class="passage-label">📖 閱讀文章</div>${sec.passage}</div>`;
+    }
+    sec.questions.forEach((q) => {
+      globalQNum++;
+      const n = globalQNum;
+      qMap[n] = { ans: labels[q.ans], exp: q.exp };
+      let optHtml = '';
+      q.opts.forEach((o, i) => {
+        optHtml += `<div class="option" id="opt-${n}-${labels[i]}" onclick="choose(${n},'${labels[i]}')">`
+          + `<span class="option-label">(${labels[i]})</span>${o}</div>`;
+      });
+      html += `<div class="question" id="q${n}">
+        <div class="q-text"><span class="q-num">${n}.</span> ${q.q}</div>
+        <div class="options">${optHtml}</div>
+        <div class="explanation" id="exp${n}">
+          <div class="exp-header">💡 解析</div>
+          <div class="exp-body">${q.exp}</div>
+        </div>
+      </div>`;
+    });
+    secDiv.innerHTML = html;
+    container.appendChild(secDiv);
+  });
+}
+
+render();
+
+// ── LOGIC ─────────────────────────────────────────────────
+function choose(n, chosen) {
+  if (submitted) return;
+  userAnswers[n] = chosen;
+  const ans = qMap[n].ans;
+
+  labels.forEach(l => {
+    const el = document.getElementById(`opt-${n}-${l}`);
+    el.classList.remove('selected','correct','wrong','reveal-correct');
+    if (l === chosen) {
+      if (chosen === ans) el.classList.add('correct');
+      else el.classList.add('wrong');
+    } else if (l === ans && chosen !== ans) {
+      el.classList.add('reveal-correct');
+    }
+  });
+
+  document.getElementById(`exp${n}`).classList.add('show');
+  updateTopBar();
+}
+
+function updateTopBar() {
+  const count = Object.keys(userAnswers).length;
+  document.getElementById('answered-count').textContent = count;
+  document.getElementById('progress-fill').style.width = (count / 50 * 100) + '%';
+  let score = 0;
+  for (let q in userAnswers) { if (userAnswers[q] === qMap[q].ans) score += 2; }
+  document.getElementById('live-score').textContent = score;
+}
+
+function revealAll() {
+  for (let n = 1; n <= 50; n++) {
+    const ans = qMap[n].ans;
+    labels.forEach(l => {
+      const el = document.getElementById(`opt-${n}-${l}`);
+      el.classList.remove('selected','correct','wrong','reveal-correct');
+      if (l === ans) el.classList.add('reveal-correct');
+      else if (userAnswers[n] === l && l !== ans) el.classList.add('wrong');
+    });
+    document.getElementById(`exp${n}`).classList.add('show');
+  }
+  updateTopBar();
+}
+
+function submitAll() {
+  submitted = true;
+  revealAll();
+  let score = 0;
+  for (let n = 1; n <= 50; n++) {
+    if (userAnswers[n] === qMap[n].ans) score += 2;
+  }
+  const rb = document.getElementById('result-box');
+  rb.classList.add('show');
+  document.getElementById('result-score').textContent = score;
+  const gr = document.getElementById('result-grade');
+  const det = document.getElementById('result-detail');
+  if (score >= 90) { gr.textContent = '🏆 優秀！'; gr.className = 'result-grade grade-a'; det.textContent = '表現卓越，繼續保持！'; }
+  else if (score >= 70) { gr.textContent = '👍 良好'; gr.className = 'result-grade grade-b'; det.textContent = '表現不錯，再複習錯誤的題目吧！'; }
+  else { gr.textContent = '📚 需加強'; gr.className = 'result-grade grade-c'; det.textContent = '多複習解析說明，你可以做到的！'; }
+  document.getElementById('answered-count').textContent = 50;
+  document.getElementById('live-score').textContent = score;
+  document.getElementById('progress-fill').style.width = '100%';
+  rb.scrollIntoView({ behavior: 'smooth' });
+}
+
+function resetAll() {
+  submitted = false;
+  for (let key in userAnswers) delete userAnswers[key];
+  for (let n = 1; n <= 50; n++) {
+    labels.forEach(l => {
+      document.getElementById(`opt-${n}-${l}`).classList.remove('selected','correct','wrong','reveal-correct');
+    });
+    document.getElementById(`exp${n}`).classList.remove('show');
+  }
+  document.getElementById('result-box').classList.remove('show');
+  document.getElementById('answered-count').textContent = '0';
+  document.getElementById('live-score').textContent = '0';
+  document.getElementById('progress-fill').style.width = '0%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
