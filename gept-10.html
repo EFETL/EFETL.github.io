@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEPT 初級 閱讀測驗　第10回</title>
+<style>
+  :root{
+    --blue:#2b8cff; --blue-dark:#1f6fe0;
+    --coral:#ff7a59; --amber:#ffb02e; --pink:#ff5d8f;
+    --bg:#f3f9ff; --card:#ffffff; --line:#e3edf9;
+    --green:#22b573; --green-bg:#e4f8ef;
+    --red:#ff5a5a; --red-bg:#ffecec;
+    --gray:#6b7785;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;
+    background:linear-gradient(180deg,#f0f7ff,#fff7f2 70%);color:#22303f;line-height:1.6;
+    -webkit-text-size-adjust:100%;}
+  .wrap{max-width:760px;margin:0 auto;padding:16px;}
+  header.top{background:linear-gradient(135deg,#5ec6ff,#7d8bff 55%,#b88bff);color:#fff;
+    border-radius:18px;padding:24px 22px;margin-bottom:16px;box-shadow:0 8px 22px rgba(93,141,255,.3);}
+  header.top h1{margin:0 0 6px;font-size:1.5rem;text-shadow:0 1px 2px rgba(0,0,0,.12);}
+  header.top p{margin:0;font-size:.92rem;opacity:.95;}
+  .meta{margin-top:14px;font-size:.86rem;background:rgba(255,255,255,.22);
+    padding:9px 13px;border-radius:10px;}
+  .sticky{position:sticky;top:0;z-index:20;padding:10px 0;
+    background:linear-gradient(180deg,#f0f7ff 70%,rgba(240,247,255,0));}
+  .bar{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:11px 16px;display:flex;align-items:center;gap:12px;font-size:.9rem;
+    box-shadow:0 4px 12px rgba(43,140,255,.1);}
+  .bar .track{flex:1;height:9px;background:#e9f1fb;border-radius:6px;overflow:hidden;}
+  .bar .fill{height:100%;width:0;border-radius:6px;
+    background:linear-gradient(90deg,#3ad1c6,#2b8cff);transition:width .35s;}
+  .bar #count{font-weight:700;color:var(--blue-dark);}
+  .section-title{color:#fff;font-weight:800;border-radius:12px;
+    padding:10px 16px;margin:24px 0 6px;font-size:1.05rem;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);}
+  .section-title.s0{background:linear-gradient(135deg,#ff9a6c,#ff6f91);}
+  .section-title.s1{background:linear-gradient(135deg,#4dd0e1,#2b8cff);}
+  .section-title.s2{background:linear-gradient(135deg,#9b8bff,#b06bff);}
+  .section-desc{font-size:.86rem;color:var(--gray);margin:0 4px 10px;}
+  .passage{background:#fffdf4;border:1px solid #ffe9c9;border-left:5px solid var(--amber);
+    border-radius:12px;padding:15px 17px;margin:14px 0;font-size:.95rem;
+    box-shadow:0 3px 10px rgba(255,176,46,.08);}
+  .passage h3{margin:0 0 8px;color:#e0820a;font-size:1rem;}
+  .passage table{border-collapse:collapse;width:100%;margin:8px 0;font-size:.88rem;}
+  .passage th,.passage td{border:1px solid #ffe0b0;padding:5px 8px;text-align:left;}
+  .passage th{background:#fff2dc;}
+  .email-h{font-size:.85rem;color:var(--gray);border-bottom:1px dashed #ffd9a8;
+    padding-bottom:6px;margin-bottom:8px;}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:15px 17px;margin:12px 0;box-shadow:0 3px 10px rgba(43,140,255,.07);}
+  .q .stem{font-weight:600;margin-bottom:10px;}
+  .q .stem .num{display:inline-block;color:#fff;background:var(--blue);font-weight:700;
+    border-radius:8px;padding:1px 9px;margin-right:8px;font-size:.92rem;}
+  .opt{display:flex;align-items:flex-start;gap:10px;border:2px solid var(--line);
+    border-radius:11px;padding:10px 13px;margin:8px 0;cursor:pointer;transition:.15s;
+    font-size:.95rem;background:#fbfdff;}
+  .opt:hover{border-color:var(--blue);background:#eef6ff;}
+  .opt input{margin-top:3px;accent-color:var(--blue);}
+  .opt .lab{font-weight:800;color:var(--blue);min-width:18px;}
+  .opt.sel{border-color:var(--blue);background:#e7f2ff;}
+  .opt.correct{border-color:var(--green);background:var(--green-bg);}
+  .opt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .opt.lock{cursor:default;}
+  .exp{display:none;margin-top:11px;border-top:2px dashed #ffe1c2;padding-top:11px;font-size:.9rem;}
+  .exp.show{display:block;}
+  .exp .tag{display:inline-block;font-weight:800;color:#fff;background:var(--green);
+    border-radius:7px;padding:2px 10px;font-size:.8rem;margin-bottom:7px;}
+  .exp .tag.miss{background:var(--red);}
+  .exp .en{color:#1c4f7a;background:#eef7ff;border-radius:8px;padding:6px 10px;margin:5px 0;}
+  .exp .zh{color:#7a4a12;background:#fff7ea;border-radius:8px;padding:6px 10px;margin:5px 0;}
+  .actions{position:sticky;bottom:0;padding:14px 0 6px;margin-top:18px;
+    background:linear-gradient(transparent,#fff7f2 35%);}
+  button.submit{width:100%;color:#fff;border:0;border-radius:14px;padding:16px;
+    font-size:1.08rem;font-weight:800;cursor:pointer;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);
+    box-shadow:0 6px 16px rgba(255,93,143,.35);}
+  button.submit:active{transform:translateY(1px);}
+  button.reset{width:100%;background:#fff;color:var(--blue);border:2px solid var(--blue);
+    border-radius:14px;padding:14px;font-size:1rem;font-weight:800;cursor:pointer;margin-top:10px;display:none;}
+  .result{display:none;background:var(--card);border:3px solid transparent;border-radius:16px;
+    padding:22px;margin:16px 0;text-align:center;
+    background-image:linear-gradient(#fff,#fff),linear-gradient(135deg,#3ad1c6,#2b8cff,#b06bff);
+    background-origin:border-box;background-clip:padding-box,border-box;
+    box-shadow:0 8px 22px rgba(43,140,255,.15);}
+  .result.show{display:block;}
+  .result .score{font-size:2.8rem;font-weight:900;
+    background:linear-gradient(135deg,#2b8cff,#b06bff);-webkit-background-clip:text;
+    background-clip:text;-webkit-text-fill-color:transparent;}
+  .result .sub{color:var(--gray);font-size:.95rem;}
+  .result .bd{display:flex;justify-content:center;gap:18px;margin-top:12px;flex-wrap:wrap;font-size:.95rem;}
+  .result .bd span{font-weight:800;}
+  .hint{text-align:center;font-size:.85rem;color:var(--gray);margin-top:9px;min-height:1.2em;}
+  footer{text-align:center;color:var(--gray);font-size:.8rem;margin:24px 0;}
+</style>
+</head>
+<body>
+<a href="gept.html" style="position:fixed;top:12px;left:12px;background:rgba(255,255,255,.92);color:#2b8cff;padding:7px 15px;border-radius:20px;text-decoration:none;font-size:.85rem;font-weight:800;z-index:999;box-shadow:0 3px 10px rgba(0,0,0,.15);">&#8592; 回題庫</a>
+<div class="wrap">
+  <header class="top">
+    <h1>GEPT 初級　閱讀測驗　<span style="opacity:.9">第10回</span></h1>
+    <p>仿真練習卷　&middot;　依官方題型與難度命題</p>
+    <div class="meta">共 3 部分、30 題　|　建議作答時間 35 分鐘　|　送出後顯示完整中英文解析與分數</div>
+  </header>
+
+  <div class="sticky">
+    <div class="bar">
+      <span>作答進度</span>
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <span id="count">0 / 30</span>
+    </div>
+  </div>
+
+  <form id="quiz"></form>
+
+  <div class="result" id="result">
+    <div class="score" id="scoreNum">0</div>
+    <div class="sub" id="scoreTxt">分</div>
+    <div class="bd">
+      <span style="color:var(--green)">答對 <b id="rOk">0</b></span>
+      <span style="color:var(--red)">答錯 <b id="rNo">0</b></span>
+      <span style="color:var(--gray)">未作答 <b id="rBlank">0</b></span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="submit" id="submitBtn">送出並查看解析</button>
+    <div class="hint" id="hint">尚未作答任何題目</div>
+    <button type="button" class="reset" id="resetBtn">重新作答</button>
+  </div>
+
+  <footer>GEPT 初級閱讀　仿真練習　&middot;　第二顆腦 / GEPT初級</footer>
+</div>
+
+<script>
+/* ====== 題庫資料 ====== */
+const PARTS = [{"title": "第一部分　詞彙", "desc": "共 10 題，每題有一個空格，請從四個選項中選出最適合題意的字或詞。"}, {"title": "第二部分　段落填空", "desc": "共 8 題，包含二個段落，每格四個選項，請依文意選出最適合的答案。"}, {"title": "第三部分　閱讀理解", "desc": "共 12 題，包含 4 個題組，請依短文內容選出最適合的答案。"}];
+
+const PASSAGES = {"11": "<div class=\"passage\"><h3>Questions 11-14</h3>Have you heard that laughter is the best medicine? When we laugh, our body relaxes and feels less pain. Laughing also helps our heart and makes us breathe more __(11)__. People who laugh often are usually healthier and happier. Laughter is good for our friendships, __(12)__. When we laugh together, we feel closer to others. Some hospitals even invite clowns to make sick children laugh, __(13)__ it helps them feel better. So next time you feel sad, try watching something funny. A good laugh might be __(14)__ you need.</div>", "15": "<div class=\"passage\"><h3>Questions 15-18</h3>Walt Disney is famous all over the world for creating Mickey Mouse and Disneyland. __(15)__, his early life was full of failures. When he was young, he was once fired from a newspaper because his boss said he had no good ideas. He started several companies that did not __(16)__. But Disney never stopped believing in his dreams. He kept drawing and trying new things, __(17)__ he finally became successful. Today, millions of people enjoy his films and theme parks. His story teaches us that failure is just a step __(18)__ success.</div>", "19": "<div class=\"passage\"><h3>Questions 19-21</h3><b>City Music Hall &mdash; Summer Concert</b><br>Date: Saturday, July 20 | Doors open 6:30 PM, show starts 7:30 PM<br>Tickets: Front seats NT$1,500 | Back seats NT$800 | Students 20% off<br>&bull; No food or drinks inside the hall.<br>&bull; Photos are allowed, but please turn off your flash.<br>&bull; Tickets are non-refundable.</div>", "22": "<div class=\"passage\"><h3>Questions 22-24</h3><b>Music Together Studio</b><br>&bull; Learn piano, guitar, or violin from friendly teachers.<br>&bull; One-on-one lessons for all ages and levels.<br>&bull; First trial lesson only NT$100!<br>&bull; Free use of instruments during your lesson.<br>&bull; Lessons available on weekday evenings and weekends.<br>&bull; Sign up online at www.musictogether.tw.</div>", "25": "<div class=\"passage\"><h3>Questions 25-27</h3><div class=\"email-h\">From: ben@mail.com　|　To: classmates　|　Subject: My Graduation Party</div>Hi everyone,<br><br>I'm so happy that we are finally graduating! To celebrate, I'm having a party at my house on Saturday, June 28, from 5 PM. There will be pizza, games, and music. Please come and bring your favorite snack to share. If you can make it, please reply by Thursday so I know how much food to prepare. I can't wait to see you all!<br><br>Ben</div>", "28": "<div class=\"passage\"><h3>Questions 28-30</h3>Koalas are cute animals that live in Australia. Although many people call them \"koala bears,\" they are not bears at all. Koalas spend most of their time in eucalyptus trees, eating the leaves and sleeping. In fact, a koala can sleep for up to 20 hours a day! The leaves they eat give them very little energy, so they must rest a lot to save it. Baby koalas, called joeys, stay in their mother's pouch for about six months. Sadly, koalas are losing their homes because many trees are being cut down.</div>"};
+
+const Q = [{"n": 1, "p": 0, "stem": "He told a funny joke and everyone began to __________.", "o": ["sleep", "laugh", "cry", "shout"], "a": 1, "en": "A funny joke makes people \"laugh.\"", "zh": "聽到好笑的笑話大家開始「笑」laugh。cry 哭、shout 叫、sleep 睡，不合。"}, {"n": 2, "p": 0, "stem": "Please __________ your seat belt before the bus moves.", "o": ["throw", "fasten", "open", "break"], "a": 1, "en": "\"fasten your seat belt\" = buckle it.", "zh": "fasten your seat belt（繫安全帶）。open 打開、break 弄壞、throw 丟，不合。"}, {"n": 3, "p": 0, "stem": "I __________ my keys this morning and couldn't open the door.", "o": ["found", "bought", "sold", "lost"], "a": 3, "en": "\"lost\" my keys = couldn't find them.", "zh": "lost（弄丟）鑰匙所以開不了門。found 找到、bought 買、sold 賣，不合。"}, {"n": 4, "p": 0, "stem": "The soup tastes great. Can I have __________ bowl?", "o": ["other", "others", "each", "another"], "a": 3, "en": "\"another bowl\" = one more.", "zh": "another bowl（再來一碗）。another 後接單數名詞。other 須接複數、others 是代名詞。"}, {"n": 5, "p": 0, "stem": "Let's __________ a photo together to remember this day.", "o": ["get", "take", "make", "do"], "a": 1, "en": "\"take a photo\" = use a camera.", "zh": "take a photo（拍照）為固定搭配。make/do/get a photo 不合。"}, {"n": 6, "p": 0, "stem": "I want to buy that bike, __________ I don't have enough money.", "o": ["so", "and", "because", "but"], "a": 3, "en": "Want it, BUT no money. Contrast.", "zh": "想買腳踏車「但」錢不夠，前後相反用 but。"}, {"n": 7, "p": 0, "stem": "__________ you study hard, you will pass the test.", "o": ["If", "Although", "But", "So"], "a": 0, "en": "\"If you study hard\" = condition.", "zh": "If（如果）引導條件：如果用功就會通過。although 雖然、but 但是、so 所以，不合。"}, {"n": 8, "p": 0, "stem": "The road is wet and __________, so drive carefully.", "o": ["dry", "clean", "slippery", "sunny"], "a": 2, "en": "Wet road is \"slippery.\"", "zh": "路濕又「滑」slippery，要小心開車。sunny 晴、dry 乾、clean 乾淨，與「濕」矛盾。"}, {"n": 9, "p": 0, "stem": "She is __________ of becoming a famous singer one day.", "o": ["dreaming", "thinking", "looking", "hearing"], "a": 0, "en": "\"dream of\" = hope for.", "zh": "dream of（夢想）。她夢想有天成為知名歌手。think of 想到、look/hear 不合此片語。"}, {"n": 10, "p": 0, "stem": "Don't __________ up. You can do it if you try again.", "o": ["grow", "wake", "give", "get"], "a": 2, "en": "\"give up\" = stop trying.", "zh": "give up（放棄）。別放棄，再試一次就能做到。"}, {"n": 11, "p": 1, "stem": "(11)", "o": ["deep", "deeply", "deeper", "depth"], "a": 1, "en": "\"breathe more deeply\" — adverb.", "zh": "修飾動詞 breathe 用副詞 deeply（更深地呼吸）。deep 形容詞、depth 名詞。"}, {"n": 12, "p": 1, "stem": "(12)", "o": ["too", "also", "either", "only"], "a": 0, "en": "\"good for our friendships, too\" — also (end position).", "zh": "句尾用 too（也）：對友誼也有益。also 通常放句中、either 用於否定句。"}, {"n": 13, "p": 1, "stem": "(13)", "o": ["but", "because", "although", "so"], "a": 1, "en": "\"because it helps them feel better\" — reason.", "zh": "because（因為）說明請小丑的原因：能讓孩子感覺好一點。"}, {"n": 14, "p": 1, "stem": "(14)", "o": ["all", "every", "each", "both"], "a": 0, "en": "\"all you need\" = the only thing.", "zh": "all you need（你所需要的一切）。a good laugh might be all you need。"}, {"n": 15, "p": 1, "stem": "(15)", "o": ["Because", "So", "However", "Therefore"], "a": 2, "en": "Contrast: famous now, HOWEVER early life full of failures.", "zh": "如今出名，「然而」早年充滿失敗，前後相反用 However。"}, {"n": 16, "p": 1, "stem": "(16)", "o": ["successful", "successfully", "succeed", "success"], "a": 2, "en": "\"did not succeed\" — base verb after did.", "zh": "did not 後接原形動詞 succeed（沒有成功）。success 名詞、successful 形容詞。"}, {"n": 17, "p": 1, "stem": "(17)", "o": ["so", "or", "because", "but"], "a": 0, "en": "Kept trying, SO he finally succeeded. Result.", "zh": "他持續嘗試，「所以」最終成功，表結果用 so。"}, {"n": 18, "p": 1, "stem": "(18)", "o": ["of", "to", "for", "towards"], "a": 3, "en": "\"a step towards success\" = moving in that direction.", "zh": "a step towards success（邁向成功的一步）。towards 表方向。"}, {"n": 19, "p": 2, "stem": "What time does the concert start?", "o": ["6:30 PM", "7:30 PM", "7:00 PM", "8:00 PM"], "a": 1, "en": "\"show starts 7:30 PM.\" (Doors open 6:30.)", "zh": "演出 7:30 開始；6:30 是開門時間。"}, {"n": 20, "p": 2, "stem": "A student buys a back seat. How much does the ticket cost?", "o": ["NT$160", "NT$800", "NT$640", "NT$1,200"], "a": 2, "en": "Back seat NT$800, students 20% off → 800×0.8 = 640.", "zh": "後排 800 元，學生 8 折＝640。"}, {"n": 21, "p": 2, "stem": "What is allowed inside the hall?", "o": ["Taking photos without flash", "Getting a refund", "Eating snacks", "Bringing drinks"], "a": 0, "en": "\"Photos are allowed, but please turn off your flash.\"", "zh": "可以拍照（但要關閃光燈）。禁帶飲食、票不退。"}, {"n": 22, "p": 2, "stem": "What can you learn at this studio?", "o": ["Piano, guitar, or violin", "Drawing", "Singing", "Dancing"], "a": 0, "en": "\"Learn piano, guitar, or violin.\"", "zh": "工作室教鋼琴、吉他或小提琴。"}, {"n": 23, "p": 2, "stem": "How much is the first trial lesson?", "o": ["NT$50", "Free", "NT$100", "NT$1,000"], "a": 2, "en": "\"First trial lesson only NT$100!\"", "zh": "第一堂體驗課只要 NT$100。"}, {"n": 24, "p": 2, "stem": "What is provided for free during lessons?", "o": ["Free music books", "Snacks", "Free instruments to keep", "Use of instruments"], "a": 3, "en": "\"Free use of instruments during your lesson.\"", "zh": "上課時可「免費使用樂器」（非贈送）。"}, {"n": 25, "p": 2, "stem": "Why did Ben write this email?", "o": ["To say goodbye forever", "To invite classmates to a party", "To ask for money", "To cancel a party"], "a": 1, "en": "He invites classmates to his graduation party.", "zh": "班寫信「邀請同學」參加他的畢業派對。"}, {"n": 26, "p": 2, "stem": "What does Ben ask everyone to bring?", "o": ["A photo", "A snack to share", "A drink", "A gift"], "a": 1, "en": "\"bring your favorite snack to share.\"", "zh": "請大家帶「喜歡的零食來分享」。"}, {"n": 27, "p": 2, "stem": "By when should they reply?", "o": ["5 PM", "June 28", "Saturday", "Thursday"], "a": 3, "en": "\"please reply by Thursday.\"", "zh": "請在「週四前」回覆，好讓他準備食物。"}, {"n": 28, "p": 2, "stem": "According to the passage, are koalas bears?", "o": ["No, they are not bears", "They are a kind of fish", "They are dogs", "Yes, they are bears"], "a": 0, "en": "\"they are not bears at all.\"", "zh": "無尾熊「並不是熊」，雖然常被叫做 koala bear。"}, {"n": 29, "p": 2, "stem": "Why do koalas sleep so much?", "o": ["They are sick", "They are lazy", "The leaves give little energy", "It is always dark"], "a": 2, "en": "\"The leaves ... give them very little energy, so they must rest a lot.\"", "zh": "牠們吃的葉子能量很低，所以要多休息以節省能量。"}, {"n": 30, "p": 2, "stem": "What is a baby koala called?", "o": ["A chick", "A puppy", "A cub", "A joey"], "a": 3, "en": "\"Baby koalas, called joeys...\"", "zh": "無尾熊寶寶叫 joey。"}];
+/* ====== 產生畫面 ====== */
+const form = document.getElementById('quiz');
+let lastPart = -1;
+Q.forEach(q=>{
+  if(q.p!==lastPart){
+    const st=document.createElement('div'); st.className='section-title s'+q.p; st.textContent=PARTS[q.p].title;
+    const sd=document.createElement('div'); sd.className='section-desc'; sd.textContent=PARTS[q.p].desc;
+    form.appendChild(st); form.appendChild(sd); lastPart=q.p;
+  }
+  if(PASSAGES[q.n]){ const d=document.createElement('div'); d.innerHTML=PASSAGES[q.n]; form.appendChild(d.firstChild); }
+  const card=document.createElement('div'); card.className='q'; card.id='q'+q.n;
+  const isBlank=/^\(\d+\)$/.test(q.stem);
+  const stemHtml = isBlank ? `第 ${q.n} 格` : q.stem;
+  card.innerHTML=`<div class="stem"><span class="num">${q.n}</span>${stemHtml}</div>`;
+  q.o.forEach((opt,i)=>{
+    const lab=document.createElement('label'); lab.className='opt'; lab.dataset.i=i;
+    lab.innerHTML=`<input type="radio" name="q${q.n}" value="${i}"><span class="lab">${'ABCD'[i]}</span><span>${opt}</span>`;
+    lab.querySelector('input').addEventListener('change',()=>{
+      card.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
+      lab.classList.add('sel'); updateProgress();
+    });
+    card.appendChild(lab);
+  });
+  const exp=document.createElement('div'); exp.className='exp'; exp.id='exp'+q.n;
+  card.appendChild(exp);
+  form.appendChild(card);
+});
+
+const submitBtn=document.getElementById('submitBtn');
+const resetBtn=document.getElementById('resetBtn');
+const hint=document.getElementById('hint');
+
+function answeredCount(){ let c=0; Q.forEach(q=>{ if(form.querySelector(`input[name="q${q.n}"]:checked`)) c++; }); return c; }
+function updateProgress(){
+  const c=answeredCount();
+  document.getElementById('count').textContent=`${c} / 30`;
+  document.getElementById('fill').style.width=(c/30*100)+'%';
+  hint.textContent = c===30 ? '已完成全部 30 題' : (c===0 ? '尚未作答任何題目（仍可送出查看解析）' : `已作答 ${c} 題，未作答 ${30-c} 題（仍可送出）`);
+}
+
+submitBtn.addEventListener('click',()=>{
+  let ok=0, blank=0;
+  Q.forEach(q=>{
+    const sel=form.querySelector(`input[name="q${q.n}"]:checked`);
+    const pick = sel ? parseInt(sel.value) : null;
+    if(pick===null) blank++;
+    const card=document.getElementById('q'+q.n);
+    card.querySelectorAll('.opt').forEach(o=>{
+      o.classList.add('lock');
+      o.querySelector('input').disabled=true;
+      const i=parseInt(o.dataset.i);
+      if(i===q.a) o.classList.add('correct');
+      if(pick!==null && i===pick && pick!==q.a) o.classList.add('wrong');
+    });
+    const correct = pick===q.a; if(correct) ok++;
+    const exp=document.getElementById('exp'+q.n);
+    const tag = correct ? '答對' : (pick===null ? '未作答' : '答錯');
+    exp.innerHTML=`<span class="tag ${correct?'':'miss'}">${tag}　正解：${'ABCD'[q.a]}</span>
+      <div class="en"><b>EN</b>&nbsp;${q.en}</div><div class="zh"><b>中</b>&nbsp;${q.zh}</div>`;
+    exp.classList.add('show');
+  });
+  const res=document.getElementById('result');
+  document.getElementById('scoreNum').textContent=Math.round(ok/30*100);
+  document.getElementById('scoreTxt').textContent=`分（答對 ${ok} / 30 題）`;
+  document.getElementById('rOk').textContent=ok;
+  document.getElementById('rNo').textContent=30-ok-blank;
+  document.getElementById('rBlank').textContent=blank;
+  res.classList.add('show');
+  submitBtn.style.display='none'; hint.style.display='none'; resetBtn.style.display='block';
+  res.scrollIntoView({behavior:'smooth'});
+});
+
+resetBtn.addEventListener('click',()=>{
+  form.reset();
+  Q.forEach(q=>{
+    const card=document.getElementById('q'+q.n);
+    card.querySelectorAll('.opt').forEach(o=>{o.classList.remove('sel','correct','wrong','lock');o.querySelector('input').disabled=false;});
+    document.getElementById('exp'+q.n).classList.remove('show');
+  });
+  document.getElementById('result').classList.remove('show');
+  submitBtn.style.display='block'; hint.style.display='block'; resetBtn.style.display='none';
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+updateProgress();
+</script>
+</body>
+</html>

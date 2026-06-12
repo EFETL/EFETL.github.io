@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEPT 初級 閱讀測驗　第11回</title>
+<style>
+  :root{
+    --blue:#2b8cff; --blue-dark:#1f6fe0;
+    --coral:#ff7a59; --amber:#ffb02e; --pink:#ff5d8f;
+    --bg:#f3f9ff; --card:#ffffff; --line:#e3edf9;
+    --green:#22b573; --green-bg:#e4f8ef;
+    --red:#ff5a5a; --red-bg:#ffecec;
+    --gray:#6b7785;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;
+    background:linear-gradient(180deg,#f0f7ff,#fff7f2 70%);color:#22303f;line-height:1.6;
+    -webkit-text-size-adjust:100%;}
+  .wrap{max-width:760px;margin:0 auto;padding:16px;}
+  header.top{background:linear-gradient(135deg,#5ec6ff,#7d8bff 55%,#b88bff);color:#fff;
+    border-radius:18px;padding:24px 22px;margin-bottom:16px;box-shadow:0 8px 22px rgba(93,141,255,.3);}
+  header.top h1{margin:0 0 6px;font-size:1.5rem;text-shadow:0 1px 2px rgba(0,0,0,.12);}
+  header.top p{margin:0;font-size:.92rem;opacity:.95;}
+  .meta{margin-top:14px;font-size:.86rem;background:rgba(255,255,255,.22);
+    padding:9px 13px;border-radius:10px;}
+  .sticky{position:sticky;top:0;z-index:20;padding:10px 0;
+    background:linear-gradient(180deg,#f0f7ff 70%,rgba(240,247,255,0));}
+  .bar{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:11px 16px;display:flex;align-items:center;gap:12px;font-size:.9rem;
+    box-shadow:0 4px 12px rgba(43,140,255,.1);}
+  .bar .track{flex:1;height:9px;background:#e9f1fb;border-radius:6px;overflow:hidden;}
+  .bar .fill{height:100%;width:0;border-radius:6px;
+    background:linear-gradient(90deg,#3ad1c6,#2b8cff);transition:width .35s;}
+  .bar #count{font-weight:700;color:var(--blue-dark);}
+  .section-title{color:#fff;font-weight:800;border-radius:12px;
+    padding:10px 16px;margin:24px 0 6px;font-size:1.05rem;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);}
+  .section-title.s0{background:linear-gradient(135deg,#ff9a6c,#ff6f91);}
+  .section-title.s1{background:linear-gradient(135deg,#4dd0e1,#2b8cff);}
+  .section-title.s2{background:linear-gradient(135deg,#9b8bff,#b06bff);}
+  .section-desc{font-size:.86rem;color:var(--gray);margin:0 4px 10px;}
+  .passage{background:#fffdf4;border:1px solid #ffe9c9;border-left:5px solid var(--amber);
+    border-radius:12px;padding:15px 17px;margin:14px 0;font-size:.95rem;
+    box-shadow:0 3px 10px rgba(255,176,46,.08);}
+  .passage h3{margin:0 0 8px;color:#e0820a;font-size:1rem;}
+  .passage table{border-collapse:collapse;width:100%;margin:8px 0;font-size:.88rem;}
+  .passage th,.passage td{border:1px solid #ffe0b0;padding:5px 8px;text-align:left;}
+  .passage th{background:#fff2dc;}
+  .email-h{font-size:.85rem;color:var(--gray);border-bottom:1px dashed #ffd9a8;
+    padding-bottom:6px;margin-bottom:8px;}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:15px 17px;margin:12px 0;box-shadow:0 3px 10px rgba(43,140,255,.07);}
+  .q .stem{font-weight:600;margin-bottom:10px;}
+  .q .stem .num{display:inline-block;color:#fff;background:var(--blue);font-weight:700;
+    border-radius:8px;padding:1px 9px;margin-right:8px;font-size:.92rem;}
+  .opt{display:flex;align-items:flex-start;gap:10px;border:2px solid var(--line);
+    border-radius:11px;padding:10px 13px;margin:8px 0;cursor:pointer;transition:.15s;
+    font-size:.95rem;background:#fbfdff;}
+  .opt:hover{border-color:var(--blue);background:#eef6ff;}
+  .opt input{margin-top:3px;accent-color:var(--blue);}
+  .opt .lab{font-weight:800;color:var(--blue);min-width:18px;}
+  .opt.sel{border-color:var(--blue);background:#e7f2ff;}
+  .opt.correct{border-color:var(--green);background:var(--green-bg);}
+  .opt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .opt.lock{cursor:default;}
+  .exp{display:none;margin-top:11px;border-top:2px dashed #ffe1c2;padding-top:11px;font-size:.9rem;}
+  .exp.show{display:block;}
+  .exp .tag{display:inline-block;font-weight:800;color:#fff;background:var(--green);
+    border-radius:7px;padding:2px 10px;font-size:.8rem;margin-bottom:7px;}
+  .exp .tag.miss{background:var(--red);}
+  .exp .en{color:#1c4f7a;background:#eef7ff;border-radius:8px;padding:6px 10px;margin:5px 0;}
+  .exp .zh{color:#7a4a12;background:#fff7ea;border-radius:8px;padding:6px 10px;margin:5px 0;}
+  .actions{position:sticky;bottom:0;padding:14px 0 6px;margin-top:18px;
+    background:linear-gradient(transparent,#fff7f2 35%);}
+  button.submit{width:100%;color:#fff;border:0;border-radius:14px;padding:16px;
+    font-size:1.08rem;font-weight:800;cursor:pointer;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);
+    box-shadow:0 6px 16px rgba(255,93,143,.35);}
+  button.submit:active{transform:translateY(1px);}
+  button.reset{width:100%;background:#fff;color:var(--blue);border:2px solid var(--blue);
+    border-radius:14px;padding:14px;font-size:1rem;font-weight:800;cursor:pointer;margin-top:10px;display:none;}
+  .result{display:none;background:var(--card);border:3px solid transparent;border-radius:16px;
+    padding:22px;margin:16px 0;text-align:center;
+    background-image:linear-gradient(#fff,#fff),linear-gradient(135deg,#3ad1c6,#2b8cff,#b06bff);
+    background-origin:border-box;background-clip:padding-box,border-box;
+    box-shadow:0 8px 22px rgba(43,140,255,.15);}
+  .result.show{display:block;}
+  .result .score{font-size:2.8rem;font-weight:900;
+    background:linear-gradient(135deg,#2b8cff,#b06bff);-webkit-background-clip:text;
+    background-clip:text;-webkit-text-fill-color:transparent;}
+  .result .sub{color:var(--gray);font-size:.95rem;}
+  .result .bd{display:flex;justify-content:center;gap:18px;margin-top:12px;flex-wrap:wrap;font-size:.95rem;}
+  .result .bd span{font-weight:800;}
+  .hint{text-align:center;font-size:.85rem;color:var(--gray);margin-top:9px;min-height:1.2em;}
+  footer{text-align:center;color:var(--gray);font-size:.8rem;margin:24px 0;}
+</style>
+</head>
+<body>
+<a href="gept.html" style="position:fixed;top:12px;left:12px;background:rgba(255,255,255,.92);color:#2b8cff;padding:7px 15px;border-radius:20px;text-decoration:none;font-size:.85rem;font-weight:800;z-index:999;box-shadow:0 3px 10px rgba(0,0,0,.15);">&#8592; 回題庫</a>
+<div class="wrap">
+  <header class="top">
+    <h1>GEPT 初級　閱讀測驗　<span style="opacity:.9">第11回</span></h1>
+    <p>仿真練習卷　&middot;　依官方題型與難度命題</p>
+    <div class="meta">共 3 部分、30 題　|　建議作答時間 35 分鐘　|　送出後顯示完整中英文解析與分數</div>
+  </header>
+
+  <div class="sticky">
+    <div class="bar">
+      <span>作答進度</span>
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <span id="count">0 / 30</span>
+    </div>
+  </div>
+
+  <form id="quiz"></form>
+
+  <div class="result" id="result">
+    <div class="score" id="scoreNum">0</div>
+    <div class="sub" id="scoreTxt">分</div>
+    <div class="bd">
+      <span style="color:var(--green)">答對 <b id="rOk">0</b></span>
+      <span style="color:var(--red)">答錯 <b id="rNo">0</b></span>
+      <span style="color:var(--gray)">未作答 <b id="rBlank">0</b></span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="submit" id="submitBtn">送出並查看解析</button>
+    <div class="hint" id="hint">尚未作答任何題目</div>
+    <button type="button" class="reset" id="resetBtn">重新作答</button>
+  </div>
+
+  <footer>GEPT 初級閱讀　仿真練習　&middot;　第二顆腦 / GEPT初級</footer>
+</div>
+
+<script>
+/* ====== 題庫資料 ====== */
+const PARTS = [{"title": "第一部分　詞彙", "desc": "共 10 題，每題有一個空格，請從四個選項中選出最適合題意的字或詞。"}, {"title": "第二部分　段落填空", "desc": "共 8 題，包含二個段落，每格四個選項，請依文意選出最適合的答案。"}, {"title": "第三部分　閱讀理解", "desc": "共 12 題，包含 4 個題組，請依短文內容選出最適合的答案。"}];
+
+const PASSAGES = {"11": "<div class=\"passage\"><h3>Questions 11-14</h3>Everyone dreams, even if we don't always remember it. Dreams happen during a special part of our sleep when our brain is very __(11)__. Scientists are still not sure why we dream, but they have some ideas. Some believe that dreaming helps us deal __(12)__ our feelings and the things that happened during the day. __(13)__, dreams may help us practice solving problems while we sleep. Most dreams are forgotten within minutes of waking up. If you want to remember a dream, try writing it down __(14)__ you wake up.</div>", "15": "<div class=\"passage\"><h3>Questions 15-18</h3>Vincent van Gogh is now one of the most famous painters in the world. During his life, __(15)__, he was very poor and sold only one painting. Many people did not understand his colorful style and thought his art was strange. Van Gogh often felt lonely and sad, __(16)__ he kept painting almost every day. He created more than 800 paintings in about ten years. It was only __(17)__ his death that people began to see how special his work was. Today, his paintings are loved by people __(18)__ the world.</div>", "19": "<div class=\"passage\"><h3>Questions 19-21</h3><b>Island Ferry &mdash; Daily Schedule</b><table><tr><th>Ferry</th><th>Leaves Harbor</th><th>Arrives Island</th></tr><tr><td>A</td><td>08:00</td><td>08:40</td></tr><tr><td>B</td><td>10:30</td><td>11:15</td></tr><tr><td>C</td><td>13:00</td><td>13:40</td></tr><tr><td>D</td><td>16:00</td><td>16:50</td></tr></table>One-way ticket: NT$150. Round trip: NT$250. Bikes can be brought on board for NT$50 extra.</div>", "22": "<div class=\"passage\"><h3>Questions 22-24</h3><b>City Bikes &mdash; Rent and Ride!</b><br>&bull; Rent a bike and explore the city your way.<br>&bull; NT$30 for the first hour, NT$20 for each hour after.<br>&bull; Free helmet with every rental.<br>&bull; Return the bike to any of our 50 stations.<br>&bull; Download our app to find the nearest bike.<br>&bull; Open 24 hours every day.</div>", "25": "<div class=\"passage\"><h3>Questions 25-27</h3><div class=\"email-h\">From: amy@mail.com　|　To: mr.lee@school.edu　|　Subject: Sorry for missing class</div>Dear Mr. Lee,<br><br>I am writing to say sorry for missing your English class yesterday. I woke up with a high fever and my mother took me to see a doctor. The doctor said I should rest at home for two days. I have asked my classmate Jenny to send me the notes. Could you please tell me if there is any homework I should do? I promise to catch up as soon as I feel better. Thank you for understanding.<br><br>Amy Wang</div>", "28": "<div class=\"passage\"><h3>Questions 28-30</h3>The octopus is one of the most amazing creatures in the sea. It has eight arms and three hearts, and its blood is blue! An octopus is also very clever. It can change the color of its skin in less than a second to hide from danger or surprise its enemies. Some octopuses even use shells and rocks to build a safe place to live. If an octopus loses an arm, it can grow a new one. Because they are so smart and unusual, scientists love to study these eight-armed animals.</div>"};
+
+const Q = [{"n": 1, "p": 0, "stem": "It's getting dark. Please __________ on the lights.", "o": ["give", "turn", "take", "put"], "a": 1, "en": "\"turn on the lights\" = switch on.", "zh": "turn on（打開電燈）。天黑了把燈打開。take/put/give on 不合。"}, {"n": 2, "p": 0, "stem": "I need to __________ some money to buy a new phone.", "o": ["spend", "waste", "lose", "save"], "a": 3, "en": "\"save money\" = keep it.", "zh": "save money（存錢）買新手機。spend 花、waste 浪費、lose 弄丟，不合。"}, {"n": 3, "p": 0, "stem": "The two countries finally __________ peace after the long war.", "o": ["did", "took", "gave", "made"], "a": 3, "en": "\"make peace\" = end a conflict.", "zh": "make peace（締結和平）。漫長戰爭後兩國終於和平。do/take/give peace 不合。"}, {"n": 4, "p": 0, "stem": "He's not here right now. Can I __________ a message?", "o": ["give", "send", "take", "make"], "a": 2, "en": "\"take a message\" = write it down for someone.", "zh": "take a message（代為留言）。對方不在，我可以幫你留言。"}, {"n": 5, "p": 0, "stem": "We should be __________ to old people and give them our seats.", "o": ["busy", "polite", "rude", "lazy"], "a": 1, "en": "\"polite\" = showing good manners.", "zh": "polite（有禮貌的）。對長者要有禮並讓座。rude 無禮、lazy 懶、busy 忙，不合。"}, {"n": 6, "p": 0, "stem": "__________ I was tired, I finished my homework.", "o": ["So", "If", "Although", "Because"], "a": 2, "en": "\"Although I was tired\" = even though.", "zh": "Although（雖然）。雖然累，我還是寫完作業。because 因為、so 所以、if 如果，不合。"}, {"n": 7, "p": 0, "stem": "Turn off the tap __________ you brush your teeth to save water.", "o": ["while", "before", "after", "until"], "a": 0, "en": "\"while you brush\" = during.", "zh": "while（當…的時候）。刷牙時關水龍頭省水。"}, {"n": 8, "p": 0, "stem": "The math problem was __________; nobody could solve it.", "o": ["simple", "boring", "difficult", "easy"], "a": 2, "en": "Nobody could solve it → \"difficult.\"", "zh": "沒人解得出，表示題目很「難」difficult。easy/simple 簡單、boring 無聊，不合。"}, {"n": 9, "p": 0, "stem": "Please __________ in line and wait for your turn.", "o": ["run", "stand", "sit", "lie"], "a": 1, "en": "\"stand in line\" = queue.", "zh": "stand in line（排隊）。請排隊等候。sit 坐、lie 躺、run 跑，不合。"}, {"n": 10, "p": 0, "stem": "She ran fast and __________ the bus just in time.", "o": ["missed", "lost", "dropped", "caught"], "a": 3, "en": "\"caught the bus\" = got on it in time.", "zh": "caught the bus（趕上公車）。missed 錯過、lost 失去、dropped 掉落，不合。"}, {"n": 11, "p": 1, "stem": "(11)", "o": ["active", "actively", "action", "act"], "a": 0, "en": "\"very active\" — adjective after very.", "zh": "very 後接形容詞 active（活躍的）。大腦在作夢時非常活躍。"}, {"n": 12, "p": 1, "stem": "(12)", "o": ["with", "for", "on", "about"], "a": 0, "en": "\"deal with our feelings\" = handle them.", "zh": "deal with（處理）。作夢幫我們處理情緒。"}, {"n": 13, "p": 1, "stem": "(13)", "o": ["However", "In addition", "Because", "So"], "a": 1, "en": "Adds another idea: In addition, dreams may help us solve problems.", "zh": "再補充另一個看法，用 In addition（此外）。"}, {"n": 14, "p": 1, "stem": "(14)", "o": ["unless", "although", "as soon as", "so that"], "a": 2, "en": "\"as soon as you wake up\" = immediately when.", "zh": "as soon as（一…就）。一醒來就把夢寫下來。"}, {"n": 15, "p": 1, "stem": "(15)", "o": ["because", "so", "however", "therefore"], "a": 2, "en": "Contrast: famous now, however he was poor in life.", "zh": "如今聞名，「然而」生前很窮，前後相反用 however。"}, {"n": 16, "p": 1, "stem": "(16)", "o": ["because", "and", "so", "but"], "a": 3, "en": "Felt sad, BUT kept painting. Contrast.", "zh": "他常感孤獨難過，「但」仍幾乎每天作畫，用 but。"}, {"n": 17, "p": 1, "stem": "(17)", "o": ["until", "before", "after", "during"], "a": 2, "en": "\"only after his death\" = following his death.", "zh": "only after his death（直到他死後）人們才看出他作品的特別。"}, {"n": 18, "p": 1, "stem": "(18)", "o": ["around", "between", "among", "through"], "a": 0, "en": "\"around the world\" = everywhere.", "zh": "around the world（全世界）為固定片語。"}, {"n": 19, "p": 2, "stem": "How long does Ferry B take?", "o": ["45 minutes", "50 minutes", "30 minutes", "40 minutes"], "a": 0, "en": "10:30 → 11:15 = 45 minutes.", "zh": "B 船 10:30 出發、11:15 抵達，共 45 分鐘。"}, {"n": 20, "p": 2, "stem": "A man buys a round-trip ticket and brings his bike. How much does he pay?", "o": ["NT$200", "NT$350", "NT$250", "NT$300"], "a": 3, "en": "Round trip 250 + bike 50 = 300.", "zh": "來回票 250＋腳踏車 50＝300。"}, {"n": 21, "p": 2, "stem": "Which ferry takes the longest?", "o": ["C", "D", "A", "B"], "a": 1, "en": "D: 16:00 → 16:50 = 50 minutes, the longest.", "zh": "D 船 16:00→16:50 共 50 分鐘，最久。A、C 各 40 分、B 45 分。"}, {"n": 22, "p": 2, "stem": "How much does it cost to rent a bike for two hours?", "o": ["NT$30", "NT$50", "NT$40", "NT$60"], "a": 1, "en": "First hour 30 + second hour 20 = 50.", "zh": "第一小時 30，第二小時 20，共 50。"}, {"n": 23, "p": 2, "stem": "What do you get for free with every rental?", "o": ["A helmet", "A drink", "A phone", "A map"], "a": 0, "en": "\"Free helmet with every rental.\"", "zh": "每次租借都附「免費安全帽」。"}, {"n": 24, "p": 2, "stem": "Where can you return the bike?", "o": ["To any of the 50 stations", "At the city hall", "At your home", "Only where you rented it"], "a": 0, "en": "\"Return the bike to any of our 50 stations.\"", "zh": "可以還到「50 個站點的任何一個」。"}, {"n": 25, "p": 2, "stem": "Why did Amy write this email?", "o": ["To ask for a holiday", "To apologize for missing class", "To change her class", "To thank Jenny"], "a": 1, "en": "She says sorry for missing class because she was sick.", "zh": "艾美寫信「為缺課道歉」，因為她發燒去看醫生。"}, {"n": 26, "p": 2, "stem": "Why did Amy miss class?", "o": ["She was on a trip", "She forgot", "She overslept", "She had a fever and saw a doctor"], "a": 3, "en": "\"I woke up with a high fever and my mother took me to see a doctor.\"", "zh": "她早上發高燒，媽媽帶她去看醫生，所以缺課。"}, {"n": 27, "p": 2, "stem": "What does Amy ask Mr. Lee?", "o": ["About any homework she should do", "To call her mother", "To cancel the test", "To give her a higher grade"], "a": 0, "en": "\"Could you please tell me if there is any homework?\"", "zh": "她詢問老師「有沒有該做的作業」。"}, {"n": 28, "p": 2, "stem": "How many hearts does an octopus have?", "o": ["One", "Two", "Three", "Eight"], "a": 2, "en": "\"It has eight arms and three hearts.\"", "zh": "章魚有三顆心臟（八隻腕）。"}, {"n": 29, "p": 2, "stem": "Why can an octopus change its skin color?", "o": ["To keep warm", "To swim faster", "To look pretty", "To hide from danger"], "a": 3, "en": "\"to hide from danger or surprise its enemies.\"", "zh": "變色是為了「躲避危險或嚇退敵人」。"}, {"n": 30, "p": 2, "stem": "What happens if an octopus loses an arm?", "o": ["It dies", "It grows a new one", "It stops moving", "It changes color"], "a": 1, "en": "\"it can grow a new one.\"", "zh": "章魚失去一隻腕還能「長出新的」。"}];
+/* ====== 產生畫面 ====== */
+const form = document.getElementById('quiz');
+let lastPart = -1;
+Q.forEach(q=>{
+  if(q.p!==lastPart){
+    const st=document.createElement('div'); st.className='section-title s'+q.p; st.textContent=PARTS[q.p].title;
+    const sd=document.createElement('div'); sd.className='section-desc'; sd.textContent=PARTS[q.p].desc;
+    form.appendChild(st); form.appendChild(sd); lastPart=q.p;
+  }
+  if(PASSAGES[q.n]){ const d=document.createElement('div'); d.innerHTML=PASSAGES[q.n]; form.appendChild(d.firstChild); }
+  const card=document.createElement('div'); card.className='q'; card.id='q'+q.n;
+  const isBlank=/^\(\d+\)$/.test(q.stem);
+  const stemHtml = isBlank ? `第 ${q.n} 格` : q.stem;
+  card.innerHTML=`<div class="stem"><span class="num">${q.n}</span>${stemHtml}</div>`;
+  q.o.forEach((opt,i)=>{
+    const lab=document.createElement('label'); lab.className='opt'; lab.dataset.i=i;
+    lab.innerHTML=`<input type="radio" name="q${q.n}" value="${i}"><span class="lab">${'ABCD'[i]}</span><span>${opt}</span>`;
+    lab.querySelector('input').addEventListener('change',()=>{
+      card.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
+      lab.classList.add('sel'); updateProgress();
+    });
+    card.appendChild(lab);
+  });
+  const exp=document.createElement('div'); exp.className='exp'; exp.id='exp'+q.n;
+  card.appendChild(exp);
+  form.appendChild(card);
+});
+
+const submitBtn=document.getElementById('submitBtn');
+const resetBtn=document.getElementById('resetBtn');
+const hint=document.getElementById('hint');
+
+function answeredCount(){ let c=0; Q.forEach(q=>{ if(form.querySelector(`input[name="q${q.n}"]:checked`)) c++; }); return c; }
+function updateProgress(){
+  const c=answeredCount();
+  document.getElementById('count').textContent=`${c} / 30`;
+  document.getElementById('fill').style.width=(c/30*100)+'%';
+  hint.textContent = c===30 ? '已完成全部 30 題' : (c===0 ? '尚未作答任何題目（仍可送出查看解析）' : `已作答 ${c} 題，未作答 ${30-c} 題（仍可送出）`);
+}
+
+submitBtn.addEventListener('click',()=>{
+  let ok=0, blank=0;
+  Q.forEach(q=>{
+    const sel=form.querySelector(`input[name="q${q.n}"]:checked`);
+    const pick = sel ? parseInt(sel.value) : null;
+    if(pick===null) blank++;
+    const card=document.getElementById('q'+q.n);
+    card.querySelectorAll('.opt').forEach(o=>{
+      o.classList.add('lock');
+      o.querySelector('input').disabled=true;
+      const i=parseInt(o.dataset.i);
+      if(i===q.a) o.classList.add('correct');
+      if(pick!==null && i===pick && pick!==q.a) o.classList.add('wrong');
+    });
+    const correct = pick===q.a; if(correct) ok++;
+    const exp=document.getElementById('exp'+q.n);
+    const tag = correct ? '答對' : (pick===null ? '未作答' : '答錯');
+    exp.innerHTML=`<span class="tag ${correct?'':'miss'}">${tag}　正解：${'ABCD'[q.a]}</span>
+      <div class="en"><b>EN</b>&nbsp;${q.en}</div><div class="zh"><b>中</b>&nbsp;${q.zh}</div>`;
+    exp.classList.add('show');
+  });
+  const res=document.getElementById('result');
+  document.getElementById('scoreNum').textContent=Math.round(ok/30*100);
+  document.getElementById('scoreTxt').textContent=`分（答對 ${ok} / 30 題）`;
+  document.getElementById('rOk').textContent=ok;
+  document.getElementById('rNo').textContent=30-ok-blank;
+  document.getElementById('rBlank').textContent=blank;
+  res.classList.add('show');
+  submitBtn.style.display='none'; hint.style.display='none'; resetBtn.style.display='block';
+  res.scrollIntoView({behavior:'smooth'});
+});
+
+resetBtn.addEventListener('click',()=>{
+  form.reset();
+  Q.forEach(q=>{
+    const card=document.getElementById('q'+q.n);
+    card.querySelectorAll('.opt').forEach(o=>{o.classList.remove('sel','correct','wrong','lock');o.querySelector('input').disabled=false;});
+    document.getElementById('exp'+q.n).classList.remove('show');
+  });
+  document.getElementById('result').classList.remove('show');
+  submitBtn.style.display='block'; hint.style.display='block'; resetBtn.style.display='none';
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+updateProgress();
+</script>
+</body>
+</html>

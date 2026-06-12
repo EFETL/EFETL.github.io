@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEPT 初級 閱讀測驗　第14回</title>
+<style>
+  :root{
+    --blue:#2b8cff; --blue-dark:#1f6fe0;
+    --coral:#ff7a59; --amber:#ffb02e; --pink:#ff5d8f;
+    --bg:#f3f9ff; --card:#ffffff; --line:#e3edf9;
+    --green:#22b573; --green-bg:#e4f8ef;
+    --red:#ff5a5a; --red-bg:#ffecec;
+    --gray:#6b7785;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;
+    background:linear-gradient(180deg,#f0f7ff,#fff7f2 70%);color:#22303f;line-height:1.6;
+    -webkit-text-size-adjust:100%;}
+  .wrap{max-width:760px;margin:0 auto;padding:16px;}
+  header.top{background:linear-gradient(135deg,#5ec6ff,#7d8bff 55%,#b88bff);color:#fff;
+    border-radius:18px;padding:24px 22px;margin-bottom:16px;box-shadow:0 8px 22px rgba(93,141,255,.3);}
+  header.top h1{margin:0 0 6px;font-size:1.5rem;text-shadow:0 1px 2px rgba(0,0,0,.12);}
+  header.top p{margin:0;font-size:.92rem;opacity:.95;}
+  .meta{margin-top:14px;font-size:.86rem;background:rgba(255,255,255,.22);
+    padding:9px 13px;border-radius:10px;}
+  .sticky{position:sticky;top:0;z-index:20;padding:10px 0;
+    background:linear-gradient(180deg,#f0f7ff 70%,rgba(240,247,255,0));}
+  .bar{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:11px 16px;display:flex;align-items:center;gap:12px;font-size:.9rem;
+    box-shadow:0 4px 12px rgba(43,140,255,.1);}
+  .bar .track{flex:1;height:9px;background:#e9f1fb;border-radius:6px;overflow:hidden;}
+  .bar .fill{height:100%;width:0;border-radius:6px;
+    background:linear-gradient(90deg,#3ad1c6,#2b8cff);transition:width .35s;}
+  .bar #count{font-weight:700;color:var(--blue-dark);}
+  .section-title{color:#fff;font-weight:800;border-radius:12px;
+    padding:10px 16px;margin:24px 0 6px;font-size:1.05rem;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);}
+  .section-title.s0{background:linear-gradient(135deg,#ff9a6c,#ff6f91);}
+  .section-title.s1{background:linear-gradient(135deg,#4dd0e1,#2b8cff);}
+  .section-title.s2{background:linear-gradient(135deg,#9b8bff,#b06bff);}
+  .section-desc{font-size:.86rem;color:var(--gray);margin:0 4px 10px;}
+  .passage{background:#fffdf4;border:1px solid #ffe9c9;border-left:5px solid var(--amber);
+    border-radius:12px;padding:15px 17px;margin:14px 0;font-size:.95rem;
+    box-shadow:0 3px 10px rgba(255,176,46,.08);}
+  .passage h3{margin:0 0 8px;color:#e0820a;font-size:1rem;}
+  .passage table{border-collapse:collapse;width:100%;margin:8px 0;font-size:.88rem;}
+  .passage th,.passage td{border:1px solid #ffe0b0;padding:5px 8px;text-align:left;}
+  .passage th{background:#fff2dc;}
+  .email-h{font-size:.85rem;color:var(--gray);border-bottom:1px dashed #ffd9a8;
+    padding-bottom:6px;margin-bottom:8px;}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:15px 17px;margin:12px 0;box-shadow:0 3px 10px rgba(43,140,255,.07);}
+  .q .stem{font-weight:600;margin-bottom:10px;}
+  .q .stem .num{display:inline-block;color:#fff;background:var(--blue);font-weight:700;
+    border-radius:8px;padding:1px 9px;margin-right:8px;font-size:.92rem;}
+  .opt{display:flex;align-items:flex-start;gap:10px;border:2px solid var(--line);
+    border-radius:11px;padding:10px 13px;margin:8px 0;cursor:pointer;transition:.15s;
+    font-size:.95rem;background:#fbfdff;}
+  .opt:hover{border-color:var(--blue);background:#eef6ff;}
+  .opt input{margin-top:3px;accent-color:var(--blue);}
+  .opt .lab{font-weight:800;color:var(--blue);min-width:18px;}
+  .opt.sel{border-color:var(--blue);background:#e7f2ff;}
+  .opt.correct{border-color:var(--green);background:var(--green-bg);}
+  .opt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .opt.lock{cursor:default;}
+  .exp{display:none;margin-top:11px;border-top:2px dashed #ffe1c2;padding-top:11px;font-size:.9rem;}
+  .exp.show{display:block;}
+  .exp .tag{display:inline-block;font-weight:800;color:#fff;background:var(--green);
+    border-radius:7px;padding:2px 10px;font-size:.8rem;margin-bottom:7px;}
+  .exp .tag.miss{background:var(--red);}
+  .exp .en{color:#1c4f7a;background:#eef7ff;border-radius:8px;padding:6px 10px;margin:5px 0;}
+  .exp .zh{color:#7a4a12;background:#fff7ea;border-radius:8px;padding:6px 10px;margin:5px 0;}
+  .actions{position:sticky;bottom:0;padding:14px 0 6px;margin-top:18px;
+    background:linear-gradient(transparent,#fff7f2 35%);}
+  button.submit{width:100%;color:#fff;border:0;border-radius:14px;padding:16px;
+    font-size:1.08rem;font-weight:800;cursor:pointer;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);
+    box-shadow:0 6px 16px rgba(255,93,143,.35);}
+  button.submit:active{transform:translateY(1px);}
+  button.reset{width:100%;background:#fff;color:var(--blue);border:2px solid var(--blue);
+    border-radius:14px;padding:14px;font-size:1rem;font-weight:800;cursor:pointer;margin-top:10px;display:none;}
+  .result{display:none;background:var(--card);border:3px solid transparent;border-radius:16px;
+    padding:22px;margin:16px 0;text-align:center;
+    background-image:linear-gradient(#fff,#fff),linear-gradient(135deg,#3ad1c6,#2b8cff,#b06bff);
+    background-origin:border-box;background-clip:padding-box,border-box;
+    box-shadow:0 8px 22px rgba(43,140,255,.15);}
+  .result.show{display:block;}
+  .result .score{font-size:2.8rem;font-weight:900;
+    background:linear-gradient(135deg,#2b8cff,#b06bff);-webkit-background-clip:text;
+    background-clip:text;-webkit-text-fill-color:transparent;}
+  .result .sub{color:var(--gray);font-size:.95rem;}
+  .result .bd{display:flex;justify-content:center;gap:18px;margin-top:12px;flex-wrap:wrap;font-size:.95rem;}
+  .result .bd span{font-weight:800;}
+  .hint{text-align:center;font-size:.85rem;color:var(--gray);margin-top:9px;min-height:1.2em;}
+  footer{text-align:center;color:var(--gray);font-size:.8rem;margin:24px 0;}
+</style>
+</head>
+<body>
+<a href="gept.html" style="position:fixed;top:12px;left:12px;background:rgba(255,255,255,.92);color:#2b8cff;padding:7px 15px;border-radius:20px;text-decoration:none;font-size:.85rem;font-weight:800;z-index:999;box-shadow:0 3px 10px rgba(0,0,0,.15);">&#8592; 回題庫</a>
+<div class="wrap">
+  <header class="top">
+    <h1>GEPT 初級　閱讀測驗　<span style="opacity:.9">第14回</span></h1>
+    <p>仿真練習卷　&middot;　依官方題型與難度命題</p>
+    <div class="meta">共 3 部分、30 題　|　建議作答時間 35 分鐘　|　送出後顯示完整中英文解析與分數</div>
+  </header>
+
+  <div class="sticky">
+    <div class="bar">
+      <span>作答進度</span>
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <span id="count">0 / 30</span>
+    </div>
+  </div>
+
+  <form id="quiz"></form>
+
+  <div class="result" id="result">
+    <div class="score" id="scoreNum">0</div>
+    <div class="sub" id="scoreTxt">分</div>
+    <div class="bd">
+      <span style="color:var(--green)">答對 <b id="rOk">0</b></span>
+      <span style="color:var(--red)">答錯 <b id="rNo">0</b></span>
+      <span style="color:var(--gray)">未作答 <b id="rBlank">0</b></span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="submit" id="submitBtn">送出並查看解析</button>
+    <div class="hint" id="hint">尚未作答任何題目</div>
+    <button type="button" class="reset" id="resetBtn">重新作答</button>
+  </div>
+
+  <footer>GEPT 初級閱讀　仿真練習　&middot;　第二顆腦 / GEPT初級</footer>
+</div>
+
+<script>
+/* ====== 題庫資料 ====== */
+const PARTS = [{"title": "第一部分　詞彙", "desc": "共 10 題，每題有一個空格，請從四個選項中選出最適合題意的字或詞。"}, {"title": "第二部分　段落填空", "desc": "共 8 題，包含二個段落，每格四個選項，請依文意選出最適合的答案。"}, {"title": "第三部分　閱讀理解", "desc": "共 12 題，包含 4 個題組，請依短文內容選出最適合的答案。"}];
+
+const PASSAGES = {"11": "<div class=\"passage\"><h3>Questions 11-14</h3>Learning a new language can open many doors. It allows you to make friends from other countries and understand different cultures. However, learning a language takes time and __(11)__. The most important thing is to practice a little every day. Don't be afraid __(12)__ mistakes &mdash; they are part of learning. Watching movies and listening to songs in the new language can also help a lot. __(13)__, try to speak with native speakers whenever you can. The more you use the language, the __(14)__ you will become.</div>", "15": "<div class=\"passage\"><h3>Questions 15-18</h3>In the past, hospitals were dirty and dangerous places, and many sick people died there. Florence Nightingale, a brave nurse from England, wanted to change this. During a war, she traveled to care for wounded soldiers. She noticed that keeping things clean could save lives, __(15)__ she made the hospital tidy and bright. At night, she walked through the rooms with a lamp to check on the patients, __(16)__ many called her \"The Lady with the Lamp.\" Because of her hard work, far fewer soldiers died. Her ideas are __(17)__ used in hospitals today, and she is remembered as the founder of __(18)__ nursing.</div>", "19": "<div class=\"passage\"><h3>Questions 19-21</h3><b>Frosty Ice Rink</b><br>Open: 10 AM &ndash; 9 PM daily<br>Skating: NT$200 (includes skate rental) | Helmet rental: NT$50<br>&bull; Children under 12 must wear a helmet.<br>&bull; Public skating is closed from 3&ndash;4 PM for ice cleaning.<br>&bull; Group of 10 or more: 15% off.</div>", "22": "<div class=\"passage\"><h3>Questions 22-24</h3><b>Bright Minds Tutoring</b><br>&bull; Help with math, English, and science for students aged 10&ndash;15.<br>&bull; Small groups of 4 students for more attention.<br>&bull; Experienced teachers from top universities.<br>&bull; First class is free so you can try before you decide.<br>&bull; After-school and weekend times available.<br>&bull; Call 02-7777-8888 to book a free trial.</div>", "25": "<div class=\"passage\"><h3>Questions 25-27</h3><div class=\"email-h\">From: kevin@mail.com　|　To: ben@mail.com　|　Subject: Re: My Graduation Party</div>Hi Ben,<br><br>Thank you for inviting me to your graduation party! I would love to come on Saturday. I'll bring some homemade cookies to share &mdash; I hope everyone likes chocolate! I might be about 15 minutes late because I have a family lunch first, but I'll come straight after. Should I bring anything else, like drinks or paper plates? Let me know. See you on Saturday!<br><br>Kevin</div>", "28": "<div class=\"passage\"><h3>Questions 28-30</h3>Owls are birds that are mostly awake at night. They have several special abilities that make them excellent night hunters. Their large eyes help them see well in the dark, and their ears are so sharp that they can hear a tiny mouse moving under the snow. An owl can also turn its head almost all the way around to look behind itself without moving its body. Perhaps most amazing of all, owls have soft feathers that let them fly almost silently, so their prey never hears them coming. These quiet hunters help control the number of mice and other small animals.</div>"};
+
+const Q = [{"n": 1, "p": 0, "stem": "Please __________ your work carefully before you hand it in.", "o": ["check", "cook", "drive", "sing"], "a": 0, "en": "\"check your work\" = look it over for mistakes.", "zh": "check（檢查）。交件前仔細檢查。cook 煮、drive 開、sing 唱，不合。"}, {"n": 2, "p": 0, "stem": "The teacher asked us to __________ in groups of four.", "o": ["sleep", "drive", "work", "cook"], "a": 2, "en": "\"work in groups\" = do tasks together.", "zh": "work in groups（分組進行）。老師要我們四人一組。"}, {"n": 3, "p": 0, "stem": "I was so __________ that I forgot my friend's name.", "o": ["relaxed", "happy", "proud", "nervous"], "a": 3, "en": "\"nervous\" → can't think clearly.", "zh": "nervous（緊張的）。太緊張連朋友名字都忘了。relaxed 放鬆、happy 開心、proud 驕傲，不合。"}, {"n": 4, "p": 0, "stem": "He __________ his promise and helped me move house.", "o": ["made", "took", "kept", "broke"], "a": 2, "en": "\"keep a promise\" = do what you said.", "zh": "kept his promise（守住承諾）。他遵守諾言幫我搬家。break a promise 是失信。"}, {"n": 5, "p": 0, "stem": "Please __________ off your wet shoes at the door.", "o": ["turn", "give", "take", "put"], "a": 2, "en": "\"take off your shoes\" = remove them.", "zh": "take off（脫掉）。在門口脫下濕鞋。put on 穿上、turn/give off 不合。"}, {"n": 6, "p": 0, "stem": "We stayed inside __________ it was too cold to go out.", "o": ["because", "so", "but", "although"], "a": 0, "en": "\"because\" gives the reason.", "zh": "because（因為）。因為太冷不能出門，所以待在室內。"}, {"n": 7, "p": 0, "stem": "__________ practicing every day, she became a great pianist.", "o": ["On", "By", "For", "With"], "a": 1, "en": "\"By + V-ing\" = the method.", "zh": "By + V-ing 表方法：By practicing every day（藉由每天練習）。"}, {"n": 8, "p": 0, "stem": "The shop offers a wide __________ of books for children.", "o": ["number", "amount", "group", "variety"], "a": 3, "en": "\"a wide variety of\" = many kinds.", "zh": "a wide variety of（各式各樣）。書店有各式各樣的童書。"}, {"n": 9, "p": 0, "stem": "Could you __________ the window? It's hot in here.", "o": ["close", "break", "lock", "open"], "a": 3, "en": "Hot → \"open\" the window.", "zh": "裡面熱，把窗戶「打開」open。close 關、break 破、lock 鎖，不合。"}, {"n": 10, "p": 0, "stem": "After the storm, the workers __________ the broken road.", "o": ["lost", "dropped", "repaired", "destroyed"], "a": 2, "en": "\"repair\" = fix.", "zh": "repaired（修復）。風暴後工人修補壞掉的路。destroy 破壞、lose 失去、drop 掉落，不合。"}, {"n": 11, "p": 1, "stem": "(11)", "o": ["impatient", "patience", "patient", "patiently"], "a": 1, "en": "\"time and patience\" — noun.", "zh": "time and patience（時間與耐心），需名詞 patience。patient 形容詞、patiently 副詞。"}, {"n": 12, "p": 1, "stem": "(12)", "o": ["to", "for", "with", "of"], "a": 3, "en": "\"afraid of mistakes\" = scared of them.", "zh": "be afraid of（害怕）。別怕犯錯。介系詞用 of。"}, {"n": 13, "p": 1, "stem": "(13)", "o": ["Because", "So", "In addition", "However"], "a": 2, "en": "Adds another tip: In addition, try to speak with natives.", "zh": "再補充一個方法，用 In addition（此外）。"}, {"n": 14, "p": 1, "stem": "(14)", "o": ["better", "best", "good", "well"], "a": 0, "en": "\"The more ... the better\" — comparative.", "zh": "the more ... the better（用得越多，就會越好），比較級 better。"}, {"n": 15, "p": 1, "stem": "(15)", "o": ["or", "so", "but", "because"], "a": 1, "en": "Cleanliness saves lives, SO she made it clean. Result.", "zh": "乾淨能救命，「所以」她把醫院弄得整潔明亮，表結果用 so。"}, {"n": 16, "p": 1, "stem": "(16)", "o": ["so", "but", "because", "or"], "a": 0, "en": "Walked with a lamp, SO people called her that. Result.", "zh": "她夜裡提燈巡房，「所以」大家稱她提燈女士，表結果用 so。"}, {"n": 17, "p": 1, "stem": "(17)", "o": ["yet", "already", "never", "still"], "a": 3, "en": "\"still used today\" = even now.", "zh": "still（仍然）。她的理念至今仍在醫院中沿用。"}, {"n": 18, "p": 1, "stem": "(18)", "o": ["modern", "modernly", "modernize", "modernity"], "a": 0, "en": "\"modern nursing\" — adjective before noun.", "zh": "modern nursing（現代護理），形容詞 modern 修飾名詞。"}, {"n": 19, "p": 2, "stem": "What is included in the NT$200 price?", "o": ["A helmet", "Skate rental", "A drink", "A lesson"], "a": 1, "en": "\"NT$200 (includes skate rental).\"", "zh": "200 元已含「冰刀租借」。安全帽另租 50 元。"}, {"n": 20, "p": 2, "stem": "When is public skating closed?", "o": ["All morning", "3–4 PM", "After 9 PM", "On weekends"], "a": 1, "en": "\"closed from 3-4 PM for ice cleaning.\"", "zh": "下午 3 到 4 點因整理冰面暫停開放。"}, {"n": 21, "p": 2, "stem": "A 10-year-old child wants to skate. What must they do?", "o": ["Skate before 3 PM", "Wear a helmet", "Come in a group", "Pay NT$50 only"], "a": 1, "en": "\"Children under 12 must wear a helmet.\"", "zh": "12 歲以下兒童「必須戴安全帽」。"}, {"n": 22, "p": 2, "stem": "Who can join this tutoring?", "o": ["Students aged 10 to 15", "Teachers", "Parents", "University students"], "a": 0, "en": "\"for students aged 10-15.\"", "zh": "輔導對象是 10 到 15 歲的學生。"}, {"n": 23, "p": 2, "stem": "Why are the groups small?", "o": ["To finish faster", "To save money", "For more attention to each student", "Because the room is small"], "a": 2, "en": "\"Small groups of 4 students for more attention.\"", "zh": "小班（每組 4 人）是為了「對每個學生有更多關注」。"}, {"n": 24, "p": 2, "stem": "What can you do before deciding?", "o": ["Meet the principal", "Take a test", "Get a free book", "Try a free first class"], "a": 3, "en": "\"First class is free so you can try before you decide.\"", "zh": "決定前可以「免費試上第一堂課」。"}, {"n": 25, "p": 2, "stem": "Why did Kevin write this email?", "o": ["To cancel the party", "To accept Ben's invitation", "To plan a lunch", "To ask for directions"], "a": 1, "en": "He replies that he will come to the party.", "zh": "凱文回信「答應參加」班的畢業派對。"}, {"n": 26, "p": 2, "stem": "What will Kevin bring?", "o": ["A cake", "Drinks", "Homemade cookies", "Paper plates"], "a": 2, "en": "\"I'll bring some homemade cookies to share.\"", "zh": "凱文會帶「自製餅乾」來分享。"}, {"n": 27, "p": 2, "stem": "Why might Kevin be late?", "o": ["He forgot the time", "The bus is late", "He is sick", "He has a family lunch first"], "a": 3, "en": "\"I have a family lunch first.\"", "zh": "他會晚一點，因為「要先參加家庭午餐」。"}, {"n": 28, "p": 2, "stem": "When are owls mostly awake?", "o": ["In the morning", "At night", "At noon", "All day"], "a": 1, "en": "\"mostly awake at night.\"", "zh": "貓頭鷹大多在「夜間」活動。"}, {"n": 29, "p": 2, "stem": "Why can owls fly so quietly?", "o": ["They have soft feathers", "They fly slowly", "They don't flap", "They are very small"], "a": 0, "en": "\"soft feathers that let them fly almost silently.\"", "zh": "貓頭鷹有「柔軟的羽毛」，飛行幾乎無聲。"}, {"n": 30, "p": 2, "stem": "What important role do owls play in nature?", "o": ["Controlling the number of small animals", "Planting trees", "Making noise at night", "Cleaning the forest"], "a": 0, "en": "\"help control the number of mice and other small animals.\"", "zh": "貓頭鷹幫忙「控制老鼠等小動物的數量」。"}];
+/* ====== 產生畫面 ====== */
+const form = document.getElementById('quiz');
+let lastPart = -1;
+Q.forEach(q=>{
+  if(q.p!==lastPart){
+    const st=document.createElement('div'); st.className='section-title s'+q.p; st.textContent=PARTS[q.p].title;
+    const sd=document.createElement('div'); sd.className='section-desc'; sd.textContent=PARTS[q.p].desc;
+    form.appendChild(st); form.appendChild(sd); lastPart=q.p;
+  }
+  if(PASSAGES[q.n]){ const d=document.createElement('div'); d.innerHTML=PASSAGES[q.n]; form.appendChild(d.firstChild); }
+  const card=document.createElement('div'); card.className='q'; card.id='q'+q.n;
+  const isBlank=/^\(\d+\)$/.test(q.stem);
+  const stemHtml = isBlank ? `第 ${q.n} 格` : q.stem;
+  card.innerHTML=`<div class="stem"><span class="num">${q.n}</span>${stemHtml}</div>`;
+  q.o.forEach((opt,i)=>{
+    const lab=document.createElement('label'); lab.className='opt'; lab.dataset.i=i;
+    lab.innerHTML=`<input type="radio" name="q${q.n}" value="${i}"><span class="lab">${'ABCD'[i]}</span><span>${opt}</span>`;
+    lab.querySelector('input').addEventListener('change',()=>{
+      card.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
+      lab.classList.add('sel'); updateProgress();
+    });
+    card.appendChild(lab);
+  });
+  const exp=document.createElement('div'); exp.className='exp'; exp.id='exp'+q.n;
+  card.appendChild(exp);
+  form.appendChild(card);
+});
+
+const submitBtn=document.getElementById('submitBtn');
+const resetBtn=document.getElementById('resetBtn');
+const hint=document.getElementById('hint');
+
+function answeredCount(){ let c=0; Q.forEach(q=>{ if(form.querySelector(`input[name="q${q.n}"]:checked`)) c++; }); return c; }
+function updateProgress(){
+  const c=answeredCount();
+  document.getElementById('count').textContent=`${c} / 30`;
+  document.getElementById('fill').style.width=(c/30*100)+'%';
+  hint.textContent = c===30 ? '已完成全部 30 題' : (c===0 ? '尚未作答任何題目（仍可送出查看解析）' : `已作答 ${c} 題，未作答 ${30-c} 題（仍可送出）`);
+}
+
+submitBtn.addEventListener('click',()=>{
+  let ok=0, blank=0;
+  Q.forEach(q=>{
+    const sel=form.querySelector(`input[name="q${q.n}"]:checked`);
+    const pick = sel ? parseInt(sel.value) : null;
+    if(pick===null) blank++;
+    const card=document.getElementById('q'+q.n);
+    card.querySelectorAll('.opt').forEach(o=>{
+      o.classList.add('lock');
+      o.querySelector('input').disabled=true;
+      const i=parseInt(o.dataset.i);
+      if(i===q.a) o.classList.add('correct');
+      if(pick!==null && i===pick && pick!==q.a) o.classList.add('wrong');
+    });
+    const correct = pick===q.a; if(correct) ok++;
+    const exp=document.getElementById('exp'+q.n);
+    const tag = correct ? '答對' : (pick===null ? '未作答' : '答錯');
+    exp.innerHTML=`<span class="tag ${correct?'':'miss'}">${tag}　正解：${'ABCD'[q.a]}</span>
+      <div class="en"><b>EN</b>&nbsp;${q.en}</div><div class="zh"><b>中</b>&nbsp;${q.zh}</div>`;
+    exp.classList.add('show');
+  });
+  const res=document.getElementById('result');
+  document.getElementById('scoreNum').textContent=Math.round(ok/30*100);
+  document.getElementById('scoreTxt').textContent=`分（答對 ${ok} / 30 題）`;
+  document.getElementById('rOk').textContent=ok;
+  document.getElementById('rNo').textContent=30-ok-blank;
+  document.getElementById('rBlank').textContent=blank;
+  res.classList.add('show');
+  submitBtn.style.display='none'; hint.style.display='none'; resetBtn.style.display='block';
+  res.scrollIntoView({behavior:'smooth'});
+});
+
+resetBtn.addEventListener('click',()=>{
+  form.reset();
+  Q.forEach(q=>{
+    const card=document.getElementById('q'+q.n);
+    card.querySelectorAll('.opt').forEach(o=>{o.classList.remove('sel','correct','wrong','lock');o.querySelector('input').disabled=false;});
+    document.getElementById('exp'+q.n).classList.remove('show');
+  });
+  document.getElementById('result').classList.remove('show');
+  submitBtn.style.display='block'; hint.style.display='block'; resetBtn.style.display='none';
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+updateProgress();
+</script>
+</body>
+</html>
