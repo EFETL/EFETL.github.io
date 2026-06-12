@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>統測英文模擬考卷 A</title>
+<style>
+  :root{
+    --blue:#2b8cff; --blue-dark:#1f6fe0;
+    --coral:#ff7a59; --amber:#ffb02e; --pink:#ff5d8f;
+    --bg:#f3f9ff; --card:#ffffff; --line:#e3edf9;
+    --green:#22b573; --green-bg:#e4f8ef;
+    --red:#ff5a5a; --red-bg:#ffecec;
+    --gray:#6b7785;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;
+    background:linear-gradient(180deg,#f0f7ff,#fff7f2 70%);color:#22303f;line-height:1.6;
+    font-size:16px;-webkit-text-size-adjust:100%;}
+  .wrap{max-width:760px;margin:0 auto;padding:16px;}
+  header.top{background:linear-gradient(135deg,#5ec6ff,#7d8bff 55%,#b88bff);color:#fff;
+    border-radius:18px;padding:24px 22px;margin-bottom:16px;box-shadow:0 8px 22px rgba(93,141,255,.3);}
+  header.top h1{margin:0 0 6px;font-size:1.5rem;text-shadow:0 1px 2px rgba(0,0,0,.12);}
+  header.top p{margin:0;font-size:.92rem;opacity:.95;}
+  .meta{margin-top:14px;font-size:.86rem;background:rgba(255,255,255,.22);
+    padding:9px 13px;border-radius:10px;}
+  .sticky{position:sticky;top:0;z-index:20;padding:10px 0;
+    background:linear-gradient(180deg,#f0f7ff 70%,rgba(240,247,255,0));}
+  .bar{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:11px 16px;display:flex;align-items:center;gap:12px;font-size:.9rem;
+    box-shadow:0 4px 12px rgba(43,140,255,.1);}
+  .bar .track{flex:1;height:9px;background:#e9f1fb;border-radius:6px;overflow:hidden;}
+  .bar .fill{height:100%;width:0;border-radius:6px;
+    background:linear-gradient(90deg,#3ad1c6,#2b8cff);transition:width .35s;}
+  .bar #count{font-weight:700;color:var(--blue-dark);}
+  .section-title{color:#fff;font-weight:800;border-radius:12px;
+    padding:10px 16px;margin:24px 0 6px;font-size:1.05rem;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);}
+  .section-title.s0{background:linear-gradient(135deg,#ff9a6c,#ff6f91);}
+  .section-title.s1{background:linear-gradient(135deg,#4dd0e1,#2b8cff);}
+  .section-title.s2{background:linear-gradient(135deg,#9b8bff,#b06bff);}
+  .section-title.s3{background:linear-gradient(135deg,#42d392,#22b573);}
+  .section-desc{font-size:.86rem;color:var(--gray);margin:0 4px 10px;}
+  .passage{background:#fffdf4;border:1px solid #ffe9c9;border-left:5px solid var(--amber);
+    border-radius:12px;padding:15px 17px;margin:14px 0;font-size:.95rem;
+    box-shadow:0 3px 10px rgba(255,176,46,.08);}
+  .passage h3{margin:0 0 8px;color:#e0820a;font-size:1rem;}
+  .passage .blk{display:inline-block;min-width:1.6em;text-align:center;font-weight:800;
+    color:#fff;background:var(--coral);border-radius:6px;padding:0 4px;margin:0 2px;font-size:.85rem;}
+  .email-h{font-size:.85rem;color:var(--gray);border-bottom:1px dashed #ffd9a8;
+    padding-bottom:6px;margin-bottom:8px;}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:15px 17px;margin:12px 0;box-shadow:0 3px 10px rgba(43,140,255,.07);}
+  .q .stem{font-weight:600;margin-bottom:10px;}
+  .q .stem .num{display:inline-block;color:#fff;background:var(--blue);font-weight:700;
+    border-radius:8px;padding:1px 9px;margin-right:8px;font-size:.92rem;}
+  .opt{display:flex;align-items:flex-start;gap:10px;border:2px solid var(--line);
+    border-radius:11px;padding:10px 13px;margin:8px 0;cursor:pointer;transition:.15s;
+    font-size:.95rem;background:#fbfdff;}
+  .opt:hover{border-color:var(--blue);background:#eef6ff;}
+  .opt input{margin-top:3px;accent-color:var(--blue);}
+  .opt .lab{font-weight:800;color:var(--blue);min-width:18px;}
+  .opt.sel{border-color:var(--blue);background:#e7f2ff;}
+  .opt.correct{border-color:var(--green);background:var(--green-bg);}
+  .opt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .opt.lock{cursor:default;}
+  .exp{display:none;margin-top:11px;border-top:2px dashed #ffe1c2;padding-top:11px;font-size:.9rem;}
+  .exp.show{display:block;}
+  .exp .tag{display:inline-block;font-weight:800;color:#fff;background:var(--green);
+    border-radius:7px;padding:2px 10px;font-size:.8rem;margin-bottom:7px;}
+  .exp .tag.miss{background:var(--red);}
+  .exp .tag.blank{background:var(--gray);}
+  .exp .body{color:#7a4a12;background:#fff7ea;border-radius:8px;padding:8px 11px;margin:5px 0;
+    white-space:pre-line;}
+  .written{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:15px 17px;margin:12px 0;box-shadow:0 3px 10px rgba(43,140,255,.07);}
+  .written h4{margin:0 0 8px;color:var(--blue-dark);font-size:1rem;}
+  .written .prompt{margin-bottom:10px;}
+  .written .blankline{display:inline-block;background:#fbfdff;border:1px dashed var(--line);
+    border-radius:8px;padding:6px 10px;margin-top:6px;}
+  .written button.reveal{background:#fff;color:var(--blue);border:2px solid var(--blue);
+    border-radius:10px;padding:8px 16px;font-weight:800;font-size:.9rem;cursor:pointer;}
+  .written .ans{display:none;margin-top:11px;border-top:2px dashed #ffe1c2;padding-top:11px;font-size:.92rem;}
+  .written .ans.show{display:block;}
+  .written .ans .tag{display:inline-block;font-weight:800;color:#fff;background:var(--blue);
+    border-radius:7px;padding:2px 10px;font-size:.8rem;margin-bottom:7px;}
+  .written .ans .body{color:#7a4a12;background:#fff7ea;border-radius:8px;padding:8px 11px;margin:5px 0;}
+  .actions{position:sticky;bottom:0;padding:14px 0 6px;margin-top:18px;
+    background:linear-gradient(transparent,#fff7f2 35%);}
+  button.submit{width:100%;color:#fff;border:0;border-radius:14px;padding:16px;
+    font-size:1.08rem;font-weight:800;cursor:pointer;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);
+    box-shadow:0 6px 16px rgba(255,93,143,.35);}
+  button.submit:active{transform:translateY(1px);}
+  button.reset{width:100%;background:#fff;color:var(--blue);border:2px solid var(--blue);
+    border-radius:14px;padding:14px;font-size:1rem;font-weight:800;cursor:pointer;margin-top:10px;display:none;}
+  .result{display:none;background:var(--card);border:3px solid transparent;border-radius:16px;
+    padding:22px;margin:16px 0;text-align:center;
+    background-image:linear-gradient(#fff,#fff),linear-gradient(135deg,#3ad1c6,#2b8cff,#b06bff);
+    background-origin:border-box;background-clip:padding-box,border-box;
+    box-shadow:0 8px 22px rgba(43,140,255,.15);}
+  .result.show{display:block;}
+  .result .score{font-size:2.8rem;font-weight:900;
+    background:linear-gradient(135deg,#2b8cff,#b06bff);-webkit-background-clip:text;
+    background-clip:text;-webkit-text-fill-color:transparent;}
+  .result .sub{color:var(--gray);font-size:.95rem;}
+  .result .bd{display:flex;justify-content:center;gap:18px;margin-top:12px;flex-wrap:wrap;font-size:.95rem;}
+  .result .bd span{font-weight:800;}
+  .hint{text-align:center;font-size:.85rem;color:var(--gray);margin-top:9px;min-height:1.2em;}
+  footer{text-align:center;color:var(--gray);font-size:.8rem;margin:24px 0;}
+</style>
+</head>
+<body>
+<a href="tongce.html" style="position:fixed;top:12px;left:12px;background:rgba(255,255,255,.92);color:#2b8cff;padding:7px 15px;border-radius:20px;text-decoration:none;font-size:.85rem;font-weight:800;z-index:999;box-shadow:0 3px 10px rgba(0,0,0,.15);">&#8592; 回題庫</a>
+<div class="wrap">
+  <header class="top">
+    <h1>統測英文　<span style="opacity:.9">模擬考卷 A</span></h1>
+    <p>科技校院四年制與專科學校二年制統一入學測驗　共同科目：英文（模擬）</p>
+    <div class="meta">選擇題共 42 題，每題 2 分，共 84 分　|　每題選擇答案後立即顯示解析　|　送出後顯示總分與作答統計</div>
+  </header>
+
+  <div class="sticky">
+    <div class="bar">
+      <span>作答進度</span>
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <span id="count">0 / 42</span>
+    </div>
+  </div>
+
+  <form id="quiz"></form>
+
+  <div class="result" id="result">
+    <div class="score" id="scoreNum">0</div>
+    <div class="sub" id="scoreTxt">分</div>
+    <div class="bd">
+      <span style="color:var(--green)">答對 <b id="rOk">0</b></span>
+      <span style="color:var(--red)">答錯 <b id="rNo">0</b></span>
+      <span style="color:var(--gray)">未作答 <b id="rBlank">0</b></span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="submit" id="submitBtn">交卷並查看總分</button>
+    <div class="hint" id="hint">尚未作答任何題目</div>
+    <button type="button" class="reset" id="resetBtn">重新作答</button>
+  </div>
+
+  <div class="section-title s2" style="margin-top:30px;">二、非選擇題（共 16 分，點擊查看答案與解析）</div>
+  <div id="written"></div>
+
+  <footer>統測英文模擬考卷 A　&middot;　第二顆腦 / 統測</footer>
+</div>
+
+<script>
+const PARTS = [{"title": "Ⅰ　字彙題", "desc": "共 10 題。第 1–8 題為單字選填；第 9–10 題為劃線字詞同義詞選擇。"}, {"title": "Ⅱ　對話題", "desc": "共 10 題，請依對話內容選出一個最適合的答案。"}, {"title": "Ⅲ　綜合測驗", "desc": "共 8 題，兩篇短文各 4 個空格，請依文意選出最適合的答案。"}, {"title": "Ⅳ　閱讀測驗", "desc": "共 14 題，請依短文內容選出最適當的答案。"}];
+const PASSAGES = {"21": "<div class=\"passage\"><h3>第 21–24 題</h3>\nTaiwan has become a world leader in the production of semiconductors (半導體). These tiny chips power almost everything from smartphones to electric cars. At the center of this success is TSMC (台積電), a company founded in 1987. Over the years, TSMC has developed the ability to manufacture chips with incredible precision, staying <span class=\"blk\">21</span> of global competitors. The company's advanced processes allow it to produce chips that are smaller and more powerful than ever before. Taiwan's strong performance in this field <span class=\"blk\">22</span> the country a key player in global supply chains. Governments around the world now see Taiwan's chip industry as <span class=\"blk\">23</span> to their own technology development. As demand for AI and high-performance computing grows, TSMC and its partners will likely <span class=\"blk\">24</span> their role in shaping the future of technology.</div>", "25": "<div class=\"passage\"><h3>第 25–28 題</h3>\nRemote work, once seen as a temporary solution during the pandemic, has become a lasting part of modern work life. Many employees enjoy the <span class=\"blk\">25</span> to work from home or from anywhere they choose. Studies show that remote workers often feel more satisfied with their jobs and report higher levels of productivity. <span class=\"blk\">26</span>, not everyone benefits equally from this arrangement. Some workers struggle to stay focused without the structure of an office, while others feel lonely and disconnected from their team. To address these challenges, companies have introduced &ldquo;hybrid&rdquo; models, <span class=\"blk\">27</span> employees split their time between the office and home. This balance aims to offer the best of both worlds. As technology continues to improve, remote work tools such as video conferencing and cloud-based software will make collaboration even easier, <span class=\"blk\">28</span> the future of work truly flexible.</div>", "29": "<div class=\"passage\"><h3>第 29–30 題</h3>\n<i>Read the notice below and answer the questions.</i><br><br>\n<b>Greenfield Community Center</b><br>\n<b>Summer Volunteer Program &ndash; 2026</b><br><br>\nWe are looking for enthusiastic volunteers to help with our summer programs for children aged 6&ndash;12.<br><br>\n<b>Positions Available:</b><br>\n&bull; Reading Buddy (Mon &amp; Wed, 9:00&ndash;11:00 AM)<br>\n&bull; Arts &amp; Crafts Instructor (Tue &amp; Thu, 2:00&ndash;4:00 PM)<br>\n&bull; Sports Coach (Sat, 8:00 AM&ndash;12:00 PM)<br><br>\n<b>Requirements:</b><br>\n&bull; Age 16 or above<br>\n&bull; No prior experience required for Reading Buddy<br>\n&bull; Must have basic art skills for Arts &amp; Crafts<br>\n&bull; Relevant sports background preferred for Sports Coach<br><br>\n<b>How to Apply:</b><br>\nSubmit a short application form at the front desk or email us at volunteer@greenfieldcc.org by June 30, 2026.<br><br>\nAll accepted volunteers will receive a certificate of participation.</div>", "31": "<div class=\"passage\"><h3>第 31–32 題</h3>\n<i>Read the following email and answer the questions.</i>\n<div class=\"email-h\">From: manager@sunflowerhotel.com&nbsp;&nbsp;|&nbsp;&nbsp;To: guestservices@sunflowerhotel.com&nbsp;&nbsp;|&nbsp;&nbsp;Subject: Feedback from Room 308 &ndash; April 18, 2026</div>\nDear Team,<br><br>\nI'd like to share some feedback we received from a guest who stayed in Room 308 last Friday.<br><br>\nThe guest, Mr. Chen, praised the cleanliness of the room and the helpfulness of the check-in staff. He was especially pleased with the complimentary breakfast, saying it offered a great variety of fresh food. However, he mentioned that the air conditioning in the room was making a loud noise throughout the night, which disturbed his sleep. He also found the Wi-Fi connection in the room to be quite slow.<br><br>\nPlease ask maintenance to check Room 308's air conditioning unit as soon as possible. I would also like IT to look into the Wi-Fi coverage on the third floor.<br><br>\nLet's make sure these issues are resolved before the room is booked again.<br><br>\nBest regards,<br>Manager Lin</div>", "33": "<div class=\"passage\"><h3>第 33–35 題</h3>\nTaiwan's National Health Insurance (NHI) system is widely regarded as one of the best in the world. Launched in 1995, it covers more than 99% of Taiwan's population, providing access to hospitals, clinics, and pharmacies for a low co-payment fee. Before NHI was introduced, about 41% of residents had no health insurance at all, meaning many people avoided seeing a doctor due to cost.<br><br>\nToday, patients in Taiwan can visit almost any clinic or hospital of their choice without a referral. This flexibility is rare in many countries. For example, in some nations, patients must first see a general doctor before being referred to a specialist, which can take weeks or even months.<br><br>\nCritics of the system point out that the low co-payment model puts pressure on hospitals and clinics, which are sometimes overcrowded. Doctors also face heavy workloads. Despite these concerns, satisfaction with NHI remains high. Surveys consistently show that over 80% of Taiwanese people are happy with the system, and it has been studied by governments around the world as a model for universal healthcare.</div>", "36": "<div class=\"passage\"><h3>第 36–38 題</h3>\nUrban farming is a growing trend in cities around the world. As more people move to urban areas, the idea of growing food in cities has gained popularity. Rooftop gardens, vertical farms, and community plots are now appearing in places like New York, Singapore, and Tokyo.<br><br>\nOne key benefit of urban farming is reducing the distance food travels from farm to table. When food is grown locally, it is fresher and requires less packaging. This also means fewer greenhouse gas emissions from transportation. In addition, urban farms can help cool down cities, which tend to be much warmer than surrounding areas due to the &ldquo;urban heat island&rdquo; effect.<br><br>\nHowever, urban farming also faces significant challenges. Space in cities is expensive and limited. Growing enough food to feed a large urban population is difficult, and the costs of setting up rooftop farms or vertical growing systems can be very high. Despite these obstacles, many cities are offering subsidies and policy support to encourage more urban farming projects.<br><br>\nExperts believe that while urban farming alone cannot solve food security challenges, it plays a valuable role as part of a broader strategy to make cities more sustainable and self-sufficient.</div>", "39": "<div class=\"passage\"><h3>第 39–42 題</h3>\nThe concept of &ldquo;slow travel&rdquo; has been gaining traction among modern tourists who are tired of rushing through tourist attractions. Unlike traditional tourism, which often involves visiting as many landmarks as possible in a short time, slow travel encourages people to stay in one place longer and experience local life more deeply.<br><br>\nSlow travelers typically rent apartments instead of staying in hotels, visit local markets rather than tourist shops, and take public transportation instead of tour buses. They prefer to eat where locals eat and to learn a few words of the local language. In this way, they gain a richer understanding of the culture and form more meaningful connections with the people they meet.<br><br>\nThe slow travel movement also benefits local communities. When tourists spend more time in one area, they tend to spend more money at local businesses instead of large international chains. This helps support the local economy and encourages the preservation of traditional crafts and cuisine.<br><br>\nCritics argue that slow travel is a privilege available only to those with enough time and money to stay abroad for extended periods. Indeed, not everyone can take a month-long vacation. However, the principles of slow travel can be applied even on shorter trips &mdash; by choosing to explore fewer places more deeply rather than rushing through a long list of must-see spots.</div>"};
+const Q = [{"n": 1, "p": 0, "stem": "The new library has a large _____ of books and e-books that students can borrow for free.", "o": ["collection", "mission", "shadow", "victory"], "a": 0, "exp": "✓ (A) collection（收藏；館藏）— 圖書館有大量的書籍館藏，符合句意。\n❌ (B) mission = 任務、使命，與圖書館的書籍無關。\n❌ (C) shadow = 陰影，不適用。\n❌ (D) victory = 勝利，不符合語境。"}, {"n": 2, "p": 0, "stem": "After the typhoon, many roads were blocked, making it difficult for rescue teams to _____ the affected areas.", "o": ["decorate", "invite", "reach", "waste"], "a": 2, "exp": "✓ (C) reach（抵達）— 救援隊難以「抵達」受影響地區，語意通順。\n❌ (A) decorate = 裝飾，語意不符。\n❌ (B) invite = 邀請，不適用。\n❌ (D) waste = 浪費，語意不符。"}, {"n": 3, "p": 0, "stem": "The doctor told him to avoid _____ foods, such as fried chicken and potato chips, because they were bad for his heart.", "o": ["active", "greasy", "humble", "sharp"], "a": 1, "exp": "✓ (B) greasy（油膩的）— 炸雞和洋芋片是「油膩」食物，與心臟健康的警示一致。\n❌ (A) active = 活躍的，不修飾食物。\n❌ (C) humble = 謙遜的，語意不符。\n❌ (D) sharp = 鋒利的，不適用。"}, {"n": 4, "p": 0, "stem": "Anna speaks English very _____; she makes very few grammar mistakes and sounds almost like a native speaker.", "o": ["fluently", "lazily", "nervously", "roughly"], "a": 0, "exp": "✓ (A) fluently（流利地）— 幾乎不犯文法錯誤、聽起來像母語者 → 說得「流利」。\n❌ (B) lazily = 懶散地。\n❌ (C) nervously = 緊張地，與描述不符。\n❌ (D) roughly = 粗略地，語意相反。"}, {"n": 5, "p": 0, "stem": "Since the plant had not been watered for two weeks, its leaves turned yellow and began to _____.", "o": ["bloom", "celebrate", "wither", "sparkle"], "a": 2, "exp": "✓ (C) wither（枯萎）— 兩週未澆水，葉子變黃並開始「枯萎」，符合植物缺水的描述。\n❌ (A) bloom = 開花，語意相反。\n❌ (B) celebrate = 慶祝，不適用。\n❌ (D) sparkle = 閃耀，語意相反。"}, {"n": 6, "p": 0, "stem": "Taiwan's high-speed rail system is well-known for being _____, departing and arriving on schedule almost every day.", "o": ["ancient", "punctual", "terrible", "uncertain"], "a": 1, "exp": "✓ (B) punctual（準時的）— 每天幾乎都準時出發和抵達 → 以「準時」著稱。\n❌ (A) ancient = 古老的，不符合高鐵的描述。\n❌ (C) terrible = 糟糕的，語意相反。\n❌ (D) uncertain = 不確定的，語意相反。"}, {"n": 7, "p": 0, "stem": "The _____ from the factory was so strong that residents living nearby complained about the unbearable smell.", "o": ["odor", "receipt", "statue", "talent"], "a": 0, "exp": "✓ (A) odor（氣味）— 工廠散發出強烈的「氣味」，居民抱怨難以忍受，語意一致（smell 為同義詞提示）。\n❌ (B) receipt = 收據，語意不符。\n❌ (C) statue = 雕像，不適用。\n❌ (D) talent = 才能，語意不符。"}, {"n": 8, "p": 0, "stem": "The film director _____ her success to years of hard work and the support of her family.", "o": ["carried out", "gave up", "attributed", "broke into"], "a": 2, "exp": "✓ (C) attributed（歸因於）— \"attribute A to B\" 是固定用法，意思是「將 A 歸因於 B」。\n❌ (A) carried out = 執行，不符合此語境。\n❌ (B) gave up = 放棄，語意相反。\n❌ (D) broke into = 闖入，語意不符。"}, {"n": 9, "p": 0, "stem": "The scientist made a <u>significant</u> discovery that completely changed the way people understood the human brain.", "o": ["major", "silly", "private", "distant"], "a": 0, "exp": "✓ (A) major（重大的）— significant（重要的、重大的）與 major 意義最接近。\n❌ (B) silly = 愚蠢的，語意相反。\n❌ (C) private = 私人的，語意不符。\n❌ (D) distant = 遙遠的，語意不符。"}, {"n": 10, "p": 0, "stem": "The government plans to <u>renovate</u> the old downtown area to attract more visitors and businesses.", "o": ["destroy", "rebuild", "observe", "announce"], "a": 1, "exp": "✓ (B) rebuild（重建、翻新）— renovate（翻新、整修）與 rebuild 最接近。\n❌ (A) destroy = 破壞，語意相反。\n❌ (C) observe = 觀察，語意不符。\n❌ (D) announce = 宣布，語意不符。"}, {"n": 11, "p": 1, "stem": "Amy: I haven't seen you for a long time! How have you been?<br>Ken: Pretty good, thanks. I just came back from a trip to Japan.<br>Amy: Really? _____<br>Ken: It was amazing! I visited Kyoto and tried lots of delicious food.", "o": ["When did you go?", "How was it?", "Did you like the weather?", "Who paid for the trip?"], "a": 1, "exp": "✓ (B) How was it?（怎麼樣？）— Ken 回答「很棒！去了京都、吃了很多美食」，符合詢問「旅程如何」的問題。\n❌ (A)(C)(D) 提問方向不符合 Ken 的回答內容。"}, {"n": 12, "p": 1, "stem": "Customer: Excuse me, can I return this jacket?<br>Staff: Of course. _____<br>Customer: It's a little too small for me.<br>Staff: No problem. We can exchange it for a bigger size.", "o": ["Can I see your receipt?", "What's the reason?", "When did you buy it?", "Do you have the tag?"], "a": 1, "exp": "✓ (B) What's the reason?（原因是什麼？）— 顧客回答「有點太小了」，回應的是「退貨原因」的詢問。\n❌ (A) 詢問收據，時機不對（應先問原因）。\n❌ (C)(D) 與情境不符。"}, {"n": 13, "p": 1, "stem": "Tom: I'm thinking about joining the photography club this semester.<br>Lisa: That sounds fun! _____<br>Tom: I'm mostly interested in nature and landscape photography.<br>Lisa: Then you'd love the club. They go on outdoor trips every month.", "o": ["What kind of photos do you like to take?", "Do you own a professional camera?", "Have you joined any clubs before?", "When does the club meet?"], "a": 0, "exp": "✓ (A) What kind of photos do you like to take?（你喜歡拍什麼照片？）— Tom 回答喜歡拍自然和風景照，直接回應此問題。\n❌ (B)(C)(D) 與 Tom 的回答無直接關聯。"}, {"n": 14, "p": 1, "stem": "Mom: You look exhausted. Did you sleep well last night?<br>Son: Not really. I stayed up until two in the morning studying for the math exam.<br>Mom: _____<br>Son: I know, I know. I'll try to manage my time better next time.", "o": ["Math is my favorite subject, too.", "You should go to bed earlier.", "Did you pass the exam?", "What chapter are you studying?"], "a": 1, "exp": "✓ (B) You should go to bed earlier.（你應該早點睡。）— 兒子說「我知道，下次會好好管理時間」，回應的是被提醒/勸告的情境。\n❌ (A)(C)(D) 與兒子的回應不匹配。"}, {"n": 15, "p": 1, "stem": "Grace: This restaurant has a two-hour wait. Should we go somewhere else?<br>Danny: _____<br>Grace: True, but I really want to try their signature dish.<br>Danny: All right, let's wait then. We can walk around the block in the meantime.", "o": ["That's fine. I'm not hungry anyway.", "We might as well go home.", "It seems like a waste of time.", "The food here must be terrible."], "a": 2, "exp": "✓ (C) It seems like a waste of time.（感覺很浪費時間。）— Grace 說「是啊，但我真的很想試試招牌菜」，用 \"True\" 承認對方說法有道理，符合 Danny 說「等很久感覺浪費時間」的語境。\n❌ (A) 說不餓，與後文 Grace 想吃招牌菜矛盾。\n❌ (B)(D) 語意不符。"}, {"n": 16, "p": 1, "stem": "Boss: The client meeting has been moved to Thursday afternoon.<br>Emily: Oh no. _____<br>Boss: Can you reschedule it?<br>Emily: I'll try. I'll call and explain the situation.", "o": ["That's perfect for me.", "I already knew that.", "I have a doctor's appointment then.", "Thursday is my day off anyway."], "a": 2, "exp": "✓ (C) I have a doctor's appointment then.（我那時有看診預約。）— Emily 說「我試試看，打電話說明狀況」，表示有衝突需要重新安排，符合「那時有預約」的情境。\n❌ (A)(B) 語氣正面，不需要重新安排。\n❌ (D) 說那天是休假，上下文不一致。"}, {"n": 17, "p": 1, "stem": "Jake: Have you heard about the new recycling policy at school?<br>Cindy: Yes! They're banning single-use plastic bottles on campus.<br>Jake: _____<br>Cindy: That's a great point. We should all bring reusable bottles.", "o": ["Do you think it's effective?", "I wonder who made that decision.", "That's a good move for the environment.", "When does it start?"], "a": 2, "exp": "✓ (C) That's a good move for the environment.（這對環境來說是好的做法。）— Cindy 說「很好的觀點，我們都應帶可重複使用的水瓶」，與讚揚禁塑政策的說法一致。\n❌ (A) 詢問效果，Cindy 不會直接說「很好的觀點」。\n❌ (B)(D) 語意不符。"}, {"n": 18, "p": 1, "stem": "Brian: I heard you're moving to Tainan next month.<br>Sarah: Yes! I got a job offer there that I couldn't refuse.<br>Brian: _____<br>Sarah: Thanks! I'm excited but also a little nervous about starting over.", "o": ["Why didn't you try harder?", "Congratulations! That's great news.", "Are you sure about this decision?", "Tainan is not a very big city."], "a": 1, "exp": "✓ (B) Congratulations! That's great news.（恭喜！真是好消息。）— Sarah 說「謝謝！很興奮但也有點緊張」，明顯是回應祝賀。\n❌ (A)(C)(D) 語氣消極，與 Sarah 的回應不符。"}, {"n": 19, "p": 1, "stem": "Kevin: I'm not sure what to order. Everything looks so good.<br>Waiter: Today's special is our grilled salmon with lemon butter sauce. _____<br>Kevin: That sounds delicious. I'll go with that.<br>Waiter: Excellent choice! Would you like soup or salad with that?", "o": ["It's been on the menu for years.", "It's one of our most popular dishes.", "You should order the steak instead.", "We're almost out of it, unfortunately."], "a": 1, "exp": "✓ (B) It's one of our most popular dishes.（這是我們最受歡迎的菜之一。）— 服務生推薦後補充說「這是熱門菜」，能讓客人更有信心點餐，Kevin 說「聽起來好吃，就點這個」符合邏輯。\n❌ (A) 說已經在菜單上很多年，不是說服顧客的好理由。\n❌ (C) 建議點牛排，與顧客的選擇矛盾。\n❌ (D) 說快賣完了，則服務生不會推薦。"}, {"n": 20, "p": 1, "stem": "Lucy: Did you watch the documentary about ocean pollution last night?<br>Mark: Yes, it was eye-opening. I didn't realize how much plastic ends up in the sea.<br>Lucy: _____<br>Mark: Absolutely. We need to reduce plastic use and support ocean clean-up efforts.", "o": ["I prefer action movies to documentaries.", "The ocean is very beautiful and peaceful.", "It makes me want to do something about it.", "I don't think pollution is a serious problem."], "a": 2, "exp": "✓ (C) It makes me want to do something about it.（這讓我想為此做些事。）— Mark 說「我們需要減少塑膠使用、支持海洋清潔行動」，與 Lucy 說「想採取行動」的語氣一致，Mark 的回應用 \"Absolutely\" 強化。\n❌ (A)(B)(D) 語氣不符或語意不連貫。"}, {"n": 21, "p": 2, "stem": "(21)", "o": ["ahead", "short", "apart", "behind"], "a": 0, "exp": "✓ (A) ahead（領先）— \"stay ahead of competitors\" 是固定搭配，表示「保持在競爭對手前面」。\n❌ (B) short of = 不足。(C) apart = 分開。(D) behind = 落後，語意相反。"}, {"n": 22, "p": 2, "stem": "(22)", "o": ["make", "makes", "made", "making"], "a": 1, "exp": "✓ (B) makes（使……成為）— \"make + 受詞 + 補語\" 的第三人稱單數現在式，主詞為 \"performance\"（單數）。\n❌ (A) make = 原形，主詞單數需用 makes。(C) made = 過去式，時態不符。(D) making = 分詞，缺少謂語動詞。"}, {"n": 23, "p": 2, "stem": "(23)", "o": ["harmful", "optional", "essential", "ordinary"], "a": 2, "exp": "✓ (C) essential（不可或缺的）— 各國政府將台灣晶片業視為「對自身技術發展至關重要」的存在，符合語境。\n❌ (A) harmful = 有害的，語意相反。(B) optional = 可選的，語意相反。(D) ordinary = 普通的，不夠強調其重要性。"}, {"n": 24, "p": 2, "stem": "(24)", "o": ["expand", "reduce", "ignore", "replace"], "a": 0, "exp": "✓ (A) expand（擴大）— 隨著 AI 需求增長，台積電等企業可能會「擴大」其角色，語意合理。\n❌ (B) reduce = 縮減，語意相反。(C) ignore = 忽視，不合邏輯。(D) replace = 取代，不符合語境。"}, {"n": 25, "p": 2, "stem": "(25)", "o": ["freedom", "failure", "pressure", "danger"], "a": 0, "exp": "✓ (A) freedom（自由）— 員工享有「從任何地方工作的自由」，搭配 \"freedom to do\" 是固定用法。\n❌ (B) failure = 失敗。(C) pressure = 壓力，語意相反。(D) danger = 危險，不符合語境。"}, {"n": 26, "p": 2, "stem": "(26)", "o": ["Therefore", "Similarly", "However", "Besides"], "a": 2, "exp": "✓ (C) However（然而）— 前文說遠距工作者滿意度高，後文說不是每個人都能受益，明顯的轉折關係。\n❌ (A) Therefore = 因此（因果）。(B) Similarly = 相似地。(D) Besides = 此外（補充）。"}, {"n": 27, "p": 2, "stem": "(27)", "o": ["which", "where", "what", "when"], "a": 1, "exp": "✓ (B) where（在此模式下）— 此處 where 引導關係子句，先行詞為 \"models\"（一種情境/安排），語法正確。\n❌ (A) which 引導限定子句，此處用 where 更自然。(C) what 不引導關係子句。(D) when 用於時間語境。"}, {"n": 28, "p": 2, "stem": "(28)", "o": ["taking", "making", "breaking", "leaving"], "a": 1, "exp": "✓ (B) making（使……）— 分詞構句，承接前文，\"making the future of work truly flexible\" 表示「使工作的未來真正靈活」。\n❌ (A) taking、(C) breaking、(D) leaving 語意不符。"}, {"n": 29, "p": 3, "stem": "Which volunteer position requires prior experience or skill?", "o": ["Reading Buddy only", "Arts &amp; Crafts Instructor only", "Sports Coach only", "Both Arts &amp; Crafts Instructor and Sports Coach"], "a": 3, "exp": "✓ (D) — 公告說 Arts &amp; Crafts 需要基本美術技能，Sports Coach 建議具備相關運動背景，兩者均需要一定經驗或技能。Reading Buddy 則明確說明不需要先備經驗。"}, {"n": 30, "p": 3, "stem": "According to the notice, which of the following is true?", "o": ["Volunteers must be at least 18 years old.", "The sports program takes place on weekday mornings.", "All volunteers will get a certificate after joining.", "Applications can only be submitted in person at the front desk."], "a": 2, "exp": "✓ (C) — 公告末段明確說明「All accepted volunteers will receive a certificate of participation.」\n❌ (A) 年齡限制是 16 歲以上，非 18 歲。(B) 運動課在週六，不是平日。(D) 可以 email 申請，非只能親自前往。"}, {"n": 31, "p": 3, "stem": "What did Mr. Chen complain about?", "o": ["The breakfast menu and the slow elevator", "The noisy air conditioning and the slow Wi-Fi", "The unfriendly staff and dirty room", "The high room rate and limited breakfast choices"], "a": 1, "exp": "✓ (B) — 陳先生在電郵中提到：冷氣整晚噪音很大影響睡眠，以及房間的 Wi-Fi 很慢。"}, {"n": 32, "p": 3, "stem": "What did Manager Lin ask the team to do?", "o": ["Apologize to Mr. Chen by email", "Upgrade Mr. Chen's room for free", "Fix the air conditioning and improve the Wi-Fi", "Move Mr. Chen to a different floor"], "a": 2, "exp": "✓ (C) — 林主管在信中要求：請維修部門檢查 308 冷氣，請 IT 部門處理三樓 Wi-Fi。"}, {"n": 33, "p": 3, "stem": "What was one major problem with healthcare in Taiwan BEFORE the NHI was introduced?", "o": ["Hospitals were overcrowded with too many patients.", "Doctors were not well-trained or qualified.", "Many people could not afford to see a doctor.", "The government spent too much on health insurance."], "a": 2, "exp": "✓ (C) — 文章提到 NHI 實施前有約 41% 的居民沒有健保，許多人因費用問題而不就醫。"}, {"n": 34, "p": 3, "stem": "Which of the following is a unique feature of Taiwan's NHI system?", "o": ["Patients must get a referral from a specialist before visiting a clinic.", "Patients can visit almost any medical facility without a referral.", "Only citizens over 65 are covered by the insurance.", "The system is funded entirely by private companies."], "a": 1, "exp": "✓ (B) — 文章指出台灣患者幾乎可以自由選擇診所或醫院就診，不需要轉介，這在許多國家是罕見的。"}, {"n": 35, "p": 3, "stem": "According to the passage, what is one criticism of the NHI system?", "o": ["It does not cover most of Taiwan's population.", "The low fees lead to overcrowded medical facilities.", "Patients are not satisfied with the quality of care.", "It costs too much for the government to maintain."], "a": 1, "exp": "✓ (B) — 文章提到批評者指出，低自付額模式導致醫院和診所有時過度擁擠，醫生工作負擔也很重。"}, {"n": 36, "p": 3, "stem": "What is the main topic of this passage?", "o": ["How traditional farmers are moving to the city", "The advantages and challenges of farming in cities", "Why rooftop gardens are becoming more fashionable", "How climate change affects food production worldwide"], "a": 1, "exp": "✓ (B) — 文章依序討論都市農業的好處（減少食物里程、降低熱島效應）和挑戰（空間和成本問題），符合「優缺點」的主題。"}, {"n": 37, "p": 3, "stem": "According to the passage, how does urban farming help the environment?", "o": ["It increases the amount of packaging used for food.", "It helps cool cities and reduces transportation emissions.", "It produces more food than traditional farming methods.", "It removes the need for greenhouses in rural areas."], "a": 1, "exp": "✓ (B) — 文章第二段明確說明：都市農業可幫助降低城市溫度（熱島效應），且本地種植減少運輸排放。"}, {"n": 38, "p": 3, "stem": "What do experts say about urban farming?", "o": ["It is the best solution to global food insecurity.", "It will eventually replace traditional farming completely.", "It is too expensive to be worthwhile in most cities.", "It is a useful part of making cities more sustainable."], "a": 3, "exp": "✓ (D) — 文章最後段落引用專家觀點：都市農業雖然無法單獨解決糧食安全問題，但它是讓城市更永續的廣泛策略中有價值的一環。"}, {"n": 39, "p": 3, "stem": "What is the main idea of this passage?", "o": ["Why tourists should visit more countries in less time", "What slow travel is and why it is becoming popular", "How the tourism industry is changing due to technology", "Why traveling with a tour group is more efficient"], "a": 1, "exp": "✓ (B) — 文章介紹慢旅行的定義、旅行方式、對社區的好處，以及針對批評的回應，整體圍繞「慢旅行」這個概念及其普及原因。"}, {"n": 40, "p": 3, "stem": "Which of the following best describes a \"slow traveler\"?", "o": ["Someone who prefers to travel by plane rather than by train", "Someone who visits many different cities in a short trip", "Someone who rents a local apartment and shops at local markets", "Someone who only travels to popular tourist destinations"], "a": 2, "exp": "✓ (C) — 文章第二段描述慢旅行者：租公寓而非住飯店，去本地市場而非觀光商店。"}, {"n": 41, "p": 3, "stem": "According to the passage, how does slow travel benefit local communities?", "o": ["It attracts more international companies to invest in the area.", "It helps local businesses earn more income from tourists.", "It encourages tourists to donate money to local charities.", "It reduces the number of tourists visiting busy areas."], "a": 1, "exp": "✓ (B) — 文章第三段說明：慢旅行者停留時間較長，傾向於在本地商店消費，而非大型國際連鎖，有助於支持當地經濟。"}, {"n": 42, "p": 3, "stem": "Which of the following is a criticism of slow travel mentioned in the passage?", "o": ["It causes tourists to disrespect local cultures.", "It makes tourists spend less money on local businesses.", "It is not accessible to everyone due to time and cost.", "It leads to overcrowding in small towns and villages."], "a": 2, "exp": "✓ (C) — 文章第四段提到批評者認為，慢旅行是有足夠時間和金錢才能負擔的特權，並非人人可及。"}];
+const WRITTEN = [{"title": "Ⅰ. 填充（4 分）", "prompt": "研究人員花了多年時間才終於找到這種疾病的有效療法。<br><span class=\"blankline\">Researchers spent many years before finally finding an effective c<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>① for the d<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>② .</span>", "ans": "① <b>cure</b>　② <b>disease</b>", "exp": "cure（n.）= 療法、治癒方法，字首 c；disease（n.）= 疾病，字首 d。<br>完整句：Researchers spent many years before finally finding an effective <b>cure</b> for the <b>disease</b>.（研究人員花了多年時間，才終於找到這種疾病的有效療法。）"}, {"title": "Ⅱ. 句子重組（6 分）", "prompt": "請將下列提示字詞重組成一句完整的句子，並於句尾加上適當標點符號：<br><i>has been / the city's new / praised / international architects / transportation system / by</i>", "ans": "The city's new transportation system has been praised by international architects.", "exp": "句型為現在完成式被動語態：主詞 + has been + 過去分詞 + by + 行為者。\"praised by international architects\" = 受到國際建築師讚揚。"}, {"title": "Ⅲ. 中譯英（6 分）", "prompt": "請將以下中文句子譯成正確、通順、達意的英文：<br>保護環境是每一個公民的責任，而不只是政府的工作。", "ans": "Protecting the environment is every citizen's responsibility, not just the government's job.", "exp": "\"Protecting...\" 使用動名詞短語作主詞；\"not just the government's job\" = 而不只是政府的工作。另可寫為：It is every citizen's responsibility to protect the environment, not just the government's."}];
+const TOTAL = Q.length;
+
+/* ====== 產生選擇題畫面 ====== */
+const form = document.getElementById('quiz');
+let lastPart = -1;
+Q.forEach(q=>{
+  if(q.p!==lastPart){
+    const st=document.createElement('div'); st.className='section-title s'+q.p; st.textContent=PARTS[q.p].title;
+    const sd=document.createElement('div'); sd.className='section-desc'; sd.textContent=PARTS[q.p].desc;
+    form.appendChild(st); form.appendChild(sd); lastPart=q.p;
+  }
+  if(PASSAGES[q.n]){ const d=document.createElement('div'); d.innerHTML=PASSAGES[q.n]; form.appendChild(d.firstChild); }
+  const card=document.createElement('div'); card.className='q'; card.id='q'+q.n;
+  const isBlank=/^\(\d+\)$/.test(q.stem);
+  const stemHtml = isBlank ? `第 ${q.n} 格` : q.stem;
+  card.innerHTML=`<div class="stem"><span class="num">${q.n}</span>${stemHtml}</div>`;
+  q.o.forEach((opt,i)=>{
+    const lab=document.createElement('label'); lab.className='opt'; lab.dataset.i=i;
+    lab.innerHTML=`<input type="radio" name="q${q.n}" value="${i}"><span class="lab">${'ABCD'[i]}</span><span>${opt}</span>`;
+    lab.querySelector('input').addEventListener('change',()=>{
+      pickAnswer(q,i);
+    });
+    card.appendChild(lab);
+  });
+  const exp=document.createElement('div'); exp.className='exp'; exp.id='exp'+q.n;
+  card.appendChild(exp);
+  form.appendChild(card);
+});
+
+const submitBtn=document.getElementById('submitBtn');
+const resetBtn=document.getElementById('resetBtn');
+const hint=document.getElementById('hint');
+let submitted=false;
+
+/* 選擇答案後立即鎖定並顯示該題解析 */
+function pickAnswer(q,pick){
+  const card=document.getElementById('q'+q.n);
+  card.querySelectorAll('.opt').forEach(o=>{
+    o.classList.add('lock');
+    o.querySelector('input').disabled=true;
+    const i=parseInt(o.dataset.i);
+    if(i===pick) o.classList.add('sel');
+    if(i===q.a) o.classList.add('correct');
+    if(i===pick && pick!==q.a) o.classList.add('wrong');
+  });
+  const correct = pick===q.a;
+  const exp=document.getElementById('exp'+q.n);
+  const tag = correct ? '答對' : '答錯';
+  exp.innerHTML=`<span class="tag ${correct?'':'miss'}">${tag}　正解：${'ABCD'[q.a]}</span>
+    <div class="body">${q.exp}</div>`;
+  exp.classList.add('show');
+  updateProgress();
+}
+
+function answeredCount(){ let c=0; Q.forEach(q=>{ if(form.querySelector(`input[name="q${q.n}"]:checked`)) c++; }); return c; }
+function updateProgress(){
+  const c=answeredCount();
+  document.getElementById('count').textContent=`${c} / ${TOTAL}`;
+  document.getElementById('fill').style.width=(c/TOTAL*100)+'%';
+  if(submitted) return;
+  hint.textContent = c===TOTAL ? `已完成全部 ${TOTAL} 題，可以交卷查看總分了` : (c===0 ? '尚未作答任何題目（每題選擇後立即顯示解析）' : `已作答 ${c} 題，未作答 ${TOTAL-c} 題（可隨時交卷）`);
+}
+
+submitBtn.addEventListener('click',()=>{
+  let ok=0, blank=0;
+  Q.forEach(q=>{
+    const sel=form.querySelector(`input[name="q${q.n}"]:checked`);
+    const pick = sel ? parseInt(sel.value) : null;
+    const card=document.getElementById('q'+q.n);
+    if(pick===null){
+      blank++;
+      card.querySelectorAll('.opt').forEach(o=>{
+        o.classList.add('lock');
+        o.querySelector('input').disabled=true;
+        const i=parseInt(o.dataset.i);
+        if(i===q.a) o.classList.add('correct');
+      });
+      const exp=document.getElementById('exp'+q.n);
+      exp.innerHTML=`<span class="tag blank">未作答　正解：${'ABCD'[q.a]}</span>
+        <div class="body">${q.exp}</div>`;
+      exp.classList.add('show');
+    } else if(pick===q.a){
+      ok++;
+    }
+  });
+  const res=document.getElementById('result');
+  const score = ok*2;
+  document.getElementById('scoreNum').textContent=score;
+  document.getElementById('scoreTxt').textContent=`分（選擇題 / 84 分，答對 ${ok} / ${TOTAL} 題）`;
+  document.getElementById('rOk').textContent=ok;
+  document.getElementById('rNo').textContent=TOTAL-ok-blank;
+  document.getElementById('rBlank').textContent=blank;
+  res.classList.add('show');
+  submitted=true;
+  submitBtn.style.display='none'; hint.style.display='none'; resetBtn.style.display='block';
+  res.scrollIntoView({behavior:'smooth'});
+});
+
+resetBtn.addEventListener('click',()=>{
+  form.reset();
+  Q.forEach(q=>{
+    const card=document.getElementById('q'+q.n);
+    card.querySelectorAll('.opt').forEach(o=>{o.classList.remove('sel','correct','wrong','lock');o.querySelector('input').disabled=false;});
+    document.getElementById('exp'+q.n).classList.remove('show');
+  });
+  document.getElementById('result').classList.remove('show');
+  submitted=false;
+  submitBtn.style.display='block'; hint.style.display='block'; resetBtn.style.display='none';
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+/* ====== 非選擇題（點擊查看解析） ====== */
+const writtenDiv=document.getElementById('written');
+WRITTEN.forEach((w,idx)=>{
+  const card=document.createElement('div'); card.className='written';
+  card.innerHTML=`<h4>${w.title}</h4>
+    <div class="prompt">${w.prompt}</div>
+    <button type="button" class="reveal" id="wb${idx}">查看答案與解析</button>
+    <div class="ans" id="wa${idx}">
+      <span class="tag">參考答案</span>
+      <div class="body">${w.ans}</div>
+      <div class="body">${w.exp}</div>
+    </div>`;
+  writtenDiv.appendChild(card);
+  card.querySelector('#wb'+idx).addEventListener('click',()=>{
+    card.querySelector('#wa'+idx).classList.add('show');
+    card.querySelector('#wb'+idx).style.display='none';
+  });
+});
+
+updateProgress();
+</script>
+</body>
+</html>
