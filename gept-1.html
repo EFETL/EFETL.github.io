@@ -101,7 +101,7 @@
 <div class="wrap">
   <header class="top">
     <h1>GEPT 初級　閱讀測驗　<span style="opacity:.9">第1回</span></h1>
-    <p>仿真練習　&middot;　依官方題型與難度命題</p>
+    <p>仿真練習卷　&middot;　依官方題型與難度命題</p>
     <div class="meta">共 3 部分、30 題　|　建議作答時間 35 分鐘　|　送出後顯示完整中英文解析與分數</div>
   </header>
 
@@ -169,5 +169,218 @@ const PASSAGES = {
   28:`<div class="passage"><h3>Questions 28-30</h3>
     David grew up in a small village with no library. As a boy, he loved stories but had only a few old books at home. He read them again and again until he knew every word. When he grew up, he became a teacher at a city school. He never forgot how hard it was to find books as a child. So he started collecting used books from his friends and neighbors. Every summer, he drives to faraway villages and gives the books to children for free. "A single book can change a child's life," he often says. Today, his small idea has grown into a group of more than 100 volunteers who share books all over the country.</div>`
 };
-/*r1*/
-(function(){})();
+
+const Q = [
+{n:1,p:0,stem:"Remember to __________ the lights before you leave the classroom.",
+ o:["turn off","turn up","put on","give away"],a:0,
+ en:"\"turn off\" means to stop a light or machine. You switch off the lights when leaving a room.",
+ zh:"turn off 是「關掉（電燈、電器）」。離開教室前要把燈關掉。turn up 是調大聲、put on 是穿上、give away 是送出。"},
+{n:2,p:0,stem:"I couldn't __________ what the teacher said because she spoke too fast.",
+ o:["listen","talk","understand","answer"],a:2,
+ en:"\"understand\" = get the meaning. Because she spoke too fast, the meaning was lost.",
+ zh:"understand 是「理解、聽懂」。因為老師講太快所以「聽不懂」。listen 是聆聽（後接 to）、talk 說話、answer 回答，皆不合句意。"},
+{n:3,p:0,stem:"This shirt is too small. Can I __________ it for a larger size?",
+ o:["pay","exchange","spend","borrow"],a:1,
+ en:"\"exchange A for B\" = trade one thing for another. The small shirt is traded for a larger one.",
+ zh:"exchange A for B 是「把 A 換成 B」。把太小的襯衫換大一號。pay 付款、spend 花費、borrow 借入，語意不合。"},
+{n:4,p:0,stem:"We have to __________ a decision before Friday, or we'll lose the chance.",
+ o:["do","make","give","take"],a:1,
+ en:"\"make a decision\" is a fixed phrase meaning to decide.",
+ zh:"make a decision（做決定）為固定搭配。星期五前必須做出決定。動詞用 make，不用 do/give/take。"},
+{n:5,p:0,stem:"My brother came __________ a bad cold and stayed in bed all day.",
+ o:["down with","up with","across","along"],a:0,
+ en:"\"come down with + illness\" = to catch / get sick. He caught a bad cold.",
+ zh:"come down with + 疾病 是「染上（生病）」的固定片語。他得了重感冒。come up with 是想出、come across 是偶遇、come along 是一起來。"},
+{n:6,p:0,stem:"The shoes are 40% __________ this week, so it's a good time to buy them.",
+ o:["on","up","off","out"],a:2,
+ en:"\"40% off\" means a 40% discount on the price.",
+ zh:"40% off 是「打六折／降價 40%」的固定說法。本週鞋子特價，是購買好時機。on/up/out 皆不符。"},
+{n:7,p:0,stem:"Tom was __________ when he heard he won first prize in the contest.",
+ o:["boring","excited","bored","exciting"],a:1,
+ en:"A person who feels strong happy emotion is \"excited.\" (-ed describes how a person feels.)",
+ zh:"形容「人」的感受用 -ed：excited（感到興奮）。湯姆得知得獎而興奮。exciting/boring 形容事物令人興奮／無聊；bored 是感到無聊。"},
+{n:8,p:0,stem:"Could you __________ me a favor and turn down the music?",
+ o:["give","make","do","take"],a:2,
+ en:"\"do someone a favor\" = to help someone. The verb is \"do.\"",
+ zh:"do someone a favor（幫某人一個忙）為固定搭配，動詞用 do。請對方幫忙把音樂關小聲。"},
+{n:9,p:0,stem:"I'm not sure how to spell this word. Let me __________ it up online.",
+ o:["look","find","watch","search"],a:0,
+ en:"\"look something up\" = to search for information (in a dictionary or online).",
+ zh:"look ... up 是「查（字典、網路上的資料）」。把不會拼的字查一下。find/watch/search 不能構成 look up 這個片語動詞。"},
+{n:10,p:0,stem:"Jenny is very __________. She always shares her snacks with her classmates.",
+ o:["selfish","generous","lazy","shy"],a:1,
+ en:"\"generous\" = willing to share and give. She shares snacks with others.",
+ zh:"generous 是「慷慨、大方的」。她常和同學分享零食。selfish 自私、lazy 懶惰、shy 害羞，與分享的行為不符。"},
+
+{n:11,p:1,stem:"(11)",
+ o:["So","However","Because","Therefore"],a:1,
+ en:"A contrast is needed: recycling is easy, BUT many people still throw things away. \"However\" shows contrast.",
+ zh:"前句說回收很容易，後句說「許多人仍亂丟」，前後相反，需用表轉折的 However。So/Therefore 表結果、Because 表原因，皆不合。"},
+{n:12,p:1,stem:"(12)",
+ o:["turn","be turned","turning","turned"],a:1,
+ en:"After \"can,\" use the base verb; the bottles receive the action, so use passive: can be turned into.",
+ zh:"can 後接原形動詞，且瓶子是「被」做成新產品，須用被動：can be turned into（能被製成）。"},
+{n:13,p:1,stem:"(13)",
+ o:["In addition","As a result","For example","On the other hand"],a:0,
+ en:"The writer adds another benefit of recycling, so \"In addition\" (also/besides) fits.",
+ zh:"此處再補充回收的另一項好處，用 In addition（此外、而且）。As a result 表結果、For example 舉例、On the other hand 表對比，皆不合。"},
+{n:14,p:1,stem:"(14)",
+ o:["Throw","Put","Make","Take"],a:1,
+ en:"\"Put it in the right bin\" = place the bottle in the correct recycling bin (contrast with throwing it away).",
+ zh:"Put it in the right bin（把它放進正確的回收桶）。與前面「不要隨手丟掉」對比。throw 是丟、make 製造、take 拿走，語意不合。"},
+{n:15,p:1,stem:"(15)",
+ o:["little","few","many","a lot"],a:0,
+ en:"\"money\" is uncountable, so use \"little\" (very little money = almost no money).",
+ zh:"money 是不可數名詞，用 little（很少）。very little money 指幾乎沒錢。few 修飾可數名詞、many 是很多、a lot 後須接 of。"},
+{n:16,p:1,stem:"(16)",
+ o:["so","but","because","or"],a:1,
+ en:"Publishers refused her, BUT she didn't give up. \"but\" shows contrast.",
+ zh:"出版商拒絕她「但」她不放棄，前後相反用 but。so 表結果、because 表原因、or 表選擇，皆不合。"},
+{n:17,p:1,stem:"(17)",
+ o:["To","For","In","At"],a:0,
+ en:"\"To one's surprise\" is a fixed phrase meaning surprisingly.",
+ zh:"To one's surprise（令人驚訝的是）為固定片語，介系詞用 To，不可用 For/In/At。"},
+{n:18,p:1,stem:"(18)",
+ o:["unless","even though","so that","as soon as"],a:1,
+ en:"\"even though things get difficult\" = although it is hard. We should keep trying despite difficulty.",
+ zh:"even though（即使、儘管）。即使事情變困難也要繼續努力。unless 除非、so that 以便、as soon as 一…就，語意不合。"},
+
+{n:19,p:2,stem:"When is the swimming pool closed?",
+ o:["Every Wednesday.","On weekends.","On the last Wednesday of every month.","At 6 PM on weekdays."],a:2,
+ en:"The notes say the pool is closed on the last Wednesday of every month for cleaning.",
+ zh:"公告寫泳池「每月最後一個週三」因清潔而休館，故選 C。週末有開（8 AM–6 PM）、平日開到 10 PM。"},
+{n:20,p:2,stem:"Mr. Wang takes his 5-year-old son swimming on Saturday. How much do they pay in total?",
+ o:["NT$120","NT$200","NT$240","NT$80"],a:0,
+ en:"One adult = NT$120; a child under 6 is free. Total = 120.",
+ zh:"成人 NT$120；6 歲以下兒童免費，5 歲的兒子免錢。合計 NT$120。"},
+{n:21,p:2,stem:"What must everyone do at the pool?",
+ o:["Wear a swimming cap.","Bring their own towel.","Arrive before 8 AM.","Pay by credit card."],a:0,
+ en:"The notice says a swimming cap must be worn at all times.",
+ zh:"公告寫在泳池內「必須全程戴泳帽」。其餘選項（自備毛巾、8 點前到、刷卡）公告皆未要求。"},
+{n:22,p:2,stem:"What is the purpose of this advertisement?",
+ o:["To sell kitchen tools.","To invite people to join a cooking class.","To open a new restaurant.","To find a new chef."],a:1,
+ en:"The ad invites readers to join Chef Lin's weekend cooking class.",
+ zh:"廣告目的是邀請大家參加林大廚的週末烹飪課。並非賣廚具、開餐廳或徵廚師。"},
+{n:23,p:2,stem:"How can someone book a class?",
+ o:["By email only.","By phone or website.","In person only.","Through a friend."],a:1,
+ en:"\"Call ... or visit www.cheflin.com\" — you can book by phone or website.",
+ zh:"廣告寫可「打電話或上網站 www.cheflin.com」預約，故為電話或網站兩種方式。"},
+{n:24,p:2,stem:"What does someone get if they sign up for five classes?",
+ o:["A free cookbook.","Free ingredients.","One extra class for free.","A discount on tools."],a:2,
+ en:"\"Sign up for 5 classes and get one class free!\"",
+ zh:"廣告寫「報名 5 堂課，再送 1 堂」，故可多獲得一堂免費課程。食材本來就含在課程內，並非額外贈送。"},
+{n:25,p:2,stem:"Why did Amy write this email?",
+ o:["To cancel a meeting.","To join the book club.","To sell some novels.","To teach piano."],a:1,
+ en:"Amy saw the poster and writes that she'd love to join the book club.",
+ zh:"艾美看到海報，寫信表示想加入讀書會。並非取消聚會、賣書或教鋼琴。"},
+{n:26,p:2,stem:"What problem does Amy have?",
+ o:["She can't read novels.","She has a piano lesson before the meeting.","She lives too far away.","She doesn't like Tuesdays."],a:1,
+ en:"Her piano lesson ends at 7 PM, which clashes with the Tuesday-evening meeting.",
+ zh:"她的鋼琴課上到晚上 7 點，和週二晚上的聚會時間衝突，這是她的困擾。"},
+{n:27,p:2,stem:"What does Amy ask Mr. Wang to do?",
+ o:["Change the meeting place.","Start the meeting later.","Cancel her piano lesson.","Send her some books."],a:1,
+ en:"She asks if the meeting could start a little later, maybe at 7:30.",
+ zh:"她詢問聚會能否「晚一點開始」，例如改到 7:30。並非改地點、取消鋼琴課或寄書。"},
+{n:28,p:2,stem:"Why did David start collecting books?",
+ o:["He wanted to sell them for money.","He remembered how hard it was to find books as a child.","His school asked him to.","He wanted to open a bookstore."],a:1,
+ en:"He never forgot how hard it was to find books as a child, so he collected books for village kids.",
+ zh:"他忘不了小時候找書的困難，因此開始收集二手書送給偏鄉孩子。並非為了賣錢、開書店或受學校要求。"},
+{n:29,p:2,stem:"What does David do every summer?",
+ o:["He writes new books.","He gives free books to village children.","He opens a bookstore.","He teaches piano."],a:1,
+ en:"Every summer he drives to faraway villages and gives books to children for free.",
+ zh:"他每年夏天開車到偏遠村莊，把書免費送給孩子們。"},
+{n:30,p:2,stem:"What can we learn about David's idea?",
+ o:["It failed in the end.","It stayed very small.","It grew into a large group of volunteers.","It only helped his own students."],a:2,
+ en:"His small idea has grown into a group of more than 100 volunteers across the country.",
+ zh:"他的小小想法已發展成全國超過 100 位志工的團體，故選「擴展成大型志工團隊」。"}
+];
+
+/* ====== 產生畫面 ====== */
+const form = document.getElementById('quiz');
+let lastPart = -1;
+Q.forEach(q=>{
+  if(q.p!==lastPart){
+    const st=document.createElement('div'); st.className='section-title s'+q.p; st.textContent=PARTS[q.p].title;
+    const sd=document.createElement('div'); sd.className='section-desc'; sd.textContent=PARTS[q.p].desc;
+    form.appendChild(st); form.appendChild(sd); lastPart=q.p;
+  }
+  if(PASSAGES[q.n]){ const d=document.createElement('div'); d.innerHTML=PASSAGES[q.n]; form.appendChild(d.firstChild); }
+  const card=document.createElement('div'); card.className='q'; card.id='q'+q.n;
+  const isBlank=/^\(\d+\)$/.test(q.stem);
+  const stemHtml = isBlank ? `第 ${q.n} 格` : q.stem;
+  card.innerHTML=`<div class="stem"><span class="num">${q.n}</span>${stemHtml}</div>`;
+  q.o.forEach((opt,i)=>{
+    const lab=document.createElement('label'); lab.className='opt'; lab.dataset.i=i;
+    lab.innerHTML=`<input type="radio" name="q${q.n}" value="${i}"><span class="lab">${'ABCD'[i]}</span><span>${opt}</span>`;
+    lab.querySelector('input').addEventListener('change',()=>{
+      card.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
+      lab.classList.add('sel'); updateProgress();
+    });
+    card.appendChild(lab);
+  });
+  const exp=document.createElement('div'); exp.className='exp'; exp.id='exp'+q.n;
+  card.appendChild(exp);
+  form.appendChild(card);
+});
+
+const submitBtn=document.getElementById('submitBtn');
+const resetBtn=document.getElementById('resetBtn');
+const hint=document.getElementById('hint');
+
+function answeredCount(){ let c=0; Q.forEach(q=>{ if(form.querySelector(`input[name="q${q.n}"]:checked`)) c++; }); return c; }
+function updateProgress(){
+  const c=answeredCount();
+  document.getElementById('count').textContent=`${c} / 30`;
+  document.getElementById('fill').style.width=(c/30*100)+'%';
+  hint.textContent = c===30 ? '已完成全部 30 題' : (c===0 ? '尚未作答任何題目（仍可送出查看解析）' : `已作答 ${c} 題，未作答 ${30-c} 題（仍可送出）`);
+}
+
+submitBtn.addEventListener('click',()=>{
+  let ok=0, blank=0;
+  Q.forEach(q=>{
+    const sel=form.querySelector(`input[name="q${q.n}"]:checked`);
+    const pick = sel ? parseInt(sel.value) : null;
+    if(pick===null) blank++;
+    const card=document.getElementById('q'+q.n);
+    card.querySelectorAll('.opt').forEach(o=>{
+      o.classList.add('lock');
+      o.querySelector('input').disabled=true;
+      const i=parseInt(o.dataset.i);
+      if(i===q.a) o.classList.add('correct');
+      if(pick!==null && i===pick && pick!==q.a) o.classList.add('wrong');
+    });
+    const correct = pick===q.a; if(correct) ok++;
+    const exp=document.getElementById('exp'+q.n);
+    const tag = correct ? '答對' : (pick===null ? '未作答' : '答錯');
+    exp.innerHTML=`<span class="tag ${correct?'':'miss'}">${tag}　正解：${'ABCD'[q.a]}</span>
+      <div class="en"><b>EN</b>&nbsp;${q.en}</div><div class="zh"><b>中</b>&nbsp;${q.zh}</div>`;
+    exp.classList.add('show');
+  });
+  const res=document.getElementById('result');
+  document.getElementById('scoreNum').textContent=Math.round(ok/30*100);
+  document.getElementById('scoreTxt').textContent=`分（答對 ${ok} / 30 題）`;
+  document.getElementById('rOk').textContent=ok;
+  document.getElementById('rNo').textContent=30-ok-blank;
+  document.getElementById('rBlank').textContent=blank;
+  res.classList.add('show');
+  submitBtn.style.display='none'; hint.style.display='none'; resetBtn.style.display='block';
+  res.scrollIntoView({behavior:'smooth'});
+});
+
+resetBtn.addEventListener('click',()=>{
+  form.reset();
+  Q.forEach(q=>{
+    const card=document.getElementById('q'+q.n);
+    card.querySelectorAll('.opt').forEach(o=>{o.classList.remove('sel','correct','wrong','lock');o.querySelector('input').disabled=false;});
+    document.getElementById('exp'+q.n).classList.remove('show');
+  });
+  document.getElementById('result').classList.remove('show');
+  submitBtn.style.display='block'; hint.style.display='block'; resetBtn.style.display='none';
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+updateProgress();
+</script>
+</body>
+</html>

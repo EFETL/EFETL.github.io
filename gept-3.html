@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEPT 初級 閱讀測驗　第3回</title>
+<style>
+  :root{
+    --blue:#2b8cff; --blue-dark:#1f6fe0;
+    --coral:#ff7a59; --amber:#ffb02e; --pink:#ff5d8f;
+    --bg:#f3f9ff; --card:#ffffff; --line:#e3edf9;
+    --green:#22b573; --green-bg:#e4f8ef;
+    --red:#ff5a5a; --red-bg:#ffecec;
+    --gray:#6b7785;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;
+    background:linear-gradient(180deg,#f0f7ff,#fff7f2 70%);color:#22303f;line-height:1.6;
+    -webkit-text-size-adjust:100%;}
+  .wrap{max-width:760px;margin:0 auto;padding:16px;}
+  header.top{background:linear-gradient(135deg,#5ec6ff,#7d8bff 55%,#b88bff);color:#fff;
+    border-radius:18px;padding:24px 22px;margin-bottom:16px;box-shadow:0 8px 22px rgba(93,141,255,.3);}
+  header.top h1{margin:0 0 6px;font-size:1.5rem;text-shadow:0 1px 2px rgba(0,0,0,.12);}
+  header.top p{margin:0;font-size:.92rem;opacity:.95;}
+  .meta{margin-top:14px;font-size:.86rem;background:rgba(255,255,255,.22);
+    padding:9px 13px;border-radius:10px;}
+  .sticky{position:sticky;top:0;z-index:20;padding:10px 0;
+    background:linear-gradient(180deg,#f0f7ff 70%,rgba(240,247,255,0));}
+  .bar{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:11px 16px;display:flex;align-items:center;gap:12px;font-size:.9rem;
+    box-shadow:0 4px 12px rgba(43,140,255,.1);}
+  .bar .track{flex:1;height:9px;background:#e9f1fb;border-radius:6px;overflow:hidden;}
+  .bar .fill{height:100%;width:0;border-radius:6px;
+    background:linear-gradient(90deg,#3ad1c6,#2b8cff);transition:width .35s;}
+  .bar #count{font-weight:700;color:var(--blue-dark);}
+  .section-title{color:#fff;font-weight:800;border-radius:12px;
+    padding:10px 16px;margin:24px 0 6px;font-size:1.05rem;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);}
+  .section-title.s0{background:linear-gradient(135deg,#ff9a6c,#ff6f91);}
+  .section-title.s1{background:linear-gradient(135deg,#4dd0e1,#2b8cff);}
+  .section-title.s2{background:linear-gradient(135deg,#9b8bff,#b06bff);}
+  .section-desc{font-size:.86rem;color:var(--gray);margin:0 4px 10px;}
+  .passage{background:#fffdf4;border:1px solid #ffe9c9;border-left:5px solid var(--amber);
+    border-radius:12px;padding:15px 17px;margin:14px 0;font-size:.95rem;
+    box-shadow:0 3px 10px rgba(255,176,46,.08);}
+  .passage h3{margin:0 0 8px;color:#e0820a;font-size:1rem;}
+  .passage table{border-collapse:collapse;width:100%;margin:8px 0;font-size:.88rem;}
+  .passage th,.passage td{border:1px solid #ffe0b0;padding:5px 8px;text-align:left;}
+  .passage th{background:#fff2dc;}
+  .email-h{font-size:.85rem;color:var(--gray);border-bottom:1px dashed #ffd9a8;
+    padding-bottom:6px;margin-bottom:8px;}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:15px 17px;margin:12px 0;box-shadow:0 3px 10px rgba(43,140,255,.07);}
+  .q .stem{font-weight:600;margin-bottom:10px;}
+  .q .stem .num{display:inline-block;color:#fff;background:var(--blue);font-weight:700;
+    border-radius:8px;padding:1px 9px;margin-right:8px;font-size:.92rem;}
+  .opt{display:flex;align-items:flex-start;gap:10px;border:2px solid var(--line);
+    border-radius:11px;padding:10px 13px;margin:8px 0;cursor:pointer;transition:.15s;
+    font-size:.95rem;background:#fbfdff;}
+  .opt:hover{border-color:var(--blue);background:#eef6ff;}
+  .opt input{margin-top:3px;accent-color:var(--blue);}
+  .opt .lab{font-weight:800;color:var(--blue);min-width:18px;}
+  .opt.sel{border-color:var(--blue);background:#e7f2ff;}
+  .opt.correct{border-color:var(--green);background:var(--green-bg);}
+  .opt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .opt.lock{cursor:default;}
+  .exp{display:none;margin-top:11px;border-top:2px dashed #ffe1c2;padding-top:11px;font-size:.9rem;}
+  .exp.show{display:block;}
+  .exp .tag{display:inline-block;font-weight:800;color:#fff;background:var(--green);
+    border-radius:7px;padding:2px 10px;font-size:.8rem;margin-bottom:7px;}
+  .exp .tag.miss{background:var(--red);}
+  .exp .en{color:#1c4f7a;background:#eef7ff;border-radius:8px;padding:6px 10px;margin:5px 0;}
+  .exp .zh{color:#7a4a12;background:#fff7ea;border-radius:8px;padding:6px 10px;margin:5px 0;}
+  .actions{position:sticky;bottom:0;padding:14px 0 6px;margin-top:18px;
+    background:linear-gradient(transparent,#fff7f2 35%);}
+  button.submit{width:100%;color:#fff;border:0;border-radius:14px;padding:16px;
+    font-size:1.08rem;font-weight:800;cursor:pointer;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);
+    box-shadow:0 6px 16px rgba(255,93,143,.35);}
+  button.submit:active{transform:translateY(1px);}
+  button.reset{width:100%;background:#fff;color:var(--blue);border:2px solid var(--blue);
+    border-radius:14px;padding:14px;font-size:1rem;font-weight:800;cursor:pointer;margin-top:10px;display:none;}
+  .result{display:none;background:var(--card);border:3px solid transparent;border-radius:16px;
+    padding:22px;margin:16px 0;text-align:center;
+    background-image:linear-gradient(#fff,#fff),linear-gradient(135deg,#3ad1c6,#2b8cff,#b06bff);
+    background-origin:border-box;background-clip:padding-box,border-box;
+    box-shadow:0 8px 22px rgba(43,140,255,.15);}
+  .result.show{display:block;}
+  .result .score{font-size:2.8rem;font-weight:900;
+    background:linear-gradient(135deg,#2b8cff,#b06bff);-webkit-background-clip:text;
+    background-clip:text;-webkit-text-fill-color:transparent;}
+  .result .sub{color:var(--gray);font-size:.95rem;}
+  .result .bd{display:flex;justify-content:center;gap:18px;margin-top:12px;flex-wrap:wrap;font-size:.95rem;}
+  .result .bd span{font-weight:800;}
+  .hint{text-align:center;font-size:.85rem;color:var(--gray);margin-top:9px;min-height:1.2em;}
+  footer{text-align:center;color:var(--gray);font-size:.8rem;margin:24px 0;}
+</style>
+</head>
+<body>
+<a href="gept.html" style="position:fixed;top:12px;left:12px;background:rgba(255,255,255,.92);color:#2b8cff;padding:7px 15px;border-radius:20px;text-decoration:none;font-size:.85rem;font-weight:800;z-index:999;box-shadow:0 3px 10px rgba(0,0,0,.15);">&#8592; 回題庫</a>
+<div class="wrap">
+  <header class="top">
+    <h1>GEPT 初級　閱讀測驗　<span style="opacity:.9">第3回</span></h1>
+    <p>仿真練習卷　&middot;　依官方題型與難度命題</p>
+    <div class="meta">共 3 部分、30 題　|　建議作答時間 35 分鐘　|　送出後顯示完整中英文解析與分數</div>
+  </header>
+
+  <div class="sticky">
+    <div class="bar">
+      <span>作答進度</span>
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <span id="count">0 / 30</span>
+    </div>
+  </div>
+
+  <form id="quiz"></form>
+
+  <div class="result" id="result">
+    <div class="score" id="scoreNum">0</div>
+    <div class="sub" id="scoreTxt">分</div>
+    <div class="bd">
+      <span style="color:var(--green)">答對 <b id="rOk">0</b></span>
+      <span style="color:var(--red)">答錯 <b id="rNo">0</b></span>
+      <span style="color:var(--gray)">未作答 <b id="rBlank">0</b></span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="submit" id="submitBtn">送出並查看解析</button>
+    <div class="hint" id="hint">尚未作答任何題目</div>
+    <button type="button" class="reset" id="resetBtn">重新作答</button>
+  </div>
+
+  <footer>GEPT 初級閱讀　仿真練習　&middot;　第二顆腦 / GEPT初級</footer>
+</div>
+
+<script>
+/* ====== 題庫資料 ====== */
+const PARTS = [{"title": "第一部分　詞彙", "desc": "共 10 題，每題有一個空格，請從四個選項中選出最適合題意的字或詞。"}, {"title": "第二部分　段落填空", "desc": "共 8 題，包含二個段落，每格四個選項，請依文意選出最適合的答案。"}, {"title": "第三部分　閱讀理解", "desc": "共 12 題，包含 4 個題組，請依短文內容選出最適合的答案。"}];
+
+const PASSAGES = {"11": "<div class=\"passage\"><h3>Questions 11-14</h3>Smartphones have become a part of our daily life. We use them to call friends, take photos, and __(11)__ the Internet. However, using a phone too much can be __(12)__ for our health. For example, looking at the small screen for hours may hurt our eyes. Some people even feel nervous __(13)__ they do not have their phones with them. To stay healthy, we should put down our phones and __(14)__ more time with our family and friends.</div>", "15": "<div class=\"passage\"><h3>Questions 15-18</h3>Jane Goodall is a famous scientist who studies wild animals. When she was young, she dreamed of going to Africa to live __(15)__ animals. Most people thought it was impossible for a young woman, __(16)__ she never gave up her dream. In 1960, she finally traveled to Africa and began to study chimpanzees. She spent many years watching them and learned a lot about __(17)__ they live. Today, she travels around the world to teach people __(18)__ the importance of protecting nature.</div>", "19": "<div class=\"passage\"><h3>Questions 19-21</h3><b>Star Cinema &mdash; \"The Brave Lion\" (PG)</b><table><tr><th>Show Time</th><th>Hall</th><th>Seats Left</th></tr><tr><td>13:00</td><td>A</td><td>Full</td></tr><tr><td>15:30</td><td>B</td><td>12</td></tr><tr><td>18:00</td><td>A</td><td>5</td></tr><tr><td>20:30</td><td>C</td><td>20</td></tr></table>Ticket: NT$280 (Adult), NT$220 (Student). Popcorn set +NT$120.</div>", "22": "<div class=\"passage\"><h3>Questions 22-24</h3><b>Green Market App &mdash; Shop Fresh, Stay Healthy!</b><br>&bull; Order fresh fruit and vegetables from your phone.<br>&bull; Free delivery for orders over NT$600.<br>&bull; Get your food within 2 hours.<br>&bull; New users get 15% off their first order!<br>&bull; Download now from the App Store or Google Play.</div>", "25": "<div class=\"passage\"><h3>Questions 25-27</h3><div class=\"email-h\">Chatroom &mdash; Amy &amp; Ben</div><b>Amy:</b> Hi Ben! Are you free this Saturday? I want to visit the new art museum.<br><b>Ben:</b> Sounds great! But I have a basketball game in the morning. Can we go in the afternoon?<br><b>Amy:</b> Sure. The museum is open until 9 PM. Let’s meet at 2 PM.<br><b>Ben:</b> Perfect. Should we take the bus or the MRT?<br><b>Amy:</b> The MRT is faster. There is a station right next to the museum.<br><b>Ben:</b> OK, see you at the station at 2!</div>", "28": "<div class=\"passage\"><h3>Questions 28-30</h3>Bees are small insects, but they do important work for our world. They fly from flower to flower to collect a sweet juice called nectar. While doing this, they also carry a yellow powder called pollen from one flower to another. This helps plants make fruit and seeds. Without bees, many fruits and vegetables could not grow. Bees also make honey, which people have enjoyed for thousands of years. Sadly, the number of bees is getting smaller because of pollution and the loss of flowers. Scientists are now trying to find ways to protect them.</div>"};
+
+const Q = [{"n": 1, "p": 0, "stem": "The shop __________ a 20% discount during the holiday, so many people went there.", "o": ["offered", "paid", "spent", "cost"], "a": 0, "en": "\"offer a discount\" = to give a price cut.", "zh": "offer a discount（提供折扣）。商店打八折，所以人潮多。paid 付、spent 花、cost 花費，皆不合。"}, {"n": 2, "p": 0, "stem": "My grandmother __________ me how to make dumplings last weekend.", "o": ["said", "spoke", "taught", "talked"], "a": 2, "en": "\"teach someone how to...\" = to show how to do something.", "zh": "teach someone how to...（教某人如何…）。奶奶教我包水餃。said/spoke/talked 不能接「人 + how to」這種結構。"}, {"n": 3, "p": 0, "stem": "You look pale. Are you feeling __________?", "o": ["well", "good", "sick", "fine"], "a": 2, "en": "Looking pale suggests illness, so \"sick\" fits.", "zh": "臉色蒼白表示可能生病，feel sick（不舒服）。well/good/fine 都是「好」，與蒼白矛盾。"}, {"n": 4, "p": 0, "stem": "The students were __________ about the school trip to the zoo.", "o": ["excited", "bored", "tired", "worried"], "a": 0, "en": "A fun trip makes students \"excited.\"", "zh": "形容人的感受用 -ed：excited（興奮）。去動物園校外教學讓學生興奮。bored/tired/worried 與期待出遊不合。"}, {"n": 5, "p": 0, "stem": "Could you __________ the door? It's too noisy outside.", "o": ["open", "close", "break", "knock"], "a": 1, "en": "It is noisy outside, so \"close\" the door to keep quiet.", "zh": "外面太吵，把門「關上」用 close。open 開、break 打破、knock 敲，皆不合。"}, {"n": 6, "p": 0, "stem": "He didn't pass the exam __________ he didn't study hard enough.", "o": ["so", "but", "because", "or"], "a": 2, "en": "\"because\" gives the reason he failed.", "zh": "because（因為）說明沒考過的原因：不夠用功。so 表結果、but 轉折、or 選擇。"}, {"n": 7, "p": 0, "stem": "I'm looking __________ to seeing you again next summer.", "o": ["forward", "after", "for", "up"], "a": 0, "en": "\"look forward to + V-ing\" = to feel happy about a future event.", "zh": "look forward to + V-ing（期待）。期待明年夏天再見到你。look after 照顧、look for 尋找、look up 查詢。"}, {"n": 8, "p": 0, "stem": "Please __________ your hand if you know the answer.", "o": ["lift", "raise", "rise", "grow"], "a": 1, "en": "\"raise your hand\" is the fixed phrase for putting your hand up.", "zh": "raise your hand（舉手）為固定搭配。raise 是及物動詞「舉起」；rise 是不及物「上升」不可接受詞。lift 多指搬重物。"}, {"n": 9, "p": 0, "stem": "This is a __________ between us, so please don't tell anyone.", "o": ["secret", "promise", "message", "notice"], "a": 0, "en": "Something you keep and don't tell others is a \"secret.\"", "zh": "secret（祕密）是不告訴別人的事。promise 承諾、message 訊息、notice 公告，皆不合。"}, {"n": 10, "p": 0, "stem": "The two brothers look so similar that I often __________ them up.", "o": ["mix", "match", "mark", "miss"], "a": 0, "en": "\"mix up\" = to confuse one person/thing with another.", "zh": "mix ... up（搞混、認錯）。兄弟長得太像常被認錯。match 配對、mark 標記、miss 錯過，不能構成此意。"}, {"n": 11, "p": 1, "stem": "(11)", "o": ["surf", "swim", "drive", "climb"], "a": 0, "en": "\"surf the Internet\" = to browse the web.", "zh": "surf the Internet（上網瀏覽）為固定說法。swim 游泳、drive 開車、climb 攀爬，皆不合。"}, {"n": 12, "p": 1, "stem": "(12)", "o": ["good", "helpful", "harmful", "useful"], "a": 2, "en": "Using a phone too much is \"harmful\" (bad) for health.", "zh": "手機用太多對健康「有害」用 harmful。good/helpful/useful 皆正面，與「傷眼睛」矛盾。"}, {"n": 13, "p": 1, "stem": "(13)", "o": ["when", "so", "but", "or"], "a": 0, "en": "\"feel nervous when they don't have their phones\" — when introduces the time/condition.", "zh": "feel nervous when...（當…時感到緊張）。沒帶手機時會緊張，用 when 引導。"}, {"n": 14, "p": 1, "stem": "(14)", "o": ["spend", "cost", "take", "pay"], "a": 0, "en": "\"spend time with...\" = to use time being with someone.", "zh": "spend time with...（花時間和…相處）。主詞為人用 spend。cost/take 主詞多為事物、pay 付錢。"}, {"n": 15, "p": 1, "stem": "(15)", "o": ["with", "for", "on", "by"], "a": 0, "en": "\"live with animals\" = to live together with them.", "zh": "live with animals（和動物一起生活）。介系詞用 with。"}, {"n": 16, "p": 1, "stem": "(16)", "o": ["so", "but", "because", "and"], "a": 1, "en": "People thought it impossible, BUT she never gave up. Contrast = but.", "zh": "人們認為不可能，「但」她不放棄，前後對比用 but。"}, {"n": 17, "p": 1, "stem": "(17)", "o": ["how", "what", "which", "who"], "a": 0, "en": "\"learn about how they live\" = the way they live.", "zh": "learn about how they live（了解牠們如何生活）。用 how 引導「方式」。"}, {"n": 18, "p": 1, "stem": "(18)", "o": ["about", "of", "for", "in"], "a": 0, "en": "\"teach people about something\" = to give knowledge about it.", "zh": "teach people about...（教導人們關於…）。teach 後接 about 帶出主題。"}, {"n": 19, "p": 2, "stem": "Which show time has no seats left?", "o": ["13:00", "15:30", "18:00", "20:30"], "a": 0, "en": "The 13:00 show is marked \"Full.\"", "zh": "時刻表顯示 13:00 場「Full（客滿）」，沒有座位。"}, {"n": 20, "p": 2, "stem": "A student wants to watch the 20:30 show with a popcorn set. How much in total?", "o": ["NT$280", "NT$340", "NT$400", "NT$300"], "a": 1, "en": "Student ticket NT$220 + popcorn set NT$120 = NT$340.", "zh": "學生票 NT$220＋爆米花套餐 NT$120＝NT$340。"}, {"n": 21, "p": 2, "stem": "Which show has the most seats left?", "o": ["15:30", "18:00", "20:30", "13:00"], "a": 2, "en": "20:30 has 20 seats left, the most of all.", "zh": "20:30 場剩 20 個位子，是最多的。15:30 剩 12、18:00 剩 5、13:00 客滿。"}, {"n": 22, "p": 2, "stem": "What can people do with this app?", "o": ["Book a hotel.", "Order fresh food.", "Learn to cook.", "Find a job."], "a": 1, "en": "The app lets users order fresh fruit and vegetables.", "zh": "這個 App 可以訂購新鮮蔬果。並非訂飯店、學煮菜或找工作。"}, {"n": 23, "p": 2, "stem": "When is delivery free?", "o": ["Always.", "For orders over NT$600.", "For new users only.", "Never."], "a": 1, "en": "\"Free delivery for orders over NT$600.\"", "zh": "訂單超過 NT$600 才免運費。"}, {"n": 24, "p": 2, "stem": "What do new users get?", "o": ["Free fruit.", "15% off the first order.", "A free app.", "Two free deliveries."], "a": 1, "en": "\"New users get 15% off their first order!\"", "zh": "新使用者首次下單享 85 折（15% off）。"}, {"n": 25, "p": 2, "stem": "What do Amy and Ben plan to do?", "o": ["Play basketball.", "Visit an art museum.", "Take a cooking class.", "Watch a game."], "a": 1, "en": "Amy wants to visit the new art museum and Ben agrees.", "zh": "艾美想去新的美術館，班同意，他們計畫去參觀美術館。"}, {"n": 26, "p": 2, "stem": "Why can't they go in the morning?", "o": ["The museum is closed.", "Ben has a basketball game.", "Amy is busy.", "It is raining."], "a": 1, "en": "Ben has a basketball game in the morning.", "zh": "班早上有籃球比賽，所以不能上午去。"}, {"n": 27, "p": 2, "stem": "How will they go to the museum?", "o": ["By bus.", "By car.", "By MRT.", "On foot."], "a": 2, "en": "Amy says the MRT is faster and a station is next to the museum.", "zh": "艾美說捷運比較快，而且美術館旁邊就有捷運站，所以搭捷運（MRT）。"}, {"n": 28, "p": 2, "stem": "What do bees collect from flowers?", "o": ["Honey.", "Nectar.", "Seeds.", "Water."], "a": 1, "en": "\"They fly from flower to flower to collect a sweet juice called nectar.\"", "zh": "蜜蜂從花朵採集甜甜的「花蜜（nectar）」。蜂蜜是牠們之後製造的。"}, {"n": 29, "p": 2, "stem": "Why are bees important to plants?", "o": ["They eat harmful insects.", "They carry pollen to help plants make fruit.", "They water the flowers.", "They keep flowers warm."], "a": 1, "en": "Bees carry pollen between flowers, helping plants make fruit and seeds.", "zh": "蜜蜂把花粉（pollen）從一朵花帶到另一朵，幫助植物結出果實與種子。"}, {"n": 30, "p": 2, "stem": "Why is the number of bees getting smaller?", "o": ["Too much honey.", "Pollution and fewer flowers.", "Cold weather.", "Too many scientists."], "a": 1, "en": "\"the number of bees is getting smaller because of pollution and the loss of flowers.\"", "zh": "蜜蜂變少是因為「污染」和「花變少」。"}];
+/* ====== 產生畫面 ====== */
+const form = document.getElementById('quiz');
+let lastPart = -1;
+Q.forEach(q=>{
+  if(q.p!==lastPart){
+    const st=document.createElement('div'); st.className='section-title s'+q.p; st.textContent=PARTS[q.p].title;
+    const sd=document.createElement('div'); sd.className='section-desc'; sd.textContent=PARTS[q.p].desc;
+    form.appendChild(st); form.appendChild(sd); lastPart=q.p;
+  }
+  if(PASSAGES[q.n]){ const d=document.createElement('div'); d.innerHTML=PASSAGES[q.n]; form.appendChild(d.firstChild); }
+  const card=document.createElement('div'); card.className='q'; card.id='q'+q.n;
+  const isBlank=/^\(\d+\)$/.test(q.stem);
+  const stemHtml = isBlank ? `第 ${q.n} 格` : q.stem;
+  card.innerHTML=`<div class="stem"><span class="num">${q.n}</span>${stemHtml}</div>`;
+  q.o.forEach((opt,i)=>{
+    const lab=document.createElement('label'); lab.className='opt'; lab.dataset.i=i;
+    lab.innerHTML=`<input type="radio" name="q${q.n}" value="${i}"><span class="lab">${'ABCD'[i]}</span><span>${opt}</span>`;
+    lab.querySelector('input').addEventListener('change',()=>{
+      card.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
+      lab.classList.add('sel'); updateProgress();
+    });
+    card.appendChild(lab);
+  });
+  const exp=document.createElement('div'); exp.className='exp'; exp.id='exp'+q.n;
+  card.appendChild(exp);
+  form.appendChild(card);
+});
+
+const submitBtn=document.getElementById('submitBtn');
+const resetBtn=document.getElementById('resetBtn');
+const hint=document.getElementById('hint');
+
+function answeredCount(){ let c=0; Q.forEach(q=>{ if(form.querySelector(`input[name="q${q.n}"]:checked`)) c++; }); return c; }
+function updateProgress(){
+  const c=answeredCount();
+  document.getElementById('count').textContent=`${c} / 30`;
+  document.getElementById('fill').style.width=(c/30*100)+'%';
+  hint.textContent = c===30 ? '已完成全部 30 題' : (c===0 ? '尚未作答任何題目（仍可送出查看解析）' : `已作答 ${c} 題，未作答 ${30-c} 題（仍可送出）`);
+}
+
+submitBtn.addEventListener('click',()=>{
+  let ok=0, blank=0;
+  Q.forEach(q=>{
+    const sel=form.querySelector(`input[name="q${q.n}"]:checked`);
+    const pick = sel ? parseInt(sel.value) : null;
+    if(pick===null) blank++;
+    const card=document.getElementById('q'+q.n);
+    card.querySelectorAll('.opt').forEach(o=>{
+      o.classList.add('lock');
+      o.querySelector('input').disabled=true;
+      const i=parseInt(o.dataset.i);
+      if(i===q.a) o.classList.add('correct');
+      if(pick!==null && i===pick && pick!==q.a) o.classList.add('wrong');
+    });
+    const correct = pick===q.a; if(correct) ok++;
+    const exp=document.getElementById('exp'+q.n);
+    const tag = correct ? '答對' : (pick===null ? '未作答' : '答錯');
+    exp.innerHTML=`<span class="tag ${correct?'':'miss'}">${tag}　正解：${'ABCD'[q.a]}</span>
+      <div class="en"><b>EN</b>&nbsp;${q.en}</div><div class="zh"><b>中</b>&nbsp;${q.zh}</div>`;
+    exp.classList.add('show');
+  });
+  const res=document.getElementById('result');
+  document.getElementById('scoreNum').textContent=Math.round(ok/30*100);
+  document.getElementById('scoreTxt').textContent=`分（答對 ${ok} / 30 題）`;
+  document.getElementById('rOk').textContent=ok;
+  document.getElementById('rNo').textContent=30-ok-blank;
+  document.getElementById('rBlank').textContent=blank;
+  res.classList.add('show');
+  submitBtn.style.display='none'; hint.style.display='none'; resetBtn.style.display='block';
+  res.scrollIntoView({behavior:'smooth'});
+});
+
+resetBtn.addEventListener('click',()=>{
+  form.reset();
+  Q.forEach(q=>{
+    const card=document.getElementById('q'+q.n);
+    card.querySelectorAll('.opt').forEach(o=>{o.classList.remove('sel','correct','wrong','lock');o.querySelector('input').disabled=false;});
+    document.getElementById('exp'+q.n).classList.remove('show');
+  });
+  document.getElementById('result').classList.remove('show');
+  submitBtn.style.display='block'; hint.style.display='block'; resetBtn.style.display='none';
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+updateProgress();
+</script>
+</body>
+</html>
