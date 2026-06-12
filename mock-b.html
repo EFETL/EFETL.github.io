@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>統測英文模擬考卷 B</title>
+<style>
+  :root{
+    --blue:#2b8cff; --blue-dark:#1f6fe0;
+    --coral:#ff7a59; --amber:#ffb02e; --pink:#ff5d8f;
+    --bg:#f3f9ff; --card:#ffffff; --line:#e3edf9;
+    --green:#22b573; --green-bg:#e4f8ef;
+    --red:#ff5a5a; --red-bg:#ffecec;
+    --gray:#6b7785;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;
+    background:linear-gradient(180deg,#f0f7ff,#fff7f2 70%);color:#22303f;line-height:1.6;
+    font-size:16px;-webkit-text-size-adjust:100%;}
+  .wrap{max-width:760px;margin:0 auto;padding:16px;}
+  header.top{background:linear-gradient(135deg,#5ec6ff,#7d8bff 55%,#b88bff);color:#fff;
+    border-radius:18px;padding:24px 22px;margin-bottom:16px;box-shadow:0 8px 22px rgba(93,141,255,.3);}
+  header.top h1{margin:0 0 6px;font-size:1.5rem;text-shadow:0 1px 2px rgba(0,0,0,.12);}
+  header.top p{margin:0;font-size:.92rem;opacity:.95;}
+  .meta{margin-top:14px;font-size:.86rem;background:rgba(255,255,255,.22);
+    padding:9px 13px;border-radius:10px;}
+  .sticky{position:sticky;top:0;z-index:20;padding:10px 0;
+    background:linear-gradient(180deg,#f0f7ff 70%,rgba(240,247,255,0));}
+  .bar{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:11px 16px;display:flex;align-items:center;gap:12px;font-size:.9rem;
+    box-shadow:0 4px 12px rgba(43,140,255,.1);}
+  .bar .track{flex:1;height:9px;background:#e9f1fb;border-radius:6px;overflow:hidden;}
+  .bar .fill{height:100%;width:0;border-radius:6px;
+    background:linear-gradient(90deg,#3ad1c6,#2b8cff);transition:width .35s;}
+  .bar #count{font-weight:700;color:var(--blue-dark);}
+  .section-title{color:#fff;font-weight:800;border-radius:12px;
+    padding:10px 16px;margin:24px 0 6px;font-size:1.05rem;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);}
+  .section-title.s0{background:linear-gradient(135deg,#ff9a6c,#ff6f91);}
+  .section-title.s1{background:linear-gradient(135deg,#4dd0e1,#2b8cff);}
+  .section-title.s2{background:linear-gradient(135deg,#9b8bff,#b06bff);}
+  .section-title.s3{background:linear-gradient(135deg,#42d392,#22b573);}
+  .section-desc{font-size:.86rem;color:var(--gray);margin:0 4px 10px;}
+  .passage{background:#fffdf4;border:1px solid #ffe9c9;border-left:5px solid var(--amber);
+    border-radius:12px;padding:15px 17px;margin:14px 0;font-size:.95rem;
+    box-shadow:0 3px 10px rgba(255,176,46,.08);}
+  .passage h3{margin:0 0 8px;color:#e0820a;font-size:1rem;}
+  .passage .blk{display:inline-block;min-width:1.6em;text-align:center;font-weight:800;
+    color:#fff;background:var(--coral);border-radius:6px;padding:0 4px;margin:0 2px;font-size:.85rem;}
+  .email-h{font-size:.85rem;color:var(--gray);border-bottom:1px dashed #ffd9a8;
+    padding-bottom:6px;margin-bottom:8px;}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:15px 17px;margin:12px 0;box-shadow:0 3px 10px rgba(43,140,255,.07);}
+  .q .stem{font-weight:600;margin-bottom:10px;}
+  .q .stem .num{display:inline-block;color:#fff;background:var(--blue);font-weight:700;
+    border-radius:8px;padding:1px 9px;margin-right:8px;font-size:.92rem;}
+  .opt{display:flex;align-items:flex-start;gap:10px;border:2px solid var(--line);
+    border-radius:11px;padding:10px 13px;margin:8px 0;cursor:pointer;transition:.15s;
+    font-size:.95rem;background:#fbfdff;}
+  .opt:hover{border-color:var(--blue);background:#eef6ff;}
+  .opt input{margin-top:3px;accent-color:var(--blue);}
+  .opt .lab{font-weight:800;color:var(--blue);min-width:18px;}
+  .opt.sel{border-color:var(--blue);background:#e7f2ff;}
+  .opt.correct{border-color:var(--green);background:var(--green-bg);}
+  .opt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .opt.lock{cursor:default;}
+  .exp{display:none;margin-top:11px;border-top:2px dashed #ffe1c2;padding-top:11px;font-size:.9rem;}
+  .exp.show{display:block;}
+  .exp .tag{display:inline-block;font-weight:800;color:#fff;background:var(--green);
+    border-radius:7px;padding:2px 10px;font-size:.8rem;margin-bottom:7px;}
+  .exp .tag.miss{background:var(--red);}
+  .exp .tag.blank{background:var(--gray);}
+  .exp .body{color:#7a4a12;background:#fff7ea;border-radius:8px;padding:8px 11px;margin:5px 0;
+    white-space:pre-line;}
+  .written{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:15px 17px;margin:12px 0;box-shadow:0 3px 10px rgba(43,140,255,.07);}
+  .written h4{margin:0 0 8px;color:var(--blue-dark);font-size:1rem;}
+  .written .prompt{margin-bottom:10px;}
+  .written .blankline{display:inline-block;background:#fbfdff;border:1px dashed var(--line);
+    border-radius:8px;padding:6px 10px;margin-top:6px;}
+  .written button.reveal{background:#fff;color:var(--blue);border:2px solid var(--blue);
+    border-radius:10px;padding:8px 16px;font-weight:800;font-size:.9rem;cursor:pointer;}
+  .written .ans{display:none;margin-top:11px;border-top:2px dashed #ffe1c2;padding-top:11px;font-size:.92rem;}
+  .written .ans.show{display:block;}
+  .written .ans .tag{display:inline-block;font-weight:800;color:#fff;background:var(--blue);
+    border-radius:7px;padding:2px 10px;font-size:.8rem;margin-bottom:7px;}
+  .written .ans .body{color:#7a4a12;background:#fff7ea;border-radius:8px;padding:8px 11px;margin:5px 0;}
+  .actions{position:sticky;bottom:0;padding:14px 0 6px;margin-top:18px;
+    background:linear-gradient(transparent,#fff7f2 35%);}
+  button.submit{width:100%;color:#fff;border:0;border-radius:14px;padding:16px;
+    font-size:1.08rem;font-weight:800;cursor:pointer;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);
+    box-shadow:0 6px 16px rgba(255,93,143,.35);}
+  button.submit:active{transform:translateY(1px);}
+  button.reset{width:100%;background:#fff;color:var(--blue);border:2px solid var(--blue);
+    border-radius:14px;padding:14px;font-size:1rem;font-weight:800;cursor:pointer;margin-top:10px;display:none;}
+  .result{display:none;background:var(--card);border:3px solid transparent;border-radius:16px;
+    padding:22px;margin:16px 0;text-align:center;
+    background-image:linear-gradient(#fff,#fff),linear-gradient(135deg,#3ad1c6,#2b8cff,#b06bff);
+    background-origin:border-box;background-clip:padding-box,border-box;
+    box-shadow:0 8px 22px rgba(43,140,255,.15);}
+  .result.show{display:block;}
+  .result .score{font-size:2.8rem;font-weight:900;
+    background:linear-gradient(135deg,#2b8cff,#b06bff);-webkit-background-clip:text;
+    background-clip:text;-webkit-text-fill-color:transparent;}
+  .result .sub{color:var(--gray);font-size:.95rem;}
+  .result .bd{display:flex;justify-content:center;gap:18px;margin-top:12px;flex-wrap:wrap;font-size:.95rem;}
+  .result .bd span{font-weight:800;}
+  .hint{text-align:center;font-size:.85rem;color:var(--gray);margin-top:9px;min-height:1.2em;}
+  footer{text-align:center;color:var(--gray);font-size:.8rem;margin:24px 0;}
+</style>
+</head>
+<body>
+<a href="tongce.html" style="position:fixed;top:12px;left:12px;background:rgba(255,255,255,.92);color:#2b8cff;padding:7px 15px;border-radius:20px;text-decoration:none;font-size:.85rem;font-weight:800;z-index:999;box-shadow:0 3px 10px rgba(0,0,0,.15);">&#8592; 回題庫</a>
+<div class="wrap">
+  <header class="top">
+    <h1>統測英文　<span style="opacity:.9">模擬考卷 B</span></h1>
+    <p>科技校院四年制與專科學校二年制統一入學測驗　共同科目：英文（模擬）</p>
+    <div class="meta">選擇題共 42 題，每題 2 分，共 84 分　|　每題選擇答案後立即顯示解析　|　送出後顯示總分與作答統計</div>
+  </header>
+
+  <div class="sticky">
+    <div class="bar">
+      <span>作答進度</span>
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <span id="count">0 / 42</span>
+    </div>
+  </div>
+
+  <form id="quiz"></form>
+
+  <div class="result" id="result">
+    <div class="score" id="scoreNum">0</div>
+    <div class="sub" id="scoreTxt">分</div>
+    <div class="bd">
+      <span style="color:var(--green)">答對 <b id="rOk">0</b></span>
+      <span style="color:var(--red)">答錯 <b id="rNo">0</b></span>
+      <span style="color:var(--gray)">未作答 <b id="rBlank">0</b></span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="submit" id="submitBtn">交卷並查看總分</button>
+    <div class="hint" id="hint">尚未作答任何題目</div>
+    <button type="button" class="reset" id="resetBtn">重新作答</button>
+  </div>
+
+  <div class="section-title s2" style="margin-top:30px;">二、非選擇題（共 16 分，點擊查看答案與解析）</div>
+  <div id="written"></div>
+
+  <footer>統測英文模擬考卷 B　&middot;　第二顆腦 / 統測</footer>
+</div>
+
+<script>
+const PARTS = [{"title": "Ⅰ　字彙題", "desc": "共 10 題。第 1–8 題為單字選填；第 9–10 題為劃線字詞同義詞選擇。"}, {"title": "Ⅱ　對話題", "desc": "共 10 題，請依對話內容選出一個最適合的答案。"}, {"title": "Ⅲ　綜合測驗", "desc": "共 8 題，兩篇短文各 4 個空格，請依文意選出最適合的答案。"}, {"title": "Ⅳ　閱讀測驗", "desc": "共 14 題，請依短文內容選出最適當的答案。"}];
+const PASSAGES = {"21": "<div class=\"passage\"><h3>第 21–24 題</h3>\nTaiwan's indigenous peoples (原住民族) have a rich cultural heritage that includes unique languages, music, weaving, and traditional ceremonies. There are currently 16 officially <span class=\"blk\">21</span> indigenous groups in Taiwan, each with its own distinct traditions. In recent years, the government has made efforts to preserve and promote indigenous cultures. For example, indigenous languages are now <span class=\"blk\">22</span> in some schools as part of the regular curriculum. Festivals such as the Amis Harvest Festival (豐年祭) attract both local and international visitors every year, providing a <span class=\"blk\">23</span> for indigenous communities to showcase their traditions. However, many indigenous leaders note that economic challenges and urbanization continue to threaten their way of life. Young people often move to cities for work, making it harder to <span class=\"blk\">24</span> traditional practices from one generation to the next.</div>", "25": "<div class=\"passage\"><h3>第 25–28 題</h3>\nSleep is one of the most important factors in maintaining good health, yet many people worldwide do not get enough of it. Adults are generally recommended to get between seven and nine hours of sleep <span class=\"blk\">25</span>. Lack of sleep has been linked to a wide range of health problems, including heart disease, obesity, and weakened immunity. Research also shows that poor sleep affects memory and concentration. <span class=\"blk\">26</span>, teenagers are particularly vulnerable, as their developing brains require even more rest than adults. Unfortunately, the widespread use of smartphones and social media has made it harder for young people to fall asleep. The blue light emitted by screens <span class=\"blk\">27</span> the production of melatonin (褪黑激素), a hormone that helps regulate sleep. Experts recommend avoiding screens for at least one hour before bed and keeping a consistent sleep schedule <span class=\"blk\">28</span> one falls asleep more easily over time.</div>", "29": "<div class=\"passage\"><h3>第 29–30 題</h3>\n<i>Read the schedule below and answer the questions.</i><br><br>\n<b>Sunrise Fitness Studio &ndash; Weekly Class Schedule</b>\n<table style=\"width:100%;border-collapse:collapse;margin:10px 0;font-size:.85rem;\">\n<tr style=\"background:#ffe9c9;\"><th style=\"border:1px solid #ffd9a8;padding:5px 6px;\">Class</th><th style=\"border:1px solid #ffd9a8;padding:5px 6px;\">Day</th><th style=\"border:1px solid #ffd9a8;padding:5px 6px;\">Time</th><th style=\"border:1px solid #ffd9a8;padding:5px 6px;\">Instructor</th><th style=\"border:1px solid #ffd9a8;padding:5px 6px;\">Level</th></tr>\n<tr><td style=\"border:1px solid #ffd9a8;padding:5px 6px;\">Yoga</td><td style=\"border:1px solid #ffd9a8;padding:5px 6px;\">Mon / Wed / Fri</td><td style=\"border:1px solid #ffd9a8;padding:5px 6px;\">7:00&ndash;8:00 AM</td><td style=\"border:1px solid #ffd9a8;padding:5px 6px;\">Ms. Lin</td><td style=\"border:1px solid #ffd9a8;padding:5px 6px;\">Beginner</td></tr>\n<tr><td style=\"border:1px solid #ffd9a8;padding:5px 6px;\">Pilates</td><td style=\"border:1px solid #ffd9a8;padding:5px 6px;\">Tue / Thu</td><td style=\"border:1px solid #ffd9a8;padding:5px 6px;\">6:30&ndash;7:30 PM</td><td style=\"border:1px solid #ffd9a8;padding:5px 6px;\">Mr. Chen</td><td style=\"border:1px solid #ffd9a8;padding:5px 6px;\">Intermediate</td></tr>\n<tr><td style=\"border:1px solid #ffd9a8;padding:5px 6px;\">Zumba</td><td style=\"border:1px solid #ffd9a8;padding:5px 6px;\">Wed / Sat</td><td style=\"border:1px solid #ffd9a8;padding:5px 6px;\">10:00&ndash;11:00 AM</td><td style=\"border:1px solid #ffd9a8;padding:5px 6px;\">Ms. Wang</td><td style=\"border:1px solid #ffd9a8;padding:5px 6px;\">All levels</td></tr>\n<tr><td style=\"border:1px solid #ffd9a8;padding:5px 6px;\">Strength Training</td><td style=\"border:1px solid #ffd9a8;padding:5px 6px;\">Mon / Fri</td><td style=\"border:1px solid #ffd9a8;padding:5px 6px;\">5:30&ndash;6:30 PM</td><td style=\"border:1px solid #ffd9a8;padding:5px 6px;\">Mr. Lee</td><td style=\"border:1px solid #ffd9a8;padding:5px 6px;\">Advanced</td></tr>\n<tr><td style=\"border:1px solid #ffd9a8;padding:5px 6px;\">Swimming</td><td style=\"border:1px solid #ffd9a8;padding:5px 6px;\">Sat / Sun</td><td style=\"border:1px solid #ffd9a8;padding:5px 6px;\">9:00&ndash;10:30 AM</td><td style=\"border:1px solid #ffd9a8;padding:5px 6px;\">Ms. Huang</td><td style=\"border:1px solid #ffd9a8;padding:5px 6px;\">All levels</td></tr>\n</table>\n<i>Note: All classes require registration at least 24 hours in advance. Classes with fewer than 5 registered participants will be cancelled.</i></div>", "31": "<div class=\"passage\"><h3>第 31–32 題</h3>\n<i>Read the following web post and answer the questions.</i>\n<div class=\"email-h\">TechHelp Community Forum&nbsp;&nbsp;|&nbsp;&nbsp;Thread: My new laptop won't connect to Wi-Fi &ndash; please help!&nbsp;&nbsp;|&nbsp;&nbsp;Posted by: user2468</div>\nHi everyone! I just bought a new laptop and for some reason it can't connect to my home Wi-Fi. It shows the network name, but every time I try to connect, it says &ldquo;Connection failed.&rdquo; My phone and tablet work fine on the same network. I've already tried restarting the laptop and the router. Not sure what else to do. Any advice?<br><br>\n<b>Reply from TechGuru99:</b><br>\nHi! Try forgetting the network on your laptop and then reconnecting fresh. If that doesn't work, check if your laptop's Wi-Fi driver needs an update. You can do this by going to Device Manager and looking for &ldquo;Network Adapters.&rdquo; Right-click and choose &ldquo;Update driver.&rdquo; Let us know how it goes!<br><br>\n<b>Reply from helper_tom:</b><br>\nAlso, make sure the date and time settings on your new laptop are correct. Incorrect time settings can sometimes prevent a successful connection.</div>", "33": "<div class=\"passage\"><h3>第 33–35 題</h3>\nCoffee is one of the most popular beverages in the world, and Taiwan has developed a rich coffee culture of its own. While many Taiwanese consumers still enjoy instant coffee or chain caf&eacute; drinks, a growing number of coffee lovers are turning to specialty coffee &mdash; high-quality beans that are carefully grown, processed, and brewed.<br><br>\nTaiwan even grows its own specialty coffee, primarily in mountainous regions such as Alishan (阿里山) and the Da-wu Mountain area (大武山). Taiwanese coffee farmers have won international recognition in recent years, with some beans earning top rankings at global competitions. The high altitude, misty climate, and rich soil of these regions create ideal growing conditions.<br><br>\nThe rise of specialty coffee in Taiwan has given birth to a new generation of skilled baristas. Coffee competitions such as the Taiwan Barista Championship draw attention from across Asia. Young professionals invest significant time learning about bean origins, extraction techniques, and flavor profiles.<br><br>\nHowever, specialty coffee remains more expensive than mass-market options, and some consumers find the culture intimidating. Supporters of the movement argue that once people try a well-prepared cup of specialty coffee, they quickly understand why it is worth the price.</div>", "36": "<div class=\"passage\"><h3>第 36–38 題</h3>\nAnimal-assisted therapy (AAT), also known as pet therapy, is a growing field in healthcare and mental health treatment. It involves trained animals &mdash; most commonly dogs &mdash; interacting with patients to help reduce stress, anxiety, and feelings of loneliness. Research has shown that spending time with animals can lower blood pressure, increase levels of the feel-good hormone oxytocin, and even reduce pain perception.<br><br>\nAAT is used in a wide range of settings, including hospitals, nursing homes, schools, and rehabilitation centers. For elderly patients with dementia (失智症), visits from therapy dogs have been found to improve mood and social engagement. In schools, reading programs that involve children reading aloud to dogs have helped students who struggle with reading gain confidence.<br><br>\nCritics of AAT raise concerns about hygiene and potential allergic reactions among patients. There is also debate about the stress that therapy work may place on the animals themselves. Ethical guidelines now require that therapy animals be regularly assessed for their health and well-being.<br><br>\nDespite these concerns, interest in AAT continues to grow. As more research supports its benefits, healthcare providers are increasingly incorporating animal-assisted programs into their treatment plans.</div>", "39": "<div class=\"passage\"><h3>第 39–42 題</h3>\nTaiwan's convenience stores have evolved far beyond simple shops selling snacks and drinks. Today, they serve as essential service centers that touch nearly every aspect of daily life. There are more than 12,000 convenience stores on the island &mdash; one of the highest densities in the world &mdash; and they are open 24 hours a day, seven days a week.<br><br>\nAt a Taiwan convenience store, customers can pay utility bills, pick up online purchases, print documents, apply for government certificates, and even buy high-speed rail tickets. Hot food counters serve everything from tea eggs to bento boxes, and some stores offer seating areas where people can eat, study, or hold informal meetings. Micro-ATMs and financial services are also commonly available.<br><br>\nDuring natural disasters such as typhoons, convenience stores play a critical role in the community. They often remain open when other businesses close, providing emergency supplies and a gathering point for those in need. After major floods or earthquakes, they have been among the first businesses to restore operations, distributing food and water to affected residents.<br><br>\nThe success of Taiwan's convenience store model has attracted international attention. Several Southeast Asian countries have adopted similar systems, inspired by Taiwan's example. Industry observers note that Taiwan's convenience stores succeed because they are deeply embedded in daily life and constantly adapting to meet changing consumer needs.</div>"};
+const Q = [{"n": 1, "p": 0, "stem": "The hospital kept all patient records _____, so no one outside the medical team could access them.", "o": ["confidential", "expensive", "ordinary", "seasonal"], "a": 0, "exp": "✓ (A) confidential（機密的）— 醫院將所有病患紀錄保密，只有醫療團隊可以查閱，語意一致。\n❌ (B) expensive = 昂貴的，不修飾紀錄保存方式。\n❌ (C) ordinary = 普通的，語意相反。\n❌ (D) seasonal = 季節性的，不適用。"}, {"n": 2, "p": 0, "stem": "The mountain trail was so _____ that only experienced hikers were advised to attempt it.", "o": ["comfortable", "cheerful", "steep", "polite"], "a": 2, "exp": "✓ (C) steep（陡峭的）— 山徑「陡峭」到只有有經驗的健行者才被建議嘗試，語意合理。\n❌ (A) comfortable = 舒適的，語意相反。\n❌ (B) cheerful = 愉快的，不修飾山徑。\n❌ (D) polite = 有禮貌的，不適用。"}, {"n": 3, "p": 0, "stem": "Local officials _____ a new park project that would provide green space for residents in the busy downtown area.", "o": ["approved", "avoided", "damaged", "regretted"], "a": 0, "exp": "✓ (A) approved（批准）— 地方官員「批准」了一項公園計畫，語意通順。\n❌ (B) avoided = 避免，語意不符（官員不會避免公園計畫）。\n❌ (C) damaged = 損壞，語意相反。\n❌ (D) regretted = 後悔，不符合語境。"}, {"n": 4, "p": 0, "stem": "The famous chef's cookbook became an instant bestseller, _____ thousands of home cooks to try new recipes.", "o": ["frightening", "inspiring", "missing", "wasting"], "a": 1, "exp": "✓ (B) inspiring（激勵；鼓舞）— 食譜書成為暢銷書，「激勵」數千位家庭廚師嘗試新食譜，分詞構句表結果，語意順暢。\n❌ (A) frightening = 嚇到，語意相反。\n❌ (C) missing = 錯過，語意不符。\n❌ (D) wasting = 浪費，語意不符。"}, {"n": 5, "p": 0, "stem": "The elderly woman could not _____ the stairs on her own, so a volunteer helped her up to the second floor.", "o": ["climb", "drop", "smile", "teach"], "a": 0, "exp": "✓ (A) climb（爬；攀登）— 老婦人無法獨自「爬」樓梯，志工幫助她到二樓，語意一致。\n❌ (B) drop = 掉落，語意不符。\n❌ (C) smile = 微笑，不適用。\n❌ (D) teach = 教，不適用。"}, {"n": 6, "p": 0, "stem": "The company's new product was so _____ that it sold out within hours of going on sale online.", "o": ["boring", "distant", "popular", "useless"], "a": 2, "exp": "✓ (C) popular（受歡迎的）— 產品在幾小時內售罄，表示非常「受歡迎」。\n❌ (A) boring = 無聊的，語意相反（無聊的產品不會售罄）。\n❌ (B) distant = 遙遠的，不修飾產品。\n❌ (D) useless = 無用的，語意相反。"}, {"n": 7, "p": 0, "stem": "After working at the same company for twenty years, she decided to _____ and start her own business.", "o": ["repeat", "hide", "resign", "arrive"], "a": 2, "exp": "✓ (C) resign（辭職）— 在同一家公司工作二十年後，她決定「辭職」並創業，語意合理。\n❌ (A) repeat = 重複，不符合語境。\n❌ (B) hide = 躲藏，語意不符。\n❌ (D) arrive = 到達，語意不符。"}, {"n": 8, "p": 0, "stem": "The athlete's performance in the final race was _____, breaking both the national and world records at the same time.", "o": ["was described as", "was regarded as", "nothing but", "outstanding"], "a": 3, "exp": "✓ (D) outstanding（傑出的）— 同時打破國家和世界紀錄，表現「傑出」，語意完整。\n❌ (A) was described as = 被描述為（文法不完整，缺補語）。\n❌ (B) was regarded as = 被視為（後面應接名詞）。\n❌ (C) nothing but = 只不過，語意不符（nothing but 後接名詞）。"}, {"n": 9, "p": 0, "stem": "The company decided to <u>halt</u> production temporarily due to a shortage of raw materials.", "o": ["stop", "increase", "review", "announce"], "a": 0, "exp": "✓ (A) stop（停止）— halt（暫停、停止）與 stop 意義最接近。\n❌ (B) increase = 增加，語意相反。\n❌ (C) review = 審查，語意不符。\n❌ (D) announce = 宣布，語意不符。"}, {"n": 10, "p": 0, "stem": "Many students find it hard to concentrate during long lectures because their attention tends to <u>drift</u>.", "o": ["focus", "improve", "relax", "wander"], "a": 3, "exp": "✓ (D) wander（游移；漫遊）— drift 在此表示「注意力飄移、散漫」，wander 意義最接近。\n❌ (A) focus = 集中，語意相反。\n❌ (B) improve = 改善，語意不符。\n❌ (C) relax = 放鬆，語意不符。"}, {"n": 11, "p": 1, "stem": "Nurse: Good morning! How are you feeling today?<br>Patient: A little better, thank you. But my throat is still sore.<br>Nurse: _____<br>Patient: I took it at seven this morning.", "o": ["Have you eaten breakfast yet?", "When did you last take your medicine?", "What time did the doctor visit?", "Would you like some water?"], "a": 1, "exp": "✓ (B) When did you last take your medicine?（你上次服藥是什麼時候？）— 病患回答「今天早上七點吃的」，直接回應「上次服藥時間」的詢問。\n❌ (A)(C)(D) 不符合病患的回答內容。"}, {"n": 12, "p": 1, "stem": "Rick: I can't decide what to do this weekend.<br>Pam: _____<br>Rick: That sounds great! I haven't been to the beach in ages.<br>Pam: Perfect. I'll bring the sunscreen!", "o": ["Why don't you just stay home and rest?", "How about going to the beach together?", "Have you tried the new shopping mall?", "You should start exercising more."], "a": 1, "exp": "✓ (B) How about going to the beach together?（要不要一起去海邊？）— Rick 說「聽起來很棒！好久沒去海邊了」，直接回應去海邊的提議。\n❌ (A) 建議待在家，Rick 不會說「聽起來很棒！」。\n❌ (C)(D) 與 Rick 的回應不符。"}, {"n": 13, "p": 1, "stem": "Tim: My computer crashed and I lost all my homework files.<br>Claire: That's terrible! _____<br>Tim: No, I didn't. I completely forgot.<br>Claire: Let that be a lesson — always back up your work!", "o": ["Did you save your work to the cloud?", "Can you borrow someone's computer?", "Which subject was the homework for?", "Did you tell your teacher already?"], "a": 0, "exp": "✓ (A) Did you save your work to the cloud?（你有把作業存到雲端嗎？）— Tim 說「沒有，完全忘了」，直接回應是否備份到雲端的詢問。\n❌ (B)(C)(D) 與 Tim 的否定回答不符合邏輯對應。"}, {"n": 14, "p": 1, "stem": "Receptionist: Good afternoon, Golden Star Hotel. How can I help you?<br>Caller: Hi, I'd like to make a reservation for two nights, please.<br>Receptionist: Of course. _____<br>Caller: We'll be checking in on July 10th.", "o": ["What is your phone number?", "How many guests will be staying?", "What are your check-in and check-out dates?", "Would you prefer a smoking or non-smoking room?"], "a": 2, "exp": "✓ (C) What are your check-in and check-out dates?（您的入住和退房日期是什麼？）— 來電者回答「7月10日入住」，直接回應詢問入退房日期的問題。\n❌ (A)(B)(D) 詢問方向不符合來電者的回答。"}, {"n": 15, "p": 1, "stem": "Julia: I heard that you got into the National University of the Arts!<br>Leo: Yes! I'm still in shock. I wasn't expecting it.<br>Julia: _____<br>Leo: Thank you so much. It hasn't really sunk in yet.", "o": ["That school is very hard to get into.", "What will you study there?", "Why didn't you apply earlier?", "You truly deserve it. Congratulations!"], "a": 3, "exp": "✓ (D) You truly deserve it. Congratulations!（你真的當之無愧。恭喜！）— Leo 說「非常感謝，還沒完全回過神來」，明顯是回應祝賀和讚美。\n❌ (A)(B)(C) 語氣消極或方向偏移，Leo 不會說「謝謝！還沒回過神」。"}, {"n": 16, "p": 1, "stem": "Henry: Coach, I've been practicing every day, but my swimming time isn't improving.<br>Coach: _____<br>Henry: I just swim back and forth as fast as I can.<br>Coach: That's the problem. You need to focus on your technique, not just speed.", "o": ["What kind of training are you doing?", "Have you tried swimming in a longer pool?", "Do you train with any other athletes?", "When do you usually practice?"], "a": 0, "exp": "✓ (A) What kind of training are you doing?（你在做什麼訓練？）— Henry 回答「只是盡快來回游」，直接說明訓練方式，回應教練詢問訓練類型的問題。\n❌ (B)(C)(D) 不符合 Henry 的回答內容。"}, {"n": 17, "p": 1, "stem": "Helen: There's a charity run next Sunday. Want to sign up together?<br>James: A charity run? _____<br>Helen: All the money raised goes to support children's education in rural areas.<br>James: That's a wonderful cause. Count me in!", "o": ["Where does it start?", "How long is the race?", "What charity does it support?", "Is registration free?"], "a": 2, "exp": "✓ (C) What charity does it support?（支持什麼慈善機構？）— Helen 回答「所有籌得款項用於支持偏鄉兒童教育」，直接回應詢問支持對象的問題。\n❌ (A)(B)(D) 與 Helen 的回答不對應。"}, {"n": 18, "p": 1, "stem": "Student: Professor Wang, could I speak to you after class?<br>Professor: Sure. Is everything alright?<br>Student: I wanted to ask about the essay assignment. _____<br>Professor: Of course. Send me an email and we'll set up a time.", "o": ["Can I hand it in late?", "I'd like some feedback on my draft, if possible.", "How many pages does it need to be?", "When is the deadline exactly?"], "a": 1, "exp": "✓ (B) I'd like some feedback on my draft, if possible.（如果可以的話，我想請您給我的草稿一些意見。）— 教授說「當然，發郵件給我，我們約個時間」，回應需要約時間討論的情境，與提交草稿請求反饋一致。\n❌ (A)(C)(D) 是簡單的是非或資訊詢問，不需要教授說「約個時間」。"}, {"n": 19, "p": 1, "stem": "Mia: The weather forecast says it'll rain all week.<br>Dan: _____<br>Mia: I was going to have an outdoor birthday party this Saturday!<br>Dan: Oh no. Maybe you should move it indoors just in case.", "o": ["That's perfect — I love rainy days.", "That's not too bad, is it?", "That's terrible timing! What did you have planned?", "Who cares about the weather anyway?"], "a": 2, "exp": "✓ (C) That's terrible timing! What did you have planned?（時機真糟！你有什麼計畫？）— Mia 回答「我原本要辦戶外生日派對」，回應的是詢問她的計畫的問題，而且 \"terrible timing\" 與下雨預報的壞消息呼應。\n❌ (A)(B)(D) 語氣不符合或不自然。"}, {"n": 20, "p": 1, "stem": "Amy: I just got back from the science exhibition at the museum.<br>Bob: How was it?<br>Amy: It was fantastic! They had interactive displays about space exploration.<br>Bob: _____<br>Amy: Yes! You'd absolutely love it. It's open until the end of the month.", "o": ["Was it crowded?", "Did you take any photos?", "That sounds amazing! Is it still running?", "Do they have anything about animals?"], "a": 2, "exp": "✓ (C) That sounds amazing! Is it still running?（聽起來太棒了！還在展出嗎？）— Amy 說「你一定會喜歡！展覽開到月底」，直接回應詢問是否還在展出的問題。\n❌ (A)(B)(D) 與 Amy 的回答（確認展覽時間）不對應。"}, {"n": 21, "p": 2, "stem": "(21)", "o": ["recognized", "denied", "invented", "forgotten"], "a": 0, "exp": "✓ (A) recognized（承認；認定）— \"officially recognized\" 是固定搭配，表示「官方正式認定」的原住民族群，語意正確。\n❌ (B) denied = 否認，語意相反。(C) invented = 發明，語意不符。(D) forgotten = 遺忘，語意不符。"}, {"n": 22, "p": 2, "stem": "(22)", "o": ["taught", "hidden", "removed", "sold"], "a": 0, "exp": "✓ (A) taught（教授）— 原住民語言現在在部分學校「被教授」，被動語態（be + pp），符合文法和語意。\n❌ (B) hidden = 被隱藏，語意相反。(C) removed = 被移除，語意相反。(D) sold = 被販賣，語意不符。"}, {"n": 23, "p": 2, "stem": "(23)", "o": ["problem", "platform", "punishment", "promise"], "a": 1, "exp": "✓ (B) platform（平台；舞台）— 節慶為原住民社群「提供了展示傳統的舞台」，語意自然。\n❌ (A) problem = 問題，語意相反。(C) punishment = 懲罰，語意不符。(D) promise = 承諾，語意不符。"}, {"n": 24, "p": 2, "stem": "(24)", "o": ["pass on", "throw away", "break down", "look into"], "a": 0, "exp": "✓ (A) pass on（傳承；傳遞）— \"pass on...from one generation to the next\" 是固定搭配，表示「從一代傳給下一代」。\n❌ (B) throw away = 丟棄，語意相反。(C) break down = 分解；失敗，語意不符。(D) look into = 調查，語意不符。"}, {"n": 25, "p": 2, "stem": "(25)", "o": ["per day", "per class", "per meal", "per exercise"], "a": 0, "exp": "✓ (A) per day（每天）— 每天應睡七到九小時，per day 是最合理的時間單位。\n❌ (B) per class / (C) per meal / (D) per exercise 均不符合睡眠建議的語境。"}, {"n": 26, "p": 2, "stem": "(26)", "o": ["As a result", "In addition", "On the contrary", "In other words"], "a": 1, "exp": "✓ (B) In addition（此外）— 前文說睡眠不足影響健康，後文補充說青少年特別脆弱，屬於補充說明關係。\n❌ (A) As a result = 因此（因果）。(C) On the contrary = 相反地（轉折）。(D) In other words = 換句話說（同義改述）。"}, {"n": 27, "p": 2, "stem": "(27)", "o": ["increases", "replaces", "suppresses", "creates"], "a": 2, "exp": "✓ (C) suppresses（抑制）— 藍光「抑制」褪黑激素的產生，這是科學事實，且語意與後文「幫助調節睡眠的荷爾蒙」相符。\n❌ (A) increases = 增加，語意相反（藍光不增加褪黑激素）。(B) replaces = 取代。(D) creates = 創造，語意不符。"}, {"n": 28, "p": 2, "stem": "(28)", "o": ["unless", "so that", "although", "until"], "a": 1, "exp": "✓ (B) so that（以便；使得）— 保持固定的睡眠時間表「以便」隨著時間更容易入睡，表目的結果。\n❌ (A) unless = 除非（條件否定）。(C) although = 雖然（讓步）。(D) until = 直到（時間）。"}, {"n": 29, "p": 3, "stem": "A student who is a complete beginner wants to exercise on Wednesday morning. Which class should she join?", "o": ["Yoga", "Pilates", "Zumba", "Strength Training"], "a": 2, "exp": "✓ (C) Zumba — Zumba 標示「所有程度（All levels）」，且週三上午 10:00–11:00 有課，最適合完全初學者選擇。\n❌ (A) Yoga 雖然在週三早上 7:00–8:00 有課，但標示為 Beginner 等級。(B)(D) 時間或程度不符。"}, {"n": 30, "p": 3, "stem": "According to the schedule, which of the following is true?", "o": ["Swimming classes are available from Monday to Friday.", "Zumba is taught by Mr. Lee on Wednesday and Saturday.", "A class may be cancelled if not enough people register.", "Pilates is open to people of all fitness levels."], "a": 2, "exp": "✓ (C) — 公告備注說明：報名人數少於 5 人的課程將取消。\n❌ (A) 游泳課在週六和週日，非週一至五。(B) Zumba 由 Ms. Wang 授課，非 Mr. Lee。(D) Pilates 為中階程度，非所有程度。"}, {"n": 31, "p": 3, "stem": "What is the main problem described in the post?", "o": ["The user's phone cannot connect to the internet.", "The user's new laptop cannot connect to Wi-Fi.", "The home router keeps turning off unexpectedly.", "The user forgot the password for the Wi-Fi network."], "a": 1, "exp": "✓ (B) — 貼文標題和內文清楚說明：「剛買的新筆電無法連接家中 Wi-Fi，顯示網路名稱但連線失敗」。\n❌ (A) 文中提到手機和平板都正常連線。(C)(D) 文中未提及。"}, {"n": 32, "p": 3, "stem": "What does TechGuru99 suggest the user should check?", "o": ["Whether the laptop's antivirus software is up to date", "Whether the Wi-Fi password needs to be changed", "Whether the laptop's Wi-Fi driver needs an update", "Whether the router is compatible with new laptops"], "a": 2, "exp": "✓ (C) — TechGuru99 建議進入裝置管理員（Device Manager），找到「網路介面卡（Network Adapters）」，右鍵選擇「更新驅動程式（Update driver）」。\n❌ (A)(B)(D) 文中未提及。"}, {"n": 33, "p": 3, "stem": "What is the passage mainly about?", "o": ["How coffee is grown in the mountains of Taiwan", "The history of coffee consumption in Asia", "The development of specialty coffee culture in Taiwan", "Why Taiwanese consumers prefer instant coffee"], "a": 2, "exp": "✓ (C) — 文章介紹台灣咖啡文化的興起、本土咖啡豆生產、精品咖啡師培育等，整體主題為台灣精品咖啡文化的發展。\n❌ (A) 僅是文章部分內容，不是整體主題。(B)(D) 文章未討論此議題。"}, {"n": 34, "p": 3, "stem": "Which of the following is mentioned as a reason why Alishan is good for growing coffee?", "o": ["It has a warm and sunny climate all year round.", "It has high altitude, mist, and fertile soil.", "It is close to major coffee-consuming cities.", "It uses the most advanced farming technology in Asia."], "a": 1, "exp": "✓ (B) — 文章第二段明確提到：高海拔、多霧氣候和肥沃土壤是阿里山等地種植咖啡的理想條件。\n❌ (A)(C)(D) 文中未提及。"}, {"n": 35, "p": 3, "stem": "According to the passage, what is one challenge that specialty coffee faces?", "o": ["There are not enough trained baristas in Taiwan.", "Taiwanese farmers cannot compete in global contests.", "It is more costly and can seem difficult to understand.", "The government does not support the coffee industry."], "a": 2, "exp": "✓ (C) — 文章第四段指出精品咖啡比大眾市場選擇昂貴，且一些消費者覺得這種文化令人卻步（intimidating）。\n❌ (A) 文章提到培育出新一代咖啡師，並非不足。(B) 文章提到台灣咖啡豆獲國際認可。(D) 文中未提及。"}, {"n": 36, "p": 3, "stem": "What is the main idea of this passage?", "o": ["Why dogs make better pets than other animals", "The benefits, uses, and concerns related to pet therapy", "How to train a dog for therapy work", "Why animals should not be used in hospitals"], "a": 1, "exp": "✓ (B) — 文章依序介紹動物輔助療法的好處（減壓、降血壓）、應用場所（醫院、養老院、學校）以及批評者的顧慮（衛生、動物壓力），全面涵蓋主題。\n❌ (A)(C)(D) 均非文章主旨。"}, {"n": 37, "p": 3, "stem": "According to the passage, which is NOT a listed benefit of spending time with therapy animals?", "o": ["Reduced stress and anxiety", "Improved physical strength and endurance", "Lower blood pressure", "Higher levels of oxytocin"], "a": 1, "exp": "✓ (B) — 文章提到的好處包括：減少壓力和焦慮、降低血壓、增加催產素、減少疼痛感覺。但「提升體力和耐力」在文章中並未提及。\n❌ (A)(C)(D) 均為文章提到的好處。"}, {"n": 38, "p": 3, "stem": "What concern do critics raise about animal-assisted therapy?", "o": ["Animals are not intelligent enough for therapy work.", "Children may become too attached to therapy animals.", "Therapy work may be stressful for the animals involved.", "AAT is only effective for elderly patients."], "a": 2, "exp": "✓ (C) — 文章第三段提到批評者關切：治療工作可能對動物本身造成壓力。因此現在有倫理準則要求定期評估治療動物的健康和福祉。\n❌ (A)(B)(D) 文中未提及。"}, {"n": 39, "p": 3, "stem": "What is the main purpose of this passage?", "o": ["To compare convenience stores in different Asian countries", "To explain the wide-ranging role of convenience stores in Taiwan", "To argue that convenience stores are replacing traditional shops", "To describe the history of the 7-Eleven brand in Taiwan"], "a": 1, "exp": "✓ (B) — 文章介紹台灣便利商店提供的多元服務（繳費、取包裹、列印、政府憑證、火車票等）以及在災難期間的社區角色，目的是解釋便利商店在台灣生活中的廣泛功能。\n❌ (A)(C)(D) 均非文章主旨。"}, {"n": 40, "p": 3, "stem": "According to the passage, which of the following services is available at Taiwan's convenience stores?", "o": ["Dental appointments and medical check-ups", "Language courses and library services", "Payment of utility bills and pickup of online orders", "Passport renewals and visa applications"], "a": 2, "exp": "✓ (C) — 文章第二段明確提到：顧客可以在便利商店繳交水電費（utility bills）和領取網購包裹（pick up online purchases）。\n❌ (A)(B)(D) 文中未提及。"}, {"n": 41, "p": 3, "stem": "How do convenience stores contribute during natural disasters?", "o": ["They offer free accommodation to affected residents.", "They provide supplies and remain open when other shops close.", "They organize volunteer teams to help with rescue efforts.", "They donate all profits to disaster relief funds."], "a": 1, "exp": "✓ (B) — 文章第三段說明：颱風等天然災害期間，便利商店通常在其他商家關閉時仍保持營業，提供緊急物資和集合場所。\n❌ (A)(C)(D) 文中未提及。"}, {"n": 42, "p": 3, "stem": "According to the passage, why have other countries adopted Taiwan's convenience store model?", "o": ["Because Taiwan has more stores than any other country in the world", "Because the model is deeply integrated into everyday life and adaptable", "Because Taiwanese stores offer lower prices than other countries", "Because the stores are only open at night when other shops are closed"], "a": 1, "exp": "✓ (B) — 文章最後段落引用業界觀察者的話：台灣便利商店成功是因為它深深融入日常生活，且不斷適應消費者的變化需求，這也是其他國家效仿的原因。\n❌ (A)(C)(D) 文中未提及。"}];
+const WRITTEN = [{"title": "Ⅰ. 填充（4 分）", "prompt": "這位年輕科學家因為在再生能源領域的傑出貢獻而獲得了獎學金。<br><span class=\"blankline\">The young scientist was awarded a s<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>① for her outstanding c<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>② in the field of renewable energy.</span>", "ans": "① <b>scholarship</b>　② <b>contribution</b>", "exp": "scholarship（n.）= 獎學金，字首 s；contribution（n.）= 貢獻，字首 c。<br>完整句：The young scientist was awarded a <b>scholarship</b> for her outstanding <b>contribution</b> in the field of renewable energy.（這位年輕科學家因在再生能源領域的傑出貢獻而獲得了獎學金。）"}, {"title": "Ⅱ. 句子重組（6 分）", "prompt": "請將下列提示字詞重組成一句完整的句子，並於句尾加上適當標點符號：<br><i>the doctor / every patient / with care and respect / advised / to treat</i>", "ans": "The doctor advised every patient to treat with care and respect.", "exp": "句型為 \"advise + 人 + to do\"：建議某人做某事。\"treat...with care and respect\" = 以關心和尊重對待。完整句：The doctor advised every patient to treat with care and respect."}, {"title": "Ⅲ. 中譯英（6 分）", "prompt": "請將以下中文句子譯成正確、通順、達意的英文：<br>隨著人口老化，社會需要更多的醫療資源來照顧老年人。", "ans": "As the population ages, society needs more medical resources to take care of the elderly.", "exp": "\"As the population ages\" = 隨著人口老化（as 引導時間/因果副詞子句）；\"medical resources\" = 醫療資源；\"the elderly\" = 老年人（集合名詞）。另可寫為：With an aging population, society needs more medical resources to care for older people."}];
+const TOTAL = Q.length;
+
+/* ====== 產生選擇題畫面 ====== */
+const form = document.getElementById('quiz');
+let lastPart = -1;
+Q.forEach(q=>{
+  if(q.p!==lastPart){
+    const st=document.createElement('div'); st.className='section-title s'+q.p; st.textContent=PARTS[q.p].title;
+    const sd=document.createElement('div'); sd.className='section-desc'; sd.textContent=PARTS[q.p].desc;
+    form.appendChild(st); form.appendChild(sd); lastPart=q.p;
+  }
+  if(PASSAGES[q.n]){ const d=document.createElement('div'); d.innerHTML=PASSAGES[q.n]; form.appendChild(d.firstChild); }
+  const card=document.createElement('div'); card.className='q'; card.id='q'+q.n;
+  const isBlank=/^\(\d+\)$/.test(q.stem);
+  const stemHtml = isBlank ? `第 ${q.n} 格` : q.stem;
+  card.innerHTML=`<div class="stem"><span class="num">${q.n}</span>${stemHtml}</div>`;
+  q.o.forEach((opt,i)=>{
+    const lab=document.createElement('label'); lab.className='opt'; lab.dataset.i=i;
+    lab.innerHTML=`<input type="radio" name="q${q.n}" value="${i}"><span class="lab">${'ABCD'[i]}</span><span>${opt}</span>`;
+    lab.querySelector('input').addEventListener('change',()=>{
+      pickAnswer(q,i);
+    });
+    card.appendChild(lab);
+  });
+  const exp=document.createElement('div'); exp.className='exp'; exp.id='exp'+q.n;
+  card.appendChild(exp);
+  form.appendChild(card);
+});
+
+const submitBtn=document.getElementById('submitBtn');
+const resetBtn=document.getElementById('resetBtn');
+const hint=document.getElementById('hint');
+let submitted=false;
+
+/* 選擇答案後立即鎖定並顯示該題解析 */
+function pickAnswer(q,pick){
+  const card=document.getElementById('q'+q.n);
+  card.querySelectorAll('.opt').forEach(o=>{
+    o.classList.add('lock');
+    o.querySelector('input').disabled=true;
+    const i=parseInt(o.dataset.i);
+    if(i===pick) o.classList.add('sel');
+    if(i===q.a) o.classList.add('correct');
+    if(i===pick && pick!==q.a) o.classList.add('wrong');
+  });
+  const correct = pick===q.a;
+  const exp=document.getElementById('exp'+q.n);
+  const tag = correct ? '答對' : '答錯';
+  exp.innerHTML=`<span class="tag ${correct?'':'miss'}">${tag}　正解：${'ABCD'[q.a]}</span>
+    <div class="body">${q.exp}</div>`;
+  exp.classList.add('show');
+  updateProgress();
+}
+
+function answeredCount(){ let c=0; Q.forEach(q=>{ if(form.querySelector(`input[name="q${q.n}"]:checked`)) c++; }); return c; }
+function updateProgress(){
+  const c=answeredCount();
+  document.getElementById('count').textContent=`${c} / ${TOTAL}`;
+  document.getElementById('fill').style.width=(c/TOTAL*100)+'%';
+  if(submitted) return;
+  hint.textContent = c===TOTAL ? `已完成全部 ${TOTAL} 題，可以交卷查看總分了` : (c===0 ? '尚未作答任何題目（每題選擇後立即顯示解析）' : `已作答 ${c} 題，未作答 ${TOTAL-c} 題（可隨時交卷）`);
+}
+
+submitBtn.addEventListener('click',()=>{
+  let ok=0, blank=0;
+  Q.forEach(q=>{
+    const sel=form.querySelector(`input[name="q${q.n}"]:checked`);
+    const pick = sel ? parseInt(sel.value) : null;
+    const card=document.getElementById('q'+q.n);
+    if(pick===null){
+      blank++;
+      card.querySelectorAll('.opt').forEach(o=>{
+        o.classList.add('lock');
+        o.querySelector('input').disabled=true;
+        const i=parseInt(o.dataset.i);
+        if(i===q.a) o.classList.add('correct');
+      });
+      const exp=document.getElementById('exp'+q.n);
+      exp.innerHTML=`<span class="tag blank">未作答　正解：${'ABCD'[q.a]}</span>
+        <div class="body">${q.exp}</div>`;
+      exp.classList.add('show');
+    } else if(pick===q.a){
+      ok++;
+    }
+  });
+  const res=document.getElementById('result');
+  const score = ok*2;
+  document.getElementById('scoreNum').textContent=score;
+  document.getElementById('scoreTxt').textContent=`分（選擇題 / 84 分，答對 ${ok} / ${TOTAL} 題）`;
+  document.getElementById('rOk').textContent=ok;
+  document.getElementById('rNo').textContent=TOTAL-ok-blank;
+  document.getElementById('rBlank').textContent=blank;
+  res.classList.add('show');
+  submitted=true;
+  submitBtn.style.display='none'; hint.style.display='none'; resetBtn.style.display='block';
+  res.scrollIntoView({behavior:'smooth'});
+});
+
+resetBtn.addEventListener('click',()=>{
+  form.reset();
+  Q.forEach(q=>{
+    const card=document.getElementById('q'+q.n);
+    card.querySelectorAll('.opt').forEach(o=>{o.classList.remove('sel','correct','wrong','lock');o.querySelector('input').disabled=false;});
+    document.getElementById('exp'+q.n).classList.remove('show');
+  });
+  document.getElementById('result').classList.remove('show');
+  submitted=false;
+  submitBtn.style.display='block'; hint.style.display='block'; resetBtn.style.display='none';
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+/* ====== 非選擇題（點擊查看解析） ====== */
+const writtenDiv=document.getElementById('written');
+WRITTEN.forEach((w,idx)=>{
+  const card=document.createElement('div'); card.className='written';
+  card.innerHTML=`<h4>${w.title}</h4>
+    <div class="prompt">${w.prompt}</div>
+    <button type="button" class="reveal" id="wb${idx}">查看答案與解析</button>
+    <div class="ans" id="wa${idx}">
+      <span class="tag">參考答案</span>
+      <div class="body">${w.ans}</div>
+      <div class="body">${w.exp}</div>
+    </div>`;
+  writtenDiv.appendChild(card);
+  card.querySelector('#wb'+idx).addEventListener('click',()=>{
+    card.querySelector('#wa'+idx).classList.add('show');
+    card.querySelector('#wb'+idx).style.display='none';
+  });
+});
+
+updateProgress();
+</script>
+</body>
+</html>
