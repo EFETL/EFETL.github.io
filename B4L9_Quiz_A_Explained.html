@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L9 卷A 解析版 — To Kill a Mockingbird</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 17px; line-height: 1.7;
+  background: #f0f2f5; color: #1d1d1f;
+  padding-bottom: 48px;
+}
+header {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white; padding: 20px 16px; text-align: center;
+}
+header h1 { font-size: 20px; margin-bottom: 4px; }
+header p { font-size: 14px; opacity: 0.75; }
+.top-bar {
+  background: white; padding: 10px 14px;
+  display: flex; justify-content: space-between; align-items: center;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1); gap: 8px;
+}
+.top-bar .score-info { font-size: 15px; font-weight: bold; color: #1a1a2e; white-space: nowrap; }
+.btn-reveal {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white; border: none; border-radius: 10px;
+  padding: 8px 14px; font-size: 14px; font-weight: bold;
+  cursor: pointer; white-space: nowrap; -webkit-tap-highlight-color: transparent;
+}
+.progress-bar { height: 4px; background: #e0e0e0; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); transition: width 0.3s; width: 0%; }
+.section {
+  background: white; margin: 14px 10px 0;
+  border-radius: 16px; overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+.section-header {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white; padding: 13px 16px; font-size: 16px; font-weight: bold;
+}
+.section-header .pts { font-size: 12px; opacity: 0.85; font-weight: normal; }
+.question { padding: 15px 16px; border-bottom: 1px solid #f0f0f0; }
+.question:last-child { border-bottom: none; }
+.q-text { font-size: 16px; margin-bottom: 11px; font-weight: 500; line-height: 1.6; }
+.q-num { color: #667eea; font-weight: bold; margin-right: 4px; }
+.options { display: flex; flex-direction: column; gap: 7px; }
+.option {
+  display: flex; align-items: flex-start; gap: 9px;
+  padding: 10px 13px; border: 2px solid #e0e0e0; border-radius: 11px;
+  cursor: pointer; transition: all 0.15s; font-size: 16px; line-height: 1.5;
+  background: #fafafa; -webkit-tap-highlight-color: transparent;
+}
+.option:active { transform: scale(0.98); }
+.option.selected { border-color: #667eea; background: #f0f0ff; }
+.option.correct { border-color: #34c759; background: #f0fff4; }
+.option.wrong   { border-color: #ff3b30; background: #fff5f5; }
+.option.reveal-correct { border-color: #34c759; background: #f0fff4; }
+.option-label { font-weight: bold; color: #667eea; min-width: 22px; flex-shrink: 0; }
+.option.correct .option-label, .option.reveal-correct .option-label { color: #34c759; }
+.option.wrong .option-label { color: #ff3b30; }
+
+/* Explanation panel */
+.explanation {
+  display: none; margin-top: 10px;
+  background: #fafbff; border-radius: 10px;
+  border: 1px solid #dde3ff; overflow: hidden;
+}
+.explanation.show { display: block; }
+.exp-header {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 13px; font-size: 14px; font-weight: bold;
+  background: #eef1ff; color: #667eea;
+}
+.exp-body { padding: 10px 13px; font-size: 15px; line-height: 1.7; color: #333; }
+.exp-key { color: #2e7d32; font-weight: bold; }
+.exp-wrong-key { color: #c62828; }
+
+/* Passage */
+.passage {
+  background: #f8f9ff; border-left: 4px solid #667eea;
+  padding: 13px 15px; margin: 0 16px 10px;
+  border-radius: 0 8px 8px 0; font-size: 15px; line-height: 1.75;
+}
+.passage-label { font-weight: bold; color: #667eea; margin-bottom: 7px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* Buttons */
+.btn-submit {
+  display: block; width: calc(100% - 28px); margin: 18px auto 0;
+  padding: 15px; background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white; border: none; border-radius: 13px;
+  font-size: 17px; font-weight: bold; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-submit:active { opacity: 0.9; transform: scale(0.98); }
+
+/* Result */
+.result-box {
+  display: none; margin: 14px 10px;
+  background: white; border-radius: 16px; padding: 22px 18px;
+  text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+.result-box.show { display: block; }
+.result-score { font-size: 50px; font-weight: bold; color: #667eea; line-height: 1.1; }
+.result-total { font-size: 20px; color: #666; margin-bottom: 10px; }
+.result-grade { font-size: 18px; font-weight: bold; padding: 7px 18px; border-radius: 18px; display: inline-block; margin-bottom: 14px; }
+.grade-a { background: #f0fff4; color: #1a7a3c; }
+.grade-b { background: #fff9e6; color: #b7791f; }
+.grade-c { background: #fff5f5; color: #c0392b; }
+.btn-reset {
+  display: inline-block; padding: 11px 26px;
+  background: #f0f0f7; color: #667eea;
+  border: none; border-radius: 11px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 6px;
+}
+</style>
+</head>
+<body>
+<a href="/" style="position:fixed;top:14px;left:14px;background:#2b4c8c;color:#fff;padding:7px 16px;border-radius:8px;text-decoration:none;font-size:0.9rem;font-weight:600;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,0.18);">&#8592; &#22238;&#39318;&#39052;</a>
+<header>
+  <h1>L9 To Kill a Mockingbird — 卷A 解析版</h1>
+  <p>單字、文法、克漏字、閱讀測驗｜選完即顯示解析</p>
+</header>
+<div class="top-bar">
+  <span class="score-info">進度 <span id="answered-count">0</span>/50 ｜ 得分 <span id="live-score">0</span>/100</span>
+  <button class="btn-reveal" onclick="revealAll()">📖 顯示全部解析</button>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+
+<div id="quiz-container"></div>
+
+<button class="btn-submit" onclick="submitAll()">📝 交卷 / 查看成績</button>
+
+<div class="result-box" id="result-box">
+  <div class="result-score" id="result-score">0</div>
+  <div class="result-total">/ 100 分</div>
+  <div class="result-grade" id="result-grade"></div>
+  <div style="color:#666;font-size:15px;margin-bottom:14px;" id="result-detail"></div>
+  <button class="btn-reset" onclick="resetAll()">🔄 重新作答</button>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────
+const sections = [
+  {
+    title: '第一大題：字彙選擇',
+    pts: '15 題 × 2 分 = 30 分',
+    questions: [
+      { q: 'Stealing money from your friend is considered a serious _______ in most cultures.',
+        opts: ['sin','version','rage','fate'],
+        ans: 'A',
+        exp: '<span class="exp-key">sin（罪過；罪惡）</span>──句意為「在多數文化中，偷朋友的錢被視為一種嚴重的罪過」。<br>❌ version = 版本；rage = 憤怒；fate = 命運，皆不符語境。' },
+      { q: 'Despite the rumors, the snake in the garden was actually _______ and posed no threat to anyone.',
+        opts: ['harmless','guilty','dominant','unrecognizable'],
+        ans: 'A',
+        exp: '<span class="exp-key">harmless（無害的）</span>──句意為「儘管有謠言，花園裡的蛇其實是無害的，對任何人都不構成威脅」。<br>❌ guilty = 有罪的；dominant = 占優勢的；unrecognizable = 認不出的，皆不符語境。' },
+      { q: 'After her husband passed away, she became a _______ and had to raise three children alone.',
+        opts: ['widow','jury','sheriff','drunkard'],
+        ans: 'A',
+        exp: '<span class="exp-key">widow（寡婦）</span>──丈夫去世後，她成為寡婦，須獨自撫養三個孩子。<br>❌ jury = 陪審團；sheriff = 警長；drunkard = 酒鬼，皆不符語境。' },
+      { q: 'The professor is widely _______ for his groundbreaking research on climate change.',
+        opts: ['respected','despised','deliberated','dominated'],
+        ans: 'A',
+        exp: '<span class="exp-key">respected（受敬重的）</span>──句意為「這位教授因其突破性的氣候變遷研究而廣受敬重」。<br>❌ despised = 被鄙視的；deliberated = 被商議的；dominated = 被支配的，皆不符語境。' },
+      { q: 'A good doctor should be _______, able to understand and share the feelings of their patients.',
+        opts: ['empathetic','left-handed','sensible','moral'],
+        ans: 'A',
+        exp: '<span class="exp-key">empathetic（具同理心的）</span>──句意為「好醫生應具同理心，能理解並感受病患的感受」。<br>❌ left-handed = 左撇子的；sensible = 明智的；moral = 道德的，皆不符語境。' },
+      { q: 'The committee decided to _______ a new manager to oversee the entire project from start to finish.',
+        opts: ['appoint','despise','sway','escape'],
+        ans: 'A',
+        exp: '<span class="exp-key">appoint（指派；任命）</span>──句意為「委員會決定指派一位新經理來監督整個專案」。<br>❌ despise = 鄙視；sway = 影響；escape = 逃脫，皆不符語境。' },
+      { q: 'The lawyer agreed to _______ the man in court, even though most people believed he was guilty.',
+        opts: ['defend','accuse','comfort','represent'],
+        ans: 'A',
+        exp: '<span class="exp-key">defend（為…辯護）</span>──句意為「即使大多數人認為他有罪，這位律師仍同意在法庭上為他辯護」。<br>❌ accuse = 指控（與辯護方向相反）；comfort = 安慰；represent 雖也指「代表」，但在法律語境中 defend 更貼切表「辯護」之意。' },
+      { q: 'The witness decided to _______ her neighbor of stealing the bicycle from the garage.',
+        opts: ['accuse','defend','comfort','despise'],
+        ans: 'A',
+        exp: '<span class="exp-key">accuse（指控；指責）</span>──accuse sb. of + N/V-ing = 指控某人做某事，句意為「目擊者決定指控鄰居從車庫偷走腳踏車」。<br>❌ defend = 辯護；comfort = 安慰；despise = 鄙視，皆不符語境。' },
+      { q: 'All the townspeople began to _______ the criminal after learning about his cruel actions.',
+        opts: ['despise','comfort','respect','defend'],
+        ans: 'A',
+        exp: '<span class="exp-key">despise（鄙視；蔑視）</span>──句意為「鎮上所有居民得知他殘酷的行為後，開始鄙視這個犯罪者」。<br>❌ comfort = 安慰；respect = 尊重；defend = 辯護，皆不符語境。' },
+      { q: 'The actress faced harsh _______ from critics after her latest movie failed at the box office.',
+        opts: ['criticism','reputation','progress','victory'],
+        ans: 'A',
+        exp: '<span class="exp-key">criticism（批評）</span>──句意為「在最新電影票房失利後，這位女演員受到評論家的嚴厲批評」。<br>❌ reputation = 名聲；progress = 進步；victory = 勝利，皆不符語境。' },
+      { q: 'When the child fell down and started crying, his mother rushed over to _______ him.',
+        opts: ['comfort','accuse','despise','criticize'],
+        ans: 'A',
+        exp: '<span class="exp-key">comfort（安慰）</span>──句意為「當小孩跌倒哭了起來，媽媽立刻跑去安慰他」。<br>❌ accuse = 指控；despise = 鄙視；criticize = 批評，皆不符語境。' },
+      { q: 'The courthouse was completely _______ with reporters eager to hear the verdict of the famous trial.',
+        opts: ['packed','despised','deliberated','dominated'],
+        ans: 'A',
+        exp: '<span class="exp-key">packed（擠滿的）</span>──pack 作動詞表「擠滿」，句意為「法院擠滿了急於聽到這場著名審判判決的記者」。<br>❌ despised = 被鄙視的；deliberated = 被商議的；dominated = 被支配的，皆不符語境。' },
+      { q: 'Because he was nervous, he tried to _______ out of the back door before anyone noticed him.',
+        opts: ['slip','pack','sway','despair'],
+        ans: 'A',
+        exp: '<span class="exp-key">slip（悄悄移動；滑動）</span>──句意為「因為他很緊張，試圖在沒人注意時悄悄從後門溜走」。<br>❌ pack = 包裝／擠滿；sway = 影響；despair = 絕望，皆不符語境。' },
+      { q: 'The jury had to spend several hours discussing the case before reaching a final _______.',
+        opts: ['verdict','rage','fate','sin'],
+        ans: 'A',
+        exp: '<span class="exp-key">verdict（判決；裁定）</span>──句意為「陪審團必須花上數小時討論該案件，才能做出最終判決」。<br>❌ rage = 憤怒；fate = 命運；sin = 罪過，皆不符語境。' },
+      { q: 'Even though the evidence was weak, the jury found the defendant _______ and sentenced him to five years in prison.',
+        opts: ['guilty','innocent','harmless','sensible'],
+        ans: 'A',
+        exp: '<span class="exp-key">guilty（有罪的）</span>──句意為「即使證據薄弱，陪審團仍判定被告有罪，判處五年徒刑」，find sb. guilty = 判定某人有罪。<br>❌ innocent = 無罪的（與句意被判刑矛盾）；harmless = 無害的；sensible = 明智的，皆不符語境。' },
+    ]
+  },
+  {
+    title: '第二大題：文法選擇',
+    pts: '15 題 × 2 分 = 30 分',
+    questions: [
+      { q: 'Atticus, _______ was a respected lawyer in Maycomb, taught his children to be just and empathetic.',
+        opts: ['who','whom','which','whose'],
+        ans: 'A',
+        exp: '<span class="exp-key">who（關係代名詞，代替先行詞 Atticus 作主詞）</span>──who 引導非限定關係子句，補充說明 Atticus 的身分，並在子句中作主詞。<br>❌ whom 作受詞；which 用於指事物；whose 為所有格，皆不符句中需求（子句缺主詞）。' },
+      { q: 'Tom Robinson was the man _______ Atticus was appointed to defend in court.',
+        opts: ['who','whom','whose','what'],
+        ans: 'B',
+        exp: '<span class="exp-key">whom（關係代名詞，作 defend 的受詞）</span>──defend whom，whom 代替 the man 作 defend 的受詞，且為正式用法（口語可用 who 或省略）。<br>❌ who 通常作主詞；whose 為所有格；what 不能用於有先行詞的限定關係子句。' },
+      { q: '_______ accused of a crime he did not commit, Tom Robinson remained calm throughout the trial.',
+        opts: ['Accuse','Accusing','Having accused','Accused'],
+        ans: 'D',
+        exp: '<span class="exp-key">Accused（過去分詞，表被動的分詞構句）</span>──Tom 是「被指控」的一方，分詞構句須用過去分詞表被動，等於 Although he was accused of a crime he did not commit。<br>❌ Accuse（原形）、Accusing（現在分詞，表主動）、Having accused（完成式主動分詞）均不符被動語意。' },
+      { q: 'The courthouse, _______ was packed with people, fell silent as the verdict was about to be read.',
+        opts: ['that','which','what','who'],
+        ans: 'B',
+        exp: '<span class="exp-key">which（關係代名詞，引導非限定子句，代替 the courthouse）</span>──非限定關係子句前須用逗號分隔，只能用 which，不可用 that。<br>❌ that 不可用於非限定子句；what 不能有先行詞；who 用於指人，courthouse 為地方。' },
+      { q: 'Mayella Ewell came from the poorest family in town, _______ made her situation even more pitiable.',
+        opts: ['that','which','who','it'],
+        ans: 'B',
+        exp: '<span class="exp-key">which（關係代名詞，代替前面整個句子的內容作主詞）</span>──which 可代替前面整句話，引導補充說明的子句，相當於 and this。<br>❌ that 不可用於此種非限定用法；who 指人；it 不能引導關係子句。' },
+      { q: 'Tom Robinson\'s left arm, _______ in a farming accident years earlier, was permanently disabled.',
+        opts: ['injure','injuring','injured','to injure'],
+        ans: 'C',
+        exp: '<span class="exp-key">injured（過去分詞，表被動，修飾 left arm）</span>──手臂是「受傷的」，過去分詞作形容詞用法，相當於 which had been injured in a farming accident。<br>❌ injure（原形）、injuring（現在分詞，表主動）、to injure（不定詞）皆不符被動修飾語意。' },
+      { q: '_______ the strong evidence in his favor, Tom was still found guilty by the all-white jury.',
+        opts: ['Because of','Despite','Although','Since'],
+        ans: 'B',
+        exp: '<span class="exp-key">Despite（儘管，後接名詞）</span>──despite + N，表示讓步：儘管有對他有利的強力證據，Tom 仍被判有罪。<br>❌ Because of 表原因，語意矛盾；Although 為連接詞須接子句（主詞+動詞），而非單純名詞；Since 表原因或時間，皆不符。' },
+      { q: 'The sheriff pointed out that Mayella\'s bruises _______ on the right side of her face.',
+        opts: ['was','were','being','to be'],
+        ans: 'B',
+        exp: '<span class="exp-key">were（過去式 be 動詞，與複數主詞 bruises 一致）</span>──主詞 bruises 為複數，且全文以過去式敘述故事，須用 were。<br>❌ was 為單數；being/to be 非完整動詞，不能作主要動詞。' },
+      { q: 'The audience realized that the injuries must _______ caused by someone left-handed.',
+        opts: ['be','have been','being','to be'],
+        ans: 'B',
+        exp: '<span class="exp-key">have been（must have been + p.p. 表對過去事實的推測）</span>──must have been caused = 一定是被造成的（對過去事實的肯定推測），句意為「傷勢一定是左撇子造成的」。<br>❌ be（must be 表對現在的推測，時態不符）；being/to be 非完整動詞形式，不能接在 must 之後。' },
+      { q: 'Mr. Ewell, _______ no one suspected at first, turned out to be the real culprit.',
+        opts: ['who','whom','which','that'],
+        ans: 'B',
+        exp: '<span class="exp-key">whom（關係代名詞，作 suspected 的受詞）</span>──no one suspected whom，whom 代替 Mr. Ewell 作 suspected 的受詞，且前有逗號（非限定用法）須用 who/whom，不可用 that。<br>❌ who 通常作主詞；which 指事物；that 不可用於非限定子句。' },
+      { q: 'Atticus asked Mr. Ewell to write his name, _______ revealed that he was left-handed.',
+        opts: ['what','that','which','who'],
+        ans: 'C',
+        exp: '<span class="exp-key">which（關係代名詞，代替前面整句話作主詞）</span>──which 代替「Atticus 請 Ewell 寫名字」這件事，引導補充說明的子句，相當於 and this revealed。<br>❌ what 不能有先行詞；that 不可用於逗號後的非限定子句；who 用於指人。' },
+      { q: 'Atticus told his children that a lawyer should stand up for justice, _______ of a person\'s skin color.',
+        opts: ['regard','regarding','regardless','regarded'],
+        ans: 'C',
+        exp: '<span class="exp-key">regardless（regardless of = 不顧；不論，固定片語）</span>──regardless of sth. = 不論…如何，句意為「不論一個人的膚色為何」。<br>❌ regard（動詞「視為」）、regarding（介系詞「關於」）、regarded（過去分詞）均無法與 of 構成此固定搭配表「不論」之意。' },
+      { q: 'If Tom had not tried to escape from prison, he _______ shot to death.',
+        opts: ['would not be','would not have been','will not be','had not been'],
+        ans: 'B',
+        exp: '<span class="exp-key">would not have been（與過去事實相反的假設語氣，主要子句用 would + have + p.p.）</span>──If 子句用過去完成式（had not tried），主要子句須用 would not have been，表「若當初沒有……，就不會被……」。<br>❌ would not be（與現在事實相反）；will not be（直述句）；had not been（與 if 子句重複過去完成式）。' },
+      { q: 'It was Atticus _______ encouraged Jem and Scout to hold their heads up despite the criticism.',
+        opts: ['who','whom','which','what'],
+        ans: 'A',
+        exp: '<span class="exp-key">who（強調句型 It was... who... 強調人，作主詞）</span>──It was Atticus who + 動詞，為強調句型，強調主詞 Atticus，子句中缺主詞須用 who。<br>❌ whom 作受詞；which 指事物；what 不可用於強調句型。' },
+      { q: 'Hardly _______ the jury announced the verdict when the courtroom erupted into murmurs of disbelief.',
+        opts: ['did','had','does','has'],
+        ans: 'B',
+        exp: '<span class="exp-key">had（Hardly had + S + p.p. ... when ~，倒裝句型，表「一……就……」）</span>──Hardly had the jury announced the verdict when... 為過去完成式倒裝句，表示「陪審團一宣布判決，法庭就……」。<br>❌ did/does 為一般過去式/現在式倒裝，不搭配 when 表「剛…就…」的完成意味；has 為現在完成式，與全文過去時態不一致。' },
+    ]
+  },
+  {
+    title: '第三大題：克漏字填充',
+    pts: '10 題 × 2 分 = 20 分',
+    passage: 'For decades, the story of Tom Robinson has remained a powerful symbol of racial <strong>(31)</strong> in the American legal system. In the 1930s, an African American man <strong>(32)</strong> of a crime he did not commit had almost no chance of receiving a fair trial, especially when the accuser was white.<br><br>Atticus Finch, the lawyer <strong>(33)</strong> to defend Tom, knew from the start that the case would be difficult. Most people in town were already <strong>(34)</strong> to believe Tom was guilty simply because of his skin color. Even so, Atticus presented clear evidence <strong>(35)</strong> Tom could not have caused Mayella\'s injuries, since Tom\'s left arm had been <strong>(36)</strong> in an earlier accident and could not have delivered the blows that left bruises on the right side of her face.<br><br>Despite this strong evidence, the all-white jury <strong>(37)</strong> Tom guilty, and he was sent to prison. Feeling great <strong>(38)</strong> about his future, Tom later tried to escape and was shot. Jem and Scout, who had <strong>(39)</strong> the entire trial with great hope, were devastated by the unfair outcome.<br><br>However, Atticus pointed out one small <strong>(40)</strong> of hope: the jury had taken several hours to reach its decision, which was unusually long for a case involving a black defendant, suggesting that at least one juror had doubts about Tom\'s guilt.',
+    questions: [
+      { q: 'For decades, the story of Tom Robinson has remained a powerful symbol of racial _______ in the American legal system.',
+        opts: ['injustice','victory','progress','reputation'],
+        ans: 'A',
+        exp: '<span class="exp-key">injustice（不公正；不公平）</span>──句意為「Tom Robinson 的故事多年來一直是美國司法體系中種族不公的有力象徵」，injustice 與「不公平的種族待遇」呼應。<br>❌ victory = 勝利；progress = 進步；reputation = 名聲，皆與「不公」語意相反或不符。' },
+      { q: 'In the 1930s, an African American man _______ of a crime he did not commit had almost no chance of receiving a fair trial.',
+        opts: ['accused','defended','comforted','respected'],
+        ans: 'A',
+        exp: '<span class="exp-key">accused（被指控的，過去分詞作形容詞）</span>──a man accused of a crime = 被指控犯罪的人，accuse sb. of sth. 為固定搭配。<br>❌ defended = 被辯護的；comforted = 被安慰的；respected = 受敬重的，皆不符語境。' },
+      { q: 'Atticus Finch, the lawyer _______ to defend Tom, knew from the start that the case would be difficult.',
+        opts: ['appointed','appointing','appoint','appoints'],
+        ans: 'A',
+        exp: '<span class="exp-key">appointed（過去分詞作形容詞，表被動）</span>──the lawyer appointed to defend Tom = 被指派為Tom辯護的律師，appointed 修飾 lawyer，相當於 who was appointed。<br>❌ appointing（現在分詞，表主動）、appoint（原形）、appoints（現在式動詞）皆不符被動修飾語意。' },
+      { q: 'Most people in town were already _______ to believe Tom was guilty simply because of his skin color.',
+        opts: ['swayed','despised','deliberated','dominated'],
+        ans: 'A',
+        exp: '<span class="exp-key">swayed（被影響；被動搖，過去分詞）</span>──be swayed to believe = 被影響而相信，課文提及人們因種族而 be swayed by 偏見。<br>❌ despised = 被鄙視的；deliberated = 被商議的；dominated = 被支配的，皆不符語境。' },
+      { q: 'Atticus presented clear evidence _______ Tom could not have caused Mayella\'s injuries.',
+        opts: ['that','which','what','of which'],
+        ans: 'A',
+        exp: '<span class="exp-key">that（同位語連接詞，引導名詞子句說明 evidence 的內容）</span>──evidence that... = 證明…的證據，that 引導同位語子句，補充說明 evidence 的具體內容，子句本身結構完整。<br>❌ which/what 為關係代名詞，須在子句中擔任成分，但此子句結構已完整，不需要代名詞；of which 用法不符。' },
+      { q: 'Tom\'s left arm had been _______ in an earlier accident and could not have delivered the blows.',
+        opts: ['injured','injuring','injure','injures'],
+        ans: 'A',
+        exp: '<span class="exp-key">injured（過去分詞，與 had been 構成過去完成式被動）</span>──had been injured = 已經受傷（被動），描述意外發生在更早之前，符合過去完成式時態。<br>❌ injuring（現在分詞）、injure（原形）、injures（現在式）皆不能接在 had been 之後構成被動。' },
+      { q: 'Despite this strong evidence, the all-white jury _______ Tom guilty, and he was sent to prison.',
+        opts: ['found','founded','finding','founding'],
+        ans: 'A',
+        exp: '<span class="exp-key">found（find 的過去式，find sb. guilty = 判定某人有罪）</span>──find-found-found，全文以過去式敘述歷史故事，故用過去式 found。<br>❌ founded（found 的過去式，意為「建立」，與 find 不同字）；finding/founding 為分詞，非完整動詞，不符句構。' },
+      { q: 'Feeling great _______ about his future, Tom later tried to escape and was shot.',
+        opts: ['despair','victory','progress','comfort'],
+        ans: 'A',
+        exp: '<span class="exp-key">despair（絕望）</span>──句意為「對未來感到極度絕望，Tom後來試圖逃獄並遭槍殺」，與課文中 Tom feeling great despair for his future 呼應。<br>❌ victory = 勝利；progress = 進步；comfort = 安慰，皆不符語境。' },
+      { q: 'Jem and Scout, who had _______ the entire trial with great hope, were devastated by the unfair outcome.',
+        opts: ['watched','despised','escaped','deliberated'],
+        ans: 'A',
+        exp: '<span class="exp-key">watched（觀看，過去完成式 had watched）</span>──had watched the entire trial = 已經全程觀看了審判，與課文 Jem and Scout, who had watched the entire trial 呼應。<br>❌ despised = 鄙視；escaped = 逃脫；deliberated = 商議，皆不符語境。' },
+      { q: 'Atticus pointed out one small _______ of hope: the jury had taken several hours to reach its decision.',
+        opts: ['glimmer','version','rage','fate'],
+        ans: 'A',
+        exp: '<span class="exp-key">glimmer（一閃的光；微光）</span>──a glimmer of hope = 一絲希望，固定搭配，與課文 a glimmer of hope remained 呼應。<br>❌ version = 版本；rage = 憤怒；fate = 命運，皆不符語境。' },
+    ]
+  },
+  {
+    title: '第四大題：閱讀測驗',
+    pts: '10 題 × 2 分 = 20 分',
+    passage: '<strong>Passage 1</strong><br>In the small town of Maycomb, Alabama, during the 1930s, Atticus Finch was a widowed lawyer raising two children, Scout and Jem, on his own. Known throughout the community as a fair and respected man, Atticus taught his children to treat everyone with empathy, regardless of their background. When he was appointed to defend Tom Robinson, a black man accused of assaulting a white woman named Mayella Ewell, Atticus knew the case would test not only his legal skills but also his family\'s standing in the community. Many of Maycomb\'s residents, including some of the Finches\' own relatives, criticized Atticus for taking the case, and Jem and Scout were taunted at school. Atticus comforted his children, telling them that a lawyer must stand up for what is right regardless of public opinion, and he urged them to remain calm and dignified—to "keep their fists down" even when provoked.<br><br><strong>Passage 2</strong><br>On the day of the trial, the courthouse was so packed that Jem and Scout had to sneak in to find a place to watch. The Ewells claimed that Tom had attacked Mayella while helping her with a task at their home, and that Mr. Ewell had arrived just in time to scare him away. Tom, however, testified that Mayella had approached him, and that he had pushed her away before her father appeared in a rage. Key evidence emerged during the trial: the sheriff testified that Mayella\'s bruises were on the right side of her face, suggesting the attacker was left-handed. Tom\'s left arm, however, had been permanently injured in a childhood accident, making it nearly impossible for him to have caused such injuries. When Atticus asked Mr. Ewell to sign his name, the man instinctively used his left hand—strong evidence that he, not Tom, was responsible for Mayella\'s injuries. Despite this, the all-white jury found Tom guilty. Atticus later explained to his children that while people are usually capable of fairness, something happens to their judgment whenever race becomes part of the equation. Still, he noted that the jury had deliberated for several hours rather than minutes, which was, in its own small way, a sign of progress.',
+    questions: [
+      { q: 'According to Passage 1, how did Atticus teach his children to treat others?',
+        opts: ['With suspicion toward strangers','With empathy, regardless of background','With strict obedience to social rules','With indifference to public opinion'],
+        ans: 'B',
+        exp: '<span class="exp-key">B</span>──文中提到 Atticus taught his children to treat everyone with empathy, regardless of their background，他教導孩子以同理心對待他人，不論其背景如何。<br>❌ 文章未提及對陌生人抱持懷疑、嚴格服從社會規範，或對輿論漠不關心。' },
+      { q: 'How did the community react when Atticus was appointed to defend Tom Robinson?',
+        opts: ['They praised his courage publicly.','Many criticized him, including relatives.','They offered to help with the case.','They were indifferent and unaffected.'],
+        ans: 'B',
+        exp: '<span class="exp-key">B</span>──文中提到 Many of Maycomb\'s residents, including some of the Finches\' own relatives, criticized Atticus for taking the case，許多居民甚至親戚都批評他。<br>❌ 文章未提及公開讚揚其勇氣、提供協助，也並非毫無影響（孩子們在學校被嘲弄）。' },
+      { q: 'What advice did Atticus give his children regarding how to respond to criticism?',
+        opts: ['To fight back immediately','To ignore school completely','To remain calm and keep their fists down','To move away from Maycomb'],
+        ans: 'C',
+        exp: '<span class="exp-key">C</span>──文中提到 he urged them to remain calm and dignified—to "keep their fists down" even when provoked，要求孩子們即使被激怒也要保持冷靜、不動拳頭。<br>❌ 文章未建議立即還擊、完全不去上學，或搬離梅康鎮。' },
+      { q: 'According to Passage 2, what evidence suggested the attacker was left-handed?',
+        opts: ['Tom\'s testimony about pushing Mayella','The location of Mayella\'s bruises on the right side of her face','Mr. Ewell\'s statement to the sheriff','The position of the furniture at the scene'],
+        ans: 'B',
+        exp: '<span class="exp-key">B</span>──文中提到 the sheriff testified that Mayella\'s bruises were on the right side of her face, suggesting the attacker was left-handed，警長的證詞指出傷痕位置暗示攻擊者是左撇子。<br>❌ 文章未提及家具位置，也並非直接來自 Tom 的證詞或 Ewell 對警長的陳述本身。' },
+      { q: 'Why was it unlikely that Tom caused Mayella\'s injuries?',
+        opts: ['He was not present at the scene.','His left arm had been permanently injured and could not function normally.','He was right-handed and the injuries required a left-handed person.','He had an alibi proven by witnesses.'],
+        ans: 'B',
+        exp: '<span class="exp-key">B</span>──文中提到 Tom\'s left arm, however, had been permanently injured in a childhood accident, making it nearly impossible for him to have caused such injuries，他左臂因童年意外永久受傷，幾乎不可能造成這樣的傷害。<br>❌ B 選項已包含「左撇子」的關鍵，其餘選項皆與文章描述不符（文章並未說他不在場或有目擊者證明的不在場證明，但B最直接對應左撇子線索）。' },
+      { q: 'What happened when Atticus asked Mr. Ewell to sign his name?',
+        opts: ['Mr. Ewell refused to write anything.','Mr. Ewell used his right hand without thinking.','Mr. Ewell instinctively used his left hand.','Mr. Ewell asked for a lawyer before responding.'],
+        ans: 'C',
+        exp: '<span class="exp-key">C</span>──文中提到 the man instinctively used his left hand，Ewell 本能地用左手簽名，暗示他才是真正的攻擊者。<br>❌ 文章未提及他拒絕書寫、使用右手，或要求律師。' },
+      { q: 'What was the outcome of the trial, according to Passage 2?',
+        opts: ['Tom was acquitted of all charges.','The jury could not reach a decision.','The all-white jury found Tom guilty.','The case was dismissed due to lack of evidence.'],
+        ans: 'C',
+        exp: '<span class="exp-key">C</span>──文中明確指出 the all-white jury found Tom guilty，全白人陪審團判定 Tom 有罪。<br>❌ 文章未提及無罪釋放、無法做出決定，或因證據不足被駁回。' },
+      { q: 'According to Atticus, what happens to people\'s judgment when race becomes involved?',
+        opts: ['They become more careful and fair.','Something affects their otherwise fair judgment.','They make decisions more quickly.','They tend to side with the defendant.'],
+        ans: 'B',
+        exp: '<span class="exp-key">B</span>──文中提到 something happens to their judgment whenever race becomes part of the equation，指當涉及種族時，人們原本公正的判斷力會受到影響。<br>❌ 文章並未說人們會變得更謹慎公平、做決定更快，或傾向支持被告（事實恰恰相反）。' },
+      { q: 'What did Atticus consider a small sign of progress?',
+        opts: ['The jury\'s quick verdict','The jury\'s several hours of deliberation','The community\'s praise for his defense','Tom\'s eventual release from prison'],
+        ans: 'B',
+        exp: '<span class="exp-key">B</span>──文中提到 he noted that the jury had deliberated for several hours rather than minutes, which was, in its own small way, a sign of progress，陪審團花了數小時而非數分鐘商議，被視為微小的進步象徵。<br>❌ 文章未提及社區的讚揚或 Tom 最終獲釋（事實上 Tom 並未獲釋）。' },
+      { q: 'What is the overall theme conveyed by both passages?',
+        opts: ['The legal system in Maycomb was completely fair.','Racial prejudice can override clear evidence and justice.','Children should never question authority.','Lawyers should avoid controversial cases.'],
+        ans: 'B',
+        exp: '<span class="exp-key">B</span>──兩篇文章共同呈現的主題是：即使有明確證據（Tom 左臂受傷、Ewell 用左手簽名），種族偏見仍導致不公正的判決，顯示種族偏見可以蓋過明確的證據與正義。<br>❌ 文章明確顯示梅康鎮的司法制度並不公平；文章未討論孩子不該質疑權威，也未建議律師避免爭議案件（Atticus 反而勇於承接）。' },
+    ]
+  }
+];
+
+// ── RENDER ────────────────────────────────────────────────
+let globalQNum = 0;
+const qMap = {}; // qNum → { ans, exp }
+const userAnswers = {};
+let submitted = false;
+
+const container = document.getElementById('quiz-container');
+
+sections.forEach((sec, si) => {
+  const secDiv = document.createElement('div');
+  secDiv.className = 'section';
+  let html = `<div class="section-header">${sec.title} <span class="pts">（${sec.pts}）</span></div>`;
+  if (sec.passage) {
+    html += `<div class="passage"><div class="passage-label">📖 閱讀文章</div>${sec.passage}</div>`;
+  }
+  sec.questions.forEach((q, qi) => {
+    globalQNum++;
+    const n = globalQNum;
+    qMap[n] = { ans: q.ans, exp: q.exp };
+    const labels = ['A','B','C','D'];
+    let optHtml = '';
+    q.opts.forEach((o, i) => {
+      optHtml += `<div class="option" id="opt-${n}-${labels[i]}" onclick="choose(${n},'${labels[i]}')">`
+        + `<span class="option-label">(${labels[i]})</span>${o}</div>`;
+    });
+    let qLabel = n;
+    if (si === 2) qLabel = `(${n})`;
+    if (si === 3) qLabel = `(${n})`;
+    html += `<div class="question" id="q${n}">
+      <div class="q-text"><span class="q-num">${qLabel}.</span> ${q.q}</div>
+      <div class="options">${optHtml}</div>
+      <div class="explanation" id="exp${n}">
+        <div class="exp-header">💡 解析</div>
+        <div class="exp-body">${q.exp}</div>
+      </div>
+    </div>`;
+  });
+  secDiv.innerHTML = html;
+  container.appendChild(secDiv);
+});
+
+// ── LOGIC ─────────────────────────────────────────────────
+function choose(n, chosen) {
+  if (submitted) return;
+  userAnswers[n] = chosen;
+  const ans = qMap[n].ans;
+  const labels = ['A','B','C','D'];
+
+  labels.forEach(l => {
+    const el = document.getElementById(`opt-${n}-${l}`);
+    el.classList.remove('selected','correct','wrong','reveal-correct');
+    if (l === chosen) {
+      if (chosen === ans) el.classList.add('correct');
+      else el.classList.add('wrong');
+    } else if (l === ans && chosen !== ans) {
+      el.classList.add('reveal-correct');
+    }
+  });
+
+  document.getElementById(`exp${n}`).classList.add('show');
+  updateTopBar();
+}
+
+function updateTopBar() {
+  const count = Object.keys(userAnswers).length;
+  document.getElementById('answered-count').textContent = count;
+  document.getElementById('progress-fill').style.width = (count / 50 * 100) + '%';
+  let score = 0;
+  for (let q in userAnswers) { if (userAnswers[q] === qMap[q].ans) score += 2; }
+  document.getElementById('live-score').textContent = score;
+}
+
+function revealAll() {
+  for (let n = 1; n <= 50; n++) {
+    const ans = qMap[n].ans;
+    const labels = ['A','B','C','D'];
+    labels.forEach(l => {
+      const el = document.getElementById(`opt-${n}-${l}`);
+      el.classList.remove('selected','correct','wrong','reveal-correct');
+      if (l === ans) el.classList.add('reveal-correct');
+      else if (userAnswers[n] === l && l !== ans) el.classList.add('wrong');
+    });
+    document.getElementById(`exp${n}`).classList.add('show');
+  }
+  updateTopBar();
+}
+
+function submitAll() {
+  submitted = true;
+  revealAll();
+  let score = 0;
+  for (let n = 1; n <= 50; n++) {
+    if (userAnswers[n] === qMap[n].ans) score += 2;
+  }
+  const rb = document.getElementById('result-box');
+  rb.classList.add('show');
+  document.getElementById('result-score').textContent = score;
+  const gr = document.getElementById('result-grade');
+  const det = document.getElementById('result-detail');
+  if (score >= 90) { gr.textContent = '🏆 優秀！'; gr.className = 'result-grade grade-a'; det.textContent = '表現卓越，繼續保持！'; }
+  else if (score >= 70) { gr.textContent = '👍 良好'; gr.className = 'result-grade grade-b'; det.textContent = '表現不錯，再複習錯誤的題目吧！'; }
+  else { gr.textContent = '📚 需加強'; gr.className = 'result-grade grade-c'; det.textContent = '多複習解析說明，你可以做到的！'; }
+  document.getElementById('answered-count').textContent = 50;
+  document.getElementById('live-score').textContent = score;
+  document.getElementById('progress-fill').style.width = '100%';
+  rb.scrollIntoView({ behavior: 'smooth' });
+}
+
+function resetAll() {
+  submitted = false;
+  for (let key in userAnswers) delete userAnswers[key];
+  for (let n = 1; n <= 50; n++) {
+    const labels = ['A','B','C','D'];
+    labels.forEach(l => {
+      document.getElementById(`opt-${n}-${l}`).classList.remove('selected','correct','wrong','reveal-correct');
+    });
+    document.getElementById(`exp${n}`).classList.remove('show');
+  }
+  document.getElementById('result-box').classList.remove('show');
+  document.getElementById('answered-count').textContent = '0';
+  document.getElementById('live-score').textContent = '0';
+  document.getElementById('progress-fill').style.width = '0%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
