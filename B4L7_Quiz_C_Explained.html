@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L7 卷C 解析版 — Iceland's Road to Gender Equality</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 17px; line-height: 1.7;
+  background: #f0f2f5; color: #1d1d1f;
+  padding-bottom: 48px;
+}
+header {
+  background: linear-gradient(135deg, #fa709a, #fee140);
+  color: white; padding: 20px 16px; text-align: center;
+}
+header h1 { font-size: 20px; margin-bottom: 4px; }
+header p { font-size: 14px; opacity: 0.9; }
+.top-bar {
+  background: white; padding: 10px 14px;
+  display: flex; justify-content: space-between; align-items: center;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1); gap: 8px;
+}
+.top-bar .score-info { font-size: 15px; font-weight: bold; color: #d6336c; white-space: nowrap; }
+.btn-reveal {
+  background: linear-gradient(135deg, #fa709a, #fee140);
+  color: white; border: none; border-radius: 10px;
+  padding: 8px 14px; font-size: 14px; font-weight: bold;
+  cursor: pointer; white-space: nowrap; -webkit-tap-highlight-color: transparent;
+}
+.progress-bar { height: 4px; background: #e0e0e0; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, #fa709a, #fee140); transition: width 0.3s; width: 0%; }
+.section {
+  background: white; margin: 14px 10px 0;
+  border-radius: 16px; overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+.section-header {
+  background: linear-gradient(135deg, #fa709a, #fee140);
+  color: white; padding: 13px 16px; font-size: 16px; font-weight: bold;
+}
+.section-header .pts { font-size: 12px; opacity: 0.9; font-weight: normal; }
+.question { padding: 15px 16px; border-bottom: 1px solid #f0f0f0; }
+.question:last-child { border-bottom: none; }
+.q-text { font-size: 16px; margin-bottom: 11px; font-weight: 500; line-height: 1.6; }
+.q-num { color: #fa709a; font-weight: bold; margin-right: 4px; }
+.options { display: flex; flex-direction: column; gap: 7px; }
+.option {
+  display: flex; align-items: flex-start; gap: 9px;
+  padding: 10px 13px; border: 2px solid #e0e0e0; border-radius: 11px;
+  cursor: pointer; transition: all 0.15s; font-size: 16px; line-height: 1.5;
+  background: #fafafa; -webkit-tap-highlight-color: transparent;
+}
+.option:active { transform: scale(0.98); }
+.option.selected { border-color: #fa709a; background: #fff0f5; }
+.option.correct { border-color: #34c759; background: #f0fff4; }
+.option.wrong   { border-color: #ff3b30; background: #fff5f5; }
+.option.reveal-correct { border-color: #34c759; background: #f0fff4; }
+.option-label { font-weight: bold; color: #fa709a; min-width: 22px; flex-shrink: 0; }
+.option.correct .option-label, .option.reveal-correct .option-label { color: #34c759; }
+.option.wrong .option-label { color: #ff3b30; }
+
+/* Explanation panel */
+.explanation {
+  display: none; margin-top: 10px;
+  background: #fff8fb; border-radius: 10px;
+  border: 1px solid #ffd6e8; overflow: hidden;
+}
+.explanation.show { display: block; }
+.exp-header {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 13px; font-size: 14px; font-weight: bold;
+  background: #ffe9f1; color: #fa709a;
+}
+.exp-body { padding: 10px 13px; font-size: 15px; line-height: 1.7; color: #333; }
+.exp-key { color: #2e7d32; font-weight: bold; }
+.exp-wrong-key { color: #c62828; }
+
+/* Passage */
+.passage {
+  background: #fff8fb; border-left: 4px solid #fa709a;
+  padding: 13px 15px; margin: 0 16px 10px;
+  border-radius: 0 8px 8px 0; font-size: 15px; line-height: 1.75;
+}
+.passage-label { font-weight: bold; color: #fa709a; margin-bottom: 7px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* Buttons */
+.btn-submit {
+  display: block; width: calc(100% - 28px); margin: 18px auto 0;
+  padding: 15px; background: linear-gradient(135deg, #fa709a, #fee140);
+  color: white; border: none; border-radius: 13px;
+  font-size: 17px; font-weight: bold; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-submit:active { opacity: 0.9; transform: scale(0.98); }
+
+/* Result */
+.result-box {
+  display: none; margin: 14px 10px;
+  background: white; border-radius: 16px; padding: 22px 18px;
+  text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+.result-box.show { display: block; }
+.result-score { font-size: 50px; font-weight: bold; color: #fa709a; line-height: 1.1; }
+.result-total { font-size: 20px; color: #666; margin-bottom: 10px; }
+.result-grade { font-size: 18px; font-weight: bold; padding: 7px 18px; border-radius: 18px; display: inline-block; margin-bottom: 14px; }
+.grade-a { background: #f0fff4; color: #1a7a3c; }
+.grade-b { background: #fff9e6; color: #b7791f; }
+.grade-c { background: #fff5f5; color: #c0392b; }
+.btn-reset {
+  display: inline-block; padding: 11px 26px;
+  background: #ffe9f1; color: #fa709a;
+  border: none; border-radius: 11px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 6px;
+}
+</style>
+</head>
+<body>
+<a href="/" style="position:fixed;top:14px;left:14px;background:#2b4c8c;color:#fff;padding:7px 16px;border-radius:8px;text-decoration:none;font-size:0.9rem;font-weight:600;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,0.18);">&#8592; &#22238;&#39318;&#39052;</a>
+<header>
+  <h1>L7 Iceland's Road to Gender Equality — 卷C 解析版</h1>
+  <p>選完即顯示解析</p>
+</header>
+<div class="top-bar">
+  <span class="score-info">進度 <span id="answered-count">0</span>/50 ｜ 得分 <span id="live-score">0</span>/100</span>
+  <button class="btn-reveal" onclick="revealAll()">📖 顯示全部解析</button>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+
+<div id="quiz-container"></div>
+
+<button class="btn-submit" onclick="submitAll()">📝 交卷 / 查看成績</button>
+
+<div class="result-box" id="result-box">
+  <div class="result-score" id="result-score">0</div>
+  <div class="result-total">/ 100 分</div>
+  <div class="result-grade" id="result-grade"></div>
+  <div style="color:#666;font-size:15px;margin-bottom:14px;" id="result-detail"></div>
+  <button class="btn-reset" onclick="resetAll()">🔄 重新作答</button>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────
+const sections = [
+  {
+    title: '第一大題：字彙選擇',
+    pts: '15 題 × 2 分 = 30 分',
+    questions: [
+      { q: 'Doctors are trained to treat patients of every _______, race, and background with equal care and respect.',
+        opts: ['gender','council','certificate','revolution'],
+        ans: 'A',
+        exp: '<span class="exp-key">gender（性別）</span>──醫生受訓要以平等的關懷與尊重對待每一種性別、種族與背景的病患，呼應課文標題 Gender Equality。<br>❌ council = 委員會；certificate = 證書；revolution = 革命，皆不符語境。' },
+      { q: 'There is still a huge _______ between the salaries of top executives and ordinary workers in many companies.',
+        opts: ['gap','chore','path','majority'],
+        ans: 'A',
+        exp: '<span class="exp-key">gap（差距）</span>──許多公司的高階主管與一般員工薪資之間仍存在巨大差距，呼應課文中 the Global Gender Gap Index 及 women still being paid only 64.15% of what men earned。<br>❌ chore = 雜務；path = 道路；majority = 大多數，皆不符語境。' },
+      { q: 'After years of hard work, she finally found a clear _______ toward becoming a successful entrepreneur.',
+        opts: ['path','ban','chaos','council'],
+        ans: 'A',
+        exp: '<span class="exp-key">path（道路；途徑）</span>──經過多年努力，她終於找到一條通往成功創業家之路，呼應課文中 The path to equality began on October 24, 1975。<br>❌ ban = 禁令；chaos = 混亂；council = 委員會，皆不符語境。' },
+      { q: 'The small town\'s _______ has grown rapidly over the past decade due to new job opportunities.',
+        opts: ['population','protest','anniversary','salary'],
+        ans: 'A',
+        exp: '<span class="exp-key">population（人口）</span>──由於新的工作機會，這個小鎮的人口在過去十年迅速增長，呼應課文中 this country, with fewer than 400,000 people。<br>❌ protest = 抗議；anniversary = 週年紀念日；salary = 薪水，皆不符語境。' },
+      { q: 'Thousands of citizens gathered downtown to stage a peaceful _______ against the new tax policy.',
+        opts: ['protest','nursery','discrimination','certificate'],
+        ans: 'A',
+        exp: '<span class="exp-key">protest（抗議；示威）</span>──數千名市民聚集市中心，對新稅制發起一場和平抗議，呼應課文中 "Women\'s Day Off" to protest against wage inequality。<br>❌ nursery = 托兒所；discrimination = 歧視；certificate = 證書，皆不符語境。' },
+      { q: 'After a long day at the office, he still had to handle several _______ chores like cooking and cleaning.',
+        opts: ['domestic','democratic','revolutionary','bold'],
+        ans: 'A',
+        exp: '<span class="exp-key">domestic（家務的）</span>──在公司忙了一天後，他還要處理像煮飯、打掃這些家務雜事，呼應課文中 domestic chores。<br>❌ democratic = 民主的；revolutionary = 革命性的；bold = 大膽的，皆不符語境。' },
+      { q: 'Washing dishes, doing laundry, and taking out the trash are daily _______ that nobody really enjoys.',
+        opts: ['chores','councils','anniversaries','certificates'],
+        ans: 'A',
+        exp: '<span class="exp-key">chores（雜務；瑣事）</span>──洗碗、洗衣服、倒垃圾是每天的家務瑣事，沒有人真的喜歡做，呼應課文中 looking after children, or doing domestic chores。<br>❌ councils = 委員會；anniversaries = 週年紀念日；certificates = 證書，皆不符語境。' },
+      { q: 'The _______ of voters in the survey said they supported stricter laws on workplace safety.',
+        opts: ['majority','chaos','gap','ban'],
+        ans: 'A',
+        exp: '<span class="exp-key">majority（多數；大多數）</span>──調查中大多數選民表示支持更嚴格的職場安全法律，呼應課文中 the majority of women going on strike。<br>❌ chaos = 混亂；gap = 差距；ban = 禁令，皆不符語境。' },
+      { q: 'When the power suddenly went out in the middle of the concert, the venue was thrown into total _______.',
+        opts: ['chaos','addition','salary','anniversary'],
+        ans: 'A',
+        exp: '<span class="exp-key">chaos（混亂；混沌）</span>──演唱會中途突然斷電，整個場館陷入一片混亂，呼應課文中 the country fell into complete chaos。<br>❌ addition = 增加；salary = 薪水；anniversary = 週年紀念日，皆不符語境。' },
+      { q: '_______, the new policy will require all employees to complete safety training before starting work.',
+        opts: ['Additionally','Democratically','Revolutionarily','Marvelously'],
+        ans: 'A',
+        exp: '<span class="exp-key">Additionally（此外；另外，副詞）</span>──此外，新政策將要求所有員工在開始工作前完成安全訓練，呼應課文中 Additionally, mothers striking all day long simply left children in the care of their husbands。<br>❌ Democratically = 民主地；Revolutionarily = 革命性地；Marvelously = 令人驚嘆地，皆不符語境。' },
+      { q: 'Because both parents had to work overtime, they sent their toddler to a _______ near their office every morning.',
+        opts: ['nursery','council','certificate','anniversary'],
+        ans: 'A',
+        exp: '<span class="exp-key">nursery（托兒所；育嬰室）</span>──因為父母都要加班，他們每天早上把小孩送到辦公室附近的托兒所，呼應課文中 the mainly female-run schools and nurseries were closed。<br>❌ council = 委員會；certificate = 證書；anniversary = 週年紀念日，皆不符語境。' },
+      { q: 'The massive snowstorm completely _______ traffic across the entire region, leaving thousands of cars stuck for hours.',
+        opts: ['paralyzed','banned','eliminated','discriminated'],
+        ans: 'A',
+        exp: '<span class="exp-key">paralyzed（使麻痺；使癱瘓）</span>──這場大雪完全癱瘓了整個地區的交通，導致數千輛汽車困在路上好幾個小時，呼應課文中 This protest paralyzed the entire nation。<br>❌ banned = 禁止；eliminated = 消除；discriminated = 歧視，皆不符語境。' },
+      { q: 'The city _______ recently passed a new rule banning smoking in all public parks.',
+        opts: ['council','path','population','salary'],
+        ans: 'A',
+        exp: '<span class="exp-key">council（委員會；議會）</span>──市議會最近通過一項新規定，禁止在所有公園吸菸，呼應課文中 Iceland established the Gender Equality Council。<br>❌ path = 道路；population = 人口；salary = 薪水，皆不符語境。' },
+      { q: 'Many countries have laws that strictly _______ discrimination based on race, gender, or religion in the workplace.',
+        opts: ['ban','marvel','eliminate','paralyze'],
+        ans: 'A',
+        exp: '<span class="exp-key">ban（禁止）</span>──許多國家有法律嚴格禁止職場上基於種族、性別或宗教的歧視，呼應課文中 banning gender discrimination in the workplace and in schools。<br>❌ marvel = 感到驚奇；eliminate = 消除；paralyze = 使麻痺，皆不符語境（此處應為「禁止」之意，且 ban 為及物動詞直接接受詞）。' },
+      { q: 'Despite decades of progress, many women still face _______ when applying for leadership positions in large companies.',
+        opts: ['discrimination','anniversary','certificate','revolution'],
+        ans: 'A',
+        exp: '<span class="exp-key">discrimination（歧視）</span>──儘管數十年來已有進展，許多女性在應徵大公司的領導職位時仍面臨歧視，呼應課文中 banning gender discrimination in the workplace。<br>❌ anniversary = 週年紀念日；certificate = 證書；revolution = 革命，皆不符語境。' },
+    ]
+  },
+  {
+    title: '第二大題：文法選擇',
+    pts: '15 題 × 2 分 = 30 分',
+    questions: [
+      { q: 'The woman _______ speech inspired millions of people around the world was honored with an international award.',
+        opts: ['who','whom','whose','which'],
+        ans: 'C',
+        exp: '<span class="exp-key">whose（所有格關係代詞）</span>──whose speech 表示「她的演講」，修飾先行詞 the woman，表所有關係。<br>❌ who 為主格；whom 為受格；which 用於指物，皆不符合「所有」的關係。' },
+      { q: '_______ to protest against unfair wages, thousands of women left their jobs and took to the streets.',
+        opts: ['Determine','Determining','Determined','To determine'],
+        ans: 'C',
+        exp: '<span class="exp-key">Determined（過去分詞，表被動）</span>──分詞構句修飾主詞 thousands of women，她們「被」決心驅使（即「下定決心」），故用過去分詞 Determined，表示一種被動的心理狀態。<br>❌ Determine（原形）、Determining（現在分詞，表主動）、To determine（不定詞）皆不符合此分詞構句的被動關係。' },
+      { q: 'If the government _______ stricter equal pay laws decades ago, the wage gap might be much smaller today.',
+        opts: ['passes','passed','had passed','has passed'],
+        ans: 'C',
+        exp: '<span class="exp-key">had passed（過去完成式，與過去事實相反的假設）</span>──If 子句用過去完成式 had passed，主要子句用 might be，表示「如果政府數十年前就通過更嚴格的同工同酬法律（但事實上沒有），今天的薪資差距可能會小得多」。<br>❌ passes、passed、has passed 時態皆不正確，無法與主要子句的 might + 原形動詞搭配此種假設語氣。' },
+      { q: 'No sooner _______ the new law than companies across the country began reviewing their pay structures.',
+        opts: ['the government passed','did the government pass','the government had passed','had the government passed'],
+        ans: 'B',
+        exp: '<span class="exp-key">did the government pass（No sooner 倒裝句）</span>──No sooner 置於句首時，主要子句須倒裝，用助動詞 did + 主詞 + 原形動詞，表示「政府一通過新法律，全國的公司就立刻開始檢討薪資結構」。<br>❌ 其餘選項未正確使用倒裝結構或時態不一致。' },
+      { q: 'Many of the new employees, _______ were unfamiliar with the company\'s equal pay policy, attended a mandatory training session.',
+        opts: ['that','what','who','whom'],
+        ans: 'C',
+        exp: '<span class="exp-key">who（非限定關係代詞，指人作主詞）</span>──逗號後的關係子句為補充說明，指代 many of the new employees（人），作關係子句的主詞，故用 who；that 不可用於非限定關係子句。<br>❌ that 不能接在逗號後引導非限定關係子句；what 本身已包含先行詞；whom 為受格，此處需作主詞。' },
+      { q: 'Had the women not organized the strike in 1975, public attitudes toward gender equality _______ so quickly.',
+        opts: ['would not change','would not have changed','did not change','will not change'],
+        ans: 'B',
+        exp: '<span class="exp-key">would not have changed（與過去事實相反的假設，倒裝句）</span>──Had + 主詞 + not + 過去分詞 (=If 主詞 had not + 過去分詞) 為過去完成式倒裝，主要子句須用 would (not) have + 過去分詞，表示「如果1975年女性沒有發起這場罷工（但事實上發起了），對性別平等的公眾態度就不會這麼快改變」。<br>❌ would not change 用於現在/未來假設；did not change、will not change 時態不符。' },
+      { q: 'The company, _______ profits had dropped sharply, decided to lay off a quarter of its staff.',
+        opts: ['that','which','whose','who'],
+        ans: 'C',
+        exp: '<span class="exp-key">whose（所有格關係代詞）</span>──whose profits 表示「該公司的利潤」，修飾先行詞 the company，表所有關係。<br>❌ that、which 用於指物但不表所有；who 用於指人，皆不符合「所有」的關係。' },
+      { q: 'It was not until the law was passed _______ companies finally began offering equal pay to men and women.',
+        opts: ['than','that','when','which'],
+        ans: 'B',
+        exp: '<span class="exp-key">that（It is/was not until... that... 句型）</span>──"It was not until + 時間/事件 + that + 主詞 + 動詞" 表示「直到…才…」，強調 not until 之後的內容，表示「直到該法律通過，公司才終於開始提供男女同等的薪資」。<br>❌ than 用於比較句；when、which 不符合此強調句型結構。' },
+      { q: '_______ on strict laws to address gender discrimination, many companies still struggle to achieve true equality in practice.',
+        opts: ['Despite relying','Although relying','Relying','Relied'],
+        ans: 'C',
+        exp: '<span class="exp-key">Relying（現在分詞，表主動的分詞構句）</span>──分詞構句修飾主詞 many companies，公司「依賴」嚴格的法律來解決性別歧視問題，主詞與 rely 為主動關係，故用現在分詞 Relying（此句型相當於 Although they rely on...）。<br>❌ Despite relying 介詞後接動名詞語法正確，但與後句語意搭配時較生硬；Although relying 文法上 although 通常接子句而非單獨分詞；Relied 表被動，與主詞為主動關係不符。' },
+      { q: 'The certificate, _______ to companies that follow equal pay policies, is now required by law in some countries.',
+        opts: ['issuing','issued','to issue','issue'],
+        ans: 'B',
+        exp: '<span class="exp-key">issued（過去分詞，表被動）</span>──分詞構句修飾 the certificate，這份證書「被」發給遵循同工同酬政策的公司，故用過去分詞 issued。<br>❌ issuing（現在分詞，表主動）、to issue（不定詞）、issue（原形）皆不符合被動關係。' },
+      { q: 'Not only _______ the women leave work early, but they also organized public demonstrations to raise awareness.',
+        opts: ['did','were','they','was'],
+        ans: 'A',
+        exp: '<span class="exp-key">did（Not only... but also... 倒裝句）</span>──Not only 置於句首時，主要子句須倒裝，一般動詞須用助動詞提前，"Not only did the women leave work early, but they also..." 表示「這些女性不僅提早離開工作，還組織了公開示威」。<br>❌ were、was 為 be 動詞，此處主要動詞為 leave（一般動詞），須用 did；they 未倒裝。' },
+      { q: 'The strike, _______ unfair to some business owners at the time, eventually led to major reforms in labor law.',
+        opts: ['considering','considered','to consider','consider'],
+        ans: 'B',
+        exp: '<span class="exp-key">considered（過去分詞，表被動）</span>──分詞構句修飾 the strike，這場罷工「被認為」對當時一些企業主不公平，故用過去分詞 considered。<br>❌ considering（現在分詞，表主動，常用作介詞「考慮到」）、to consider（不定詞）、consider（原形）皆不符合被動關係。' },
+      { q: 'She spoke as _______ she had personally witnessed the historic strike, even though she was born years after it happened.',
+        opts: ['if','that','though','which'],
+        ans: 'A',
+        exp: '<span class="exp-key">as if（假設語氣，好像）</span>──as if + 過去完成式（had witnessed）表示「與過去事實相反的假設」，她說話的樣子「好像」親眼見過這場歷史性罷工，但實際上她是在事件發生多年後才出生。<br>❌ that、which 不構成此假設語氣結構；though 雖可表「雖然」，但語意與此句不符。' },
+      { q: 'However strict the new equal pay law _______, some companies still found ways to avoid following it.',
+        opts: ['was','were','be','being'],
+        ans: 'A',
+        exp: '<span class="exp-key">was（However + 形容詞 + 主詞 + 動詞，讓步副詞子句）</span>──"However strict the new equal pay law was" 為讓步副詞子句，描述過去的事實，須用正常直述語氣動詞 was（此處非假設語氣，主詞 the law 為單數）。<br>❌ were、be、being 皆不符合此句的時態與語法結構。' },
+      { q: 'The activists, _______ by years of inequality, finally decided to take bold action and organize a nationwide strike.',
+        opts: ['frustrate','frustrating','frustrated','to frustrate'],
+        ans: 'C',
+        exp: '<span class="exp-key">frustrated（過去分詞，表被動）</span>──分詞構句修飾 the activists，這些行動者「因」多年的不平等而感到挫折（被動的情緒狀態），故用過去分詞 frustrated。<br>❌ frustrate（原形）、frustrating（現在分詞，表主動，常形容事物「令人沮喪的」）、to frustrate（不定詞）皆不符合被動關係。' },
+    ]
+  },
+  {
+    title: '第三大題：綜合測驗',
+    pts: '10 題 × 2 分 = 20 分',
+    passage: `Throughout history, social movements have played a (31) ______ role in bringing about change that governments alone were unable to achieve. When ordinary citizens feel that their voices are not (32) ______ by those in power, they often turn to collective action as a way to make their concerns impossible to ignore. Strikes, marches, and public demonstrations can (33) ______ entire cities, forcing businesses, schools, and government offices to confront the consequences of inequality directly. Although such actions may initially be (34) ______ as inconvenient or even disruptive, they frequently succeed in shifting public opinion in ways that years of quiet discussion could not. (35) ______ these protests, many laws that we now consider basic protections might never have been passed. Once a law is in place, however, the work is often (36) ______ from finished, since putting new rules into practice can take much longer than passing them on paper. Companies may be required to obtain official (37) ______ proving that they meet certain standards, and those that fail to comply may (38) ______ serious penalties. Over time, as more organizations adjust their policies, what once seemed (39) ______ can gradually become the new normal. For this reason, social movements are often remembered not only for the immediate (40) ______ they caused, but also for the long-term progress they made possible.`,
+    questions: [
+      { q: '(31)',
+        opts: ['crucial','curious','casual','cautious'],
+        ans: 'A',
+        exp: '<span class="exp-key">crucial（關鍵的；至關重要的）</span>──"play a crucial role" 為固定搭配，表示「扮演關鍵的角色」，社會運動在帶來改變方面扮演了至關重要的角色。<br>❌ curious = 好奇的；casual = 隨意的；cautious = 謹慎的，皆不符語境。' },
+      { q: '(32)',
+        opts: ['heard','listened','sounded','spoken'],
+        ans: 'A',
+        exp: '<span class="exp-key">heard（被動式，被聽見）</span>──"their voices are not heard" 表示「他們的聲音沒有被聽見」，是常見的固定用法。<br>❌ listened 通常接 to，不能直接這樣被動使用於 voices；sounded = 聽起來；spoken = 被說出，皆不符語境。' },
+      { q: '(33)',
+        opts: ['paralyze','paralysis','paralyzing','paralyzed'],
+        ans: 'A',
+        exp: '<span class="exp-key">paralyze（使麻痺；使癱瘓，原形動詞）</span>──助動詞 can 之後須接原形動詞，"can paralyze entire cities" 表示「能使整座城市陷入癱瘓」，呼應課文中 This protest paralyzed the entire nation。<br>❌ paralysis（名詞）、paralyzing（現在分詞）、paralyzed（過去分詞/過去式）皆不能直接接在助動詞 can 之後。' },
+      { q: '(34)',
+        opts: ['viewed','viewing','to view','view'],
+        ans: 'A',
+        exp: '<span class="exp-key">viewed（過去分詞，表被動）</span>──"may initially be viewed as inconvenient" 為被動語態 be + 過去分詞，表示「最初可能被視為造成不便」。<br>❌ viewing（現在分詞）、to view（不定詞）、view（原形）皆無法與 be 動詞構成此被動結構。' },
+      { q: '(35)',
+        opts: ['Without','With','Despite','Through'],
+        ans: 'A',
+        exp: '<span class="exp-key">Without（若沒有，後接名詞表達假設語氣）</span>──"Without these protests, many laws... might never have been passed" 表示「若不是因為這些抗議行動，許多法律可能永遠不會通過」，與 if it had not been for 句型意義相近。<br>❌ With = 有了…的話，語意相反；Despite = 儘管；Through = 透過，皆不符合此處與過去事實相反的假設語境。' },
+      { q: '(36)',
+        opts: ['far','near','close','away'],
+        ans: 'A',
+        exp: '<span class="exp-key">far from（固定搭配，遠非；一點也不）</span>──"the work is often far from finished" 表示「這項工作往往遠遠未完成」，far from 為常見固定搭配，表示「完全不是」。<br>❌ near、close、away 皆不構成此固定用法的語意。' },
+      { q: '(37)',
+        opts: ['certification','certificate','certify','certified'],
+        ans: 'B',
+        exp: '<span class="exp-key">certificate（證書，名詞）</span>──"obtain official certificate(s) proving that..." 表示「取得官方證書以證明…」，呼應課文中 obtain a certificate proving that they were following national equal pay policies。<br>❌ certification 雖也為名詞（認證過程），但課文原句使用 certificate 一詞，且語境強調具體文件；certify（動詞）、certified（過去分詞/形容詞）不適合直接作 obtain 的受詞名詞。' },
+      { q: '(38)',
+        opts: ['face','facing','faced','to facing'],
+        ans: 'A',
+        exp: '<span class="exp-key">face（面對；遭受，原形動詞）</span>──助動詞 may 之後須接原形動詞，"may face serious penalties" 表示「可能面臨嚴重的罰款」，呼應課文中 they would face heavy fines。<br>❌ facing（現在分詞）、faced（過去分詞）、to facing（不定詞形式錯誤）皆不能直接接在助動詞 may 之後。' },
+      { q: '(39)',
+        opts: ['radical','radically','radicalism','radicalize'],
+        ans: 'A',
+        exp: '<span class="exp-key">radical（極端的；激進的，形容詞）</span>──"what once seemed radical" 表示「曾經看似激進的事物」，radical 作形容詞修飾語意，符合 seem + 形容詞的結構。<br>❌ radically（副詞）、radicalism（名詞）、radicalize（動詞）皆無法直接接在 seem 之後作補語。' },
+      { q: '(40)',
+        opts: ['disruption','disrupt','disruptive','disrupted'],
+        ans: 'A',
+        exp: '<span class="exp-key">disruption（名詞，干擾；破壞）</span>──"the immediate disruption they caused" 表示「它們造成的立即性干擾」，disruption 為名詞，作 caused 的受詞，且與冠詞 the 及形容詞 immediate 搭配，須為名詞形式。<br>❌ disrupt（動詞）、disruptive（形容詞）、disrupted（過去分詞/過去式）皆不能直接作此處的名詞受詞。' },
+    ]
+  },
+  {
+    title: '第四大題：閱讀理解',
+    pts: '10 題 × 2 分 = 20 分',
+    passage: `<b>Passage 1</b><br>
+On October 24, 1975, something extraordinary happened in Iceland. Around 90 percent of Icelandic women refused to go to work, cook, clean, or take care of children for an entire day. Instead, they gathered in the streets to protest against unequal pay and unfair treatment in society. The effect was immediate and dramatic: banks, factories, schools, and shops across the country were forced to close or operate with only a handful of staff, since so many of their workers were women. Fathers, many of whom had never spent a full day alone with their children, suddenly found themselves responsible for feeding, entertaining, and supervising their kids while also trying to get to work. Some brought their children to the office, while others simply gave up and stayed home. The day became known as the "Women's Day Off," and it is widely seen as a turning point in Iceland's history. Although the protest caused widespread disruption, it succeeded in opening the eyes of many men to just how much work women did every day — work that had previously gone unnoticed and unappreciated.<br><br>
+<b>Passage 2</b><br>
+The "Women's Day Off" did not solve gender inequality overnight, but it set in motion a series of changes that would make Iceland a global leader in this area. The following year, the government created the Gender Equality Council and passed a law banning discrimination based on gender in both workplaces and schools. In 1980, Iceland made history again by electing Vigdís Finnbogadóttir as president, making her the world's first democratically elected female head of state. Even so, progress remained slow in certain areas, particularly when it came to wages. Decades later, in 2005 and again in 2016, Icelandic women organized similar walkouts to highlight the fact that they were still earning significantly less than their male counterparts for the same work. These later protests eventually led to the passage of a groundbreaking law in 2018, which made Iceland the first country in the world to legally require equal pay for equal work, with significant fines for companies that failed to comply. Today, Iceland is consistently ranked as the most gender-equal country on Earth, though its leaders insist that the work of building a truly fair society is never completely finished.`,
+    questions: [
+      { q: '(41) According to Passage 1, what did Icelandic women do on October 24, 1975?',
+        opts: ['They voted in a national election.','They refused to work, cook, clean, or care for children for a day.','They opened new schools and nurseries.','They elected a female president.'],
+        ans: 'B',
+        exp: '<span class="exp-key">B</span>──文中提到 "Around 90 percent of Icelandic women refused to go to work, cook, clean, or take care of children for an entire day"，她們在這一天拒絕做這些工作。<br>❌ A、C、D 均與文章描述不符，這些事件發生在其他時間點。' },
+      { q: '(42) According to Passage 1, what happened to many workplaces during the protest?',
+        opts: ['They hired more male workers permanently.','They were forced to close or operate with very few staff.','They increased wages immediately.','They relocated to other countries.'],
+        ans: 'B',
+        exp: '<span class="exp-key">B</span>──文中提到 "banks, factories, schools, and shops across the country were forced to close or operate with only a handful of staff"，許多工作場所被迫關閉或只能以極少數員工運作。<br>❌ A、C、D 均為文章未提及的內容。' },
+      { q: '(43) Why did many fathers struggle on the day of the protest, according to Passage 1?',
+        opts: ['They had to take over childcare duties they were unfamiliar with.','They lost their jobs permanently.','They were not allowed to leave their offices.','They had to organize the protest themselves.'],
+        ans: 'A',
+        exp: '<span class="exp-key">A</span>──文中提到 "Fathers, many of whom had never spent a full day alone with their children, suddenly found themselves responsible for feeding, entertaining, and supervising their kids"，許多父親必須承擔他們不熟悉的育兒責任。<br>❌ B、C、D 均為文章未提及的內容。' },
+      { q: '(44) What does Passage 1 suggest was a positive result of the protest, despite the disruption it caused?',
+        opts: ['It immediately doubled women\'s salaries.','It made many men more aware of how much work women did every day.','It led to the closing of all schools permanently.','It ended all forms of gender discrimination instantly.'],
+        ans: 'B',
+        exp: '<span class="exp-key">B</span>──文章最後一句提到 "it succeeded in opening the eyes of many men to just how much work women did every day — work that had previously gone unnoticed and unappreciated"，讓許多男性意識到女性每天所做的工作量。<br>❌ A、C、D 均為文章未提及或誇大的內容，改變是漸進的，並非立即且全面的。' },
+      { q: '(45) Based on Passage 1, what is the "Women\'s Day Off" widely considered to be?',
+        opts: ['A minor local event with little lasting impact','A failed attempt that was quickly forgotten','A turning point in Iceland\'s history','An annual holiday created by the government'],
+        ans: 'C',
+        exp: '<span class="exp-key">C</span>──文中明確指出 "The day became known as the \'Women\'s Day Off,\' and it is widely seen as a turning point in Iceland\'s history"，被廣泛視為冰島歷史上的一個轉折點。<br>❌ A、B、D 均與文章描述不符或未提及。' },
+      { q: '(46) According to Passage 2, what happened the year after the "Women\'s Day Off"?',
+        opts: ['Iceland elected its first female president.','The government created the Gender Equality Council and banned gender discrimination.','Companies were required to obtain equal pay certificates.','Women organized another nationwide walkout.'],
+        ans: 'B',
+        exp: '<span class="exp-key">B</span>──文中提到 "The following year, the government created the Gender Equality Council and passed a law banning discrimination based on gender in both workplaces and schools"，隔年政府成立性別平等委員會並通過禁止性別歧視的法律。<br>❌ A 發生在1980年；C 是2018年的法律規定；D 發生在2005年及2016年，皆非「隔年」發生。' },
+      { q: '(47) What made Vigdís Finnbogadóttir\'s 1980 election historically significant, according to Passage 2?',
+        opts: ['She was the first woman to vote in Iceland.','She became the world\'s first democratically elected female head of state.','She founded the Gender Equality Council.','She organized the 1975 protest.'],
+        ans: 'B',
+        exp: '<span class="exp-key">B</span>──文中明確指出 "Iceland made history again by electing Vigdís Finnbogadóttir as president, making her the world\'s first democratically elected female head of state"，她是世界上第一位民選的女性國家元首。<br>❌ A、C、D 均為文章未提及的內容。' },
+      { q: '(48) Why did Icelandic women organize walkouts again in 2005 and 2016, according to Passage 2?',
+        opts: ['To protest against new immigration laws','To celebrate the anniversary of Iceland\'s independence','To highlight that they were still earning less than men for the same work','To demand the resignation of the president'],
+        ans: 'C',
+        exp: '<span class="exp-key">C</span>──文中提到 "Icelandic women organized similar walkouts to highlight the fact that they were still earning significantly less than their male counterparts for the same work"，目的是凸顯她們做同樣工作卻仍領取較少薪資的事實。<br>❌ A、B、D 均為文章未提及的內容。' },
+      { q: '(49) What was significant about the 2018 law mentioned in Passage 2?',
+        opts: ['It made Iceland the first country to legally require equal pay for equal work.','It banned all strikes and protests in Iceland.','It eliminated the Gender Equality Council.','It reduced the number of female workers in companies.'],
+        ans: 'A',
+        exp: '<span class="exp-key">A</span>──文中明確指出 "a groundbreaking law in 2018, which made Iceland the first country in the world to legally require equal pay for equal work, with significant fines for companies that failed to comply"，這是冰島首創、要求同工同酬的法律。<br>❌ B、C、D 均為文章未提及或與文章內容相反的描述。' },
+      { q: '(50) What is the overall message conveyed by both passages?',
+        opts: ['Gender equality was achieved instantly through a single protest in 1975.','Iceland\'s progress toward gender equality has been a long process built on persistent collective action.','Iceland no longer needs to make any further progress on gender equality.','Only government leaders, not ordinary citizens, can bring about social change.'],
+        ans: 'B',
+        exp: '<span class="exp-key">B</span>──兩段文章共同呈現的是一個漫長的歷程：從1975年的罷工開始，到1976年的法律、1980年的女性總統，再到2005、2016年的後續抗爭，最終促成2018年的同工同酬法律，顯示冰島的性別平等是透過持續的集體行動逐步累積而成。<br>❌ A 與文章描述的漸進過程不符；C 文末提到 "the work of building a truly fair society is never completely finished"，與此相反；D 文章強調的正是一般公民（women）所發起的集體行動帶來改變。' },
+    ]
+  }
+];
+
+// ── RENDER ────────────────────────────────────────────────
+let globalQNum = 0;
+const qMap = {}; // qNum → { ans, exp }
+const userAnswers = {};
+let submitted = false;
+
+const container = document.getElementById('quiz-container');
+
+function render() {
+  sections.forEach((sec, si) => {
+    const secDiv = document.createElement('div');
+    secDiv.className = 'section';
+    let html = `<div class="section-header">${sec.title} <span class="pts">（${sec.pts}）</span></div>`;
+    if (sec.passage) {
+      html += `<div class="passage"><div class="passage-label">📖 閱讀文章</div>${sec.passage}</div>`;
+    }
+    sec.questions.forEach((q, qi) => {
+      globalQNum++;
+      const n = globalQNum;
+      qMap[n] = { ans: q.ans, exp: q.exp };
+      const labels = ['A','B','C','D'];
+      let optHtml = '';
+      q.opts.forEach((o, i) => {
+        optHtml += `<div class="option" id="opt-${n}-${labels[i]}" onclick="choose(${n},'${labels[i]}')">`
+          + `<span class="option-label">(${labels[i]})</span>${o}</div>`;
+      });
+      html += `<div class="question" id="q${n}">
+        <div class="q-text"><span class="q-num">${n}.</span> ${q.q}</div>
+        <div class="options">${optHtml}</div>
+        <div class="explanation" id="exp${n}">
+          <div class="exp-header">💡 解析</div>
+          <div class="exp-body">${q.exp}</div>
+        </div>
+      </div>`;
+    });
+    secDiv.innerHTML = html;
+    container.appendChild(secDiv);
+  });
+}
+
+render();
+
+// ── LOGIC ─────────────────────────────────────────────────
+function choose(n, chosen) {
+  if (submitted) return;
+  userAnswers[n] = chosen;
+  const ans = qMap[n].ans;
+  const labels = ['A','B','C','D'];
+
+  labels.forEach(l => {
+    const el = document.getElementById(`opt-${n}-${l}`);
+    el.classList.remove('selected','correct','wrong','reveal-correct');
+    if (l === chosen) {
+      if (chosen === ans) el.classList.add('correct');
+      else el.classList.add('wrong');
+    } else if (l === ans && chosen !== ans) {
+      el.classList.add('reveal-correct');
+    }
+  });
+
+  document.getElementById(`exp${n}`).classList.add('show');
+  updateTopBar();
+}
+
+function updateTopBar() {
+  const count = Object.keys(userAnswers).length;
+  document.getElementById('answered-count').textContent = count;
+  document.getElementById('progress-fill').style.width = (count / 50 * 100) + '%';
+  let score = 0;
+  for (let q in userAnswers) { if (userAnswers[q] === qMap[q].ans) score += 2; }
+  document.getElementById('live-score').textContent = score;
+}
+
+function revealAll() {
+  for (let n = 1; n <= 50; n++) {
+    const ans = qMap[n].ans;
+    const labels = ['A','B','C','D'];
+    labels.forEach(l => {
+      const el = document.getElementById(`opt-${n}-${l}`);
+      el.classList.remove('selected','correct','wrong','reveal-correct');
+      if (l === ans) el.classList.add('reveal-correct');
+      else if (userAnswers[n] === l && l !== ans) el.classList.add('wrong');
+    });
+    document.getElementById(`exp${n}`).classList.add('show');
+  }
+  updateTopBar();
+}
+
+function submitAll() {
+  submitted = true;
+  revealAll();
+  let score = 0;
+  for (let n = 1; n <= 50; n++) {
+    if (userAnswers[n] === qMap[n].ans) score += 2;
+  }
+  const rb = document.getElementById('result-box');
+  rb.classList.add('show');
+  document.getElementById('result-score').textContent = score;
+  const gr = document.getElementById('result-grade');
+  const det = document.getElementById('result-detail');
+  if (score >= 90) { gr.textContent = '🏆 優秀！'; gr.className = 'result-grade grade-a'; det.textContent = '表現卓越，繼續保持！'; }
+  else if (score >= 70) { gr.textContent = '👍 良好'; gr.className = 'result-grade grade-b'; det.textContent = '表現不錯，再複習錯誤的題目吧！'; }
+  else { gr.textContent = '📚 需加強'; gr.className = 'result-grade grade-c'; det.textContent = '多複習解析說明，你可以做到的！'; }
+  document.getElementById('answered-count').textContent = 50;
+  document.getElementById('live-score').textContent = score;
+  document.getElementById('progress-fill').style.width = '100%';
+  rb.scrollIntoView({ behavior: 'smooth' });
+}
+
+function resetAll() {
+  submitted = false;
+  for (let key in userAnswers) delete userAnswers[key];
+  for (let n = 1; n <= 50; n++) {
+    const labels = ['A','B','C','D'];
+    labels.forEach(l => {
+      document.getElementById(`opt-${n}-${l}`).classList.remove('selected','correct','wrong','reveal-correct');
+    });
+    document.getElementById(`exp${n}`).classList.remove('show');
+  }
+  document.getElementById('result-box').classList.remove('show');
+  document.getElementById('answered-count').textContent = '0';
+  document.getElementById('live-score').textContent = '0';
+  document.getElementById('progress-fill').style.width = '0%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

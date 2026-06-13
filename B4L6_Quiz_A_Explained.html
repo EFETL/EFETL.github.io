@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L6 卷A 解析版 — Dabbawalas: Door-to-Door Meal Delivery in Mumbai</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 17px; line-height: 1.7;
+  background: #f0f2f5; color: #1d1d1f;
+  padding-bottom: 48px;
+}
+header {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white; padding: 20px 16px; text-align: center;
+}
+header h1 { font-size: 20px; margin-bottom: 4px; }
+header p { font-size: 14px; opacity: 0.75; }
+.top-bar {
+  background: white; padding: 10px 14px;
+  display: flex; justify-content: space-between; align-items: center;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1); gap: 8px;
+}
+.top-bar .score-info { font-size: 15px; font-weight: bold; color: #1a1a2e; white-space: nowrap; }
+.btn-reveal {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white; border: none; border-radius: 10px;
+  padding: 8px 14px; font-size: 14px; font-weight: bold;
+  cursor: pointer; white-space: nowrap; -webkit-tap-highlight-color: transparent;
+}
+.progress-bar { height: 4px; background: #e0e0e0; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); transition: width 0.3s; width: 0%; }
+.section {
+  background: white; margin: 14px 10px 0;
+  border-radius: 16px; overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+.section-header {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white; padding: 13px 16px; font-size: 16px; font-weight: bold;
+}
+.section-header .pts { font-size: 12px; opacity: 0.85; font-weight: normal; }
+.question { padding: 15px 16px; border-bottom: 1px solid #f0f0f0; }
+.question:last-child { border-bottom: none; }
+.q-text { font-size: 16px; margin-bottom: 11px; font-weight: 500; line-height: 1.6; }
+.q-num { color: #667eea; font-weight: bold; margin-right: 4px; }
+.options { display: flex; flex-direction: column; gap: 7px; }
+.option {
+  display: flex; align-items: flex-start; gap: 9px;
+  padding: 10px 13px; border: 2px solid #e0e0e0; border-radius: 11px;
+  cursor: pointer; transition: all 0.15s; font-size: 16px; line-height: 1.5;
+  background: #fafafa; -webkit-tap-highlight-color: transparent;
+}
+.option:active { transform: scale(0.98); }
+.option.selected { border-color: #667eea; background: #f0f0ff; }
+.option.correct { border-color: #34c759; background: #f0fff4; }
+.option.wrong   { border-color: #ff3b30; background: #fff5f5; }
+.option.reveal-correct { border-color: #34c759; background: #f0fff4; }
+.option-label { font-weight: bold; color: #667eea; min-width: 22px; flex-shrink: 0; }
+.option.correct .option-label, .option.reveal-correct .option-label { color: #34c759; }
+.option.wrong .option-label { color: #ff3b30; }
+
+/* Explanation panel */
+.explanation {
+  display: none; margin-top: 10px;
+  background: #fafbff; border-radius: 10px;
+  border: 1px solid #dde3ff; overflow: hidden;
+}
+.explanation.show { display: block; }
+.exp-header {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 13px; font-size: 14px; font-weight: bold;
+  background: #eef1ff; color: #667eea;
+}
+.exp-body { padding: 10px 13px; font-size: 15px; line-height: 1.7; color: #333; }
+.exp-key { color: #2e7d32; font-weight: bold; }
+.exp-wrong-key { color: #c62828; }
+
+/* Passage */
+.passage {
+  background: #f8f9ff; border-left: 4px solid #667eea;
+  padding: 13px 15px; margin: 0 16px 10px;
+  border-radius: 0 8px 8px 0; font-size: 15px; line-height: 1.75;
+}
+.passage-label { font-weight: bold; color: #667eea; margin-bottom: 7px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* Buttons */
+.btn-submit {
+  display: block; width: calc(100% - 28px); margin: 18px auto 0;
+  padding: 15px; background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white; border: none; border-radius: 13px;
+  font-size: 17px; font-weight: bold; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-submit:active { opacity: 0.9; transform: scale(0.98); }
+
+/* Result */
+.result-box {
+  display: none; margin: 14px 10px;
+  background: white; border-radius: 16px; padding: 22px 18px;
+  text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+.result-box.show { display: block; }
+.result-score { font-size: 50px; font-weight: bold; color: #667eea; line-height: 1.1; }
+.result-total { font-size: 20px; color: #666; margin-bottom: 10px; }
+.result-grade { font-size: 18px; font-weight: bold; padding: 7px 18px; border-radius: 18px; display: inline-block; margin-bottom: 14px; }
+.grade-a { background: #f0fff4; color: #1a7a3c; }
+.grade-b { background: #fff9e6; color: #b7791f; }
+.grade-c { background: #fff5f5; color: #c0392b; }
+.btn-reset {
+  display: inline-block; padding: 11px 26px;
+  background: #f0f0f7; color: #667eea;
+  border: none; border-radius: 11px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 6px;
+}
+</style>
+</head>
+<body>
+<a href="/" style="position:fixed;top:14px;left:14px;background:#2b4c8c;color:#fff;padding:7px 16px;border-radius:8px;text-decoration:none;font-size:0.9rem;font-weight:600;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,0.18);">&#8592; &#22238;&#39318;&#39052;</a>
+<header>
+  <h1>L6 Dabbawalas — 卷A 解析版</h1>
+  <p>單字、文法、克漏字、閱讀測驗｜選完即顯示解析</p>
+</header>
+<div class="top-bar">
+  <span class="score-info">進度 <span id="answered-count">0</span>/50 ｜ 得分 <span id="live-score">0</span>/100</span>
+  <button class="btn-reveal" onclick="revealAll()">📖 顯示全部解析</button>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+
+<div id="quiz-container"></div>
+
+<button class="btn-submit" onclick="submitAll()">📝 交卷 / 查看成績</button>
+
+<div class="result-box" id="result-box">
+  <div class="result-score" id="result-score">0</div>
+  <div class="result-total">/ 100 分</div>
+  <div class="result-grade" id="result-grade"></div>
+  <div style="color:#666;font-size:15px;margin-bottom:14px;" id="result-detail"></div>
+  <button class="btn-reset" onclick="resetAll()">🔄 重新作答</button>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────
+const sections = [
+  {
+    title: '第一大題：單字選擇',
+    pts: '15 題 × 2 分 = 30 分',
+    questions: [
+      { q: 'A small bakery is a tiny _______ compared to a multinational corporation with thousands of employees.',
+        opts: ['enterprise','transaction','accuracy','tactic'],
+        ans: 0,
+        exp: '<span class="exp-key">enterprise（企業；事業）</span>──句意為「相較於擁有數千名員工的跨國企業，小麵包店只是一個小企業」。<br>❌ transaction = 交易；accuracy = 準確性；tactic = 策略，皆不符語境。' },
+      { q: 'The bank processes millions of financial _______ every day, ranging from deposits to wire transfers.',
+        opts: ['suburbs','transactions','tactics','schemes'],
+        ans: 1,
+        exp: '<span class="exp-key">transactions（交易；業務，transaction 的複數）</span>──句意為「銀行每天處理數百萬筆金融交易，從存款到電匯」。<br>❌ suburbs = 郊區；tactics = 策略；schemes = 計畫，皆不符語境。' },
+      { q: 'The factory maintains an extremely low defect _______ , with fewer than one faulty product per million.',
+        opts: ['flaw','rate','code','network'],
+        ans: 1,
+        exp: '<span class="exp-key">rate（率；比率）</span>──句意為「這家工廠維持極低的瑕疵率，每百萬件產品中故障件數少於一件」，defect rate = 瑕疵率。<br>❌ flaw = 缺陷（名詞，但不接「率」概念）；code = 代碼；network = 網絡，皆不符語境。' },
+      { q: 'The new intern made a few mistakes, but they were _______ minor issues that could be fixed quickly.',
+        opts: ['merely','massively','roughly','swiftly'],
+        ans: 0,
+        exp: '<span class="exp-key">merely（僅僅；只不過，副詞）</span>──句意為「新來的實習生犯了一些錯，但那些僅僅是可以很快修正的小問題」。<br>❌ massively = 大規模地；roughly = 大致上；swiftly = 迅速地，皆不符語境。' },
+      { q: 'Winning the lottery was, for him, a _______ stroke of luck that changed his life forever.',
+        opts: ['mere','massive','particular','classic'],
+        ans: 0,
+        exp: '<span class="exp-key">mere（僅僅的；純粹的，形容詞）</span>──句意為「對他而言，贏得樂透只是純粹的幸運，卻徹底改變了他的人生」，a mere stroke of luck = 純粹的幸運。<br>❌ massive = 巨大的（語意上與「純屬偶然」的「mere」不符）；particular = 特定的；classic = 經典的，皆不符語境。' },
+      { q: 'The new GPS navigation system has greatly improved the _______ of delivery time estimates.',
+        opts: ['accuracy','suburb','tactic','flaw'],
+        ans: 0,
+        exp: '<span class="exp-key">accuracy（準確性；精確度）</span>──句意為「新的 GPS 導航系統大幅提升了送貨時間預估的準確性」。<br>❌ suburb = 郊區；tactic = 策略；flaw = 缺陷，皆不符語境。' },
+      { q: 'Many families choose to live in a quiet _______ rather than in the crowded city center.',
+        opts: ['suburb','network','scheme','transaction'],
+        ans: 0,
+        exp: '<span class="exp-key">suburb（郊區）</span>──句意為「許多家庭選擇住在安靜的郊區，而非擁擠的市中心」。<br>❌ network = 網絡；scheme = 計畫；transaction = 交易，皆不符語境。' },
+      { q: 'Every weekday, she has to _______ for nearly two hours to reach her office in the city.',
+        opts: ['commute','retrace','sort','load'],
+        ans: 0,
+        exp: '<span class="exp-key">commute（通勤，動詞）</span>──句意為「每個工作日，她必須通勤將近兩小時才能抵達市區的辦公室」。<br>❌ retrace = 沿原路返回；sort = 分類；load = 裝載，皆不符語境。' },
+      { q: 'As a daily _______ , he spends almost three hours on trains traveling between his home and workplace.',
+        opts: ['commuter','tactic','enterprise','scheme'],
+        ans: 0,
+        exp: '<span class="exp-key">commuter（通勤者）</span>──句意為「作為每天的通勤者，他花將近三小時在往返家與工作地點的火車上」。<br>❌ tactic = 策略；enterprise = 企業；scheme = 計畫，皆不符語境。' },
+      { q: 'The company built a vast _______ of suppliers and distributors to support its global operations.',
+        opts: ['network','rate','flaw','code'],
+        ans: 0,
+        exp: '<span class="exp-key">network（網絡；網路）</span>──句意為「該公司建立了龐大的供應商與經銷商網絡，以支撐其全球業務」。<br>❌ rate = 率；flaw = 缺陷；code = 代碼，皆不符語境。' },
+      { q: 'By automating repetitive tasks, the factory increased production _______ without hiring more workers.',
+        opts: ['efficiency','suburb','transaction','tactic'],
+        ans: 0,
+        exp: '<span class="exp-key">efficiency（效率）</span>──句意為「透過自動化重複性的工作，工廠在不增加員工的情況下提高了生產效率」。<br>❌ suburb = 郊區；transaction = 交易；tactic = 策略，皆不符語境。' },
+      { q: 'The new assembly line is far more _______ than the old one, producing twice as many units per hour.',
+        opts: ['efficient','massive','rough','classical'],
+        ans: 0,
+        exp: '<span class="exp-key">efficient（有效率的，形容詞）</span>──句意為「新的生產線比舊的更有效率，每小時可生產兩倍的產量」。<br>❌ massive = 巨大的；rough = 粗略的；classical = 古典的，皆不符語境。' },
+      { q: 'The journey takes _______ two hours, though it can be longer during rush hour.',
+        opts: ['roughly','swiftly','merely','particularly'],
+        ans: 0,
+        exp: '<span class="exp-key">roughly（大致上；粗略地，副詞）</span>──句意為「這段路程大約需要兩小時，但在尖峰時間可能更久」，roughly two hours = 大約兩小時。<br>❌ swiftly = 迅速地；merely = 僅僅；particularly = 特別地，皆不符語境。' },
+      { q: 'Without checking the exact figures, he gave a _______ estimate of the total cost.',
+        opts: ['rough','swift','flawless','classic'],
+        ans: 0,
+        exp: '<span class="exp-key">rough（粗略的；粗糙的，形容詞）</span>──句意為「他沒有核對確切數字，就給出了一個粗略的總成本估算」，a rough estimate = 粗略的估計。<br>❌ swift = 迅速的；flawless = 完美無瑕的；classic = 經典的，皆不符語境。' },
+      { q: 'The rescue team responded with _______ action, saving the trapped hikers within minutes.',
+        opts: ['swift','rough','particular','classical'],
+        ans: 0,
+        exp: '<span class="exp-key">swift（迅速的，形容詞）</span>──句意為「救援隊迅速採取行動，在幾分鐘內救出受困的登山客」，swift action = 迅速的行動。<br>❌ rough = 粗略的；particular = 特定的；classical = 古典的，皆不符語境。' },
+    ]
+  },
+  {
+    title: '第二大題：文法選擇',
+    pts: '15 題 × 2 分 = 30 分',
+    questions: [
+      { q: 'The dabbawala _______ delivers lunchboxes every day rarely makes a mistake in sorting them.',
+        opts: ['who','whom','which','whose'],
+        ans: 0,
+        exp: '<span class="exp-key">who（關係代名詞，代替先行詞 the dabbawala 作主詞）</span>──who 引導限定關係子句，在子句中作主詞，修飾 the dabbawala。<br>❌ whom 作受詞；which 用於指事物；whose 為所有格，皆不符子句缺主詞的需求。' },
+      { q: 'The tiffin boxes, _______ are color-coded for easy identification, travel by train to their destinations.',
+        opts: ['that','which','what','who'],
+        ans: 1,
+        exp: '<span class="exp-key">which（關係代名詞，引導非限定子句，代替 the tiffin boxes）</span>──非限定關係子句前須有逗號分隔，只能用 which，不可用 that。<br>❌ that 不可用於非限定子句；what 不能有先行詞；who 用於指人，tiffin boxes 為物。' },
+      { q: '_______ sorted at the train station, the lunchboxes are loaded onto the correct trains for delivery.',
+        opts: ['Sort','Sorting','Having sorted','Sorted'],
+        ans: 3,
+        exp: '<span class="exp-key">Sorted（過去分詞，表被動的分詞構句）</span>──the lunchboxes 是「被分類」的一方，分詞構句須用過去分詞表被動，等於 After they are sorted at the train station。<br>❌ Sort（原形）、Sorting（現在分詞，表主動）、Having sorted（完成式主動分詞）均不符被動語意。' },
+      { q: 'The system, _______ relies on simple codes and colors, manages to deliver 200,000 lunches accurately every day.',
+        opts: ['that','which','who','it'],
+        ans: 1,
+        exp: '<span class="exp-key">which（關係代名詞，引導非限定子句，代替 the system）</span>──非限定關係子句前須有逗號，只能用 which，不可用 that；the system 為事物，不可用 who 或 it。<br>❌ that 不可用於非限定子句；who 指人；it 不能引導關係子句。' },
+      { q: 'The numbers and letters written on each box, _______ indicate its destination, help dabbawalas avoid mistakes.',
+        opts: ['that','which','who','it'],
+        ans: 1,
+        exp: '<span class="exp-key">which（關係代名詞，引導非限定子句，代替 the numbers and letters）</span>──逗號後的非限定關係子句須用 which，不可用 that；先行詞為事物，不可用 who。<br>❌ that 不可用於逗號後的非限定子句；who 指人；it 不能引導關係子句。' },
+      { q: 'Each dabbawala\'s bicycle, _______ in a busy accident years earlier, was eventually replaced with a new one.',
+        opts: ['damage','damaging','damaged','to damage'],
+        ans: 2,
+        exp: '<span class="exp-key">damaged（過去分詞，表被動，修飾 bicycle）</span>──腳踏車是「被損壞的」，過去分詞作形容詞用法，相當於 which had been damaged in a busy accident years earlier。<br>❌ damage（原形）、damaging（現在分詞，表主動）、to damage（不定詞）皆不符被動修飾語意。' },
+      { q: '_______ the immense scale of the operation, the dabbawala system makes remarkably few errors.',
+        opts: ['Because of','Despite','Although','Since'],
+        ans: 1,
+        exp: '<span class="exp-key">Despite（儘管，後接名詞）</span>──despite + N，表示讓步：儘管營運規模龐大，dabbawala 系統的失誤率仍極低。<br>❌ Because of 表原因，語意矛盾；Although 為連接詞須接子句（主詞+動詞），而非單純名詞；Since 表原因或時間，皆不符。' },
+      { q: 'The supervisor pointed out that the delivery records _______ accurate for over a century.',
+        opts: ['was','have been','being','to be'],
+        ans: 1,
+        exp: '<span class="exp-key">have been（現在完成式，與複數主詞 records 一致，表延續至今的狀態）</span>──主詞 records 為複數，且句意強調「持續超過一世紀」，須用現在完成式 have been。<br>❌ was 為單數過去式；being/to be 非完整動詞，不能作主要動詞。' },
+      { q: 'Researchers concluded that the low error rate _______ achieved through teamwork rather than technology.',
+        opts: ['be','have been','must have been','being'],
+        ans: 2,
+        exp: '<span class="exp-key">must have been（must have been + p.p. 表對過去事實的推測）</span>──must have been achieved = 一定是被達成的（對過去事實的肯定推測），句意為「這麼低的錯誤率一定是靠團隊合作而非科技達成的」。<br>❌ be（表對現在的推測，時態不符）；have been 缺乏推測語氣的 must；being 非完整動詞形式。' },
+      { q: 'Harvard Business School, _______ studied the dabbawala system closely, was deeply impressed by its efficiency.',
+        opts: ['who','whom','which','that'],
+        ans: 2,
+        exp: '<span class="exp-key">which（關係代名詞，引導非限定子句，代替 Harvard Business School）</span>──逗號後的非限定關係子句須用 which，先行詞 Harvard Business School 為機構（事物），不可用 who/whom。<br>❌ who/whom 用於指人；that 不可用於逗號後的非限定子句。' },
+      { q: 'The dabbawalas decided to deliver the boxes by bicycle, _______ revealed how flexible their system truly was.',
+        opts: ['what','that','which','who'],
+        ans: 2,
+        exp: '<span class="exp-key">which（關係代名詞，代替前面整句話作主詞）</span>──which 代替「dabbawalas 決定用腳踏車送貨」這件事，引導補充說明的子句，相當於 and this revealed。<br>❌ what 不能有先行詞；that 不可用於逗號後的非限定子句；who 用於指人。' },
+      { q: 'FedEx executives admired the dabbawala system, _______ of the fact that it relies on no advanced technology.',
+        opts: ['regard','regarding','regardless','regarded'],
+        ans: 2,
+        exp: '<span class="exp-key">regardless（regardless of = 不顧；不論，固定片語）</span>──regardless of sth. = 不論…如何，句意為「不論該系統完全不依賴先進科技這一事實」。<br>❌ regard（動詞「視為」）、regarding（介系詞「關於」）、regarded（過去分詞）均無法與 of 構成此固定搭配表「不論」之意。' },
+      { q: 'If the dabbawalas had not developed such a precise coding system, mistakes _______ far more common.',
+        opts: ['would not be','would not have been','will not be','had not been'],
+        ans: 1,
+        exp: '<span class="exp-key">would not have been（與過去事實相反的假設語氣，主要子句用 would + have + p.p.）</span>──If 子句用過去完成式（had not developed），主要子句須用 would not have been，表「若當初沒有……，就不會……」。<br>❌ would not be（與現在事實相反）；will not be（直述句）；had not been（與 if 子句重複過去完成式）。' },
+      { q: 'It was the dabbawalas\' teamwork _______ enabled the system to function with such remarkable accuracy.',
+        opts: ['who','whom','which','what'],
+        ans: 2,
+        exp: '<span class="exp-key">which（強調句型 It was... which... 強調事物，作主詞）</span>──It was the dabbawalas\' teamwork which + 動詞，為強調句型，強調主詞 teamwork（事物），子句中缺主詞須用 which。<br>❌ who/whom 用於指人；what 不可用於強調句型。' },
+      { q: 'Hardly _______ the train arrived at the station when the dabbawalas began sorting the boxes again.',
+        opts: ['did','had','does','has'],
+        ans: 1,
+        exp: '<span class="exp-key">had（Hardly had + S + p.p. ... when ~，倒裝句型，表「一……就……」）</span>──Hardly had the train arrived at the station when... 為過去完成式倒裝句，表示「火車一抵達車站，dabbawalas 就……」。<br>❌ did/does 為一般過去式/現在式倒裝，不搭配 when 表「剛…就…」的完成意味；has 為現在完成式，與全文過去時態不一致。' },
+    ]
+  },
+  {
+    title: '第三大題：克漏字填充',
+    pts: '10 題 × 2 分 = 20 分',
+    passage: 'Every morning, thousands of dabbawalas across Mumbai begin a (31) <strong>(31)</strong> operation that has fascinated logistics experts for decades. Each dabbawala is responsible for picking up tiffin boxes from customers\' homes in the suburbs, where most workers live because they cannot afford housing closer to the city center.<br><br>Because the system handles around 200,000 deliveries a day, even a (32) <strong>(32)</strong> increase in errors could cause chaos. Yet the dabbawalas are remarkably (33) <strong>(33)</strong> , managing to deliver almost every box to the correct address.<br><br>Their secret lies in a coding system that has been (34) <strong>(34)</strong> for generations: special numbers and colors are written on the lid of each box to show its neighborhood, building, and floor, as well as the train station of (35) <strong>(35)</strong> . When the boxes arrive at the destination station, they are (36) <strong>(36)</strong> a second time, this time according to specific buildings.<br><br>Not until this second round of sorting (37) <strong>(37)</strong> completed can each box be delivered to its rightful owner. In the afternoon, the dabbawalas (38) <strong>(38)</strong> their original routes, bringing the empty boxes back home. The entire process, (39) <strong>(39)</strong> a relay race, depends on every dabbawala completing his task on time.<br><br>It is no surprise that the dabbawala network has become a (40) <strong>(40)</strong> example of efficiency and teamwork, admired by companies and business schools around the world.',
+    questions: [
+      { q: 'Every morning, thousands of dabbawalas across Mumbai begin a _______ operation that has fascinated logistics experts for decades.',
+        opts: ['massive','flawless','particular','rough'],
+        ans: 0,
+        exp: '<span class="exp-key">massive（巨大的；大規模的）</span>──句意為「每天早上，孟買數千名 dabbawalas 展開一項規模巨大的行動，數十年來令物流專家著迷」。<br>❌ flawless = 完美無瑕的；particular = 特定的；rough = 粗略的，皆不符語境。' },
+      { q: 'Because the system handles around 200,000 deliveries a day, even a _______ increase in errors could cause chaos.',
+        opts: ['mere','swift','classic','excellent'],
+        ans: 0,
+        exp: '<span class="exp-key">mere（僅僅的；純粹的，形容詞）</span>──句意為「由於系統每天處理約二十萬份外送，即使僅僅一點點錯誤的增加都可能造成混亂」，a mere increase = 微小的增加。<br>❌ swift = 迅速的；classic = 經典的；excellent = 優秀的，皆不符語境。' },
+      { q: 'Yet the dabbawalas are remarkably _______ , managing to deliver almost every box to the correct address.',
+        opts: ['accurate','efficient','swift','capable'],
+        ans: 1,
+        exp: '<span class="exp-key">efficient（有效率的，形容詞）</span>──句意為「然而 dabbawalas 卻異常有效率，幾乎能將每個便當盒送到正確地址」，呼應全文強調的「效率」主題。<br>❌ accurate（準確的）、swift（迅速的）、capable（有能力的）雖語意相近，但 efficient 最貼合「有效率地完成大量遞送」這一核心概念。' },
+      { q: 'Their secret lies in a coding system that has been _______ for generations.',
+        opts: ['used','despised','escaped','retraced'],
+        ans: 0,
+        exp: '<span class="exp-key">used（被使用，過去分詞，與 has been 構成現在完成式被動）</span>──has been used for generations = 已經被使用了好幾代，描述這套編碼系統長期沿用至今。<br>❌ despised = 被鄙視的；escaped = 被逃脫的；retraced = 被沿原路返回的，皆不符語境。' },
+      { q: 'Special numbers and colors are written on the lid of each box to show the train station of _______ .',
+        opts: ['origin','accuracy','excellence','efficiency'],
+        ans: 0,
+        exp: '<span class="exp-key">origin（起源；出發點）</span>──句意為「每個便當盒蓋上寫有特殊數字與顏色，以標示其出發的火車站」，station of origin = 起點站，與課文 to show the train station of origin 呼應。<br>❌ accuracy = 準確性；excellence = 卓越；efficiency = 效率，皆不符語境。' },
+      { q: 'When the boxes arrive at the destination station, they are _______ a second time, this time according to specific buildings.',
+        opts: ['sorted','loaded','handled','retraced'],
+        ans: 0,
+        exp: '<span class="exp-key">sorted（被分類，過去分詞，與 are 構成被動）</span>──are sorted a second time = 被再次分類，呼應課文 these boxes are sorted again。<br>❌ loaded = 被裝載；handled = 被處理；retraced = 被沿原路返回，皆不符此處「依建築物分類」的語境。' },
+      { q: 'Not until this second round of sorting _______ completed can each box be delivered to its rightful owner.',
+        opts: ['has been','is','was','had'],
+        ans: 0,
+        exp: '<span class="exp-key">has been（Not until + 完成式，倒裝句的主要子句用助動詞提前）</span>──Not until... has been completed can... 為 Not until 引導的倒裝句，搭配現在完成式表「直到…已完成才能…」，與課文 Not until this second round of sorting has been completed can each tiffin box be delivered 呼應。<br>❌ is（現在簡單式，語意不符「已完成」）；was（過去式，與全文現在時態描述系統運作不一致）；had（非完整動詞形式）。' },
+      { q: 'In the afternoon, the dabbawalas _______ their original routes, bringing the empty boxes back home.',
+        opts: ['retrace','load','handle','commute'],
+        ans: 0,
+        exp: '<span class="exp-key">retrace（沿原路返回）</span>──句意為「下午，dabbawalas 沿著原本的路線返回，將空的便當盒帶回家」，與課文 the dabbawalas retrace their original routes 呼應。<br>❌ load = 裝載；handle = 處理；commute = 通勤，皆不符語境。' },
+      { q: 'The entire process, _______ a relay race, depends on every dabbawala completing his task on time.',
+        opts: ['resembling','resembled','to resemble','resemble'],
+        ans: 0,
+        exp: '<span class="exp-key">resembling（現在分詞，表主動，修飾 the entire process）</span>──整個流程「類似」接力賽，resemble 為主動意義的及物動詞，須用現在分詞修飾，相當於 which resembles a relay race。<br>❌ resembled（過去分詞，表被動，但 resemble 通常不用被動）；to resemble（不定詞）；resemble（原形動詞），皆不符分詞修飾語意。' },
+      { q: 'It is no surprise that the dabbawala network has become a _______ example of efficiency and teamwork.',
+        opts: ['classic','classical','mere','rough'],
+        ans: 0,
+        exp: '<span class="exp-key">classic（經典的；典範的，形容詞）</span>──句意為「dabbawala 網絡已成為效率與團隊合作的經典範例，這並不令人意外」，a classic example = 經典範例。<br>❌ classical = 古典的（多指古典音樂、藝術等）；mere = 僅僅的；rough = 粗略的，皆不符語境。' },
+    ]
+  },
+  {
+    title: '第四大題：閱讀測驗',
+    pts: '10 題 × 2 分 = 20 分',
+    passage: '<strong>Passage 1</strong><br>Every weekday morning, an extraordinary logistics operation unfolds across Mumbai. Around 5,000 dabbawalas—most of whom have little formal education and many of whom cannot read—fan out across the city to collect freshly cooked lunches from customers\' homes. These customers, who often live in distant suburbs, prepare home-cooked meals for family members who commute long distances to offices and factories in the city center. Carrying a hot lunch on a crowded train would be inconvenient and impractical, so families rely on dabbawalas to deliver these meals instead.<br><br>What makes this system remarkable is not just its scale but its accuracy. Each dabbawala typically handles about thirty tiffin boxes, which are first sorted at a local collection point according to their general destination. The boxes are then loaded onto trains and transported toward the city. At each destination station, a second team of dabbawalas sorts the boxes again, this time by specific building and floor, before delivering them to offices just in time for lunch.<br><br><strong>Passage 2</strong><br>The dabbawala system relies on a simple but ingenious coding method. Each tiffin box is marked with numbers, letters, and colors that indicate the collection point, the destination station, the building, and even the floor where the recipient works. Because so many dabbawalas are illiterate, this code must be simple enough to be read at a glance, yet precise enough to prevent mix-ups among hundreds of thousands of boxes handled every day.<br><br>Researchers have long been fascinated by how such a low-tech system can achieve an error rate of roughly one mistake in sixteen million transactions—a level of accuracy that rivals many automated systems. Harvard Business School has studied the dabbawala network as a case study in operational excellence, and the courier giant FedEx has expressed admiration for its efficiency. Experts attribute the system\'s success not to any single individual but to a culture of teamwork: each dabbawala depends on the next to complete his part of the relay, and a single careless mistake could disrupt the entire chain. In the afternoon, the same boxes are sorted and returned along the same routes, completing a daily cycle that has continued, largely unchanged, for more than a century.',
+    questions: [
+      { q: 'According to Passage 1, why do families rely on dabbawalas to deliver lunches?',
+        opts: ['Restaurants near offices are too expensive.','Carrying hot lunches on crowded trains is inconvenient.','Workers are not allowed to bring food to the office.','Dabbawalas charge very low delivery fees.'],
+        ans: 1,
+        exp: '<span class="exp-key">B</span>──文中提到 Carrying a hot lunch on a crowded train would be inconvenient and impractical, so families rely on dabbawalas to deliver these meals instead，因在擁擠的火車上攜帶熱食不便，因此家庭依賴 dabbawalas 送餐。<br>❌ 文章未提及餐廳太貴、辦公室禁止帶食物，或低廉的運費。' },
+      { q: 'Where do dabbawalas typically collect the lunches?',
+        opts: ['From restaurants in the city center','From factories near train stations','From customers\' homes in the suburbs','From shops located inside train stations'],
+        ans: 2,
+        exp: '<span class="exp-key">C</span>──文中提到 dabbawalas fan out across the city to collect freshly cooked lunches from customers\' homes，且 customers...often live in distant suburbs，dabbawalas 是從位於郊區的顧客家中收取餐點。<br>❌ 文章未提及從市中心餐廳、工廠或車站內商店收取。' },
+      { q: 'According to Passage 1, what happens to the tiffin boxes at the local collection point?',
+        opts: ['They are washed and repackaged.','They are sorted according to their general destination.','They are weighed to calculate delivery fees.','They are stored until the next morning.'],
+        ans: 1,
+        exp: '<span class="exp-key">B</span>──文中提到 the boxes...are first sorted at a local collection point according to their general destination，便當盒在當地集合點先依大致目的地分類。<br>❌ 文章未提及清洗重新包裝、依重量計費，或儲存至次日。' },
+      { q: 'What happens to the boxes at the destination train station, according to Passage 1?',
+        opts: ['They are loaded directly onto delivery trucks.','They are sorted again by building and floor.','They are checked for damage before delivery.','They are given to a different delivery company.'],
+        ans: 1,
+        exp: '<span class="exp-key">B</span>──文中提到 a second team of dabbawalas sorts the boxes again, this time by specific building and floor，在目的地車站，第二組 dabbawalas 會再依建築物與樓層分類。<br>❌ 文章未提及直接裝上貨車、檢查是否損壞，或交給其他公司。' },
+      { q: 'What is notable about the dabbawalas who carry out this entire operation, according to Passage 1?',
+        opts: ['Most of them have advanced college degrees.','Many of them cannot read.','They all work for international logistics companies.','They use smartphones to track each delivery.'],
+        ans: 1,
+        exp: '<span class="exp-key">B</span>──文中提到 most of whom have little formal education and many of whom cannot read，大多數 dabbawalas 教育程度不高，許多人甚至不識字，這正是該系統令人驚嘆之處。<br>❌ 文章未提及他們擁有大學學歷、為跨國物流公司工作，或使用智慧型手機追蹤配送。' },
+      { q: 'According to Passage 2, why must the coding system be simple?',
+        opts: ['Because customers change addresses frequently.','Because many dabbawalas are illiterate.','Because the boxes are made of cheap materials.','Because the trains are too crowded to read labels.'],
+        ans: 1,
+        exp: '<span class="exp-key">B</span>──文中提到 Because so many dabbawalas are illiterate, this code must be simple enough to be read at a glance，由於許多 dabbawalas 不識字，編碼系統必須簡單到一眼即可看懂。<br>❌ 文章未提及顧客頻繁更換地址、便當盒材質廉價，或火車過於擁擠難以閱讀標籤。' },
+      { q: 'What error rate does the dabbawala system reportedly achieve, according to Passage 2?',
+        opts: ['Roughly one mistake in sixteen million transactions','Roughly one mistake in a thousand transactions','Roughly one mistake in a hundred transactions','Roughly one mistake per dabbawala per year'],
+        ans: 0,
+        exp: '<span class="exp-key">A</span>──文中明確指出 an error rate of roughly one mistake in sixteen million transactions，即每一千六百萬筆交易中約只有一次錯誤。<br>❌ 文章並未提及千分之一、百分之一的錯誤率，或「每位 dabbawala 每年一次錯誤」的說法。' },
+      { q: 'According to Passage 2, what do experts credit for the dabbawala system\'s success?',
+        opts: ['Advanced computer software','The leadership of a single founder','A culture of teamwork among dabbawalas','Government subsidies for transportation'],
+        ans: 2,
+        exp: '<span class="exp-key">C</span>──文中提到 Experts attribute the system\'s success not to any single individual but to a culture of teamwork，專家將成功歸因於 dabbawalas 之間的團隊合作文化，而非任何單一個人。<br>❌ 文章明確指出系統不依賴先進電腦軟體，也未歸功於單一創辦人的領導，更未提及政府補貼。' },
+      { q: 'Which organizations are mentioned in Passage 2 as admiring or studying the dabbawala system?',
+        opts: ['The United Nations and the World Bank','Harvard Business School and FedEx','Google and Amazon','The Indian government and local universities'],
+        ans: 1,
+        exp: '<span class="exp-key">B</span>──文中提到 Harvard Business School has studied the dabbawala network as a case study...and the courier giant FedEx has expressed admiration for its efficiency，哈佛商學院曾將其作為案例研究，而快遞巨頭 FedEx 對其效率表示讚賞。<br>❌ 文章未提及聯合國、世界銀行、Google、Amazon、印度政府或當地大學。' },
+      { q: 'What is the overall theme conveyed by both passages?',
+        opts: ['Modern technology is essential for accurate deliveries.','A simple system based on teamwork can achieve remarkable efficiency.','Illiterate workers are unsuitable for complex jobs.','Mumbai\'s public transportation system is unreliable.'],
+        ans: 1,
+        exp: '<span class="exp-key">B</span>──兩篇文章共同呈現的主題是：一套依靠簡單編碼與團隊合作的系統，即使缺乏先進科技，也能達到極高的效率與準確度，展現出「簡單系統＋團隊合作＝卓越效率」的核心精神。<br>❌ 文章恰恰顯示先進科技並非必要；不識字的工作者其實能勝任此複雜工作（與選項C相反）；文章也未批評孟買的大眾運輸系統不可靠。' },
+    ]
+  }
+];
+
+// ── RENDER ────────────────────────────────────────────────
+let globalQNum = 0;
+const qMap = {}; // qNum → { ans, exp }
+const userAnswers = {};
+let submitted = false;
+
+const container = document.getElementById('quiz-container');
+
+function render() {
+  container.innerHTML = '';
+  globalQNum = 0;
+  sections.forEach((sec, si) => {
+    const secDiv = document.createElement('div');
+    secDiv.className = 'section';
+    let html = `<div class="section-header">${sec.title} <span class="pts">（${sec.pts}）</span></div>`;
+    if (sec.passage) {
+      html += `<div class="passage"><div class="passage-label">📖 閱讀文章</div>${sec.passage}</div>`;
+    }
+    sec.questions.forEach((q, qi) => {
+      globalQNum++;
+      const n = globalQNum;
+      qMap[n] = { ans: q.ans, exp: q.exp };
+      const labels = ['A','B','C','D'];
+      let optHtml = '';
+      q.opts.forEach((o, i) => {
+        optHtml += `<div class="option" id="opt-${n}-${labels[i]}" onclick="choose(${n},${i})">`
+          + `<span class="option-label">(${labels[i]})</span>${o}</div>`;
+      });
+      let qLabel = n;
+      if (si === 2 || si === 3) qLabel = `(${n})`;
+      html += `<div class="question" id="q${n}">
+        <div class="q-text"><span class="q-num">${qLabel}.</span> ${q.q}</div>
+        <div class="options">${optHtml}</div>
+        <div class="explanation" id="exp${n}">
+          <div class="exp-header">💡 解析</div>
+          <div class="exp-body">${q.exp}</div>
+        </div>
+      </div>`;
+    });
+    secDiv.innerHTML = html;
+    container.appendChild(secDiv);
+  });
+}
+
+render();
+
+// ── LOGIC ─────────────────────────────────────────────────
+function choose(n, chosenIdx) {
+  if (submitted) return;
+  const labels = ['A','B','C','D'];
+  const chosen = labels[chosenIdx];
+  userAnswers[n] = chosenIdx;
+  const ans = qMap[n].ans;
+
+  labels.forEach((l, i) => {
+    const el = document.getElementById(`opt-${n}-${l}`);
+    el.classList.remove('selected','correct','wrong','reveal-correct');
+    if (i === chosenIdx) {
+      if (chosenIdx === ans) el.classList.add('correct');
+      else el.classList.add('wrong');
+    } else if (i === ans && chosenIdx !== ans) {
+      el.classList.add('reveal-correct');
+    }
+  });
+
+  document.getElementById(`exp${n}`).classList.add('show');
+  updateTopBar();
+}
+
+function updateTopBar() {
+  const count = Object.keys(userAnswers).length;
+  document.getElementById('answered-count').textContent = count;
+  document.getElementById('progress-fill').style.width = (count / 50 * 100) + '%';
+  let score = 0;
+  for (let q in userAnswers) { if (userAnswers[q] === qMap[q].ans) score += 2; }
+  document.getElementById('live-score').textContent = score;
+}
+
+function revealAll() {
+  const labels = ['A','B','C','D'];
+  for (let n = 1; n <= 50; n++) {
+    const ans = qMap[n].ans;
+    labels.forEach((l, i) => {
+      const el = document.getElementById(`opt-${n}-${l}`);
+      el.classList.remove('selected','correct','wrong','reveal-correct');
+      if (i === ans) el.classList.add('reveal-correct');
+      else if (userAnswers[n] === i && i !== ans) el.classList.add('wrong');
+    });
+    document.getElementById(`exp${n}`).classList.add('show');
+  }
+  updateTopBar();
+}
+
+function submitAll() {
+  submitted = true;
+  revealAll();
+  let score = 0;
+  for (let n = 1; n <= 50; n++) {
+    if (userAnswers[n] === qMap[n].ans) score += 2;
+  }
+  const rb = document.getElementById('result-box');
+  rb.classList.add('show');
+  document.getElementById('result-score').textContent = score;
+  const gr = document.getElementById('result-grade');
+  const det = document.getElementById('result-detail');
+  if (score >= 90) { gr.textContent = '🏆 優秀！'; gr.className = 'result-grade grade-a'; det.textContent = '表現卓越，繼續保持！'; }
+  else if (score >= 70) { gr.textContent = '👍 良好'; gr.className = 'result-grade grade-b'; det.textContent = '表現不錯，再複習錯誤的題目吧！'; }
+  else { gr.textContent = '📚 需加強'; gr.className = 'result-grade grade-c'; det.textContent = '多複習解析說明，你可以做到的！'; }
+  document.getElementById('answered-count').textContent = 50;
+  document.getElementById('live-score').textContent = score;
+  document.getElementById('progress-fill').style.width = '100%';
+  rb.scrollIntoView({ behavior: 'smooth' });
+}
+
+function resetAll() {
+  submitted = false;
+  for (let key in userAnswers) delete userAnswers[key];
+  const labels = ['A','B','C','D'];
+  for (let n = 1; n <= 50; n++) {
+    labels.forEach(l => {
+      document.getElementById(`opt-${n}-${l}`).classList.remove('selected','correct','wrong','reveal-correct');
+    });
+    document.getElementById(`exp${n}`).classList.remove('show');
+  }
+  document.getElementById('result-box').classList.remove('show');
+  document.getElementById('answered-count').textContent = '0';
+  document.getElementById('live-score').textContent = '0';
+  document.getElementById('progress-fill').style.width = '0%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
