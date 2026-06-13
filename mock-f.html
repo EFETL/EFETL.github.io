@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>統測英文模擬考卷 F</title>
+<style>
+  :root{
+    --blue:#2b8cff; --blue-dark:#1f6fe0;
+    --coral:#ff7a59; --amber:#ffb02e; --pink:#ff5d8f;
+    --bg:#f3f9ff; --card:#ffffff; --line:#e3edf9;
+    --green:#22b573; --green-bg:#e4f8ef;
+    --red:#ff5a5a; --red-bg:#ffecec;
+    --gray:#6b7785;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;
+    background:linear-gradient(180deg,#f0f7ff,#fff7f2 70%);color:#22303f;line-height:1.6;
+    font-size:16px;-webkit-text-size-adjust:100%;}
+  .wrap{max-width:760px;margin:0 auto;padding:16px;}
+  header.top{background:linear-gradient(135deg,#5ec6ff,#7d8bff 55%,#b88bff);color:#fff;
+    border-radius:18px;padding:24px 22px;margin-bottom:16px;box-shadow:0 8px 22px rgba(93,141,255,.3);}
+  header.top h1{margin:0 0 6px;font-size:1.5rem;text-shadow:0 1px 2px rgba(0,0,0,.12);}
+  header.top p{margin:0;font-size:.92rem;opacity:.95;}
+  .meta{margin-top:14px;font-size:.86rem;background:rgba(255,255,255,.22);
+    padding:9px 13px;border-radius:10px;}
+  .sticky{position:sticky;top:0;z-index:20;padding:10px 0;
+    background:linear-gradient(180deg,#f0f7ff 70%,rgba(240,247,255,0));}
+  .bar{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:11px 16px;display:flex;align-items:center;gap:12px;font-size:.9rem;
+    box-shadow:0 4px 12px rgba(43,140,255,.1);}
+  .bar .track{flex:1;height:9px;background:#e9f1fb;border-radius:6px;overflow:hidden;}
+  .bar .fill{height:100%;width:0;border-radius:6px;
+    background:linear-gradient(90deg,#3ad1c6,#2b8cff);transition:width .35s;}
+  .bar #count{font-weight:700;color:var(--blue-dark);}
+  .section-title{color:#fff;font-weight:800;border-radius:12px;
+    padding:10px 16px;margin:24px 0 6px;font-size:1.05rem;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);}
+  .section-title.s0{background:linear-gradient(135deg,#ff9a6c,#ff6f91);}
+  .section-title.s1{background:linear-gradient(135deg,#4dd0e1,#2b8cff);}
+  .section-title.s2{background:linear-gradient(135deg,#9b8bff,#b06bff);}
+  .section-title.s3{background:linear-gradient(135deg,#42d392,#22b573);}
+  .section-desc{font-size:.86rem;color:var(--gray);margin:0 4px 10px;}
+  .passage{background:#fffdf4;border:1px solid #ffe9c9;border-left:5px solid var(--amber);
+    border-radius:12px;padding:15px 17px;margin:14px 0;font-size:.95rem;
+    box-shadow:0 3px 10px rgba(255,176,46,.08);}
+  .passage h3{margin:0 0 8px;color:#e0820a;font-size:1rem;}
+  .passage .blk{display:inline-block;min-width:1.6em;text-align:center;font-weight:800;
+    color:#fff;background:var(--coral);border-radius:6px;padding:0 4px;margin:0 2px;font-size:.85rem;}
+  .email-h{font-size:.85rem;color:var(--gray);border-bottom:1px dashed #ffd9a8;
+    padding-bottom:6px;margin-bottom:8px;}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:15px 17px;margin:12px 0;box-shadow:0 3px 10px rgba(43,140,255,.07);}
+  .q .stem{font-weight:600;margin-bottom:10px;}
+  .q .stem .num{display:inline-block;color:#fff;background:var(--blue);font-weight:700;
+    border-radius:8px;padding:1px 9px;margin-right:8px;font-size:.92rem;}
+  .opt{display:flex;align-items:flex-start;gap:10px;border:2px solid var(--line);
+    border-radius:11px;padding:10px 13px;margin:8px 0;cursor:pointer;transition:.15s;
+    font-size:.95rem;background:#fbfdff;}
+  .opt:hover{border-color:var(--blue);background:#eef6ff;}
+  .opt input{margin-top:3px;accent-color:var(--blue);}
+  .opt .lab{font-weight:800;color:var(--blue);min-width:18px;}
+  .opt.sel{border-color:var(--blue);background:#e7f2ff;}
+  .opt.correct{border-color:var(--green);background:var(--green-bg);}
+  .opt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .opt.lock{cursor:default;}
+  .exp{display:none;margin-top:11px;border-top:2px dashed #ffe1c2;padding-top:11px;font-size:.9rem;}
+  .exp.show{display:block;}
+  .exp .tag{display:inline-block;font-weight:800;color:#fff;background:var(--green);
+    border-radius:7px;padding:2px 10px;font-size:.8rem;margin-bottom:7px;}
+  .exp .tag.miss{background:var(--red);}
+  .exp .tag.blank{background:var(--gray);}
+  .exp .body{color:#7a4a12;background:#fff7ea;border-radius:8px;padding:8px 11px;margin:5px 0;
+    white-space:pre-line;}
+  .written{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:15px 17px;margin:12px 0;box-shadow:0 3px 10px rgba(43,140,255,.07);}
+  .written h4{margin:0 0 8px;color:var(--blue-dark);font-size:1rem;}
+  .written .prompt{margin-bottom:10px;}
+  .written .blankline{display:inline-block;background:#fbfdff;border:1px dashed var(--line);
+    border-radius:8px;padding:6px 10px;margin-top:6px;}
+  .written button.reveal{background:#fff;color:var(--blue);border:2px solid var(--blue);
+    border-radius:10px;padding:8px 16px;font-weight:800;font-size:.9rem;cursor:pointer;}
+  .written .ans{display:none;margin-top:11px;border-top:2px dashed #ffe1c2;padding-top:11px;font-size:.92rem;}
+  .written .ans.show{display:block;}
+  .written .ans .tag{display:inline-block;font-weight:800;color:#fff;background:var(--blue);
+    border-radius:7px;padding:2px 10px;font-size:.8rem;margin-bottom:7px;}
+  .written .ans .body{color:#7a4a12;background:#fff7ea;border-radius:8px;padding:8px 11px;margin:5px 0;}
+  .actions{position:sticky;bottom:0;padding:14px 0 6px;margin-top:18px;
+    background:linear-gradient(transparent,#fff7f2 35%);}
+  button.submit{width:100%;color:#fff;border:0;border-radius:14px;padding:16px;
+    font-size:1.08rem;font-weight:800;cursor:pointer;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);
+    box-shadow:0 6px 16px rgba(255,93,143,.35);}
+  button.submit:active{transform:translateY(1px);}
+  button.reset{width:100%;background:#fff;color:var(--blue);border:2px solid var(--blue);
+    border-radius:14px;padding:14px;font-size:1rem;font-weight:800;cursor:pointer;margin-top:10px;display:none;}
+  .result{display:none;background:var(--card);border:3px solid transparent;border-radius:16px;
+    padding:22px;margin:16px 0;text-align:center;
+    background-image:linear-gradient(#fff,#fff),linear-gradient(135deg,#3ad1c6,#2b8cff,#b06bff);
+    background-origin:border-box;background-clip:padding-box,border-box;
+    box-shadow:0 8px 22px rgba(43,140,255,.15);}
+  .result.show{display:block;}
+  .result .score{font-size:2.8rem;font-weight:900;
+    background:linear-gradient(135deg,#2b8cff,#b06bff);-webkit-background-clip:text;
+    background-clip:text;-webkit-text-fill-color:transparent;}
+  .result .sub{color:var(--gray);font-size:.95rem;}
+  .result .bd{display:flex;justify-content:center;gap:18px;margin-top:12px;flex-wrap:wrap;font-size:.95rem;}
+  .result .bd span{font-weight:800;}
+  .hint{text-align:center;font-size:.85rem;color:var(--gray);margin-top:9px;min-height:1.2em;}
+  footer{text-align:center;color:var(--gray);font-size:.8rem;margin:24px 0;}
+</style>
+</head>
+<body>
+<a href="tongce.html" style="position:fixed;top:12px;left:12px;background:rgba(255,255,255,.92);color:#2b8cff;padding:7px 15px;border-radius:20px;text-decoration:none;font-size:.85rem;font-weight:800;z-index:999;box-shadow:0 3px 10px rgba(0,0,0,.15);">&#8592; 回題庫</a>
+<div class="wrap">
+  <header class="top">
+    <h1>統測英文　<span style="opacity:.9">模擬考卷 F</span></h1>
+    <p>科技校院四年制與專科學校二年制統一入學測驗　共同科目：英文（模擬）</p>
+    <div class="meta">選擇題共 42 題，每題 2 分，共 84 分　|　每題選擇答案後立即顯示解析　|　送出後顯示總分與作答統計</div>
+  </header>
+
+  <div class="sticky">
+    <div class="bar">
+      <span>作答進度</span>
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <span id="count">0 / 42</span>
+    </div>
+  </div>
+
+  <form id="quiz"></form>
+
+  <div class="result" id="result">
+    <div class="score" id="scoreNum">0</div>
+    <div class="sub" id="scoreTxt">分</div>
+    <div class="bd">
+      <span style="color:var(--green)">答對 <b id="rOk">0</b></span>
+      <span style="color:var(--red)">答錯 <b id="rNo">0</b></span>
+      <span style="color:var(--gray)">未作答 <b id="rBlank">0</b></span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="submit" id="submitBtn">交卷並查看總分</button>
+    <div class="hint" id="hint">尚未作答任何題目</div>
+    <button type="button" class="reset" id="resetBtn">重新作答</button>
+  </div>
+
+  <div class="section-title s2" style="margin-top:30px;">二、非選擇題（共 16 分，點擊查看答案與解析）</div>
+  <div id="written"></div>
+
+  <footer>統測英文模擬考卷 F　&middot;　第二顆腦 / 統測</footer>
+</div>
+
+<script>
+const PARTS = [{"title": "Ⅰ　字彙題", "desc": "共 10 題。第 1–8 題為單字選填；第 9–10 題為劃線字詞同義詞選擇。"}, {"title": "Ⅱ　對話題", "desc": "共 10 題，請依對話內容選出一個最適合的答案。"}, {"title": "Ⅲ　綜合測驗", "desc": "共 8 題，兩篇短文各 4 個空格，請依文意選出最適合的答案。"}, {"title": "Ⅳ　閱讀測驗", "desc": "共 14 題，請依短文內容選出最適當的答案。"}];
+const PASSAGES = {"21": "<div class=\"passage\"><h3>第 21–24 題</h3>\nMany people believe that learning a musical instrument is only useful for those who want to become professional musicians. However, research suggests that <span class=\"blk\">21</span> an instrument can benefit the brain in many other ways. For example, children who study music often perform better in subjects <span class=\"blk\">22</span> mathematics, since reading music involves recognizing patterns and ratios. Playing an instrument also requires coordination between the hands, eyes, and ears, which can improve focus and memory. Some researchers even believe that <span class=\"blk\">23</span> musical training begins, the greater the impact on brain development. Of course, not every child will become a professional musician, but the skills <span class=\"blk\">24</span> through music lessons can be useful in many areas of life.</div>", "25": "<div class=\"passage\"><h3>第 25–28 題</h3>\nThe history of the umbrella dates back thousands of years, with early versions appearing in ancient Egypt, China, and Greece. In many of these cultures, umbrellas were originally used <span class=\"blk\">25</span> as protection from the sun rather than the rain, and they were often associated with status — only royalty or the wealthy were allowed to use them. It wasn't until much later that umbrellas became <span class=\"blk\">26</span> for everyday people to protect themselves from rain. Today, umbrellas are so common that we rarely think about their long history. <span class=\"blk\">27</span> their simple design, modern umbrellas still rely on the same basic principle as ancient ones: a frame covered with material that blocks out the sun or rain. Some designers have tried to reinvent the umbrella with new materials and folding mechanisms, but the basic shape has <span class=\"blk\">28</span> largely unchanged for centuries.</div>", "29": "<div class=\"passage\"><h3>第 29–30 題</h3>\n<b>Community Center Schedule Update</b><br><br>Starting next Monday, the yoga class will move from the second-floor studio to the first-floor multipurpose room due to renovation work upstairs. The class time remains the same: Tuesdays and Thursdays at 6:00 PM. Please note that the multipurpose room is located next to the front entrance, not the gym. Members are advised to arrive five minutes early, as seating is limited to 20 people. We thank you for your understanding during this temporary change.</div>", "31": "<div class=\"passage\"><h3>第 31–32 題</h3>\n<b>Text Messages</b><br><br>Emma: Hi, I'm at the train station but I don't see you. Where are you? Noah: I'm so sorry! My train was delayed by 15 minutes. I just got off and I'm walking toward the exit now. Emma: No worries, take your time. I'll wait by the coffee shop near the main entrance. Noah: Got it, I'll be there in two minutes.</div>", "33": "<div class=\"passage\"><h3>第 33–35 題</h3>\nIn the past, most maps were printed on paper and needed to be replaced whenever roads changed or new buildings were constructed. Today, digital maps on smartphones are updated constantly, often using information submitted by users themselves. When a road is closed or a new restaurant opens, users can report the change, and the information becomes available to others almost immediately. This crowd-sourced approach has made digital maps far more accurate and up-to-date than traditional paper maps could ever be. However, some experts point out a downside: because digital maps rely on satellite signals and data connections, they can become useless in areas with poor reception, such as remote mountains or underground spaces. For this reason, many hikers and travelers still recommend carrying a paper map as a backup, especially when traveling to areas without reliable cell service.</div>", "36": "<div class=\"passage\"><h3>第 36–38 題</h3>\nMany parents worry that giving children too many choices, such as which toy to play with or which snack to eat, will make them happier. However, some psychologists argue that too much choice can actually cause stress, even in children. In one study, children who were given a small number of options to choose from seemed more satisfied with their final choice than those who were given a large number of options. Researchers believe this is because too many choices make it harder to feel confident about a decision — there is always a nagging feeling that another option might have been better. This phenomenon, sometimes called \"choice overload,\" has also been observed in adults when shopping for products like cereal or shampoo, where dozens of nearly identical options can make simple decisions surprisingly difficult. Based on these findings, some experts suggest that offering a smaller, carefully selected range of choices may actually lead to greater satisfaction.</div>", "39": "<div class=\"passage\"><h3>第 39–42 題</h3>\nGrowing up in a small fishing village, Tomas often watched his grandfather repair nets and boats using skills passed down through generations. As tourism in the area increased, Tomas noticed that visitors were fascinated by these traditional skills, which were becoming rare as younger people moved to cities for other jobs. Instead of leaving the village like many of his friends, Tomas decided to open a small workshop where tourists could learn traditional net-making and boat repair from local fishermen, including his grandfather. The workshop not only provided extra income for the older fishermen but also gave tourists a meaningful, hands-on experience that was different from typical tourist activities. Word of the workshop spread, and soon people were traveling specifically to the village to participate. Tomas hopes that by combining tourism with tradition, he can help keep these skills alive for future generations while also supporting his community economically.</div>"};
+const Q = [{"n": 1, "p": 0, "stem": "The hotel staff were very _____ and helped us with our luggage right away.", "o": ["polite", "pollute", "pirate", "pilot"], "a": 0, "exp": "✓ (A) polite（禮貌的）— 飯店員工很「有禮貌」，並立即協助搬運行李。\n❌ (B) pollute = 汙染（動詞），詞性與語意皆不符。\n❌ (C) pirate = 海盜，語意不符。\n❌ (D) pilot = 飛行員，語意不符。"}, {"n": 2, "p": 0, "stem": "The doctor advised him to _____ heavy exercise until his leg fully healed.", "o": ["avoid", "afford", "adopt", "admire"], "a": 0, "exp": "✓ (A) avoid（避免）— 醫生建議他在腿完全康復前「避免」劇烈運動。\n❌ (B) afford = 負擔得起，語意不符。\n❌ (C) adopt = 採用、收養，不適用。\n❌ (D) admire = 欽佩，語意不符。"}, {"n": 3, "p": 0, "stem": "The two brothers had a heated _____ about who should inherit the family business.", "o": ["argument", "agreement", "achievement", "arrangement"], "a": 0, "exp": "✓ (A) argument（爭論）— 兩兄弟針對家族企業繼承問題發生激烈「爭論」。\n❌ (B) agreement = 協議，與「heated（激烈的）」矛盾。\n❌ (C) achievement = 成就，語意不符。\n❌ (D) arrangement = 安排，語意不符。"}, {"n": 4, "p": 0, "stem": "Because the bridge was under construction, traffic was _____ to one lane.", "o": ["reduced", "recorded", "replaced", "repaired"], "a": 0, "exp": "✓ (A) reduced（被縮減）— 因橋樑施工，車流量被「縮減」至一個車道。\n❌ (B) recorded = 被記錄，語意不符。\n❌ (C) replaced = 被取代，不適用。\n❌ (D) repaired = 被修復，語意不符。"}, {"n": 5, "p": 0, "stem": "The professor's explanation was so _____ that even beginners could understand it easily.", "o": ["clear", "cruel", "crowded", "curious"], "a": 0, "exp": "✓ (A) clear（清楚的）— 教授的解釋非常「清楚」，連初學者都能輕易理解。\n❌ (B) cruel = 殘忍的，語意不符。\n❌ (C) crowded = 擁擠的，不適用。\n❌ (D) curious = 好奇的，語意不符。"}, {"n": 6, "p": 0, "stem": "The volunteers worked together to _____ the beach of plastic bottles and other trash.", "o": ["clear", "cheer", "climb", "charge"], "a": 0, "exp": "✓ (A) clear（清理）— \"clear A of B\" 表示「清除A中的B」，志工合力「清理」海灘上的塑膠瓶與垃圾。\n❌ (B) cheer = 歡呼，語意不符。\n❌ (C) climb = 攀爬，不適用。\n❌ (D) charge = 收費、充電，語意不符。"}, {"n": 7, "p": 0, "stem": "The little girl was too _____ to speak in front of the whole class.", "o": ["shy", "sharp", "shallow", "sincere"], "a": 0, "exp": "✓ (A) shy（害羞的）— 小女孩太「害羞」，不敢在全班面前發言。\n❌ (B) sharp = 銳利的，語意不符。\n❌ (C) shallow = 淺的，不適用。\n❌ (D) sincere = 真誠的，語意不符。"}, {"n": 8, "p": 0, "stem": "Due to the heavy snowfall, all flights were _____ until further notice.", "o": ["suspended", "suspected", "supported", "supplied"], "a": 0, "exp": "✓ (A) suspended（暫停）— 因大雪，所有航班「暫停」直到進一步通知。\n❌ (B) suspected = 被懷疑，語意不符。\n❌ (C) supported = 被支持，不適用。\n❌ (D) supplied = 被供應，語意不符。"}, {"n": 9, "p": 0, "stem": "The novel's plot was so <i>complicated</i> that readers had to pay close attention to every detail.", "o": ["simple", "complex", "boring", "short"], "a": 1, "exp": "✓ (B) complex（複雜的）— complicated（複雜的）與 complex 意義最接近。\n❌ (A) simple = 簡單的，語意相反。\n❌ (C) boring = 無聊的，語意不符。\n❌ (D) short = 短的，語意不符。"}, {"n": 10, "p": 0, "stem": "The company's new policy aims to <i>enhance</i> employee satisfaction and reduce turnover.", "o": ["measure", "improve", "limit", "discuss"], "a": 1, "exp": "✓ (B) improve（提升）— enhance（提升、增強）與 improve 意義最接近。\n❌ (A) measure = 測量，語意不符。\n❌ (C) limit = 限制，語意相反。\n❌ (D) discuss = 討論，語意不符。"}, {"n": 11, "p": 1, "stem": "Employee: I finished organizing the files you asked for.<br>Manager: _____<br>Employee: I put them in the cabinet by the window, sorted by date.", "o": ["Did you remember to lock the office?", "Great, where did you put them?", "When is the meeting scheduled?", "Who asked you to do that?"], "a": 1, "exp": "✓ (B) Great, where did you put them?— 員工回答檔案放在哪裡，呼應主管詢問檔案位置。\n❌ (A) 問是否鎖門，與「整理檔案」話題無關。\n❌ (C) 問會議時間，與話題無關。\n❌ (D) 問「誰要求你做的」，與主管自己交代的任務矛盾。"}, {"n": 12, "p": 1, "stem": "Passenger: Excuse me, is this seat taken?<br>Stranger: _____<br>Passenger: Thanks, I'll just put my bag here then.", "o": ["No, go ahead. It's free.", "Yes, my friend is sitting there.", "I'm getting off at the next stop.", "This train is always crowded."], "a": 0, "exp": "✓ (A) No, go ahead. It's free.— 乘客回應「謝謝，那我把包包放這裡」，呼應陌生人表示座位是空的。\n❌ (B) 說「有人坐」，與乘客接著「把包包放這裡」矛盾。\n❌ (C) 說自己下一站要下車，未直接回答座位是否有人。\n❌ (D) 說火車總是很擠，與問題無直接關聯。"}, {"n": 13, "p": 1, "stem": "Wife: Did you remember to turn off the oven before we left?<br>Husband: _____<br>Wife: Oh good, I was worried we left it on.", "o": ["I think we should buy a new oven.", "Yes, I checked it twice before locking the door.", "The oven hasn't worked properly for weeks.", "We don't even have an oven at home."], "a": 1, "exp": "✓ (B) Yes, I checked it twice before locking the door.— 妻子回應「太好了，我還擔心烤箱沒關」，呼應丈夫確認已關閉。\n❌ (A) 提議買新烤箱，未回答問題。\n❌ (C) 說烤箱壞了好幾週，與妻子「擔心沒關」的回應不符。\n❌ (D) 說家裡根本沒有烤箱，與妻子的問題矛盾。"}, {"n": 14, "p": 1, "stem": "Customer: I ordered this jacket online, but it arrived with a small tear.<br>Staff: _____<br>Customer: That would be great, thank you.", "o": ["We don't accept returns on sale items.", "I'm sorry to hear that. We can send you a replacement right away.", "The jacket looks fine to me.", "You should have checked it before ordering."], "a": 1, "exp": "✓ (B) I'm sorry to hear that. We can send you a replacement right away.— 顧客回應「那真是太好了，謝謝」，呼應店員提供換貨服務。\n❌ (A) 說特價商品不接受退貨，與店員「立即補寄」的服務態度不符。\n❌ (C) 說外套看起來沒問題，否定顧客的描述，與顧客滿意的回應矛盾。\n❌ (D) 責備顧客「應該下訂前先檢查」，語氣不符且與顧客滿意的回應矛盾。"}, {"n": 15, "p": 1, "stem": "Friend A: I'm thinking about learning to play the guitar.<br>Friend B: _____<br>Friend A: That's a good idea. Maybe I'll ask him this weekend.", "o": ["I don't think music lessons are worth the money.", "My cousin teaches guitar lessons on weekends; you could ask him.", "I've never been interested in music at all.", "You should sell your old guitar instead."], "a": 1, "exp": "✓ (B) My cousin teaches guitar lessons on weekends; you could ask him.— Friend A 回應「好主意，這週末我會問問他」，呼應 B 提供吉他老師的建議。\n❌ (A) 說音樂課不值得花錢，與 A「好主意」的回應矛盾。\n❌ (C) 說自己對音樂毫無興趣，未提供建議。\n❌ (D) 建議賣掉舊吉他，與「想學吉他」的話題不符。"}, {"n": 16, "p": 1, "stem": "Teacher: Has everyone submitted their permission slips for the trip?<br>Student: _____<br>Teacher: That's fine, just bring it tomorrow morning at the latest.", "o": ["Yes, I submitted mine last week.", "I forgot to bring mine today, but I have it at home.", "The trip was canceled, wasn't it?", "I already went on the trip last year."], "a": 1, "exp": "✓ (B) I forgot to bring mine today, but I have it at home.— 老師回應「沒關係，明天早上前帶來就好」，呼應學生表示忘了帶但家裡有。\n❌ (A) 說上週就交了，與老師「明天帶來」的回應不符。\n❌ (C) 問「校外教學不是被取消了嗎」，與老師的回應不連貫。\n❌ (D) 說去年已經參加過這次校外教學，與情境不符。"}, {"n": 17, "p": 1, "stem": "Repairman: The leak seems to be coming from this pipe under the sink.<br>Homeowner: _____<br>Repairman: It shouldn't take more than an hour to fix.", "o": ["How long do you think it will take to fix?", "Is the kitchen sink broken too?", "When did you arrive?", "Should I call another repairman?"], "a": 0, "exp": "✓ (A) How long do you think it will take to fix?— 修理工回答「應該不會超過一小時」，呼應屋主詢問所需時間。\n❌ (B) 問廚房水槽是否也壞了，與修理工的回答不符。\n❌ (C) 問「你什麼時候到的」，與情境不符（修理工已在工作）。\n❌ (D) 問是否該叫另一位修理工，與修理工自信的回應不符。"}, {"n": 18, "p": 1, "stem": "Coach: You did really well in today's practice. Keep it up!<br>Player: _____<br>Coach: Of course. Practice makes perfect.", "o": ["I don't think I'll play in the next game.", "Thanks, Coach. I've been practicing every day after school.", "The weather was too hot for practice today.", "Can we skip practice tomorrow?"], "a": 1, "exp": "✓ (B) Thanks, Coach. I've been practicing every day after school.— 教練回應「當然，熟能生巧」，呼應球員提到每天練習。\n❌ (A) 說「我不打算參加下一場比賽」，與教練「保持下去」的鼓勵矛盾。\n❌ (C) 說今天天氣太熱不適合練習，與教練稱讚「今天練習表現很好」矛盾。\n❌ (D) 問是否能跳過明天的練習，與教練「保持下去」的鼓勵矛盾。"}, {"n": 19, "p": 1, "stem": "Librarian: I'm sorry, but this book is already checked out by another student.<br>Visitor: _____<br>Librarian: Sure, I can put it on hold for you. It should be returned by next week.", "o": ["That's okay, can you let me know when it's available?", "I'll just buy a copy online instead.", "Never mind, I didn't really need it.", "Can I borrow your library card instead?"], "a": 0, "exp": "✓ (A) That's okay, can you let me know when it's available?— 圖書館員回應「可以幫你預約，下週應該會還回來」，呼應訪客詢問書何時可借。\n❌ (B) 說會直接在網路上買一本，與圖書館員提供「預約」服務的回應不連貫。\n❌ (C) 說「沒關係，其實不太需要」，與圖書館員主動提供預約服務矛盾。\n❌ (D) 要求借用圖書館員的借書證，不合理且與情境不符。"}, {"n": 20, "p": 1, "stem": "Babysitter: The kids just fell asleep about ten minutes ago.<br>Parent: _____<br>Babysitter: Of course. Thanks for letting me know. Drive safe!", "o": ["We should wake them up before dinner.", "Perfect timing. We'll be home in about twenty minutes.", "Did they eat their dinner already?", "I think they slept too much today."], "a": 1, "exp": "✓ (B) Perfect timing. We'll be home in about twenty minutes.— 保母回應「好的，謝謝告知，開車小心」，呼應家長告知即將到家的時間。\n❌ (A) 說「應該在晚餐前叫醒他們」，與「孩子剛睡著」的情境矛盾（不合理要求立刻叫醒）。\n❌ (C) 問孩子是否吃過晚餐，與保母「謝謝告知」的回應不連貫。\n❌ (D) 說「他們今天睡太多了」，與保母的回應不連貫。"}, {"n": 21, "p": 2, "stem": "(21)", "o": ["play", "played", "playing", "to play"], "a": 2, "exp": "✓ (C) playing（動名詞作主詞）— \"playing an instrument can benefit the brain\" 中，playing an instrument 為動名詞片語，作該子句的主詞。\n❌ (A) play = 動詞原形，不能單獨作主詞。\n❌ (B) played = 過去式/過去分詞，不能作主詞。\n❌ (D) to play = 不定詞，雖可作主詞但與全文語感的動名詞用法不符，且後方動詞 can benefit 搭配動名詞主詞更自然。"}, {"n": 22, "p": 2, "stem": "(22)", "o": ["like", "alike", "likely", "liking"], "a": 0, "exp": "✓ (A) like（介系詞，例如）— \"subjects like mathematics\" 表示「像數學這樣的科目」，like 作「例如」之意。\n❌ (B) alike = 形容詞/副詞「相似的」，不能直接接名詞作此用法。\n❌ (C) likely = 形容詞「可能的」，語意不符。\n❌ (D) liking = 動名詞「喜歡」，語意與用法皆不符。"}, {"n": 23, "p": 2, "stem": "(23)", "o": ["earlier", "the earlier", "early", "earliest"], "a": 1, "exp": "✓ (B) the earlier（the + 比較級）— \"The earlier musical training begins, the greater the impact...\" 為 \"the + 比較級..., the + 比較級...\" 句型，表示「越早…就越…」。\n❌ (A) earlier = 缺少 the，不符合此句型結構。\n❌ (C) early = 原級，不符合比較句型。\n❌ (D) earliest = 最高級，不符合 \"the + 比較級, the + 比較級\" 的句型。"}, {"n": 24, "p": 2, "stem": "(24)", "o": ["gain", "gained", "gaining", "to gain"], "a": 1, "exp": "✓ (B) gained（過去分詞，被動修飾）— \"the skills gained through music lessons\" 表示「透過音樂課所獲得的技能」，過去分詞修飾 skills（技能是被獲得的）。\n❌ (A) gain = 動詞原形，不能直接修飾名詞。\n❌ (C) gaining = 現在分詞，語意上會變成「正在獲得的技能」，與「透過音樂課程獲得」的被動關係不符。\n❌ (D) to gain = 不定詞表目的，語意不符。"}, {"n": 25, "p": 2, "stem": "(25)", "o": ["main", "mainly", "mainland", "maintain"], "a": 1, "exp": "✓ (B) mainly（副詞，主要地）— \"umbrellas were originally used mainly as protection from the sun\" 表示「最初主要被用作遮陽」，副詞修飾動詞 used。\n❌ (A) main = 形容詞，不能修飾動詞 used。\n❌ (C) mainland = 名詞「大陸」，語意與詞性皆不符。\n❌ (D) maintain = 動詞「維持」，語意與詞性皆不符。"}, {"n": 26, "p": 2, "stem": "(26)", "o": ["afford", "afforded", "affordable", "affording"], "a": 2, "exp": "✓ (C) affordable（形容詞，負擔得起的）— \"umbrellas became affordable for everyday people\" 表示「雨傘變得讓一般人也能負擔得起」，become + 形容詞為常見句型。\n❌ (A) afford = 動詞原形，become 後通常接形容詞而非動詞原形。\n❌ (B) afforded = 過去分詞，與 become 搭配不符常見用法。\n❌ (D) affording = 現在分詞，與 become 搭配不自然。"}, {"n": 27, "p": 2, "stem": "(27)", "o": ["Despite", "Because", "Unless", "Although"], "a": 0, "exp": "✓ (A) Despite（儘管，介系詞）— \"Despite their simple design, modern umbrellas still rely on...\" 表示「儘管設計簡單，現代雨傘仍依賴…」，despite 後接名詞片語 their simple design。\n❌ (B) Because = 因為，後面需接 of + 名詞或完整子句，且語意上「因為設計簡單」與「仍依賴相同原理」非因果關係。\n❌ (C) Unless = 除非，語意不符。\n❌ (D) Although = 雖然，後面需接完整子句（主詞+動詞），而此處接的是名詞片語 their simple design，文法不符。"}, {"n": 28, "p": 2, "stem": "(28)", "o": ["remain", "remained", "remains", "remaining"], "a": 1, "exp": "✓ (B) remained（過去分詞，與 has 構成現在完成時）— \"the basic shape has remained largely unchanged for centuries\" 為現在完成時 has + 過去分詞，表示「幾個世紀以來基本上維持不變」。\n❌ (A) remain = 動詞原形，與 has 搭配文法不符。\n❌ (C) remains = 第三人稱單數現在式，與 has 搭配文法不符。\n❌ (D) remaining = 現在分詞，與 has 搭配文法不符。"}, {"n": 29, "p": 3, "stem": "Why is the yoga class moving to a new room?", "o": ["The class has become too popular for the old room.", "The second-floor studio is being renovated.", "The first-floor room has better equipment.", "The class time has been changed."], "a": 1, "exp": "公告提到：「the yoga class will move from the second-floor studio to the first-floor multipurpose room due to renovation work upstairs」\n(B) The second-floor studio is being renovated. ✓ 為正解。\n❌ (A) 公告未提到課程太受歡迎。\n❌ (C) 公告未提到一樓設備較好。\n❌ (D) 公告明確說「上課時間不變」。"}, {"n": 30, "p": 3, "stem": "What should members do according to the notice?", "o": ["Arrive five minutes early because seating is limited.", "Bring their own yoga mats from home.", "Sign up online before attending.", "Use the entrance near the gym."], "a": 0, "exp": "公告提到：「Members are advised to arrive five minutes early, as seating is limited to 20 people.」\n(A) Arrive five minutes early because seating is limited. ✓ 為正解。\n❌ (B) 公告未提到自備瑜伽墊。\n❌ (C) 公告未提到需要線上報名。\n❌ (D) 公告特別提醒「多功能教室在正門旁，不是體育館」，並非要會員走體育館入口。"}, {"n": 31, "p": 3, "stem": "Why is Noah late to meet Emma?", "o": ["He forgot about their plans.", "His train was delayed.", "He got lost inside the station.", "Emma arrived earlier than planned."], "a": 1, "exp": "Noah 說：「My train was delayed by 15 minutes.」\n(B) His train was delayed. ✓ 為正解。\n❌ (A) 對話顯示 Noah 道歉並解釋原因，並非忘記。\n❌ (C) 對話中沒有提到迷路。\n❌ (D) 是 Noah 比預定時間晚到，並非 Emma 提早到。"}, {"n": 32, "p": 3, "stem": "Where will Emma wait for Noah?", "o": ["Near the train platform.", "Outside the station entrance.", "By the coffee shop near the main entrance.", "At the ticket counter."], "a": 2, "exp": "Emma 說：「I'll wait by the coffee shop near the main entrance.」\n(C) By the coffee shop near the main entrance. ✓ 為正解。\n❌ (A) 對話中沒有提到月台。\n❌ (B) Emma 說的是在「咖啡店旁」等候，並非車站外。\n❌ (D) 對話中沒有提到售票處。"}, {"n": 33, "p": 3, "stem": "How are digital maps kept up-to-date, according to the passage?", "o": ["Government workers update them every year.", "Users submit information about changes.", "Satellites automatically redraw the maps daily.", "Map companies send out paper updates monthly."], "a": 1, "exp": "文中提到：「Today, digital maps on smartphones are updated constantly, often using information submitted by users themselves.」\n(B) Users submit information about changes. ✓ 為正解。\n❌ (A) 文中未提到政府人員每年更新。\n❌ (C) 文中未提到衛星每天自動重繪地圖。\n❌ (D) 文中說的是「紙本地圖」需要更換，並非地圖公司每月寄送紙本更新。"}, {"n": 34, "p": 3, "stem": "What is a disadvantage of digital maps mentioned in the passage?", "o": ["They are more expensive than paper maps.", "They cannot show restaurants or new buildings.", "They may not work in areas with poor signal.", "They take longer to update than paper maps."], "a": 2, "exp": "文中提到：「because digital maps rely on satellite signals and data connections, they can become useless in areas with poor reception, such as remote mountains or underground spaces」\n(C) They may not work in areas with poor signal. ✓ 為正解。\n❌ (A) 文中未比較數位地圖與紙本地圖的價格。\n❌ (B) 文中說數位地圖能顯示新餐廳等變化，並非無法顯示。\n❌ (D) 文中說的是數位地圖比紙本地圖「更新得更快」，並非更慢。"}, {"n": 35, "p": 3, "stem": "What do many hikers and travelers still recommend?", "o": ["Avoiding digital maps altogether.", "Carrying a paper map as a backup.", "Only traveling to areas with strong signal.", "Printing a new map every day."], "a": 1, "exp": "文中提到：「many hikers and travelers still recommend carrying a paper map as a backup, especially when traveling to areas without reliable cell service」\n(B) Carrying a paper map as a backup. ✓ 為正解。\n❌ (A) 文中並未建議完全避免使用數位地圖。\n❌ (C) 文中未建議只前往訊號良好的地區。\n❌ (D) 文中未提到每天列印新地圖。"}, {"n": 36, "p": 3, "stem": "What is the main idea of this passage?", "o": ["Children should never be given any choices.", "Having too many choices can cause stress rather than happiness.", "Adults are immune to choice overload.", "More choices always lead to better decisions."], "a": 1, "exp": "全文主旨：給予孩童（甚至成人）過多選擇反而可能造成壓力，而非更開心。\n(B) Having too many choices can cause stress rather than happiness. ✓ 為正解。\n❌ (A) 文中並未主張「完全不該給孩子選擇」，而是建議提供「較少但精心挑選」的選項。\n❌ (C) 文中明確說成人也會經歷 choice overload，並非免於此現象。\n❌ (D) 文中說的恰好相反——選擇過多反而讓人較不滿意。"}, {"n": 37, "p": 3, "stem": "According to the passage, why might too many choices make people less confident?", "o": ["They take too long to read all the options.", "They worry that another option might have been better.", "They cannot remember what they chose.", "They are not allowed to change their minds."], "a": 1, "exp": "文中提到：「too many choices make it harder to feel confident about a decision — there is always a nagging feeling that another option might have been better」\n(B) They worry that another option might have been better. ✓ 為正解。\n❌ (A) 文中未提到閱讀所有選項耗時。\n❌ (C) 文中未提到記不住自己選了什麼。\n❌ (D) 文中未提到不能改變心意。"}, {"n": 38, "p": 3, "stem": "Where else has \"choice overload\" been observed, according to the passage?", "o": ["In job interviews.", "In children's classrooms.", "In adults shopping for products like cereal or shampoo.", "In online video games."], "a": 2, "exp": "文中提到：「This phenomenon...has also been observed in adults when shopping for products like cereal or shampoo」\n(C) In adults shopping for products like cereal or shampoo. ✓ 為正解。\n❌ (A)(B)(D) 文中皆未提及。"}, {"n": 39, "p": 3, "stem": "What did Tomas notice about traditional fishing skills?", "o": ["They were no longer useful to anyone.", "They were becoming rare as young people left for cities.", "Tourists were not interested in learning them.", "His grandfather refused to teach them to anyone."], "a": 1, "exp": "文中提到：「visitors were fascinated by these traditional skills, which were becoming rare as younger people moved to cities for other jobs」\n(B) They were becoming rare as young people left for cities. ✓ 為正解。\n❌ (A) 文中說遊客對這些技能「很感興趣」，並非無人需要。\n❌ (C) 文中說的恰好相反——遊客對這些技能很感興趣。\n❌ (D) 文中未提到祖父拒絕教導。"}, {"n": 40, "p": 3, "stem": "What did Tomas do instead of leaving the village?", "o": ["He opened a workshop teaching traditional skills to tourists.", "He moved his grandfather to a city.", "He stopped working with fishing nets entirely.", "He convinced tourists to stop visiting the village."], "a": 0, "exp": "文中提到：「Tomas decided to open a small workshop where tourists could learn traditional net-making and boat repair from local fishermen」\n(A) He opened a workshop teaching traditional skills to tourists. ✓ 為正解。\n❌ (B) 文中未提到把祖父搬到城市。\n❌ (C) 文中未提到完全停止漁網相關工作。\n❌ (D) 文中未提到說服遊客停止造訪。"}, {"n": 41, "p": 3, "stem": "How does the workshop benefit older fishermen?", "o": ["It gives them free boats.", "It provides them with extra income.", "It allows them to retire early.", "It pays for their travel to other countries."], "a": 1, "exp": "文中提到：「The workshop not only provided extra income for the older fishermen」\n(B) It provides them with extra income. ✓ 為正解。\n❌ (A) 文中未提到提供免費船隻。\n❌ (C) 文中未提到提早退休。\n❌ (D) 文中未提到資助出國旅行。"}, {"n": 42, "p": 3, "stem": "What does Tomas hope to achieve through his workshop?", "o": ["Convince young people to never leave the village.", "Keep traditional skills alive while supporting the community.", "Replace fishing with tourism completely.", "Make the village a major shipping port. ---"], "a": 1, "exp": "文中結尾提到：「Tomas hopes that by combining tourism with tradition, he can help keep these skills alive for future generations while also supporting his community economically.」\n(B) Keep traditional skills alive while supporting the community. ✓ 為正解。\n❌ (A) 文中未提到說服年輕人永遠不要離開村莊。\n❌ (C) 文中未提到要完全用觀光取代漁業。\n❌ (D) 文中未提到讓村莊成為主要航運港口。"}];
+const WRITTEN = [{"title": "Ⅰ. 填充（4 分）", "prompt": "說明：請依中文提示，將空格 ①、② 答案之完整單字（含提示之字首）填入答案區。每格限填一字。<br><span class=\"blankline\">1. 許多學生在準備考試時會感到壓力，因此適當的休息是重要的。</span>", "ans": "① <b>stressed</b>　② <b>rest</b>", "exp": "① stressed（感到壓力）— 依提示字首 s 及句意「準備考試時感到壓力」。\n② rest（休息）— 依提示字首 r 及句意「適當的休息」。"}, {"title": "Ⅱ. 句子重組（6 分）", "prompt": "請將下列提示字詞重組成一句完整的句子，並於句尾加上適當標點符號：<br><i>說明：請將下列詞組重組成一個正確、通順的句子，並於句尾加上適當標點符號。</i>", "ans": "This city is known for its delicious street food and friendly people among travelers.", "exp": "句構：主詞 (This city) + is known for（be known for 為固定用法，表「以…聞名」）+ its delicious street food and friendly people（受詞，兩個並列名詞片語）+ among travelers（介系詞片語修飾語）。"}, {"title": "Ⅲ. 中譯英（6 分）", "prompt": "請將以下中文句子譯成正確、通順、達意的英文：<br>說明：請將以下中文句子譯成正確、通順、達意的英文。", "ans": "Students should learn how to manage their time effectively.", "exp": "重點結構：should + 動詞原形（should learn）；how to + 動詞原形（how to manage）作 learn 的受詞；effectively 為副詞修飾 manage。"}];
+const TOTAL = Q.length;
+
+/* ====== 產生選擇題畫面 ====== */
+const form = document.getElementById('quiz');
+let lastPart = -1;
+Q.forEach(q=>{
+  if(q.p!==lastPart){
+    const st=document.createElement('div'); st.className='section-title s'+q.p; st.textContent=PARTS[q.p].title;
+    const sd=document.createElement('div'); sd.className='section-desc'; sd.textContent=PARTS[q.p].desc;
+    form.appendChild(st); form.appendChild(sd); lastPart=q.p;
+  }
+  if(PASSAGES[q.n]){ const d=document.createElement('div'); d.innerHTML=PASSAGES[q.n]; form.appendChild(d.firstChild); }
+  const card=document.createElement('div'); card.className='q'; card.id='q'+q.n;
+  const isBlank=/^\(\d+\)$/.test(q.stem);
+  const stemHtml = isBlank ? `第 ${q.n} 格` : q.stem;
+  card.innerHTML=`<div class="stem"><span class="num">${q.n}</span>${stemHtml}</div>`;
+  q.o.forEach((opt,i)=>{
+    const lab=document.createElement('label'); lab.className='opt'; lab.dataset.i=i;
+    lab.innerHTML=`<input type="radio" name="q${q.n}" value="${i}"><span class="lab">${'ABCD'[i]}</span><span>${opt}</span>`;
+    lab.querySelector('input').addEventListener('change',()=>{
+      pickAnswer(q,i);
+    });
+    card.appendChild(lab);
+  });
+  const exp=document.createElement('div'); exp.className='exp'; exp.id='exp'+q.n;
+  card.appendChild(exp);
+  form.appendChild(card);
+});
+
+const submitBtn=document.getElementById('submitBtn');
+const resetBtn=document.getElementById('resetBtn');
+const hint=document.getElementById('hint');
+let submitted=false;
+
+/* 選擇答案後立即鎖定並顯示該題解析 */
+function pickAnswer(q,pick){
+  const card=document.getElementById('q'+q.n);
+  card.querySelectorAll('.opt').forEach(o=>{
+    o.classList.add('lock');
+    o.querySelector('input').disabled=true;
+    const i=parseInt(o.dataset.i);
+    if(i===pick) o.classList.add('sel');
+    if(i===q.a) o.classList.add('correct');
+    if(i===pick && pick!==q.a) o.classList.add('wrong');
+  });
+  const correct = pick===q.a;
+  const exp=document.getElementById('exp'+q.n);
+  const tag = correct ? '答對' : '答錯';
+  exp.innerHTML=`<span class="tag ${correct?'':'miss'}">${tag}　正解：${'ABCD'[q.a]}</span>
+    <div class="body">${q.exp}</div>`;
+  exp.classList.add('show');
+  updateProgress();
+}
+
+function answeredCount(){ let c=0; Q.forEach(q=>{ if(form.querySelector(`input[name="q${q.n}"]:checked`)) c++; }); return c; }
+function updateProgress(){
+  const c=answeredCount();
+  document.getElementById('count').textContent=`${c} / ${TOTAL}`;
+  document.getElementById('fill').style.width=(c/TOTAL*100)+'%';
+  if(submitted) return;
+  hint.textContent = c===TOTAL ? `已完成全部 ${TOTAL} 題，可以交卷查看總分了` : (c===0 ? '尚未作答任何題目（每題選擇後立即顯示解析）' : `已作答 ${c} 題，未作答 ${TOTAL-c} 題（可隨時交卷）`);
+}
+
+submitBtn.addEventListener('click',()=>{
+  let ok=0, blank=0;
+  Q.forEach(q=>{
+    const sel=form.querySelector(`input[name="q${q.n}"]:checked`);
+    const pick = sel ? parseInt(sel.value) : null;
+    const card=document.getElementById('q'+q.n);
+    if(pick===null){
+      blank++;
+      card.querySelectorAll('.opt').forEach(o=>{
+        o.classList.add('lock');
+        o.querySelector('input').disabled=true;
+        const i=parseInt(o.dataset.i);
+        if(i===q.a) o.classList.add('correct');
+      });
+      const exp=document.getElementById('exp'+q.n);
+      exp.innerHTML=`<span class="tag blank">未作答　正解：${'ABCD'[q.a]}</span>
+        <div class="body">${q.exp}</div>`;
+      exp.classList.add('show');
+    } else if(pick===q.a){
+      ok++;
+    }
+  });
+  const res=document.getElementById('result');
+  const score = ok*2;
+  document.getElementById('scoreNum').textContent=score;
+  document.getElementById('scoreTxt').textContent=`分（選擇題 / 84 分，答對 ${ok} / ${TOTAL} 題）`;
+  document.getElementById('rOk').textContent=ok;
+  document.getElementById('rNo').textContent=TOTAL-ok-blank;
+  document.getElementById('rBlank').textContent=blank;
+  res.classList.add('show');
+  submitted=true;
+  submitBtn.style.display='none'; hint.style.display='none'; resetBtn.style.display='block';
+  res.scrollIntoView({behavior:'smooth'});
+});
+
+resetBtn.addEventListener('click',()=>{
+  form.reset();
+  Q.forEach(q=>{
+    const card=document.getElementById('q'+q.n);
+    card.querySelectorAll('.opt').forEach(o=>{o.classList.remove('sel','correct','wrong','lock');o.querySelector('input').disabled=false;});
+    document.getElementById('exp'+q.n).classList.remove('show');
+  });
+  document.getElementById('result').classList.remove('show');
+  submitted=false;
+  submitBtn.style.display='block'; hint.style.display='block'; resetBtn.style.display='none';
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+/* ====== 非選擇題（點擊查看解析） ====== */
+const writtenDiv=document.getElementById('written');
+WRITTEN.forEach((w,idx)=>{
+  const card=document.createElement('div'); card.className='written';
+  card.innerHTML=`<h4>${w.title}</h4>
+    <div class="prompt">${w.prompt}</div>
+    <button type="button" class="reveal" id="wb${idx}">查看答案與解析</button>
+    <div class="ans" id="wa${idx}">
+      <span class="tag">參考答案</span>
+      <div class="body">${w.ans}</div>
+      <div class="body">${w.exp}</div>
+    </div>`;
+  writtenDiv.appendChild(card);
+  card.querySelector('#wb'+idx).addEventListener('click',()=>{
+    card.querySelector('#wa'+idx).classList.add('show');
+    card.querySelector('#wb'+idx).style.display='none';
+  });
+});
+
+updateProgress();
+</script>
+</body>
+</html>

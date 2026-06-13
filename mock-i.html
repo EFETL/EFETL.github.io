@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>統測英文模擬考卷 I</title>
+<style>
+  :root{
+    --blue:#2b8cff; --blue-dark:#1f6fe0;
+    --coral:#ff7a59; --amber:#ffb02e; --pink:#ff5d8f;
+    --bg:#f3f9ff; --card:#ffffff; --line:#e3edf9;
+    --green:#22b573; --green-bg:#e4f8ef;
+    --red:#ff5a5a; --red-bg:#ffecec;
+    --gray:#6b7785;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;
+    background:linear-gradient(180deg,#f0f7ff,#fff7f2 70%);color:#22303f;line-height:1.6;
+    font-size:16px;-webkit-text-size-adjust:100%;}
+  .wrap{max-width:760px;margin:0 auto;padding:16px;}
+  header.top{background:linear-gradient(135deg,#5ec6ff,#7d8bff 55%,#b88bff);color:#fff;
+    border-radius:18px;padding:24px 22px;margin-bottom:16px;box-shadow:0 8px 22px rgba(93,141,255,.3);}
+  header.top h1{margin:0 0 6px;font-size:1.5rem;text-shadow:0 1px 2px rgba(0,0,0,.12);}
+  header.top p{margin:0;font-size:.92rem;opacity:.95;}
+  .meta{margin-top:14px;font-size:.86rem;background:rgba(255,255,255,.22);
+    padding:9px 13px;border-radius:10px;}
+  .sticky{position:sticky;top:0;z-index:20;padding:10px 0;
+    background:linear-gradient(180deg,#f0f7ff 70%,rgba(240,247,255,0));}
+  .bar{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:11px 16px;display:flex;align-items:center;gap:12px;font-size:.9rem;
+    box-shadow:0 4px 12px rgba(43,140,255,.1);}
+  .bar .track{flex:1;height:9px;background:#e9f1fb;border-radius:6px;overflow:hidden;}
+  .bar .fill{height:100%;width:0;border-radius:6px;
+    background:linear-gradient(90deg,#3ad1c6,#2b8cff);transition:width .35s;}
+  .bar #count{font-weight:700;color:var(--blue-dark);}
+  .section-title{color:#fff;font-weight:800;border-radius:12px;
+    padding:10px 16px;margin:24px 0 6px;font-size:1.05rem;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);}
+  .section-title.s0{background:linear-gradient(135deg,#ff9a6c,#ff6f91);}
+  .section-title.s1{background:linear-gradient(135deg,#4dd0e1,#2b8cff);}
+  .section-title.s2{background:linear-gradient(135deg,#9b8bff,#b06bff);}
+  .section-title.s3{background:linear-gradient(135deg,#42d392,#22b573);}
+  .section-desc{font-size:.86rem;color:var(--gray);margin:0 4px 10px;}
+  .passage{background:#fffdf4;border:1px solid #ffe9c9;border-left:5px solid var(--amber);
+    border-radius:12px;padding:15px 17px;margin:14px 0;font-size:.95rem;
+    box-shadow:0 3px 10px rgba(255,176,46,.08);}
+  .passage h3{margin:0 0 8px;color:#e0820a;font-size:1rem;}
+  .passage .blk{display:inline-block;min-width:1.6em;text-align:center;font-weight:800;
+    color:#fff;background:var(--coral);border-radius:6px;padding:0 4px;margin:0 2px;font-size:.85rem;}
+  .email-h{font-size:.85rem;color:var(--gray);border-bottom:1px dashed #ffd9a8;
+    padding-bottom:6px;margin-bottom:8px;}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:15px 17px;margin:12px 0;box-shadow:0 3px 10px rgba(43,140,255,.07);}
+  .q .stem{font-weight:600;margin-bottom:10px;}
+  .q .stem .num{display:inline-block;color:#fff;background:var(--blue);font-weight:700;
+    border-radius:8px;padding:1px 9px;margin-right:8px;font-size:.92rem;}
+  .opt{display:flex;align-items:flex-start;gap:10px;border:2px solid var(--line);
+    border-radius:11px;padding:10px 13px;margin:8px 0;cursor:pointer;transition:.15s;
+    font-size:.95rem;background:#fbfdff;}
+  .opt:hover{border-color:var(--blue);background:#eef6ff;}
+  .opt input{margin-top:3px;accent-color:var(--blue);}
+  .opt .lab{font-weight:800;color:var(--blue);min-width:18px;}
+  .opt.sel{border-color:var(--blue);background:#e7f2ff;}
+  .opt.correct{border-color:var(--green);background:var(--green-bg);}
+  .opt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .opt.lock{cursor:default;}
+  .exp{display:none;margin-top:11px;border-top:2px dashed #ffe1c2;padding-top:11px;font-size:.9rem;}
+  .exp.show{display:block;}
+  .exp .tag{display:inline-block;font-weight:800;color:#fff;background:var(--green);
+    border-radius:7px;padding:2px 10px;font-size:.8rem;margin-bottom:7px;}
+  .exp .tag.miss{background:var(--red);}
+  .exp .tag.blank{background:var(--gray);}
+  .exp .body{color:#7a4a12;background:#fff7ea;border-radius:8px;padding:8px 11px;margin:5px 0;
+    white-space:pre-line;}
+  .written{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:15px 17px;margin:12px 0;box-shadow:0 3px 10px rgba(43,140,255,.07);}
+  .written h4{margin:0 0 8px;color:var(--blue-dark);font-size:1rem;}
+  .written .prompt{margin-bottom:10px;}
+  .written .blankline{display:inline-block;background:#fbfdff;border:1px dashed var(--line);
+    border-radius:8px;padding:6px 10px;margin-top:6px;}
+  .written button.reveal{background:#fff;color:var(--blue);border:2px solid var(--blue);
+    border-radius:10px;padding:8px 16px;font-weight:800;font-size:.9rem;cursor:pointer;}
+  .written .ans{display:none;margin-top:11px;border-top:2px dashed #ffe1c2;padding-top:11px;font-size:.92rem;}
+  .written .ans.show{display:block;}
+  .written .ans .tag{display:inline-block;font-weight:800;color:#fff;background:var(--blue);
+    border-radius:7px;padding:2px 10px;font-size:.8rem;margin-bottom:7px;}
+  .written .ans .body{color:#7a4a12;background:#fff7ea;border-radius:8px;padding:8px 11px;margin:5px 0;}
+  .actions{position:sticky;bottom:0;padding:14px 0 6px;margin-top:18px;
+    background:linear-gradient(transparent,#fff7f2 35%);}
+  button.submit{width:100%;color:#fff;border:0;border-radius:14px;padding:16px;
+    font-size:1.08rem;font-weight:800;cursor:pointer;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);
+    box-shadow:0 6px 16px rgba(255,93,143,.35);}
+  button.submit:active{transform:translateY(1px);}
+  button.reset{width:100%;background:#fff;color:var(--blue);border:2px solid var(--blue);
+    border-radius:14px;padding:14px;font-size:1rem;font-weight:800;cursor:pointer;margin-top:10px;display:none;}
+  .result{display:none;background:var(--card);border:3px solid transparent;border-radius:16px;
+    padding:22px;margin:16px 0;text-align:center;
+    background-image:linear-gradient(#fff,#fff),linear-gradient(135deg,#3ad1c6,#2b8cff,#b06bff);
+    background-origin:border-box;background-clip:padding-box,border-box;
+    box-shadow:0 8px 22px rgba(43,140,255,.15);}
+  .result.show{display:block;}
+  .result .score{font-size:2.8rem;font-weight:900;
+    background:linear-gradient(135deg,#2b8cff,#b06bff);-webkit-background-clip:text;
+    background-clip:text;-webkit-text-fill-color:transparent;}
+  .result .sub{color:var(--gray);font-size:.95rem;}
+  .result .bd{display:flex;justify-content:center;gap:18px;margin-top:12px;flex-wrap:wrap;font-size:.95rem;}
+  .result .bd span{font-weight:800;}
+  .hint{text-align:center;font-size:.85rem;color:var(--gray);margin-top:9px;min-height:1.2em;}
+  footer{text-align:center;color:var(--gray);font-size:.8rem;margin:24px 0;}
+</style>
+</head>
+<body>
+<a href="tongce.html" style="position:fixed;top:12px;left:12px;background:rgba(255,255,255,.92);color:#2b8cff;padding:7px 15px;border-radius:20px;text-decoration:none;font-size:.85rem;font-weight:800;z-index:999;box-shadow:0 3px 10px rgba(0,0,0,.15);">&#8592; 回題庫</a>
+<div class="wrap">
+  <header class="top">
+    <h1>統測英文　<span style="opacity:.9">模擬考卷 I</span></h1>
+    <p>科技校院四年制與專科學校二年制統一入學測驗　共同科目：英文（模擬）</p>
+    <div class="meta">選擇題共 42 題，每題 2 分，共 84 分　|　每題選擇答案後立即顯示解析　|　送出後顯示總分與作答統計</div>
+  </header>
+
+  <div class="sticky">
+    <div class="bar">
+      <span>作答進度</span>
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <span id="count">0 / 42</span>
+    </div>
+  </div>
+
+  <form id="quiz"></form>
+
+  <div class="result" id="result">
+    <div class="score" id="scoreNum">0</div>
+    <div class="sub" id="scoreTxt">分</div>
+    <div class="bd">
+      <span style="color:var(--green)">答對 <b id="rOk">0</b></span>
+      <span style="color:var(--red)">答錯 <b id="rNo">0</b></span>
+      <span style="color:var(--gray)">未作答 <b id="rBlank">0</b></span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="submit" id="submitBtn">交卷並查看總分</button>
+    <div class="hint" id="hint">尚未作答任何題目</div>
+    <button type="button" class="reset" id="resetBtn">重新作答</button>
+  </div>
+
+  <div class="section-title s2" style="margin-top:30px;">二、非選擇題（共 16 分，點擊查看答案與解析）</div>
+  <div id="written"></div>
+
+  <footer>統測英文模擬考卷 I　&middot;　第二顆腦 / 統測</footer>
+</div>
+
+<script>
+const PARTS = [{"title": "Ⅰ　字彙題", "desc": "共 10 題。第 1–8 題為單字選填；第 9–10 題為劃線字詞同義詞選擇。"}, {"title": "Ⅱ　對話題", "desc": "共 10 題，請依對話內容選出一個最適合的答案。"}, {"title": "Ⅲ　綜合測驗", "desc": "共 8 題，兩篇短文各 4 個空格，請依文意選出最適合的答案。"}, {"title": "Ⅳ　閱讀測驗", "desc": "共 14 題，請依短文內容選出最適當的答案。"}];
+const PASSAGES = {"21": "<div class=\"passage\"><h3>第 21–24 題</h3>\nBefore the invention of electric lighting, city streets at night were often dark and dangerous. Residents who needed to go out after dark usually <span class=\"blk\">21</span> their own lanterns for light. In the 19th century, gas lamps began <span class=\"blk\">22</span> installed along major streets, which allowed people to walk safely after dark for the first time. This change not only improved safety but also extended the hours during which people could shop, work, and socialize, <span class=\"blk\">23</span> led to a noticeable shift in city life. By the early 20th century, electric streetlights had largely replaced gas lamps, a development that was widely <span class=\"blk\">24</span> as a major step forward in urban life.</div>", "25": "<div class=\"passage\"><h3>第 25–28 題</h3>\nLearning a second language offers benefits that go well beyond being able to communicate with more people. Research has shown that bilingual individuals often perform better on tasks <span class=\"blk\">25</span> require switching attention between different activities, possibly because managing two languages trains the brain to handle competing information. In addition, studies suggest that people who speak more than one language may be <span class=\"blk\">26</span> likely to develop certain age-related memory problems later in life, although researchers caution that more studies are needed before drawing firm conclusions. <span class=\"blk\">27</span> these potential benefits, learning a new language requires significant time and effort, and many adult learners give up before reaching fluency. Nevertheless, experts agree that even basic knowledge of another language can <span class=\"blk\">28</span> to a deeper understanding of different cultures.</div>", "29": "<div class=\"passage\"><h3>第 29–30 題</h3>\n<b>Gym Notice</b><br><br>The swimming pool will be closed for maintenance from Monday to Wednesday this week. During this time, members can use the indoor pool at our sister location on Park Avenue free of charge by showing their membership card. All other gym facilities, including the weight room and group fitness classes, will operate as usual. We apologize for any inconvenience.</div>", "31": "<div class=\"passage\"><h3>第 31–32 題</h3>\n<b>Text Messages</b><br><br>Ben: Don't forget, Sarah's surprise party is this Saturday at 6 PM. Tom: Got it. Should I bring anything? Ben: Maybe some drinks? I've got the cake and decorations covered. Tom: Sounds good. See you there!</div>", "33": "<div class=\"passage\"><h3>第 33–35 題</h3>\nNoise-canceling headphones have become increasingly popular, especially among people who work in open offices or travel frequently. These headphones use small microphones to detect surrounding sounds and produce opposite sound waves that cancel out much of the background noise before it reaches the ear. While many users praise the headphones for helping them concentrate, some researchers have raised concerns about overuse. Constantly blocking out environmental sounds, they argue, may make it harder for people to notice important signals, such as a colleague calling their name or an approaching vehicle. Additionally, a few studies have found that some users experience mild dizziness or ear pressure after wearing the headphones for long periods, although more research is needed to confirm these effects. Despite these concerns, most experts agree that occasional use of noise-canceling headphones is unlikely to cause harm for the average person.</div>", "36": "<div class=\"passage\"><h3>第 36–38 題</h3>\nIn recent years, a growing number of people have embraced minimalism — a lifestyle that focuses on owning fewer possessions and prioritizing experiences over material goods. Supporters of minimalism argue that having fewer belongings can reduce stress, make cleaning and organizing easier, and free up money for travel or other experiences. Critics, however, point out that minimalism can sometimes become its own form of consumerism, as people buy specially designed \"minimalist\" products or pay for organizing services. Others note that minimalism may be easier for people with higher incomes, who can more easily replace items if needed, while those with lower incomes may need to keep extra items for practical reasons. Despite these criticisms, many people who have adopted a minimalist lifestyle report feeling less overwhelmed and more focused on what truly matters to them.</div>", "39": "<div class=\"passage\"><h3>第 39–42 題</h3>\nWhen Hannah began teaching at a local elementary school, she noticed that the amount of trash thrown away during lunchtime was enormous, with much of it being recyclable materials and uneaten food. Concerned about the waste, she started a small project with her class: students would sort their lunch waste into separate bins for recycling, composting, and trash, and the class would track how much was diverted from the landfill each week. Within a few months, other classes became interested and asked to join the project. Hannah worked with the school administration to expand the program to the entire school, and the school's overall trash output dropped significantly. Local news outlets featured the program, and several nearby schools reached out to Hannah for advice on starting similar initiatives. Hannah now spends some of her weekends helping other schools set up their own waste-sorting programs, in addition to her regular teaching duties.</div>"};
+const Q = [{"n": 1, "p": 0, "stem": "The volunteers worked through the night to _____ supplies to the flood victims.", "o": ["deliver", "discover", "discuss", "disturb"], "a": 0, "exp": "✓ (A) deliver（送達）— 志工們徹夜工作，將物資「送達」洪水災民手中。\n❌ (B) discover = 發現，語意不符。\n❌ (C) discuss = 討論，語意不符。\n❌ (D) disturb = 打擾，語意不符。"}, {"n": 2, "p": 0, "stem": "The new employee was given a brief _____ of the company's policies during orientation.", "o": ["summary", "symptom", "suspicion", "substitute"], "a": 0, "exp": "✓ (A) summary（摘要、概述）— 新員工在職前訓練時獲得公司政策的簡要「概述」。\n❌ (B) symptom = 症狀，語意不符。\n❌ (C) suspicion = 懷疑，語意不符。\n❌ (D) substitute = 替代品，語意不符。"}, {"n": 3, "p": 0, "stem": "The scientist's research was widely _____ by experts in the field.", "o": ["praised", "pleased", "pleaded", "prayed"], "a": 0, "exp": "✓ (A) praised（被讚揚）— 這位科學家的研究廣受該領域專家「讚揚」。\n❌ (B) pleased = 高興的，詞性與用法不符。\n❌ (C) pleaded = 懇求，語意不符。\n❌ (D) prayed = 祈禱，語意不符。"}, {"n": 4, "p": 0, "stem": "The hikers had to _____ a steep hill to reach the viewpoint.", "o": ["climb", "clean", "clip", "clap"], "a": 0, "exp": "✓ (A) climb（攀爬）— 健行者必須「攀爬」一座陡峭的山丘才能到達觀景點。\n❌ (B) clean = 清潔，語意不符。\n❌ (C) clip = 剪、夾，語意不符。\n❌ (D) clap = 拍手，語意不符。"}, {"n": 5, "p": 0, "stem": "The company's profits have _____ significantly over the past year.", "o": ["increased", "instructed", "inserted", "installed"], "a": 0, "exp": "✓ (A) increased（增加）— 該公司的利潤在過去一年中顯著「增加」。\n❌ (B) instructed = 指示，語意不符。\n❌ (C) inserted = 插入，語意不符。\n❌ (D) installed = 安裝，語意不符。"}, {"n": 6, "p": 0, "stem": "The teacher asked students to _____ their opinions during the discussion.", "o": ["express", "expand", "expect", "expose"], "a": 0, "exp": "✓ (A) express（表達）— 老師要求學生在討論中「表達」他們的意見。\n❌ (B) expand = 擴展，語意不符。\n❌ (C) expect = 期待，語意不符。\n❌ (D) expose = 暴露，語意不符。"}, {"n": 7, "p": 0, "stem": "The firefighters managed to _____ the family from the burning building.", "o": ["rescue", "reduce", "refuse", "reveal"], "a": 0, "exp": "✓ (A) rescue（救援）— 消防員設法將這家人從燃燒的建築物中「救出」。\n❌ (B) reduce = 減少，語意不符。\n❌ (C) refuse = 拒絕，語意不符。\n❌ (D) reveal = 揭露，語意不符。"}, {"n": 8, "p": 0, "stem": "The committee will _____ the final decision after reviewing all proposals.", "o": ["announce", "annoy", "appoint", "approve"], "a": 0, "exp": "✓ (A) announce（宣布）— 委員會將在審查所有提案後「宣布」最終決定。\n❌ (B) annoy = 使惱怒，語意不符。\n❌ (C) appoint = 任命，語意不符。\n❌ (D) approve = 批准，\"approve the final decision\" 語意稍可通但不如 announce（宣布決定）貼切，且委員會的角色是做出並「宣布」決定，而非批准既有決定。"}, {"n": 9, "p": 0, "stem": "The instructions were so <i>ambiguous</i> that no one understood what to do.", "o": ["clear", "unclear", "simple", "detailed"], "a": 1, "exp": "✓ (B) unclear（不清楚的）— ambiguous（含糊不清的）與 unclear 意義最接近。\n❌ (A) clear = 清楚的，語意相反。\n❌ (C) simple = 簡單的，語意不符。\n❌ (D) detailed = 詳細的，語意不符。"}, {"n": 10, "p": 0, "stem": "The team worked <i>diligently</i> to finish the project before the deadline.", "o": ["carelessly", "hard", "slowly", "occasionally"], "a": 1, "exp": "✓ (B) hard（努力地）— diligently（勤勉地）與 hard（努力地）意義最接近。\n❌ (A) carelessly = 粗心地，語意相反。\n❌ (C) slowly = 緩慢地，語意不符。\n❌ (D) occasionally = 偶爾地，語意不符。"}, {"n": 11, "p": 1, "stem": "Customer: I'd like to apply for a credit card. What documents do I need?<br>Bank staff: _____<br>Customer: Okay, I have those with me.", "o": ["We don't issue credit cards anymore.", "You'll need your ID and proof of income.", "The bank is closed for the day.", "You should apply online instead."], "a": 1, "exp": "✓ (B) You'll need your ID and proof of income.— 顧客回應「好，這些我都帶來了」，呼應行員告知所需的文件。\n❌ (A) 說「我們不再發行信用卡了」，與顧客接著說「我都有帶」矛盾。\n❌ (C) 說「銀行今天休息」，與顧客的回應不連貫。\n❌ (D) 說「你應該改用線上申請」，與顧客接著表示已準備好文件矛盾。"}, {"n": 12, "p": 1, "stem": "Coworker A: Have you finished setting up the conference room for tomorrow?<br>Coworker B: _____<br>Coworker A: Great, thanks for taking care of that.", "o": ["Yes, everything is ready to go.", "The conference was canceled.", "I forgot we had a meeting tomorrow.", "Someone else is supposed to do that."], "a": 0, "exp": "✓ (A) Yes, everything is ready to go.— 同事B回答已經準備好，同事A回應「太好了，謝謝你處理這件事」，前後呼應。\n❌ (B) 說「會議取消了」，與A回應「謝謝你處理這件事」矛盾。\n❌ (C) 說「我忘了我們明天有會議」，與A的感謝回應矛盾。\n❌ (D) 說「應該是別人負責這件事」，與A的感謝回應矛盾。"}, {"n": 13, "p": 1, "stem": "Waiter: Would you like to see the dessert menu?<br>Customer: _____<br>Waiter: No problem, I'll bring the check right away.", "o": ["Yes, I'd love to try something sweet.", "No, thank you. Just the check, please.", "Can I get a refill on my drink?", "I think we ordered too much already."], "a": 1, "exp": "✓ (B) No, thank you. Just the check, please.— 顧客表示不需要甜點菜單只要結帳，服務生回應「沒問題，我馬上拿帳單來」，前後呼應。\n❌ (A) 說「好，我想嚐點甜的」，與服務生回應「馬上拿帳單來」矛盾（不會再看甜點菜單）。\n❌ (C) 問是否可以續杯飲料，與服務生「馬上拿帳單」的回應不連貫。\n❌ (D) 說「我們好像點太多了」，未直接回應服務生詢問是否要看甜點菜單。"}, {"n": 14, "p": 1, "stem": "Friend A: I can't find my keys anywhere. Have you seen them?<br>Friend B: _____<br>Friend A: Oh, you're right! Thanks for reminding me.", "o": ["I think you left them on the kitchen counter.", "I never touch your things.", "Maybe you should buy a new lock.", "I locked the door already."], "a": 0, "exp": "✓ (A) I think you left them on the kitchen counter.— 朋友B提示鑰匙可能放在廚房檯面上，朋友A回應「對耶！謝謝你提醒我」，前後呼應。\n❌ (B) 說「我從不碰你的東西」，與A的感謝回應不連貫，且未回答鑰匙位置。\n❌ (C) 說「你應該換個新鎖」，與A回應「謝謝提醒」不連貫。\n❌ (D) 說「我已經把門鎖上了」，與尋找鑰匙的話題不連貫。"}, {"n": 15, "p": 1, "stem": "Tour guide: We'll be heading to the next site in about ten minutes.<br>Tourist: _____<br>Tour guide: Sure, the restroom is just over there.", "o": ["Is there a restroom nearby before we leave?", "How far is the next site?", "Can we skip this site?", "I think we should leave now."], "a": 0, "exp": "✓ (A) Is there a restroom nearby before we leave?— 導遊回答「有，洗手間就在那邊」，呼應遊客詢問離開前是否有洗手間。\n❌ (B) 問下一個景點有多遠，與導遊回答「洗手間在那邊」不連貫。\n❌ (C) 問可不可以跳過這個景點，與導遊的回應不連貫。\n❌ (D) 說「我覺得我們該離開了」，與導遊回答洗手間位置不連貫。"}, {"n": 16, "p": 1, "stem": "Manager: I noticed the sales numbers dropped last month.<br>Employee: _____<br>Manager: That makes sense. Let's discuss it more in our meeting.", "o": ["I think our prices are too low.", "It might be due to the new competitor that opened nearby.", "Sales have always been this low.", "I haven't checked the numbers yet."], "a": 1, "exp": "✓ (B) It might be due to the new competitor that opened nearby.— 員工提出銷售下滑的可能原因，主管回應「這樣說得通，我們在會議中再詳談」，前後呼應。\n❌ (A) 說「我覺得我們價格太低了」，與「銷售下滑」的因果方向不合理（價格過低通常會帶動銷量）。\n❌ (C) 說「銷售一直都這麼低」，與主管說「上個月下降」（暗示之前並非如此低）的語意不符。\n❌ (D) 說「我還沒檢查數字」，與主管回應「這樣說得通」不連貫（未檢查就無法說得通）。"}, {"n": 17, "p": 1, "stem": "Student A: Do you know if the library is open on holidays?<br>Student B: _____<br>Student A: Okay, I'll go on a regular weekday then.", "o": ["It's open 24 hours a day.", "No, it's closed on public holidays.", "The library moved to a new building.", "I've never been to the library."], "a": 1, "exp": "✓ (B) No, it's closed on public holidays.— 學生B回答圖書館假日不開放，學生A回應「好，那我平日再去」，前後呼應。\n❌ (A) 說「它一天24小時開放」，與A回應「那我平日再去」矛盾（若24小時開放，假日去也可以）。\n❌ (C) 說「圖書館搬到新大樓了」，與「假日是否開放」的問題不連貫。\n❌ (D) 說「我從來沒去過圖書館」，未回答問題。"}, {"n": 18, "p": 1, "stem": "Passenger: Excuse me, does this bus stop near the city hall?<br>Driver: _____<br>Passenger: Perfect, that's exactly where I need to go.", "o": ["This bus doesn't go downtown at all.", "Yes, it's the third stop from here.", "You'll need to transfer to another bus.", "The city hall moved last year."], "a": 1, "exp": "✓ (B) Yes, it's the third stop from here.— 司機確認會停靠市政廳附近，乘客回應「太好了，那正是我要去的地方」，前後呼應。\n❌ (A) 說「這班公車根本不去市中心」，與乘客回應「太好了，正是我要去的地方」矛盾。\n❌ (C) 說「你需要轉乘另一班公車」，與乘客回應「太好了」不連貫（需轉車通常不會說「太好了」）。\n❌ (D) 說「市政廳去年搬走了」，與乘客回應「正是我要去的地方」矛盾。"}, {"n": 19, "p": 1, "stem": "Coworker A: I'm thinking about taking a vacation next month.<br>Coworker B: _____<br>Coworker A: That's a great idea. I'll start looking at flights.", "o": ["You should ask your boss for approval first.", "Vacations are a waste of time.", "Maybe somewhere warm would be nice this time of year.", "I never take vacations."], "a": 2, "exp": "✓ (C) Maybe somewhere warm would be nice this time of year.— 同事B提出目的地建議，同事A回應「好主意，我來查查機票」，前後呼應，顯示話題延續到旅行地點與機票。\n❌ (A) 說「你應該先問老闆同意」，與A回應「好主意，我來查機票」（已決定要去）不連貫。\n❌ (B) 說「放假是浪費時間」，與A回應「好主意」矛盾。\n❌ (D) 說「我從不放假」，與「正在討論放假地點」的話題不連貫。"}, {"n": 20, "p": 1, "stem": "Customer: I'd like to cancel my subscription to this magazine.<br>Representative: _____<br>Customer: Yes, I understand. Please go ahead and cancel it.", "o": ["I'm sorry to hear that. May I ask why you'd like to cancel?", "We don't offer subscriptions anymore.", "Your subscription was canceled last month.", "You'll need to renew first before canceling."], "a": 0, "exp": "✓ (A) I'm sorry to hear that. May I ask why you'd like to cancel?— 客服人員詢問取消原因，顧客回應「我了解，請幫我取消」，前後呼應（顧客在被詢問後仍選擇取消）。\n❌ (B) 說「我們不再提供訂閱了」，與顧客接著說「請幫我取消」矛盾（若不提供訂閱，顧客也無需被取消）。\n❌ (C) 說「您的訂閱上個月已經取消了」，與顧客「請幫我取消」的請求矛盾（尚未取消）。\n❌ (D) 說「您需要先續訂才能取消」，邏輯不合理，且與顧客的回應不連貫。"}, {"n": 21, "p": 2, "stem": "(21)", "o": ["carried", "carry", "carrying", "to carry"], "a": 0, "exp": "✓ (A) carried（過去式動詞）— \"Residents... usually carried their own lanterns for light\" 描述過去的常態，主詞 Residents 為複數，搭配過去式動詞 carried，作句子的主要動詞。\n❌ (B) carry = 現在式原形，與全文描述「電燈發明之前」的過去時間不符。\n❌ (C) carrying = 現在分詞，不能單獨作句子的主要動詞。\n❌ (D) to carry = 不定詞，不能單獨作句子的主要動詞。"}, {"n": 22, "p": 2, "stem": "(22)", "o": ["install", "installing", "to be installed", "installed"], "a": 2, "exp": "✓ (C) to be installed（不定詞被動式）— \"gas lamps began to be installed along major streets\" 表示「瓦斯燈開始被裝設在主要街道上」，gas lamps 是被裝設的對象，begin 後接不定詞，且需用被動式表示「被裝設」。\n❌ (A) install = 主動原形，begin 後不可直接接原形動詞，且與被動語意不符。\n❌ (B) installing = 主動現在分詞，與被動語意不符。\n❌ (D) installed = 過去分詞，但 begin 後須接不定詞或動名詞，不能直接接過去分詞。"}, {"n": 23, "p": 2, "stem": "(23)", "o": ["that", "which", "what", "it"], "a": 1, "exp": "✓ (B) which（關係代名詞，代替前面整個句子）— \"..., which led to a noticeable shift in city life\" 中，which 代替前面整句話的概念（safety improved and hours extended），引導補述關係子句，在子句中作主詞。\n❌ (A) that = 通常不用於非限定（補述）關係子句，且 that 前不可加逗號。\n❌ (C) what = what 引導名詞子句且本身不能有先行詞，不適用於此處的補述用法。\n❌ (D) it = it 為代名詞，不能引導從屬子句，會造成句子結構錯誤（兩個句子缺少連接詞）。"}, {"n": 24, "p": 2, "stem": "(24)", "o": ["regarded", "regarding", "regard", "regards"], "a": 0, "exp": "✓ (A) regarded（過去分詞，被動修飾）— \"a development that was widely regarded as a major step forward\" 表示「一項被廣泛視為重大進展的發展」，\"regard A as B\" 的被動式為 \"A is regarded as B\"，過去分詞 regarded 與 be動詞 was 搭配構成被動語態。\n❌ (B) regarding = 現在分詞/介系詞「關於」，與 was 搭配文法不符。\n❌ (C) regard = 動詞原形，與 was 搭配文法不符。\n❌ (D) regards = 第三人稱單數現在式，與 was 搭配文法不符。"}, {"n": 25, "p": 2, "stem": "(25)", "o": ["who", "that", "whom", "whose"], "a": 1, "exp": "✓ (B) that（關係代名詞，指事物，作主格）— \"tasks that require switching attention\" 中，that 代替先行詞 tasks（事物），在子句中作主詞，引導形容詞子句修飾 tasks。\n❌ (A) who = 用於指人，tasks 為事物，不適用。\n❌ (C) whom = 用於指人且作受格，不適用於事物，且此處子句缺主詞而非受詞。\n❌ (D) whose = 所有格關係代名詞，此處子句缺的是主詞而非所有格修飾語，不符。"}, {"n": 26, "p": 2, "stem": "(26)", "o": ["more", "less", "most", "least"], "a": 1, "exp": "✓ (B) less（較不…）— \"people who speak more than one language may be less likely to develop certain age-related memory problems\" 表示「會說多種語言的人可能較不容易出現某些與年齡相關的記憶問題」，符合「學習語言對大腦有保護作用」的正面語意脈絡。\n❌ (A) more = 與全文強調學習第二語言「益處」的正面脈絡相反（若更容易出現記憶問題，便不是益處）。\n❌ (C) most = 最高級，與句子語意及文法搭配皆不自然。\n❌ (D) least = 最不…，語意過於極端，與全文謹慎保留語氣（\"researchers caution that more studies are needed\"）不符。"}, {"n": 27, "p": 2, "stem": "(27)", "o": ["Despite", "Because of", "Although", "Since"], "a": 0, "exp": "✓ (A) Despite（儘管，介系詞）— \"Despite these potential benefits, learning a new language requires significant time and effort\" 表示「儘管有這些潛在益處，學習新語言仍需要大量時間與努力」，despite 後接名詞片語 these potential benefits，形成語意轉折。\n❌ (B) Because of = 因為，表因果關係，與「儘管有益處仍需努力」的轉折語意不符。\n❌ (C) Although = 雖然，後面須接「主詞+動詞」的完整子句，而此處接的是名詞片語 these potential benefits，文法不符。\n❌ (D) Since = 因為／自從，不符合轉折語意。"}, {"n": 28, "p": 2, "stem": "(28)", "o": ["lead", "leads", "leading", "led"], "a": 0, "exp": "✓ (A) lead（動詞原形）— 情態助動詞 can 後須接動詞原形，\"even basic knowledge... can lead to a deeper understanding\" 表示「即使是基本的語言知識也能促成更深刻的理解」，\"lead to\" 表示「導致、促成」。\n❌ (B) leads = 第三人稱單數現在式，can 後不可接此形式。\n❌ (C) leading = 現在分詞，can 後不可直接接此形式。\n❌ (D) led = 過去式/過去分詞，can 後不可直接接此形式。"}, {"n": 29, "p": 3, "stem": "Why is the pool closed this week?", "o": ["It is being used for a private event.", "It is undergoing maintenance.", "It has been permanently closed.", "There is a staff shortage."], "a": 1, "exp": "公告提到：「The swimming pool will be closed for maintenance from Monday to Wednesday this week.」\n(B) It is undergoing maintenance. ✓ 為正解。\n❌ (A) 公告未提到私人活動。\n❌ (C) 公告說是「本週一到三」暫時關閉，並非永久關閉。\n❌ (D) 公告未提到人手不足。"}, {"n": 30, "p": 3, "stem": "What can members do during the pool closure?", "o": ["Get a refund for their membership.", "Use the pool at the Park Avenue location for free.", "Use the weight room for free.", "Wait until next month to swim."], "a": 1, "exp": "公告提到：「members can use the indoor pool at our sister location on Park Avenue free of charge by showing their membership card」\n(B) Use the pool at the Park Avenue location for free. ✓ 為正解。\n❌ (A) 公告未提到退費。\n❌ (C) 公告說重訓室「照常開放」，並非「免費使用」（重訓室原本就是會員設施，並非此次特別免費項目）。\n❌ (D) 公告提供替代方案（去姊妹館游泳），並非要會員等到下個月。"}, {"n": 31, "p": 3, "stem": "What is Tom asked to bring?", "o": ["A cake.", "Decorations.", "Drinks.", "Nothing at all."], "a": 2, "exp": "Ben 說：「Maybe some drinks?」（回應 Tom 詢問要帶什麼）\n(C) Drinks. ✓ 為正解。\n❌ (A)(B) Ben 說蛋糕和裝飾品他已經準備好了，不需要 Tom 帶。\n❌ (D) Ben 明確建議 Tom 帶飲料，並非什麼都不用帶。"}, {"n": 32, "p": 3, "stem": "What has Ben already arranged?", "o": ["The cake and decorations.", "The drinks and music.", "The location of the party.", "The guest list."], "a": 0, "exp": "Ben 說：「I've got the cake and decorations covered.」\n(A) The cake and decorations. ✓ 為正解。\n❌ (B) 對話未提到音樂。\n❌ (C) 對話未提到派對地點的安排。\n❌ (D) 對話未提到賓客名單。"}, {"n": 33, "p": 3, "stem": "How do noise-canceling headphones work, according to the passage?", "o": ["They increase the volume of background noise.", "They produce sound waves that cancel out background noise.", "They block all sound from entering the ear physically.", "They play music louder than the surrounding noise."], "a": 1, "exp": "文中提到：「These headphones use small microphones to detect surrounding sounds and produce opposite sound waves that cancel out much of the background noise before it reaches the ear.」\n(B) They produce sound waves that cancel out background noise. ✓ 為正解。\n❌ (A) 文中說耳機是要「抵消」背景噪音，並非「增加」音量。\n❌ (C) 文中描述的是透過聲波抵消噪音，並非物理性地完全阻隔所有聲音。\n❌ (D) 文中未提到耳機是靠播放更大聲的音樂來蓋過噪音。"}, {"n": 34, "p": 3, "stem": "What concern have some researchers raised about these headphones?", "o": ["They are too expensive for most people.", "They may make it harder to notice important signals.", "They cannot be used in open offices.", "They damage hearing immediately."], "a": 1, "exp": "文中提到：「Constantly blocking out environmental sounds, they argue, may make it harder for people to notice important signals, such as a colleague calling their name or an approaching vehicle.」\n(B) They may make it harder to notice important signals. ✓ 為正解。\n❌ (A) 文中未提到價格過高的問題。\n❌ (C) 文中說這類耳機在開放式辦公室「特別受歡迎」，並非不能使用。\n❌ (D) 文中說部分使用者「可能」出現輕微暈眩或耳壓不適，且需更多研究確認，並非「立即」造成聽力損害。"}, {"n": 35, "p": 3, "stem": "What is the overall conclusion of experts mentioned in the passage?", "o": ["Noise-canceling headphones should never be used.", "Occasional use is unlikely to cause harm.", "Everyone should use them at all times.", "They should only be used by travelers."], "a": 1, "exp": "文中提到：「Despite these concerns, most experts agree that occasional use of noise-canceling headphones is unlikely to cause harm for the average person.」\n(B) Occasional use is unlikely to cause harm. ✓ 為正解。\n❌ (A) 文中專家的結論並非「永遠不應使用」。\n❌ (C) 文中說的是「偶爾使用不太可能造成傷害」，並非「應該一直使用」。\n❌ (D) 文中未限定僅限旅行者使用。"}, {"n": 36, "p": 3, "stem": "What is minimalism, according to the passage?", "o": ["A lifestyle focused on owning fewer possessions.", "A trend of buying as many products as possible.", "A type of home decoration style only.", "A method of investing money."], "a": 0, "exp": "文中提到：「minimalism — a lifestyle that focuses on owning fewer possessions and prioritizing experiences over material goods」\n(A) A lifestyle focused on owning fewer possessions. ✓ 為正解。\n❌ (B) 文中說極簡主義是「減少」物品，並非盡可能購買大量產品。\n❌ (C) 文中未將極簡主義限定為居家裝潢風格。\n❌ (D) 文中未提到投資方法。"}, {"n": 37, "p": 3, "stem": "What criticism of minimalism is mentioned in the passage?", "o": ["It is illegal in some countries.", "It can become its own form of consumerism.", "It requires people to live in tiny houses.", "It has no effect on people's stress levels."], "a": 1, "exp": "文中提到：「Critics, however, point out that minimalism can sometimes become its own form of consumerism, as people buy specially designed \"minimalist\" products or pay for organizing services.」\n(B) It can become its own form of consumerism. ✓ 為正解。\n❌ (A) 文中未提到極簡主義在某些國家屬違法行為。\n❌ (C) 文中未提到要求住在小房子裡。\n❌ (D) 文中說支持者認為極簡主義「能減少壓力」，並非「對壓力毫無影響」（此選項與文中支持者觀點相反，且文中並未如此陳述）。"}, {"n": 38, "p": 3, "stem": "According to the passage, who might find minimalism more difficult?", "o": ["People with higher incomes.", "People with lower incomes.", "People who travel frequently.", "People who live alone."], "a": 1, "exp": "文中提到：「minimalism may be easier for people with higher incomes... while those with lower incomes may need to keep extra items for practical reasons」\n(B) People with lower incomes. ✓ 為正解。\n❌ (A) 文中說極簡主義對「高收入者」較容易實行，並非較困難。\n❌ (C) 文中未特別提到旅行頻繁的人。\n❌ (D) 文中未提到獨居者。"}, {"n": 39, "p": 3, "stem": "What did Hannah notice when she began teaching?", "o": ["Students were not eating enough lunch.", "A large amount of recyclable and uneaten food was being thrown away.", "The school lacked enough trash bins.", "Students were not interested in recycling at all."], "a": 1, "exp": "文中提到：「she noticed that the amount of trash thrown away during lunchtime was enormous, with much of it being recyclable materials and uneaten food」\n(B) A large amount of recyclable and uneaten food was being thrown away. ✓ 為正解。\n❌ (A) 文中說的是「食物被丟棄」，並非學生吃得不夠。\n❌ (C) 文中未提到垃圾桶數量不足。\n❌ (D) 文中並未說學生對回收完全不感興趣；事實上後來其他班級也主動加入。"}, {"n": 40, "p": 3, "stem": "How did Hannah's project expand to the whole school?", "o": ["The school administration required all classes to join immediately.", "Other classes became interested and asked to join.", "The government ordered the school to adopt it.", "Parents demanded the program be expanded."], "a": 1, "exp": "文中提到：「Within a few months, other classes became interested and asked to join the project.」\n(B) Other classes became interested and asked to join. ✓ 為正解。\n❌ (A) 文中說是 Hannah「與校方合作」擴大計畫，並非校方強制所有班級立刻加入。\n❌ (C) 文中未提到政府下令。\n❌ (D) 文中未提到家長要求擴大計畫。"}, {"n": 41, "p": 3, "stem": "What happened after local news outlets featured the program?", "o": ["The program was shut down due to the attention.", "Several nearby schools asked Hannah for advice.", "Hannah quit teaching to run the program full-time.", "The school stopped the recycling program."], "a": 1, "exp": "文中提到：「Local news outlets featured the program, and several nearby schools reached out to Hannah for advice on starting similar initiatives.」\n(B) Several nearby schools asked Hannah for advice. ✓ 為正解。\n❌ (A) 文中未提到計畫因受到關注而被迫停止。\n❌ (C) 文中說 Hannah 仍維持「正常教學工作」，並非辭職全職投入此計畫。\n❌ (D) 文中未提到學校停止回收計畫。"}, {"n": 42, "p": 3, "stem": "What does Hannah do on some weekends now?", "o": ["She rests and avoids any school-related work.", "She helps other schools set up waste-sorting programs.", "She works at a recycling factory.", "She writes books about teaching. ---"], "a": 1, "exp": "文中提到：「Hannah now spends some of her weekends helping other schools set up their own waste-sorting programs」\n(B) She helps other schools set up waste-sorting programs. ✓ 為正解。\n❌ (A) 文中說她利用部分週末協助其他學校，並非完全避免與學校相關的工作。\n❌ (C) 文中未提到在回收工廠工作。\n❌ (D) 文中未提到寫書。"}];
+const WRITTEN = [{"title": "Ⅰ. 填充（4 分）", "prompt": "說明：請依中文提示，將空格 ①、② 答案之完整單字（含提示之字首）填入答案區。每格限填一字。<br><span class=\"blankline\">1. 這個社區的居民決定一起清理公園裡的垃圾。</span>", "ans": "① <b>clean</b>　② <b>together</b>", "exp": "① clean（清理）— 依提示字首 c 及句意「居民決定一起清理公園裡的垃圾」。\n② together（一起）— 依提示字首 t 及句意「一起清理」。"}, {"title": "Ⅱ. 句子重組（6 分）", "prompt": "請將下列提示字詞重組成一句完整的句子，並於句尾加上適當標點符號：<br><i>說明：請將下列詞組重組成一個正確、通順的句子，並於句尾加上適當標點符號。</i>", "ans": "All flights were canceled due to the heavy snow yesterday.", "exp": "句構：主詞 (All flights) + were canceled（被動語態，表示「被取消」）+ due to the heavy snow（介系詞片語，表示原因「由於大雪」）+ yesterday（時間副詞）。"}, {"title": "Ⅲ. 中譯英（6 分）", "prompt": "請將以下中文句子譯成正確、通順、達意的英文：<br>說明：請將以下中文句子譯成正確、通順、達意的英文。", "ans": "Many students take part in volunteer activities during their vacation to help people in need.", "exp": "重點結構：take part in + 名詞，表示「參加……」；during their vacation 表示「在他們的假期期間」；不定詞 to help 表示目的「為了幫助……」；people in need 表示「需要幫助的人」。"}];
+const TOTAL = Q.length;
+
+/* ====== 產生選擇題畫面 ====== */
+const form = document.getElementById('quiz');
+let lastPart = -1;
+Q.forEach(q=>{
+  if(q.p!==lastPart){
+    const st=document.createElement('div'); st.className='section-title s'+q.p; st.textContent=PARTS[q.p].title;
+    const sd=document.createElement('div'); sd.className='section-desc'; sd.textContent=PARTS[q.p].desc;
+    form.appendChild(st); form.appendChild(sd); lastPart=q.p;
+  }
+  if(PASSAGES[q.n]){ const d=document.createElement('div'); d.innerHTML=PASSAGES[q.n]; form.appendChild(d.firstChild); }
+  const card=document.createElement('div'); card.className='q'; card.id='q'+q.n;
+  const isBlank=/^\(\d+\)$/.test(q.stem);
+  const stemHtml = isBlank ? `第 ${q.n} 格` : q.stem;
+  card.innerHTML=`<div class="stem"><span class="num">${q.n}</span>${stemHtml}</div>`;
+  q.o.forEach((opt,i)=>{
+    const lab=document.createElement('label'); lab.className='opt'; lab.dataset.i=i;
+    lab.innerHTML=`<input type="radio" name="q${q.n}" value="${i}"><span class="lab">${'ABCD'[i]}</span><span>${opt}</span>`;
+    lab.querySelector('input').addEventListener('change',()=>{
+      pickAnswer(q,i);
+    });
+    card.appendChild(lab);
+  });
+  const exp=document.createElement('div'); exp.className='exp'; exp.id='exp'+q.n;
+  card.appendChild(exp);
+  form.appendChild(card);
+});
+
+const submitBtn=document.getElementById('submitBtn');
+const resetBtn=document.getElementById('resetBtn');
+const hint=document.getElementById('hint');
+let submitted=false;
+
+/* 選擇答案後立即鎖定並顯示該題解析 */
+function pickAnswer(q,pick){
+  const card=document.getElementById('q'+q.n);
+  card.querySelectorAll('.opt').forEach(o=>{
+    o.classList.add('lock');
+    o.querySelector('input').disabled=true;
+    const i=parseInt(o.dataset.i);
+    if(i===pick) o.classList.add('sel');
+    if(i===q.a) o.classList.add('correct');
+    if(i===pick && pick!==q.a) o.classList.add('wrong');
+  });
+  const correct = pick===q.a;
+  const exp=document.getElementById('exp'+q.n);
+  const tag = correct ? '答對' : '答錯';
+  exp.innerHTML=`<span class="tag ${correct?'':'miss'}">${tag}　正解：${'ABCD'[q.a]}</span>
+    <div class="body">${q.exp}</div>`;
+  exp.classList.add('show');
+  updateProgress();
+}
+
+function answeredCount(){ let c=0; Q.forEach(q=>{ if(form.querySelector(`input[name="q${q.n}"]:checked`)) c++; }); return c; }
+function updateProgress(){
+  const c=answeredCount();
+  document.getElementById('count').textContent=`${c} / ${TOTAL}`;
+  document.getElementById('fill').style.width=(c/TOTAL*100)+'%';
+  if(submitted) return;
+  hint.textContent = c===TOTAL ? `已完成全部 ${TOTAL} 題，可以交卷查看總分了` : (c===0 ? '尚未作答任何題目（每題選擇後立即顯示解析）' : `已作答 ${c} 題，未作答 ${TOTAL-c} 題（可隨時交卷）`);
+}
+
+submitBtn.addEventListener('click',()=>{
+  let ok=0, blank=0;
+  Q.forEach(q=>{
+    const sel=form.querySelector(`input[name="q${q.n}"]:checked`);
+    const pick = sel ? parseInt(sel.value) : null;
+    const card=document.getElementById('q'+q.n);
+    if(pick===null){
+      blank++;
+      card.querySelectorAll('.opt').forEach(o=>{
+        o.classList.add('lock');
+        o.querySelector('input').disabled=true;
+        const i=parseInt(o.dataset.i);
+        if(i===q.a) o.classList.add('correct');
+      });
+      const exp=document.getElementById('exp'+q.n);
+      exp.innerHTML=`<span class="tag blank">未作答　正解：${'ABCD'[q.a]}</span>
+        <div class="body">${q.exp}</div>`;
+      exp.classList.add('show');
+    } else if(pick===q.a){
+      ok++;
+    }
+  });
+  const res=document.getElementById('result');
+  const score = ok*2;
+  document.getElementById('scoreNum').textContent=score;
+  document.getElementById('scoreTxt').textContent=`分（選擇題 / 84 分，答對 ${ok} / ${TOTAL} 題）`;
+  document.getElementById('rOk').textContent=ok;
+  document.getElementById('rNo').textContent=TOTAL-ok-blank;
+  document.getElementById('rBlank').textContent=blank;
+  res.classList.add('show');
+  submitted=true;
+  submitBtn.style.display='none'; hint.style.display='none'; resetBtn.style.display='block';
+  res.scrollIntoView({behavior:'smooth'});
+});
+
+resetBtn.addEventListener('click',()=>{
+  form.reset();
+  Q.forEach(q=>{
+    const card=document.getElementById('q'+q.n);
+    card.querySelectorAll('.opt').forEach(o=>{o.classList.remove('sel','correct','wrong','lock');o.querySelector('input').disabled=false;});
+    document.getElementById('exp'+q.n).classList.remove('show');
+  });
+  document.getElementById('result').classList.remove('show');
+  submitted=false;
+  submitBtn.style.display='block'; hint.style.display='block'; resetBtn.style.display='none';
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+/* ====== 非選擇題（點擊查看解析） ====== */
+const writtenDiv=document.getElementById('written');
+WRITTEN.forEach((w,idx)=>{
+  const card=document.createElement('div'); card.className='written';
+  card.innerHTML=`<h4>${w.title}</h4>
+    <div class="prompt">${w.prompt}</div>
+    <button type="button" class="reveal" id="wb${idx}">查看答案與解析</button>
+    <div class="ans" id="wa${idx}">
+      <span class="tag">參考答案</span>
+      <div class="body">${w.ans}</div>
+      <div class="body">${w.exp}</div>
+    </div>`;
+  writtenDiv.appendChild(card);
+  card.querySelector('#wb'+idx).addEventListener('click',()=>{
+    card.querySelector('#wa'+idx).classList.add('show');
+    card.querySelector('#wb'+idx).style.display='none';
+  });
+});
+
+updateProgress();
+</script>
+</body>
+</html>

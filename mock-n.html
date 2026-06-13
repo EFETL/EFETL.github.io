@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>統測英文模擬考卷 N</title>
+<style>
+  :root{
+    --blue:#2b8cff; --blue-dark:#1f6fe0;
+    --coral:#ff7a59; --amber:#ffb02e; --pink:#ff5d8f;
+    --bg:#f3f9ff; --card:#ffffff; --line:#e3edf9;
+    --green:#22b573; --green-bg:#e4f8ef;
+    --red:#ff5a5a; --red-bg:#ffecec;
+    --gray:#6b7785;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;
+    background:linear-gradient(180deg,#f0f7ff,#fff7f2 70%);color:#22303f;line-height:1.6;
+    font-size:16px;-webkit-text-size-adjust:100%;}
+  .wrap{max-width:760px;margin:0 auto;padding:16px;}
+  header.top{background:linear-gradient(135deg,#5ec6ff,#7d8bff 55%,#b88bff);color:#fff;
+    border-radius:18px;padding:24px 22px;margin-bottom:16px;box-shadow:0 8px 22px rgba(93,141,255,.3);}
+  header.top h1{margin:0 0 6px;font-size:1.5rem;text-shadow:0 1px 2px rgba(0,0,0,.12);}
+  header.top p{margin:0;font-size:.92rem;opacity:.95;}
+  .meta{margin-top:14px;font-size:.86rem;background:rgba(255,255,255,.22);
+    padding:9px 13px;border-radius:10px;}
+  .sticky{position:sticky;top:0;z-index:20;padding:10px 0;
+    background:linear-gradient(180deg,#f0f7ff 70%,rgba(240,247,255,0));}
+  .bar{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:11px 16px;display:flex;align-items:center;gap:12px;font-size:.9rem;
+    box-shadow:0 4px 12px rgba(43,140,255,.1);}
+  .bar .track{flex:1;height:9px;background:#e9f1fb;border-radius:6px;overflow:hidden;}
+  .bar .fill{height:100%;width:0;border-radius:6px;
+    background:linear-gradient(90deg,#3ad1c6,#2b8cff);transition:width .35s;}
+  .bar #count{font-weight:700;color:var(--blue-dark);}
+  .section-title{color:#fff;font-weight:800;border-radius:12px;
+    padding:10px 16px;margin:24px 0 6px;font-size:1.05rem;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);}
+  .section-title.s0{background:linear-gradient(135deg,#ff9a6c,#ff6f91);}
+  .section-title.s1{background:linear-gradient(135deg,#4dd0e1,#2b8cff);}
+  .section-title.s2{background:linear-gradient(135deg,#9b8bff,#b06bff);}
+  .section-title.s3{background:linear-gradient(135deg,#42d392,#22b573);}
+  .section-desc{font-size:.86rem;color:var(--gray);margin:0 4px 10px;}
+  .passage{background:#fffdf4;border:1px solid #ffe9c9;border-left:5px solid var(--amber);
+    border-radius:12px;padding:15px 17px;margin:14px 0;font-size:.95rem;
+    box-shadow:0 3px 10px rgba(255,176,46,.08);}
+  .passage h3{margin:0 0 8px;color:#e0820a;font-size:1rem;}
+  .passage .blk{display:inline-block;min-width:1.6em;text-align:center;font-weight:800;
+    color:#fff;background:var(--coral);border-radius:6px;padding:0 4px;margin:0 2px;font-size:.85rem;}
+  .email-h{font-size:.85rem;color:var(--gray);border-bottom:1px dashed #ffd9a8;
+    padding-bottom:6px;margin-bottom:8px;}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:15px 17px;margin:12px 0;box-shadow:0 3px 10px rgba(43,140,255,.07);}
+  .q .stem{font-weight:600;margin-bottom:10px;}
+  .q .stem .num{display:inline-block;color:#fff;background:var(--blue);font-weight:700;
+    border-radius:8px;padding:1px 9px;margin-right:8px;font-size:.92rem;}
+  .opt{display:flex;align-items:flex-start;gap:10px;border:2px solid var(--line);
+    border-radius:11px;padding:10px 13px;margin:8px 0;cursor:pointer;transition:.15s;
+    font-size:.95rem;background:#fbfdff;}
+  .opt:hover{border-color:var(--blue);background:#eef6ff;}
+  .opt input{margin-top:3px;accent-color:var(--blue);}
+  .opt .lab{font-weight:800;color:var(--blue);min-width:18px;}
+  .opt.sel{border-color:var(--blue);background:#e7f2ff;}
+  .opt.correct{border-color:var(--green);background:var(--green-bg);}
+  .opt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .opt.lock{cursor:default;}
+  .exp{display:none;margin-top:11px;border-top:2px dashed #ffe1c2;padding-top:11px;font-size:.9rem;}
+  .exp.show{display:block;}
+  .exp .tag{display:inline-block;font-weight:800;color:#fff;background:var(--green);
+    border-radius:7px;padding:2px 10px;font-size:.8rem;margin-bottom:7px;}
+  .exp .tag.miss{background:var(--red);}
+  .exp .tag.blank{background:var(--gray);}
+  .exp .body{color:#7a4a12;background:#fff7ea;border-radius:8px;padding:8px 11px;margin:5px 0;
+    white-space:pre-line;}
+  .written{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:15px 17px;margin:12px 0;box-shadow:0 3px 10px rgba(43,140,255,.07);}
+  .written h4{margin:0 0 8px;color:var(--blue-dark);font-size:1rem;}
+  .written .prompt{margin-bottom:10px;}
+  .written .blankline{display:inline-block;background:#fbfdff;border:1px dashed var(--line);
+    border-radius:8px;padding:6px 10px;margin-top:6px;}
+  .written button.reveal{background:#fff;color:var(--blue);border:2px solid var(--blue);
+    border-radius:10px;padding:8px 16px;font-weight:800;font-size:.9rem;cursor:pointer;}
+  .written .ans{display:none;margin-top:11px;border-top:2px dashed #ffe1c2;padding-top:11px;font-size:.92rem;}
+  .written .ans.show{display:block;}
+  .written .ans .tag{display:inline-block;font-weight:800;color:#fff;background:var(--blue);
+    border-radius:7px;padding:2px 10px;font-size:.8rem;margin-bottom:7px;}
+  .written .ans .body{color:#7a4a12;background:#fff7ea;border-radius:8px;padding:8px 11px;margin:5px 0;}
+  .actions{position:sticky;bottom:0;padding:14px 0 6px;margin-top:18px;
+    background:linear-gradient(transparent,#fff7f2 35%);}
+  button.submit{width:100%;color:#fff;border:0;border-radius:14px;padding:16px;
+    font-size:1.08rem;font-weight:800;cursor:pointer;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);
+    box-shadow:0 6px 16px rgba(255,93,143,.35);}
+  button.submit:active{transform:translateY(1px);}
+  button.reset{width:100%;background:#fff;color:var(--blue);border:2px solid var(--blue);
+    border-radius:14px;padding:14px;font-size:1rem;font-weight:800;cursor:pointer;margin-top:10px;display:none;}
+  .result{display:none;background:var(--card);border:3px solid transparent;border-radius:16px;
+    padding:22px;margin:16px 0;text-align:center;
+    background-image:linear-gradient(#fff,#fff),linear-gradient(135deg,#3ad1c6,#2b8cff,#b06bff);
+    background-origin:border-box;background-clip:padding-box,border-box;
+    box-shadow:0 8px 22px rgba(43,140,255,.15);}
+  .result.show{display:block;}
+  .result .score{font-size:2.8rem;font-weight:900;
+    background:linear-gradient(135deg,#2b8cff,#b06bff);-webkit-background-clip:text;
+    background-clip:text;-webkit-text-fill-color:transparent;}
+  .result .sub{color:var(--gray);font-size:.95rem;}
+  .result .bd{display:flex;justify-content:center;gap:18px;margin-top:12px;flex-wrap:wrap;font-size:.95rem;}
+  .result .bd span{font-weight:800;}
+  .hint{text-align:center;font-size:.85rem;color:var(--gray);margin-top:9px;min-height:1.2em;}
+  footer{text-align:center;color:var(--gray);font-size:.8rem;margin:24px 0;}
+</style>
+</head>
+<body>
+<a href="tongce.html" style="position:fixed;top:12px;left:12px;background:rgba(255,255,255,.92);color:#2b8cff;padding:7px 15px;border-radius:20px;text-decoration:none;font-size:.85rem;font-weight:800;z-index:999;box-shadow:0 3px 10px rgba(0,0,0,.15);">&#8592; 回題庫</a>
+<div class="wrap">
+  <header class="top">
+    <h1>統測英文　<span style="opacity:.9">模擬考卷 N</span></h1>
+    <p>科技校院四年制與專科學校二年制統一入學測驗　共同科目：英文（模擬）</p>
+    <div class="meta">選擇題共 42 題，每題 2 分，共 84 分　|　每題選擇答案後立即顯示解析　|　送出後顯示總分與作答統計</div>
+  </header>
+
+  <div class="sticky">
+    <div class="bar">
+      <span>作答進度</span>
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <span id="count">0 / 42</span>
+    </div>
+  </div>
+
+  <form id="quiz"></form>
+
+  <div class="result" id="result">
+    <div class="score" id="scoreNum">0</div>
+    <div class="sub" id="scoreTxt">分</div>
+    <div class="bd">
+      <span style="color:var(--green)">答對 <b id="rOk">0</b></span>
+      <span style="color:var(--red)">答錯 <b id="rNo">0</b></span>
+      <span style="color:var(--gray)">未作答 <b id="rBlank">0</b></span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="submit" id="submitBtn">交卷並查看總分</button>
+    <div class="hint" id="hint">尚未作答任何題目</div>
+    <button type="button" class="reset" id="resetBtn">重新作答</button>
+  </div>
+
+  <div class="section-title s2" style="margin-top:30px;">二、非選擇題（共 16 分，點擊查看答案與解析）</div>
+  <div id="written"></div>
+
+  <footer>統測英文模擬考卷 N　&middot;　第二顆腦 / 統測</footer>
+</div>
+
+<script>
+const PARTS = [{"title": "Ⅰ　字彙題", "desc": "共 10 題。第 1–8 題為單字選填；第 9–10 題為劃線字詞同義詞選擇。"}, {"title": "Ⅱ　對話題", "desc": "共 10 題，請依對話內容選出一個最適合的答案。"}, {"title": "Ⅲ　綜合測驗", "desc": "共 8 題，兩篇短文各 4 個空格，請依文意選出最適合的答案。"}, {"title": "Ⅳ　閱讀測驗", "desc": "共 14 題，請依短文內容選出最適當的答案。"}];
+const PASSAGES = {"21": "<div class=\"passage\"><h3>第 21–24 題</h3>\nWhen Alexander Graham Bell patented the telephone in 1876, few people <span class=\"blk\">21</span> imagine how completely it would change the way people communicate. In its early years, telephone service was expensive and limited mainly to businesses, and callers often had to speak to an operator <span class=\"blk\">22</span> their call could be connected. Over time, as technology improved and costs dropped, telephones <span class=\"blk\">23</span> common in homes across many countries. Today, smartphones, <span class=\"blk\">24</span> are essentially small computers capable of making calls, have largely replaced traditional telephones in many parts of the world.</div>", "25": "<div class=\"passage\"><h3>第 25–28 題</h3>\nForests play a crucial role in regulating the Earth's climate, <span class=\"blk\">25</span> carbon dioxide from the atmosphere and storing it in trees and soil. When large areas of forest are cut down, not only is this carbon storage capacity lost, but the carbon previously stored in the trees may also be released back into the atmosphere, <span class=\"blk\">26</span> to climate change. In addition to their role in the carbon cycle, forests help maintain local rainfall patterns and provide habitats for countless species of plants and animals, many of <span class=\"blk\">27</span> have not yet been studied by scientists. For these reasons, many environmental organizations argue that protecting existing forests should be considered <span class=\"blk\">28</span> important as planting new trees.</div>", "29": "<div class=\"passage\"><h3>第 29–30 題</h3>\n<b>Notice</b><br><br>Starting next month, the office will introduce a new recycling program. Separate bins for paper, plastic, and aluminum cans will be placed on each floor near the elevators. Employees are asked to rinse containers before recycling them. Questions about the program can be directed to the facilities office.</div>", "31": "<div class=\"passage\"><h3>第 31–32 題</h3>\n<b>Text Messages</b><br><br>Tina: Hey, are we still meeting in the library at 4? Jake: Actually, the library is full today. Can we meet at the café instead? Tina: Sure, that works. See you there. Jake: Great, see you soon.</div>", "33": "<div class=\"passage\"><h3>第 33–35 題</h3>\nIn recent years, subscription-based services have become increasingly common, covering everything from streaming video and music to meal kits, clothing, and even razors. Rather than purchasing a product outright, customers pay a recurring fee, usually monthly, in exchange for ongoing access to a service or regular deliveries of a product. Companies often favor this model because it provides a more predictable stream of revenue and can encourage long-term customer loyalty. For consumers, subscriptions can offer convenience and sometimes lower costs compared to making individual purchases. However, consumer advocates have raised concerns that subscription services are sometimes designed to make canceling difficult, requiring customers to call a phone number or navigate multiple screens, while signing up can often be done with a single click. In response to these concerns, some governments have introduced regulations requiring companies to make the cancellation process as easy as the sign-up process.</div>", "36": "<div class=\"passage\"><h3>第 36–38 題</h3>\nTravelers who cross multiple time zones often experience jet lag, a temporary condition that can cause fatigue, difficulty concentrating, and disrupted sleep patterns. Jet lag occurs because the body's internal clock, which regulates when we feel sleepy or alert, becomes out of sync with the new time zone's day-night cycle. Generally, the more time zones a traveler crosses, the more severe the jet lag tends to be, and traveling eastward tends to produce more noticeable effects than traveling westward, since it is often easier for the body to delay its schedule than to advance it. To reduce the effects of jet lag, some experts recommend gradually adjusting sleep schedules in the days before a trip, staying hydrated during the flight, and spending time outdoors in natural light upon arrival, since sunlight helps reset the body's internal clock. While jet lag cannot be entirely avoided on long trips, these strategies may help travelers adjust more quickly to their new time zone.</div>", "39": "<div class=\"passage\"><h3>第 39–42 題</h3>\nLeo worked at a large company located far from public transportation, and many of his coworkers complained about the high cost of driving to work alone every day. Leo, who lived near several of his coworkers, suggested that they take turns driving each other to work, splitting the cost of gas and reducing the number of cars on the road. At first, only three coworkers participated, taking turns driving once a week. As more people heard about the arrangement and asked to join, Leo created a simple online sign-up sheet where coworkers could list their neighborhood and preferred schedule, making it easier to match people who lived near each other. Within a few months, more than twenty employees were participating in the carpool program, and the company began offering reserved parking spots near the entrance for carpool vehicles as an incentive. Leo now updates the sign-up sheet each month and helps new employees find a carpool group close to their home.</div>"};
+const Q = [{"n": 1, "p": 0, "stem": "Scientists are working to _____ a cure for the disease.", "o": ["deliver", "develop", "deserve", "describe"], "a": 1, "exp": "(B) develop（研發）✓ 科學家正致力於「研發」這種疾病的療法，\"develop a cure\" 為常見搭配。\n❌ (A) deliver = 傳遞、發表，不接 a cure 表「研發」之意。\n❌ (C) deserve = 應得，文意不通。\n❌ (D) describe = 描述，文意不通。"}, {"n": 2, "p": 0, "stem": "The bridge was _____ due to structural damage after the earthquake.", "o": ["cleaned", "climbed", "closed", "carried"], "a": 2, "exp": "(C) closed（關閉）✓ 地震後因結構受損，橋樑被「關閉」。\n❌ (A) cleaned = 被清潔，文意不通。\n❌ (B) climbed = 被攀爬，文意不通。\n❌ (D) carried = 被搬運，文意不通。"}, {"n": 3, "p": 0, "stem": "The teacher gave clear _____ on how to complete the assignment.", "o": ["intentions", "instructions", "impressions", "inventions"], "a": 1, "exp": "(B) instructions（指示、說明）✓ 老師給予清楚的「指示」說明如何完成作業，\"give instructions on\" 為常見搭配。\n❌ (A) intentions = 意圖，文意不通。\n❌ (C) impressions = 印象，文意不通。\n❌ (D) inventions = 發明，文意不通。"}, {"n": 4, "p": 0, "stem": "The volunteers were _____ for their dedication to helping the community.", "o": ["recovered", "recorded", "recognized", "reduced"], "a": 2, "exp": "(C) recognized（被表揚、被認可）✓ \"be recognized for\" 表「因……而受到表揚」，志工因對社區的奉獻而受到表揚。\n❌ (A) recovered = 恢復，文意不通。\n❌ (B) recorded = 被記錄，文意不通。\n❌ (D) reduced = 被減少，文意不通。"}, {"n": 5, "p": 0, "stem": "The flight was _____ because of bad weather conditions.", "o": ["declared", "delayed", "divided", "doubled"], "a": 1, "exp": "(B) delayed（延誤）✓ 班機因惡劣天氣「延誤」。\n❌ (A) declared = 被宣布，文意不通。\n❌ (C) divided = 被分割，文意不通。\n❌ (D) doubled = 加倍，文意不通。"}, {"n": 6, "p": 0, "stem": "He tried to _____ his fear of public speaking by practicing every day.", "o": ["overlook", "overturn", "overcome", "overhear"], "a": 2, "exp": "(C) overcome（克服）✓ 他試圖透過每天練習來「克服」對公開演講的恐懼，\"overcome fear\" 為常見搭配。\n❌ (A) overlook = 忽視，文意不通。\n❌ (B) overturn = 推翻，文意不通。\n❌ (D) overhear = 偷聽到，文意不通。"}, {"n": 7, "p": 0, "stem": "The factory implements strict procedures to _____ contamination of food products.", "o": ["present", "preserve", "pretend", "prevent"], "a": 3, "exp": "(D) prevent（防止）✓ 工廠實施嚴格程序以「防止」食品受到污染，\"prevent contamination\" 為常見搭配。\n❌ (A) present = 呈現，文意不通。\n❌ (B) preserve = 保存（preserve food 較常見，但 preserve contamination 不合邏輯）。\n❌ (C) pretend = 假裝，文意不通。"}, {"n": 8, "p": 0, "stem": "The committee will _____ the proposal at next week's meeting.", "o": ["disturb", "discuss", "disappear", "discover"], "a": 1, "exp": "(B) discuss（討論）✓ 委員會將在下週的會議上「討論」該提案。\n❌ (A) disturb = 打擾，文意不通。\n❌ (C) disappear = 消失（不及物動詞），不接受詞。\n❌ (D) discover = 發現，文意不通。"}, {"n": 9, "p": 0, "stem": "The athlete's <i>remarkable</i> performance impressed everyone at the competition.", "o": ["ordinary", "careless", "brief", "extraordinary"], "a": 3, "exp": "(D) extraordinary（非凡的）✓ *remarkable* 意為「非凡的、卓越的」，與 extraordinary 同義，該選手非凡的表現讓所有人印象深刻。\n❌ (A) ordinary = 普通的，意思相反。\n❌ (B) careless = 粗心的，語意不符。\n❌ (C) brief = 簡短的，語意不符。"}, {"n": 10, "p": 0, "stem": "The negotiations between the two companies were <i>terminated</i> after months of disagreement.", "o": ["extended", "recorded", "celebrated", "ended"], "a": 3, "exp": "(D) ended（結束）✓ *terminated* 意為「終止、結束」，與 ended 同義，兩家公司經過數月分歧後，談判「結束」了。\n❌ (A) extended = 延長，意思相反。\n❌ (B) recorded = 被記錄，語意不符。\n❌ (C) celebrated = 被慶祝，語意不符。"}, {"n": 11, "p": 1, "stem": "Customer: Could I get a latte with oat milk instead of regular milk?<br>Barista: _____<br>Customer: Perfect, thank you.", "o": ["We're out of oat milk today, I'm afraid.", "Sure, that's no problem at all.", "We don't make lattes here.", "Oat milk costs extra, is that okay?"], "a": 1, "exp": "(B) Sure, that's no problem at all. ✓ 咖啡師答應無條件更換成燕麥奶，顧客回應「太好了，謝謝」，文意連貫。\n❌ (A) 「我們今天燕麥奶用完了」與顧客回應「太好了」矛盾。\n❌ (C) 「我們這裡不做拿鐵」與顧客的訂購要求矛盾。\n❌ (D) 「燕麥奶要加價，可以嗎？」需要顧客進一步確認，但顧客直接回應「太好了，謝謝」而非回答是否同意加價，文意不如 (B) 連貫。"}, {"n": 12, "p": 1, "stem": "Customer: My car is making a strange noise when I brake.<br>Mechanic: _____<br>Customer: Okay, how long will that take?", "o": ["That's probably nothing to worry about.", "We'll need to take a look at the brake pads.", "We don't repair cars here.", "You should sell the car."], "a": 1, "exp": "(B) We'll need to take a look at the brake pads. ✓ 技師說明需要檢查煞車片，顧客接著問「那需要多久時間？」，文意連貫。\n❌ (A) 「這應該沒什麼好擔心的」與顧客接著詢問「需要多久」不連貫（暗示不需要進一步動作）。\n❌ (C) 「我們這裡不修車」與後續討論維修時間矛盾。\n❌ (D) 「你應該把車賣掉」未回應顧客問題，且與後續「需要多久」不連貫。"}, {"n": 13, "p": 1, "stem": "Customer: Can I exchange this for a different color?<br>Clerk: _____<br>Customer: Great, I'll take the blue one.", "o": ["We don't do exchanges.", "Sure, what color would you like instead?", "That item is out of stock everywhere.", "You'll need to pay a fee for that."], "a": 1, "exp": "(B) Sure, what color would you like instead? ✓ 店員詢問想換的顏色，顧客回答「我要藍色」，文意連貫。\n❌ (A) 「我們不接受換貨」與顧客接著選擇藍色矛盾。\n❌ (C) 「該商品全面缺貨」與顧客接著能選到藍色矛盾。\n❌ (D) 「需要支付額外費用」未詢問顧客想要的顏色，與「我要藍色」不直接呼應。"}, {"n": 14, "p": 1, "stem": "Classmate A: Have the groups for the presentation been decided yet?<br>Classmate B: _____<br>Classmate A: Okay, I'll check the list later then.", "o": ["The presentation was canceled.", "Not yet, the teacher will post them tomorrow.", "We're not having groups this time.", "I already finished my presentation."], "a": 1, "exp": "(B) Not yet, the teacher will post them tomorrow. ✓ B 表示分組名單尚未公布，明天會公布，A 回應「好，我之後再去看名單」，文意連貫。\n❌ (A) 「報告被取消了」與 A 接著要查看名單的動作矛盾。\n❌ (C) 「這次不分組」與 A 詢問「分組是否已決定」矛盾。\n❌ (D) 「我已經做完報告了」未回應分組是否決定的問題。"}, {"n": 15, "p": 1, "stem": "Guest: Is it possible to get a late checkout?<br>Receptionist: _____<br>Guest: That works for me, thanks.", "o": ["Checkout is always at 9 AM with no exceptions.", "We can offer a late checkout until 1 PM for a small fee.", "The hotel is fully booked tonight.", "You'll have to leave immediately."], "a": 1, "exp": "(B) We can offer a late checkout until 1 PM for a small fee. ✓ 接待員提供延遲退房至 1 點的選項，房客回應「這樣可以，謝謝」，文意連貫。\n❌ (A) 「退房時間一律是上午 9 點，無例外」與房客接受延遲退房的回應矛盾。\n❌ (C) 「今晚已經客滿」與延遲退房的請求無關。\n❌ (D) 「您必須立刻離開」與房客回應「這樣可以」矛盾。"}, {"n": 16, "p": 1, "stem": "Patient: Have my test results come back yet?<br>Receptionist: _____<br>Patient: Okay, I'll wait for the call then.", "o": ["The doctor will call you once they're ready.", "We don't perform tests here.", "Your results were lost.", "You need to schedule another test."], "a": 0, "exp": "(A) The doctor will call you once they're ready. ✓ 接待員表示結果出來後醫生會打電話通知，病人回應「好，那我等電話」，文意連貫。\n❌ (B) 「我們這裡不做檢驗」與病人詢問檢驗結果的情境矛盾。\n❌ (C) 「您的檢驗結果遺失了」與「我等電話」不連貫（暗示無法等待結果）。\n❌ (D) 「您需要再預約一次檢驗」與「我等電話」不連貫。"}, {"n": 17, "p": 1, "stem": "Coworker A: Have you tried the new scheduling software yet?<br>Coworker B: _____<br>Coworker A: I felt the same way at first, but it gets easier.", "o": ["I haven't heard of any new software.", "Yes, it's a bit confusing at first.", "The software was removed last week.", "I don't use computers at work."], "a": 1, "exp": "(B) Yes, it's a bit confusing at first. ✓ B 表示一開始覺得有點令人困惑，A 回應「我一開始也有同感，但之後會變容易」，文意連貫。\n❌ (A) 「我沒聽過什麼新軟體」與 A 接著說「我一開始也有同感」不連貫（A 的回應暗示 B 已嘗試使用過）。\n❌ (C) 「軟體上週被移除了」與 A 接著鼓勵的回應矛盾。\n❌ (D) 「我工作不用電腦」與話題（嘗試新排程軟體）矛盾。"}, {"n": 18, "p": 1, "stem": "Customer: We have a reservation for six people under the name Chen.<br>Host: _____<br>Customer: Thank you.", "o": ["I'm sorry, we have no reservations today.", "Right this way, your table is ready.", "We don't accept reservations.", "Six people is too many for one table."], "a": 1, "exp": "(B) Right this way, your table is ready. ✓ 領檯人員確認並引導入座，顧客回應「謝謝」，文意連貫。\n❌ (A) 「很抱歉，我們今天沒有任何預訂」與顧客回應「謝謝」（暗示得到正面回應）不連貫。\n❌ (C) 「我們不接受預訂」與顧客提到「我們有預訂」矛盾。\n❌ (D) 「六個人對一桌來說太多了」與顧客回應「謝謝」不連貫。"}, {"n": 19, "p": 1, "stem": "Customer: How long will it take for this package to arrive in Taipei?<br>Clerk: _____<br>Customer: That's faster than I expected.", "o": ["It usually takes about two business days.", "We don't ship to Taipei.", "Packages are not allowed at this counter.", "It will take at least a month."], "a": 0, "exp": "(A) It usually takes about two business days. ✓ 店員告知約需兩個工作日，顧客回應「比我預期的快」，文意連貫。\n❌ (B) 「我們不寄送到台北」與顧客詢問送達時間矛盾。\n❌ (C) 「這個櫃台不收包裹」與情境矛盾。\n❌ (D) 「至少需要一個月」會讓顧客覺得「比預期慢」，與「比我預期的快」矛盾。"}, {"n": 20, "p": 1, "stem": "Friend A: Do you have any plans for the weekend?<br>Friend B: _____<br>Friend A: That sounds relaxing. Enjoy!", "o": ["I have to work both days.", "I'm just going to stay home and read.", "I'm not sure what a weekend is.", "I already finished my plans."], "a": 1, "exp": "(B) I'm just going to stay home and read. ✓ B 表示打算待在家看書，A 回應「聽起來很放鬆，好好享受！」，文意連貫。\n❌ (A) 「我兩天都要上班」與「聽起來很放鬆」不連貫。\n❌ (C) 「我不確定什麼是週末」文意荒謬，與情境不符。\n❌ (D) 「我已經完成我的計畫了」語意不清，未具體說明計畫內容，與「聽起來很放鬆」不直接呼應。"}, {"n": 21, "p": 2, "stem": "(21)", "o": ["could", "would", "should", "might"], "a": 0, "exp": "(A) could ✓ 表示過去的能力「能夠」，符合「當時很少人能想像」的文意，並與全文過去時態一致。\n❌ (B) would 表示「會」，用於描述意願或假設結果，不表「過去的能力」。\n❌ (C) should 表「應該」，文意不合。\n❌ (D) might 表「可能」，與「能夠想像」的語意不完全相符，且不如 could 自然。"}, {"n": 22, "p": 2, "stem": "(22)", "o": ["before", "until", "since", "after"], "a": 0, "exp": "(A) before ✓ \"before their call could be connected\"（在電話被接通之前），符合「先講話、後接通」的時間順序。\n❌ (B) until = 直到，\"speak to an operator until...\" 語意變成「一直講話直到電話被接通」，與實際流程（先講話、再接通）不符。\n❌ (C) since = 自從，文意不合。\n❌ (D) after = 之後，\"speak to an operator after their call could be connected\" 與實際流程順序相反。"}, {"n": 23, "p": 2, "stem": "(23)", "o": ["become", "became", "becoming", "becomes"], "a": 1, "exp": "(B) became ✓ 過去式，與 \"Over time, as technology improved and costs dropped\" 的過去時態一致。\n❌ (A) become 為原形動詞，不可單獨作主要動詞。\n❌ (C) becoming 為現在分詞，不可單獨作主要動詞。\n❌ (D) becomes 為現在式，與全文過去時態不一致。"}, {"n": 24, "p": 2, "stem": "(24)", "o": ["which", "who", "what", "whom"], "a": 0, "exp": "(A) which ✓ 非限定關係子句中指代「事物」（smartphones）的主格關係代名詞。\n❌ (B) who／(D) whom 用於指「人」，smartphones 為事物，不可使用。\n❌ (C) what 本身已包含先行詞，不可用於有先行詞（smartphones）的關係子句。"}, {"n": 25, "p": 2, "stem": "(25)", "o": ["absorb", "absorbing", "absorbed", "to absorb"], "a": 1, "exp": "(B) absorbing ✓ 與 storing 並列的現在分詞，構成分詞構句。\n❌ (A) absorb 為原形動詞，不可單獨作分詞構句。\n❌ (C) absorbed 為過去分詞，主動「吸收」應用現在分詞而非過去分詞。\n❌ (D) to absorb 不定詞不符合與 storing 並列的結構。"}, {"n": 26, "p": 2, "stem": "(26)", "o": ["contribute", "contributing", "contributed", "to contribute"], "a": 1, "exp": "(B) contributing ✓ 現在分詞構句，表示前述動作導致的結果。\n❌ (A) contribute 為原形動詞，不可單獨作分詞構句。\n❌ (C) contributed 為過去分詞，\"contribute to\" 為主動意義（造成），不應用過去分詞。\n❌ (D) to contribute 不定詞在此處不符合分詞構句的用法。"}, {"n": 27, "p": 2, "stem": "(27)", "o": ["which", "whom", "them", "those"], "a": 0, "exp": "(A) which ✓ \"many of which\" 代替前述事物（物種），引導關係子句。\n❌ (B) whom 用於指「人」，species 為事物，不可使用。\n❌ (C) them／(D) those 為人稱代詞／指示代詞，不可置於 \"many of ___\" 之後形成關係子句結構。"}, {"n": 28, "p": 2, "stem": "(28)", "o": ["as", "so", "too", "very"], "a": 0, "exp": "(A) as ✓ 與後面的 as 構成 \"as...as\"（同等比較）句型。\n❌ (B) so 不可與後面的 as 構成此比較句型（\"so...as\" 用法不同，多用於否定句 \"not so...as\"）。\n❌ (C) too／(D) very 為程度副詞，不能與後面的 as 構成同等比較句型。"}, {"n": 29, "p": 3, "stem": "What is the office introducing next month?", "o": ["A new parking policy.", "A new recycling program.", "A new cafeteria menu.", "A new dress code."], "a": 1, "exp": "(B) A new recycling program. ✓ 公告開頭明確指出 \"the office will introduce a new recycling program\"。\n❌ (A) 公告未提到停車政策。\n❌ (C) 公告未提到自助餐廳菜單。\n❌ (D) 公告未提到服裝規定。"}, {"n": 30, "p": 3, "stem": "What are employees asked to do before recycling containers?", "o": ["Label them with their name.", "Rinse them.", "Crush them.", "Take them home."], "a": 1, "exp": "(B) Rinse them. ✓ 公告明確指出 \"Employees are asked to rinse containers before recycling them\"。\n❌ (A) 公告未提到貼上姓名標籤。\n❌ (C) 公告未提到壓扁容器。\n❌ (D) 公告未提到帶回家。"}, {"n": 31, "p": 3, "stem": "Why does Jake suggest changing the meeting location?", "o": ["The library is closed.", "The library is full today.", "He doesn't like the library.", "The café is closer to his house."], "a": 1, "exp": "(B) The library is full today. ✓ Jake 明確說 \"the library is full today\"。\n❌ (A) 對話未提到圖書館關閉。\n❌ (C) 對話未提到 Jake 不喜歡圖書館。\n❌ (D) 對話未提到咖啡廳離他家比較近。"}, {"n": 32, "p": 3, "stem": "Where will Tina and Jake meet?", "o": ["At the library.", "At Jake's house.", "At the café.", "At Tina's house."], "a": 2, "exp": "(C) At the café. ✓ Jake 提議改在咖啡廳見面，Tina 回應 \"Sure, that works. See you there.\"。\n❌ (A) 原本約定的地點是圖書館，但已改變。\n❌ (B)／(D) 對話未提到在 Jake 或 Tina 家見面。"}, {"n": 33, "p": 3, "stem": "What is one reason companies favor the subscription model, according to the passage?", "o": ["It requires no advertising.", "It provides a more predictable stream of revenue.", "It eliminates the need for customer service.", "It allows companies to avoid taxes."], "a": 1, "exp": "(B) It provides a more predictable stream of revenue. ✓ 文中明確指出 \"it provides a more predictable stream of revenue and can encourage long-term customer loyalty\"。\n❌ (A) 文章未提到不需要廣告。\n❌ (C) 文章未提到不需要客服。\n❌ (D) 文章未提到避稅。"}, {"n": 34, "p": 3, "stem": "What concern have consumer advocates raised about subscription services?", "o": ["They are too expensive for most people.", "Canceling is sometimes made difficult.", "They are illegal in most countries.", "They only offer one type of product."], "a": 1, "exp": "(B) Canceling is sometimes made difficult. ✓ 文中指出 \"subscription services are sometimes designed to make canceling difficult\"。\n❌ (A) 文章未說訂閱服務對大多數人來說太貴。\n❌ (C) 文章未提到訂閱服務在多數國家屬於非法。\n❌ (D) 文章開頭即列舉多種訂閱服務類型，並非只有一種。"}, {"n": 35, "p": 3, "stem": "What have some governments done in response to these concerns?", "o": ["Banned subscription services entirely.", "Required companies to make canceling as easy as signing up.", "Required companies to offer free trials.", "Limited the number of subscriptions a person can have."], "a": 1, "exp": "(B) Required companies to make canceling as easy as signing up. ✓ 文末指出 \"some governments have introduced regulations requiring companies to make the cancellation process as easy as the sign-up process\"。\n❌ (A) 文章未提到完全禁止訂閱服務。\n❌ (C) 文章未提到要求提供免費試用。\n❌ (D) 文章未提到限制訂閱數量。"}, {"n": 36, "p": 3, "stem": "What causes jet lag, according to the passage?", "o": ["The body's internal clock becomes out of sync with the new time zone.", "Drinking too much water during a flight.", "Eating unfamiliar food while traveling.", "Sitting for too long during a flight."], "a": 0, "exp": "(A) The body's internal clock becomes out of sync with the new time zone. ✓ 文中指出 \"Jet lag occurs because the body's internal clock...becomes out of sync with the new time zone's day-night cycle\"。\n❌ (B) 文章未提到飛行中喝太多水。\n❌ (C) 文章未提到吃不熟悉的食物。\n❌ (D) 文章未提到久坐的問題。"}, {"n": 37, "p": 3, "stem": "According to the passage, which direction of travel tends to produce more noticeable jet lag effects?", "o": ["Traveling westward.", "Traveling eastward.", "Both directions equally.", "Neither direction causes jet lag."], "a": 1, "exp": "(B) Traveling eastward. ✓ 文中明確指出 \"traveling eastward tends to produce more noticeable effects than traveling westward\"。\n❌ (A) 文章說西向的效應較不明顯。\n❌ (C)／(D) 文章明確區分兩個方向的不同效應，並非「相同」或「皆無時差」。"}, {"n": 38, "p": 3, "stem": "What do some experts recommend to reduce the effects of jet lag?", "o": ["Avoiding sunlight after arrival.", "Sleeping as much as possible during the flight.", "Spending time outdoors in natural light upon arrival.", "Eating a large meal before departure."], "a": 2, "exp": "(C) Spending time outdoors in natural light upon arrival. ✓ 文中指出 \"spending time outdoors in natural light upon arrival, since sunlight helps reset the body's internal clock\"。\n❌ (A) 文章建議的是「到達後在自然光下活動」，並非避免陽光。\n❌ (B) 文章未建議在飛行中盡量睡覺。\n❌ (D) 文章未建議出發前吃大餐。"}, {"n": 39, "p": 3, "stem": "Why did Leo suggest a carpool arrangement?", "o": ["He wanted to avoid paying for parking.", "Coworkers complained about the high cost of driving alone.", "The company required employees to carpool.", "He didn't have a car of his own."], "a": 1, "exp": "(B) Coworkers complained about the high cost of driving alone. ✓ 文章開頭說明許多同事抱怨「每天獨自開車上班的成本太高」。\n❌ (A) 文章未提到 Leo 想避免支付停車費。\n❌ (C) 文章未提到公司要求員工共乘。\n❌ (D) 文章未提到 Leo 沒有自己的車（事實上他提議輪流開車）。"}, {"n": 40, "p": 3, "stem": "How did Leo make it easier for more coworkers to join the carpool program?", "o": ["He bought a van for the company.", "He created an online sign-up sheet listing neighborhoods and schedules.", "He asked the city to build a new bus route.", "He required everyone to live in the same neighborhood."], "a": 1, "exp": "(B) He created an online sign-up sheet listing neighborhoods and schedules. ✓ 文中指出 \"Leo created a simple online sign-up sheet where coworkers could list their neighborhood and preferred schedule\"。\n❌ (A) 文章未提到他為公司買了一輛廂型車。\n❌ (C) 文章未提到請市政府增設公車路線。\n❌ (D) 文章未要求所有人住在同一個社區。"}, {"n": 41, "p": 3, "stem": "What did the company do as an incentive for carpool vehicles?", "o": ["Gave employees a pay raise.", "Offered reserved parking spots near the entrance.", "Paid for everyone's gas.", "Reduced working hours for carpool participants."], "a": 1, "exp": "(B) Offered reserved parking spots near the entrance. ✓ 文中指出 \"the company began offering reserved parking spots near the entrance for carpool vehicles as an incentive\"。\n❌ (A) 文章未提到加薪。\n❌ (C) 文章未提到公司支付所有人的油錢。\n❌ (D) 文章未提到縮短工時。"}, {"n": 42, "p": 3, "stem": "What does Leo do now each month?", "o": ["He drives every coworker to work himself.", "He updates the sign-up sheet and helps new employees find groups.", "He no longer participates in the program.", "He charges coworkers a fee to join. ---"], "a": 1, "exp": "(B) He updates the sign-up sheet and helps new employees find groups. ✓ 文末指出 \"Leo now updates the sign-up sheet each month and helps new employees find a carpool group close to their home\"。\n❌ (A) 文章說明是「共乘」（輪流開車），並非他親自接送每位同事。\n❌ (C) 文章說明他「持續」參與，並非不再參與。\n❌ (D) 文章未提到向同事收費。"}];
+const WRITTEN = [{"title": "Ⅰ. 填充（4 分）", "prompt": "說明：請依中文提示，將空格 ①、② 答案之完整單字（含提示之字首）填入答案區。每格限填一字。<br><span class=\"blankline\">1. 保持積極的態度可以幫助我們克服生活中的困難。</span>", "ans": "① <b>positive</b>　② <b>overcome</b>", "exp": "① positive（積極的）：句中 \"a p___ attitude\" 對應中文「積極的態度」，字首為 p，即 positive。\n② overcome（克服）：\"help us o___ difficulties\" 對應中文「克服困難」，字首為 o，即 overcome。"}, {"title": "Ⅱ. 句子重組（6 分）", "prompt": "請將下列提示字詞重組成一句完整的句子，並於句尾加上適當標點符號：<br><i>說明：請將下列詞組重組成一個正確、通順的句子，並於句尾加上適當標點符號。</i>", "ans": "Air pollution is becoming a serious problem in many cities.", "exp": "\"is becoming\" 為現在進行時，表示「正逐漸變成」。\n\"more and more\" 修飾 \"a serious problem\"，意為「越來越嚴重的問題」。\n\"in many cities\" 為地方副詞片語，置於句尾。"}, {"title": "Ⅲ. 中譯英（6 分）", "prompt": "請將以下中文句子譯成正確、通順、達意的英文：<br>說明：請將以下中文句子譯成正確、通順、達意的英文。", "ans": "If everyone saves water, we can avoid a water shortage.", "exp": "「如果……」用 \"if\" 引導條件句，主詞 everyone 為單數，動詞用 saves。\n「節約用水」譯為 \"save water\"。\n「就能避免水資源短缺」譯為 \"we can avoid a water shortage\"，\"shortage\" 意為「短缺」。"}];
+const TOTAL = Q.length;
+
+/* ====== 產生選擇題畫面 ====== */
+const form = document.getElementById('quiz');
+let lastPart = -1;
+Q.forEach(q=>{
+  if(q.p!==lastPart){
+    const st=document.createElement('div'); st.className='section-title s'+q.p; st.textContent=PARTS[q.p].title;
+    const sd=document.createElement('div'); sd.className='section-desc'; sd.textContent=PARTS[q.p].desc;
+    form.appendChild(st); form.appendChild(sd); lastPart=q.p;
+  }
+  if(PASSAGES[q.n]){ const d=document.createElement('div'); d.innerHTML=PASSAGES[q.n]; form.appendChild(d.firstChild); }
+  const card=document.createElement('div'); card.className='q'; card.id='q'+q.n;
+  const isBlank=/^\(\d+\)$/.test(q.stem);
+  const stemHtml = isBlank ? `第 ${q.n} 格` : q.stem;
+  card.innerHTML=`<div class="stem"><span class="num">${q.n}</span>${stemHtml}</div>`;
+  q.o.forEach((opt,i)=>{
+    const lab=document.createElement('label'); lab.className='opt'; lab.dataset.i=i;
+    lab.innerHTML=`<input type="radio" name="q${q.n}" value="${i}"><span class="lab">${'ABCD'[i]}</span><span>${opt}</span>`;
+    lab.querySelector('input').addEventListener('change',()=>{
+      pickAnswer(q,i);
+    });
+    card.appendChild(lab);
+  });
+  const exp=document.createElement('div'); exp.className='exp'; exp.id='exp'+q.n;
+  card.appendChild(exp);
+  form.appendChild(card);
+});
+
+const submitBtn=document.getElementById('submitBtn');
+const resetBtn=document.getElementById('resetBtn');
+const hint=document.getElementById('hint');
+let submitted=false;
+
+/* 選擇答案後立即鎖定並顯示該題解析 */
+function pickAnswer(q,pick){
+  const card=document.getElementById('q'+q.n);
+  card.querySelectorAll('.opt').forEach(o=>{
+    o.classList.add('lock');
+    o.querySelector('input').disabled=true;
+    const i=parseInt(o.dataset.i);
+    if(i===pick) o.classList.add('sel');
+    if(i===q.a) o.classList.add('correct');
+    if(i===pick && pick!==q.a) o.classList.add('wrong');
+  });
+  const correct = pick===q.a;
+  const exp=document.getElementById('exp'+q.n);
+  const tag = correct ? '答對' : '答錯';
+  exp.innerHTML=`<span class="tag ${correct?'':'miss'}">${tag}　正解：${'ABCD'[q.a]}</span>
+    <div class="body">${q.exp}</div>`;
+  exp.classList.add('show');
+  updateProgress();
+}
+
+function answeredCount(){ let c=0; Q.forEach(q=>{ if(form.querySelector(`input[name="q${q.n}"]:checked`)) c++; }); return c; }
+function updateProgress(){
+  const c=answeredCount();
+  document.getElementById('count').textContent=`${c} / ${TOTAL}`;
+  document.getElementById('fill').style.width=(c/TOTAL*100)+'%';
+  if(submitted) return;
+  hint.textContent = c===TOTAL ? `已完成全部 ${TOTAL} 題，可以交卷查看總分了` : (c===0 ? '尚未作答任何題目（每題選擇後立即顯示解析）' : `已作答 ${c} 題，未作答 ${TOTAL-c} 題（可隨時交卷）`);
+}
+
+submitBtn.addEventListener('click',()=>{
+  let ok=0, blank=0;
+  Q.forEach(q=>{
+    const sel=form.querySelector(`input[name="q${q.n}"]:checked`);
+    const pick = sel ? parseInt(sel.value) : null;
+    const card=document.getElementById('q'+q.n);
+    if(pick===null){
+      blank++;
+      card.querySelectorAll('.opt').forEach(o=>{
+        o.classList.add('lock');
+        o.querySelector('input').disabled=true;
+        const i=parseInt(o.dataset.i);
+        if(i===q.a) o.classList.add('correct');
+      });
+      const exp=document.getElementById('exp'+q.n);
+      exp.innerHTML=`<span class="tag blank">未作答　正解：${'ABCD'[q.a]}</span>
+        <div class="body">${q.exp}</div>`;
+      exp.classList.add('show');
+    } else if(pick===q.a){
+      ok++;
+    }
+  });
+  const res=document.getElementById('result');
+  const score = ok*2;
+  document.getElementById('scoreNum').textContent=score;
+  document.getElementById('scoreTxt').textContent=`分（選擇題 / 84 分，答對 ${ok} / ${TOTAL} 題）`;
+  document.getElementById('rOk').textContent=ok;
+  document.getElementById('rNo').textContent=TOTAL-ok-blank;
+  document.getElementById('rBlank').textContent=blank;
+  res.classList.add('show');
+  submitted=true;
+  submitBtn.style.display='none'; hint.style.display='none'; resetBtn.style.display='block';
+  res.scrollIntoView({behavior:'smooth'});
+});
+
+resetBtn.addEventListener('click',()=>{
+  form.reset();
+  Q.forEach(q=>{
+    const card=document.getElementById('q'+q.n);
+    card.querySelectorAll('.opt').forEach(o=>{o.classList.remove('sel','correct','wrong','lock');o.querySelector('input').disabled=false;});
+    document.getElementById('exp'+q.n).classList.remove('show');
+  });
+  document.getElementById('result').classList.remove('show');
+  submitted=false;
+  submitBtn.style.display='block'; hint.style.display='block'; resetBtn.style.display='none';
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+/* ====== 非選擇題（點擊查看解析） ====== */
+const writtenDiv=document.getElementById('written');
+WRITTEN.forEach((w,idx)=>{
+  const card=document.createElement('div'); card.className='written';
+  card.innerHTML=`<h4>${w.title}</h4>
+    <div class="prompt">${w.prompt}</div>
+    <button type="button" class="reveal" id="wb${idx}">查看答案與解析</button>
+    <div class="ans" id="wa${idx}">
+      <span class="tag">參考答案</span>
+      <div class="body">${w.ans}</div>
+      <div class="body">${w.exp}</div>
+    </div>`;
+  writtenDiv.appendChild(card);
+  card.querySelector('#wb'+idx).addEventListener('click',()=>{
+    card.querySelector('#wa'+idx).classList.add('show');
+    card.querySelector('#wb'+idx).style.display='none';
+  });
+});
+
+updateProgress();
+</script>
+</body>
+</html>

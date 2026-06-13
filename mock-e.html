@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>統測英文模擬考卷 E</title>
+<style>
+  :root{
+    --blue:#2b8cff; --blue-dark:#1f6fe0;
+    --coral:#ff7a59; --amber:#ffb02e; --pink:#ff5d8f;
+    --bg:#f3f9ff; --card:#ffffff; --line:#e3edf9;
+    --green:#22b573; --green-bg:#e4f8ef;
+    --red:#ff5a5a; --red-bg:#ffecec;
+    --gray:#6b7785;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;
+    background:linear-gradient(180deg,#f0f7ff,#fff7f2 70%);color:#22303f;line-height:1.6;
+    font-size:16px;-webkit-text-size-adjust:100%;}
+  .wrap{max-width:760px;margin:0 auto;padding:16px;}
+  header.top{background:linear-gradient(135deg,#5ec6ff,#7d8bff 55%,#b88bff);color:#fff;
+    border-radius:18px;padding:24px 22px;margin-bottom:16px;box-shadow:0 8px 22px rgba(93,141,255,.3);}
+  header.top h1{margin:0 0 6px;font-size:1.5rem;text-shadow:0 1px 2px rgba(0,0,0,.12);}
+  header.top p{margin:0;font-size:.92rem;opacity:.95;}
+  .meta{margin-top:14px;font-size:.86rem;background:rgba(255,255,255,.22);
+    padding:9px 13px;border-radius:10px;}
+  .sticky{position:sticky;top:0;z-index:20;padding:10px 0;
+    background:linear-gradient(180deg,#f0f7ff 70%,rgba(240,247,255,0));}
+  .bar{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:11px 16px;display:flex;align-items:center;gap:12px;font-size:.9rem;
+    box-shadow:0 4px 12px rgba(43,140,255,.1);}
+  .bar .track{flex:1;height:9px;background:#e9f1fb;border-radius:6px;overflow:hidden;}
+  .bar .fill{height:100%;width:0;border-radius:6px;
+    background:linear-gradient(90deg,#3ad1c6,#2b8cff);transition:width .35s;}
+  .bar #count{font-weight:700;color:var(--blue-dark);}
+  .section-title{color:#fff;font-weight:800;border-radius:12px;
+    padding:10px 16px;margin:24px 0 6px;font-size:1.05rem;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);}
+  .section-title.s0{background:linear-gradient(135deg,#ff9a6c,#ff6f91);}
+  .section-title.s1{background:linear-gradient(135deg,#4dd0e1,#2b8cff);}
+  .section-title.s2{background:linear-gradient(135deg,#9b8bff,#b06bff);}
+  .section-title.s3{background:linear-gradient(135deg,#42d392,#22b573);}
+  .section-desc{font-size:.86rem;color:var(--gray);margin:0 4px 10px;}
+  .passage{background:#fffdf4;border:1px solid #ffe9c9;border-left:5px solid var(--amber);
+    border-radius:12px;padding:15px 17px;margin:14px 0;font-size:.95rem;
+    box-shadow:0 3px 10px rgba(255,176,46,.08);}
+  .passage h3{margin:0 0 8px;color:#e0820a;font-size:1rem;}
+  .passage .blk{display:inline-block;min-width:1.6em;text-align:center;font-weight:800;
+    color:#fff;background:var(--coral);border-radius:6px;padding:0 4px;margin:0 2px;font-size:.85rem;}
+  .email-h{font-size:.85rem;color:var(--gray);border-bottom:1px dashed #ffd9a8;
+    padding-bottom:6px;margin-bottom:8px;}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:15px 17px;margin:12px 0;box-shadow:0 3px 10px rgba(43,140,255,.07);}
+  .q .stem{font-weight:600;margin-bottom:10px;}
+  .q .stem .num{display:inline-block;color:#fff;background:var(--blue);font-weight:700;
+    border-radius:8px;padding:1px 9px;margin-right:8px;font-size:.92rem;}
+  .opt{display:flex;align-items:flex-start;gap:10px;border:2px solid var(--line);
+    border-radius:11px;padding:10px 13px;margin:8px 0;cursor:pointer;transition:.15s;
+    font-size:.95rem;background:#fbfdff;}
+  .opt:hover{border-color:var(--blue);background:#eef6ff;}
+  .opt input{margin-top:3px;accent-color:var(--blue);}
+  .opt .lab{font-weight:800;color:var(--blue);min-width:18px;}
+  .opt.sel{border-color:var(--blue);background:#e7f2ff;}
+  .opt.correct{border-color:var(--green);background:var(--green-bg);}
+  .opt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .opt.lock{cursor:default;}
+  .exp{display:none;margin-top:11px;border-top:2px dashed #ffe1c2;padding-top:11px;font-size:.9rem;}
+  .exp.show{display:block;}
+  .exp .tag{display:inline-block;font-weight:800;color:#fff;background:var(--green);
+    border-radius:7px;padding:2px 10px;font-size:.8rem;margin-bottom:7px;}
+  .exp .tag.miss{background:var(--red);}
+  .exp .tag.blank{background:var(--gray);}
+  .exp .body{color:#7a4a12;background:#fff7ea;border-radius:8px;padding:8px 11px;margin:5px 0;
+    white-space:pre-line;}
+  .written{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:15px 17px;margin:12px 0;box-shadow:0 3px 10px rgba(43,140,255,.07);}
+  .written h4{margin:0 0 8px;color:var(--blue-dark);font-size:1rem;}
+  .written .prompt{margin-bottom:10px;}
+  .written .blankline{display:inline-block;background:#fbfdff;border:1px dashed var(--line);
+    border-radius:8px;padding:6px 10px;margin-top:6px;}
+  .written button.reveal{background:#fff;color:var(--blue);border:2px solid var(--blue);
+    border-radius:10px;padding:8px 16px;font-weight:800;font-size:.9rem;cursor:pointer;}
+  .written .ans{display:none;margin-top:11px;border-top:2px dashed #ffe1c2;padding-top:11px;font-size:.92rem;}
+  .written .ans.show{display:block;}
+  .written .ans .tag{display:inline-block;font-weight:800;color:#fff;background:var(--blue);
+    border-radius:7px;padding:2px 10px;font-size:.8rem;margin-bottom:7px;}
+  .written .ans .body{color:#7a4a12;background:#fff7ea;border-radius:8px;padding:8px 11px;margin:5px 0;}
+  .actions{position:sticky;bottom:0;padding:14px 0 6px;margin-top:18px;
+    background:linear-gradient(transparent,#fff7f2 35%);}
+  button.submit{width:100%;color:#fff;border:0;border-radius:14px;padding:16px;
+    font-size:1.08rem;font-weight:800;cursor:pointer;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);
+    box-shadow:0 6px 16px rgba(255,93,143,.35);}
+  button.submit:active{transform:translateY(1px);}
+  button.reset{width:100%;background:#fff;color:var(--blue);border:2px solid var(--blue);
+    border-radius:14px;padding:14px;font-size:1rem;font-weight:800;cursor:pointer;margin-top:10px;display:none;}
+  .result{display:none;background:var(--card);border:3px solid transparent;border-radius:16px;
+    padding:22px;margin:16px 0;text-align:center;
+    background-image:linear-gradient(#fff,#fff),linear-gradient(135deg,#3ad1c6,#2b8cff,#b06bff);
+    background-origin:border-box;background-clip:padding-box,border-box;
+    box-shadow:0 8px 22px rgba(43,140,255,.15);}
+  .result.show{display:block;}
+  .result .score{font-size:2.8rem;font-weight:900;
+    background:linear-gradient(135deg,#2b8cff,#b06bff);-webkit-background-clip:text;
+    background-clip:text;-webkit-text-fill-color:transparent;}
+  .result .sub{color:var(--gray);font-size:.95rem;}
+  .result .bd{display:flex;justify-content:center;gap:18px;margin-top:12px;flex-wrap:wrap;font-size:.95rem;}
+  .result .bd span{font-weight:800;}
+  .hint{text-align:center;font-size:.85rem;color:var(--gray);margin-top:9px;min-height:1.2em;}
+  footer{text-align:center;color:var(--gray);font-size:.8rem;margin:24px 0;}
+</style>
+</head>
+<body>
+<a href="tongce.html" style="position:fixed;top:12px;left:12px;background:rgba(255,255,255,.92);color:#2b8cff;padding:7px 15px;border-radius:20px;text-decoration:none;font-size:.85rem;font-weight:800;z-index:999;box-shadow:0 3px 10px rgba(0,0,0,.15);">&#8592; 回題庫</a>
+<div class="wrap">
+  <header class="top">
+    <h1>統測英文　<span style="opacity:.9">模擬考卷 E</span></h1>
+    <p>科技校院四年制與專科學校二年制統一入學測驗　共同科目：英文（模擬）</p>
+    <div class="meta">選擇題共 42 題，每題 2 分，共 84 分　|　每題選擇答案後立即顯示解析　|　送出後顯示總分與作答統計</div>
+  </header>
+
+  <div class="sticky">
+    <div class="bar">
+      <span>作答進度</span>
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <span id="count">0 / 42</span>
+    </div>
+  </div>
+
+  <form id="quiz"></form>
+
+  <div class="result" id="result">
+    <div class="score" id="scoreNum">0</div>
+    <div class="sub" id="scoreTxt">分</div>
+    <div class="bd">
+      <span style="color:var(--green)">答對 <b id="rOk">0</b></span>
+      <span style="color:var(--red)">答錯 <b id="rNo">0</b></span>
+      <span style="color:var(--gray)">未作答 <b id="rBlank">0</b></span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="submit" id="submitBtn">交卷並查看總分</button>
+    <div class="hint" id="hint">尚未作答任何題目</div>
+    <button type="button" class="reset" id="resetBtn">重新作答</button>
+  </div>
+
+  <div class="section-title s2" style="margin-top:30px;">二、非選擇題（共 16 分，點擊查看答案與解析）</div>
+  <div id="written"></div>
+
+  <footer>統測英文模擬考卷 E　&middot;　第二顆腦 / 統測</footer>
+</div>
+
+<script>
+const PARTS = [{"title": "Ⅰ　字彙題", "desc": "共 10 題。第 1–8 題為單字選填；第 9–10 題為劃線字詞同義詞選擇。"}, {"title": "Ⅱ　對話題", "desc": "共 10 題，請依對話內容選出一個最適合的答案。"}, {"title": "Ⅲ　綜合測驗", "desc": "共 8 題，兩篇短文各 4 個空格，請依文意選出最適合的答案。"}, {"title": "Ⅳ　閱讀測驗", "desc": "共 14 題，請依短文內容選出最適當的答案。"}];
+const PASSAGES = {"21": "<div class=\"passage\"><h3>第 21–24 題</h3>\nSleep plays a crucial role in maintaining both physical and mental health. During deep sleep, the body repairs muscles and tissues, while the brain processes information <span class=\"blk\">21</span> during the day. Experts recommend that adults get between seven and nine hours of sleep each night, <span class=\"blk\">22</span> many people fall short of this due to busy schedules and screen use before bed. Studies have shown that exposure to bright screens late at night can make it <span class=\"blk\">23</span> to fall asleep, since the light interferes with the body's natural sleep signals. To improve sleep quality, doctors suggest <span class=\"blk\">24</span> a consistent bedtime and avoiding caffeine in the evening.</div>", "25": "<div class=\"passage\"><h3>第 25–28 題</h3>\nVolunteering has become an important part of many students' lives, not only because it benefits the community but also because it helps students develop valuable skills. By working with people from <span class=\"blk\">25</span> backgrounds, volunteers learn to communicate effectively and solve problems creatively. Some schools now require students <span class=\"blk\">26</span> complete a certain number of volunteer hours before graduation. While a few students view this requirement as a burden, most come to appreciate the experience <span class=\"blk\">27</span> they have completed it. In fact, many former volunteers say that the friendships and lessons they gained were <span class=\"blk\">28</span> anything they learned in the classroom.</div>", "29": "<div class=\"passage\"><h3>第 29–30 題</h3>\n<b>LOST CAT — PLEASE HELP!</b><br><br>Our cat, Mochi, has been missing since Monday evening. He is a small gray cat with white paws and a torn left ear. He was last seen near Maple Street Park wearing a blue collar with a small bell. Mochi is very shy around strangers, so please do not try to chase him — instead, call us right away if you spot him. A reward of $50 is offered for anyone who helps bring him home safely.<br><br>Contact: 0912-345-678 (the Chen family)</div>", "31": "<div class=\"passage\"><h3>第 31–32 題</h3>\n<b>Online Chat</b><br><br>Tina: Hey, are you coming to the study group tonight? Jake: I want to, but I still have to finish my chemistry lab report. Tina: How much do you have left? Jake: Just the conclusion section. I think I can finish it in an hour. Tina: Okay, we'll probably start around 7. Just join whenever you're done. Jake: Sounds good, see you then!</div>", "33": "<div class=\"passage\"><h3>第 33–35 題</h3>\nIn recent years, more restaurants have started offering \"imperfect produce\" on their menus — fruits and vegetables that are perfectly edible but do not meet the cosmetic standards of supermarkets, such as oddly shaped carrots or apples with small blemishes. These items are often sold at a lower cost, allowing restaurants to reduce expenses while also cutting down on food waste. According to some estimates, a large percentage of fruits and vegetables grown on farms never reach store shelves simply because of their appearance, even though their taste and nutritional value are unaffected. By partnering directly with local farms, restaurants can purchase this produce at a discount and create dishes that highlight fresh, seasonal ingredients. Some chefs say that customers rarely notice any difference in taste, and many appreciate knowing that their meal helped reduce food waste.</div>", "36": "<div class=\"passage\"><h3>第 36–38 題</h3>\nMost people assume that taking frequent breaks during work or study reduces productivity, but research suggests the opposite may be true. A well-known study found that participants who took short breaks every hour performed better on tasks requiring focus than those who worked straight through without stopping. Researchers believe this is because the brain's ability to concentrate naturally declines over time, and brief breaks allow it to \"reset.\" Interestingly, the type of break matters as well — looking at a smartphone during a break was found to be less restorative than activities such as stretching, walking outside, or simply looking out a window. Based on these findings, some companies have begun encouraging employees to step away from their desks for a few minutes every hour, rather than working continuously until lunch.</div>", "39": "<div class=\"passage\"><h3>第 39–42 題</h3>\nWhen Hana was a teenager, she struggled to find clothes that fit her properly, since most stores only carried a limited range of sizes. Frustrated by this experience, she began sewing her own clothes using fabric from secondhand shops. At first, her designs were simple, but as she practiced, she developed a unique style that combined traditional patterns with modern cuts. After posting photos of her creations online, she started receiving requests from people who wanted similar pieces made to fit their own bodies. Recognizing an opportunity, Hana opened a small studio where she offers custom-made clothing in a wide range of sizes, using sustainable fabrics whenever possible. She also hosts free workshops to teach basic sewing skills to anyone interested, especially those who, like her, have had difficulty finding clothes that fit. Hana hopes that her studio will encourage the fashion industry to become more inclusive of different body types.</div>"};
+const Q = [{"n": 1, "p": 0, "stem": "The fire alarm went off suddenly, and everyone had to _____ the building immediately.", "o": ["evacuate", "educate", "eliminate", "exaggerate"], "a": 0, "exp": "✓ (A) evacuate（疏散、撤離）— 火警警報響起，大家必須立即「撤離」大樓。\n❌ (B) educate = 教育，語意不符。\n❌ (C) eliminate = 消除，不適用。\n❌ (D) exaggerate = 誇大，語意不符。"}, {"n": 2, "p": 0, "stem": "The chef carefully _____ the soup before adding more salt.", "o": ["tasted", "wasted", "lasted", "pasted"], "a": 0, "exp": "✓ (A) tasted（品嚐）— 主廚在加更多鹽之前，先「品嚐」湯的味道。\n❌ (B) wasted = 浪費，語意不符。\n❌ (C) lasted = 持續，不適用。\n❌ (D) pasted = 黏貼，語意不符。"}, {"n": 3, "p": 0, "stem": "Because the singer was so popular, tickets for the concert sold out _____.", "o": ["instantly", "honestly", "roughly", "slightly"], "a": 0, "exp": "✓ (A) instantly（立即地）— 歌手非常受歡迎，演唱會門票「立即」售罄。\n❌ (B) honestly = 誠實地，語意不符。\n❌ (C) roughly = 粗略地，不適用於「售罄」的方式。\n❌ (D) slightly = 稍微地，與「售罄」的語意不搭。"}, {"n": 4, "p": 0, "stem": "The company offers a one-year _____ on all electronic products, so customers can get free repairs.", "o": ["warranty", "variety", "majority", "charity"], "a": 0, "exp": "✓ (A) warranty（保固）— 公司提供一年「保固」，顧客可享免費維修。\n❌ (B) variety = 多樣性，語意不符。\n❌ (C) majority = 大多數，不適用。\n❌ (D) charity = 慈善，語意不符。"}, {"n": 5, "p": 0, "stem": "The teacher tried to _____ the difficult concept by using a simple diagram.", "o": ["illustrate", "imitate", "irritate", "isolate"], "a": 0, "exp": "✓ (A) illustrate（說明、闡明）— 老師試圖用簡單的圖表來「說明」困難的概念。\n❌ (B) imitate = 模仿，語意不符。\n❌ (C) irritate = 使惱怒，不適用。\n❌ (D) isolate = 隔離，語意不符。"}, {"n": 6, "p": 0, "stem": "Several students were absent due to the _____ flu that was spreading around the school.", "o": ["seasonal", "social", "special", "spatial"], "a": 0, "exp": "✓ (A) seasonal（季節性的）— 「季節性」流感在學校中傳播，導致多名學生缺席。\n❌ (B) social = 社交的，語意不符。\n❌ (C) special = 特別的，不適用。\n❌ (D) spatial = 空間的，語意不符。"}, {"n": 7, "p": 0, "stem": "The hikers were warned not to _____ from the marked trail because the area was dangerous.", "o": ["wander", "wonder", "waver", "wither"], "a": 0, "exp": "✓ (A) wander（漫遊、偏離）— \"wander from the trail\" 表示「偏離步道」，符合「該地區危險，禁止偏離標示步道」的語意。\n❌ (B) wonder = 想知道，語意與用法不符。\n❌ (C) waver = 動搖、猶豫，語意不符。\n❌ (D) wither = 枯萎，語意不符。"}, {"n": 8, "p": 0, "stem": "After reviewing the data carefully, the scientists came to a surprising _____.", "o": ["conclusion", "confusion", "collision", "conversion"], "a": 0, "exp": "✓ (A) conclusion（結論）— 仔細檢視資料後，科學家得出一個令人驚訝的「結論」。\n❌ (B) confusion = 困惑，語意不符。\n❌ (C) collision = 碰撞，不適用。\n❌ (D) conversion = 轉換，語意不符。"}, {"n": 9, "p": 0, "stem": "The negotiation between the two companies was <i>tense</i> until both sides finally agreed on the price.", "o": ["relaxed", "stressful", "friendly", "brief"], "a": 1, "exp": "✓ (B) stressful（緊張的、有壓力的）— tense（緊張的）與 stressful 意義最接近。\n❌ (A) relaxed = 放鬆的，語意相反。\n❌ (C) friendly = 友善的，與「緊張的談判」不符。\n❌ (D) brief = 簡短的，與 tense 意義不同。"}, {"n": 10, "p": 0, "stem": "The factory has implemented strict safety measures to <i>minimize</i> the risk of accidents.", "o": ["increase", "reduce", "ignore", "examine"], "a": 1, "exp": "✓ (B) reduce（減少）— minimize（使降到最低）與 reduce 意義最接近。\n❌ (A) increase = 增加，語意相反。\n❌ (C) ignore = 忽視，語意不符。\n❌ (D) examine = 檢查，語意不符。"}, {"n": 11, "p": 1, "stem": "Clerk: Welcome to City Library. Do you have a library card?<br>Visitor: _____<br>Clerk: No problem. I can help you apply for one right now. It only takes a few minutes.", "o": ["Yes, here it is.", "No, this is my first time here.", "I'd like to return these books.", "The library closes at 8 p.m., right?"], "a": 1, "exp": "✓ (B) No, this is my first time here.— 館員回應「沒關係，我現在就能幫你辦一張」，呼應訪客沒有借書證且是第一次來。\n❌ (A) 說「是的，這是」，與後句「幫你辦一張」矛盾。\n❌ (C) 說要還書，與「辦借書證」情境不符。\n❌ (D) 問閉館時間，與館員回應無關。"}, {"n": 12, "p": 1, "stem": "Boss: The client meeting has been moved to 2 p.m. Can you prepare the slides by then?<br>Employee: _____<br>Boss: Great, thanks for letting me know early.", "o": ["I'm afraid I won't be able to attend the meeting.", "Sure, I'll have them ready by 1:30 at the latest.", "The client canceled the meeting yesterday.", "I already sent the slides to the wrong client."], "a": 1, "exp": "✓ (B) Sure, I'll have them ready by 1:30 at the latest.— 老闆回應「太好了，謝謝你提前告知」，呼應員工答應準備好投影片。\n❌ (A) 說無法出席會議，與老闆「謝謝告知」的正面回應不符。\n❌ (C) 說客戶昨天取消會議，與老闆說「會議改到2點」矛盾。\n❌ (D) 說把投影片寄給錯誤的客戶，與「謝謝提前告知」不符。"}, {"n": 13, "p": 1, "stem": "Patient: I've had a cough for almost two weeks now.<br>Doctor: _____<br>Patient: Mostly at night, especially when I lie down.", "o": ["Do you smoke or drink regularly?", "When does it get worse?", "Have you taken any medicine before?", "Are you allergic to any medication?"], "a": 1, "exp": "✓ (B) When does it get worse?— 病人回答「主要在晚上，尤其躺下時」，呼應醫生詢問咳嗽何時加重。\n❌ (A) 問是否抽菸或喝酒，病人的回答未涉及這些。\n❌ (C) 問是否吃過藥，病人的回答未涉及藥物。\n❌ (D) 問是否對藥物過敏，病人的回答未涉及過敏。"}, {"n": 14, "p": 1, "stem": "Neighbor A: Your garden looks amazing! How do you keep the flowers so healthy?<br>Neighbor B: _____<br>Neighbor A: That makes sense. I should water mine more regularly too.", "o": ["I water them every morning and remove the weeds weekly.", "Actually, I haven't watered them in weeks.", "I'm thinking about getting rid of the garden.", "My neighbor takes care of it for me."], "a": 0, "exp": "✓ (A) I water them every morning and remove the weeds weekly.— Neighbor A 回應「這樣說得通，我也該更常澆水」，呼應 B 分享澆水習慣。\n❌ (B) 說好幾週沒澆水，與「花園看起來很棒」矛盾。\n❌ (C) 說考慮放棄花園，與「花園看起來很棒」矛盾。\n❌ (D) 說鄰居幫忙照顧，與 A 接著說「我也該更常澆水」不連貫。"}, {"n": 15, "p": 1, "stem": "Student: Excuse me, professor. Could I ask for an extension on the essay?<br>Professor: _____<br>Student: Thank you so much. I really appreciate it.", "o": ["I'm afraid extensions are not allowed under any circumstances.", "Sure, you can have until next Monday.", "The essay was due last week.", "You should have started earlier."], "a": 1, "exp": "✓ (B) Sure, you can have until next Monday.— 學生回應「太感謝了」，呼應教授同意延期。\n❌ (A) 說「絕對不允許延期」，與學生「非常感謝」的回應矛盾。\n❌ (C) 說論文上週就到期了，與「同意延期」矛盾。\n❌ (D) 說「你應該早點開始」，語氣與「非常感謝」不符。"}, {"n": 16, "p": 1, "stem": "Caller: Hi, I'd like to book a table for four this Saturday evening.<br>Staff: _____<br>Caller: 7:30 would be perfect.", "o": ["I'm sorry, we're fully booked this weekend.", "What time would you prefer, 7 or 7:30?", "Could you spell your last name for me?", "We don't accept reservations on Saturdays."], "a": 1, "exp": "✓ (B) What time would you prefer, 7 or 7:30?— 來電者回應「7:30 最好」，呼應服務人員詢問時間選項。\n❌ (A) 說「本週末已全部預訂滿」，與來電者選擇時間矛盾。\n❌ (C) 問如何拼姓氏，與來電者回答時間不連貫。\n❌ (D) 說「週六不接受訂位」，與來電者選擇時間矛盾。"}, {"n": 17, "p": 1, "stem": "Coworker A: Have you tried the new coffee machine in the break room?<br>Coworker B: _____<br>Coworker A: I agree. It makes much better coffee than the old one.", "o": ["No, I prefer to bring my own coffee from home.", "Yes, it's so much faster and the coffee tastes great.", "I think the break room needs to be cleaned.", "We should buy a new microwave too."], "a": 1, "exp": "✓ (B) Yes, it's so much faster and the coffee tastes great.— Coworker A 回應「我同意，比舊的好喝多了」，呼應 B 對新咖啡機的稱讚。\n❌ (A) 說自己從家裡帶咖啡，與 A 的「我同意」回應不連貫。\n❌ (C) 說休息室需要打掃，與咖啡機話題無關。\n❌ (D) 提議買新微波爐，與話題無關。"}, {"n": 18, "p": 1, "stem": "Mother: Did you remember to feed the cat before you left?<br>Son: _____<br>Mother: Good. Don't forget to give her fresh water too.", "o": ["I forgot we even have a cat.", "Yes, I fed her right after breakfast.", "The cat ran away last week.", "I think the cat already ate twice today."], "a": 1, "exp": "✓ (B) Yes, I fed her right after breakfast.— 媽媽回應「很好，別忘了給牠新鮮的水」，呼應兒子已經餵過貓。\n❌ (A) 說忘記家裡有貓，與媽媽的「很好」回應矛盾。\n❌ (C) 說貓上週跑走了，與媽媽接著提到「給牠水」矛盾。\n❌ (D) 說貓今天已經吃了兩次，未直接回答「是否記得餵貓」且與媽媽回應不連貫。"}, {"n": 19, "p": 1, "stem": "Tour guide: We'll be stopping here for about thirty minutes. Feel free to take photos.<br>Tourist: _____<br>Tour guide: Of course, there's one just behind the gift shop.", "o": ["Is there a restroom nearby?", "How long is the whole tour?", "Can we buy souvenirs here?", "What time does the tour end?"], "a": 0, "exp": "✓ (A) Is there a restroom nearby?— 導遊回應「當然有，就在禮品店後面」，呼應遊客詢問廁所位置。\n❌ (B) 問整個行程多長，與導遊回答「禮品店後面」不符。\n❌ (C) 問是否能在這裡買紀念品，與導遊的回答（指向廁所位置）不符。\n❌ (D) 問行程何時結束，與導遊的回答不符。"}, {"n": 20, "p": 1, "stem": "Roommate A: The Wi-Fi has been really slow all day.<br>Roommate B: _____<br>Roommate A: Good idea. Let's try that.", "o": ["Maybe we should restart the router.", "I think we should cancel the internet plan.", "The Wi-Fi password was changed yesterday.", "I already called the company about the bill."], "a": 0, "exp": "✓ (A) Maybe we should restart the router.— Roommate A 回應「好主意，我們來試試」，呼應 B 提出重啟路由器的建議。\n❌ (B) 建議取消網路方案，與「好主意，來試試」的正面回應不符（取消網路並非「可以嘗試」的小動作）。\n❌ (C) 說 Wi-Fi 密碼昨天被改了，未提出解決方案。\n❌ (D) 說已經打電話給網路公司詢問帳單，與「好主意，來試試」不連貫。"}, {"n": 21, "p": 2, "stem": "(21)", "o": ["collect", "collected", "collecting", "to collect"], "a": 1, "exp": "✓ (B) collected（過去分詞，被動修飾）— \"information collected during the day\" 表示「白天所蒐集到的資訊」，過去分詞作形容詞，修飾 information（被動關係：資訊是被蒐集的）。\n❌ (A) collect = 動詞原形，不能直接修飾名詞。\n❌ (C) collecting = 現在分詞，語意上會變成「正在蒐集的資訊」（主動），與文意不符。\n❌ (D) to collect = 不定詞表目的，語意不符。"}, {"n": 22, "p": 2, "stem": "(22)", "o": ["but", "so", "or", "for"], "a": 0, "exp": "✓ (A) but（但是）— 「專家建議每晚睡7-9小時，但許多人因忙碌和睡前使用螢幕而達不到」，前後句為對比關係，用 but 連接。\n❌ (B) so = 所以，因果關係不符。\n❌ (C) or = 或者，語意不符。\n❌ (D) for = 因為（連接詞），語意上不構成因果關係。"}, {"n": 23, "p": 2, "stem": "(23)", "o": ["hard", "hardly", "hardness", "hardening"], "a": 0, "exp": "✓ (A) hard（形容詞，困難的）— \"make it hard to fall asleep\" 為固定句型 make + it + 形容詞 + to V，表示「使入睡變得困難」。\n❌ (B) hardly = 副詞「幾乎不」，不能放在 it 之後作補語。\n❌ (C) hardness = 名詞「硬度」，語意與詞性皆不符。\n❌ (D) hardening = 動名詞/現在分詞「使變硬」，語意不符。"}, {"n": 24, "p": 2, "stem": "(24)", "o": ["set", "sets", "setting", "to setting"], "a": 2, "exp": "✓ (C) setting（動名詞）— \"doctors suggest setting a consistent bedtime\" — suggest 後面接動名詞作受詞，表示「建議設定固定的睡覺時間」。\n❌ (A) set = 動詞原形，suggest 後不可直接接原形動詞。\n❌ (B) sets = 第三人稱單數，文法不符。\n❌ (D) to setting = 不定詞+動名詞的混合形式，文法上不存在。"}, {"n": 25, "p": 2, "stem": "(25)", "o": ["difference", "different", "differently", "differ"], "a": 1, "exp": "✓ (B) different（形容詞，不同的）— \"people from different backgrounds\" 表示「來自不同背景的人」，形容詞修飾名詞 backgrounds。\n❌ (A) difference = 名詞「差異」，詞性不符。\n❌ (C) differently = 副詞，不能修飾名詞。\n❌ (D) differ = 動詞「不同」，詞性不符。"}, {"n": 26, "p": 2, "stem": "(26)", "o": ["complete", "completing", "to complete", "completed"], "a": 2, "exp": "✓ (C) to complete（不定詞）— \"require + 受詞 + to V\" 為固定句型，\"require students to complete\" 表示「要求學生完成」。\n❌ (A) complete = 動詞原形，與 require 受詞後的句型不符。\n❌ (B) completing = 動名詞，require 受詞後不接動名詞。\n❌ (D) completed = 過去分詞，文法不符。"}, {"n": 27, "p": 2, "stem": "(27)", "o": ["unless", "once", "although", "before"], "a": 1, "exp": "✓ (B) once（一旦…就）— \"most come to appreciate the experience once they have completed it\" 表示「一旦完成後，大多數學生便會欣賞這段經歷」，語意通順。\n❌ (A) unless = 除非，語意不符（並非「除非完成才欣賞」的條件關係）。\n❌ (C) although = 雖然，語意上不構成讓步關係。\n❌ (D) before = 在…之前，與「完成之後才欣賞」的時間順序相反。"}, {"n": 28, "p": 2, "stem": "(28)", "o": ["as valuable as", "more valuable than", "less valuable than", "valuable enough for"], "a": 1, "exp": "✓ (B) more valuable than（比較級）— \"were more valuable than anything they learned in the classroom\" 表示「比他們在課堂上學到的任何東西都更有價值」，為比較級的標準用法。\n❌ (A) as valuable as = 表示「一樣有價值」，與文意強調「友誼與經驗更勝課堂所學」不符。\n❌ (C) less valuable than = 表示「較不重要」，語意相反。\n❌ (D) valuable enough for = 文法與語意皆不符此處的比較句構。"}, {"n": 29, "p": 3, "stem": "What should someone do if they see Mochi?", "o": ["Try to catch him as quickly as possible.", "Take him to the nearest animal shelter.", "Call the Chen family right away.", "Leave food for him near the park."], "a": 2, "exp": "公告提到：「please do not try to chase him — instead, call us right away if you spot him」\n(C) Call the Chen family right away. ✓ 為正解。\n❌ (A) 公告明確要求「不要嘗試追趕牠」。\n❌ (B) 公告未提到送到動物收容所。\n❌ (D) 公告未提到在公園放食物。"}, {"n": 30, "p": 3, "stem": "What can be inferred about Mochi?", "o": ["He is friendly with strangers.", "He does not wear any collar.", "He may be hiding because he is shy.", "He has been missing for over a month."], "a": 2, "exp": "公告提到：「Mochi is very shy around strangers」，可推論牠可能因害羞而躲藏。\n(C) He may be hiding because he is shy. ✓ 為正解。\n❌ (A) 公告說 Mochi 對陌生人「害羞」，並非友善。\n❌ (B) 公告提到牠戴著「藍色項圈和小鈴鐺」，並非沒有項圈。\n❌ (D) 公告說牠「自週一晚上」開始失蹤，並非超過一個月。"}, {"n": 31, "p": 3, "stem": "Why is Jake unsure about joining the study group?", "o": ["He doesn't think the study group is helpful.", "He needs to finish a lab report first.", "He has another appointment tonight.", "He doesn't know where the study group is."], "a": 1, "exp": "Jake 說：「I want to, but I still have to finish my chemistry lab report.」\n(B) He needs to finish a lab report first. ✓ 為正解。\n❌ (A) Jake 說「我想參加」，並未表示讀書會沒有幫助。\n❌ (C) 對話中沒有提到其他約會。\n❌ (D) 對話中沒有提到不知道地點。"}, {"n": 32, "p": 3, "stem": "What does Tina suggest Jake do?", "o": ["Skip the study group entirely.", "Finish the report tomorrow instead.", "Join the group whenever he is ready.", "Meet her before the study group starts."], "a": 2, "exp": "Tina 說：「Just join whenever you're done.」\n(C) Join the group whenever he is ready. ✓ 為正解。\n❌ (A) Tina 並未建議完全跳過讀書會。\n❌ (B) 對話中沒有提到隔天再完成報告。\n❌ (D) 對話中沒有提到在讀書會前先見面。"}, {"n": 33, "p": 3, "stem": "What is \"imperfect produce\" as described in the passage?", "o": ["Fruits and vegetables that have gone bad.", "Fruits and vegetables that are edible but look unusual.", "Produce that is more expensive than usual.", "Produce that has been recalled by supermarkets."], "a": 1, "exp": "文中提到：「fruits and vegetables that are perfectly edible but do not meet the cosmetic standards of supermarkets, such as oddly shaped carrots or apples with small blemishes」\n(B) Fruits and vegetables that are edible but look unusual. ✓ 為正解。\n❌ (A) 文中說這些蔬果「完全可以食用」，並非已經壞掉。\n❌ (C) 文中說這些蔬果「成本較低」，並非更貴。\n❌ (D) 文中未提到被超市召回。"}, {"n": 34, "p": 3, "stem": "According to the passage, why do many fruits and vegetables never reach store shelves?", "o": ["They are too expensive to transport.", "They do not meet appearance standards.", "They lack nutritional value.", "They are reserved for restaurants only."], "a": 1, "exp": "文中提到：「a large percentage of fruits and vegetables grown on farms never reach store shelves simply because of their appearance」\n(B) They do not meet appearance standards. ✓ 為正解。\n❌ (A) 文中未提到運輸成本過高。\n❌ (C) 文中說「口味和營養價值不受影響」，並非缺乏營養。\n❌ (D) 文中未提到專門保留給餐廳。"}, {"n": 35, "p": 3, "stem": "How do customers generally react to dishes made with imperfect produce?", "o": ["They often complain about the taste.", "They refuse to order such dishes.", "They rarely notice a difference and appreciate the idea.", "They demand a discount on their meal."], "a": 2, "exp": "文中提到：「customers rarely notice any difference in taste, and many appreciate knowing that their meal helped reduce food waste」\n(C) They rarely notice a difference and appreciate the idea. ✓ 為正解。\n❌ (A) 文中說顧客「很少抱怨味道」，並非經常抱怨。\n❌ (B) 文中未提到顧客拒絕點這些餐點。\n❌ (D) 文中未提到顧客要求折扣。"}, {"n": 36, "p": 3, "stem": "What is the main idea of this passage?", "o": ["Taking breaks can actually improve productivity.", "Working without breaks is the best way to finish tasks.", "Smartphones are the best tool for taking breaks.", "Companies should eliminate lunch breaks entirely."], "a": 0, "exp": "全文主旨為：適度休息實際上能提升專注力與生產力。\n(A) Taking breaks can actually improve productivity. ✓ 為正解。\n❌ (B) 文中說的恰好相反——不停工作的表現較差。\n❌ (C) 文中說使用手機是「較不具恢復效果」的休息方式，並非「最佳工具」。\n❌ (D) 文中未提到要取消午休。"}, {"n": 37, "p": 3, "stem": "According to the passage, why do brief breaks help people focus?", "o": ["They allow the brain to reset its concentration.", "They give people time to check their phones.", "They reduce the total number of work hours.", "They make tasks feel less important."], "a": 0, "exp": "文中提到：「the brain's ability to concentrate naturally declines over time, and brief breaks allow it to 'reset'」\n(A) They allow the brain to reset its concentration. ✓ 為正解。\n❌ (B) 文中說看手機「較不具恢復效果」，並非休息的目的。\n❌ (C) 文中未提到減少總工時。\n❌ (D) 文中未提到讓任務感覺不重要。"}, {"n": 38, "p": 3, "stem": "Which activity was found to be the LEAST restorative during a break?", "o": ["Stretching.", "Walking outside.", "Looking out a window.", "Using a smartphone."], "a": 3, "exp": "文中提到：「looking at a smartphone during a break was found to be less restorative than activities such as stretching, walking outside, or simply looking out a window」\n(D) Using a smartphone. ✓ 為正解，因為其恢復效果低於其他三項活動。\n❌ (A)(B)(C) 伸展、戶外散步、看窗外皆被列為比使用手機「更具恢復效果」的活動。"}, {"n": 39, "p": 3, "stem": "Why did Hana start sewing her own clothes?", "o": ["She wanted to start a fashion business immediately.", "She could not find clothes that fit her well in stores.", "She was required to do so for a school project.", "She wanted to sell clothes online for extra money."], "a": 1, "exp": "文中提到：「Hana...struggled to find clothes that fit her properly, since most stores only carried a limited range of sizes. Frustrated by this experience, she began sewing her own clothes」\n(B) She could not find clothes that fit her well in stores. ✓ 為正解。\n❌ (A) 文中說她「一開始」設計很簡單，並非立即想創業。\n❌ (C) 文中未提到學校專題。\n❌ (D) 文中說她後來才開始接受訂製需求，並非一開始就想線上賣衣賺錢。"}, {"n": 40, "p": 3, "stem": "What materials does Hana's studio use whenever possible?", "o": ["Imported luxury fabrics.", "Sustainable fabrics.", "Only secondhand clothing.", "Synthetic materials only."], "a": 1, "exp": "文中提到：「using sustainable fabrics whenever possible」\n(B) Sustainable fabrics. ✓ 為正解。\n❌ (A) 文中未提到進口奢華布料。\n❌ (C) 文中說她「最初」使用二手店的布料，工作室成立後並非僅用二手衣物。\n❌ (D) 文中未提到僅使用人造材料。"}, {"n": 41, "p": 3, "stem": "Who does Hana's free workshop especially benefit?", "o": ["Professional fashion designers.", "People who have trouble finding clothes that fit.", "Children under the age of ten.", "Customers who want a discount."], "a": 1, "exp": "文中提到：「free workshops to teach basic sewing skills to anyone interested, especially those who, like her, have had difficulty finding clothes that fit」\n(B) People who have trouble finding clothes that fit. ✓ 為正解。\n❌ (A) 文中未特別提到專業設計師。\n❌ (C) 文中未提到十歲以下兒童。\n❌ (D) 文中未提到折扣對象。"}, {"n": 42, "p": 3, "stem": "What does Hana hope her studio will achieve?", "o": ["Replace traditional clothing stores entirely.", "Encourage the fashion industry to be more inclusive of body types.", "Become the largest clothing brand in the country.", "Convince people to stop buying secondhand clothes. ---"], "a": 1, "exp": "文中結尾提到：「Hana hopes that her studio will encourage the fashion industry to become more inclusive of different body types.」\n(B) Encourage the fashion industry to be more inclusive of body types. ✓ 為正解。\n❌ (A) 文中未提到取代傳統服飾店。\n❌ (C) 文中未提到成為全國最大品牌。\n❌ (D) 文中未提到要說服人們停止購買二手衣物。"}];
+const WRITTEN = [{"title": "Ⅰ. 填充（4 分）", "prompt": "說明：請依中文提示，將空格 ①、② 答案之完整單字（含提示之字首）填入答案區。每格限填一字。<br><span class=\"blankline\">1. 在做出最終決定之前，我們應該考慮所有可能的選項。</span>", "ans": "① <b>decision</b>　② <b>consider</b>", "exp": "① decision（決定）— 依提示字首 d 及句意「做出最終決定」。\n② consider（考慮）— 依提示字首 c 及句意「考慮所有可能的選項」。"}, {"title": "Ⅱ. 句子重組（6 分）", "prompt": "請將下列提示字詞重組成一句完整的句子，並於句尾加上適當標點符號：<br><i>說明：請將下列詞組重組成一個正確、通順的句子，並於句尾加上適當標點符號。</i>", "ans": "The number of electric cars on the road has increased significantly over the past decade.", "exp": "句構：主詞 (The number of electric cars on the road) + has increased significantly（現在完成時，表示持續到現在的變化）+ over the past decade（時間副詞，表示「過去十年間」）。"}, {"title": "Ⅲ. 中譯英（6 分）", "prompt": "請將以下中文句子譯成正確、通順、達意的英文：<br>說明：請將以下中文句子譯成正確、通順、達意的英文。", "ans": "If you practice English conversation every day, your speaking ability will improve.", "exp": "重點結構：if 條件句，現在簡單式 (practice) + 主要子句用 will + 動詞原形 (will improve)，表示條件達成後的未來結果。"}];
+const TOTAL = Q.length;
+
+/* ====== 產生選擇題畫面 ====== */
+const form = document.getElementById('quiz');
+let lastPart = -1;
+Q.forEach(q=>{
+  if(q.p!==lastPart){
+    const st=document.createElement('div'); st.className='section-title s'+q.p; st.textContent=PARTS[q.p].title;
+    const sd=document.createElement('div'); sd.className='section-desc'; sd.textContent=PARTS[q.p].desc;
+    form.appendChild(st); form.appendChild(sd); lastPart=q.p;
+  }
+  if(PASSAGES[q.n]){ const d=document.createElement('div'); d.innerHTML=PASSAGES[q.n]; form.appendChild(d.firstChild); }
+  const card=document.createElement('div'); card.className='q'; card.id='q'+q.n;
+  const isBlank=/^\(\d+\)$/.test(q.stem);
+  const stemHtml = isBlank ? `第 ${q.n} 格` : q.stem;
+  card.innerHTML=`<div class="stem"><span class="num">${q.n}</span>${stemHtml}</div>`;
+  q.o.forEach((opt,i)=>{
+    const lab=document.createElement('label'); lab.className='opt'; lab.dataset.i=i;
+    lab.innerHTML=`<input type="radio" name="q${q.n}" value="${i}"><span class="lab">${'ABCD'[i]}</span><span>${opt}</span>`;
+    lab.querySelector('input').addEventListener('change',()=>{
+      pickAnswer(q,i);
+    });
+    card.appendChild(lab);
+  });
+  const exp=document.createElement('div'); exp.className='exp'; exp.id='exp'+q.n;
+  card.appendChild(exp);
+  form.appendChild(card);
+});
+
+const submitBtn=document.getElementById('submitBtn');
+const resetBtn=document.getElementById('resetBtn');
+const hint=document.getElementById('hint');
+let submitted=false;
+
+/* 選擇答案後立即鎖定並顯示該題解析 */
+function pickAnswer(q,pick){
+  const card=document.getElementById('q'+q.n);
+  card.querySelectorAll('.opt').forEach(o=>{
+    o.classList.add('lock');
+    o.querySelector('input').disabled=true;
+    const i=parseInt(o.dataset.i);
+    if(i===pick) o.classList.add('sel');
+    if(i===q.a) o.classList.add('correct');
+    if(i===pick && pick!==q.a) o.classList.add('wrong');
+  });
+  const correct = pick===q.a;
+  const exp=document.getElementById('exp'+q.n);
+  const tag = correct ? '答對' : '答錯';
+  exp.innerHTML=`<span class="tag ${correct?'':'miss'}">${tag}　正解：${'ABCD'[q.a]}</span>
+    <div class="body">${q.exp}</div>`;
+  exp.classList.add('show');
+  updateProgress();
+}
+
+function answeredCount(){ let c=0; Q.forEach(q=>{ if(form.querySelector(`input[name="q${q.n}"]:checked`)) c++; }); return c; }
+function updateProgress(){
+  const c=answeredCount();
+  document.getElementById('count').textContent=`${c} / ${TOTAL}`;
+  document.getElementById('fill').style.width=(c/TOTAL*100)+'%';
+  if(submitted) return;
+  hint.textContent = c===TOTAL ? `已完成全部 ${TOTAL} 題，可以交卷查看總分了` : (c===0 ? '尚未作答任何題目（每題選擇後立即顯示解析）' : `已作答 ${c} 題，未作答 ${TOTAL-c} 題（可隨時交卷）`);
+}
+
+submitBtn.addEventListener('click',()=>{
+  let ok=0, blank=0;
+  Q.forEach(q=>{
+    const sel=form.querySelector(`input[name="q${q.n}"]:checked`);
+    const pick = sel ? parseInt(sel.value) : null;
+    const card=document.getElementById('q'+q.n);
+    if(pick===null){
+      blank++;
+      card.querySelectorAll('.opt').forEach(o=>{
+        o.classList.add('lock');
+        o.querySelector('input').disabled=true;
+        const i=parseInt(o.dataset.i);
+        if(i===q.a) o.classList.add('correct');
+      });
+      const exp=document.getElementById('exp'+q.n);
+      exp.innerHTML=`<span class="tag blank">未作答　正解：${'ABCD'[q.a]}</span>
+        <div class="body">${q.exp}</div>`;
+      exp.classList.add('show');
+    } else if(pick===q.a){
+      ok++;
+    }
+  });
+  const res=document.getElementById('result');
+  const score = ok*2;
+  document.getElementById('scoreNum').textContent=score;
+  document.getElementById('scoreTxt').textContent=`分（選擇題 / 84 分，答對 ${ok} / ${TOTAL} 題）`;
+  document.getElementById('rOk').textContent=ok;
+  document.getElementById('rNo').textContent=TOTAL-ok-blank;
+  document.getElementById('rBlank').textContent=blank;
+  res.classList.add('show');
+  submitted=true;
+  submitBtn.style.display='none'; hint.style.display='none'; resetBtn.style.display='block';
+  res.scrollIntoView({behavior:'smooth'});
+});
+
+resetBtn.addEventListener('click',()=>{
+  form.reset();
+  Q.forEach(q=>{
+    const card=document.getElementById('q'+q.n);
+    card.querySelectorAll('.opt').forEach(o=>{o.classList.remove('sel','correct','wrong','lock');o.querySelector('input').disabled=false;});
+    document.getElementById('exp'+q.n).classList.remove('show');
+  });
+  document.getElementById('result').classList.remove('show');
+  submitted=false;
+  submitBtn.style.display='block'; hint.style.display='block'; resetBtn.style.display='none';
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+/* ====== 非選擇題（點擊查看解析） ====== */
+const writtenDiv=document.getElementById('written');
+WRITTEN.forEach((w,idx)=>{
+  const card=document.createElement('div'); card.className='written';
+  card.innerHTML=`<h4>${w.title}</h4>
+    <div class="prompt">${w.prompt}</div>
+    <button type="button" class="reveal" id="wb${idx}">查看答案與解析</button>
+    <div class="ans" id="wa${idx}">
+      <span class="tag">參考答案</span>
+      <div class="body">${w.ans}</div>
+      <div class="body">${w.exp}</div>
+    </div>`;
+  writtenDiv.appendChild(card);
+  card.querySelector('#wb'+idx).addEventListener('click',()=>{
+    card.querySelector('#wa'+idx).classList.add('show');
+    card.querySelector('#wb'+idx).style.display='none';
+  });
+});
+
+updateProgress();
+</script>
+</body>
+</html>
