@@ -18,6 +18,7 @@ body { font-family: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", sans-se
 .section-title { display: flex; align-items: center; gap: 14px; }
 .section-badge { background: linear-gradient(135deg, #3b82f6, #6366f1); color: #fff; border-radius: 10px; padding: 6px 14px; font-size: 0.85rem; font-weight: 700; white-space: nowrap; }
 .section-badge.purple { background: linear-gradient(135deg, #7c3aed, #a855f7); }
+.section-badge.green { background: linear-gradient(135deg, #059669, #10b981); }
 .section-name { font-size: 1.15rem; font-weight: 700; color: #2d3748; }
 .section-sub { font-size: 0.85rem; color: #718096; margin-top: 2px; }
 .chevron { font-size: 1.1rem; color: #a0aec0; transition: transform 0.25s; }
@@ -36,77 +37,118 @@ body { font-family: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", sans-se
 <body>
 <a href="/" style="position:fixed;top:14px;left:14px;background:#2b4c8c;color:#fff;padding:7px 16px;border-radius:8px;text-decoration:none;font-size:0.9rem;font-weight:600;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,0.18);">← 回首頁</a>
 <div class="hero">
-  <h1>高中學測歷屆英文試題練習</h1>
-  <p>點選大題，展開年份選單，開始練習</p>
+<h1>高中學測歷屆英文試題練習</h1>
+<p>點選大題，展開年份選單，開始練習</p>
 </div>
 <div class="sections">
-  <!-- 第一大題 -->
-  <div class="section-card">
-    <div class="section-header" id="hdr1" onclick="toggle(1)">
-      <div class="section-title">
-        <span class="section-badge">第一大題</span>
-        <div>
-          <div class="section-name">詞彙題</div>
-          <div class="section-sub">選出最適合填入空格的詞語</div>
-        </div>
-      </div>
-      <span class="chevron">▾</span>
-    </div>
-    <div class="year-grid" id="grid1">
-      <div class="year-grid-inner" id="inner1"></div>
-    </div>
-  </div>
-  <!-- 第二大題 -->
-  <div class="section-card">
-    <div class="section-header" id="hdr2" onclick="toggle(2)">
-      <div class="section-title">
-        <span class="section-badge purple">第二大題</span>
-        <div>
-          <div class="section-name">綜合測驗</div>
-          <div class="section-sub">選出最適合填入空格的詞語或句子</div>
-        </div>
-      </div>
-      <span class="chevron">▾</span>
-    </div>
-    <div class="year-grid" id="grid2">
-      <div class="year-grid-inner" id="inner2"></div>
-    </div>
-  </div>
+<!-- 第一大題 -->
+<div class="section-card">
+<div class="section-header" id="hdr1" onclick="toggle(1)">
+<div class="section-title">
+<span class="section-badge">第一大題</span>
+<div>
+<div class="section-name">詞彙題</div>
+<div class="section-sub">選出最適合填入空格的詞語</div>
+</div>
+</div>
+<span class="chevron">▾</span>
+</div>
+<div class="year-grid" id="grid1">
+<div class="year-grid-inner" id="inner1"></div>
+</div>
+</div>
+<!-- 第二大題 -->
+<div class="section-card">
+<div class="section-header" id="hdr2" onclick="toggle(2)">
+<div class="section-title">
+<span class="section-badge purple">第二大題</span>
+<div>
+<div class="section-name">綜合測驗</div>
+<div class="section-sub">選出最適合填入空格的詞語或句子</div>
+</div>
+</div>
+<span class="chevron">▾</span>
+</div>
+<div class="year-grid" id="grid2">
+<div class="year-grid-inner" id="inner2"></div>
+</div>
+</div>
+<!-- 模擬試題 -->
+<div class="section-card">
+<div class="section-header" id="hdr3" onclick="toggle(3)">
+<div class="section-title">
+<span class="section-badge green">模擬試題</span>
+<div>
+<div class="section-name">模擬學測英文 全套試卷</div>
+<div class="section-sub">完整大題型模擬考，共 16 回（陸續更新）</div>
+</div>
+</div>
+<span class="chevron">▾</span>
+</div>
+<div class="year-grid" id="grid3">
+<div class="year-grid-inner" id="inner3"></div>
+</div>
+</div>
 </div>
 <script>
 // 可用題目設定 (key: "section-year", value: 檔案路徑)
 const available = {
-  's1-111': 's1-111.html',
-  's1-112': 's1-112.html',
-  's1-113': 's1-113.html',
-  's1-114': 's1-114.html',
-  's1-115': 's1-115.html'
+'s1-111': 's1-111.html',
+'s1-112': 's1-112.html',
+'s1-113': 's1-113.html',
+'s1-114': 's1-114.html',
+'s1-115': 's1-115.html'
 };
 const years = [115,114,113,112,111,110,109,108,107];
 function buildGrid(section, innerId) {
-  const inner = document.getElementById(innerId);
-  years.forEach(y => {
-    const key = 's' + section + '-' + y;
-    const path = available[key];
-    const btn = document.createElement('a');
-    btn.className = 'year-btn' + (path ? ' available' : '');
-    btn.textContent = y + '年';
-    if (path) { btn.href = path; }
-    const sub = document.createElement('span');
-    sub.className = 'coming';
-    sub.textContent = '即將推出';
-    btn.appendChild(sub);
-    inner.appendChild(btn);
-  });
+const inner = document.getElementById(innerId);
+years.forEach(y => {
+const key = 's' + section + '-' + y;
+const path = available[key];
+const btn = document.createElement('a');
+btn.className = 'year-btn' + (path ? ' available' : '');
+btn.textContent = y + '年';
+if (path) { btn.href = path; }
+const sub = document.createElement('span');
+sub.className = 'coming';
+sub.textContent = '即將推出';
+btn.appendChild(sub);
+inner.appendChild(btn);
+});
 }
 buildGrid(1, 'inner1');
 buildGrid(2, 'inner2');
+
+// 模擬試題 第1~16回
+const mockAvailable = {
+1: 'gsat-mock-1.html',
+2: 'gsat-mock-2.html',
+3: 'gsat-mock-3.html'
+};
+const mockRoundNames = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六'];
+function buildMockGrid() {
+const inner = document.getElementById('inner3');
+for (let i = 1; i <= 16; i++) {
+const path = mockAvailable[i];
+const btn = document.createElement('a');
+btn.className = 'year-btn' + (path ? ' available' : '');
+btn.textContent = '第' + mockRoundNames[i-1] + '回';
+if (path) { btn.href = path; }
+const sub = document.createElement('span');
+sub.className = 'coming';
+sub.textContent = '即將推出';
+btn.appendChild(sub);
+inner.appendChild(btn);
+}
+}
+buildMockGrid();
+
 function toggle(n) {
-  const hdr = document.getElementById('hdr' + n);
-  const grid = document.getElementById('grid' + n);
-  const isOpen = hdr.classList.contains('open');
-  hdr.classList.toggle('open', !isOpen);
-  grid.classList.toggle('visible', !isOpen);
+const hdr = document.getElementById('hdr' + n);
+const grid = document.getElementById('grid' + n);
+const isOpen = hdr.classList.contains('open');
+hdr.classList.toggle('open', !isOpen);
+grid.classList.toggle('visible', !isOpen);
 }
 </script>
 </body>
