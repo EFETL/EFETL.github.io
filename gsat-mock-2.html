@@ -704,5 +704,355 @@ function submitExam() {
   document.getElementById('result-msg').scrollIntoView({behavior:'smooth'});
 }
 </script>
+
+<!-- ===== 英文作文批改區 ===== -->
+<style>
+.writing-section {
+  max-width: 860px;
+  margin: 48px auto 0;
+  padding: 0 16px 60px;
+  font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+}
+.writing-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.writing-divider::before, .writing-divider::after {
+  content: '';
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(to right, transparent, #1a3a5c44);
+}
+.writing-divider::after { background: linear-gradient(to left, transparent, #1a3a5c44); }
+.writing-divider-label {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #1a3a5c;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.wcard {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 14px rgba(26,58,92,0.10);
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+.wcard-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  border-bottom: 1px solid #f0f2f5;
+}
+.wcard-icon {
+  width: 34px; height: 34px;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px;
+  flex-shrink: 0;
+}
+.wi-blue { background: #e8f0fa; }
+.wi-orange { background: #fef3e8; }
+.wi-green { background: #e8f8ef; }
+.wcard-label { font-size: 11px; font-weight: 600; letter-spacing: 0.8px; color: #667085; text-transform: uppercase; }
+.wcard-title { font-size: 15px; font-weight: 600; color: #1a3a5c; margin-top: 2px; }
+.wcard-body { padding: 16px 18px; }
+.prompt-txt { font-size: 14px; line-height: 1.8; color: #344054; }
+.prompt-hl {
+  background: #fef3e8;
+  border-left: 3px solid #f0822a;
+  border-radius: 0 8px 8px 0;
+  padding: 10px 14px;
+  margin-top: 12px;
+  font-size: 13px;
+  color: #1a3a5c;
+  line-height: 1.7;
+}
+.prompt-hl strong { color: #f0822a; }
+.wchecklist { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+.wcheck-item { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: #344054; line-height: 1.5; }
+.wcheck-dot {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 2px solid #d0d5dd;
+  flex-shrink: 0; margin-top: 1px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: #667085;
+}
+.essay-ta {
+  width: 100%;
+  min-height: 180px;
+  border: 2px solid #d0d5dd;
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 14px;
+  line-height: 1.7;
+  resize: vertical;
+  font-family: inherit;
+  color: #344054;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.essay-ta:focus { border-color: #2a5080; }
+.wc-meta { display: flex; justify-content: space-between; margin-top: 8px; font-size: 13px; color: #667085; }
+.wc-meta span { font-weight: 700; color: #1a3a5c; }
+.wc-ok span { color: #27ae60 !important; }
+.wc-low span { color: #e74c3c !important; }
+.wbtn {
+  background: #f0822a;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 24px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.2s, transform 0.1s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.wbtn:hover { background: #d96e1a; }
+.wbtn:active { transform: scale(0.98); }
+.wbtn:disabled { background: #d0d5dd; cursor: not-allowed; }
+.wloading { display: none; flex-direction: column; align-items: center; padding: 40px; gap: 16px; }
+.wloading.on { display: flex; }
+.wspinner {
+  width: 40px; height: 40px;
+  border: 3px solid #f0f2f5;
+  border-top-color: #f0822a;
+  border-radius: 50%;
+  animation: wspin 0.8s linear infinite;
+}
+@keyframes wspin { to { transform: rotate(360deg); } }
+.wresult { display: none; }
+.wresult.on { display: block; }
+.wscore-grid {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 10px;
+  padding: 16px 18px;
+}
+.wscore-item { background: #f8f9fa; border-radius: 10px; padding: 12px 8px; text-align: center; }
+.wscore-num { font-size: 26px; font-weight: 800; line-height: 1; }
+.wscore-lbl { font-size: 11px; color: #667085; margin-top: 4px; font-weight: 500; }
+.sc-a { color: #27ae60; } .sc-b { color: #1a3a5c; } .sc-c { color: #f0822a; } .sc-d { color: #9b59b6; }
+.wfeed-sec { border-top: 1px solid #f0f2f5; padding: 14px 18px; }
+.wsec-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #1a3a5c; color: white;
+  font-size: 12px; font-weight: 700;
+  padding: 4px 12px; border-radius: 20px;
+  margin-bottom: 10px;
+}
+.worig {
+  background: #fff9e6;
+  border-left: 3px solid #f1c40f;
+  border-radius: 0 6px 6px 0;
+  padding: 10px 14px;
+  font-size: 13px; line-height: 1.7;
+  color: #344054; margin-bottom: 10px;
+}
+.wfp { display: flex; gap: 8px; font-size: 13px; line-height: 1.6; color: #344054; margin-bottom: 6px; }
+.wfp::before { content: "→"; color: #f0822a; font-weight: 700; flex-shrink: 0; }
+.wrevised {
+  background: #eaf8ef;
+  border-left: 3px solid #27ae60;
+  border-radius: 0 6px 6px 0;
+  padding: 10px 14px; margin-top: 10px;
+}
+.wrev-lbl { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: #27ae60; margin-bottom: 6px; }
+.wrev-txt { font-size: 13px; line-height: 1.7; color: #1a5c3a; }
+.woverall {
+  background: linear-gradient(135deg, #1a3a5c 0%, #2a5080 100%);
+  color: white; border-radius: 10px;
+  padding: 16px; margin: 14px 18px 18px;
+}
+.wov-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; opacity: 0.7; margin-bottom: 8px; }
+.wov-txt { font-size: 14px; line-height: 1.7; opacity: 0.95; }
+@media(max-width:480px){ .wscore-grid{grid-template-columns:repeat(2,1fr);} }
+</style>
+
+<div class="writing-section">
+  <div class="writing-divider"><span class="writing-divider-label">✍️ 英文作文練習</span></div>
+
+  <!-- 題目提示 -->
+  <div class="wcard">
+    <div class="wcard-header">
+      <div class="wcard-icon wi-blue">📋</div>
+      <div>
+        <div class="wcard-label">作文題目</div>
+        <div class="wcard-title">志工服務 Volunteer Service</div>
+      </div>
+    </div>
+    <div class="wcard-body">
+      <div class="prompt-txt">志工服務（volunteer service）在現代社會中扮演著重要的角色，許多學校也鼓勵學生參與各種志工活動。請以此為主題寫一篇英文作文，文分兩段，文長至少 120 個單詞（words）。</div>
+      <div class="prompt-hl">
+        <strong>第一段：</strong>描述志工服務的種類及其對社會的貢獻<br>
+        <strong>第二段：</strong>分享你自己參與志工服務的經驗，或說明你認為哪種志工服務最有意義及其原因
+      </div>
+      <div class="wchecklist">
+        <div class="wcheck-item"><div class="wcheck-dot">①</div><span>說明 2 種以上志工類型（環境清潔、老人關懷、教育支援⋯）</span></div>
+        <div class="wcheck-item"><div class="wcheck-dot">②</div><span>說明志工對社會的貢獻（幫助弱勢、增強社區凝聚力）</span></div>
+        <div class="wcheck-item"><div class="wcheck-dot">③</div><span>第二段：個人經驗或說明最有意義的類型及理由</span></div>
+        <div class="wcheck-item"><div class="wcheck-dot">④</div><span>至少 120 words，文分兩段</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 輸入區 -->
+  <div class="wcard">
+    <div class="wcard-header">
+      <div class="wcard-icon wi-orange">✏️</div>
+      <div>
+        <div class="wcard-label">輸入作文</div>
+        <div class="wcard-title">請在下方輸入或貼上你的英文作文</div>
+      </div>
+    </div>
+    <div class="wcard-body">
+      <textarea class="essay-ta" id="wEssayInput" placeholder="Volunteer service plays an important role in modern society..."></textarea>
+      <div class="wc-meta">
+        <div class="wc-low" id="wWordCount">字數：<span>0</span> / 120 words</div>
+        <div style="font-size:12px">建議 150–200 字</div>
+      </div>
+    </div>
+  </div>
+
+  <button class="wbtn" id="wSubmitBtn" onclick="wHandleSubmit()">🤖 送出，開始 AI 批改</button>
+
+  <!-- 載入中 -->
+  <div class="wcard" id="wLoadingCard" style="display:none">
+    <div class="wloading on">
+      <div class="wspinner"></div>
+      <div style="font-size:14px;color:#667085;text-align:center">AI 正在批改你的作文<br>請稍候約 10–15 秒…</div>
+    </div>
+  </div>
+
+  <!-- 結果 -->
+  <div class="wcard wresult" id="wResultCard">
+    <div class="wcard-header">
+      <div class="wcard-icon wi-green">📊</div>
+      <div>
+        <div class="wcard-label">批改結果</div>
+        <div class="wcard-title">整體評分</div>
+      </div>
+    </div>
+    <div class="wscore-grid">
+      <div class="wscore-item"><div class="wscore-num sc-a" id="wScC">—</div><div class="wscore-lbl">內容 Content</div></div>
+      <div class="wscore-item"><div class="wscore-num sc-b" id="wScO">—</div><div class="wscore-lbl">組織 Organization</div></div>
+      <div class="wscore-item"><div class="wscore-num sc-c" id="wScG">—</div><div class="wscore-lbl">文法 Grammar</div></div>
+      <div class="wscore-item"><div class="wscore-num sc-d" id="wScV">—</div><div class="wscore-lbl">用字 Vocabulary</div></div>
+    </div>
+    <div class="wfeed-sec">
+      <div class="wsec-tag">📝 第一段分析</div>
+      <div class="worig" id="wP1Orig"></div>
+      <div id="wP1Pts"></div>
+      <div class="wrevised"><div class="wrev-lbl">✦ 修改範例</div><div class="wrev-txt" id="wP1Rev"></div></div>
+    </div>
+    <div class="wfeed-sec">
+      <div class="wsec-tag">📝 第二段分析</div>
+      <div class="worig" id="wP2Orig"></div>
+      <div id="wP2Pts"></div>
+      <div class="wrevised"><div class="wrev-lbl">✦ 修改範例</div><div class="wrev-txt" id="wP2Rev"></div></div>
+    </div>
+    <div class="woverall">
+      <div class="wov-title">📣 整體總評 Overall Comment</div>
+      <div class="wov-txt" id="wOverall"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const ta = document.getElementById('wEssayInput');
+  ta.addEventListener('input', function(){
+    const words = ta.value.trim() ? ta.value.trim().split(/\s+/).filter(w=>w).length : 0;
+    const el = document.getElementById('wWordCount');
+    el.querySelector('span').textContent = words;
+    el.className = words >= 120 ? 'wc-ok' : 'wc-low';
+  });
+})();
+
+async function wHandleSubmit(){
+  const essay = document.getElementById('wEssayInput').value.trim();
+  if(!essay){ alert('請先輸入你的作文！'); return; }
+  const words = essay.split(/\s+/).filter(w=>w).length;
+  if(words < 30){ alert('作文內容太短，請至少輸入 30 個英文字！'); return; }
+
+  document.getElementById('wSubmitBtn').disabled = true;
+  document.getElementById('wLoadingCard').style.display = 'block';
+  document.getElementById('wResultCard').classList.remove('on');
+
+  const prompt = `你是一位台灣高中英文老師，請批改以下學生的英文作文。
+
+作文題目：
+志工服務（volunteer service）在現代社會中扮演著重要的角色。請以此為主題寫一篇英文作文，文分兩段，文長至少120個單詞。
+第一段：描述志工服務的種類及其對社會的貢獻。
+第二段：分享你自己參與志工服務的經驗，或說明你認為哪種志工服務最有意義及其原因。
+
+學生作文：
+${essay}
+
+請以 JSON 格式回應，不要加任何 Markdown 或說明文字，直接輸出 JSON：
+{
+  "scores": {
+    "content": "數字1-20",
+    "organization": "數字1-20",
+    "grammar": "數字1-20",
+    "vocabulary": "數字1-20"
+  },
+  "para1": {
+    "original": "第一段原文",
+    "feedback": ["回饋點1（中文）", "回饋點2（中文）"],
+    "revised": "修改後的第一段（英文）"
+  },
+  "para2": {
+    "original": "第二段原文",
+    "feedback": ["回饋點1（中文）", "回饋點2（中文）"],
+    "revised": "修改後的第二段（英文）"
+  },
+  "overall": "整體總評（中文，2-3句，鼓勵為主）"
+}`;
+
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 1000,
+        messages: [{role:"user", content: prompt}]
+      })
+    });
+    const data = await res.json();
+    const raw = data.content.map(b=>b.text||'').join('');
+    const clean = raw.replace(/```json|```/g,'').trim();
+    const r = JSON.parse(clean);
+
+    document.getElementById('wScC').textContent = r.scores.content;
+    document.getElementById('wScO').textContent = r.scores.organization;
+    document.getElementById('wScG').textContent = r.scores.grammar;
+    document.getElementById('wScV').textContent = r.scores.vocabulary;
+    document.getElementById('wP1Orig').textContent = r.para1.original;
+    document.getElementById('wP1Pts').innerHTML = r.para1.feedback.map(f=>`<div class="wfp">${f}</div>`).join('');
+    document.getElementById('wP1Rev').textContent = r.para1.revised;
+    document.getElementById('wP2Orig').textContent = r.para2.original;
+    document.getElementById('wP2Pts').innerHTML = r.para2.feedback.map(f=>`<div class="wfp">${f}</div>`).join('');
+    document.getElementById('wP2Rev').textContent = r.para2.revised;
+    document.getElementById('wOverall').textContent = r.overall;
+
+    document.getElementById('wResultCard').classList.add('on');
+    document.getElementById('wResultCard').scrollIntoView({behavior:'smooth', block:'start'});
+  } catch(err){
+    alert('批改時發生錯誤，請重試。\n' + err.message);
+  } finally {
+    document.getElementById('wLoadingCard').style.display = 'none';
+    document.getElementById('wSubmitBtn').disabled = false;
+  }
+}
+</script>
 </body>
 </html>
