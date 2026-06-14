@@ -29,7 +29,12 @@ a:hover { text-decoration: underline; }
 .options { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 16px;
            margin-bottom: 10px; }
 .options.single { grid-template-columns: 1fr; }
-.opt { padding: 2px 4px; border-radius: 4px; }
+.opt { padding: 4px 6px; border-radius: 4px; cursor: pointer; border: 1px solid transparent;
+       transition: background 0.12s, border-color 0.12s; }
+.opt:hover { background: #f0f4ff; }
+.q-block.answered .opt { cursor: default; }
+.opt.correct { background: #d4edda; border-color: #28a745; font-weight: 700; }
+.opt.incorrect { background: #f8d7da; border-color: #dc3545; }
 .analysis-btn { background: none; border: 1px solid #1a6bbf; color: #1a6bbf;
                 border-radius: 4px; font-size: 0.85em; padding: 3px 10px;
                 cursor: pointer; }
@@ -42,6 +47,18 @@ a:hover { text-decoration: underline; }
 .submit-btn { background: #1a6bbf; color: #fff; border: none; border-radius: 8px;
               font-size: 1.05em; font-weight: 700; padding: 14px 36px; cursor: pointer; }
 .submit-btn:hover { background: #1558a0; }
+.input-textarea { width: 100%; min-height: 90px; border: 1px solid #ccc; border-radius: 6px;
+                  padding: 10px; font-family: inherit; font-size: 0.95em; margin: 8px 0;
+                  resize: vertical; color: #222; }
+.input-textarea.essay { min-height: 220px; }
+.input-textarea:focus { outline: none; border-color: #1a6bbf; }
+.compare-btn { background: #1a6bbf; color: #fff; border: none; border-radius: 4px;
+               font-size: 0.85em; padding: 6px 14px; cursor: pointer; }
+.compare-btn:hover { background: #1558a0; }
+.essay-stats { display: flex; gap: 20px; margin: 4px 0 10px; font-size: 0.9em; color: #555; }
+.essay-stats b { color: #1a6bbf; }
+.essay-hint { font-weight: 700; margin-bottom: 4px; }
+.essay-hint span { font-weight: 400; color: #888; }
 </style>
 </head>
 <body>
@@ -56,59 +73,59 @@ a:hover { text-decoration: underline; }
     <button class="analysis-btn" onclick="hideAll()">收起所有解析</button>
   </div>
 <div class="section-title">第一部分　詞彙題（第1-10題）</div>
-<div class="q-block"><p class="q-text"><span class="q-num">1.</span>The government announced a series of ______ measures to reduce air pollution in the capital.</p><div class="options"><div class="opt">(A) aggressive</div><div class="opt">(B) optional</div><div class="opt">(C) subtle</div><div class="opt">(D) decorative</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">中譯：政府宣布了一系列＿＿＿措施，以減少首都的空氣污染。
+<div class="q-block"><p class="q-text"><span class="q-num">1.</span>The government announced a series of ______ measures to reduce air pollution in the capital.</p><div class="options"><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(A) aggressive</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(B) optional</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(C) subtle</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(D) decorative</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">中譯：政府宣布了一系列＿＿＿措施，以減少首都的空氣污染。
 正解 (A) aggressive（積極強硬的、大力的）：aggressive measures（積極/強硬的措施）是常見搭配，用來形容政府為解決嚴重問題（如空氣污染）所採取的「大力、積極」的行動，與「減少空氣污染」這一目標的迫切性相符。
 (B) optional（可選擇的、非強制的）：optional measures（可選擇性措施）暗示這些措施並非強制執行，與政府「宣布」一系列措施以「解決」污染問題的堅定語氣不符，力度不足。
 (C) subtle（微妙的、不明顯的）：subtle measures（微妙的措施）表示不易察覺、輕微的作法，但要有效減少空氣污染通常需要明顯且有力的政策，與句意的迫切性矛盾。
 (D) decorative（裝飾性的）：decorative measures（裝飾性措施）指僅具表面、裝飾效果而無實質作用的措施，與政府認真解決污染問題的語境完全不符。</div></div>
-<div class="q-block"><p class="q-text"><span class="q-num">2.</span>The novel&#x27;s plot was so ______ that even experienced readers found it hard to predict the ending.</p><div class="options"><div class="opt">(A) predictable</div><div class="opt">(B) straightforward</div><div class="opt">(C) intricate</div><div class="opt">(D) shallow</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">中譯：這部小說的情節非常＿＿＿，即使是經驗豐富的讀者也很難預測結局。
+<div class="q-block"><p class="q-text"><span class="q-num">2.</span>The novel&#x27;s plot was so ______ that even experienced readers found it hard to predict the ending.</p><div class="options"><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(A) predictable</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(B) straightforward</div><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(C) intricate</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(D) shallow</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">中譯：這部小說的情節非常＿＿＿，即使是經驗豐富的讀者也很難預測結局。
 正解 (C) intricate（複雜精細的）：intricate plot（錯綜複雜的情節）能合理解釋為什麼「即使是經驗豐富的讀者也難以預測結局」，情節越複雜、層次越多，越難猜到走向，因果關係合理。
 (A) predictable（可預測的）：若情節是 predictable（可預測的），便不會讓「經驗豐富的讀者也覺得難以預測」，語意自相矛盾。
 (B) straightforward（直接了當的、簡單明瞭的）：straightforward plot（簡單直白的情節）通常容易預測結局，與「難以預測」的句意相反。
 (D) shallow（膚淺的）：shallow plot（膚淺的情節）通常結構簡單、缺乏深度，較容易被猜到結局，與「難以預測」的語境不符。</div></div>
-<div class="q-block"><p class="q-text"><span class="q-num">3.</span>After the storm, volunteers worked tirelessly to ______ the damaged homes in the flooded neighborhood.</p><div class="options"><div class="opt">(A) inspect</div><div class="opt">(B) restore</div><div class="opt">(C) abandon</div><div class="opt">(D) measure</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">中譯：暴風雨過後，志工們不辭辛勞地＿＿＿淹水社區中受損的房屋。
+<div class="q-block"><p class="q-text"><span class="q-num">3.</span>After the storm, volunteers worked tirelessly to ______ the damaged homes in the flooded neighborhood.</p><div class="options"><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(A) inspect</div><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(B) restore</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(C) abandon</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(D) measure</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">中譯：暴風雨過後，志工們不辭辛勞地＿＿＿淹水社區中受損的房屋。
 正解 (B) restore（修復、恢復）：restore the damaged homes（修復受損的房屋）語意通順，志工在風災後協助修復房屋是常見且合理的善後行動，與「暴風雨過後」的情境完全吻合。
 (A) inspect（檢查）：inspect the damaged homes（檢查受損房屋）雖然也合理，但「不辭辛勞地檢查」與「tirelessly」所強調的「持續努力、付出大量勞力」的語氣相比，restore（修復重建）更能展現志工辛勤付出的具體成果與行動意義。
 (C) abandon（放棄、棄置）：abandon the damaged homes（放棄受損房屋）與志工「不辭辛勞」(tirelessly worked) 採取積極行動的精神完全相反，邏輯矛盾。
 (D) measure（測量）：measure the damaged homes（測量受損房屋）語意過於技術性、片面，無法呼應「志工們不辭辛勞地努力」這種投入大量心力協助重建的整體語境。</div></div>
-<div class="q-block"><p class="q-text"><span class="q-num">4.</span>The speaker&#x27;s ______ tone made the audience feel at ease and ready to listen attentively.</p><div class="options"><div class="opt">(A) hostile</div><div class="opt">(B) soothing</div><div class="opt">(C) technical</div><div class="opt">(D) urgent</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">中譯：演講者＿＿＿的語氣讓聽眾感到放心並願意專注聆聽。
+<div class="q-block"><p class="q-text"><span class="q-num">4.</span>The speaker&#x27;s ______ tone made the audience feel at ease and ready to listen attentively.</p><div class="options"><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(A) hostile</div><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(B) soothing</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(C) technical</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(D) urgent</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">中譯：演講者＿＿＿的語氣讓聽眾感到放心並願意專注聆聽。
 正解 (B) soothing（撫慰人心的、舒緩的）：soothing tone（撫慰人心的語氣）能讓人感到 at ease（放鬆、安心），並進而「ready to listen attentively」（願意專心聆聽），因果關係合理且語意自然。
 (A) hostile（充滿敵意的）：hostile tone（充滿敵意的語氣）會讓聽眾感到緊張或防備，而非「感到放鬆並專心聆聽」，語意相反。
 (C) technical（技術性的）：technical tone（技術性的語氣）通常較生硬、專業，不一定能讓聽眾「感到放鬆」，且與「感到放心」的情感描述不直接相關。
 (D) urgent（緊迫的、急切的）：urgent tone（急切的語氣）通常會讓人感到緊張、有壓力，而非「感到放鬆、安心」，與句意相反。</div></div>
-<div class="q-block"><p class="q-text"><span class="q-num">5.</span>The athlete&#x27;s ______ training schedule left little time for family or leisure activities.</p><div class="options"><div class="opt">(A) flexible</div><div class="opt">(B) casual</div><div class="opt">(C) demanding</div><div class="opt">(D) adequate</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">中譯：這位運動員＿＿＿的訓練計畫幾乎沒有留下時間給家庭或休閒活動。
+<div class="q-block"><p class="q-text"><span class="q-num">5.</span>The athlete&#x27;s ______ training schedule left little time for family or leisure activities.</p><div class="options"><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(A) flexible</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(B) casual</div><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(C) demanding</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(D) adequate</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">中譯：這位運動員＿＿＿的訓練計畫幾乎沒有留下時間給家庭或休閒活動。
 正解 (C) demanding（高要求的、嚴苛的）：demanding training schedule（要求嚴苛的訓練計畫）能合理解釋為什麼「幾乎沒有時間給家庭或休閒活動」——訓練計畫越嚴苛、要求越高，所佔用的時間就越多，因果關係合理。
 (A) flexible（彈性的）：flexible schedule（彈性的計畫）通常意味著時間安排可以調整，理論上應該「留有時間」給其他活動，與句意「幾乎沒有時間」相矛盾。
 (B) casual（隨意的、非正式的）：casual training schedule（隨意的訓練計畫）暗示訓練強度不高、不嚴格，不太可能導致「幾乎沒有時間」從事其他活動，與句意不符。
 (D) adequate（足夠的、適當的）：adequate schedule（足夠/適當的計畫）通常表示安排得當、合理，不會造成「幾乎沒有時間」這種極端的結果，與句意的強烈語氣不符。</div></div>
-<div class="q-block"><p class="q-text"><span class="q-num">6.</span>The museum&#x27;s latest exhibition ______ rare artifacts from civilizations that no longer exist.</p><div class="options"><div class="opt">(A) features</div><div class="opt">(B) rejects</div><div class="opt">(C) removes</div><div class="opt">(D) donates</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">中譯：這間博物館最新的展覽＿＿＿來自已不存在文明的稀有文物。
+<div class="q-block"><p class="q-text"><span class="q-num">6.</span>The museum&#x27;s latest exhibition ______ rare artifacts from civilizations that no longer exist.</p><div class="options"><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(A) features</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(B) rejects</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(C) removes</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(D) donates</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">中譯：這間博物館最新的展覽＿＿＿來自已不存在文明的稀有文物。
 正解 (A) features（以…為特色、展出）：feature rare artifacts（以稀有文物為特色展出）是描述展覽內容時常見且自然的搭配，意指這次展覽「展出、呈現」這些珍貴文物，語意通順。
 (B) rejects（拒絕）：reject rare artifacts（拒絕稀有文物）語意不通，展覽的目的是「展示」文物而非「拒絕」它們，邏輯矛盾。
 (C) removes（移除）：remove rare artifacts（移除稀有文物）表示將文物撤除、移走，這與「最新展覽」呈現文物的語境完全相反。
 (D) donates（捐贈）：donate rare artifacts（捐贈稀有文物）通常指博物館將文物贈與他處，而非「展覽展出」文物，動詞主體與語境不符。</div></div>
-<div class="q-block"><p class="q-text"><span class="q-num">7.</span>To ______ the safety of workers, the factory installed new protective gear and updated equipment.</p><div class="options"><div class="opt">(A) threaten</div><div class="opt">(B) determine</div><div class="opt">(C) guarantee</div><div class="opt">(D) postpone</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">中譯：為了＿＿＿工人的安全，工廠安裝了新的防護裝備並更新了設備。
+<div class="q-block"><p class="q-text"><span class="q-num">7.</span>To ______ the safety of workers, the factory installed new protective gear and updated equipment.</p><div class="options"><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(A) threaten</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(B) determine</div><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(C) guarantee</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(D) postpone</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">中譯：為了＿＿＿工人的安全，工廠安裝了新的防護裝備並更新了設備。
 正解 (C) guarantee（保證、確保）：guarantee the safety of workers（保證工人的安全）語意通順，「安裝新的防護裝備並更新設備」正是為了「確保」工人安全所採取的具體行動，因果關係合理。
 (A) threaten（威脅）：threaten the safety of workers（威脅工人的安全）與「安裝防護裝備、更新設備」這種保護性行動的目的完全相反，語意矛盾。
 (B) determine（決定、判定）：determine the safety of workers（判定工人的安全）語意較為抽象、偏向「評估」而非「確保」，與後文「安裝防護裝備」這種主動採取保護措施的具體行動銜接不夠直接。
 (D) postpone（延後）：postpone the safety of workers（延後工人的安全）語意不通，「安全」並非可以被「延後」的對象，且與「安裝新設備」這種立即採取行動的描述矛盾。</div></div>
-<div class="q-block"><p class="q-text"><span class="q-num">8.</span>The report revealed that food waste has reached ______ levels, with millions of tons discarded each year.</p><div class="options"><div class="opt">(A) manageable</div><div class="opt">(B) alarming</div><div class="opt">(C) beneficial</div><div class="opt">(D) satisfying</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">中譯：報告顯示食物浪費已達到＿＿＿的程度，每年有數百萬噸的食物被丟棄。
+<div class="q-block"><p class="q-text"><span class="q-num">8.</span>The report revealed that food waste has reached ______ levels, with millions of tons discarded each year.</p><div class="options"><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(A) manageable</div><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(B) alarming</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(C) beneficial</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(D) satisfying</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">中譯：報告顯示食物浪費已達到＿＿＿的程度，每年有數百萬噸的食物被丟棄。
 正解 (B) alarming（令人擔憂的、警訊的）：alarming levels（令人擔憂的程度）能合理修飾「食物浪費」這一負面現象，且後文「每年數百萬噸食物被丟棄」這個驚人的數據，正好支持「令人擔憂」的語氣，因果關係合理。
 (A) manageable（可控制的、可處理的）：manageable levels（可控制的程度）暗示問題不算嚴重、仍在掌控之中，但後文「每年數百萬噸食物被丟棄」描述的是嚴重的問題，與 manageable 的語意矛盾。
 (C) beneficial（有益的）：beneficial levels（有益的程度）用於形容「食物浪費」這種負面現象顯然不合邏輯，浪費食物不可能是「有益的」。
 (D) satisfying（令人滿意的）：satisfying levels（令人滿意的程度）同樣不適合用來形容「食物浪費」這個負面議題，語意矛盾且不合常理。</div></div>
-<div class="q-block"><p class="q-text"><span class="q-num">9.</span>His consistent ______ to the team&#x27;s success was finally acknowledged at the annual awards ceremony.</p><div class="options"><div class="opt">(A) objection</div><div class="opt">(B) interference</div><div class="opt">(C) contribution</div><div class="opt">(D) reduction</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">中譯：他對團隊成功持續的＿＿＿終於在年度頒獎典禮上獲得了認可。
+<div class="q-block"><p class="q-text"><span class="q-num">9.</span>His consistent ______ to the team&#x27;s success was finally acknowledged at the annual awards ceremony.</p><div class="options"><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(A) objection</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(B) interference</div><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(C) contribution</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(D) reduction</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">中譯：他對團隊成功持續的＿＿＿終於在年度頒獎典禮上獲得了認可。
 正解 (C) contribution（貢獻）：consistent contribution to the team&#x27;s success（對團隊成功持續的貢獻）語意通順，「貢獻」是會在頒獎典禮上被表揚、認可的正向行為，與「被認可」(acknowledged) 的結果相呼應。
 (A) objection（反對、異議）：objection to the team&#x27;s success（對團隊成功的反對）語意不通，「持續反對團隊的成功」不太可能在頒獎典禮上獲得「認可」與表揚，邏輯矛盾。
 (B) interference（干涉、妨礙）：interference to the team&#x27;s success（對團隊成功的干涉/妨礙）是負面行為，不會在頒獎典禮上被「acknowledged」（讚揚、認可），與句意完全相反。
 (D) reduction（減少）：reduction to the team&#x27;s success（對團隊成功的減少）語意不通且搭配不自然，「減少成功」是負面的，不會是頒獎典禮表揚的對象。</div></div>
-<div class="q-block"><p class="q-text"><span class="q-num">10.</span>The landscape was breathtaking—rolling hills ______ by dense forests and sparkling rivers.</p><div class="options"><div class="opt">(A) damaged</div><div class="opt">(B) surrounded</div><div class="opt">(C) divided</div><div class="opt">(D) covered</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">中譯：景色令人驚嘆——連綿起伏的丘陵被茂密的森林與閃閃發光的河流＿＿＿。
+<div class="q-block"><p class="q-text"><span class="q-num">10.</span>The landscape was breathtaking—rolling hills ______ by dense forests and sparkling rivers.</p><div class="options"><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(A) damaged</div><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(B) surrounded</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(C) divided</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(D) covered</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">中譯：景色令人驚嘆——連綿起伏的丘陵被茂密的森林與閃閃發光的河流＿＿＿。
 正解 (B) surrounded（環繞）：rolling hills surrounded by dense forests and sparkling rivers（被茂密森林與閃閃發光的河流環繞的連綿丘陵）描繪出一幅自然景觀互相環繞、層次豐富的畫面，與「breathtaking（令人驚嘆的）landscape」的描述相符，語意自然優美。
 (A) damaged（損壞）：damaged by dense forests and sparkling rivers（被茂密森林和閃閃發光的河流「損壞」）語意不通，森林與河流通常不會「損壞」丘陵，且與「breathtaking」讚嘆美景的正面語氣矛盾。
 (C) divided（分割）：divided by dense forests and sparkling rivers（被森林和河流「分割」）雖然在文法上可能通順，但「分割」這個詞較為中性甚至帶有割裂感，不如 surrounded（環繞）更能呈現「令人驚嘆」景觀中自然元素彼此交融環繞的和諧美感。
 (D) covered（覆蓋）：covered by dense forests and sparkling rivers（被森林和河流「覆蓋」）語意較不自然，河流通常無法「覆蓋」丘陵（河流是線狀分布而非覆蓋整片區域），搭配不夠精確。</div></div>
 <div class="section-title">第二部分　綜合測驗（第11-20題）</div>
 <div class="passage"><b>第11至15題為題組</b><br><br>Urban gardening—the practice of growing food in cities—has gained remarkable   11   in recent years. As more people become aware of where their food comes from, many city dwellers have turned rooftops, balconies, and vacant lots into productive green spaces. In cities like Singapore and Tokyo, vertical gardens and hydroponic systems allow residents to grow   12   in small, controlled environments. Community gardens, in particular, offer more than just fresh produce. They serve as meeting places where neighbors can   13  , share knowledge, and strengthen social bonds. Research has shown that spending time in green spaces can   14   stress and improve overall mental well-being. As climate change threatens traditional agriculture, urban gardening may also play an important role in building more   15   food systems for future generations.</div>
-<div class="q-block"><p class="q-text"><span class="q-num">11.</span>請選出最適合填入空格的答案</p><div class="options"><div class="opt">(A) criticism</div><div class="opt">(B) popularity</div><div class="opt">(C) competition</div><div class="opt">(D) regulation</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【綜合測驗第一篇背景】
+<div class="q-block"><p class="q-text"><span class="q-num">11.</span>請選出最適合填入空格的答案</p><div class="options"><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(A) criticism</div><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(B) popularity</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(C) competition</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(D) regulation</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【綜合測驗第一篇背景】
 段落大意：「都市園藝」(urban gardening)，即在城市中種植食物的做法，近年來人氣大增。隨著越來越多人開始關心食物的來源，許多城市居民將屋頂、陽台與空地改造成具生產力的綠色空間。在新加坡、東京等城市，垂直花園與水耕系統讓居民能在小型、受控的環境中種植農作物。社區花園尤其提供的不只是新鮮蔬果——它們也是鄰居們可以聚在一起、分享知識並增進社會凝聚力的聚會場所。研究顯示，待在綠色空間中能減少壓力並改善整體心理健康。隨著氣候變遷威脅傳統農業，都市園藝也可能在為未來世代建立更具韌性的食物系統方面，扮演重要的角色。
 
 第11題：Urban gardening—the practice of growing food in cities—has gained remarkable   11   in recent years.
@@ -117,7 +134,7 @@ a:hover { text-decoration: underline; }
 (A) criticism（批評）：gain remarkable criticism（獲得驚人的批評）與後文描述都市園藝蓬勃發展、人們踴躍參與的正向敘述方向不符。
 (C) competition（競爭）：gain remarkable competition（獲得驚人的競爭）語意不通，「都市園藝獲得競爭」邏輯上講不通，且後文並未提及競爭相關的內容。
 (D) regulation（法規、規範）：gain remarkable regulation（獲得驚人的法規）語意不自然，「園藝活動獲得法規」搭配不合理，且後文強調的是民眾自發參與的趨勢，而非法規層面的變化。</div></div>
-<div class="q-block"><p class="q-text"><span class="q-num">12.</span>請選出最適合填入空格的答案</p><div class="options"><div class="opt">(A) animals</div><div class="opt">(B) technology</div><div class="opt">(C) crops</div><div class="opt">(D) furniture</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【綜合測驗第一篇背景】
+<div class="q-block"><p class="q-text"><span class="q-num">12.</span>請選出最適合填入空格的答案</p><div class="options"><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(A) animals</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(B) technology</div><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(C) crops</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(D) furniture</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【綜合測驗第一篇背景】
 段落大意：「都市園藝」(urban gardening)，即在城市中種植食物的做法，近年來人氣大增。隨著越來越多人開始關心食物的來源，許多城市居民將屋頂、陽台與空地改造成具生產力的綠色空間。在新加坡、東京等城市，垂直花園與水耕系統讓居民能在小型、受控的環境中種植農作物。社區花園尤其提供的不只是新鮮蔬果——它們也是鄰居們可以聚在一起、分享知識並增進社會凝聚力的聚會場所。研究顯示，待在綠色空間中能減少壓力並改善整體心理健康。隨著氣候變遷威脅傳統農業，都市園藝也可能在為未來世代建立更具韌性的食物系統方面，扮演重要的角色。
 
 第12題：In cities like Singapore and Tokyo, vertical gardens and hydroponic systems allow residents to grow   12   in small, controlled environments.
@@ -126,7 +143,7 @@ a:hover { text-decoration: underline; }
 (A) animals（動物）：grow animals（種植動物）搭配不通，動物是「飼養」(raise) 而非「種植」(grow)，且與「都市園藝」種植食物的主題不符。
 (B) technology（技術）：grow technology（種植技術）語意不通，「技術」並非可以被「種植」的對象，搭配錯誤。
 (D) furniture（家具）：grow furniture（種植家具）語意完全不通，家具不可能透過種植產生，與整段討論「都市園藝種植食物」的主題無關。</div></div>
-<div class="q-block"><p class="q-text"><span class="q-num">13.</span>請選出最適合填入空格的答案</p><div class="options"><div class="opt">(A) compete fiercely</div><div class="opt">(B) come together</div><div class="opt">(C) stay apart</div><div class="opt">(D) cause conflict</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【綜合測驗第一篇背景】
+<div class="q-block"><p class="q-text"><span class="q-num">13.</span>請選出最適合填入空格的答案</p><div class="options"><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(A) compete fiercely</div><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(B) come together</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(C) stay apart</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(D) cause conflict</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【綜合測驗第一篇背景】
 段落大意：「都市園藝」(urban gardening)，即在城市中種植食物的做法，近年來人氣大增。隨著越來越多人開始關心食物的來源，許多城市居民將屋頂、陽台與空地改造成具生產力的綠色空間。在新加坡、東京等城市，垂直花園與水耕系統讓居民能在小型、受控的環境中種植農作物。社區花園尤其提供的不只是新鮮蔬果——它們也是鄰居們可以聚在一起、分享知識並增進社會凝聚力的聚會場所。研究顯示，待在綠色空間中能減少壓力並改善整體心理健康。隨著氣候變遷威脅傳統農業，都市園藝也可能在為未來世代建立更具韌性的食物系統方面，扮演重要的角色。
 
 第13題：They serve as meeting places where neighbors can   13  , share knowledge, and strengthen social bonds.
@@ -135,7 +152,7 @@ a:hover { text-decoration: underline; }
 (A) compete fiercely（激烈競爭）：compete fiercely, share knowledge, and strengthen social bonds 語意矛盾——「激烈競爭」與「分享知識、增進凝聚力」這類合作性、正向的行為方向相反。
 (C) stay apart（保持距離、各自分開）：stay apart 與「meeting places（聚會場所）」讓人們「聚在一起」的功能完全相反，且與後面「分享知識、增進凝聚力」的正向描述矛盾。
 (D) cause conflict（引發衝突）：cause conflict, share knowledge, and strengthen social bonds 語意矛盾，「引發衝突」是負面行為，與後面「分享知識、增進社會凝聚力」的正向敘述不一致。</div></div>
-<div class="q-block"><p class="q-text"><span class="q-num">14.</span>請選出最適合填入空格的答案</p><div class="options"><div class="opt">(A) worsen</div><div class="opt">(B) measure</div><div class="opt">(C) reduce</div><div class="opt">(D) transfer</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【綜合測驗第一篇背景】
+<div class="q-block"><p class="q-text"><span class="q-num">14.</span>請選出最適合填入空格的答案</p><div class="options"><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(A) worsen</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(B) measure</div><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(C) reduce</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(D) transfer</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【綜合測驗第一篇背景】
 段落大意：「都市園藝」(urban gardening)，即在城市中種植食物的做法，近年來人氣大增。隨著越來越多人開始關心食物的來源，許多城市居民將屋頂、陽台與空地改造成具生產力的綠色空間。在新加坡、東京等城市，垂直花園與水耕系統讓居民能在小型、受控的環境中種植農作物。社區花園尤其提供的不只是新鮮蔬果——它們也是鄰居們可以聚在一起、分享知識並增進社會凝聚力的聚會場所。研究顯示，待在綠色空間中能減少壓力並改善整體心理健康。隨著氣候變遷威脅傳統農業，都市園藝也可能在為未來世代建立更具韌性的食物系統方面，扮演重要的角色。
 
 第14題：Research has shown that spending time in green spaces can   14   stress and improve overall mental well-being.
@@ -144,7 +161,7 @@ a:hover { text-decoration: underline; }
 (A) worsen（使惡化）：worsen stress and improve overall mental well-being 語意矛盾——「使壓力惡化」與「改善心理健康」方向相反，無法並列為「研究顯示的正向效果」。
 (B) measure（測量）：measure stress and improve overall mental well-being 語意不一致，「測量壓力」是中性的觀察行為，與「改善心理健康」這種積極的效果在語意層次上不對等，且與本句強調「綠色空間帶來益處」的主旨不符。
 (D) transfer（轉移）：transfer stress and improve overall mental well-being 語意不通，「轉移壓力」並非「綠色空間」帶來的效果描述，且與「改善心理健康」的正向結果銜接不自然。</div></div>
-<div class="q-block"><p class="q-text"><span class="q-num">15.</span>請選出最適合填入空格的答案</p><div class="options"><div class="opt">(A) profitable</div><div class="opt">(B) resilient</div><div class="opt">(C) complicated</div><div class="opt">(D) independent</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【綜合測驗第一篇背景】
+<div class="q-block"><p class="q-text"><span class="q-num">15.</span>請選出最適合填入空格的答案</p><div class="options"><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(A) profitable</div><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(B) resilient</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(C) complicated</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(D) independent</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【綜合測驗第一篇背景】
 段落大意：「都市園藝」(urban gardening)，即在城市中種植食物的做法，近年來人氣大增。隨著越來越多人開始關心食物的來源，許多城市居民將屋頂、陽台與空地改造成具生產力的綠色空間。在新加坡、東京等城市，垂直花園與水耕系統讓居民能在小型、受控的環境中種植農作物。社區花園尤其提供的不只是新鮮蔬果——它們也是鄰居們可以聚在一起、分享知識並增進社會凝聚力的聚會場所。研究顯示，待在綠色空間中能減少壓力並改善整體心理健康。隨著氣候變遷威脅傳統農業，都市園藝也可能在為未來世代建立更具韌性的食物系統方面，扮演重要的角色。
 
 第15題：As climate change threatens traditional agriculture, urban gardening may also play an important role in building more   15   food systems for future generations.
@@ -154,7 +171,7 @@ a:hover { text-decoration: underline; }
 (C) complicated（複雜的）：complicated food systems（複雜的食物系統）並非「應對氣候變遷威脅」的合理目標，建立「複雜」的系統並不能直接解決氣候威脅帶來的問題，語意不符。
 (D) independent（獨立的）：independent food systems（獨立的食物系統）雖然語意上可能部分相關，但「resilient（具韌性、能適應與承受衝擊）」更精確地呼應「氣候變遷威脅」這一前提下，食物系統需要具備「應變能力」的核心訴求。</div></div>
 <div class="passage"><b>第16至20題為題組</b><br><br>The human brain is remarkably   16   throughout life, a quality known as neuroplasticity. Unlike a computer, which is fixed once it leaves the factory, the brain continuously reorganizes itself in   17   to new experiences, learning, and even injury. This means that learning new skills—whether a language, a musical instrument, or a sport—physically changes the structure of the brain. Neural pathways that are frequently used   18   stronger, while those that are rarely activated   19   weaker over time. This is why practice truly does make perfect: repeated activity reinforces the connections between neurons, making tasks feel more natural and automatic. Neuroplasticity also gives hope to people recovering from brain injuries. With the right rehabilitation,   20   brain regions can sometimes learn to take over functions that were lost, allowing patients to regain abilities they thought were gone forever.</div>
-<div class="q-block"><p class="q-text"><span class="q-num">16.</span>請選出最適合填入空格的答案</p><div class="options"><div class="opt">(A) adaptable</div><div class="opt">(B) fragile</div><div class="opt">(C) predictable</div><div class="opt">(D) isolated</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【綜合測驗第二篇背景】
+<div class="q-block"><p class="q-text"><span class="q-num">16.</span>請選出最適合填入空格的答案</p><div class="options"><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(A) adaptable</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(B) fragile</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(C) predictable</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(D) isolated</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【綜合測驗第二篇背景】
 段落大意：人類大腦在一生中都保持著驚人的＿可塑性＿(neuroplasticity)。與一旦離開工廠就固定不變的電腦不同，大腦會持續因應新的經驗、學習，甚至傷害而重新自我組織。這意味著學習新技能——無論是語言、樂器或運動——都會實際改變大腦的結構。經常使用的神經路徑會變得更強，而很少被激發的神經路徑則會隨時間變弱。這就是為什麼「熟能生巧」——重複的活動會強化神經元之間的連結，使任務變得更自然、更自動化。神經可塑性也為腦傷復健中的患者帶來希望。透過正確的復健，鄰近的健康腦區有時能夠學會接替已喪失的功能，讓患者重新獲得他們以為永遠失去的能力。
 
 第16題：The human brain is remarkably   16   throughout life, a quality known as neuroplasticity.
@@ -163,7 +180,7 @@ a:hover { text-decoration: underline; }
 (B) fragile（脆弱的）：remarkably fragile（驚人的脆弱）與後文「大腦持續重新組織自己以應對新經驗、學習」這種積極、具彈性的特質描述方向不符，fragile 強調的是「容易受損」，而非「能夠適應、重組」。
 (C) predictable（可預測的）：remarkably predictable（驚人的可預測）與「神經可塑性」強調大腦「能因應不同經驗而改變、重組」的不確定性與動態性特質不符。
 (D) isolated（孤立的、隔離的）：remarkably isolated（驚人的孤立）與「神經可塑性」描述大腦「持續與外界經驗互動並因此改變」的特質完全相反，isolated 暗示與外界隔絕，不符合語境。</div></div>
-<div class="q-block"><p class="q-text"><span class="q-num">17.</span>請選出最適合填入空格的答案</p><div class="options"><div class="opt">(A) addition</div><div class="opt">(B) response</div><div class="opt">(C) contrast</div><div class="opt">(D) comparison</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【綜合測驗第二篇背景】
+<div class="q-block"><p class="q-text"><span class="q-num">17.</span>請選出最適合填入空格的答案</p><div class="options"><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(A) addition</div><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(B) response</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(C) contrast</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(D) comparison</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【綜合測驗第二篇背景】
 段落大意：人類大腦在一生中都保持著驚人的＿可塑性＿(neuroplasticity)。與一旦離開工廠就固定不變的電腦不同，大腦會持續因應新的經驗、學習，甚至傷害而重新自我組織。這意味著學習新技能——無論是語言、樂器或運動——都會實際改變大腦的結構。經常使用的神經路徑會變得更強，而很少被激發的神經路徑則會隨時間變弱。這就是為什麼「熟能生巧」——重複的活動會強化神經元之間的連結，使任務變得更自然、更自動化。神經可塑性也為腦傷復健中的患者帶來希望。透過正確的復健，鄰近的健康腦區有時能夠學會接替已喪失的功能，讓患者重新獲得他們以為永遠失去的能力。
 
 第17題：Unlike a computer, which is fixed once it leaves the factory, the brain continuously reorganizes itself in   17   to new experiences, learning, and even injury.
@@ -172,7 +189,7 @@ a:hover { text-decoration: underline; }
 (A) addition（增加）：in addition to（除了…之外）雖為固定搭配，但若填入「in addition to new experiences」，語意會變成「除了新經驗之外，大腦還會重新組織自己因應...」，無法準確表達「大腦因應外界刺激而改變」這一核心語意，且與「Unlike a computer」的對比邏輯銜接不自然。
 (C) contrast（對比）：in contrast to（與…相比）表示對比關係，但此處要表達的是「大腦因應新經驗而重組」這種「回應」關係，而非「大腦與新經驗形成對比」，語意不符。
 (D) comparison（比較）：in comparison to（與…比較）同樣表示比較關係，與「大腦對新經驗、學習、傷害做出回應並重組自己」這一因果/回應關係不符，搭配不自然。</div></div>
-<div class="q-block"><p class="q-text"><span class="q-num">18.</span>請選出最適合填入空格的答案</p><div class="options"><div class="opt">(A) grow</div><div class="opt">(B) become</div><div class="opt">(C) feel</div><div class="opt">(D) sound</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【綜合測驗第二篇背景】
+<div class="q-block"><p class="q-text"><span class="q-num">18.</span>請選出最適合填入空格的答案</p><div class="options"><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(A) grow</div><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(B) become</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(C) feel</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(D) sound</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【綜合測驗第二篇背景】
 段落大意：人類大腦在一生中都保持著驚人的＿可塑性＿(neuroplasticity)。與一旦離開工廠就固定不變的電腦不同，大腦會持續因應新的經驗、學習，甚至傷害而重新自我組織。這意味著學習新技能——無論是語言、樂器或運動——都會實際改變大腦的結構。經常使用的神經路徑會變得更強，而很少被激發的神經路徑則會隨時間變弱。這就是為什麼「熟能生巧」——重複的活動會強化神經元之間的連結，使任務變得更自然、更自動化。神經可塑性也為腦傷復健中的患者帶來希望。透過正確的復健，鄰近的健康腦區有時能夠學會接替已喪失的功能，讓患者重新獲得他們以為永遠失去的能力。
 
 第18題：Neural pathways that are frequently used   18   stronger, while those that are rarely activated   19   weaker over time.
@@ -181,7 +198,7 @@ a:hover { text-decoration: underline; }
 (A) grow（生長、變得）：grow stronger 雖然在某些語境中也可表示「變得更強」，但對應後句 19 題若同樣考量句意對稱性與常見搭配，become 更廣泛適用於「pathways become stronger / weaker」這種狀態轉變的描述，且本題組以 become 作為一致的解答模式呼應「描述神經路徑強度變化」的語境。
 (C) feel（感覺）：feel stronger（感覺更強）將「神經路徑」擬人化為具有「感覺」的主體，搭配不自然，神經路徑本身並不會「感覺」到自己變強或變弱，應使用描述狀態轉變的動詞。
 (D) sound（聽起來）：sound stronger（聽起來更強）同樣不適合用來描述「神經路徑」這種生理結構的強度變化，sound 通常用於描述聲音或某事物給人的印象，與此處語境不符。</div></div>
-<div class="q-block"><p class="q-text"><span class="q-num">19.</span>請選出最適合填入空格的答案</p><div class="options"><div class="opt">(A) appear</div><div class="opt">(B) turn</div><div class="opt">(C) become</div><div class="opt">(D) feel</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【綜合測驗第二篇背景】
+<div class="q-block"><p class="q-text"><span class="q-num">19.</span>請選出最適合填入空格的答案</p><div class="options"><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(A) appear</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(B) turn</div><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(C) become</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(D) feel</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【綜合測驗第二篇背景】
 段落大意：人類大腦在一生中都保持著驚人的＿可塑性＿(neuroplasticity)。與一旦離開工廠就固定不變的電腦不同，大腦會持續因應新的經驗、學習，甚至傷害而重新自我組織。這意味著學習新技能——無論是語言、樂器或運動——都會實際改變大腦的結構。經常使用的神經路徑會變得更強，而很少被激發的神經路徑則會隨時間變弱。這就是為什麼「熟能生巧」——重複的活動會強化神經元之間的連結，使任務變得更自然、更自動化。神經可塑性也為腦傷復健中的患者帶來希望。透過正確的復健，鄰近的健康腦區有時能夠學會接替已喪失的功能，讓患者重新獲得他們以為永遠失去的能力。
 
 第19題：Neural pathways that are frequently used   18   stronger, while those that are rarely activated   19   weaker over time.
@@ -190,7 +207,7 @@ a:hover { text-decoration: underline; }
 (A) appear（出現、似乎）：appear weaker（似乎較弱、看起來較弱）強調的是「外觀上的印象」，而非神經路徑本身隨時間「實際發生強度上的變化」，與前句 become stronger（實際變強）的對稱性不符。
 (B) turn（變成）：turn weaker 的搭配不如 become weaker 自然常見，且為與第18題的 become 形成對稱並列結構，本題應同樣使用 become。
 (D) feel（感覺）：feel weaker（感覺較弱）將神經路徑擬人化為具有主觀感受的主體，搭配不自然，與描述生理結構強度變化的語境不符。</div></div>
-<div class="q-block"><p class="q-text"><span class="q-num">20.</span>請選出最適合填入空格的答案</p><div class="options"><div class="opt">(A) damaged</div><div class="opt">(B) healthy</div><div class="opt">(C) distant</div><div class="opt">(D) nearby</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【綜合測驗第二篇背景】
+<div class="q-block"><p class="q-text"><span class="q-num">20.</span>請選出最適合填入空格的答案</p><div class="options"><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(A) damaged</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(B) healthy</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(C) distant</div><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(D) nearby</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【綜合測驗第二篇背景】
 段落大意：人類大腦在一生中都保持著驚人的＿可塑性＿(neuroplasticity)。與一旦離開工廠就固定不變的電腦不同，大腦會持續因應新的經驗、學習，甚至傷害而重新自我組織。這意味著學習新技能——無論是語言、樂器或運動——都會實際改變大腦的結構。經常使用的神經路徑會變得更強，而很少被激發的神經路徑則會隨時間變弱。這就是為什麼「熟能生巧」——重複的活動會強化神經元之間的連結，使任務變得更自然、更自動化。神經可塑性也為腦傷復健中的患者帶來希望。透過正確的復健，鄰近的健康腦區有時能夠學會接替已喪失的功能，讓患者重新獲得他們以為永遠失去的能力。
 
 第20題：With the right rehabilitation,   20   brain regions can sometimes learn to take over functions that were lost, allowing patients to regain abilities they thought were gone forever.
@@ -330,7 +347,7 @@ Cave drawings discovered in Indonesia, dating back over 45,000 years, suggest th
 By sharing accounts of dangers and discoveries, individuals could pool their knowledge and protect the wider group from harm. This is why the human brain appears to be wired for narrative. When we hear a good story, our brains light up in ways that go far beyond simple information processing.  33  
 Modern research in psychology and neuroscience confirms what novelists and filmmakers have always known: stories are among the most powerful tools for persuasion and motivation available to us.  34  
 From social media and podcasts to immersive virtual reality experiences, each new medium creates fresh possibilities for narrative. Yet regardless of the platform, the fundamental human desire for story remains unchanged.</div>
-<div class="q-block"><p class="q-text"><span class="q-num">31.</span>請選出最適合填入空格的句子</p><div class="options single"><div class="opt">(A) Storytelling, in fact, predates written language by tens of thousands of years.</div><div class="opt">(B) Scientists now believe that sharing stories may have played a key role in the survival of early human groups.</div><div class="opt">(C) It strengthens social bonds, passes on cultural values, and makes abstract ideas easier to understand.</div><div class="opt">(D) As technology evolves, new platforms continue to emerge for telling and consuming stories.</div><div class="opt">(E) A well-told story can inspire action, change minds, and even heal emotional wounds.</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【篇章結構背景】
+<div class="q-block"><p class="q-text"><span class="q-num">31.</span>請選出最適合填入空格的句子</p><div class="options single"><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(A) Storytelling, in fact, predates written language by tens of thousands of years.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(B) Scientists now believe that sharing stories may have played a key role in the survival of early human groups.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(C) It strengthens social bonds, passes on cultural values, and makes abstract ideas easier to understand.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(D) As technology evolves, new platforms continue to emerge for telling and consuming stories.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(E) A well-told story can inspire action, change minds, and even heal emotional wounds.</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【篇章結構背景】
 文章主旨：人類最重要的特質，就是「說故事的生物」。從最早的洞穴壁畫到最新的串流影集，分享敘事的衝動似乎深深根植於我們的生物本能與文化之中。
 
 第一段（[31空格]之前）：人類本質上就是說故事的生物，從洞穴壁畫到串流影集，分享故事的衝動深植於生物與文化中。
@@ -353,7 +370,7 @@ From social media and podcasts to immersive virtual reality experiences, each ne
 (C) 描述「故事強化社會凝聚力、傳承文化價值」，這是對「故事功能」的進一步抽象論述，應出現在已經建立具體例證（如洞穴壁畫、記住重要資訊）之後的總結性位置，而非開頭承接句。
 (D) 談「隨著科技演進，新平台不斷出現」，這個主題與全文結尾（第四段）討論「不同媒介、平台」的內容相關，但與[31空格]緊接著要引入「洞穴壁畫、文字之前的說故事」這一歷史性主題完全無關。
 (E) 描述「好故事能激發行動、改變想法、治癒傷口」，這是關於故事「對個人情感與行為的影響」，與[31空格]後文討論「故事在人類歷史早期的起源（洞穴壁畫）」的歷史脈絡銜接不上。</div></div>
-<div class="q-block"><p class="q-text"><span class="q-num">32.</span>請選出最適合填入空格的句子</p><div class="options single"><div class="opt">(A) Storytelling, in fact, predates written language by tens of thousands of years.</div><div class="opt">(B) Scientists now believe that sharing stories may have played a key role in the survival of early human groups.</div><div class="opt">(C) It strengthens social bonds, passes on cultural values, and makes abstract ideas easier to understand.</div><div class="opt">(D) As technology evolves, new platforms continue to emerge for telling and consuming stories.</div><div class="opt">(E) A well-told story can inspire action, change minds, and even heal emotional wounds.</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【篇章結構背景】
+<div class="q-block"><p class="q-text"><span class="q-num">32.</span>請選出最適合填入空格的句子</p><div class="options single"><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(A) Storytelling, in fact, predates written language by tens of thousands of years.</div><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(B) Scientists now believe that sharing stories may have played a key role in the survival of early human groups.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(C) It strengthens social bonds, passes on cultural values, and makes abstract ideas easier to understand.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(D) As technology evolves, new platforms continue to emerge for telling and consuming stories.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(E) A well-told story can inspire action, change minds, and even heal emotional wounds.</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【篇章結構背景】
 文章主旨：人類最重要的特質，就是「說故事的生物」。從最早的洞穴壁畫到最新的串流影集，分享敘事的衝動似乎深深根植於我們的生物本能與文化之中。
 
 第一段（[31空格]之前）：人類本質上就是說故事的生物，從洞穴壁畫到串流影集，分享故事的衝動深植於生物與文化中。
@@ -376,7 +393,7 @@ From social media and podcasts to immersive virtual reality experiences, each ne
 (C) 「故事強化社會凝聚力、傳承文化價值、讓抽象概念更容易理解」這是對故事功能較為廣泛、抽象的描述，與[32空格]前後文聚焦在「生存」(survival) 這一具體且狹義的功能論述不夠精確對應。
 (D) 「隨著科技演進，新平台不斷出現」這個主題與[32空格]前後文討論「早期人類生存」的歷史脈絡完全不相關，時間軸錯置。
 (E) 「好故事能激發行動、改變想法、治癒傷口」描述的是故事對「現代個人」情感與行為的影響，與[32空格]前後文討論「早期人類群體生存」的歷史與演化脈絡不符。</div></div>
-<div class="q-block"><p class="q-text"><span class="q-num">33.</span>請選出最適合填入空格的句子</p><div class="options single"><div class="opt">(A) Storytelling, in fact, predates written language by tens of thousands of years.</div><div class="opt">(B) Scientists now believe that sharing stories may have played a key role in the survival of early human groups.</div><div class="opt">(C) It strengthens social bonds, passes on cultural values, and makes abstract ideas easier to understand.</div><div class="opt">(D) As technology evolves, new platforms continue to emerge for telling and consuming stories.</div><div class="opt">(E) A well-told story can inspire action, change minds, and even heal emotional wounds.</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【篇章結構背景】
+<div class="q-block"><p class="q-text"><span class="q-num">33.</span>請選出最適合填入空格的句子</p><div class="options single"><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(A) Storytelling, in fact, predates written language by tens of thousands of years.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(B) Scientists now believe that sharing stories may have played a key role in the survival of early human groups.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(C) It strengthens social bonds, passes on cultural values, and makes abstract ideas easier to understand.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(D) As technology evolves, new platforms continue to emerge for telling and consuming stories.</div><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(E) A well-told story can inspire action, change minds, and even heal emotional wounds.</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【篇章結構背景】
 文章主旨：人類最重要的特質，就是「說故事的生物」。從最早的洞穴壁畫到最新的串流影集，分享敘事的衝動似乎深深根植於我們的生物本能與文化之中。
 
 第一段（[31空格]之前）：人類本質上就是說故事的生物，從洞穴壁畫到串流影集，分享故事的衝動深植於生物與文化中。
@@ -399,7 +416,7 @@ From social media and podcasts to immersive virtual reality experiences, each ne
 (B) 「科學家相信分享故事在早期人類生存中扮演關鍵角色」這個論點的功能已在32題位置發揮（銜接「生存相關資訊」的討論），與[33空格]前後文聚焦在「故事的說服力與心理影響」的現代心理學脈絡不符。
 (C) 「故事強化社會凝聚力、傳承文化價值、讓抽象概念更容易理解」雖然主題相關（描述故事的功能），但 (C) 句描述的功能較為「社會與認知」層面，與[33空格]前後文聚焦在「故事對個人心智的說服力、激勵作用」(persuasion and motivation) 的脈絡相比，(E) 句更精確對應「inspire action, change minds」這類個人層面的說服效果。
 (D) 「隨著科技演進，新平台不斷出現」這個主題屬於全文結尾（第四段）討論「媒介演變」的內容，與[33空格]前後文討論「故事的心理影響力與說服力」的主題不相關。</div></div>
-<div class="q-block"><p class="q-text"><span class="q-num">34.</span>請選出最適合填入空格的句子</p><div class="options single"><div class="opt">(A) Storytelling, in fact, predates written language by tens of thousands of years.</div><div class="opt">(B) Scientists now believe that sharing stories may have played a key role in the survival of early human groups.</div><div class="opt">(C) It strengthens social bonds, passes on cultural values, and makes abstract ideas easier to understand.</div><div class="opt">(D) As technology evolves, new platforms continue to emerge for telling and consuming stories.</div><div class="opt">(E) A well-told story can inspire action, change minds, and even heal emotional wounds.</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【篇章結構背景】
+<div class="q-block"><p class="q-text"><span class="q-num">34.</span>請選出最適合填入空格的句子</p><div class="options single"><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(A) Storytelling, in fact, predates written language by tens of thousands of years.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(B) Scientists now believe that sharing stories may have played a key role in the survival of early human groups.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(C) It strengthens social bonds, passes on cultural values, and makes abstract ideas easier to understand.</div><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(D) As technology evolves, new platforms continue to emerge for telling and consuming stories.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(E) A well-told story can inspire action, change minds, and even heal emotional wounds.</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【篇章結構背景】
 文章主旨：人類最重要的特質，就是「說故事的生物」。從最早的洞穴壁畫到最新的串流影集，分享敘事的衝動似乎深深根植於我們的生物本能與文化之中。
 
 第一段（[31空格]之前）：人類本質上就是說故事的生物，從洞穴壁畫到串流影集，分享故事的衝動深植於生物與文化中。
@@ -430,7 +447,7 @@ During sleep, the brain does not simply power down. On the contrary, it becomes 
 Sleep also plays a critical role in physical health. Growth hormone, which repairs tissues and builds muscle, is primarily released during deep sleep. The immune system, too, is reinforced during sleep, as the body produces proteins called cytokines that fight infection and inflammation. Chronic sleep deprivation has been linked to a significantly higher risk of obesity, diabetes, cardiovascular disease, and even certain cancers.
 
 Despite this knowledge, modern society remains deeply sleep-deprived. Artificial lighting, smartphones, demanding work schedules, and social norms that equate busyness with success all conspire to keep people awake. Public health experts are calling for a cultural shift—one that treats sleep not as laziness, but as a fundamental pillar of well-being.</div>
-<div class="q-block"><p class="q-text"><span class="q-num">35.</span>What was Thomas Edison&#x27;s attitude toward sleep?</p><div class="options single"><div class="opt">(A) He believed sleep was essential for creativity.</div><div class="opt">(B) He saw sleep as an unproductive use of time.</div><div class="opt">(C) He recommended at least eight hours of sleep per night.</div><div class="opt">(D) He researched the relationship between sleep and health.</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【閱讀測驗第一篇背景：睡眠的科學 The Science of Sleep】
+<div class="q-block"><p class="q-text"><span class="q-num">35.</span>What was Thomas Edison&#x27;s attitude toward sleep?</p><div class="options single"><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(A) He believed sleep was essential for creativity.</div><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(B) He saw sleep as an unproductive use of time.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(C) He recommended at least eight hours of sleep per night.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(D) He researched the relationship between sleep and health.</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【閱讀測驗第一篇背景：睡眠的科學 The Science of Sleep】
 文章大意：在人類歷史的大部分時間裡，睡眠被視為一種「必要的不便」——是從生產性活動中偷走的時間。19世紀發明家愛迪生曾公開宣稱睡眠是浪費時間，並自誇自己每晚只需睡幾個小時就能正常運作。如今，科學家正逐步揭開睡眠期間大腦與身體所發生的種種現象，這些發現相當驚人。睡眠期間，大腦並非單純關機，反而變得非常活躍，這對健康至關重要。睡眠最重要的功能之一是「記憶鞏固」(memory consolidation)：在深度睡眠階段，海馬迴(hippocampus)——大腦中負責形成新記憶的關鍵區域——會重播當天發生的事件，並將重要資訊轉移到長期記憶儲存中，這也是為什麼睡眠不足會嚴重損害學習與記憶能力。睡眠對身體健康也至關重要：負責修復組織與增長肌肉的生長激素主要在深度睡眠期間釋放；免疫系統也在睡眠期間獲得強化，身體會產生對抗感染與發炎的「細胞激素」(cytokines)蛋白質。長期睡眠不足已被證實與肥胖、糖尿病、心血管疾病甚至某些癌症的風險顯著提高有關。儘管已有這些科學知識，現代社會仍普遍嚴重睡眠不足。人工照明、智慧型手機、繁重的工作行程，以及將「忙碌」等同於「成功」的社會規範，這些因素都共同促使人們持續熬夜。公共衛生專家呼籲社會應有文化上的轉變——將睡眠視為健康的基本支柱，而非懶惰的象徵。
 
 第35題：What was Thomas Edison&#x27;s attitude toward sleep?
@@ -440,7 +457,7 @@ Despite this knowledge, modern society remains deeply sleep-deprived. Artificial
 (A) 「他認為睡眠對創造力是不可或缺的」：文章描述愛迪生視睡眠為「浪費時間」，這與「認為睡眠對創造力至關重要」的正面看法完全相反。
 (C) 「他建議每晚至少睡八小時」：文章說愛迪生自誇「每晚只需睡幾個小時」(just a few hours per night)，這與「建議睡滿八小時」的說法完全矛盾。
 (D) 「他研究了睡眠與健康之間的關係」：文章中「研究睡眠與健康關係」是指「今日的科學家」(scientists are uncovering...)，而非愛迪生本人，愛迪生本人對睡眠的態度僅止於「視其為浪費時間」的個人看法，並非進行科學研究。</div></div>
-<div class="q-block"><p class="q-text"><span class="q-num">36.</span>According to the passage, what role does the hippocampus play during sleep?</p><div class="options single"><div class="opt">(A) It produces growth hormone that repairs body tissue.</div><div class="opt">(B) It generates cytokines to strengthen the immune system.</div><div class="opt">(C) It transfers daily experiences into long-term memory.</div><div class="opt">(D) It monitors the body for signs of infection and disease.</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【閱讀測驗第一篇背景：睡眠的科學 The Science of Sleep】
+<div class="q-block"><p class="q-text"><span class="q-num">36.</span>According to the passage, what role does the hippocampus play during sleep?</p><div class="options single"><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(A) It produces growth hormone that repairs body tissue.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(B) It generates cytokines to strengthen the immune system.</div><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(C) It transfers daily experiences into long-term memory.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(D) It monitors the body for signs of infection and disease.</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【閱讀測驗第一篇背景：睡眠的科學 The Science of Sleep】
 文章大意：在人類歷史的大部分時間裡，睡眠被視為一種「必要的不便」——是從生產性活動中偷走的時間。19世紀發明家愛迪生曾公開宣稱睡眠是浪費時間，並自誇自己每晚只需睡幾個小時就能正常運作。如今，科學家正逐步揭開睡眠期間大腦與身體所發生的種種現象，這些發現相當驚人。睡眠期間，大腦並非單純關機，反而變得非常活躍，這對健康至關重要。睡眠最重要的功能之一是「記憶鞏固」(memory consolidation)：在深度睡眠階段，海馬迴(hippocampus)——大腦中負責形成新記憶的關鍵區域——會重播當天發生的事件，並將重要資訊轉移到長期記憶儲存中，這也是為什麼睡眠不足會嚴重損害學習與記憶能力。睡眠對身體健康也至關重要：負責修復組織與增長肌肉的生長激素主要在深度睡眠期間釋放；免疫系統也在睡眠期間獲得強化，身體會產生對抗感染與發炎的「細胞激素」(cytokines)蛋白質。長期睡眠不足已被證實與肥胖、糖尿病、心血管疾病甚至某些癌症的風險顯著提高有關。儘管已有這些科學知識，現代社會仍普遍嚴重睡眠不足。人工照明、智慧型手機、繁重的工作行程，以及將「忙碌」等同於「成功」的社會規範，這些因素都共同促使人們持續熬夜。公共衛生專家呼籲社會應有文化上的轉變——將睡眠視為健康的基本支柱，而非懶惰的象徵。
 
 第36題：According to the passage, what role does the hippocampus play during sleep?
@@ -450,7 +467,7 @@ Despite this knowledge, modern society remains deeply sleep-deprived. Artificial
 (A) 「它產生修復身體組織的生長激素」：文章中提到「生長激素」(growth hormone) 的釋放是另一項與深度睡眠相關的功能，但文章並未將此功能歸因於「海馬迴」，而是描述為睡眠期間身體的整體生理反應。
 (B) 「它產生細胞激素以增強免疫系統」：文章提到「細胞激素」(cytokines) 是由「身體」在睡眠期間產生以增強免疫系統，並非「海馬迴」的功能，此選項將兩個不同的睡眠生理機制混淆了。
 (D) 「它監測身體是否有感染或疾病的徵象」：文章並未描述海馬迴具有「監測感染或疾病」的功能，海馬迴的角色明確聚焦在「記憶的形成與轉移」，與「監測感染」無關。</div></div>
-<div class="q-block"><p class="q-text"><span class="q-num">37.</span>Which of the following health risks is NOT mentioned as a consequence of chronic sleep deprivation?</p><div class="options single"><div class="opt">(A) Obesity.</div><div class="opt">(B) Diabetes.</div><div class="opt">(C) Arthritis.</div><div class="opt">(D) Heart disease.</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【閱讀測驗第一篇背景：睡眠的科學 The Science of Sleep】
+<div class="q-block"><p class="q-text"><span class="q-num">37.</span>Which of the following health risks is NOT mentioned as a consequence of chronic sleep deprivation?</p><div class="options single"><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(A) Obesity.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(B) Diabetes.</div><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(C) Arthritis.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(D) Heart disease.</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【閱讀測驗第一篇背景：睡眠的科學 The Science of Sleep】
 文章大意：在人類歷史的大部分時間裡，睡眠被視為一種「必要的不便」——是從生產性活動中偷走的時間。19世紀發明家愛迪生曾公開宣稱睡眠是浪費時間，並自誇自己每晚只需睡幾個小時就能正常運作。如今，科學家正逐步揭開睡眠期間大腦與身體所發生的種種現象，這些發現相當驚人。睡眠期間，大腦並非單純關機，反而變得非常活躍，這對健康至關重要。睡眠最重要的功能之一是「記憶鞏固」(memory consolidation)：在深度睡眠階段，海馬迴(hippocampus)——大腦中負責形成新記憶的關鍵區域——會重播當天發生的事件，並將重要資訊轉移到長期記憶儲存中，這也是為什麼睡眠不足會嚴重損害學習與記憶能力。睡眠對身體健康也至關重要：負責修復組織與增長肌肉的生長激素主要在深度睡眠期間釋放；免疫系統也在睡眠期間獲得強化，身體會產生對抗感染與發炎的「細胞激素」(cytokines)蛋白質。長期睡眠不足已被證實與肥胖、糖尿病、心血管疾病甚至某些癌症的風險顯著提高有關。儘管已有這些科學知識，現代社會仍普遍嚴重睡眠不足。人工照明、智慧型手機、繁重的工作行程，以及將「忙碌」等同於「成功」的社會規範，這些因素都共同促使人們持續熬夜。公共衛生專家呼籲社會應有文化上的轉變——將睡眠視為健康的基本支柱，而非懶惰的象徵。
 
 第37題：Which of the following health risks is NOT mentioned as a consequence of chronic sleep deprivation?
@@ -460,7 +477,7 @@ Despite this knowledge, modern society remains deeply sleep-deprived. Artificial
 (A) Obesity（肥胖）：文章明確提及「肥胖」是長期睡眠不足的風險之一，故此選項「已被提及」，不符合題目要求「NOT mentioned」。
 (B) Diabetes（糖尿病）：文章明確提及「糖尿病」是長期睡眠不足的風險之一，已被提及，不符合題目要求。
 (D) Heart disease（心臟病）：文章提及的「心血管疾病」(cardiovascular disease) 即涵蓋心臟病的概念，已被提及，不符合題目要求。</div></div>
-<div class="q-block"><p class="q-text"><span class="q-num">38.</span>What does the author suggest needs to change in modern society?</p><div class="options single"><div class="opt">(A) People should use smartphones only during daylight hours.</div><div class="opt">(B) Governments should regulate work schedules more strictly.</div><div class="opt">(C) Society should stop valuing busyness over sufficient rest.</div><div class="opt">(D) Scientists should develop more effective sleep medications.</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【閱讀測驗第一篇背景：睡眠的科學 The Science of Sleep】
+<div class="q-block"><p class="q-text"><span class="q-num">38.</span>What does the author suggest needs to change in modern society?</p><div class="options single"><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(A) People should use smartphones only during daylight hours.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(B) Governments should regulate work schedules more strictly.</div><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(C) Society should stop valuing busyness over sufficient rest.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(D) Scientists should develop more effective sleep medications.</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【閱讀測驗第一篇背景：睡眠的科學 The Science of Sleep】
 文章大意：在人類歷史的大部分時間裡，睡眠被視為一種「必要的不便」——是從生產性活動中偷走的時間。19世紀發明家愛迪生曾公開宣稱睡眠是浪費時間，並自誇自己每晚只需睡幾個小時就能正常運作。如今，科學家正逐步揭開睡眠期間大腦與身體所發生的種種現象，這些發現相當驚人。睡眠期間，大腦並非單純關機，反而變得非常活躍，這對健康至關重要。睡眠最重要的功能之一是「記憶鞏固」(memory consolidation)：在深度睡眠階段，海馬迴(hippocampus)——大腦中負責形成新記憶的關鍵區域——會重播當天發生的事件，並將重要資訊轉移到長期記憶儲存中，這也是為什麼睡眠不足會嚴重損害學習與記憶能力。睡眠對身體健康也至關重要：負責修復組織與增長肌肉的生長激素主要在深度睡眠期間釋放；免疫系統也在睡眠期間獲得強化，身體會產生對抗感染與發炎的「細胞激素」(cytokines)蛋白質。長期睡眠不足已被證實與肥胖、糖尿病、心血管疾病甚至某些癌症的風險顯著提高有關。儘管已有這些科學知識，現代社會仍普遍嚴重睡眠不足。人工照明、智慧型手機、繁重的工作行程，以及將「忙碌」等同於「成功」的社會規範，這些因素都共同促使人們持續熬夜。公共衛生專家呼籲社會應有文化上的轉變——將睡眠視為健康的基本支柱，而非懶惰的象徵。
 
 第38題：What does the author suggest needs to change in modern society?
@@ -477,7 +494,7 @@ The philosophy behind kintsugi is deeply connected to the Japanese concept of wa
 In recent years, kintsugi has attracted considerable attention in the West, not only as an art form but as a psychological metaphor. Therapists and counselors have adopted the concept to discuss resilience, recovery, and the acceptance of personal history. Just as a broken bowl can be made whole and beautiful through golden repair, human beings can emerge from trauma or failure stronger and more interesting than before.
 
 Workshops teaching kintsugi have sprung up in cities around the world, drawing participants who are as interested in the philosophy as the craft. For many, the act of carefully mending something broken serves as a meditative practice—a reminder that imperfection is not the end of beauty, but often the beginning of a deeper kind.</div>
-<div class="q-block"><p class="q-text"><span class="q-num">39.</span>What is the main idea of kintsugi as an art form?</p><div class="options single"><div class="opt">(A) Broken objects should be discarded and replaced with new ones.</div><div class="opt">(B) Damage should be concealed to restore an object&#x27;s original beauty.</div><div class="opt">(C) Repairs should enhance an object&#x27;s beauty by making fractures visible.</div><div class="opt">(D) Only rare and expensive materials can be used to fix broken pottery.</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【閱讀測驗第二篇背景：金繕 Kintsugi】
+<div class="q-block"><p class="q-text"><span class="q-num">39.</span>What is the main idea of kintsugi as an art form?</p><div class="options single"><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(A) Broken objects should be discarded and replaced with new ones.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(B) Damage should be concealed to restore an object&#x27;s original beauty.</div><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(C) Repairs should enhance an object&#x27;s beauty by making fractures visible.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(D) Only rare and expensive materials can be used to fix broken pottery.</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【閱讀測驗第二篇背景：金繕 Kintsugi】
 文章大意：源自日本的「金繕」(kintsugi)——意為「黃金接合」或「黃金修復」——是一種數百年歷史的工藝，使用混合了金、銀或鉑金粉末的漆來修補破損的陶器。金繕並不會隱藏損壞，而是凸顯裂痕，將其視為該器物歷史中美麗且不可或缺的一部分。修復後的成品往往比原本的器物更美麗、更有價值。金繕背後的哲學與日本「侍寂」(wabi-sabi)的概念密切相關——這種美學在「不完美」與「短暫無常」中尋找美感，呈現出歲月痕跡、磨損與修補的器物，被認為比毫無瑕疵的器物更具美學趣味。從更廣的角度來看，金繕也反映出一種面對逆境的文化態度：與其假裝困難的經歷從未發生過，人應該承認這些經歷，並讓它們成為自我認同的一部分。近年來，金繕在西方世界引起相當大的關注，不僅作為一種藝術形式，也作為一種心理層面的隱喻。治療師與心理諮商師採用這個概念來討論「韌性」(resilience)、「復原」(recovery)與「接納個人過去經歷」。正如破碎的碗能透過黃金修復變得完整且美麗，人類也能在經歷創傷或失敗後變得比以前更堅強、更有趣。世界各地的城市都出現了教授金繕的工作坊，吸引了同時對其哲學與工藝都感興趣的參與者。對許多人來說，仔細修補破損物品的過程是一種冥想式的練習——提醒人們不完美並非美麗的終點，往往是更深層美麗的起點。
 
 第39題：What is the main idea of kintsugi as an art form?
@@ -487,7 +504,7 @@ Workshops teaching kintsugi have sprung up in cities around the world, drawing p
 (A) 「破損的物品應該被丟棄並用新的取代」：文章描述金繕的做法正是「修復」破損物品，而非「丟棄並更換」，與文章核心理念完全相反。
 (B) 「損壞應該被隱藏以恢復器物原本的美感」：文章明確指出金繕「並不隱藏損壞」(rather than hiding the damage)，而是凸顯裂痕，與選項(B)所述「隱藏損壞」的做法完全相反。
 (D) 「只有稀有昂貴的材料才能用來修補破損的陶器」：雖然文章提到金繕使用「金、銀、鉑金粉末」這類貴重材料，但文章的核心理念在於「修復凸顯裂痕、賦予器物新的美感與價值」這一哲學意義，而非強調「材料的稀有與昂貴」是金繕的核心理念。</div></div>
-<div class="q-block"><p class="q-text"><span class="q-num">40.</span>What does the concept of &quot;wabi-sabi&quot; value?</p><div class="options single"><div class="opt">(A) Perfection and flawless craftsmanship.</div><div class="opt">(B) Traditional Japanese pottery techniques.</div><div class="opt">(C) Imperfection and the beauty of age and wear.</div><div class="opt">(D) Expensive materials and luxurious design.</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【閱讀測驗第二篇背景：金繕 Kintsugi】
+<div class="q-block"><p class="q-text"><span class="q-num">40.</span>What does the concept of &quot;wabi-sabi&quot; value?</p><div class="options single"><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(A) Perfection and flawless craftsmanship.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(B) Traditional Japanese pottery techniques.</div><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(C) Imperfection and the beauty of age and wear.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(D) Expensive materials and luxurious design.</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【閱讀測驗第二篇背景：金繕 Kintsugi】
 文章大意：源自日本的「金繕」(kintsugi)——意為「黃金接合」或「黃金修復」——是一種數百年歷史的工藝，使用混合了金、銀或鉑金粉末的漆來修補破損的陶器。金繕並不會隱藏損壞，而是凸顯裂痕，將其視為該器物歷史中美麗且不可或缺的一部分。修復後的成品往往比原本的器物更美麗、更有價值。金繕背後的哲學與日本「侍寂」(wabi-sabi)的概念密切相關——這種美學在「不完美」與「短暫無常」中尋找美感，呈現出歲月痕跡、磨損與修補的器物，被認為比毫無瑕疵的器物更具美學趣味。從更廣的角度來看，金繕也反映出一種面對逆境的文化態度：與其假裝困難的經歷從未發生過，人應該承認這些經歷，並讓它們成為自我認同的一部分。近年來，金繕在西方世界引起相當大的關注，不僅作為一種藝術形式，也作為一種心理層面的隱喻。治療師與心理諮商師採用這個概念來討論「韌性」(resilience)、「復原」(recovery)與「接納個人過去經歷」。正如破碎的碗能透過黃金修復變得完整且美麗，人類也能在經歷創傷或失敗後變得比以前更堅強、更有趣。世界各地的城市都出現了教授金繕的工作坊，吸引了同時對其哲學與工藝都感興趣的參與者。對許多人來說，仔細修補破損物品的過程是一種冥想式的練習——提醒人們不完美並非美麗的終點，往往是更深層美麗的起點。
 
 第40題：What does the concept of &quot;wabi-sabi&quot; value?
@@ -497,7 +514,7 @@ Workshops teaching kintsugi have sprung up in cities around the world, drawing p
 (A) 「完美與毫無瑕疵的工藝」：文章明確指出「侍寂」重視的是「不完美」(imperfection)，而非「完美與毫無瑕疵」(perfection and flawless craftsmanship)，選項(A)與文章描述的方向完全相反。
 (B) 「傳統的日本陶藝技術」：「侍寂」是一種美學哲學概念，關於「在不完美與無常中尋找美感」，並非特指「傳統陶藝技術」本身，選項(B)範圍與性質與文章描述不符。
 (D) 「昂貴的材料與奢華的設計」：文章描述「侍寂」重視的是「不完美、歲月痕跡與磨損」所帶來的美感，這與「昂貴材料、奢華設計」的價值觀方向相反，「侍寂」恰恰是在簡樸、有瑕疵的事物中尋找美感，而非追求奢華。</div></div>
-<div class="q-block"><p class="q-text"><span class="q-num">41.</span>How has kintsugi been applied in a psychological context in the West?</p><div class="options single"><div class="opt">(A) As a form of art therapy for children with learning difficulties.</div><div class="opt">(B) As a metaphor for healing and growing stronger through hardship.</div><div class="opt">(C) As a method for treating patients suffering from memory loss.</div><div class="opt">(D) As a workshop activity for people with physical disabilities.</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【閱讀測驗第二篇背景：金繕 Kintsugi】
+<div class="q-block"><p class="q-text"><span class="q-num">41.</span>How has kintsugi been applied in a psychological context in the West?</p><div class="options single"><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(A) As a form of art therapy for children with learning difficulties.</div><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(B) As a metaphor for healing and growing stronger through hardship.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(C) As a method for treating patients suffering from memory loss.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(D) As a workshop activity for people with physical disabilities.</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【閱讀測驗第二篇背景：金繕 Kintsugi】
 文章大意：源自日本的「金繕」(kintsugi)——意為「黃金接合」或「黃金修復」——是一種數百年歷史的工藝，使用混合了金、銀或鉑金粉末的漆來修補破損的陶器。金繕並不會隱藏損壞，而是凸顯裂痕，將其視為該器物歷史中美麗且不可或缺的一部分。修復後的成品往往比原本的器物更美麗、更有價值。金繕背後的哲學與日本「侍寂」(wabi-sabi)的概念密切相關——這種美學在「不完美」與「短暫無常」中尋找美感，呈現出歲月痕跡、磨損與修補的器物，被認為比毫無瑕疵的器物更具美學趣味。從更廣的角度來看，金繕也反映出一種面對逆境的文化態度：與其假裝困難的經歷從未發生過，人應該承認這些經歷，並讓它們成為自我認同的一部分。近年來，金繕在西方世界引起相當大的關注，不僅作為一種藝術形式，也作為一種心理層面的隱喻。治療師與心理諮商師採用這個概念來討論「韌性」(resilience)、「復原」(recovery)與「接納個人過去經歷」。正如破碎的碗能透過黃金修復變得完整且美麗，人類也能在經歷創傷或失敗後變得比以前更堅強、更有趣。世界各地的城市都出現了教授金繕的工作坊，吸引了同時對其哲學與工藝都感興趣的參與者。對許多人來說，仔細修補破損物品的過程是一種冥想式的練習——提醒人們不完美並非美麗的終點，往往是更深層美麗的起點。
 
 第41題：How has kintsugi been applied in a psychological context in the West?
@@ -507,7 +524,7 @@ Workshops teaching kintsugi have sprung up in cities around the world, drawing p
 (A) 「作為學習障礙兒童的藝術治療形式」：文章提到金繕被應用於「治療師與心理諮商師」討論韌性與復原的概念，但並未specifically提及「學習障礙兒童」這一特定對象，此為文章未提及的細節。
 (C) 「作為治療記憶喪失患者的方法」：文章中討論金繕的心理應用聚焦在「韌性、復原、接納過去經歷」這類與「創傷、失敗後的成長」相關的主題，並未提及與「記憶喪失」(memory loss) 相關的治療應用。
 (D) 「作為身障人士的工作坊活動」：文章提到「世界各地都出現了教授金繕的工作坊，吸引了對其哲學與工藝都感興趣的參與者」，但並未specifically將這些工作坊定位為「身障人士專屬」的活動，此為文章未提及的資訊。</div></div>
-<div class="q-block"><p class="q-text"><span class="q-num">42.</span>According to the passage, why do many people attend kintsugi workshops?</p><div class="options single"><div class="opt">(A) They want to learn a profession in traditional Japanese crafts.</div><div class="opt">(B) They are attracted to both the craft and its deeper philosophy.</div><div class="opt">(C) They hope to sell repaired pottery at a higher price.</div><div class="opt">(D) They are required to attend as part of a therapy program.</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【閱讀測驗第二篇背景：金繕 Kintsugi】
+<div class="q-block"><p class="q-text"><span class="q-num">42.</span>According to the passage, why do many people attend kintsugi workshops?</p><div class="options single"><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(A) They want to learn a profession in traditional Japanese crafts.</div><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(B) They are attracted to both the craft and its deeper philosophy.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(C) They hope to sell repaired pottery at a higher price.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(D) They are required to attend as part of a therapy program.</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【閱讀測驗第二篇背景：金繕 Kintsugi】
 文章大意：源自日本的「金繕」(kintsugi)——意為「黃金接合」或「黃金修復」——是一種數百年歷史的工藝，使用混合了金、銀或鉑金粉末的漆來修補破損的陶器。金繕並不會隱藏損壞，而是凸顯裂痕，將其視為該器物歷史中美麗且不可或缺的一部分。修復後的成品往往比原本的器物更美麗、更有價值。金繕背後的哲學與日本「侍寂」(wabi-sabi)的概念密切相關——這種美學在「不完美」與「短暫無常」中尋找美感，呈現出歲月痕跡、磨損與修補的器物，被認為比毫無瑕疵的器物更具美學趣味。從更廣的角度來看，金繕也反映出一種面對逆境的文化態度：與其假裝困難的經歷從未發生過，人應該承認這些經歷，並讓它們成為自我認同的一部分。近年來，金繕在西方世界引起相當大的關注，不僅作為一種藝術形式，也作為一種心理層面的隱喻。治療師與心理諮商師採用這個概念來討論「韌性」(resilience)、「復原」(recovery)與「接納個人過去經歷」。正如破碎的碗能透過黃金修復變得完整且美麗，人類也能在經歷創傷或失敗後變得比以前更堅強、更有趣。世界各地的城市都出現了教授金繕的工作坊，吸引了同時對其哲學與工藝都感興趣的參與者。對許多人來說，仔細修補破損物品的過程是一種冥想式的練習——提醒人們不完美並非美麗的終點，往往是更深層美麗的起點。
 
 第42題：According to the passage, why do many people attend kintsugi workshops?
@@ -524,7 +541,7 @@ Psychologists have found that the act of writing by hand engages the brain diffe
 Writing about personal experiences, particularly difficult or emotional ones, has also been shown to have significant mental health benefits. The psychologist James Pennebaker pioneered research in this area, finding that people who wrote about traumatic events for just 15 to 20 minutes a day over several days experienced improvements in mood, immune function, and even physical health. The process of putting experiences into words helps the brain make sense of them, reducing the emotional burden they carry.
 
 In an era of constant digital distraction, diary writing offers something increasingly rare: a quiet, private space for reflection. Whether used for emotional processing, creative expression, or simple record-keeping, the humble diary continues to serve as a powerful tool for self-understanding.</div>
-<div class="q-block"><p class="q-text"><span class="q-num">43.</span>What does the first paragraph mainly discuss?</p><div class="options single"><div class="opt">(A) The history of diary writing across different cultures.</div><div class="opt">(B) The differences between digital and physical diaries.</div><div class="opt">(C) The reasons why diary writing became less popular.</div><div class="opt">(D) The most famous diarists in history and their works.</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【閱讀測驗第三篇背景：寫日記的力量 The Power of Diary Writing】
+<div class="q-block"><p class="q-text"><span class="q-num">43.</span>What does the first paragraph mainly discuss?</p><div class="options single"><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(A) The history of diary writing across different cultures.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(B) The differences between digital and physical diaries.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(C) The reasons why diary writing became less popular.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(D) The most famous diarists in history and their works.</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【閱讀測驗第三篇背景：寫日記的力量 The Power of Diary Writing】
 文章大意：寫個人日記的習慣有著悠久的歷史。從日本平安時代的「枕草子」(pillow books)到塞繆爾·佩皮斯(Samuel Pepys)17世紀著名的倫敦生活日記，人們長期以來使用文字記錄思想、情感與日常事件。如今，雖然許多人改用數位日記或部落格，紙本日記依然受歡迎——而科學正開始解釋其中原因。心理學家發現，「手寫」這個動作對大腦的影響與「打字」不同。手寫的速度較慢，要求書寫者更仔細思考自己正在記錄的內容，這有助於促進更深層的認知處理。研究顯示，採用手寫筆記的學生比使用筆電打字記筆記的學生，能更有效地記住資訊——即使打字的學生記錄了更多字數。書寫個人經歷，特別是困難或情緒化的經歷，也已被證實對心理健康有顯著益處。心理學家詹姆斯·彭尼貝克(James Pennebaker)率先在這個領域進行研究，發現連續幾天、每天花15到20分鐘書寫創傷事件的人，在情緒、免疫功能甚至身體健康方面都出現了改善。將經歷轉化為文字的過程，有助於大腦理解這些經歷，從而減輕它們所帶來的情緒負擔。在這個充滿數位干擾的時代，寫日記提供了一種日益稀有的東西：一個安靜、私密的反思空間。無論是用於情緒處理、創意表達，還是單純記錄事件，這本不起眼的日記，始終是自我理解的強大工具。
 
 第43題：What does the first paragraph mainly discuss?
@@ -534,7 +551,7 @@ In an era of constant digital distraction, diary writing offers something increa
 (B) 「數位日記與紙本日記之間的差異」：第一段僅簡短提到「如今許多人改用數位日記或部落格，但紙本日記依然受歡迎」，這個對比並非第一段的「主要」討論內容，第一段的核心是介紹「寫日記的悠久歷史」，數位vs紙本的討論在後續段落才展開。
 (C) 「寫日記為何變得較不受歡迎的原因」：第一段明確指出「紙本日記依然受歡迎」(the physical diary remains popular)，並未討論「寫日記變得較不受歡迎」的原因，選項(C)與文章內容方向相反。
 (D) 「歷史上最著名的日記作者及其作品」：第一段雖然提到「枕草子」與「塞繆爾·佩皮斯的日記」這兩個例子，但這些例子是用來「說明寫日記的悠久歷史」，而非以「介紹著名日記作者」為主要討論目的，選項(D)的焦點與第一段的主旨不完全吻合。</div></div>
-<div class="q-block"><p class="q-text"><span class="q-num">44.</span>Why does handwriting promote deeper cognitive processing compared to typing?</p><div class="options single"><div class="opt">(A) Handwriting activates more areas of the brain than typing does.</div><div class="opt">(B) Handwriting forces the writer to think more carefully due to its slower pace.</div><div class="opt">(C) Handwriting produces neater and more organized notes than typing.</div><div class="opt">(D) Handwriting requires more physical effort, which improves concentration.</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【閱讀測驗第三篇背景：寫日記的力量 The Power of Diary Writing】
+<div class="q-block"><p class="q-text"><span class="q-num">44.</span>Why does handwriting promote deeper cognitive processing compared to typing?</p><div class="options single"><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(A) Handwriting activates more areas of the brain than typing does.</div><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(B) Handwriting forces the writer to think more carefully due to its slower pace.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(C) Handwriting produces neater and more organized notes than typing.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(D) Handwriting requires more physical effort, which improves concentration.</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【閱讀測驗第三篇背景：寫日記的力量 The Power of Diary Writing】
 文章大意：寫個人日記的習慣有著悠久的歷史。從日本平安時代的「枕草子」(pillow books)到塞繆爾·佩皮斯(Samuel Pepys)17世紀著名的倫敦生活日記，人們長期以來使用文字記錄思想、情感與日常事件。如今，雖然許多人改用數位日記或部落格，紙本日記依然受歡迎——而科學正開始解釋其中原因。心理學家發現，「手寫」這個動作對大腦的影響與「打字」不同。手寫的速度較慢，要求書寫者更仔細思考自己正在記錄的內容，這有助於促進更深層的認知處理。研究顯示，採用手寫筆記的學生比使用筆電打字記筆記的學生，能更有效地記住資訊——即使打字的學生記錄了更多字數。書寫個人經歷，特別是困難或情緒化的經歷，也已被證實對心理健康有顯著益處。心理學家詹姆斯·彭尼貝克(James Pennebaker)率先在這個領域進行研究，發現連續幾天、每天花15到20分鐘書寫創傷事件的人，在情緒、免疫功能甚至身體健康方面都出現了改善。將經歷轉化為文字的過程，有助於大腦理解這些經歷，從而減輕它們所帶來的情緒負擔。在這個充滿數位干擾的時代，寫日記提供了一種日益稀有的東西：一個安靜、私密的反思空間。無論是用於情緒處理、創意表達，還是單純記錄事件，這本不起眼的日記，始終是自我理解的強大工具。
 
 第44題：Why does handwriting promote deeper cognitive processing compared to typing?
@@ -544,7 +561,7 @@ In an era of constant digital distraction, diary writing offers something increa
 (A) 「手寫比打字激發大腦更多的區域」：文章並未提及「手寫激發大腦更多區域」這一神經科學層面的具體描述，文章強調的原因是「手寫速度較慢，需要更仔細思考」，而非「激發更多腦區」。
 (C) 「手寫產生的筆記比打字更整潔、更有組織」：文章並未提及「手寫筆記比打字筆記更整潔有組織」，文章重點在於「手寫的速度與思考深度」之間的關係，與筆記的「整潔度」無關。
 (D) 「手寫需要更多體力，這能提升專注力」：文章並未提及「手寫需要更多體力而提升專注力」這一論點，文章明確指出的原因是「手寫速度較慢，促使更仔細的思考」，並非「體力消耗與專注力」的關係。</div></div>
-<div class="q-block"><p class="q-text"><span class="q-num">45.</span>What did James Pennebaker&#x27;s research find about writing about difficult experiences?</p><div class="options single"><div class="opt">(A) It increased people&#x27;s ability to perform physical exercise.</div><div class="opt">(B) It helped people forget traumatic events more quickly.</div><div class="opt">(C) It improved mood and physical health through emotional processing.</div><div class="opt">(D) It was more effective when done in a group than individually.</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【閱讀測驗第三篇背景：寫日記的力量 The Power of Diary Writing】
+<div class="q-block"><p class="q-text"><span class="q-num">45.</span>What did James Pennebaker&#x27;s research find about writing about difficult experiences?</p><div class="options single"><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(A) It increased people&#x27;s ability to perform physical exercise.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(B) It helped people forget traumatic events more quickly.</div><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(C) It improved mood and physical health through emotional processing.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(D) It was more effective when done in a group than individually.</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【閱讀測驗第三篇背景：寫日記的力量 The Power of Diary Writing】
 文章大意：寫個人日記的習慣有著悠久的歷史。從日本平安時代的「枕草子」(pillow books)到塞繆爾·佩皮斯(Samuel Pepys)17世紀著名的倫敦生活日記，人們長期以來使用文字記錄思想、情感與日常事件。如今，雖然許多人改用數位日記或部落格，紙本日記依然受歡迎——而科學正開始解釋其中原因。心理學家發現，「手寫」這個動作對大腦的影響與「打字」不同。手寫的速度較慢，要求書寫者更仔細思考自己正在記錄的內容，這有助於促進更深層的認知處理。研究顯示，採用手寫筆記的學生比使用筆電打字記筆記的學生，能更有效地記住資訊——即使打字的學生記錄了更多字數。書寫個人經歷，特別是困難或情緒化的經歷，也已被證實對心理健康有顯著益處。心理學家詹姆斯·彭尼貝克(James Pennebaker)率先在這個領域進行研究，發現連續幾天、每天花15到20分鐘書寫創傷事件的人，在情緒、免疫功能甚至身體健康方面都出現了改善。將經歷轉化為文字的過程，有助於大腦理解這些經歷，從而減輕它們所帶來的情緒負擔。在這個充滿數位干擾的時代，寫日記提供了一種日益稀有的東西：一個安靜、私密的反思空間。無論是用於情緒處理、創意表達，還是單純記錄事件，這本不起眼的日記，始終是自我理解的強大工具。
 
 第45題：What did James Pennebaker&#x27;s research find about writing about difficult experiences?
@@ -554,7 +571,7 @@ In an era of constant digital distraction, diary writing offers something increa
 (A) 「它提升了人們進行體能運動的能力」：文章提到的是「情緒、免疫功能、身體健康」方面的改善，並未specifically提及「進行體能運動的能力」這一具體面向，此為文章未提及的內容。
 (B) 「它幫助人們更快地遺忘創傷事件」：文章描述的機制是「將經歷轉化為文字，幫助大腦『理解』這些經歷，從而『減輕』情緒負擔」，這是一種「處理與理解」的過程，而非「遺忘」(forget) 創傷事件，選項(B)與文章描述的機制不符。
 (D) 「以團體方式進行比個人進行更有效」：文章描述彭尼貝克的研究方法是「個人每天花15到20分鐘書寫」，並未提及「團體 vs. 個人」的效果比較，此為文章未提及的資訊。</div></div>
-<div class="q-block"><p class="q-text"><span class="q-num">46.</span>Which of the following best describes the author&#x27;s overall attitude toward diary writing?</p><div class="options single"><div class="opt">(A) Skeptical—there is little scientific evidence to support its benefits.</div><div class="opt">(B) Neutral—the author presents both advantages and disadvantages.</div><div class="opt">(C) Positive—the author emphasizes the value of the practice.</div><div class="opt">(D) Critical—the author prefers digital journaling over physical diaries.</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【閱讀測驗第三篇背景：寫日記的力量 The Power of Diary Writing】
+<div class="q-block"><p class="q-text"><span class="q-num">46.</span>Which of the following best describes the author&#x27;s overall attitude toward diary writing?</p><div class="options single"><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(A) Skeptical—there is little scientific evidence to support its benefits.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(B) Neutral—the author presents both advantages and disadvantages.</div><div class="opt" data-correct="true" onclick="selectOpt(this,false)">(C) Positive—the author emphasizes the value of the practice.</div><div class="opt" data-correct="false" onclick="selectOpt(this,false)">(D) Critical—the author prefers digital journaling over physical diaries.</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【閱讀測驗第三篇背景：寫日記的力量 The Power of Diary Writing】
 文章大意：寫個人日記的習慣有著悠久的歷史。從日本平安時代的「枕草子」(pillow books)到塞繆爾·佩皮斯(Samuel Pepys)17世紀著名的倫敦生活日記，人們長期以來使用文字記錄思想、情感與日常事件。如今，雖然許多人改用數位日記或部落格，紙本日記依然受歡迎——而科學正開始解釋其中原因。心理學家發現，「手寫」這個動作對大腦的影響與「打字」不同。手寫的速度較慢，要求書寫者更仔細思考自己正在記錄的內容，這有助於促進更深層的認知處理。研究顯示，採用手寫筆記的學生比使用筆電打字記筆記的學生，能更有效地記住資訊——即使打字的學生記錄了更多字數。書寫個人經歷，特別是困難或情緒化的經歷，也已被證實對心理健康有顯著益處。心理學家詹姆斯·彭尼貝克(James Pennebaker)率先在這個領域進行研究，發現連續幾天、每天花15到20分鐘書寫創傷事件的人，在情緒、免疫功能甚至身體健康方面都出現了改善。將經歷轉化為文字的過程，有助於大腦理解這些經歷，從而減輕它們所帶來的情緒負擔。在這個充滿數位干擾的時代，寫日記提供了一種日益稀有的東西：一個安靜、私密的反思空間。無論是用於情緒處理、創意表達，還是單純記錄事件，這本不起眼的日記，始終是自我理解的強大工具。
 
 第46題：Which of the following best describes the author&#x27;s overall attitude toward diary writing?
@@ -615,7 +632,7 @@ Contact: brightfutures@scicamp.tw | Tel: (02) 2345-6789</div>
 
 第48格：句子描述「provided they ___ all five days of the camp」（前提是他們＿＿全部五天的營隊課程）。對照行程表「IMPORTANT NOTES」中的「Participants who complete all five days will receive a certificate」，&quot;complete all five days&quot;（完成全部五天）正是獲得證書的條件，因此第48格應填入 complete（完成）；或依語境也可填入 attend（出席/參加）全部五天課程，兩者皆能合理表達「參與者必須完成/出席全部五天才能獲得證書」這一條件關係。</div></div>
 <div class="wordbank">Based on the schedule, which TWO activities involve participants going outside or conducting hands-on experiments? 請選出活動前的英文大寫字母。（多選題，4分）</div>
-<div class="q-block"><p class="q-text"><span class="q-num">49.</span>請選出符合條件的選項</p><div class="options single"><div class="opt">A. Introduction to the Scientific Method</div><div class="opt">B. Physics &amp; Robotics Workshop</div><div class="opt">C. Environmental Science Field Trip</div><div class="opt">D. Biotechnology Workshop</div><div class="opt">E. Project Presentations</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【混合題背景】
+<div class="q-block"><p class="q-text"><span class="q-num">49.</span>請選出符合條件的選項</p><div class="options single"><div class="opt" data-correct="false" onclick="selectOpt(this,true)">A. Introduction to the Scientific Method</div><div class="opt" data-correct="false" onclick="selectOpt(this,true)">B. Physics &amp; Robotics Workshop</div><div class="opt" data-correct="true" onclick="selectOpt(this,true)">C. Environmental Science Field Trip</div><div class="opt" data-correct="true" onclick="selectOpt(this,true)">D. Biotechnology Workshop</div><div class="opt" data-correct="false" onclick="selectOpt(this,true)">E. Project Presentations</div></div><button class="analysis-btn" onclick="toggleAnalysis(this)">顯示解析</button><div class="analysis">【混合題背景】
 情境說明：這是一份「璞瑞未來科學夏令營」(Bright Futures Science Camp) 的行程表，由國家科學博物館舉辦，時間為7月14日至18日（週一至週五），招收對象為13至17歲的學生，報名費為新台幣3,500元。
 每日行程：週一為科學方法簡介與實驗室安全說明；週二為物理與機器人課程（自製機器人）；週三為環境科學課程，含前往大雪山自然保護區的實地考察；週四為生物科技工作坊（DNA萃取實驗）；週五為專題報告與閉幕典禮、頒發證書。
 費用包含：所有實驗材料與設備、每日午餐與兩次點心、週三的實地考察交通、營隊T恤、結業證書。
@@ -703,886 +720,42 @@ function submitExam() {
   document.getElementById('result-msg').style.display = 'block';
   document.getElementById('result-msg').scrollIntoView({behavior:'smooth'});
 }
-</script>
-
-
-<!-- ===== 英文作文練習區 ===== -->
-<style>
-
-:root {
-  --navy: #1a3a5c;
-  --navy-light: #2a5080;
-  --orange: #f0822a;
-  --orange-bg: #fef3e8;
-  --green: #27ae60;
-  --green-bg: #eaf8ef;
-  --red: #e74c3c;
-  --red-bg: #fdecea;
-  --yellow: #f1c40f;
-  --yellow-bg: #fffbea;
-  --gray-50: #f8f9fa;
-  --gray-100: #f0f2f5;
-  --gray-300: #d0d5dd;
-  --gray-500: #667085;
-  --gray-700: #344054;
-  --white: #fff;
-  --radius: 14px;
-  --shadow: 0 2px 14px rgba(26,58,92,0.10);
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
-  background: var(--gray-100);
-  color: var(--gray-700);
-  min-height: 100vh;
-}
-
-/* Header */
-.header {
-  background: var(--navy);
-  color: white;
-  padding: 14px 20px;
-  display: flex; align-items: center; gap: 12px;
-  position: sticky; top: 0; z-index: 100;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-}
-.header-logo { font-size: 18px; font-weight: 800; color: var(--orange); letter-spacing: 1px; }
-.header-title { font-size: 14px; font-weight: 500; opacity: 0.9; }
-
-.container { max-width: 780px; margin: 0 auto; padding: 20px 16px 60px; display: flex; flex-direction: column; gap: 14px; }
-
-/* Cards */
-.card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
-.card-header { display: flex; align-items: center; gap: 10px; padding: 13px 18px; border-bottom: 1px solid var(--gray-100); }
-.card-icon { width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
-.ci-blue { background: #e8f0fa; }
-.ci-orange { background: var(--orange-bg); }
-.ci-green { background: var(--green-bg); }
-.ci-yellow { background: var(--yellow-bg); }
-.card-meta { flex: 1; }
-.card-label { font-size: 11px; font-weight: 600; letter-spacing: 0.8px; color: var(--gray-500); text-transform: uppercase; }
-.card-title { font-size: 15px; font-weight: 600; color: var(--navy); margin-top: 2px; }
-.card-body { padding: 16px 18px; }
-
-/* Prompt */
-.prompt-text { font-size: 14px; line-height: 1.8; color: var(--gray-700); }
-.prompt-hl {
-  background: var(--orange-bg); border-left: 3px solid var(--orange);
-  border-radius: 0 8px 8px 0; padding: 10px 14px;
-  margin-top: 12px; font-size: 13px; color: var(--navy); line-height: 1.7;
-}
-.prompt-hl strong { color: var(--orange); }
-
-/* Textarea */
-.essay-ta {
-  width: 100%; min-height: 180px;
-  border: 2px solid var(--gray-300); border-radius: 10px;
-  padding: 14px; font-size: 14px; line-height: 1.7;
-  resize: vertical; font-family: inherit; color: var(--gray-700);
-  outline: none; transition: border-color 0.2s;
-}
-.essay-ta:focus { border-color: var(--navy-light); }
-.ta-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; font-size: 13px; color: var(--gray-500); }
-.wc-badge {
-  display: inline-flex; align-items: center; gap: 5px;
-  background: var(--gray-100); border-radius: 20px; padding: 3px 10px;
-  font-weight: 600; font-size: 13px; transition: all 0.3s;
-}
-.wc-badge.low { background: var(--red-bg); color: var(--red); }
-.wc-badge.ok { background: var(--green-bg); color: var(--green); }
-
-/* Check button */
-.btn-check {
-  background: var(--navy);
-  color: white; border: none; border-radius: 10px;
-  padding: 14px 24px; font-size: 15px; font-weight: 700;
-  cursor: pointer; width: 100%;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  transition: background 0.2s, transform 0.1s;
-}
-.btn-check:hover { background: var(--navy-light); }
-.btn-check:active { transform: scale(0.98); }
-.btn-check:disabled { background: var(--gray-300); cursor: not-allowed; }
-
-/* Results */
-.result-wrap { display: none; flex-direction: column; gap: 14px; }
-.result-wrap.on { display: flex; }
-
-/* Score bar */
-.score-header { padding: 16px 18px 0; }
-.score-total {
-  display: flex; align-items: baseline; gap: 8px; margin-bottom: 14px;
-}
-.score-num { font-size: 48px; font-weight: 800; line-height: 1; color: var(--navy); }
-.score-denom { font-size: 20px; color: var(--gray-500); font-weight: 500; }
-.score-label { font-size: 13px; color: var(--gray-500); margin-top: 2px; }
-.score-bar-wrap { height: 10px; background: var(--gray-100); border-radius: 10px; overflow: hidden; margin-bottom: 6px; }
-.score-bar { height: 100%; border-radius: 10px; transition: width 1s cubic-bezier(0.4,0,0.2,1); }
-.bar-red { background: var(--red); }
-.bar-orange { background: var(--orange); }
-.bar-green { background: var(--green); }
-
-/* Checklist items */
-.check-list { display: flex; flex-direction: column; gap: 0; }
-.check-item {
-  display: flex; align-items: flex-start; gap: 12px;
-  padding: 13px 18px; border-top: 1px solid var(--gray-100);
-  transition: background 0.2s;
-}
-.check-item:first-child { border-top: none; }
-.check-status {
-  width: 26px; height: 26px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 14px; flex-shrink: 0; margin-top: 1px;
-  font-weight: 700;
-}
-.status-pass { background: var(--green-bg); color: var(--green); }
-.status-fail { background: var(--red-bg); color: var(--red); }
-.status-warn { background: var(--yellow-bg); color: #b7950b; }
-.check-content { flex: 1; }
-.check-name { font-size: 14px; font-weight: 600; color: var(--gray-700); line-height: 1.4; }
-.check-detail { font-size: 13px; color: var(--gray-500); margin-top: 4px; line-height: 1.5; }
-.check-detail.found { color: var(--green); }
-.check-detail.missing { color: var(--red); }
-
-/* Keywords found */
-.kw-found-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
-.kw-tag {
-  background: var(--green-bg); color: #1a5c3a;
-  font-size: 12px; font-weight: 600;
-  padding: 2px 8px; border-radius: 20px;
-}
-.kw-tag.miss {
-  background: var(--gray-100); color: var(--gray-500);
-  text-decoration: line-through;
-}
-
-/* Paragraph preview */
-.para-preview {
-  background: var(--gray-50); border-radius: 8px;
-  padding: 10px 14px; margin-top: 8px;
-  font-size: 13px; line-height: 1.7; color: var(--gray-700);
-  border-left: 3px solid var(--gray-300);
-}
-.para-preview.good { border-left-color: var(--green); }
-.para-preview.bad { border-left-color: var(--red); }
-
-/* Self checklist */
-.self-check-list { display: flex; flex-direction: column; gap: 10px; padding: 16px 18px; }
-.self-item {
-  display: flex; align-items: flex-start; gap: 12px;
-  padding: 12px 14px; border-radius: 10px;
-  border: 2px solid var(--gray-100);
-  cursor: pointer; transition: all 0.2s; user-select: none;
-}
-.self-item:hover { border-color: var(--gray-300); background: var(--gray-50); }
-.self-item.checked { border-color: var(--green); background: var(--green-bg); }
-.self-checkbox {
-  width: 22px; height: 22px; border-radius: 6px;
-  border: 2px solid var(--gray-300);
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; margin-top: 1px;
-  transition: all 0.2s; font-size: 13px;
-}
-.self-item.checked .self-checkbox { background: var(--green); border-color: var(--green); color: white; }
-.self-text { font-size: 14px; line-height: 1.5; color: var(--gray-700); }
-
-/* Sample essay */
-.sample-toggle {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 14px 18px; cursor: pointer;
-  font-size: 14px; font-weight: 600; color: var(--navy);
-  border-top: 1px solid var(--gray-100);
-}
-.sample-toggle .arrow { transition: transform 0.3s; font-size: 12px; }
-.sample-toggle.open .arrow { transform: rotate(180deg); }
-.sample-body { display: none; padding: 0 18px 18px; }
-.sample-body.on { display: block; }
-.sample-text {
-  background: var(--gray-50); border-radius: 10px;
-  padding: 14px; font-size: 13px; line-height: 1.8;
-  color: var(--gray-700); border-left: 3px solid var(--orange);
-}
-.sample-text p { margin-bottom: 12px; }
-.sample-text p:last-child { margin-bottom: 0; }
-
-/* 中譯英 */
-.trans-q {
-  font-size: 14px; line-height: 1.8; color: var(--navy);
-  font-weight: 600; margin-bottom: 10px;
-}
-.trans-ta {
-  width: 100%; min-height: 80px;
-  border: 2px solid var(--gray-300); border-radius: 10px;
-  padding: 12px 14px; font-size: 14px; line-height: 1.7;
-  resize: vertical; font-family: inherit; color: var(--gray-700);
-  outline: none; transition: border-color 0.2s;
-}
-.trans-ta:focus { border-color: var(--navy-light); }
-.btn-trans {
-  margin-top: 10px;
-  background: var(--navy); color: white; border: none;
-  border-radius: 8px; padding: 10px 20px;
-  font-size: 13px; font-weight: 700; cursor: pointer;
-  transition: background 0.2s;
-}
-.btn-trans:hover { background: var(--navy-light); }
-.trans-result { display: none; margin-top: 14px; }
-.trans-result.on { display: block !important; }
-.trans-answer-box {
-  background: var(--green-bg); border-left: 3px solid var(--green);
-  border-radius: 0 8px 8px 0; padding: 12px 14px;
-  font-size: 13px; line-height: 1.8; color: #1a5c3a; margin-bottom: 12px;
-}
-.trans-answer-label {
-  font-size: 11px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 0.8px; color: var(--green); margin-bottom: 6px;
-}
-.trans-kw-row { margin-top: 10px; }
-.trans-kw-label { font-size: 12px; color: var(--gray-500); margin-bottom: 6px; font-weight: 600; }
-.trans-divider {
-  border: none; border-top: 1px solid var(--gray-100); margin: 18px 0;
-}
-
-/* Re-check btn */
-.btn-recheck {
-  background: var(--orange); color: white; border: none;
-  border-radius: 10px; padding: 12px 20px;
-  font-size: 14px; font-weight: 700; cursor: pointer;
-  width: 100%; margin: 14px 18px 18px;
-  width: calc(100% - 36px);
-  display: flex; align-items: center; justify-content: center; gap: 6px;
-  transition: background 0.2s;
-}
-.btn-recheck:hover { background: #d96e1a; }
-
-</style>
-<div style="max-width:860px;margin:48px auto 0;padding:0 16px 60px;font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;">
-  <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
-    <div style="flex:1;height:2px;background:linear-gradient(to right,transparent,#1a3a5c33)"></div>
-    <div style="font-size:13px;font-weight:700;letter-spacing:1.5px;color:#1a3a5c;text-transform:uppercase;white-space:nowrap">📝 寫作練習 Writing Practice</div>
-    <div style="flex:1;height:2px;background:linear-gradient(to left,transparent,#1a3a5c33)"></div>
-  </div>
-
-
-<div class="header">
-  <div class="header-logo">EFETL</div>
-  <div class="header-title">英文作文 ＆ 中譯英練習</div>
-</div>
-
-<div class="container">
-
-  <!-- 中譯英 -->
-  <div class="card">
-    <div class="card-header">
-      <div class="card-icon ci-orange">🔤</div>
-      <div class="card-meta">
-        <div class="card-label">中譯英練習</div>
-        <div class="card-title">一、中譯英</div>
-      </div>
-    </div>
-    <div class="card-body">
-
-      <!-- 第1題 -->
-      <div class="trans-q">中譯英 1. 由於科技的快速進步，許多原本需要大量人力的工作現在已經可以由機器或電腦程式來完成。</div>
-      <textarea class="trans-ta" id="trans1Input" placeholder="請在此輸入你的英文翻譯…"></textarea>
-      <button class="btn-trans" onclick="checkTrans(1)">對照答案</button>
-      <div class="trans-result" id="trans1Result">
-        <div class="trans-answer-label">✦ 參考答案</div>
-        <div class="trans-answer-box">Due to the rapid advancement of technology, many jobs that used to require a large amount of manpower can now be done by machines or computer programs.</div>
-        <div class="trans-kw-row">
-          <div class="trans-kw-label">關鍵詞彙比對：</div>
-          <div class="kw-found-list" id="trans1Kw"></div>
-        </div>
-      </div>
-
-      <hr class="trans-divider">
-
-      <!-- 第2題 -->
-      <div class="trans-q">中譯英 2. 為了保護瀕臨絕種的動物，政府必須加強對非法狩獵行為的取締，同時也要積極推廣環境保育的觀念。</div>
-      <textarea class="trans-ta" id="trans2Input" placeholder="請在此輸入你的英文翻譯…"></textarea>
-      <button class="btn-trans" onclick="checkTrans(2)">對照答案</button>
-      <div class="trans-result" id="trans2Result">
-        <div class="trans-answer-label">✦ 參考答案</div>
-        <div class="trans-answer-box">In order to protect endangered animals, the government must strengthen its crackdown on illegal hunting, and at the same time actively promote the concept of environmental conservation.</div>
-        <div class="trans-kw-row">
-          <div class="trans-kw-label">關鍵詞彙比對：</div>
-          <div class="kw-found-list" id="trans2Kw"></div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- 作文分隔 -->
-  <div style="display:flex;align-items:center;gap:12px;padding:0 4px">
-    <div style="flex:1;height:2px;background:linear-gradient(to right,transparent,#1a3a5c33)"></div>
-    <div style="font-size:12px;font-weight:700;letter-spacing:1.5px;color:var(--navy);text-transform:uppercase;white-space:nowrap">✍️ 英文作文練習</div>
-    <div style="flex:1;height:2px;background:linear-gradient(to left,transparent,#1a3a5c33)"></div>
-  </div>
-
-  <!-- 題目 -->
-  <div class="card">
-    <div class="card-header">
-      <div class="card-icon ci-blue">📋</div>
-      <div class="card-meta">
-        <div class="card-label">作文題目</div>
-        <div class="card-title">志工服務 Volunteer Service</div>
-      </div>
-    </div>
-    <div class="card-body">
-      <div class="prompt-text">志工服務（volunteer service）在現代社會中扮演著重要的角色，許多學校也鼓勵學生參與各種志工活動。請以此為主題寫一篇英文作文，文分兩段，文長至少 120 個單詞（words）。</div>
-      
-    </div>
-  </div>
-
-  <!-- 輸入區 -->
-  <div class="card">
-    <div class="card-header">
-      <div class="card-icon ci-orange">✏️</div>
-      <div class="card-meta">
-        <div class="card-label">輸入作文</div>
-        <div class="card-title">請在下方輸入或貼上你的英文作文</div>
-      </div>
-    </div>
-    <div class="card-body">
-      <textarea class="essay-ta" id="essayInput"
-        placeholder="Volunteer service plays an important role in modern society...&#10;&#10;（請分兩段輸入，段落之間空一行）"></textarea>
-      <div class="ta-meta">
-        <div class="wc-badge low" id="wcBadge">📝 字數：<span id="wcNum">0</span> / 120</div>
-        <div>段落數：<span id="paraNum">0</span> 段</div>
-      </div>
-    </div>
-  </div>
-
-  <button class="btn-check" id="checkBtn" onclick="doCheck()">🔍 開始自我檢核</button>
-
-  <!-- 結果區 -->
-  <div class="result-wrap" id="resultWrap">
-
-    <!-- 分數卡 -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon ci-green">📊</div>
-        <div class="card-meta">
-          <div class="card-label">自動檢核結果</div>
-          <div class="card-title">依評分標準分析</div>
-        </div>
-      </div>
-      <div class="score-header">
-        <div class="score-total">
-          <div class="score-num" id="scoreNum">0</div>
-          <div class="score-denom">/ 7</div>
-          <div>
-            <div style="font-size:15px;font-weight:700;color:var(--navy)" id="scoreMsg">—</div>
-            <div class="score-label">項目通過</div>
-          </div>
-        </div>
-        <div class="score-bar-wrap">
-          <div class="score-bar" id="scoreBar" style="width:0%"></div>
-        </div>
-      </div>
-      <div class="check-list" id="checkList"></div>
-    </div>
-
-
-
-    <!-- 範例作文 -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon ci-blue">📖</div>
-        <div class="card-meta">
-          <div class="card-label">參考範例</div>
-          <div class="card-title">優秀作文示範（約 150 字）</div>
-        </div>
-      </div>
-      <div class="sample-toggle" id="sampleToggle" onclick="toggleSample()">
-        <span>點擊查看範例作文</span>
-        <span class="arrow">▼</span>
-      </div>
-      <div class="sample-body" id="sampleBody">
-        <div class="sample-text" id="sampleText"></div>
-        <div style="margin-top:10px;font-size:12px;color:var(--gray-500);display:flex;justify-content:space-between;align-items:center">
-          <span id="sampleMeta"></span>
-          <button onclick="showNextSample()" style="background:none;border:1px solid var(--gray-300);border-radius:6px;padding:3px 10px;font-size:12px;cursor:pointer;color:var(--gray-500)">換一篇 🔀</button>
-        </div>
-      </div>
-      <button class="btn-recheck" onclick="resetAll()">🔄 重新輸入作文</button>
-    </div>
-
-  </div>
-</div>
-
-<script>
-const essayInput = document.getElementById('essayInput');
-
-// 即時字數 & 段落
-essayInput.addEventListener('input', updateMeta);
-function updateMeta() {
-  const text = essayInput.value.trim();
-  const words = text ? text.split(/\s+/).filter(w => w).length : 0;
-  const paras = text ? text.split(/\n\s*\n/).filter(p => p.trim()).length : 0;
-
-  document.getElementById('wcNum').textContent = words;
-  document.getElementById('paraNum').textContent = paras;
-
-  const badge = document.getElementById('wcBadge');
-  badge.className = 'wc-badge ' + (words >= 120 ? 'ok' : 'low');
-}
-
-// 關鍵字庫
-const KW_TYPES = ['environmental cleanup', 'elderly care', 'tutoring', 'animal shelter', 'food bank', 'hospital', 'library', 'community', 'education', 'children', 'elderly', 'disabled', 'homeless'];
-const KW_BENEFIT = ['benefit', 'contribute', 'strengthen', 'improve', 'help', 'support', 'society', 'community bond', 'welfare', 'meaningful', 'rewarding', 'make a difference'];
-const KW_PERSONAL = ['i ', 'my ', 'me ', 'myself', 'personally', 'experience', 'last ', 'once ', 'when i', 'i had', 'i joined', 'i went', 'i volunteered'];
-const KW_CONNECTORS = ['moreover', 'furthermore', 'in addition', 'however', 'therefore', 'as a result', 'for example', 'for instance', 'in conclusion', 'in summary', 'on the other hand', 'not only', 'such as', 'besides'];
-
-function countKw(text, kwArr) {
-  const lower = text.toLowerCase();
-  return kwArr.filter(kw => lower.includes(kw));
-}
-
-function doCheck() {
-  const text = essayInput.value.trim();
-  if (!text) { alert('請先輸入你的作文！'); return; }
-
-  const lower = text.toLowerCase();
-  const words = text.split(/\s+/).filter(w => w).length;
-  const paras = text.split(/\n\s*\n/).filter(p => p.trim());
-  const paraCount = paras.length;
-
-  // 各段
-  const para1 = paras[0] || '';
-  const para2 = paras.slice(1).join(' ') || '';
-
-  // 檢核項目
-  const foundTypes = countKw(para1 + ' ' + para2, KW_TYPES);
-  const foundBenefit = countKw(para1, KW_BENEFIT);
-  const foundPersonal = countKw(para2, KW_PERSONAL);
-  const foundConnectors = countKw(text, KW_CONNECTORS);
-
-  const checks = [
-    {
-      name: '文章分為兩段',
-      pass: paraCount >= 2,
-      warn: false,
-      detail: `偵測到 ${paraCount} 段${paraCount >= 2 ? ' ✓' : '，請在兩段之間空一行'}`,
-    },
-    {
-      name: '第一段提到志工服務類型',
-      pass: countKw(para1, KW_TYPES).length >= 2,
-      warn: countKw(para1, KW_TYPES).length === 1,
-      detail: null,
-      kwFound: countKw(para1, KW_TYPES),
-      kwAll: ['environmental cleanup', 'elderly care', 'tutoring', 'community', 'hospital', 'library'],
-    },
-    {
-      name: '第一段說明對社會的貢獻',
-      pass: foundBenefit.length >= 2,
-      warn: foundBenefit.length === 1,
-      detail: null,
-      kwFound: foundBenefit,
-      kwAll: ['benefit', 'contribute', 'help', 'improve', 'strengthen', 'society'],
-    },
-    {
-      name: '第二段有個人觀點或經驗',
-      pass: countKw(para2, KW_PERSONAL).length >= 2,
-      warn: countKw(para2, KW_PERSONAL).length === 1,
-      detail: `第二段${para2 ? '偵測到個人語氣詞 ' + countKw(para2, KW_PERSONAL).length + ' 個' : '（未偵測到段落）'}`,
-    },
-    {
-      name: '使用連接詞讓文章更流暢',
-      pass: foundConnectors.length >= 2,
-      warn: foundConnectors.length === 1,
-      detail: null,
-      kwFound: foundConnectors,
-      kwAll: ['for example', 'moreover', 'therefore', 'however', 'in addition', 'such as'],
-    },
-    {
-      name: '句子長度適中（平均 10 字以上）',
-      pass: (() => {
-        const sentences = text.split(/[.!?]+/).filter(s => s.trim().split(/\s+/).length > 3);
-        if (!sentences.length) return false;
-        const avg = sentences.reduce((a, s) => a + s.trim().split(/\s+/).length, 0) / sentences.length;
-        return avg >= 10;
-      })(),
-      warn: false,
-      detail: (() => {
-        const sentences = text.split(/[.!?]+/).filter(s => s.trim().split(/\s+/).length > 3);
-        if (!sentences.length) return '未偵測到完整句子';
-        const avg = (sentences.reduce((a, s) => a + s.trim().split(/\s+/).length, 0) / sentences.length).toFixed(1);
-        return `平均每句 ${avg} 字${avg >= 10 ? ' ✓' : '，可嘗試擴展句子'}`;
-      })(),
-    },
-    {
-      name: '段落字數均衡（每段至少 40 字）',
-      pass: paras.every(p => p.trim().split(/\s+/).length >= 40),
-      warn: paras.some(p => p.trim().split(/\s+/).length >= 30 && p.trim().split(/\s+/).length < 40),
-      detail: paras.map((p, i) => `第${i+1}段 ${p.trim().split(/\s+/).length} 字`).join('，'),
-    },
-  ];
-
-  // 計算分數
-  const passed = checks.filter(c => c.pass).length;
-  const pct = Math.round(passed / checks.length * 100);
-
-  // 更新分數
-  document.getElementById('scoreNum').textContent = passed;
-  const msgs = ['繼續加油！', '有點不足，再努力！', '還不錯！', '很好！', '優秀！'];
-  document.getElementById('scoreMsg').textContent = passed <= 2 ? msgs[0] : passed <= 3 ? msgs[1] : passed <= 4 ? msgs[2] : passed <= 5 ? msgs[3] : msgs[4];
-
-  const bar = document.getElementById('scoreBar');
-  bar.style.width = pct + '%';
-  bar.className = 'score-bar ' + (pct < 50 ? 'bar-red' : pct < 75 ? 'bar-orange' : 'bar-green');
-
-  // 渲染清單
-  const list = document.getElementById('checkList');
-  list.innerHTML = checks.map(c => {
-    const icon = c.pass ? '✓' : c.warn ? '!' : '✗';
-    const cls = c.pass ? 'status-pass' : c.warn ? 'status-warn' : 'status-fail';
-    let detail = '';
-    if (c.detail) {
-      detail = `<div class="check-detail ${c.pass ? 'found' : 'missing'}">${c.detail}</div>`;
-    }
-    if (c.kwFound !== undefined) {
-      const allKws = c.kwAll || [];
-      const foundSet = new Set(c.kwFound.map(k => k.toLowerCase()));
-      const tags = allKws.map(k =>
-        `<span class="kw-tag ${foundSet.has(k) ? '' : 'miss'}">${k}</span>`
-      ).join('');
-      detail += `<div class="kw-found-list">${tags}</div>`;
-      if (!c.detail) {
-        detail = `<div class="check-detail ${c.pass ? 'found' : 'missing'}">偵測到 ${c.kwFound.length} 個相關詞</div>` + detail;
-      }
-    }
-    return `
-      <div class="check-item">
-        <div class="check-status ${cls}">${icon}</div>
-        <div class="check-content">
-          <div class="check-name">${c.name}</div>
-          ${detail}
-        </div>
-      </div>`;
-  }).join('');
-
-  document.getElementById('resultWrap').classList.add('on');
-  document.getElementById('resultWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-// 中譯英關鍵字庫
-const TRANS_KW = {
-  1: ['rapid advancement', 'advancement of technology', 'manpower', 'computer program', 'used to', 'can now', 'due to', 'machines'],
-  2: ['endangered', 'illegal hunting', 'crackdown', 'environmental conservation', 'government', 'in order to', 'promote', 'strengthen']
-};
-
-function checkTrans(n) {
-  const input = document.getElementById('trans' + n + 'Input').value.trim();
-  if (!input) { alert('請先輸入你的翻譯！'); return; }
-  const lower = input.toLowerCase();
-  const kws = TRANS_KW[n];
-  const kwHtml = kws.map(kw =>
-    `<span class="kw-tag ${lower.includes(kw.toLowerCase()) ? '' : 'miss'}">${kw}</span>`
-  ).join('');
-  document.getElementById('trans' + n + 'Kw').innerHTML = kwHtml;
-  const result = document.getElementById('trans' + n + 'Result');
-  result.classList.add('on');
-  result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-}
-
-const SAMPLES = [
-  {
-    paras: [
-      "Volunteer service plays an essential role in modern society. There are many types of volunteer work, such as environmental cleanup, elderly care, and educational tutoring. These activities benefit the community in various ways. For example, cleaning up parks makes neighborhoods more beautiful, while tutoring helps underprivileged children improve their academic performance. By participating in volunteer work, people strengthen community bonds and create a more caring society.",
-      "Personally, I find educational tutoring the most meaningful type of volunteer service. Last summer, I volunteered at a local community center, helping elementary school students with their English homework every weekend. Seeing the children's faces light up when they understood a new concept was incredibly rewarding. Through this experience, I learned that small acts of kindness can make a big difference in someone's life. I strongly encourage everyone to join volunteer activities and contribute to making the world a better place."
-    ],
-    meta: "字數：148 words｜風格：個人經驗型"
-  },
-  {
-    paras: [
-      "In modern society, volunteer service has become increasingly important. People can contribute to their communities in different ways, such as working at food banks, visiting elderly residents in nursing homes, or helping clean up local beaches. These efforts not only improve the environment but also strengthen the relationship between community members. Moreover, volunteer work gives people a sense of belonging and teaches them the value of giving without expecting anything in return.",
-      "Among the various types of volunteer service, I believe elderly care is the most meaningful. Many senior citizens live alone and feel lonely, so spending time with them can truly brighten their days. Last winter, I joined a group of volunteers who visited a local nursing home every Saturday. We played board games with the residents, listened to their stories, and helped them write letters to their families. Through this experience, I realized that the greatest gift we can offer others is our time and attention."
-    ],
-    meta: "字數：152 words｜風格：社區關懷型"
-  },
-  {
-    paras: [
-      "Volunteer service is a powerful force that shapes modern society for the better. It takes many forms, including environmental protection, disaster relief, and community education. For instance, environmental volunteers plant trees and collect garbage to keep our surroundings clean and green. Community education volunteers, on the other hand, teach reading and writing skills to those who have limited access to formal education. In this way, volunteer work addresses social problems and helps create a more equal and sustainable world.",
-      "If I could choose one type of volunteer service to participate in, it would be environmental protection. I am deeply concerned about issues such as climate change and plastic pollution, and I believe that taking direct action is more effective than simply worrying. In fact, I once joined a beach cleanup event organized by my school, and I was shocked by the amount of trash we collected in just two hours. That experience motivated me to reduce my own use of plastic and inspire others to do the same."
-    ],
-    meta: "字數：155 words｜風格：環境議題型"
-  },
-  {
-    paras: [
-      "Volunteer service has long been a cornerstone of healthy communities around the world. From hospital volunteers who comfort patients to animal shelter workers who care for abandoned pets, these dedicated individuals give their time and energy to help those in need. Such contributions not only improve the lives of the recipients but also create a ripple effect of kindness throughout society. Furthermore, research has shown that people who volunteer regularly tend to feel happier and more connected to their communities.",
-      "In my opinion, working at an animal shelter is the most meaningful form of volunteer service. Animals cannot speak for themselves, so they depend entirely on humans for care and protection. Last year, I spent several weekends at a local shelter, feeding the animals, cleaning their cages, and helping to find them loving homes. Watching a shy, frightened dog gradually trust me and wag its tail was one of the most touching moments of my life. This experience taught me that love and patience can heal even the deepest wounds."
-    ],
-    meta: "字數：157 words｜風格：動物關懷型"
+function selectOpt(el, multi) {
+  var block = el.closest('.q-block');
+  if (!multi && block.classList.contains('answered')) return;
+  block.classList.add('answered');
+  if (el.dataset.correct === 'true') {
+    el.classList.add('correct');
+  } else {
+    el.classList.add('incorrect');
   }
-];
-
-let currentSampleIdx = -1;
-
-function showNextSample() {
-  let next;
-  do { next = Math.floor(Math.random() * SAMPLES.length); } while (next === currentSampleIdx && SAMPLES.length > 1);
-  currentSampleIdx = next;
-  const s = SAMPLES[currentSampleIdx];
-  document.getElementById('sampleText').innerHTML = s.paras.map(p => `<p>${p}</p>`).join('');
-  document.getElementById('sampleMeta').textContent = s.meta;
-}
-
-function toggleSample() {
-  const toggle = document.getElementById('sampleToggle');
-  const body = document.getElementById('sampleBody');
-  const isOpening = !body.classList.contains('on');
-  toggle.classList.toggle('open');
-  body.classList.toggle('on');
-  if (isOpening && currentSampleIdx === -1) showNextSample();
-}
-
-function resetAll() {
-  essayInput.value = '';
-  updateMeta();
-  document.getElementById('resultWrap').classList.remove('on');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-</script>
-
-</div>
-<script>
-
-const essayInput = document.getElementById('essayInput');
-
-// 即時字數 & 段落
-essayInput.addEventListener('input', updateMeta);
-function updateMeta() {
-  const text = essayInput.value.trim();
-  const words = text ? text.split(/\s+/).filter(w => w).length : 0;
-  const paras = text ? text.split(/\n\s*\n/).filter(p => p.trim()).length : 0;
-
-  document.getElementById('wcNum').textContent = words;
-  document.getElementById('paraNum').textContent = paras;
-
-  const badge = document.getElementById('wcBadge');
-  badge.className = 'wc-badge ' + (words >= 120 ? 'ok' : 'low');
-}
-
-// 關鍵字庫
-const KW_TYPES = ['environmental cleanup', 'elderly care', 'tutoring', 'animal shelter', 'food bank', 'hospital', 'library', 'community', 'education', 'children', 'elderly', 'disabled', 'homeless'];
-const KW_BENEFIT = ['benefit', 'contribute', 'strengthen', 'improve', 'help', 'support', 'society', 'community bond', 'welfare', 'meaningful', 'rewarding', 'make a difference'];
-const KW_PERSONAL = ['i ', 'my ', 'me ', 'myself', 'personally', 'experience', 'last ', 'once ', 'when i', 'i had', 'i joined', 'i went', 'i volunteered'];
-const KW_CONNECTORS = ['moreover', 'furthermore', 'in addition', 'however', 'therefore', 'as a result', 'for example', 'for instance', 'in conclusion', 'in summary', 'on the other hand', 'not only', 'such as', 'besides'];
-
-function countKw(text, kwArr) {
-  const lower = text.toLowerCase();
-  return kwArr.filter(kw => lower.includes(kw));
-}
-
-function doCheck() {
-  const text = essayInput.value.trim();
-  if (!text) { alert('請先輸入你的作文！'); return; }
-
-  const lower = text.toLowerCase();
-  const words = text.split(/\s+/).filter(w => w).length;
-  const paras = text.split(/\n\s*\n/).filter(p => p.trim());
-  const paraCount = paras.length;
-
-  // 各段
-  const para1 = paras[0] || '';
-  const para2 = paras.slice(1).join(' ') || '';
-
-  // 檢核項目
-  const foundTypes = countKw(para1 + ' ' + para2, KW_TYPES);
-  const foundBenefit = countKw(para1, KW_BENEFIT);
-  const foundPersonal = countKw(para2, KW_PERSONAL);
-  const foundConnectors = countKw(text, KW_CONNECTORS);
-
-  const checks = [
-    {
-      name: '文章分為兩段',
-      pass: paraCount >= 2,
-      warn: false,
-      detail: `偵測到 ${paraCount} 段${paraCount >= 2 ? ' ✓' : '，請在兩段之間空一行'}`,
-    },
-    {
-      name: '第一段提到志工服務類型',
-      pass: countKw(para1, KW_TYPES).length >= 2,
-      warn: countKw(para1, KW_TYPES).length === 1,
-      detail: null,
-      kwFound: countKw(para1, KW_TYPES),
-      kwAll: ['environmental cleanup', 'elderly care', 'tutoring', 'community', 'hospital', 'library'],
-    },
-    {
-      name: '第一段說明對社會的貢獻',
-      pass: foundBenefit.length >= 2,
-      warn: foundBenefit.length === 1,
-      detail: null,
-      kwFound: foundBenefit,
-      kwAll: ['benefit', 'contribute', 'help', 'improve', 'strengthen', 'society'],
-    },
-    {
-      name: '第二段有個人觀點或經驗',
-      pass: countKw(para2, KW_PERSONAL).length >= 2,
-      warn: countKw(para2, KW_PERSONAL).length === 1,
-      detail: `第二段${para2 ? '偵測到個人語氣詞 ' + countKw(para2, KW_PERSONAL).length + ' 個' : '（未偵測到段落）'}`,
-    },
-    {
-      name: '使用連接詞讓文章更流暢',
-      pass: foundConnectors.length >= 2,
-      warn: foundConnectors.length === 1,
-      detail: null,
-      kwFound: foundConnectors,
-      kwAll: ['for example', 'moreover', 'therefore', 'however', 'in addition', 'such as'],
-    },
-    {
-      name: '句子長度適中（平均 10 字以上）',
-      pass: (() => {
-        const sentences = text.split(/[.!?]+/).filter(s => s.trim().split(/\s+/).length > 3);
-        if (!sentences.length) return false;
-        const avg = sentences.reduce((a, s) => a + s.trim().split(/\s+/).length, 0) / sentences.length;
-        return avg >= 10;
-      })(),
-      warn: false,
-      detail: (() => {
-        const sentences = text.split(/[.!?]+/).filter(s => s.trim().split(/\s+/).length > 3);
-        if (!sentences.length) return '未偵測到完整句子';
-        const avg = (sentences.reduce((a, s) => a + s.trim().split(/\s+/).length, 0) / sentences.length).toFixed(1);
-        return `平均每句 ${avg} 字${avg >= 10 ? ' ✓' : '，可嘗試擴展句子'}`;
-      })(),
-    },
-    {
-      name: '段落字數均衡（每段至少 40 字）',
-      pass: paras.every(p => p.trim().split(/\s+/).length >= 40),
-      warn: paras.some(p => p.trim().split(/\s+/).length >= 30 && p.trim().split(/\s+/).length < 40),
-      detail: paras.map((p, i) => `第${i+1}段 ${p.trim().split(/\s+/).length} 字`).join('，'),
-    },
-  ];
-
-  // 計算分數
-  const passed = checks.filter(c => c.pass).length;
-  const pct = Math.round(passed / checks.length * 100);
-
-  // 更新分數
-  document.getElementById('scoreNum').textContent = passed;
-  const msgs = ['繼續加油！', '有點不足，再努力！', '還不錯！', '很好！', '優秀！'];
-  document.getElementById('scoreMsg').textContent = passed <= 2 ? msgs[0] : passed <= 3 ? msgs[1] : passed <= 4 ? msgs[2] : passed <= 5 ? msgs[3] : msgs[4];
-
-  const bar = document.getElementById('scoreBar');
-  bar.style.width = pct + '%';
-  bar.className = 'score-bar ' + (pct < 50 ? 'bar-red' : pct < 75 ? 'bar-orange' : 'bar-green');
-
-  // 渲染清單
-  const list = document.getElementById('checkList');
-  list.innerHTML = checks.map(c => {
-    const icon = c.pass ? '✓' : c.warn ? '!' : '✗';
-    const cls = c.pass ? 'status-pass' : c.warn ? 'status-warn' : 'status-fail';
-    let detail = '';
-    if (c.detail) {
-      detail = `<div class="check-detail ${c.pass ? 'found' : 'missing'}">${c.detail}</div>`;
-    }
-    if (c.kwFound !== undefined) {
-      const allKws = c.kwAll || [];
-      const foundSet = new Set(c.kwFound.map(k => k.toLowerCase()));
-      const tags = allKws.map(k =>
-        `<span class="kw-tag ${foundSet.has(k) ? '' : 'miss'}">${k}</span>`
-      ).join('');
-      detail += `<div class="kw-found-list">${tags}</div>`;
-      if (!c.detail) {
-        detail = `<div class="check-detail ${c.pass ? 'found' : 'missing'}">偵測到 ${c.kwFound.length} 個相關詞</div>` + detail;
-      }
-    }
-    return `
-      <div class="check-item">
-        <div class="check-status ${cls}">${icon}</div>
-        <div class="check-content">
-          <div class="check-name">${c.name}</div>
-          ${detail}
-        </div>
-      </div>`;
-  }).join('');
-
-  document.getElementById('resultWrap').classList.add('on');
-  document.getElementById('resultWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-// 中譯英關鍵字庫
-const TRANS_KW = {
-  1: ['rapid advancement', 'advancement of technology', 'manpower', 'computer program', 'used to', 'can now', 'due to', 'machines'],
-  2: ['endangered', 'illegal hunting', 'crackdown', 'environmental conservation', 'government', 'in order to', 'promote', 'strengthen']
-};
-
-function checkTrans(n) {
-  const input = document.getElementById('trans' + n + 'Input').value.trim();
-  if (!input) { alert('請先輸入你的翻譯！'); return; }
-  const lower = input.toLowerCase();
-  const kws = TRANS_KW[n];
-  const kwHtml = kws.map(kw =>
-    `<span class="kw-tag ${lower.includes(kw.toLowerCase()) ? '' : 'miss'}">${kw}</span>`
-  ).join('');
-  document.getElementById('trans' + n + 'Kw').innerHTML = kwHtml;
-  const result = document.getElementById('trans' + n + 'Result');
-  result.classList.add('on');
-  result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-}
-
-const SAMPLES = [
-  {
-    paras: [
-      "Volunteer service plays an essential role in modern society. There are many types of volunteer work, such as environmental cleanup, elderly care, and educational tutoring. These activities benefit the community in various ways. For example, cleaning up parks makes neighborhoods more beautiful, while tutoring helps underprivileged children improve their academic performance. By participating in volunteer work, people strengthen community bonds and create a more caring society.",
-      "Personally, I find educational tutoring the most meaningful type of volunteer service. Last summer, I volunteered at a local community center, helping elementary school students with their English homework every weekend. Seeing the children's faces light up when they understood a new concept was incredibly rewarding. Through this experience, I learned that small acts of kindness can make a big difference in someone's life. I strongly encourage everyone to join volunteer activities and contribute to making the world a better place."
-    ],
-    meta: "字數：148 words｜風格：個人經驗型"
-  },
-  {
-    paras: [
-      "In modern society, volunteer service has become increasingly important. People can contribute to their communities in different ways, such as working at food banks, visiting elderly residents in nursing homes, or helping clean up local beaches. These efforts not only improve the environment but also strengthen the relationship between community members. Moreover, volunteer work gives people a sense of belonging and teaches them the value of giving without expecting anything in return.",
-      "Among the various types of volunteer service, I believe elderly care is the most meaningful. Many senior citizens live alone and feel lonely, so spending time with them can truly brighten their days. Last winter, I joined a group of volunteers who visited a local nursing home every Saturday. We played board games with the residents, listened to their stories, and helped them write letters to their families. Through this experience, I realized that the greatest gift we can offer others is our time and attention."
-    ],
-    meta: "字數：152 words｜風格：社區關懷型"
-  },
-  {
-    paras: [
-      "Volunteer service is a powerful force that shapes modern society for the better. It takes many forms, including environmental protection, disaster relief, and community education. For instance, environmental volunteers plant trees and collect garbage to keep our surroundings clean and green. Community education volunteers, on the other hand, teach reading and writing skills to those who have limited access to formal education. In this way, volunteer work addresses social problems and helps create a more equal and sustainable world.",
-      "If I could choose one type of volunteer service to participate in, it would be environmental protection. I am deeply concerned about issues such as climate change and plastic pollution, and I believe that taking direct action is more effective than simply worrying. In fact, I once joined a beach cleanup event organized by my school, and I was shocked by the amount of trash we collected in just two hours. That experience motivated me to reduce my own use of plastic and inspire others to do the same."
-    ],
-    meta: "字數：155 words｜風格：環境議題型"
-  },
-  {
-    paras: [
-      "Volunteer service has long been a cornerstone of healthy communities around the world. From hospital volunteers who comfort patients to animal shelter workers who care for abandoned pets, these dedicated individuals give their time and energy to help those in need. Such contributions not only improve the lives of the recipients but also create a ripple effect of kindness throughout society. Furthermore, research has shown that people who volunteer regularly tend to feel happier and more connected to their communities.",
-      "In my opinion, working at an animal shelter is the most meaningful form of volunteer service. Animals cannot speak for themselves, so they depend entirely on humans for care and protection. Last year, I spent several weekends at a local shelter, feeding the animals, cleaning their cages, and helping to find them loving homes. Watching a shy, frightened dog gradually trust me and wag its tail was one of the most touching moments of my life. This experience taught me that love and patience can heal even the deepest wounds."
-    ],
-    meta: "字數：157 words｜風格：動物關懷型"
+  block.querySelectorAll('.opt').forEach(function(o) {
+    if (o.dataset.correct === 'true') o.classList.add('correct');
+  });
+  var analysis = block.querySelector('.analysis');
+  if (analysis) {
+    analysis.style.display = 'block';
+    var btn = block.querySelector('.analysis-btn');
+    if (btn) btn.textContent = '隱藏解析';
   }
-];
-
-let currentSampleIdx = -1;
-
-function showNextSample() {
-  let next;
-  do { next = Math.floor(Math.random() * SAMPLES.length); } while (next === currentSampleIdx && SAMPLES.length > 1);
-  currentSampleIdx = next;
-  const s = SAMPLES[currentSampleIdx];
-  document.getElementById('sampleText').innerHTML = s.paras.map(p => `<p>${p}</p>`).join('');
-  document.getElementById('sampleMeta').textContent = s.meta;
 }
-
-function toggleSample() {
-  const toggle = document.getElementById('sampleToggle');
-  const body = document.getElementById('sampleBody');
-  const isOpening = !body.classList.contains('on');
-  toggle.classList.toggle('open');
-  body.classList.toggle('on');
-  if (isOpening && currentSampleIdx === -1) showNextSample();
+function toggleBox(btn, showText, hideText) {
+  var el = btn.nextElementSibling;
+  if (el.style.display === 'block') {
+    el.style.display = 'none';
+    btn.textContent = showText;
+  } else {
+    el.style.display = 'block';
+    btn.textContent = hideText;
+  }
 }
-
-function resetAll() {
-  essayInput.value = '';
-  updateMeta();
-  document.getElementById('resultWrap').classList.remove('on');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+function updateEssayStats(ta, wordId, paraId) {
+  var text = ta.value.trim();
+  var words = text.length ? text.split(/\s+/).length : 0;
+  var paras = text.length ? text.split(/\n\s*\n/).filter(function(p){return p.trim().length>0;}).length : 0;
+  document.getElementById(wordId).textContent = words;
+  document.getElementById(paraId).textContent = paras;
 }
-
 </script>
-
 </body>
 </html>
