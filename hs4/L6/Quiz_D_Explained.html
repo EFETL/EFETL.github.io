@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L6 卷D 解析版 — My Life in Your Hands</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", sans-serif; font-size: 17px; line-height: 1.7; background: #f0f2f5; color: #1d1d1f; padding-bottom: 48px; }
+header { background: linear-gradient(135deg, #11998e, #38ef7d); color: white; padding: 20px 16px; text-align: center; }
+header h1 { font-size: 20px; margin-bottom: 4px; }
+header p { font-size: 14px; opacity: 0.85; }
+.top-bar { background: white; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.1); gap: 8px; }
+.top-bar .score-info { font-size: 15px; font-weight: bold; color: #1a1a2e; white-space: nowrap; }
+.btn-reveal { background: linear-gradient(135deg, #11998e, #38ef7d); color: white; border: none; border-radius: 10px; padding: 8px 14px; font-size: 14px; font-weight: bold; cursor: pointer; white-space: nowrap; -webkit-tap-highlight-color: transparent; }
+.progress-bar { height: 4px; background: #e0e0e0; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, #11998e, #38ef7d); transition: width 0.3s; width: 0%; }
+.section { background: white; margin: 14px 10px 0; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
+.section-header { background: linear-gradient(135deg, #11998e, #38ef7d); color: white; padding: 13px 16px; font-size: 16px; font-weight: bold; }
+.section-header .pts { font-size: 12px; opacity: 0.9; font-weight: normal; }
+.question { padding: 15px 16px; border-bottom: 1px solid #f0f0f0; }
+.question:last-child { border-bottom: none; }
+.q-text { font-size: 16px; margin-bottom: 11px; font-weight: 500; line-height: 1.6; }
+.q-num { color: #0e857b; font-weight: bold; margin-right: 4px; }
+.options { display: flex; flex-direction: column; gap: 7px; }
+.option { display: flex; align-items: flex-start; gap: 9px; padding: 10px 13px; border: 2px solid #e0e0e0; border-radius: 11px; cursor: pointer; transition: all 0.15s; font-size: 16px; line-height: 1.5; background: #fafafa; -webkit-tap-highlight-color: transparent; }
+.option:active { transform: scale(0.98); }
+.option.selected { border-color: #0e857b; background: #effdf6; }
+.option.correct { border-color: #34c759; background: #f0fff4; }
+.option.wrong { border-color: #ff3b30; background: #fff5f5; }
+.option.reveal-correct { border-color: #34c759; background: #f0fff4; }
+.option-label { font-weight: bold; color: #0e857b; min-width: 22px; flex-shrink: 0; }
+.option.correct .option-label, .option.reveal-correct .option-label { color: #34c759; }
+.option.wrong .option-label { color: #ff3b30; }
+.explanation { display: none; margin-top: 10px; background: #fafbff; border-radius: 10px; border: 1px solid #e3e6f0; overflow: hidden; }
+.explanation.show { display: block; }
+.exp-header { display: flex; align-items: center; gap: 6px; padding: 8px 13px; font-size: 14px; font-weight: bold; background: #effdf6; color: #0e857b; }
+.exp-body { padding: 10px 13px; font-size: 15px; line-height: 1.7; color: #333; }
+.exp-key { color: #2e7d32; font-weight: bold; }
+.passage { background: #f8f9ff; border-left: 4px solid #0e857b; padding: 13px 15px; margin: 0 16px 10px; border-radius: 0 8px 8px 0; font-size: 15px; line-height: 1.75; }
+.passage-label { font-weight: bold; color: #0e857b; margin-bottom: 7px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+.btn-submit { display: block; width: calc(100% - 28px); margin: 18px auto 0; padding: 15px; background: linear-gradient(135deg, #11998e, #38ef7d); color: white; border: none; border-radius: 13px; font-size: 17px; font-weight: bold; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.btn-submit:active { opacity: 0.9; transform: scale(0.98); }
+.result-box { display: none; margin: 14px 10px; background: white; border-radius: 16px; padding: 22px 18px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
+.result-box.show { display: block; }
+.result-score { font-size: 50px; font-weight: bold; color: #0e857b; line-height: 1.1; }
+.result-total { font-size: 20px; color: #666; margin-bottom: 10px; }
+.result-grade { font-size: 18px; font-weight: bold; padding: 7px 18px; border-radius: 18px; display: inline-block; margin-bottom: 14px; }
+.grade-a { background: #f0fff4; color: #1a7a3c; }
+.grade-b { background: #fff9e6; color: #b7791f; }
+.grade-c { background: #fff5f5; color: #c0392b; }
+.btn-reset { display: inline-block; padding: 11px 26px; background: #f0f0f7; color: #0e857b; border: none; border-radius: 11px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 6px; }
+</style>
+</head>
+<body>
+<a href="/" style="position:fixed;top:14px;left:14px;background:#2b4c8c;color:#fff;padding:7px 16px;border-radius:8px;text-decoration:none;font-size:0.9rem;font-weight:600;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,0.18);">&#8592; &#22238;&#39318;&#39052;</a>
+<header>
+  <h1>L6 My Life in Your Hands — 卷D 解析版</h1>
+  <p>單字、文法、克漏字、閱讀測驗｜選完即顯示解析</p>
+</header>
+<div class="top-bar">
+  <span class="score-info">進度 <span id="answered-count">0</span>/50 ｜ 得分 <span id="live-score">0</span>/100</span>
+  <button class="btn-reveal" onclick="revealAll()">📖 顯示全部解析</button>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+<div id="quiz-container"></div>
+<button class="btn-submit" onclick="submitAll()">📝 交卷 / 查看成績</button>
+<div class="result-box" id="result-box">
+  <div class="result-score" id="result-score">0</div>
+  <div class="result-total">/ 100 分</div>
+  <div class="result-grade" id="result-grade"></div>
+  <div style="color:#666;font-size:15px;margin-bottom:14px;" id="result-detail"></div>
+  <button class="btn-reset" onclick="resetAll()">🔄 重新作答</button>
+</div>
+<script>
+const sections = [
+  {
+    "title": "第一大題：字彙選擇",
+    "pts": "15 題 × 2 分 = 30 分",
+    "questions": [
+      {
+        "q": "Being a painter became Albrecht's lifelong _______.",
+        "opts": [
+          "fate",
+          "symbol",
+          "ruin",
+          "profession"
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">profession（職業）</span>──職業。<br>❌ fate = 命運；symbol = 象徵；ruin = 毀壞；其餘選項語意不符。"
+      },
+      {
+        "q": "The brothers left their future to _______ with a coin toss.",
+        "opts": [
+          "fate",
+          "triumph",
+          "devotion",
+          "symbol"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">fate（命運）</span>──命運。<br>❌ triumph = 凱旋；devotion = 奉獻；symbol = 象徵；其餘選項語意不符。"
+      },
+      {
+        "q": "The praying hands express deep love and _______.",
+        "opts": [
+          "ambition",
+          "devotion",
+          "triumph",
+          "profession"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">devotion（奉獻）</span>──奉獻/虔誠。<br>❌ ambition = 抱負；triumph = 凱旋；profession = 職業；其餘選項語意不符。"
+      },
+      {
+        "q": "Albrecht studied art; _______, Albert suffered in the mines.",
+        "opts": [
+          "Barely",
+          "Beneath",
+          "Meanwhile",
+          "In vain"
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">Meanwhile（同時）</span>──與此同時。<br>❌ Barely = 幾乎不；Beneath = 在…之下；In vain = 徒勞；其餘選項語意不符。"
+      },
+      {
+        "q": "The young, _______ artist dreamed of great success.",
+        "opts": [
+          "cruel",
+          "artistic",
+          "remarkable",
+          "ambitious"
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">ambitious（有抱負的）</span>──有抱負的。<br>❌ cruel = 殘酷的；artistic = 藝術的；remarkable = 非凡的；其餘選項語意不符。"
+      },
+      {
+        "q": "His family could not _______ art school for both sons.",
+        "opts": [
+          "afford",
+          "pursue",
+          "weaken",
+          "devote"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">afford（負擔得起）</span>──負擔得起。<br>❌ pursue = 追求；weaken = 削弱；devote = 奉獻；其餘選項語意不符。"
+      },
+      {
+        "q": "Albert made a great _______ for his brother.",
+        "opts": [
+          "celebration",
+          "sacrifice",
+          "symbol",
+          "profession"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">sacrifice（犧牲）</span>──犧牲。<br>❌ celebration = 慶祝；symbol = 象徵；profession = 職業；其餘選項語意不符。"
+      },
+      {
+        "q": "After the mines, Albert could _______ move his fingers.",
+        "opts": [
+          "remarkable",
+          "cruel",
+          "barely",
+          "artistic"
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">barely（幾乎不）</span>──幾乎不能。<br>❌ remarkable = 非凡的；cruel = 殘酷的；artistic = 藝術的；其餘選項語意不符。"
+      },
+      {
+        "q": "Albrecht returned home soon after he _______.",
+        "opts": [
+          "afforded",
+          "pursued",
+          "devoted",
+          "graduated"
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">graduated（畢業）</span>──畢業。<br>❌ afforded = 負擔得起；pursued = 追求；devoted = 奉獻；其餘選項語意不符。"
+      },
+      {
+        "q": "Years of labor began to _______ his brother's hands.",
+        "opts": [
+          "weaken",
+          "afford",
+          "pursue",
+          "devote"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">weaken（削弱）</span>──削弱。<br>❌ afford = 負擔得起；pursue = 追求；devote = 奉獻；其餘選項語意不符。"
+      },
+      {
+        "q": "Both boys showed a _______ gift for drawing.",
+        "opts": [
+          "cruel",
+          "remarkable",
+          "ordinary",
+          "common"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">remarkable（非凡的）</span>──非凡的天賦。<br>❌ cruel = 殘酷的；ordinary = 普通的；common = 普通的；其餘選項語意不符。"
+      },
+      {
+        "q": "The winner was free to _______ his passion for art.",
+        "opts": [
+          "afford",
+          "weaken",
+          "pursue",
+          "ruin"
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">pursue（追求）</span>──追求。<br>❌ afford = 負擔得起；weaken = 削弱；ruin = 毀壞；其餘選項語意不符。"
+      },
+      {
+        "q": "Albert rarely had the luxury of _______.",
+        "opts": [
+          "holding back",
+          "making ends meet",
+          "laying down",
+          "taking a break"
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">taking a break（休息）</span>──休息。<br>❌ holding back = 忍住；laying down = 放下；其餘選項語意不符。"
+      },
+      {
+        "q": "The poor family struggled to _______.",
+        "opts": [
+          "make ends meet",
+          "hold back",
+          "take a break",
+          "dream of"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">make ends meet（勉強度日）</span>──勉強度日。<br>❌ hold back = 忍住；take a break = 休息；dream of = 夢想；其餘選項語意不符。"
+      },
+      {
+        "q": "As children, both brothers would _______ becoming artists.",
+        "opts": [
+          "hold back",
+          "dream of",
+          "take a break",
+          "lay down"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">dream of（夢想）</span>──夢想。<br>❌ hold back = 忍住；take a break = 休息；lay down = 放下；其餘選項語意不符。"
+      }
+    ]
+  },
+  {
+    "title": "第二大題：文法選擇",
+    "pts": "15 題 × 2 分 = 30 分",
+    "questions": [
+      {
+        "q": "The coin, _______ decided their fate, changed both lives.",
+        "opts": [
+          "who",
+          "which",
+          "whose",
+          "what"
+        ],
+        "ans": "B",
+        "exp": "先行詞為事物，非限定子句用 <span class=\"exp-key\">which</span>。"
+      },
+      {
+        "q": "Behind every great drawing _______ a story.",
+        "opts": [
+          "are",
+          "is",
+          "were",
+          "have"
+        ],
+        "ans": "B",
+        "exp": "倒裝句主詞 a story 單數，用 <span class=\"exp-key\">is</span>。"
+      },
+      {
+        "q": "Their poverty made it impossible _______ together.",
+        "opts": [
+          "study",
+          "studying",
+          "to study",
+          "studied"
+        ],
+        "ans": "C",
+        "exp": "make it + 形容詞 + <span class=\"exp-key\">to study</span>。"
+      },
+      {
+        "q": "A talent _______ by hard labor can never fully return.",
+        "opts": [
+          "weaken",
+          "weakened",
+          "weakening",
+          "to weaken"
+        ],
+        "ans": "B",
+        "exp": "過去分詞 <span class=\"exp-key\">weakened</span> 作形容詞表被動。"
+      },
+      {
+        "q": "_______ his ruined hands, Albert felt proud of his brother.",
+        "opts": [
+          "Although",
+          "Because of",
+          "Despite",
+          "So"
+        ],
+        "ans": "C",
+        "exp": "後接名詞片語表讓步，用 <span class=\"exp-key\">Despite</span>。"
+      },
+      {
+        "q": "If Albert had won, he _______ the famous artist.",
+        "opts": [
+          "would be",
+          "would have become",
+          "will become",
+          "becomes"
+        ],
+        "ans": "B",
+        "exp": "與過去事實相反，主句用 <span class=\"exp-key\">would have become</span>。"
+      },
+      {
+        "q": "Albrecht insisted that his brother _______ working underground.",
+        "opts": [
+          "stops",
+          "stop",
+          "stopped",
+          "to stop"
+        ],
+        "ans": "B",
+        "exp": "insist that S (should) + 原形 <span class=\"exp-key\">stop</span>。"
+      },
+      {
+        "q": "_______ of the brothers was willing to sacrifice for the other.",
+        "opts": [
+          "Each",
+          "Most",
+          "Few",
+          "Many"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">Each</span> + 單數動詞 was。"
+      },
+      {
+        "q": "The more Albert worked, the _______ his health became.",
+        "opts": [
+          "worse",
+          "bad",
+          "worst",
+          "badly"
+        ],
+        "ans": "A",
+        "exp": "「the+比較級…」，bad 比較級 <span class=\"exp-key\">worse</span>。"
+      },
+      {
+        "q": "Albert was forced _______ his own ambitions aside.",
+        "opts": [
+          "put",
+          "putting",
+          "to put",
+          "putten"
+        ],
+        "ans": "C",
+        "exp": "be forced <span class=\"exp-key\">to put</span>。"
+      },
+      {
+        "q": "Albert _______ have soft, skilled hands before the mines.",
+        "opts": [
+          "used to",
+          "use to",
+          "is used to",
+          "was used"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">used to</span> + 原形，表過去。"
+      },
+      {
+        "q": "After _______ home, Albrecht offered to support his brother.",
+        "opts": [
+          "return",
+          "returned",
+          "returning",
+          "to return"
+        ],
+        "ans": "C",
+        "exp": "介系詞 After + 動名詞 <span class=\"exp-key\">returning</span>。"
+      },
+      {
+        "q": "Albert's sacrifice was greater _______ words can express.",
+        "opts": [
+          "as",
+          "than",
+          "then",
+          "that"
+        ],
+        "ans": "B",
+        "exp": "比較級 greater + <span class=\"exp-key\">than</span>。"
+      },
+      {
+        "q": "The story was _______ touching that many people cried.",
+        "opts": [
+          "so",
+          "such",
+          "very",
+          "too"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">so</span> + 形容詞 + that。"
+      },
+      {
+        "q": "Never _______ a simple pair of hands carried such deep meaning.",
+        "opts": [
+          "has",
+          "have",
+          "had",
+          "having"
+        ],
+        "ans": "A",
+        "exp": "否定副詞 Never 置首倒裝，用 <span class=\"exp-key\">has</span> + p.p.。"
+      }
+    ]
+  },
+  {
+    "title": "第三大題：克漏字填充",
+    "pts": "10 題 × 2 分 = 20 分",
+    "passage": "Albrecht Dürer's Praying Hands looks simple, but a touching story lies <strong>(31)</strong> it. Born into a poor family that could hardly <strong>(32)</strong>, Albrecht and his brother both <strong>(33)</strong> studying art. Since their parents could not <strong>(34)</strong> two students, a coin toss decided their <strong>(35)</strong>. Albrecht won and left to <strong>(36)</strong> his studies, while Albert worked in <strong>(37)</strong> mines and rarely got to <strong>(38)</strong>. Years later, the labor had <strong>(39)</strong> his hands so badly that he could barely paint. The drawing remains a <strong>(40)</strong> of one brother's sacrifice.",
+    "questions": [
+      {
+        "q": "a touching story lies _______ it.",
+        "opts": [
+          "above",
+          "around",
+          "beside",
+          "beneath"
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">beneath（在…之下）</span>──在…之下。<br>❌ above = 在上面；around = 在周圍；beside = 在旁邊；其餘選項語意不符。"
+      },
+      {
+        "q": "a poor family that could hardly _______.",
+        "opts": [
+          "make ends meet",
+          "take a break",
+          "hold back",
+          "dream of"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">make ends meet（勉強度日）</span>──勉強度日。<br>❌ take a break = 休息；hold back = 忍住；dream of = 夢想；其餘選項語意不符。"
+      },
+      {
+        "q": "Albrecht and his brother both _______ studying art.",
+        "opts": [
+          "held back",
+          "dreamed of",
+          "took a break",
+          "made ends meet"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">dreamed of（夢想）</span>──夢想（dream of）。<br>❌ held back = 忍住；took a break = 休息；made ends meet = 勉強度日；其餘選項語意不符。"
+      },
+      {
+        "q": "their parents could not _______ two students.",
+        "opts": [
+          "pursue",
+          "weaken",
+          "afford",
+          "devote"
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">afford（負擔得起）</span>──負擔得起。<br>❌ pursue = 追求；weaken = 削弱；devote = 奉獻；其餘選項語意不符。"
+      },
+      {
+        "q": "a coin toss decided their _______.",
+        "opts": [
+          "triumph",
+          "symbol",
+          "profession",
+          "fate"
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">fate（命運）</span>──命運。<br>❌ triumph = 凱旋；symbol = 象徵；profession = 職業；其餘選項語意不符。"
+      },
+      {
+        "q": "Albrecht left to _______ his studies.",
+        "opts": [
+          "pursue",
+          "afford",
+          "weaken",
+          "ruin"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">pursue（追求）</span>──追求。<br>❌ afford = 負擔得起；weaken = 削弱；ruin = 毀壞；其餘選項語意不符。"
+      },
+      {
+        "q": "Albert worked in _______ mines.",
+        "opts": [
+          "artistic",
+          "cruel",
+          "remarkable",
+          "professional"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">cruel（殘酷的）</span>──殘酷的礦坑。<br>❌ artistic = 藝術的；remarkable = 非凡的；professional = 專業的；其餘選項語意不符。"
+      },
+      {
+        "q": "and rarely got to _______.",
+        "opts": [
+          "hold back",
+          "dream of",
+          "take a break",
+          "lay down"
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">take a break（休息）</span>──休息。<br>❌ hold back = 忍住；dream of = 夢想；lay down = 放下；其餘選項語意不符。"
+      },
+      {
+        "q": "the labor had _______ his hands so badly.",
+        "opts": [
+          "afforded",
+          "pursued",
+          "devoted",
+          "ruined"
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">ruined（毀壞）</span>──毀壞。<br>❌ afforded = 負擔得起；pursued = 追求；devoted = 奉獻；其餘選項語意不符。"
+      },
+      {
+        "q": "The drawing remains a _______ of one brother's sacrifice.",
+        "opts": [
+          "symbol",
+          "fate",
+          "profession",
+          "ambition"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">symbol（象徵）</span>──象徵。<br>❌ fate = 命運；profession = 職業；ambition = 抱負；其餘選項語意不符。"
+      }
+    ]
+  },
+  {
+    "title": "第四大題：閱讀測驗",
+    "pts": "10 題 × 2 分 = 20 分",
+    "passage": "<strong>Passage 1</strong><br>Albrecht Dürer, one of eighteen children, was born into a poor family in a small German village. He and his brother Albert both had a remarkable talent for art and dreamed of studying at an art school. Because their family could not afford to support both of them at the same time, the brothers decided to leave their future to fate by flipping a coin. The winner would pursue his art studies, while the loser would work in the mines to support him. Albrecht won and devoted the next four years to his passion. Meanwhile, Albert worked his body to its limits in cruel, dangerous conditions underground and rarely could take a break. When Albrecht returned home in triumph after graduating, a special dinner was held in his honor. He offered to support his brother so that Albert could become an artist too. But Albert showed his bruised hands and sobbed that four years of hard labor had broken his bones; he could barely hold a paintbrush anymore. To honor his brother's sacrifice, Albrecht drew Albert's worn hands. That famous drawing, Praying Hands, has served for hundreds of years as a symbol of gratitude, devotion, and love.<br><br><strong>Passage 2 — A Touching Birthday Message</strong><br><b>Friends:</b> Surprise! Happy birthday!<br><b>Jennifer:</b> Oh! What on earth is going on?<br><b>Friends:</b> You thought we all forgot, didn't you? And we even bought you a present!<br><b>Jennifer:</b> Aww, I love it. Thanks so much! That's sweet of you.<br><b>Friends:</b> And, of course, your favorite strawberry cake!<br><b>Jennifer:</b> Thanks. I'm so touched. You really didn't have to go to all this trouble.<br><b>Friends:</b> Speech! Speech!<br><b>Jennifer:</b> Ha-ha, okay. Well, thank you everyone for coming today. You are the best.<br><b>Friends:</b> Come on, that's what friends are for!<br><b>Mother:</b> I love you too, dear. You're the sweetest daughter, and you bring so much joy to our family.<br><b>Jennifer:</b> Thanks again, guys. Now let's celebrate!",
+    "questions": [
+      {
+        "q": "Into what kind of family was Albrecht born?",
+        "opts": [
+          "A poor family struggling to make ends meet",
+          "A wealthy noble family",
+          "A family of painters",
+          "A royal family"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">A</span>──勉強度日的貧窮家庭。"
+      },
+      {
+        "q": "What did the brothers do because they could not both study at once?",
+        "opts": [
+          "They gave up art",
+          "They moved abroad",
+          "They flipped a coin to decide",
+          "They sold the mine"
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">C</span>──以擲硬幣決定。"
+      },
+      {
+        "q": "What did Albrecht do during his four years at the academy?",
+        "opts": [
+          "He worked in the mines",
+          "He devoted himself to art and made a name for himself",
+          "He took many breaks",
+          "He returned home"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">B</span>──投入藝術並闖出名號。"
+      },
+      {
+        "q": "What did Albert reveal at the celebration dinner?",
+        "opts": [
+          "A new painting",
+          "A gift",
+          "A letter",
+          "His bruised, broken hands"
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">D</span>──他傷痕累累、斷裂的雙手。"
+      },
+      {
+        "q": "For hundreds of years, Praying Hands has been a symbol of what?",
+        "opts": [
+          "Wealth",
+          "Gratitude to a brother",
+          "Royal power",
+          "Art schools"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">B</span>──對手足的感恩。"
+      },
+      {
+        "q": "What kind of message is the second text?",
+        "opts": [
+          "A complaint",
+          "A news report",
+          "A touching birthday message",
+          "A business letter"
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">C</span>──一則感人的生日訊息。"
+      },
+      {
+        "q": "What did Jennifer's friends buy her?",
+        "opts": [
+          "A present and a strawberry cake",
+          "Nothing",
+          "A car",
+          "A house"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">A</span>──禮物與草莓蛋糕。"
+      },
+      {
+        "q": "Why did Jennifer say \"you really didn't have to go to all this trouble\"?",
+        "opts": [
+          "She was upset",
+          "She felt grateful and a little overwhelmed",
+          "She wanted more gifts",
+          "She was leaving"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">B</span>──她既感激又有點不好意思。"
+      },
+      {
+        "q": "What did Jennifer do at the end?",
+        "opts": [
+          "She went home",
+          "She started to cry",
+          "She refused the cake",
+          "She thanked everyone and wanted to celebrate"
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">D</span>──她感謝大家並要一起慶祝。"
+      },
+      {
+        "q": "What feeling do both the story and the dialogue share?",
+        "opts": [
+          "Gratitude and love",
+          "Fear",
+          "Anger",
+          "Boredom"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">A</span>──感恩與愛。"
+      }
+    ]
+  }
+];
+let globalQNum = 0;
+const qMap = {};
+const userAnswers = {};
+let submitted = false;
+const container = document.getElementById('quiz-container');
+sections.forEach((sec, si) => {
+  const secDiv = document.createElement('div');
+  secDiv.className = 'section';
+  let html = `<div class="section-header">${sec.title} <span class="pts">（${sec.pts}）</span></div>`;
+  if (sec.passage) { html += `<div class="passage"><div class="passage-label">📖 閱讀文章</div>${sec.passage}</div>`; }
+  sec.questions.forEach((q) => {
+    globalQNum++; const n = globalQNum;
+    qMap[n] = { ans: q.ans, exp: q.exp };
+    const labels = ['A','B','C','D'];
+    let optHtml = '';
+    q.opts.forEach((o, i) => { optHtml += `<div class="option" id="opt-${n}-${labels[i]}" onclick="choose(${n},'${labels[i]}')"><span class="option-label">(${labels[i]})</span>${o}</div>`; });
+    let qLabel = (si === 2 || si === 3) ? `(${n})` : `${n}`;
+    html += `<div class="question" id="q${n}"><div class="q-text"><span class="q-num">${qLabel}.</span> ${q.q}</div><div class="options">${optHtml}</div><div class="explanation" id="exp${n}"><div class="exp-header">💡 解析</div><div class="exp-body">${q.exp}</div></div></div>`;
+  });
+  secDiv.innerHTML = html;
+  container.appendChild(secDiv);
+});
+function choose(n, chosen) {
+  if (submitted) return;
+  userAnswers[n] = chosen;
+  const ans = qMap[n].ans;
+  ['A','B','C','D'].forEach(l => {
+    const el = document.getElementById(`opt-${n}-${l}`);
+    el.classList.remove('selected','correct','wrong','reveal-correct');
+    if (l === chosen) { el.classList.add(chosen === ans ? 'correct' : 'wrong'); }
+    else if (l === ans && chosen !== ans) { el.classList.add('reveal-correct'); }
+  });
+  document.getElementById(`exp${n}`).classList.add('show');
+  updateTopBar();
+}
+function updateTopBar() {
+  const count = Object.keys(userAnswers).length;
+  document.getElementById('answered-count').textContent = count;
+  document.getElementById('progress-fill').style.width = (count / 50 * 100) + '%';
+  let score = 0;
+  for (let q in userAnswers) { if (userAnswers[q] === qMap[q].ans) score += 2; }
+  document.getElementById('live-score').textContent = score;
+}
+function revealAll() {
+  for (let n = 1; n <= 50; n++) {
+    const ans = qMap[n].ans;
+    ['A','B','C','D'].forEach(l => {
+      const el = document.getElementById(`opt-${n}-${l}`);
+      el.classList.remove('selected','correct','wrong','reveal-correct');
+      if (l === ans) el.classList.add('reveal-correct');
+      else if (userAnswers[n] === l && l !== ans) el.classList.add('wrong');
+    });
+    document.getElementById(`exp${n}`).classList.add('show');
+  }
+  updateTopBar();
+}
+function submitAll() {
+  submitted = true; revealAll();
+  let score = 0;
+  for (let n = 1; n <= 50; n++) { if (userAnswers[n] === qMap[n].ans) score += 2; }
+  const rb = document.getElementById('result-box'); rb.classList.add('show');
+  document.getElementById('result-score').textContent = score;
+  const gr = document.getElementById('result-grade'); const det = document.getElementById('result-detail');
+  if (score >= 90) { gr.textContent = '🏆 優秀！'; gr.className = 'result-grade grade-a'; det.textContent = '表現卓越，繼續保持！'; }
+  else if (score >= 70) { gr.textContent = '👍 良好'; gr.className = 'result-grade grade-b'; det.textContent = '表現不錯，再複習錯誤的題目吧！'; }
+  else { gr.textContent = '📚 需加強'; gr.className = 'result-grade grade-c'; det.textContent = '多複習解析說明，你可以做到的！'; }
+  document.getElementById('answered-count').textContent = 50;
+  document.getElementById('live-score').textContent = score;
+  document.getElementById('progress-fill').style.width = '100%';
+  rb.scrollIntoView({ behavior: 'smooth' });
+}
+function resetAll() {
+  submitted = false;
+  for (let key in userAnswers) delete userAnswers[key];
+  for (let n = 1; n <= 50; n++) {
+    ['A','B','C','D'].forEach(l => { document.getElementById(`opt-${n}-${l}`).classList.remove('selected','correct','wrong','reveal-correct'); });
+    document.getElementById(`exp${n}`).classList.remove('show');
+  }
+  document.getElementById('result-box').classList.remove('show');
+  document.getElementById('answered-count').textContent = '0';
+  document.getElementById('live-score').textContent = '0';
+  document.getElementById('progress-fill').style.width = '0%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

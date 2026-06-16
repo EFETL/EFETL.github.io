@@ -58,7 +58,7 @@ header p { font-size: 14px; opacity: 0.85; }
   <h1>L6 My Life in Your Hands — 卷A 解析版</h1>
   <p>單字、文法、克漏字、閱讀測驗｜選完即顯示解析</p>
 </header>
-<div class="top-bar"><a href="../../longteng-hs4.html" style="color:#667eea;text-decoration:none;font-size:14px;font-weight:bold;">← 回第四冊</a>
+<div class="top-bar">
   <span class="score-info">進度 <span id="answered-count">0</span>/50 ｜ 得分 <span id="live-score">0</span>/100</span>
   <button class="btn-reveal" onclick="revealAll()">📖 顯示全部解析</button>
 </div>
@@ -411,8 +411,7 @@ const sections = [
           "had",
           "having"
         ],
-        
-"ans": "A",
+        "ans": "A",
         "exp": "否定副詞置首倒裝，主詞單數用 <span class=\"exp-key\">has</span> + p.p.。"
       }
     ]
@@ -592,7 +591,7 @@ const sections = [
           "Religion only"
         ],
         "ans": "B",
-        "exp": "<span class=\"exp-key\">B</span>ââææ©ãå¥ç»èæçè±¡å¾µã"
+        "exp": "<span class=\"exp-key\">B</span>──感恩、奉獻與愛的象徵。"
       },
       {
         "q": "What event are Jennifer's friends celebrating?",
@@ -603,7 +602,7 @@ const sections = [
           "A new job"
         ],
         "ans": "C",
-        "exp": "<span class=\"exp-key\">C</span>ââä»åå¨æ¶ç¥å¥¹ççæ¥ã"
+        "exp": "<span class=\"exp-key\">C</span>──他們在慶祝她的生日。"
       },
       {
         "q": "How does Jennifer first react to the surprise?",
@@ -614,7 +613,7 @@ const sections = [
           "She cries loudly"
         ],
         "ans": "A",
-        "exp": "<span class=\"exp-key\">A</span>ââå¥¹é©è¨å°åç¼çä»éº¼äºã"
+        "exp": "<span class=\"exp-key\">A</span>──她驚訝地問發生什麼事。"
       },
       {
         "q": "What detail is mentioned besides the present?",
@@ -625,7 +624,7 @@ const sections = [
           "A painting"
         ],
         "ans": "B",
-        "exp": "<span class=\"exp-key\">B</span>ââå¥¹ææçèèèç³ã"
+        "exp": "<span class=\"exp-key\">B</span>──她最愛的草莓蛋糕。"
       },
       {
         "q": "What does Jennifer's mother say about her?",
@@ -636,7 +635,7 @@ const sections = [
           "She is the sweetest daughter who brings joy"
         ],
         "ans": "D",
-        "exp": "<span class=\"exp-key\">D</span>ââæ¯è¦ªèªªå¥¹æ¯æè²¼å¿ãå¸¶ä¾æ­¡æ¨çå¥³åã"
+        "exp": "<span class=\"exp-key\">D</span>──母親說她是最貼心、帶來歡樂的女兒。"
       },
       {
         "q": "What does the phrase \"that's what friends are for\" suggest?",
@@ -647,7 +646,7 @@ const sections = [
           "Friends owe money"
         ],
         "ans": "A",
-        "exp": "<span class=\"exp-key\">A</span>ââæåæ¬å°±è©²äºç¸å¹«å©èæ¯æã"
+        "exp": "<span class=\"exp-key\">A</span>──朋友本就該互相幫助與支持。"
       }
     ]
   }
@@ -660,8 +659,8 @@ const container = document.getElementById('quiz-container');
 sections.forEach((sec, si) => {
   const secDiv = document.createElement('div');
   secDiv.className = 'section';
-  let html = `<div class="section-header">${sec.title} <span class="pts">ï¼${sec.pts}ï¼</span></div>`;
-  if (sec.passage) { html += `<div class="passage"><div class="passage-label">ð é±è®æç« </div>${sec.passage}</div>`; }
+  let html = `<div class="section-header">${sec.title} <span class="pts">（${sec.pts}）</span></div>`;
+  if (sec.passage) { html += `<div class="passage"><div class="passage-label">📖 閱讀文章</div>${sec.passage}</div>`; }
   sec.questions.forEach((q) => {
     globalQNum++; const n = globalQNum;
     qMap[n] = { ans: q.ans, exp: q.exp };
@@ -669,7 +668,7 @@ sections.forEach((sec, si) => {
     let optHtml = '';
     q.opts.forEach((o, i) => { optHtml += `<div class="option" id="opt-${n}-${labels[i]}" onclick="choose(${n},'${labels[i]}')"><span class="option-label">(${labels[i]})</span>${o}</div>`; });
     let qLabel = (si === 2 || si === 3) ? `(${n})` : `${n}`;
-    html += `<div class="question" id="q${n}"><div class="q-text"><span class="q-num">${qLabel}.</span> ${q.q}</div><div class="options">${optHtml}</div><div class="explanation" id="exp${n}"><div class="exp-header">ð¡ è§£æ</div><div class="exp-body">${q.exp}</div></div></div>`;
+    html += `<div class="question" id="q${n}"><div class="q-text"><span class="q-num">${qLabel}.</span> ${q.q}</div><div class="options">${optHtml}</div><div class="explanation" id="exp${n}"><div class="exp-header">💡 解析</div><div class="exp-body">${q.exp}</div></div></div>`;
   });
   secDiv.innerHTML = html;
   container.appendChild(secDiv);
@@ -715,9 +714,9 @@ function submitAll() {
   const rb = document.getElementById('result-box'); rb.classList.add('show');
   document.getElementById('result-score').textContent = score;
   const gr = document.getElementById('result-grade'); const det = document.getElementById('result-detail');
-  if (score >= 90) { gr.textContent = 'ð åªç§ï¼'; gr.className = 'result-grade grade-a'; det.textContent = 'è¡¨ç¾åè¶ï¼ç¹¼çºä¿æï¼'; }
-  else if (score >= 70) { gr.textContent = 'ð è¯å¥½'; gr.className = 'result-grade grade-b'; det.textContent = 'è¡¨ç¾ä¸é¯ï¼åè¤ç¿é¯èª¤çé¡ç®å§ï¼'; }
-  else { gr.textContent = 'ð éå å¼·'; gr.className = 'result-grade grade-c'; det.textContent = 'å¤è¤ç¿è§£æèªªæï¼ä½ å¯ä»¥åå°çï¼'; }
+  if (score >= 90) { gr.textContent = '🏆 優秀！'; gr.className = 'result-grade grade-a'; det.textContent = '表現卓越，繼續保持！'; }
+  else if (score >= 70) { gr.textContent = '👍 良好'; gr.className = 'result-grade grade-b'; det.textContent = '表現不錯，再複習錯誤的題目吧！'; }
+  else { gr.textContent = '📚 需加強'; gr.className = 'result-grade grade-c'; det.textContent = '多複習解析說明，你可以做到的！'; }
   document.getElementById('answered-count').textContent = 50;
   document.getElementById('live-score').textContent = score;
   document.getElementById('progress-fill').style.width = '100%';
