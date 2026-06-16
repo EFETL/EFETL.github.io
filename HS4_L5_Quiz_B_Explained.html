@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L5 卷B 解析版 — My Mouth's in Airplane Mode</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", sans-serif; font-size: 17px; line-height: 1.7; background: #f0f2f5; color: #1d1d1f; padding-bottom: 48px; }
+header { background: linear-gradient(135deg, #1a1a2e, #16213e); color: white; padding: 20px 16px; text-align: center; }
+header h1 { font-size: 20px; margin-bottom: 4px; }
+header p { font-size: 14px; opacity: 0.85; }
+.top-bar { background: white; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.1); gap: 8px; }
+.top-bar .score-info { font-size: 15px; font-weight: bold; color: #1a1a2e; white-space: nowrap; }
+.btn-reveal { background: linear-gradient(135deg, #56ab2f, #a8e063); color: white; border: none; border-radius: 10px; padding: 8px 14px; font-size: 14px; font-weight: bold; cursor: pointer; white-space: nowrap; -webkit-tap-highlight-color: transparent; }
+.progress-bar { height: 4px; background: #e0e0e0; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, #56ab2f, #a8e063); transition: width 0.3s; width: 0%; }
+.section { background: white; margin: 14px 10px 0; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
+.section-header { background: linear-gradient(135deg, #56ab2f, #a8e063); color: white; padding: 13px 16px; font-size: 16px; font-weight: bold; }
+.section-header .pts { font-size: 12px; opacity: 0.9; font-weight: normal; }
+.question { padding: 15px 16px; border-bottom: 1px solid #f0f0f0; }
+.question:last-child { border-bottom: none; }
+.q-text { font-size: 16px; margin-bottom: 11px; font-weight: 500; line-height: 1.6; }
+.q-num { color: #3f8f1f; font-weight: bold; margin-right: 4px; }
+.options { display: flex; flex-direction: column; gap: 7px; }
+.option { display: flex; align-items: flex-start; gap: 9px; padding: 10px 13px; border: 2px solid #e0e0e0; border-radius: 11px; cursor: pointer; transition: all 0.15s; font-size: 16px; line-height: 1.5; background: #fafafa; -webkit-tap-highlight-color: transparent; }
+.option:active { transform: scale(0.98); }
+.option.selected { border-color: #3f8f1f; background: #f0fff0; }
+.option.correct { border-color: #34c759; background: #f0fff4; }
+.option.wrong { border-color: #ff3b30; background: #fff5f5; }
+.option.reveal-correct { border-color: #34c759; background: #f0fff4; }
+.option-label { font-weight: bold; color: #3f8f1f; min-width: 22px; flex-shrink: 0; }
+.option.correct .option-label, .option.reveal-correct .option-label { color: #34c759; }
+.option.wrong .option-label { color: #ff3b30; }
+.explanation { display: none; margin-top: 10px; background: #fafbff; border-radius: 10px; border: 1px solid #e3e6f0; overflow: hidden; }
+.explanation.show { display: block; }
+.exp-header { display: flex; align-items: center; gap: 6px; padding: 8px 13px; font-size: 14px; font-weight: bold; background: #f0fff0; color: #3f8f1f; }
+.exp-body { padding: 10px 13px; font-size: 15px; line-height: 1.7; color: #333; }
+.exp-key { color: #2e7d32; font-weight: bold; }
+.passage { background: #f8f9ff; border-left: 4px solid #3f8f1f; padding: 13px 15px; margin: 0 16px 10px; border-radius: 0 8px 8px 0; font-size: 15px; line-height: 1.75; }
+.passage-label { font-weight: bold; color: #3f8f1f; margin-bottom: 7px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+.btn-submit { display: block; width: calc(100% - 28px); margin: 18px auto 0; padding: 15px; background: linear-gradient(135deg, #56ab2f, #a8e063); color: white; border: none; border-radius: 13px; font-size: 17px; font-weight: bold; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.btn-submit:active { opacity: 0.9; transform: scale(0.98); }
+.result-box { display: none; margin: 14px 10px; background: white; border-radius: 16px; padding: 22px 18px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
+.result-box.show { display: block; }
+.result-score { font-size: 50px; font-weight: bold; color: #3f8f1f; line-height: 1.1; }
+.result-total { font-size: 20px; color: #666; margin-bottom: 10px; }
+.result-grade { font-size: 18px; font-weight: bold; padding: 7px 18px; border-radius: 18px; display: inline-block; margin-bottom: 14px; }
+.grade-a { background: #f0fff4; color: #1a7a3c; }
+.grade-b { background: #fff9e6; color: #b7791f; }
+.grade-c { background: #fff5f5; color: #c0392b; }
+.btn-reset { display: inline-block; padding: 11px 26px; background: #f0f0f7; color: #3f8f1f; border: none; border-radius: 11px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 6px; }
+</style>
+</head>
+<body>
+<a href="/" style="position:fixed;top:14px;left:14px;background:#2b4c8c;color:#fff;padding:7px 16px;border-radius:8px;text-decoration:none;font-size:0.9rem;font-weight:600;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,0.18);">&#8592; &#22238;&#39318;&#39052;</a>
+<header>
+  <h1>L5 My Mouth's in Airplane Mode — 卷B 解析版</h1>
+  <p>單字、文法、克漏字、閱讀測驗｜選完即顯示解析</p>
+</header>
+<div class="top-bar"><a href="longteng-hs4.html" style="color:#667eea;text-decoration:none;font-size:14px;font-weight:bold;">← 回第四冊</a>
+  <span class="score-info">進度 <span id="answered-count">0</span>/50 ｜ 得分 <span id="live-score">0</span>/100</span>
+  <button class="btn-reveal" onclick="revealAll()">📖 顯示全部解析</button>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+<div id="quiz-container"></div>
+<button class="btn-submit" onclick="submitAll()">📝 交卷 / 查看成績</button>
+<div class="result-box" id="result-box">
+  <div class="result-score" id="result-score">0</div>
+  <div class="result-total">/ 100 分</div>
+  <div class="result-grade" id="result-grade"></div>
+  <div style="color:#666;font-size:15px;margin-bottom:14px;" id="result-detail"></div>
+  <button class="btn-reset" onclick="resetAll()">🔄 重新作答</button>
+</div>
+<script>
+const sections = [
+  {
+    "title": "第一大題：字彙選擇",
+    "pts": "15 題 × 2 分 = 30 分",
+    "questions": [
+      {
+        "q": "After the tropical rain, the air felt hot and _______.",
+        "opts": [
+          "accurate",
+          "humid",
+          "sensitive",
+          "shortly"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">humid（潮濕的）</span>──形容空氣潮濕。<br>❌ accurate = 準確的；sensitive = 敏感的；shortly = 不久，皆不符語境。"
+      },
+      {
+        "q": "As the plane gained height, the air _______ in the cabin dropped quickly.",
+        "opts": [
+          "proposal",
+          "captain",
+          "pressure",
+          "mode"
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">pressure（氣壓）</span>──機艙氣壓下降。<br>❌ proposal = 提案；captain = 機長；mode = 模式，皆不符語境。"
+      },
+      {
+        "q": "The pilot decided to _______ the flight route to save fuel.",
+        "opts": [
+          "shorten",
+          "blame",
+          "distract",
+          "enable"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">shorten（縮短）</span>──縮短航線。<br>❌ blame = 責怪；distract = 使分心；enable = 使能夠，皆不符語境。"
+      },
+      {
+        "q": "The delay was not the airline's _______; bad weather had closed the airport.",
+        "opts": [
+          "mode",
+          "proposal",
+          "captain",
+          "fault"
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">fault（過錯）</span>──不是航空公司的過錯。<br>❌ mode = 模式；proposal = 提案；captain = 機長，皆不符語境。"
+      },
+      {
+        "q": "Cabin conditions can strongly _______ how a meal tastes.",
+        "opts": [
+          "enable",
+          "affect",
+          "shorten",
+          "spray"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">affect（影響）</span>──影響餐點味道。<br>❌ enable = 使能夠；shorten = 縮短；spray = 噴灑，皆不符語境。"
+      },
+      {
+        "q": "Doctors say a person's health _______ can change how sensitive their taste is.",
+        "opts": [
+          "captain",
+          "proposal",
+          "condition",
+          "mode"
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">condition（狀況）</span>──健康狀況。<br>❌ captain = 機長；proposal = 提案；mode = 模式，皆不符語境。"
+      },
+      {
+        "q": "The airline accepted the chef's _______ to add more spices to the meals.",
+        "opts": [
+          "proposal",
+          "fault",
+          "mode",
+          "captain"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">proposal（提案）</span>──主廚的提案。<br>❌ fault = 過錯；mode = 模式；captain = 機長，皆不符語境。"
+      },
+      {
+        "q": "A good thermometer gives an _______ reading of the cabin temperature.",
+        "opts": [
+          "humid",
+          "sensitive",
+          "shortly",
+          "accurate"
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">accurate（準確的）</span>──準確的讀數。<br>❌ humid = 潮濕的；sensitive = 敏感的；shortly = 不久，皆不符語境。"
+      },
+      {
+        "q": "Engineers noticed a sudden _______ in cabin pressure during the climb.",
+        "opts": [
+          "proposal",
+          "decrease",
+          "captain",
+          "mode"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">decrease（減少）</span>──氣壓的下降。<br>❌ proposal = 提案；captain = 機長；mode = 模式，皆不符語境。"
+      },
+      {
+        "q": "New technology will _______ passengers to order meals from a screen.",
+        "opts": [
+          "blame",
+          "distract",
+          "enable",
+          "shorten"
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">enable（使能夠）</span>──使乘客能夠點餐（enable sb to do）。<br>❌ blame = 責怪；distract = 使分心；shorten = 縮短，皆不符語境。"
+      },
+      {
+        "q": "Please _______ that electronic devices must be switched off during takeoff.",
+        "opts": [
+          "Keep in mind",
+          "Look forward to",
+          "For a start",
+          "Needless to say"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">Keep in mind（記住）</span>──請記住。<br>❌ Look forward to = 期待；For a start = 首先；Needless to say = 不用說，皆不符語境。"
+      },
+      {
+        "q": "Why don't I like airplane food? _______, it is always dry and overcooked.",
+        "opts": [
+          "Needless to say",
+          "Believe it or not",
+          "Look forward to",
+          "For a start"
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">For a start（首先）</span>──首先（列舉第一點）。<br>❌ Needless to say = 不用說；Believe it or not = 信不信由你；Look forward to = 期待，皆不符語境。"
+      },
+      {
+        "q": "_______, a tired and hungry traveler will enjoy almost any hot meal.",
+        "opts": [
+          "For a start",
+          "Needless to say",
+          "Look forward to",
+          "Regardless of"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">Needless to say（不用說）</span>──不用說（理所當然）。<br>❌ For a start = 首先；Look forward to = 期待；Regardless of = 不管，皆不符語境。"
+      },
+      {
+        "q": "In the dark cabin, it was hard to _______ the salt packet from the sugar packet.",
+        "opts": [
+          "decrease",
+          "blame",
+          "distinguish",
+          "propose"
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">distinguish（分辨）</span>──分辨鹽包與糖包。<br>❌ decrease = 減少；blame = 責怪；propose = 提議，皆不符語境。"
+      },
+      {
+        "q": "The _______ welcomed everyone aboard and announced the flight time.",
+        "opts": [
+          "captain",
+          "fault",
+          "mode",
+          "proposal"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">captain（機長）</span>──機長廣播。<br>❌ fault = 過錯；mode = 模式；proposal = 提案，皆不符語境。"
+      }
+    ]
+  },
+  {
+    "title": "第二大題：文法選擇",
+    "pts": "15 題 × 2 分 = 30 分",
+    "questions": [
+      {
+        "q": "The meal, _______ had been cooked hours earlier, tasted dry and dull.",
+        "opts": [
+          "who",
+          "which",
+          "whose",
+          "what"
+        ],
+        "ans": "B",
+        "exp": "先行詞為事物 the meal，非限定子句用 <span class=\"exp-key\">which</span>。"
+      },
+      {
+        "q": "Doris always _______ the in-flight meals, while Sophie never does.",
+        "opts": [
+          "enjoy",
+          "enjoys",
+          "is enjoying",
+          "enjoyed"
+        ],
+        "ans": "B",
+        "exp": "主詞單數＋表習慣，現在簡單式 <span class=\"exp-key\">enjoys</span>。"
+      },
+      {
+        "q": "The dry cabin air makes it hard _______ flavors clearly.",
+        "opts": [
+          "tell",
+          "telling",
+          "to tell",
+          "told"
+        ],
+        "ans": "C",
+        "exp": "make it + 形容詞 + <span class=\"exp-key\">to V</span>。"
+      },
+      {
+        "q": "Passengers were served meals _______ in advance and then reheated.",
+        "opts": [
+          "prepare",
+          "prepared",
+          "preparing",
+          "to prepare"
+        ],
+        "ans": "B",
+        "exp": "過去分詞 <span class=\"exp-key\">prepared</span> 作形容詞表被動。"
+      },
+      {
+        "q": "_______ the low humidity, the food quickly loses its flavor.",
+        "opts": [
+          "Although",
+          "Because of",
+          "Despite",
+          "So"
+        ],
+        "ans": "B",
+        "exp": "後接名詞片語表原因，用 <span class=\"exp-key\">Because of</span>。"
+      },
+      {
+        "q": "If the cabin _______ less noisy, passengers could taste their food better.",
+        "opts": [
+          "is",
+          "were",
+          "will be",
+          "has been"
+        ],
+        "ans": "B",
+        "exp": "與現在事實相反的假設，be 用 <span class=\"exp-key\">were</span>。"
+      },
+      {
+        "q": "The chef recommended that each meal _______ more heavily seasoned.",
+        "opts": [
+          "is",
+          "be",
+          "was",
+          "to be"
+        ],
+        "ans": "B",
+        "exp": "recommend that S (should) + 原形 <span class=\"exp-key\">be</span>。"
+      },
+      {
+        "q": "_______ of the passengers chose the chicken rather than the beef.",
+        "opts": [
+          "Most",
+          "Much",
+          "Every",
+          "Each"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">Most</span> of the + 複數名詞；Much 接不可數，Every/Each 接單數。"
+      },
+      {
+        "q": "The higher the plane flies, the _______ the food tends to taste.",
+        "opts": [
+          "blander",
+          "bland",
+          "blandest",
+          "most bland"
+        ],
+        "ans": "A",
+        "exp": "「the+比較級…, the+比較級…」，用 <span class=\"exp-key\">blander</span>。"
+      },
+      {
+        "q": "Airlines are required _______ safe and fresh meals to every passenger.",
+        "opts": [
+          "provide",
+          "providing",
+          "to provide",
+          "provided"
+        ],
+        "ans": "C",
+        "exp": "be required <span class=\"exp-key\">to V</span> 固定句型。"
+      },
+      {
+        "q": "When she was a child, her mother _______ cook for the whole family.",
+        "opts": [
+          "used to",
+          "use to",
+          "is used to",
+          "was used"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">used to</span> + 原形，表過去習慣。"
+      },
+      {
+        "q": "Before _______ the meal, the attendant heated it in the oven.",
+        "opts": [
+          "serve",
+          "served",
+          "serving",
+          "to serve"
+        ],
+        "ans": "C",
+        "exp": "介系詞 Before + 動名詞 <span class=\"exp-key\">serving</span>。"
+      },
+      {
+        "q": "The vegetarian option is often _______ than the standard meal.",
+        "opts": [
+          "fresh",
+          "fresher",
+          "freshest",
+          "most fresh"
+        ],
+        "ans": "B",
+        "exp": "兩者比較用比較級 <span class=\"exp-key\">fresher</span> + than。"
+      },
+      {
+        "q": "The noise was _______ loud that nobody could concentrate on the food.",
+        "opts": [
+          "so",
+          "such",
+          "very",
+          "too"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">so</span> + 形容詞 + that。"
+      },
+      {
+        "q": "Never before _______ Sophie enjoyed an in-flight meal so much.",
+        "opts": [
+          "has",
+          "have",
+          "had",
+          "having"
+        ],
+        "ans": "A",
+        "exp": "否定副詞 Never before 置首需倒裝，主詞單數用 <span class=\"exp-key\">has</span> + p.p.。"
+      }
+    ]
+  },
+  {
+    "title": "第三大題：克漏字填充",
+    "pts": "10 題 × 2 分 = 20 分",
+    "passage": "Most travelers <strong>(31)</strong> eating delicious meals when they fly, yet they are often disappointed. The truth is that the <strong>(32)</strong> inside an airplane are far from normal. As the plane rises, the air <strong>(33)</strong> drops sharply, and the air turns dry because the <strong>(34)</strong> is so low. In such an environment, our sense of taste does not work as <strong>(35)</strong> as it does on the ground; in fact, our ability to taste sweet and salty food may <strong>(36)</strong> by almost a third. The constant engine noise can also <strong>(37)</strong> us, making it hard to <strong>(38)</strong> one flavor from another. <strong>(39)</strong>, it is not always the cook's <strong>(40)</strong> that the meal seems tasteless.",
+    "questions": [
+      {
+        "q": "Most travelers _______ eating delicious meals when they fly.",
+        "opts": [
+          "look forward to",
+          "keep in mind",
+          "for a start",
+          "needless to say"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">look forward to（期待）</span>──期待（look forward to + V-ing）。<br>❌ keep in mind = 記住；for a start = 首先；needless to say = 不用說，皆不符語境。"
+      },
+      {
+        "q": "the _______ inside an airplane are far from normal.",
+        "opts": [
+          "captains",
+          "conditions",
+          "proposals",
+          "modes"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">conditions（狀況）</span>──機艙內的狀況（複數）。<br>❌ captains = 機長；proposals = 提案；modes = 模式，皆不符語境。"
+      },
+      {
+        "q": "the air _______ drops sharply.",
+        "opts": [
+          "pressure",
+          "spray",
+          "captain",
+          "mode"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">pressure（氣壓）</span>──氣壓驟降。<br>❌ spray = 噴灑；captain = 機長；mode = 模式，皆不符語境。"
+      },
+      {
+        "q": "the air turns dry because the _______ is so low.",
+        "opts": [
+          "humidity",
+          "proposal",
+          "fault",
+          "captain"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">humidity（濕度）</span>──濕度很低。<br>❌ proposal = 提案；fault = 過錯；captain = 機長，皆不符語境。"
+      },
+      {
+        "q": "our sense of taste does not work as _______ as it does on the ground.",
+        "opts": [
+          "accurately",
+          "shortly",
+          "humid",
+          "sensitive"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">accurately（準確地）</span>──副詞，as accurately as。<br>❌ shortly = 不久；humid = 潮濕的；sensitive = 敏感的，皆不符語境。"
+      },
+      {
+        "q": "our ability to taste sweet and salty food may _______ by almost a third.",
+        "opts": [
+          "decrease",
+          "distinguish",
+          "enable",
+          "blame"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">decrease（減少）</span>──下降近三分之一。<br>❌ distinguish = 分辨；enable = 使能夠；blame = 責怪，皆不符語境。"
+      },
+      {
+        "q": "The constant engine noise can also _______ us.",
+        "opts": [
+          "enable",
+          "distract",
+          "shorten",
+          "propose"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">distract（使分心）</span>──使我們分心。<br>❌ enable = 使能夠；shorten = 縮短；propose = 提議，皆不符語境。"
+      },
+      {
+        "q": "making it hard to _______ one flavor from another.",
+        "opts": [
+          "blame",
+          "shorten",
+          "distinguish",
+          "enable"
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">distinguish（分辨）</span>──分辨味道。<br>❌ blame = 責怪；shorten = 縮短；enable = 使能夠，皆不符語境。"
+      },
+      {
+        "q": "_______, it is not always the cook's fault that the meal seems tasteless.",
+        "opts": [
+          "For a start",
+          "Needless to say",
+          "Believe it or not",
+          "Look forward to"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">Needless to say（不用說）</span>──不用說（作結）。<br>❌ For a start = 首先；Believe it or not = 信不信由你；Look forward to = 期待，皆不符語境。"
+      },
+      {
+        "q": "it is not always the cook's _______ that the meal seems tasteless.",
+        "opts": [
+          "mode",
+          "fault",
+          "captain",
+          "proposal"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">fault（過錯）</span>──廚師的過錯。<br>❌ mode = 模式；captain = 機長；proposal = 提案，皆不符語境。"
+      }
+    ]
+  },
+  {
+    "title": "第四大題：閱讀測驗",
+    "pts": "10 題 × 2 分 = 20 分",
+    "passage": "<strong>Passage 1</strong><br>Sophie and her friend Doris are on an airplane talking about airline food.<br><b>Flight attendant:</b> Good evening, ma'am. Would you like chicken with noodles or beef with broccoli?<br><b>Sophie:</b> I'll have the chicken with noodles, please.<br><i>(Shortly after, the meal arrives.)</i><br><b>Sophie:</b> Ugh. This looks awful. Why do in-flight meals always taste so bad?<br><b>Doris:</b> Really? I don't think it's all that bad. In fact, I kind of like it!<br><b>Sophie:</b> No way! You're the first person I've ever met who likes in-flight meals!<br><b>Doris:</b> Ha-ha! But I'm being perfectly honest. It always comes out hot and fresh, and it tastes like the home-cooked meals my mom used to make for me when I was little.<br><b>Sophie:</b> I think the food is always overcooked and dry. Plus, the meal choices are always the same. There's nothing special about it at all!<br><b>Doris:</b> Hmm, I see. Well, maybe you can try ordering the vegetarian meal next time. I heard it's usually fresher.<br><b>Sophie:</b> Alright, I guess I can do that next time. Thanks!<br><br><strong>Passage 2</strong><br>Airlines are well aware that the cabin environment changes the way food tastes. Because low pressure and dry air make passengers' taste buds less sensitive, chefs who design in-flight menus often add more salt, sugar, or spices than they would for meals served on the ground. Some airlines also choose dishes that are rich in \"umami\", a savory taste that is barely affected by altitude, which is why tomato-based dishes appear so often on flights. In addition, meals are usually cooked in advance and then reheated, so they can easily become dry or overcooked. Knowing all this, experienced travelers keep in mind a few simple tricks: they drink plenty of water, choose umami-rich or vegetarian options, and try not to blame the airline when a meal is less tasty than expected.",
+    "questions": [
+      {
+        "q": "In Passage 1, who offered Sophie the meal choices?",
+        "opts": [
+          "A flight attendant",
+          "The captain",
+          "Her friend Doris",
+          "A pilot"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">A</span>──由空服員問 \"Would you like chicken with noodles or beef with broccoli?\" 可知。"
+      },
+      {
+        "q": "What two main dishes were offered to Sophie?",
+        "opts": [
+          "Fish or rice",
+          "Chicken with noodles or beef with broccoli",
+          "Soup or salad",
+          "Pizza or pasta"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">B</span>──空服員提供雞肉麵或牛肉花椰菜。"
+      },
+      {
+        "q": "What is Sophie's first reaction when she sees the meal?",
+        "opts": [
+          "She is delighted",
+          "She asks for seconds",
+          "She thinks it looks awful",
+          "She falls asleep"
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">C</span>──Sophie 說 \"This looks awful.\""
+      },
+      {
+        "q": "Doris is \"the first person Sophie has ever met who likes in-flight meals.\" What does this suggest?",
+     
