@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L1 卷C 解析版 — The Wonder Story</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", sans-serif; font-size: 17px; line-height: 1.7; background: #f0f2f5; color: #1d1d1f; padding-bottom: 48px; }
+header { background: linear-gradient(135deg, #fa709a, #fee140); color: white; padding: 20px 16px; text-align: center; }
+header h1 { font-size: 20px; margin-bottom: 4px; }
+header p { font-size: 14px; opacity: 0.85; }
+.top-bar { background: white; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.1); gap: 8px; }
+.top-bar .score-info { font-size: 15px; font-weight: bold; color: #1a1a2e; white-space: nowrap; }
+.btn-reveal { background: linear-gradient(135deg, #fa709a, #fee140); color: white; border: none; border-radius: 10px; padding: 8px 14px; font-size: 14px; font-weight: bold; cursor: pointer; white-space: nowrap; -webkit-tap-highlight-color: transparent; }
+.progress-bar { height: 4px; background: #e0e0e0; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, #fa709a, #fee140); transition: width 0.3s; width: 0%; }
+.section { background: white; margin: 14px 10px 0; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
+.section-header { background: linear-gradient(135deg, #fa709a, #fee140); color: white; padding: 13px 16px; font-size: 16px; font-weight: bold; }
+.section-header .pts { font-size: 12px; opacity: 0.9; font-weight: normal; }
+.question { padding: 15px 16px; border-bottom: 1px solid #f0f0f0; }
+.question:last-child { border-bottom: none; }
+.q-text { font-size: 16px; margin-bottom: 11px; font-weight: 500; line-height: 1.6; }
+.q-num { color: #e85d8a; font-weight: bold; margin-right: 4px; }
+.options { display: flex; flex-direction: column; gap: 7px; }
+.option { display: flex; align-items: flex-start; gap: 9px; padding: 10px 13px; border: 2px solid #e0e0e0; border-radius: 11px; cursor: pointer; transition: all 0.15s; font-size: 16px; line-height: 1.5; background: #fafafa; -webkit-tap-highlight-color: transparent; }
+.option:active { transform: scale(0.98); }
+.option.selected { border-color: #e85d8a; background: #fff2f7; }
+.option.correct { border-color: #34c759; background: #f0fff4; }
+.option.wrong { border-color: #ff3b30; background: #fff5f5; }
+.option.reveal-correct { border-color: #34c759; background: #f0fff4; }
+.option-label { font-weight: bold; color: #e85d8a; min-width: 22px; flex-shrink: 0; }
+.option.correct .option-label, .option.reveal-correct .option-label { color: #34c759; }
+.option.wrong .option-label { color: #ff3b30; }
+.explanation { display: none; margin-top: 10px; background: #fafbff; border-radius: 10px; border: 1px solid #e3e6f0; overflow: hidden; }
+.explanation.show { display: block; }
+.exp-header { display: flex; align-items: center; gap: 6px; padding: 8px 13px; font-size: 14px; font-weight: bold; background: #fff2f7; color: #e85d8a; }
+.exp-body { padding: 10px 13px; font-size: 15px; line-height: 1.7; color: #333; }
+.exp-key { color: #2e7d32; font-weight: bold; }
+.passage { background: #f8f9ff; border-left: 4px solid #e85d8a; padding: 13px 15px; margin: 0 16px 10px; border-radius: 0 8px 8px 0; font-size: 15px; line-height: 1.75; }
+.passage-label { font-weight: bold; color: #e85d8a; margin-bottom: 7px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+.btn-submit { display: block; width: calc(100% - 28px); margin: 18px auto 0; padding: 15px; background: linear-gradient(135deg, #fa709a, #fee140); color: white; border: none; border-radius: 13px; font-size: 17px; font-weight: bold; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.btn-submit:active { opacity: 0.9; transform: scale(0.98); }
+.result-box { display: none; margin: 14px 10px; background: white; border-radius: 16px; padding: 22px 18px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
+.result-box.show { display: block; }
+.result-score { font-size: 50px; font-weight: bold; color: #e85d8a; line-height: 1.1; }
+.result-total { font-size: 20px; color: #666; margin-bottom: 10px; }
+.result-grade { font-size: 18px; font-weight: bold; padding: 7px 18px; border-radius: 18px; display: inline-block; margin-bottom: 14px; }
+.grade-a { background: #f0fff4; color: #1a7a3c; }
+.grade-b { background: #fff9e6; color: #b7791f; }
+.grade-c { background: #fff5f5; color: #c0392b; }
+.btn-reset { display: inline-block; padding: 11px 26px; background: #f0f0f7; color: #e85d8a; border: none; border-radius: 11px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 6px; }
+</style>
+</head>
+<body>
+<a href="/" style="position:fixed;top:14px;left:14px;background:#2b4c8c;color:#fff;padding:7px 16px;border-radius:8px;text-decoration:none;font-size:0.9rem;font-weight:600;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,0.18);">&#8592; &#22238;&#39318;&#39052;</a>
+<header>
+  <h1>L1 The Wonder Story — 卷C 解析版</h1>
+  <p>單字、文法、克漏字、閱讀測驗｜選完即顯示解析</p>
+</header>
+<div class="top-bar">
+  <span class="score-info">進度 <span id="answered-count">0</span>/50 ｜ 得分 <span id="live-score">0</span>/100</span>
+  <button class="btn-reveal" onclick="revealAll()">📖 顯示全部解析</button>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+<div id="quiz-container"></div>
+<button class="btn-submit" onclick="submitAll()">📝 交卷 / 查看成績</button>
+<div class="result-box" id="result-box">
+  <div class="result-score" id="result-score">0</div>
+  <div class="result-total">/ 100 分</div>
+  <div class="result-grade" id="result-grade"></div>
+  <div style="color:#666;font-size:15px;margin-bottom:14px;" id="result-detail"></div>
+  <button class="btn-reset" onclick="resetAll()">🔄 重新作答</button>
+</div>
+<script>
+const sections = [
+  {
+    "title": "第一大題：字彙選擇",
+    "pts": "15 題 × 2 分 = 30 分",
+    "questions": [
+      {
+        "q": "Auggie was born with a _______ face that needed many operations.",
+        "opts": [
+          "creative",
+          "private",
+          "deformed",
+          "nervous"
+        ],
+        "ans": "C",
+        "note": "畸形的。",
+        "exp": "<span class=\"exp-key\">deformed（畸形的）</span>──畸形的。<br>❌ creative = 有創意的；private = 私立的；私人的；nervous = 緊張的；其餘選項語意不符。"
+      },
+      {
+        "q": "Strangers would _______ at him as though he were from another planet.",
+        "opts": [
+          "observe",
+          "afford",
+          "pretend",
+          "stare"
+        ],
+        "ans": "D",
+        "note": "盯著看。",
+        "exp": "<span class=\"exp-key\">stare（盯著看）</span>──盯著看。<br>❌ observe = 觀察；注意到；afford = 負擔得起；pretend = 假裝；其餘選項語意不符。"
+      },
+      {
+        "q": "The cruel kids would _______ him and copy the way he spoke.",
+        "opts": [
+          "tease",
+          "defend",
+          "observe",
+          "overhear"
+        ],
+        "ans": "A",
+        "note": "取笑。",
+        "exp": "<span class=\"exp-key\">tease（取笑）</span>──取笑。<br>❌ defend = 防禦；為……辯護；observe = 觀察；注意到；overhear = 無意中聽到；其餘選項語意不符。"
+      },
+      {
+        "q": "Auggie loved Halloween because a _______ let him hide his face.",
+        "opts": [
+          "horror",
+          "costume",
+          "privacy",
+          "ceremony"
+        ],
+        "ans": "B",
+        "note": "服裝。",
+        "exp": "<span class=\"exp-key\">costume（服裝；裝扮）</span>──服裝。<br>❌ horror = 驚駭；恐懼；privacy = 隱私；ceremony = 典禮；其餘選項語意不符。"
+      },
+      {
+        "q": "His cheerful _______ disappeared the moment he heard Jack's words.",
+        "opts": [
+          "incident",
+          "horror",
+          "mood",
+          "ceremony"
+        ],
+        "ans": "C",
+        "note": "心情。",
+        "exp": "<span class=\"exp-key\">mood（心情）</span>──心情。<br>❌ incident = 事件；horror = 驚駭；恐懼；ceremony = 典禮；其餘選項語意不符。"
+      },
+      {
+        "q": "Jack didn't mean for Auggie to _______ his conversation.",
+        "opts": [
+          "tease",
+          "defend",
+          "observe",
+          "overhear"
+        ],
+        "ans": "D",
+        "note": "無意中聽到。",
+        "exp": "<span class=\"exp-key\">overhear（無意中聽到）</span>──無意中聽到。<br>❌ tease = 取笑；defend = 防禦；為……辯護；observe = 觀察；注意到；其餘選項語意不符。"
+      },
+      {
+        "q": "It was the _______ who first told Jack to be kind to Auggie.",
+        "opts": [
+          "principal",
+          "incident",
+          "costume",
+          "mood"
+        ],
+        "ans": "A",
+        "note": "校長。",
+        "exp": "<span class=\"exp-key\">principal（校長；主要的）</span>──校長。<br>❌ incident = 事件；costume = 服裝；裝扮；mood = 心情；其餘選項語意不符。"
+      },
+      {
+        "q": "That heartbreaking _______ kept Auggie silent for almost a month.",
+        "opts": [
+          "horror",
+          "incident",
+          "privacy",
+          "ceremony"
+        ],
+        "ans": "B",
+        "note": "事件。",
+        "exp": "<span class=\"exp-key\">incident（事件）</span>──事件。<br>❌ horror = 驚駭；恐懼；privacy = 隱私；ceremony = 典禮；其餘選項語意不符。"
+      },
+      {
+        "q": "Jack admitted he had only _______ to care about Auggie at the start.",
+        "opts": [
+          "observed",
+          "defended",
+          "pretended",
+          "teased"
+        ],
+        "ans": "C",
+        "note": "假裝。",
+        "exp": "<span class=\"exp-key\">pretended（假裝）</span>──假裝。<br>❌ observed = 觀察；defended = 防禦；teased = 取笑；其餘選項語意不符。"
+      },
+      {
+        "q": "Apologizing helped to save their _______ and bring them closer.",
+        "opts": [
+          "mood",
+          "horror",
+          "privacy",
+          "friendship"
+        ],
+        "ans": "D",
+        "note": "友誼。",
+        "exp": "<span class=\"exp-key\">friendship（友誼）</span>──友誼。<br>❌ mood = 心情；horror = 驚駭；恐懼；privacy = 隱私；其餘選項語意不符。"
+      },
+      {
+        "q": "Names like \"alien\" are extremely _______ to a kind boy like Auggie.",
+        "opts": [
+          "hurtful",
+          "private",
+          "principal",
+          "creative"
+        ],
+        "ans": "A",
+        "note": "傷人的。",
+        "exp": "<span class=\"exp-key\">hurtful（傷人的）</span>──傷人的。<br>❌ private = 私立的；私人的；principal = 校長；主要的；creative = 有創意的；其餘選項語意不符。"
+      },
+      {
+        "q": "When the big kids attacked, Jack rushed to _______ his friend.",
+        "opts": [
+          "tease",
+          "defend",
+          "overhear",
+          "pretend"
+        ],
+        "ans": "B",
+        "note": "保護、為……辯護。",
+        "exp": "<span class=\"exp-key\">defend（防禦；為……辯護）</span>──保護、為……辯護。<br>❌ tease = 取笑；overhear = 無意中聽到；pretend = 假裝；其餘選項語意不符。"
+      },
+      {
+        "q": "The camp _______ enjoyed scaring smaller and weaker children.",
+        "opts": [
+          "ceremonies",
+          "costumes",
+          "bullies",
+          "moods"
+        ],
+        "ans": "C",
+        "note": "惡霸。",
+        "exp": "<span class=\"exp-key\">bullies（惡霸）</span>──惡霸。<br>❌ 其餘選項語意不符。"
+      },
+      {
+        "q": "Auggie won a medal at the school's year-end _______.",
+        "opts": [
+          "mood",
+          "horror",
+          "privacy",
+          "ceremony"
+        ],
+        "ans": "D",
+        "note": "典禮。",
+        "exp": "<span class=\"exp-key\">ceremony（典禮）</span>──典禮。<br>❌ mood = 心情；horror = 驚駭；恐懼；privacy = 隱私；其餘選項語意不符。"
+      },
+      {
+        "q": "The teacher began to _______ that Auggie was both smart and funny.",
+        "opts": [
+          "observe",
+          "tease",
+          "pretend",
+          "afford"
+        ],
+        "ans": "A",
+        "note": "觀察、注意到。",
+        "exp": "<span class=\"exp-key\">observe（觀察；注意到）</span>──觀察、注意到。<br>❌ tease = 取笑；pretend = 假裝；afford = 負擔得起；其餘選項語意不符。"
+      }
+    ]
+  },
+  {
+    "title": "第二大題：文法選擇",
+    "pts": "15 題 × 2 分 = 30 分",
+    "questions": [
+      {
+        "q": "The big kids, _______ shone a light on his face, made fun of Auggie.",
+        "opts": [
+          "which",
+          "who",
+          "whose",
+          "whom"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">who</span>──先行詞為人且作主詞，用 who。<br>❌ which 用於物；whose 為所有格；whom 作受詞。"
+      },
+      {
+        "q": "Rarely _______ Auggie felt so welcomed before he changed schools.",
+        "opts": [
+          "did",
+          "has",
+          "had",
+          "was"
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">had</span>──否定副詞 Rarely 置句首倒裝，搭配過去完成式。<br>❌ 其餘助動詞時態不符。"
+      },
+      {
+        "q": "Wearing a mask made it possible for Auggie _______ in.",
+        "opts": [
+          "fitted",
+          "fit",
+          "fitting",
+          "to fit"
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">to fit</span>──「make it + adj + for sb + to V」虛受詞。<br>❌ 其餘形式不符不定詞。"
+      },
+      {
+        "q": "The boy, _______ by years of teasing, still kept a kind heart.",
+        "opts": [
+          "hurt",
+          "hurting",
+          "hurts",
+          "to hurt"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">hurt</span>──過去分詞表被動（被傷害的男孩）。<br>❌ hurting 表主動；其餘為動詞形式。"
+      },
+      {
+        "q": "_______ of his hard start, Auggie ended the year happy.",
+        "opts": [
+          "Although",
+          "In spite",
+          "Because",
+          "Even though"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">In spite</span>──In spite of + 名詞片語，表讓步。<br>❌ Although／Even though 接子句；Because 表原因。"
+      },
+      {
+        "q": "If Jack _______ said those words, the two would have stayed close.",
+        "opts": [
+          "does not",
+          "did not",
+          "had not",
+          "were not"
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">had not</span>──與過去事實相反，if 子句用過去完成式。<br>❌ 其餘時態不符過去假設。"
+      },
+      {
+        "q": "The principal recommended that Auggie _______ a private school.",
+        "opts": [
+          "attending",
+          "attends",
+          "attended",
+          "attend"
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">attend</span>──recommend that S (should) + 原形動詞。<br>❌ 其餘為變化形或非原形。"
+      },
+      {
+        "q": "_______ of the mean kids ended up defending Auggie at the camp.",
+        "opts": [
+          "Some",
+          "Every",
+          "Each",
+          "Much"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">Some</span>──Some of the + 複數名詞。<br>❌ Every／Each 後接單數；Much 修飾不可數。"
+      },
+      {
+        "q": "The more time they spent together, _______ Auggie and Jack became.",
+        "opts": [
+          "closer",
+          "the closer",
+          "the closest",
+          "more close"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">the closer</span>──「the + 比較級…, the + 比較級…」句型。<br>❌ 其餘缺定冠詞或為最高級。"
+      },
+      {
+        "q": "After the fight, the children were forced _______ from the bullies.",
+        "opts": [
+          "running",
+          "run",
+          "to run",
+          "ran"
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">to run</span>──be forced + to V。<br>❌ 其餘形式不符不定詞。"
+      },
+      {
+        "q": "Gary _______ live with his family, but now he is trying camp life.",
+        "opts": [
+          "used",
+          "use to",
+          "is used to",
+          "used to"
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">used to</span>──used to + 原形，表過去習慣。<br>❌ use to 拼法錯；is used to + Ving 意思不同。"
+      },
+      {
+        "q": "Upon _______ Jack's apology, Auggie slowly forgave him.",
+        "opts": [
+          "hearing",
+          "hear",
+          "heard",
+          "to hear"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">hearing</span>──介系詞 upon + Ving，一……就……。<br>❌ 其餘形式不符介系詞後接動名詞。"
+      },
+      {
+        "q": "This was _______ a heartbreaking incident that Auggie cried all night.",
+        "opts": [
+          "so",
+          "such",
+          "too",
+          "very"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">such</span>──such + a + adj + n + that。<br>❌ so 後接形容詞；too...to 結構不同；very 不接 that 結果子句。"
+      },
+      {
+        "q": "Auggie is one of the _______ students the teacher has ever met.",
+        "opts": [
+          "braver",
+          "brave",
+          "bravest",
+          "more brave"
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">bravest</span>──one of the + 最高級 + 複數名詞。<br>❌ 其餘非最高級。"
+      },
+      {
+        "q": "Beside the campfire _______ the new friends who shared their stories.",
+        "opts": [
+          "sitting",
+          "sit",
+          "sits",
+          "sat"
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">sat</span>──地方副詞置句首倒裝，過去式用 sat。<br>❌ sit／sits 時態不符；sitting 非完整述語。"
+      }
+    ]
+  },
+  {
+    "title": "第三大題：克漏字填充",
+    "pts": "10 題 × 2 分 = 20 分",
+    "passage": "Auggie loved Halloween because a <strong>(31)</strong> let him hide his <strong>(32)</strong> face. One year his good <strong>(33)</strong> vanished when he happened to <strong>(34)</strong> Jack saying he was only Auggie's friend because the <strong>(35)</strong> had asked him to. The words were deeply <strong>(36)</strong>, and Auggie ran home in tears. Later Jack realized his mistake and chose to <strong>(37)</strong> his real friend whenever others were cruel. Slowly the class began to <strong>(38)</strong> how funny Auggie was, and they stopped picking on him. At the year-end <strong>(39)</strong>, Auggie no longer minded people standing close, and <strong>(40)</strong> he felt fully accepted.",
+    "questions": [
+      {
+        "q": "(31)",
+        "opts": [
+          "costume",
+          "horror",
+          "mood",
+          "incident"
+        ],
+        "ans": "A",
+        "note": "服裝。",
+        "exp": "<span class=\"exp-key\">costume（服裝；裝扮）</span>──服裝。<br>❌ horror = 驚駭；恐懼；mood = 心情；incident = 事件；其餘選項語意不符。"
+      },
+      {
+        "q": "(32)",
+        "opts": [
+          "private",
+          "deformed",
+          "creative",
+          "nervous"
+        ],
+        "ans": "B",
+        "note": "畸形的。",
+        "exp": "<span class=\"exp-key\">deformed（畸形的）</span>──畸形的。<br>❌ private = 私立的；私人的；creative = 有創意的；nervous = 緊張的；其餘選項語意不符。"
+      },
+      {
+        "q": "(33)",
+        "opts": [
+          "privacy",
+          "horror",
+          "mood",
+          "ceremony"
+        ],
+        "ans": "C",
+        "note": "心情。",
+        "exp": "<span class=\"exp-key\">mood（心情）</span>──心情。<br>❌ privacy = 隱私；horror = 驚駭；恐懼；ceremony = 典禮；其餘選項語意不符。"
+      },
+      {
+        "q": "(34)",
+        "opts": [
+          "tease",
+          "defend",
+          "observe",
+          "overhear"
+        ],
+        "ans": "D",
+        "note": "無意中聽到。",
+        "exp": "<span class=\"exp-key\">overhear（無意中聽到）</span>──無意中聽到。<br>❌ tease = 取笑；defend = 防禦；為……辯護；observe = 觀察；注意到；其餘選項語意不符。"
+      },
+      {
+        "q": "(35)",
+        "opts": [
+          "principal",
+          "costume",
+          "horror",
+          "incident"
+        ],
+        "ans": "A",
+        "note": "校長。",
+        "exp": "<span class=\"exp-key\">principal（校長；主要的）</span>──校長。<br>❌ costume = 服裝；裝扮；horror = 驚駭；恐懼；incident = 事件；其餘選項語意不符。"
+      },
+      {
+        "q": "(36)",
+        "opts": [
+          "private",
+          "hurtful",
+          "principal",
+          "creative"
+        ],
+        "ans": "B",
+        "note": "傷人的。",
+        "exp": "<span class=\"exp-key\">hurtful（傷人的）</span>──傷人的。<br>❌ private = 私立的；私人的；principal = 校長；主要的；creative = 有創意的；其餘選項語意不符。"
+      },
+      {
+        "q": "(37)",
+        "opts": [
+          "overhear",
+          "tease",
+          "defend",
+          "pretend"
+        ],
+        "ans": "C",
+        "note": "保護、為……辯護。",
+        "exp": "<span class=\"exp-key\">defend（防禦；為……辯護）</span>──保護、為……辯護。<br>❌ overhear = 無意中聽到；tease = 取笑；pretend = 假裝；其餘選項語意不符。"
+      },
+      {
+        "q": "(38)",
+        "opts": [
+          "stare",
+          "tease",
+          "pretend",
+          "observe"
+        ],
+        "ans": "D",
+        "note": "注意到、觀察。",
+        "exp": "<span class=\"exp-key\">observe（觀察；注意到）</span>──注意到、觀察。<br>❌ stare = 盯著看；tease = 取笑；pretend = 假裝；其餘選項語意不符。"
+      },
+      {
+        "q": "(39)",
+        "opts": [
+          "ceremony",
+          "horror",
+          "privacy",
+          "mood"
+        ],
+        "ans": "A",
+        "note": "典禮。",
+        "exp": "<span class=\"exp-key\">ceremony（典禮）</span>──典禮。<br>❌ horror = 驚駭；恐懼；privacy = 隱私；mood = 心情；其餘選項語意不符。"
+      },
+      {
+        "q": "(40)",
+        "opts": [
+          "on purpose",
+          "at last",
+          "in public",
+          "make peace"
+        ],
+        "ans": "B",
+        "note": "終於、最後。",
+        "exp": "<span class=\"exp-key\">at last（at last）</span>──終於、最後。<br>❌ on purpose = 故意地；in public = 在公共場合；make peace = 言和；和解；其餘選項語意不符。"
+      }
+    ]
+  },
+  {
+    "title": "第四大題：閱讀測驗",
+    "pts": "10 題 × 2 分 = 20 分",
+    "passage": "<strong>Passage 1</strong><br>August Pullman, known as Auggie, was a 10-year-old boy from Manhattan who was born with a deformed face. Even after 27 surgeries, people still looked away in horror when they saw him, so for years he was homeschooled. This year his parents sent him to a private school. The first months were awful: some kids avoided him on purpose, and rude kids like Julian stared at and teased him. Still, Auggie had made one friend, Jack. On Halloween, his favorite day, he wore a scary mask, but his good mood changed when he overheard Jack saying he was only Auggie's friend because the principal had asked him to. Auggie ran home in tears and hardly spoke to Jack for a month. Later Jack, who had truly come to like Auggie, apologized and made peace. On a camping trip, bigger kids made fun of Auggie and called him \"alien,\" but Jack and some classmates defended him until everyone got away. By the year-end ceremony, Auggie felt accepted at last.<br><br><strong>Passage 2</strong><br>It is Gary's first time at a winter camp, far from home, and he feels nervous. Gary: Gosh, I don't know anyone here. I don't even know where to go. Sam: Do you need help? Gary: Yeah, I'm looking for Eagle Camp. Could you tell me how to get there? Sam: I can do even better! I can take you there myself. I'm your camp leader, Sam. Gary: Wonderful! Nice to meet you, Sam. I'm Gary. Sam: So, what made you want to join this camp? Gary: I've always wanted to live away from my family for a while, and I love learning new things and the great outdoors. I saw your ad in a magazine and asked my parents to sign me up. Sam: You've come to the right place! We offer team-building games, creative arts, and singing. Gary: I'm up for joining whatever is offered. Sam: Great! Follow me. I'll introduce you to your campmates.",
+    "questions": [
+      {
+        "q": "How many surgeries had Auggie already had?",
+        "opts": [
+          "3.",
+          "10.",
+          "27.",
+          "17."
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">27 次</span>──even after 27 surgeries。<br>❌ 其餘數字不符。"
+      },
+      {
+        "q": "What kind of student was Julian?",
+        "opts": [
+          "Auggie's tutor.",
+          "Auggie's loyal friend.",
+          "The camp leader.",
+          "A rude boy who teased Auggie."
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">取笑 Auggie 的粗魯學生</span>──rude kids like Julian stared and teased。<br>❌ 其餘均不符。"
+      },
+      {
+        "q": "What did the bigger kids call Auggie at camp?",
+        "opts": [
+          "\"Alien.\"",
+          "\"Hero.\"",
+          "\"Little dude.\"",
+          "\"Leader.\""
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">外星人 alien</span>──called him hurtful names like alien。<br>❌ 其餘非該侮辱用語。"
+      },
+      {
+        "q": "What can we infer about Auggie's character?",
+        "opts": [
+          "He gives up easily.",
+          "He is brave and kind despite hardship.",
+          "He is cruel to others.",
+          "He hates making friends."
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">勇敢善良</span>──雖被欺負仍持續交友，可推知其勇敢善良。<br>❌ 其餘與文意相反。"
+      },
+      {
+        "q": "Why did classmates start to treat Auggie better?",
+        "opts": [
+          "The principal punished them.",
+          "He paid them to be nice.",
+          "They realized how nice and funny he was.",
+          "He changed schools again."
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">發現他善良又風趣</span>──they realized how nice and funny he was。<br>❌ 其餘文中未提。"
+      },
+      {
+        "q": "What is the author's main purpose in Passage 1?",
+        "opts": [
+          "To advertise a private school.",
+          "To warn against camping trips.",
+          "To explain how surgery works.",
+          "To show how acceptance grows through kindness."
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">透過善意建立接納</span>──作者旨在呈現接納的形成。<br>❌ 其餘非寫作目的。"
+      },
+      {
+        "q": "What was Gary looking for at the start of Passage 2?",
+        "opts": [
+          "Eagle Camp.",
+          "His parents.",
+          "A magazine.",
+          "The dining hall."
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">Eagle Camp</span>──I'm looking for Eagle Camp。<br>❌ 其餘文中未提。"
+      },
+      {
+        "q": "\"I can do even better!\" suggests that Sam will _______.",
+        "opts": [
+          "give Gary a map only",
+          "personally guide Gary there",
+          "refuse to help",
+          "call Gary's parents"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">親自帶路</span>──比「告訴方向」更好，即親自帶他去。<br>❌ 其餘與語意不符。"
+      },
+      {
+        "q": "How does Gary respond to the camp's activities?",
+        "opts": [
+          "He asks to go home.",
+          "He complains they are boring.",
+          "He is eager and willing to join.",
+          "He refuses to sing."
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">熱切願意參加</span>──I'm up for joining whatever is offered。<br>❌ 其餘與態度相反。"
+      },
+      {
+        "q": "What do both passages have in common?",
+        "opts": [
+          "A magazine contest.",
+          "A fight between two camps.",
+          "A school surgery program.",
+          "A boy facing a new, challenging situation."
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">男孩面對嶄新挑戰</span>──兩篇都寫男孩進入新環境。<br>❌ 其餘非共同點。"
+      }
+    ]
+  }
+];
+let globalQNum = 0;
+const qMap = {};
+const userAnswers = {};
+let submitted = false;
+const container = document.getElementById('quiz-container');
+sections.forEach((sec, si) => {
+  const secDiv = document.createElement('div');
+  secDiv.className = 'section';
+  let html = `<div class="section-header">${sec.title} <span class="pts">（${sec.pts}）</span></div>`;
+  if (sec.passage) { html += `<div class="passage"><div class="passage-label">📖 閱讀文章</div>${sec.passage}</div>`; }
+  sec.questions.forEach((q) => {
+    globalQNum++; const n = globalQNum;
+    qMap[n] = { ans: q.ans, exp: q.exp };
+    const labels = ['A','B','C','D'];
+    let optHtml = '';
+    q.opts.forEach((o, i) => { optHtml += `<div class="option" id="opt-${n}-${labels[i]}" onclick="choose(${n},'${labels[i]}')"><span class="option-label">(${labels[i]})</span>${o}</div>`; });
+    let qLabel = (si === 2 || si === 3) ? `(${n})` : `${n}`;
+    html += `<div class="question" id="q${n}"><div class="q-text"><span class="q-num">${qLabel}.</span> ${q.q}</div><div class="options">${optHtml}</div><div class="explanation" id="exp${n}"><div class="exp-header">💡 解析</div><div class="exp-body">${q.exp}</div></div></div>`;
+  });
+  secDiv.innerHTML = html;
+  container.appendChild(secDiv);
+});
+function choose(n, chosen) {
+  if (submitted) return;
+  userAnswers[n] = chosen;
+  const ans = qMap[n].ans;
+  ['A','B','C','D'].forEach(l => {
+    const el = document.getElementById(`opt-${n}-${l}`);
+    el.classList.remove('selected','correct','wrong','reveal-correct');
+    if (l === chosen) { el.classList.add(chosen === ans ? 'correct' : 'wrong'); }
+    else if (l === ans && chosen !== ans) { el.classList.add('reveal-correct'); }
+  });
+  document.getElementById(`exp${n}`).classList.add('show');
+  updateTopBar();
+}
+function updateTopBar() {
+  const count = Object.keys(userAnswers).length;
+  document.getElementById('answered-count').textContent = count;
+  document.getElementById('progress-fill').style.width = (count / 50 * 100) + '%';
+  let score = 0;
+  for (let q in userAnswers) { if (userAnswers[q] === qMap[q].ans) score += 2; }
+  document.getElementById('live-score').textContent = score;
+}
+function revealAll() {
+  for (let n = 1; n <= 50; n++) {
+    const ans = qMap[n].ans;
+    ['A','B','C','D'].forEach(l => {
+      const el = document.getElementById(`opt-${n}-${l}`);
+      el.classList.remove('selected','correct','wrong','reveal-correct');
+      if (l === ans) el.classList.add('reveal-correct');
+      else if (userAnswers[n] === l && l !== ans) el.classList.add('wrong');
+    });
+    document.getElementById(`exp${n}`).classList.add('show');
+  }
+  updateTopBar();
+}
+function submitAll() {
+  submitted = true; revealAll();
+  let score = 0;
+  for (let n = 1; n <= 50; n++) { if (userAnswers[n] === qMap[n].ans) score += 2; }
+  const rb = document.getElementById('result-box'); rb.classList.add('show');
+  document.getElementById('result-score').textContent = score;
+  const gr = document.getElementById('result-grade'); const det = document.getElementById('result-detail');
+  if (score >= 90) { gr.textContent = '🏆 優秀！'; gr.className = 'result-grade grade-a'; det.textContent = '表現卓越，繼續保持！'; }
+  else if (score >= 70) { gr.textContent = '👍 良好'; gr.className = 'result-grade grade-b'; det.textContent = '表現不錯，再複習錯誤的題目吧！'; }
+  else { gr.textContent = '📚 需加強'; gr.className = 'result-grade grade-c'; det.textContent = '多複習解析說明，你可以做到的！'; }
+  document.getElementById('answered-count').textContent = 50;
+  document.getElementById('live-score').textContent = score;
+  document.getElementById('progress-fill').style.width = '100%';
+  rb.scrollIntoView({ behavior: 'smooth' });
+}
+function resetAll() {
+  submitted = false;
+  for (let key in userAnswers) delete userAnswers[key];
+  for (let n = 1; n <= 50; n++) {
+    ['A','B','C','D'].forEach(l => { document.getElementById(`opt-${n}-${l}`).classList.remove('selected','correct','wrong','reveal-correct'); });
+    document.getElementById(`exp${n}`).classList.remove('show');
+  }
+  document.getElementById('result-box').classList.remove('show');
+  document.getElementById('answered-count').textContent = '0';
+  document.getElementById('live-score').textContent = '0';
+  document.getElementById('progress-fill').style.width = '0%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

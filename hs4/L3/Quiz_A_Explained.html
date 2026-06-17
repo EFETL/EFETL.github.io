@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L3 卷A 解析版 — TED Talks: Spreading Ideas for a Better World</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", sans-serif; font-size: 17px; line-height: 1.7; background: #f0f2f5; color: #1d1d1f; padding-bottom: 48px; }
+header { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 20px 16px; text-align: center; }
+header h1 { font-size: 20px; margin-bottom: 4px; }
+header p { font-size: 14px; opacity: 0.85; }
+.top-bar { background: white; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.1); gap: 8px; }
+.top-bar .score-info { font-size: 15px; font-weight: bold; color: #1a1a2e; white-space: nowrap; }
+.btn-reveal { background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 10px; padding: 8px 14px; font-size: 14px; font-weight: bold; cursor: pointer; white-space: nowrap; -webkit-tap-highlight-color: transparent; }
+.progress-bar { height: 4px; background: #e0e0e0; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); transition: width 0.3s; width: 0%; }
+.section { background: white; margin: 14px 10px 0; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
+.section-header { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 13px 16px; font-size: 16px; font-weight: bold; }
+.section-header .pts { font-size: 12px; opacity: 0.9; font-weight: normal; }
+.question { padding: 15px 16px; border-bottom: 1px solid #f0f0f0; }
+.question:last-child { border-bottom: none; }
+.q-text { font-size: 16px; margin-bottom: 11px; font-weight: 500; line-height: 1.6; }
+.q-num { color: #667eea; font-weight: bold; margin-right: 4px; }
+.options { display: flex; flex-direction: column; gap: 7px; }
+.option { display: flex; align-items: flex-start; gap: 9px; padding: 10px 13px; border: 2px solid #e0e0e0; border-radius: 11px; cursor: pointer; transition: all 0.15s; font-size: 16px; line-height: 1.5; background: #fafafa; -webkit-tap-highlight-color: transparent; }
+.option:active { transform: scale(0.98); }
+.option.selected { border-color: #667eea; background: #f0f0ff; }
+.option.correct { border-color: #34c759; background: #f0fff4; }
+.option.wrong { border-color: #ff3b30; background: #fff5f5; }
+.option.reveal-correct { border-color: #34c759; background: #f0fff4; }
+.option-label { font-weight: bold; color: #667eea; min-width: 22px; flex-shrink: 0; }
+.option.correct .option-label, .option.reveal-correct .option-label { color: #34c759; }
+.option.wrong .option-label { color: #ff3b30; }
+.explanation { display: none; margin-top: 10px; background: #fafbff; border-radius: 10px; border: 1px solid #e3e6f0; overflow: hidden; }
+.explanation.show { display: block; }
+.exp-header { display: flex; align-items: center; gap: 6px; padding: 8px 13px; font-size: 14px; font-weight: bold; background: #f0f0ff; color: #667eea; }
+.exp-body { padding: 10px 13px; font-size: 15px; line-height: 1.7; color: #333; }
+.exp-key { color: #2e7d32; font-weight: bold; }
+.passage { background: #f8f9ff; border-left: 4px solid #667eea; padding: 13px 15px; margin: 0 16px 10px; border-radius: 0 8px 8px 0; font-size: 15px; line-height: 1.75; }
+.passage-label { font-weight: bold; color: #667eea; margin-bottom: 7px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+.btn-submit { display: block; width: calc(100% - 28px); margin: 18px auto 0; padding: 15px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 13px; font-size: 17px; font-weight: bold; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.btn-submit:active { opacity: 0.9; transform: scale(0.98); }
+.result-box { display: none; margin: 14px 10px; background: white; border-radius: 16px; padding: 22px 18px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
+.result-box.show { display: block; }
+.result-score { font-size: 50px; font-weight: bold; color: #667eea; line-height: 1.1; }
+.result-total { font-size: 20px; color: #666; margin-bottom: 10px; }
+.result-grade { font-size: 18px; font-weight: bold; padding: 7px 18px; border-radius: 18px; display: inline-block; margin-bottom: 14px; }
+.grade-a { background: #f0fff4; color: #1a7a3c; }
+.grade-b { background: #fff9e6; color: #b7791f; }
+.grade-c { background: #fff5f5; color: #c0392b; }
+.btn-reset { display: inline-block; padding: 11px 26px; background: #f0f0f7; color: #667eea; border: none; border-radius: 11px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 6px; }
+</style>
+</head>
+<body>
+<a href="/" style="position:fixed;top:14px;left:14px;background:#2b4c8c;color:#fff;padding:7px 16px;border-radius:8px;text-decoration:none;font-size:0.9rem;font-weight:600;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,0.18);">&#8592; &#22238;&#39318;&#39052;</a>
+<header>
+  <h1>L3 TED Talks: Spreading Ideas for a Better World — 卷A 解析版</h1>
+  <p>單字、文法、克漏字、閱讀測驗｜選完即顯示解析</p>
+</header>
+<div class="top-bar">
+  <span class="score-info">進度 <span id="answered-count">0</span>/50 ｜ 得分 <span id="live-score">0</span>/100</span>
+  <button class="btn-reveal" onclick="revealAll()">📖 顯示全部解析</button>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+<div id="quiz-container"></div>
+<button class="btn-submit" onclick="submitAll()">📝 交卷 / 查看成績</button>
+<div class="result-box" id="result-box">
+  <div class="result-score" id="result-score">0</div>
+  <div class="result-total">/ 100 分</div>
+  <div class="result-grade" id="result-grade"></div>
+  <div style="color:#666;font-size:15px;margin-bottom:14px;" id="result-detail"></div>
+  <button class="btn-reset" onclick="resetAll()">🔄 重新作答</button>
+</div>
+<script>
+const sections = [
+  {
+    "title": "第一大題：字彙選擇",
+    "pts": "15 題 × 2 分 = 30 分",
+    "questions": [
+      {
+        "q": "TED talks are short online videos that help people learn new ideas in just eighteen _______.",
+        "opts": [
+          "minutes",
+          "celebrities",
+          "conferences",
+          "audiences"
+        ],
+        "ans": "A",
+        "note": "分鐘。",
+        "exp": "<span class=\"exp-key\">minutes（minutes）</span>──分鐘。<br>❌ 其餘選項語意不符。"
+      },
+      {
+        "q": "Some people like to _______ themselves by reading books and newspapers in their free time.",
+        "opts": [
+          "monitor",
+          "educate",
+          "weaken",
+          "ignore"
+        ],
+        "ans": "B",
+        "note": "教育（自己）。",
+        "exp": "<span class=\"exp-key\">educate（教育）</span>──教育（自己）。<br>❌ monitor = 監控；weaken = 削弱；ignore = 忽視；其餘選項語意不符。"
+      },
+      {
+        "q": "Still others _______ both fun and knowledge when they choose how to spend their free time.",
+        "opts": [
+          "destroy",
+          "waste",
+          "seek",
+          "reduce"
+        ],
+        "ans": "C",
+        "note": "尋求。",
+        "exp": "<span class=\"exp-key\">seek（尋求）</span>──尋求。<br>❌ destroy = 摧毀；waste = 浪費；reduce = 減少；其餘選項語意不符。"
+      },
+      {
+        "q": "The letters TED _______ Technology, Entertainment, and Design.",
+        "opts": [
+          "control",
+          "fiction",
+          "suggestion",
+          "technology"
+        ],
+        "ans": "D",
+        "note": "科技；TED 的 T 代表 Technology。",
+        "exp": "<span class=\"exp-key\">technology（科技）</span>──科技；TED 的 T 代表 Technology。<br>❌ control = 控制；fiction = 小說；虛構；suggestion = 建議；其餘選項語意不符。"
+      },
+      {
+        "q": "With the slogan \"ideas _______ spreading,\" TED held its first conference in 1984.",
+        "opts": [
+          "worth",
+          "broad",
+          "deadly",
+          "numerous"
+        ],
+        "ans": "A",
+        "note": "值得（被散播的）。",
+        "exp": "<span class=\"exp-key\">worth（值得的）</span>──值得（被散播的）。<br>❌ broad = 寬廣的；deadly = 致命的；numerous = 許多的；其餘選項語意不符。"
+      },
+      {
+        "q": "Each speaker was given eighteen minutes to _______ his or her ideas at the conference.",
+        "opts": [
+          "increase",
+          "present",
+          "ignore",
+          "avoid"
+        ],
+        "ans": "B",
+        "note": "呈現；提出。",
+        "exp": "<span class=\"exp-key\">present（呈現；提出）</span>──呈現；提出。<br>❌ increase = 增加；ignore = 忽視；avoid = 避免；其餘選項語意不符。"
+      },
+      {
+        "q": "As TED became _______ popular, the organizers invited thinkers from many more fields.",
+        "opts": [
+          "narrowly",
+          "rarely",
+          "increasingly",
+          "hardly"
+        ],
+        "ans": "C",
+        "note": "越來越地。",
+        "exp": "<span class=\"exp-key\">increasingly（越來越；日益）</span>──越來越地。<br>❌ 其餘選項語意不符。"
+      },
+      {
+        "q": "The organizers decided to invite thinkers from a _______ range of fields, including medicine.",
+        "opts": [
+          "deadly",
+          "narrow",
+          "private",
+          "broad"
+        ],
+        "ans": "D",
+        "note": "寬廣的。",
+        "exp": "<span class=\"exp-key\">broad（寬廣的）</span>──寬廣的。<br>❌ deadly = 致命的；narrow = 狹窄的；private = 私人的；其餘選項語意不符。"
+      },
+      {
+        "q": "Over the years, _______ celebrities have given TED Talks and shared their ideas.",
+        "opts": [
+          "numerous",
+          "few",
+          "rare",
+          "private"
+        ],
+        "ans": "A",
+        "note": "許多的。",
+        "exp": "<span class=\"exp-key\">numerous（許多的）</span>──許多的。<br>❌ few = 很少的；rare = 稀有的；private = 私人的；其餘選項語意不符。"
+      },
+      {
+        "q": "Many famous _______ , such as Bill Gates and Jamie Oliver, have spoken at TED.",
+        "opts": [
+          "minutes",
+          "celebrities",
+          "fictions",
+          "shoulders"
+        ],
+        "ans": "B",
+        "note": "名人。",
+        "exp": "<span class=\"exp-key\">celebrities（celebrities）</span>──名人。<br>❌ 其餘選項語意不符。"
+      },
+      {
+        "q": "A good speaker knows how to keep the _______ interested from start to finish.",
+        "opts": [
+          "control",
+          "fiction",
+          "audience",
+          "slogan"
+        ],
+        "ans": "C",
+        "note": "觀眾；聽眾。",
+        "exp": "<span class=\"exp-key\">audience（觀眾；聽眾）</span>──觀眾；聽眾。<br>❌ control = 控制；fiction = 小說；虛構；slogan = 標語；其餘選項語意不符。"
+      },
+      {
+        "q": "James Cameron talked about his childhood _______ with science fiction.",
+        "opts": [
+          "presentation",
+          "education",
+          "government",
+          "fascination"
+        ],
+        "ans": "D",
+        "note": "著迷。",
+        "exp": "<span class=\"exp-key\">fascination（著迷）</span>──著迷。<br>❌ presentation = 簡報；education = 教育；government = 政府；其餘選項語意不符。"
+      },
+      {
+        "q": "Cameron's love of space and aliens led him to make science _______ movies.",
+        "opts": [
+          "fiction",
+          "conference",
+          "audience",
+          "control"
+        ],
+        "ans": "A",
+        "note": "小說；虛構（科幻片）。",
+        "exp": "<span class=\"exp-key\">fiction（小說；虛構）</span>──小說；虛構（科幻片）。<br>❌ conference = 會議；audience = 觀眾；聽眾；control = 控制；其餘選項語意不符。"
+      },
+      {
+        "q": "Bill Gates _______ that the government do more to fight deadly diseases.",
+        "opts": [
+          "wasted",
+          "suggested",
+          "ignored",
+          "reduced"
+        ],
+        "ans": "B",
+        "note": "建議。",
+        "exp": "<span class=\"exp-key\">suggested（suggested）</span>──建議。<br>❌ 其餘選項語意不符。"
+      },
+      {
+        "q": "Gates hoped the _______ would help monitor and control the spread of diseases.",
+        "opts": [
+          "audience",
+          "celebrity",
+          "government",
+          "fiction"
+        ],
+        "ans": "C",
+        "note": "政府。",
+        "exp": "<span class=\"exp-key\">government（政府）</span>──政府。<br>❌ audience = 觀眾；聽眾；celebrity = 名人；fiction = 小說；虛構；其餘選項語意不符。"
+      }
+    ]
+  },
+  {
+    "title": "第二大題：文法選擇",
+    "pts": "15 題 × 2 分 = 30 分",
+    "questions": [
+      {
+        "q": "TED, _______ stands for Technology, Entertainment, Design, is a nonprofit foundation.",
+        "opts": [
+          "what",
+          "who",
+          "whose",
+          "which"
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">which</span>──先行詞 TED 為「事物」，非限定子句用 which。<br>❌ who 用於人；whose 為所有格；what 不可引導關係子句。"
+      },
+      {
+        "q": "Jamie Oliver, _______ presented his idea of a food revolution, is a famous chef.",
+        "opts": [
+          "who",
+          "which",
+          "whom",
+          "what"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">who</span>──先行詞為「人」且在子句中作主詞，用 who。<br>❌ which 用於物；whom 作受詞；what 不可引導關係子句。"
+      },
+      {
+        "q": "The TED foundation _______ established in 1984 by a group of thinkers.",
+        "opts": [
+          "were",
+          "was",
+          "is",
+          "are"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">was</span>──主詞 foundation 為單數且為過去被動，用 was + p.p.。<br>❌ were 用於複數；is/are 為現在式，與 1984 不符。"
+      },
+      {
+        "q": "Watching TED Talks makes _______ easy to learn new ideas in a short time.",
+        "opts": [
+          "this",
+          "that",
+          "it",
+          "what"
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">it</span>──虛受詞 it 代替後面的不定詞 to learn...。<br>❌ that/this/what 不可作虛受詞。"
+      },
+      {
+        "q": "_______ its huge popularity, TED still keeps each talk short and simple.",
+        "opts": [
+          "However",
+          "Although",
+          "Because",
+          "Despite"
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">Despite</span>──後接名詞片語 its popularity，表讓步用 Despite。<br>❌ Although 後須接子句；Because 表原因；However 為副詞。"
+      },
+      {
+        "q": "_______ TED started small, it has now spread ideas around the whole world.",
+        "opts": [
+          "Although",
+          "Despite",
+          "Because of",
+          "In spite of"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">Although</span>──後接完整子句，表讓步用 Although。<br>❌ Despite/In spite of/Because of 後須接名詞。"
+      },
+      {
+        "q": "If TED _______ never been created, millions would not have heard these great ideas.",
+        "opts": [
+          "has",
+          "had",
+          "have",
+          "would"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">had</span>──與過去事實相反，if 子句用 had + p.p.。<br>❌ has/have 為現在完成；would 不用於 if 子句。"
+      },
+      {
+        "q": "Bill Gates suggested that the government _______ more to fight diseases.",
+        "opts": [
+          "did",
+          "does",
+          "do",
+          "done"
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">do</span>──suggest that S (should) + 原形動詞，should 可省略。<br>❌ does/did 為變化形；done 為過去分詞。"
+      },
+      {
+        "q": "_______ of the talks were uploaded so that the public could watch them for free.",
+        "opts": [
+          "Each",
+          "Much",
+          "Every",
+          "Many"
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">Many</span>──修飾可數複數 talks 用 Many，且配 were。<br>❌ Much 修飾不可數；Every/Each 後接單數名詞與單數動詞。"
+      },
+      {
+        "q": "The _______ a speaker prepares, the more confident he or she becomes.",
+        "opts": [
+          "more",
+          "most",
+          "much",
+          "many"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">more</span>──「the + 比較級..., the + 比較級...」句型，前句用 the more。<br>❌ most 為最高級；much/many 非比較級。"
+      },
+      {
+        "q": "Speakers are required _______ their talks within eighteen minutes.",
+        "opts": [
+          "finishing",
+          "to finish",
+          "finish",
+          "finished"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">to finish</span>──be required + to V。<br>❌ finishing/finish/finished 不符此結構。"
+      },
+      {
+        "q": "People _______ watch TED Talks on TV, but now they watch them online.",
+        "opts": [
+          "are used to",
+          "use to",
+          "used to",
+          "using"
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">used to</span>──表過去習慣「過去常常」，used to + 原形。<br>❌ use to 形式錯誤；be used to + Ving 為「習慣於」；using 不合。"
+      },
+      {
+        "q": "By _______ to one TED Talk, you can learn a lot in just eighteen minutes.",
+        "opts": [
+          "to listen",
+          "listen",
+          "listened",
+          "listening"
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">listening</span>──介系詞 by + V-ing。<br>❌ listen/listened/to listen 不符介系詞後接動名詞。"
+      },
+      {
+        "q": "Jamie Oliver's talk was _______ inspiring that many people changed their eating habits.",
+        "opts": [
+          "so",
+          "such",
+          "very",
+          "too"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">so</span>──so + 形容詞 + that 子句。<br>❌ such 後接名詞片語；very/too 不接 that 結果子句。"
+      },
+      {
+        "q": "Never before _______ so many people learned new ideas through online videos.",
+        "opts": [
+          "has",
+          "have",
+          "had",
+          "having"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">have</span>──否定副詞 Never 置句首，須倒裝；主詞 people 為複數，用 have + p.p.。<br>❌ has 用於單數；had 時態不符；having 為分詞。"
+      }
+    ]
+  },
+  {
+    "title": "第三大題：克漏字填充",
+    "pts": "10 題 × 2 分 = 20 分",
+    "questions": [
+      {
+        "q": "(31)",
+        "opts": [
+          "stand for",
+          "as well as",
+          "a series of",
+          "at present"
+        ],
+        "ans": "C",
+        "note": "一系列的。",
+        "exp": "<span class=\"exp-key\">a series of（一系列的）</span>──一系列的。<br>❌ stand for = 代表；as well as = 以及；at present = 目前；其餘選項語意不符。"
+      },
+      {
+        "q": "(32)",
+        "opts": [
+          "looks up",
+          "seeks for",
+          "gives up",
+          "stands for"
+        ],
+        "ans": "D",
+        "note": "代表。",
+        "exp": "<span class=\"exp-key\">stands for（stands for）</span>──代表。<br>❌ 其餘選項語意不符。"
+      },
+      {
+        "q": "(33)",
+        "opts": [
+          "foundation",
+          "celebrity",
+          "audience",
+          "fiction"
+        ],
+        "ans": "A",
+        "note": "基金會。",
+        "exp": "<span class=\"exp-key\">foundation（基金會）</span>──基金會。<br>❌ celebrity = 名人；audience = 觀眾；聽眾；fiction = 小說；虛構；其餘選項語意不符。"
+      },
+      {
+        "q": "(34)",
+        "opts": [
+          "broad",
+          "worth",
+          "numerous",
+          "deadly"
+        ],
+        "ans": "B",
+        "note": "值得的。",
+        "exp": "<span class=\"exp-key\">worth（值得的）</span>──值得的。<br>❌ broad = 寬廣的；numerous = 許多的；deadly = 致命的；其餘選項語意不符。"
+      },
+      {
+        "q": "(35)",
+        "opts": [
+          "weaken",
+          "increase",
+          "present",
+          "avoid"
+        ],
+        "ans": "C",
+        "note": "呈現；提出。",
+        "exp": "<span class=\"exp-key\">present（呈現；提出）</span>──呈現；提出。<br>❌ weaken = 削弱；increase = 增加；avoid = 避免；其餘選項語意不符。"
+      },
+      {
+        "q": "(36)",
+        "opts": [
+          "hardly",
+          "rarely",
+          "narrowly",
+          "increasingly"
+        ],
+        "ans": "D",
+        "note": "越來越地。",
+        "exp": "<span class=\"exp-key\">increasingly（越來越；日益）</span>──越來越地。<br>❌ 其餘選項語意不符。"
+      },
+      {
+        "q": "(37)",
+        "opts": [
+          "broad",
+          "narrow",
+          "private",
+          "deadly"
+        ],
+        "ans": "A",
+        "note": "寬廣的。",
+        "exp": "<span class=\"exp-key\">broad（寬廣的）</span>──寬廣的。<br>❌ narrow = 狹窄的；private = 私人的；deadly = 致命的；其餘選項語意不符。"
+      },
+      {
+        "q": "(38)",
+        "opts": [
+          "few",
+          "numerous",
+          "rare",
+          "private"
+        ],
+        "ans": "B",
+        "note": "許多的。",
+        "exp": "<span class=\"exp-key\">numerous（許多的）</span>──許多的。<br>❌ few = 很少的；rare = 稀有的；private = 私人的；其餘選項語意不符。"
+      },
+      {
+        "q": "(39)",
+        "opts": [
+          "fictions",
+          "conferences",
+          "audiences",
+          "controls"
+        ],
+        "ans": "C",
+        "note": "觀眾。",
+        "exp": "<span class=\"exp-key\">audiences（audiences）</span>──觀眾。<br>❌ 其餘選項語意不符。"
+      },
+      {
+        "q": "(40)",
+        "opts": [
+          "limit",
+          "weaken",
+          "reduce",
+          "broaden"
+        ],
+        "ans": "D",
+        "note": "拓展。",
+        "exp": "<span class=\"exp-key\">broaden（拓展）</span>──拓展。<br>❌ limit = 限制；weaken = 削弱；reduce = 減少；其餘選項語意不符。"
+      }
+    ],
+    "passage": "TED talks are <strong>(31)</strong> short online videos that help people learn. TED <strong>(32)</strong> Technology, Entertainment, and Design. It is a nonprofit <strong>(33)</strong> that was established in 1984. With the slogan \"ideas <strong>(34)</strong> spreading,\" it held its first conference that same year. Each speaker had eighteen minutes to <strong>(35)</strong> his or her ideas. As TED became <strong>(36)</strong> popular, the organizers invited thinkers from a <strong>(37)</strong> range of fields. Over the years, <strong>(38)</strong> celebrities have given talks and shared ideas with their <strong>(39)</strong>. Today, the collection of videos keeps growing, and TED helps people <strong>(40)</strong> their horizons around the world."
+  },
+  {
+    "title": "第四大題：閱讀測驗",
+    "pts": "10 題 × 2 分 = 20 分",
+    "questions": [
+      {
+        "q": "What does TED stand for?",
+        "opts": [
+          "Technology, Entertainment, Design",
+          "Talks, Education, Drama",
+          "Teaching, Energy, Design",
+          "Television, Events, Design"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">Technology, Entertainment, Design</span>──文中明確指出。<br>❌ 其餘為干擾選項。"
+      },
+      {
+        "q": "When was the TED foundation established?",
+        "opts": [
+          "2007",
+          "1984",
+          "1994",
+          "1974"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">1984</span>──「a nonprofit foundation established in 1984」。<br>❌ 2007 是 TED.com 網站成立年；其餘無依據。"
+      },
+      {
+        "q": "How long does each TED speaker have to present?",
+        "opts": [
+          "Eighty minutes",
+          "Eight minutes",
+          "Eighteen minutes",
+          "Eighteen hours"
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">Eighteen minutes</span>──「giving each speaker eighteen minutes」。<br>❌ 其餘數字錯誤。"
+      },
+      {
+        "q": "Which is NOT mentioned as a field TED later invited thinkers from?",
+        "opts": [
+          "Medicine",
+          "Science",
+          "Business",
+          "Sports"
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">Sports</span>──文中列出 science, business, medicine，未提 sports。<br>❌ 其餘皆有提及。"
+      },
+      {
+        "q": "What can be inferred about TED Talks from Passage 1?",
+        "opts": [
+          "They share ideas worth spreading with the public.",
+          "They are only for scientists.",
+          "They cost a lot to watch.",
+          "They were popular before 1984."
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">They share ideas worth spreading</span>──slogan 與全文主旨。<br>❌ 不限科學家；網站影片免費；1984 才成立。"
+      },
+      {
+        "q": "How does Albert feel about the talk at the beginning?",
+        "opts": [
+          "He thinks it was inspiring.",
+          "He thinks it was boring.",
+          "He thinks it was too short.",
+          "He thinks it was funny."
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">boring</span>──「one of the most boring lectures」。<br>❌ inspiring 是 Eric 的感受；其餘無依據。"
+      },
+      {
+        "q": "What topic did the speaker talk about that inspired Eric?",
+        "opts": [
+          "Cooking healthy meals",
+          "Making movies",
+          "Fighting Ebola in Africa",
+          "Building computers"
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">Fighting Ebola</span>──「her talk about Ebola inspired me」。<br>❌ 其餘為他課人物的主題。"
+      },
+      {
+        "q": "What part of the talk did Albert admit he enjoyed?",
+        "opts": [
+          "The science fiction",
+          "The Ebola information",
+          "The food revolution",
+          "Pictures of lions and snakes"
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">Pictures of lions and snakes</span>──「wonderful to see pictures of those lions and snakes」。<br>❌ Ebola 是 Eric 喜歡的；其餘未在對話中。"
+      },
+      {
+        "q": "Why does Albert feel disconnected from the talk?",
+        "opts": [
+          "Everything felt far away from them.",
+          "The speaker spoke too fast.",
+          "The topic was too easy.",
+          "He could not see the screen."
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">far away from them</span>──「everything she talked about feels so far away from us」。<br>❌ 其餘無依據。"
+      },
+      {
+        "q": "What does Eric suggest Albert do at the end?",
+        "opts": [
+          "Give a talk himself",
+          "Look it up online",
+          "Travel to Africa",
+          "Watch a movie"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">Look it up online</span>──「You should look it up online」。<br>❌ 其餘未提及。"
+      }
+    ],
+    "passage": "<strong>Passage 1</strong><br>Everyone has his or her own favorite way of spending free time. Some like to play video games or surf the Internet, while others choose to educate themselves by reading. Still others seek fun as well as knowledge. For such people, TED Talks may be the best choice. TED, which stands for Technology, Entertainment, Design, is a nonprofit foundation established in 1984. With the slogan \"ideas worth spreading,\" it held its first conference that same year, giving each speaker eighteen minutes to present ideas. As TED grew increasingly popular, organizers invited thinkers from a broader range of fields, including science, business, and medicine. The TED.com website was not created until 2007, after which many talks were uploaded for the public to watch for free. Numerous celebrities have given talks: chef Jamie Oliver spoke of a food revolution, director James Cameron shared his childhood fascination with science fiction, and Bill Gates suggested the government do more to monitor and control deadly diseases.<br><br><strong>Passage 2</strong><br>Albert and Eric are discussing a TED Talk they just attended. Albert says, \"Thank goodness that's over. It was one of the most boring lectures I've ever heard.\" Eric is surprised: \"What?! I thought it was quite good. I loved how she talked about volunteering to fight Ebola in Africa.\" Albert is not impressed at first, but admits the pictures of lions and snakes on her safaris were wonderful. He explains that everything she talked about feels far away from them. Eric replies, \"That's true, but her talk about Ebola inspired me to help out. You should look it up online. I'm sure they'll put information on the TED website soon.\" Albert finally agrees and says he will do that."
+  }
+];
+let globalQNum = 0;
+const qMap = {};
+const userAnswers = {};
+let submitted = false;
+const container = document.getElementById('quiz-container');
+sections.forEach((sec, si) => {
+  const secDiv = document.createElement('div');
+  secDiv.className = 'section';
+  let html = `<div class="section-header">${sec.title} <span class="pts">（${sec.pts}）</span></div>`;
+  if (sec.passage) { html += `<div class="passage"><div class="passage-label">📖 閱讀文章</div>${sec.passage}</div>`; }
+  sec.questions.forEach((q) => {
+    globalQNum++; const n = globalQNum;
+    qMap[n] = { ans: q.ans, exp: q.exp };
+    const labels = ['A','B','C','D'];
+    let optHtml = '';
+    q.opts.forEach((o, i) => { optHtml += `<div class="option" id="opt-${n}-${labels[i]}" onclick="choose(${n},'${labels[i]}')"><span class="option-label">(${labels[i]})</span>${o}</div>`; });
+    let qLabel = (si === 2 || si === 3) ? `(${n})` : `${n}`;
+    html += `<div class="question" id="q${n}"><div class="q-text"><span class="q-num">${qLabel}.</span> ${q.q}</div><div class="options">${optHtml}</div><div class="explanation" id="exp${n}"><div class="exp-header">💡 解析</div><div class="exp-body">${q.exp}</div></div></div>`;
+  });
+  secDiv.innerHTML = html;
+  container.appendChild(secDiv);
+});
+function choose(n, chosen) {
+  if (submitted) return;
+  userAnswers[n] = chosen;
+  const ans = qMap[n].ans;
+  ['A','B','C','D'].forEach(l => {
+    const el = document.getElementById(`opt-${n}-${l}`);
+    el.classList.remove('selected','correct','wrong','reveal-correct');
+    if (l === chosen) { el.classList.add(chosen === ans ? 'correct' : 'wrong'); }
+    else if (l === ans && chosen !== ans) { el.classList.add('reveal-correct'); }
+  });
+  document.getElementById(`exp${n}`).classList.add('show');
+  updateTopBar();
+}
+function updateTopBar() {
+  const count = Object.keys(userAnswers).length;
+  document.getElementById('answered-count').textContent = count;
+  document.getElementById('progress-fill').style.width = (count / 50 * 100) + '%';
+  let score = 0;
+  for (let q in userAnswers) { if (userAnswers[q] === qMap[q].ans) score += 2; }
+  document.getElementById('live-score').textContent = score;
+}
+function revealAll() {
+  for (let n = 1; n <= 50; n++) {
+    const ans = qMap[n].ans;
+    ['A','B','C','D'].forEach(l => {
+      const el = document.getElementById(`opt-${n}-${l}`);
+      el.classList.remove('selected','correct','wrong','reveal-correct');
+      if (l === ans) el.classList.add('reveal-correct');
+      else if (userAnswers[n] === l && l !== ans) el.classList.add('wrong');
+    });
+    document.getElementById(`exp${n}`).classList.add('show');
+  }
+  updateTopBar();
+}
+function submitAll() {
+  submitted = true; revealAll();
+  let score = 0;
+  for (let n = 1; n <= 50; n++) { if (userAnswers[n] === qMap[n].ans) score += 2; }
+  const rb = document.getElementById('result-box'); rb.classList.add('show');
+  document.getElementById('result-score').textContent = score;
+  const gr = document.getElementById('result-grade'); const det = document.getElementById('result-detail');
+  if (score >= 90) { gr.textContent = '🏆 優秀！'; gr.className = 'result-grade grade-a'; det.textContent = '表現卓越，繼續保持！'; }
+  else if (score >= 70) { gr.textContent = '👍 良好'; gr.className = 'result-grade grade-b'; det.textContent = '表現不錯，再複習錯誤的題目吧！'; }
+  else { gr.textContent = '📚 需加強'; gr.className = 'result-grade grade-c'; det.textContent = '多複習解析說明，你可以做到的！'; }
+  document.getElementById('answered-count').textContent = 50;
+  document.getElementById('live-score').textContent = score;
+  document.getElementById('progress-fill').style.width = '100%';
+  rb.scrollIntoView({ behavior: 'smooth' });
+}
+function resetAll() {
+  submitted = false;
+  for (let key in userAnswers) delete userAnswers[key];
+  for (let n = 1; n <= 50; n++) {
+    ['A','B','C','D'].forEach(l => { document.getElementById(`opt-${n}-${l}`).classList.remove('selected','correct','wrong','reveal-correct'); });
+    document.getElementById(`exp${n}`).classList.remove('show');
+  }
+  document.getElementById('result-box').classList.remove('show');
+  document.getElementById('answered-count').textContent = '0';
+  document.getElementById('live-score').textContent = '0';
+  document.getElementById('progress-fill').style.width = '0%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

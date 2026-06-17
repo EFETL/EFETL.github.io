@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L2 卷B 解析版 — How Do You Take Your Tea, High or Low?</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", sans-serif; font-size: 17px; line-height: 1.7; background: #f0f2f5; color: #1d1d1f; padding-bottom: 48px; }
+header { background: linear-gradient(135deg, #1a1a2e, #16213e); color: white; padding: 20px 16px; text-align: center; }
+header h1 { font-size: 20px; margin-bottom: 4px; }
+header p { font-size: 14px; opacity: 0.85; }
+.top-bar { background: white; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.1); gap: 8px; }
+.top-bar .score-info { font-size: 15px; font-weight: bold; color: #1a1a2e; white-space: nowrap; }
+.btn-reveal { background: linear-gradient(135deg, #56ab2f, #a8e063); color: white; border: none; border-radius: 10px; padding: 8px 14px; font-size: 14px; font-weight: bold; cursor: pointer; white-space: nowrap; -webkit-tap-highlight-color: transparent; }
+.progress-bar { height: 4px; background: #e0e0e0; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, #56ab2f, #a8e063); transition: width 0.3s; width: 0%; }
+.section { background: white; margin: 14px 10px 0; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
+.section-header { background: linear-gradient(135deg, #56ab2f, #a8e063); color: white; padding: 13px 16px; font-size: 16px; font-weight: bold; }
+.section-header .pts { font-size: 12px; opacity: 0.9; font-weight: normal; }
+.question { padding: 15px 16px; border-bottom: 1px solid #f0f0f0; }
+.question:last-child { border-bottom: none; }
+.q-text { font-size: 16px; margin-bottom: 11px; font-weight: 500; line-height: 1.6; }
+.q-num { color: #3f8f1f; font-weight: bold; margin-right: 4px; }
+.options { display: flex; flex-direction: column; gap: 7px; }
+.option { display: flex; align-items: flex-start; gap: 9px; padding: 10px 13px; border: 2px solid #e0e0e0; border-radius: 11px; cursor: pointer; transition: all 0.15s; font-size: 16px; line-height: 1.5; background: #fafafa; -webkit-tap-highlight-color: transparent; }
+.option:active { transform: scale(0.98); }
+.option.selected { border-color: #3f8f1f; background: #f0fff0; }
+.option.correct { border-color: #34c759; background: #f0fff4; }
+.option.wrong { border-color: #ff3b30; background: #fff5f5; }
+.option.reveal-correct { border-color: #34c759; background: #f0fff4; }
+.option-label { font-weight: bold; color: #3f8f1f; min-width: 22px; flex-shrink: 0; }
+.option.correct .option-label, .option.reveal-correct .option-label { color: #34c759; }
+.option.wrong .option-label { color: #ff3b30; }
+.explanation { display: none; margin-top: 10px; background: #fafbff; border-radius: 10px; border: 1px solid #e3e6f0; overflow: hidden; }
+.explanation.show { display: block; }
+.exp-header { display: flex; align-items: center; gap: 6px; padding: 8px 13px; font-size: 14px; font-weight: bold; background: #f0fff0; color: #3f8f1f; }
+.exp-body { padding: 10px 13px; font-size: 15px; line-height: 1.7; color: #333; }
+.exp-key { color: #2e7d32; font-weight: bold; }
+.passage { background: #f8f9ff; border-left: 4px solid #3f8f1f; padding: 13px 15px; margin: 0 16px 10px; border-radius: 0 8px 8px 0; font-size: 15px; line-height: 1.75; }
+.passage-label { font-weight: bold; color: #3f8f1f; margin-bottom: 7px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+.btn-submit { display: block; width: calc(100% - 28px); margin: 18px auto 0; padding: 15px; background: linear-gradient(135deg, #56ab2f, #a8e063); color: white; border: none; border-radius: 13px; font-size: 17px; font-weight: bold; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.btn-submit:active { opacity: 0.9; transform: scale(0.98); }
+.result-box { display: none; margin: 14px 10px; background: white; border-radius: 16px; padding: 22px 18px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
+.result-box.show { display: block; }
+.result-score { font-size: 50px; font-weight: bold; color: #3f8f1f; line-height: 1.1; }
+.result-total { font-size: 20px; color: #666; margin-bottom: 10px; }
+.result-grade { font-size: 18px; font-weight: bold; padding: 7px 18px; border-radius: 18px; display: inline-block; margin-bottom: 14px; }
+.grade-a { background: #f0fff4; color: #1a7a3c; }
+.grade-b { background: #fff9e6; color: #b7791f; }
+.grade-c { background: #fff5f5; color: #c0392b; }
+.btn-reset { display: inline-block; padding: 11px 26px; background: #f0f0f7; color: #3f8f1f; border: none; border-radius: 11px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 6px; }
+</style>
+</head>
+<body>
+<a href="/" style="position:fixed;top:14px;left:14px;background:#2b4c8c;color:#fff;padding:7px 16px;border-radius:8px;text-decoration:none;font-size:0.9rem;font-weight:600;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,0.18);">&#8592; &#22238;&#39318;&#39052;</a>
+<header>
+  <h1>L2 How Do You Take Your Tea, High or Low? — 卷B 解析版</h1>
+  <p>單字、文法、克漏字、閱讀測驗｜選完即顯示解析</p>
+</header>
+<div class="top-bar">
+  <span class="score-info">進度 <span id="answered-count">0</span>/50 ｜ 得分 <span id="live-score">0</span>/100</span>
+  <button class="btn-reveal" onclick="revealAll()">📖 顯示全部解析</button>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+<div id="quiz-container"></div>
+<button class="btn-submit" onclick="submitAll()">📝 交卷 / 查看成績</button>
+<div class="result-box" id="result-box">
+  <div class="result-score" id="result-score">0</div>
+  <div class="result-total">/ 100 分</div>
+  <div class="result-grade" id="result-grade"></div>
+  <div style="color:#666;font-size:15px;margin-bottom:14px;" id="result-detail"></div>
+  <button class="btn-reset" onclick="resetAll()">🔄 重新作答</button>
+</div>
+<script>
+const sections = [
+  {
+    "title": "第一大題：字彙選擇",
+    "pts": "15 題 × 2 分 = 30 分",
+    "questions": [
+      {
+        "q": "Have you ever _______ the British tradition of drinking tea every afternoon?",
+        "opts": [
+          "asked for",
+          "heard of",
+          "on average",
+          "by comparison"
+        ],
+        "ans": "B",
+        "note": "聽說。",
+        "exp": "<span class=\"exp-key\">heard of（聽說過）</span>──聽說。<br>❌ asked for = 要求；on average = 平均而言；by comparison = 相比之下；其餘選項語意不符。"
+      },
+      {
+        "q": "It is a true _______ to sit quietly and enjoy a warm cup of tea after a long day.",
+        "opts": [
+          "revolution",
+          "laborer",
+          "delight",
+          "agriculture"
+        ],
+        "ans": "C",
+        "note": "愉快；樂事。",
+        "exp": "<span class=\"exp-key\">delight（愉快；使高興）</span>──愉快；樂事。<br>❌ revolution = 革命；laborer = 勞工；agriculture = 農業；其餘選項語意不符。"
+      },
+      {
+        "q": "She took a slow _______ of her tea and smiled at her old friend across the table.",
+        "opts": [
+          "delight",
+          "serve",
+          "function",
+          "sip"
+        ],
+        "ans": "D",
+        "note": "啜飲；一小口。",
+        "exp": "<span class=\"exp-key\">sip（啜飲）</span>──啜飲；一小口。<br>❌ delight = 愉快；使高興；serve = 供應；function = 功能；運作；其餘選項語意不符。"
+      },
+      {
+        "q": "A _______ afternoon tea includes tea, small cakes, and finger sandwiches.",
+        "opts": [
+          "typical",
+          "starving",
+          "restricted",
+          "industrial"
+        ],
+        "ans": "A",
+        "note": "典型的；一般的。",
+        "exp": "<span class=\"exp-key\">typical（典型的）</span>──典型的；一般的。<br>❌ starving = 飢餓的；restricted = 受限制的；industrial = 工業的；其餘選項語意不符。"
+      },
+      {
+        "q": "In the past, only the _______ class could enjoy this expensive custom.",
+        "opts": [
+          "convenient",
+          "upper",
+          "fundamental",
+          "industrial"
+        ],
+        "ans": "B",
+        "note": "上層的。",
+        "exp": "<span class=\"exp-key\">upper（上層的）</span>──上層的。<br>❌ convenient = 方便的；fundamental = 基本的；industrial = 工業的；其餘選項語意不符。"
+      },
+      {
+        "q": "The waiter will _______ the tea and snacks once the guests are seated.",
+        "opts": [
+          "restrict",
+          "starve",
+          "serve",
+          "indicate"
+        ],
+        "ans": "C",
+        "note": "供應；端上。",
+        "exp": "<span class=\"exp-key\">serve（供應）</span>──供應；端上。<br>❌ restrict = 限制；starve = 挨餓；indicate = 顯示；指出；其餘選項語意不符。"
+      },
+      {
+        "q": "The hotel is famous for its _______ rooms and elegant afternoon tea service.",
+        "opts": [
+          "starving",
+          "industrial",
+          "convenient",
+          "luxurious"
+        ],
+        "ans": "D",
+        "note": "奢華的。",
+        "exp": "<span class=\"exp-key\">luxurious（奢華的）</span>──奢華的。<br>❌ starving = 飢餓的；industrial = 工業的；convenient = 方便的；其餘選項語意不符。"
+      },
+      {
+        "q": "The 3.5 cups of tea per person _______ how much the British love their tea.",
+        "opts": [
+          "represent",
+          "starve",
+          "restrict",
+          "sip"
+        ],
+        "ans": "A",
+        "note": "代表；象徵。",
+        "exp": "<span class=\"exp-key\">represent（代表；象徵）</span>──代表；象徵。<br>❌ starve = 挨餓；restrict = 限制；sip = 啜飲；其餘選項語意不符。"
+      },
+      {
+        "q": "For factory workers, high tea _______ as the most important meal of the day.",
+        "opts": [
+          "restricted",
+          "functioned",
+          "indicated",
+          "sipped"
+        ],
+        "ans": "B",
+        "note": "運作；起作用。",
+        "exp": "<span class=\"exp-key\">functioned（運作；起作用）</span>──運作；起作用。<br>❌ restricted = 受限制的；其餘選項語意不符。"
+      },
+      {
+        "q": "Before the factories came, most people made a living from _______.",
+        "opts": [
+          "convenience",
+          "revolution",
+          "agriculture",
+          "delight"
+        ],
+        "ans": "C",
+        "note": "農業。",
+        "exp": "<span class=\"exp-key\">agriculture（農業）</span>──農業。<br>❌ convenience = 便利；revolution = 革命；delight = 愉快；使高興；其餘選項語意不符。"
+      },
+      {
+        "q": "The Industrial _______ changed the way ordinary people lived and worked.",
+        "opts": [
+          "Delight",
+          "Convenience",
+          "Agriculture",
+          "Revolution"
+        ],
+        "ans": "D",
+        "note": "革命。",
+        "exp": "<span class=\"exp-key\">Revolution（革命）</span>──革命。<br>❌ Delight = 愉快；使高興；Convenience = 便利；Agriculture = 農業；其餘選項語意不符。"
+      },
+      {
+        "q": "Each tired _______ wanted a big, warm meal right after a long day at the factory.",
+        "opts": [
+          "laborer",
+          "delight",
+          "convenience",
+          "agriculture"
+        ],
+        "ans": "A",
+        "note": "勞工。",
+        "exp": "<span class=\"exp-key\">laborer（勞工）</span>──勞工。<br>❌ delight = 愉快；使高興；convenience = 便利；agriculture = 農業；其餘選項語意不符。"
+      },
+      {
+        "q": "By the time they got off work, the workers were absolutely _______.",
+        "opts": [
+          "serving",
+          "starving",
+          "sipping",
+          "representing"
+        ],
+        "ans": "B",
+        "note": "飢餓的。",
+        "exp": "<span class=\"exp-key\">starving（飢餓的）</span>──飢餓的。<br>❌ 其餘選項語意不符。"
+      },
+      {
+        "q": "The high number of cups people drink clearly _______ a deep love of tea.",
+        "opts": [
+          "serves",
+          "restricts",
+          "indicates",
+          "starves"
+        ],
+        "ans": "C",
+        "note": "顯示；指出。",
+        "exp": "<span class=\"exp-key\">indicates（顯示）</span>──顯示；指出。<br>❌ 其餘選項語意不符。"
+      },
+      {
+        "q": "Today, afternoon tea is enjoyed by everyone and is not _______ to the rich.",
+        "opts": [
+          "functioned",
+          "represented",
+          "indicated",
+          "restricted"
+        ],
+        "ans": "D",
+        "note": "受限制的。",
+        "exp": "<span class=\"exp-key\">restricted（受限制的）</span>──受限制的。<br>❌ functioned = 運作；起作用；其餘選項語意不符。"
+      }
+    ]
+  },
+  {
+    "title": "第二大題：文法選擇",
+    "pts": "15 題 × 2 分 = 30 分",
+    "questions": [
+      {
+        "q": "Lady Russell, _______ idea spread through high society, loved her 4 p.m. snacks.",
+        "opts": [
+          "whose",
+          "who",
+          "which",
+          "what"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">whose</span>──表所有格「她的點子」，用 whose。<br>❌ who 作主詞；which 指物；what 不引導關係子句。"
+      },
+      {
+        "q": "Among the British, _______ many fascinating customs about tea-drinking.",
+        "opts": [
+          "there is",
+          "there are",
+          "it is",
+          "they are"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">there are</span>──there be 句型，主詞 many customs 為複數。<br>❌ there is/it is 為單數；they are 不符句型。"
+      },
+      {
+        "q": "Working in factories made _______ hard for laborers to eat a big lunch.",
+        "opts": [
+          "this",
+          "that",
+          "it",
+          "what"
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">it</span>──虛受詞 it 代替後面的 to eat。<br>❌ that/this/what 不可作虛受詞。"
+      },
+      {
+        "q": "_______ they worked long hours, the laborers still found time for high tea.",
+        "opts": [
+          "Instead of",
+          "Despite",
+          "Because of",
+          "Although"
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">Although</span>──後接子句 they worked，表「雖然」。<br>❌ Despite/Because of/Instead of 後接名詞片語。"
+      },
+      {
+        "q": "If Lady Russell _______ patient, afternoon tea might never have appeared.",
+        "opts": [
+          "had been",
+          "is",
+          "were",
+          "would be"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">had been</span>──與過去事實相反，if 子句用 had + p.p.。<br>❌ 其餘時態不符過去假設語氣。"
+      },
+      {
+        "q": "The doctor recommended that the tired worker _______ a filling meal after work.",
+        "opts": [
+          "eats",
+          "eat",
+          "ate",
+          "eating"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">eat</span>──recommend that S (should) + 原形 eat。<br>❌ eats/ate/eating 不符假設語氣原形。"
+      },
+      {
+        "q": "_______ corner of Britain now enjoys some form of afternoon tea.",
+        "opts": [
+          "All",
+          "Both",
+          "Every",
+          "Most"
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">Every</span>──Every + 單數名詞 corner，配單數動詞 enjoys。<br>❌ Both/All/Most 須接複數名詞。"
+      },
+      {
+        "q": "_______ harder the laborers worked, the hungrier they felt by evening.",
+        "opts": [
+          "So",
+          "A",
+          "More",
+          "The"
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">The</span>──「the + 比較級…, the + 比較級…」句型。<br>❌ A/More/So 不符此句型。"
+      },
+      {
+        "q": "During the revolution, workers _______ to spend most of the day in factories.",
+        "opts": [
+          "were required",
+          "required",
+          "requiring",
+          "require"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">were required</span>──be required to V「被要求」，用被動。<br>❌ 主動或非限定形式不合句意。"
+      },
+      {
+        "q": "Long ago, British families _______ eat their biggest meal at noon, not at night.",
+        "opts": [
+          "are used to",
+          "used to",
+          "use to",
+          "were used to"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">used to</span>──used to + 原形，表過去習慣。<br>❌ be used to + Ving 表「習慣於」；use to 形式錯誤。"
+      },
+      {
+        "q": "_______ getting off work, the starving laborers headed straight for high tea.",
+        "opts": [
+          "Although",
+          "Despite",
+          "Upon",
+          "While they"
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">Upon</span>──Upon + Ving「一……就」。<br>❌ Despite 語意不符；Although/While they 後須接子句。"
+      },
+      {
+        "q": "Low tea is far more elegant _______ high tea in style and atmosphere.",
+        "opts": [
+          "to",
+          "as",
+          "then",
+          "than"
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">than</span>──比較級 more elegant 後接 than。<br>❌ as/then/to 不與比較級連用。"
+      },
+      {
+        "q": "High tea was _______ a filling meal that workers felt full and ready again.",
+        "opts": [
+          "such",
+          "so",
+          "very",
+          "too"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">such</span>──such + a + adj + n + that 句型。<br>❌ so 後直接接形容詞；very/too 不引導 that 子句。"
+      },
+      {
+        "q": "Not until the Industrial Revolution _______ high tea become so popular.",
+        "opts": [
+          "does",
+          "did",
+          "has",
+          "was"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">did</span>──Not until 置句首引導倒裝，過去式助動詞用 did + 原形 become。<br>❌ does 為現在式；has/was 不符此倒裝結構。"
+      },
+      {
+        "q": "Hosts served fine teas on low tables, _______ guests found very impressive.",
+        "opts": [
+          "what",
+          "who",
+          "which",
+          "whom"
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">which</span>──關代作 found 的受詞，先行詞為物用 which。<br>❌ who/whom 指人；what 不引導關係子句。"
+      }
+    ]
+  },
+  {
+    "title": "第三大題：克漏字填充",
+    "pts": "10 題 × 2 分 = 20 分",
+    "questions": [
+      {
+        "q": "(31)",
+        "opts": [
+          "on average",
+          "asked for",
+          "by comparison",
+          "heard of"
+        ],
+        "ans": "D",
+        "note": "聽說過。",
+        "exp": "<span class=\"exp-key\">heard of（聽說過）</span>──聽說過。<br>❌ on average = 平均而言；asked for = 要求；by comparison = 相比之下；其餘選項語意不符。"
+      },
+      {
+        "q": "(32)",
+        "opts": [
+          "delight",
+          "laborer",
+          "revolution",
+          "agriculture"
+        ],
+        "ans": "A",
+        "note": "樂事；愉快。",
+        "exp": "<span class=\"exp-key\">delight（愉快；使高興）</span>──樂事；愉快。<br>❌ laborer = 勞工；revolution = 革命；agriculture = 農業；其餘選項語意不符。"
+      },
+      {
+        "q": "(33)",
+        "opts": [
+          "luxurious",
+          "typical",
+          "industrial",
+          "restricted"
+        ],
+        "ans": "B",
+        "note": "典型的（這裡指一般的、清淡的午餐）。",
+        "exp": "<span class=\"exp-key\">typical（典型的）</span>──典型的（這裡指一般的、清淡的午餐）。<br>❌ luxurious = 奢華的；industrial = 工業的；restricted = 受限制的；其餘選項語意不符。"
+      },
+      {
+        "q": "(34)",
+        "opts": [
+          "by comparison",
+          "hear of",
+          "ask for",
+          "on average"
+        ],
+        "ans": "C",
+        "note": "要求；索取。",
+        "exp": "<span class=\"exp-key\">ask for（要求；索取）</span>──要求；索取。<br>❌ by comparison = 相比之下；hear of = 聽說；on average = 平均而言；其餘選項語意不符。"
+      },
+      {
+        "q": "(35)",
+        "opts": [
+          "indicated",
+          "starved",
+          "restricted",
+          "served"
+        ],
+        "ans": "D",
+        "note": "供應。",
+        "exp": "<span class=\"exp-key\">served（供應）</span>──供應。<br>❌ restricted = 受限制的；其餘選項語意不符。"
+      },
+      {
+        "q": "(36)",
+        "opts": [
+          "by comparison",
+          "on average",
+          "ask for",
+          "hear of"
+        ],
+        "ans": "A",
+        "note": "相比之下。",
+        "exp": "<span class=\"exp-key\">by comparison（相比之下）</span>──相比之下。<br>❌ on average = 平均而言；ask for = 要求；索取；hear of = 聽說；其餘選項語意不符。"
+      },
+      {
+        "q": "(37)",
+        "opts": [
+          "revolution",
+          "agriculture",
+          "convenience",
+          "delight"
+        ],
+        "ans": "B",
+        "note": "農業。",
+        "exp": "<span class=\"exp-key\">agriculture（農業）</span>──農業。<br>❌ revolution = 革命；convenience = 便利；delight = 愉快；使高興；其餘選項語意不符。"
+      },
+      {
+        "q": "(38)",
+        "opts": [
+          "customs",
+          "delights",
+          "laborers",
+          "conveniences"
+        ],
+        "ans": "C",
+        "note": "勞工。",
+        "exp": "<span class=\"exp-key\">laborers（勞工）</span>──勞工。<br>❌ 其餘選項語意不符。"
+      },
+      {
+        "q": "(39)",
+        "opts": [
+          "representing",
+          "serving",
+          "sipping",
+          "starving"
+        ],
+        "ans": "D",
+        "note": "飢餓的。",
+        "exp": "<span class=\"exp-key\">starving（飢餓的）</span>──飢餓的。<br>❌ 其餘選項語意不符。"
+      },
+      {
+        "q": "(40)",
+        "opts": [
+          "fundamental",
+          "restricted",
+          "industrial",
+          "convenient"
+        ],
+        "ans": "A",
+        "note": "基本的。",
+        "exp": "<span class=\"exp-key\">fundamental（基本的）</span>──基本的。<br>❌ restricted = 受限制的；industrial = 工業的；convenient = 方便的；其餘選項語意不符。"
+      }
+    ],
+    "passage": "Have you ever <strong>(31)</strong> the British custom of afternoon tea? It is a real <strong>(32)</strong> to relax with a warm cup of tea. Long ago, the upper class ate a <strong>(33)</strong> lunch and a late dinner, so one duchess began to <strong>(34)</strong> snacks and tea in the afternoon. Hosts soon <strong>(35)</strong> fine teas on low tables, and this became known as \"low tea.\" High tea, <strong>(36)</strong>, was a main meal for the working class. Before the factories came, people lived by <strong>(37)</strong>. After the Industrial Revolution, however, <strong>(38)</strong> worked so long that they were <strong>(39)</strong> by evening. The tea they drank shows that it is a <strong>(40)</strong> part of British life."
+  },
+  {
+    "title": "第四大題：閱讀測驗",
+    "pts": "10 題 × 2 分 = 20 分",
+    "questions": [
+      {
+        "q": "During which period did most British people work in agriculture?",
+        "opts": [
+          "The twentieth century",
+          "The seventeenth and early eighteenth centuries",
+          "The mid-1800s only",
+          "After the Industrial Revolution"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">17th and early 18th centuries</span>──文中明指此時期人們多務農。<br>❌ 其餘時期與內文不符。"
+      },
+      {
+        "q": "When did laborers usually have high tea?",
+        "opts": [
+          "At 4 p.m.",
+          "At noon",
+          "Between 5 and 7 p.m., right after work",
+          "Late at night"
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">between 5 and 7 p.m.</span>──下班後立即用高茶。<br>❌ 4 p.m. 為低茶時間；其餘與內文不符。"
+      },
+      {
+        "q": "What kind of food was served at high tea?",
+        "opts": [
+          "Coffee and bread",
+          "Only light cakes and tea",
+          "Fresh fruit and salad",
+          "Filling food such as meat, fish, and pies"
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">meat, fish, and pies</span>──高茶是能量充足、有飽足感的一餐。<br>❌ 其餘為低茶或非文中食物。"
+      },
+      {
+        "q": "What does \"by comparison\" suggest about high tea and low tea?",
+        "opts": [
+          "They are being contrasted with each other",
+          "They are exactly the same",
+          "High tea came first",
+          "Low tea was for workers"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">contrasted</span>──by comparison 表「相比之下」，用以對照兩者。<br>❌ 其餘誤解該片語。"
+      },
+      {
+        "q": "What is the author's main purpose in Passage 1?",
+        "opts": [
+          "To teach readers how to brew tea",
+          "To explain the origins and differences of low tea and high tea",
+          "To sell tea products",
+          "To criticize the working class"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">explain the origins and differences</span>──全文說明兩種茶的由來與差異。<br>❌ 其餘非作者目的。"
+      },
+      {
+        "q": "Where does the conversation in Passage 2 take place?",
+        "opts": [
+          "In a tea factory",
+          "At Sophie's home",
+          "At a restaurant",
+          "At a market"
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">at a restaurant</span>──開頭說明兩人在餐廳，服務生點餐。<br>❌ 其餘地點與對話不符。"
+      },
+      {
+        "q": "What comes with the Classic English Afternoon Tea set?",
+        "opts": [
+          "Pizza and fries",
+          "Only sandwiches",
+          "Soup and salad",
+          "Desserts, cakes, and sandwiches"
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">desserts, cakes, and sandwiches</span>──服務生介紹套餐內容。<br>❌ 其餘非套餐內容。"
+      },
+      {
+        "q": "Which drink does Sophie order?",
+        "opts": [
+          "English black tea",
+          "Rose lemon tea",
+          "Fruit tea",
+          "Milk tea"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">English black tea</span>──Sophie 最後點英式紅茶。<br>❌ rose lemon tea 是 Kristin 點的；其餘未被選。"
+      },
+      {
+        "q": "What can we infer about Sophie and Kristin's relationship?",
+        "opts": [
+          "They are strangers",
+          "They are good friends who have not met for a while",
+          "They are coworkers in a factory",
+          "They are mother and daughter"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">good friends</span>──Kristin 說 \"We haven't had a good chat in a long time.\"<br>❌ 其餘與對話線索不符。"
+      },
+      {
+        "q": "What is the tone of the conversation in Passage 2?",
+        "opts": [
+          "Sad and worried",
+          "Angry and rude",
+          "Friendly and polite",
+          "Formal and cold"
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">friendly and polite</span>──雙方用 please、thanks，氣氛輕鬆友善。<br>❌ 其餘與對話語氣不符。"
+      }
+    ],
+    "passage": "<strong>Passage 1</strong><br>You may have heard of the delightful custom of sipping hot tea in the late afternoon. Afternoon tea can typically be described as sitting down in the afternoon to enjoy tea and snacks. Some believe the English duchess Anna Russell started this custom in the mid-1800s. At that time, the upper class had a light lunch and a late dinner. Lady Russell grew very hungry between meals and found it hard to wait until dinnertime, so she asked for snacks and tea at 4 p.m. She later invited friends over, and her idea spread through British high society. Hosts served high-quality teas and snacks on luxurious low tables, which is why we call it \"low tea.\" High tea, by comparison, was a main meal for the working class. During the Industrial Revolution, laborers worked long hours and were starving after work, so they had high tea between 5 and 7 p.m. with filling food like meat, fish, and pies. Research shows each British person drinks 3.5 cups of tea a day, indicating that tea is now a fundamental part of British culture.<br><br><strong>Passage 2</strong><br>Sophie and Kristin are at a restaurant. <br>Sophie: Thanks for inviting me today. It's so nice to enjoy a nice afternoon tea with you. <br>Kristin: My pleasure. We haven't had a good chat in a long time. <br>Waiter: Good afternoon, ladies. Are you ready to order? <br>Sophie: Hi. What do you recommend? <br>Waiter: Our Classic English Afternoon Tea set is really popular. It comes with different kinds of desserts, cakes, and sandwiches. <br>Kristin: Is this served with drinks? <br>Waiter: Yes, you can choose herbal tea, fruit tea, or milk tea. <br>Kristin: Okay. I'll have the Classic set with a rose lemon tea, please. <br>Waiter: And for you, Miss? <br>Sophie: I'll have the same set, please. <br>Waiter: And what would you like to drink? <br>Sophie: I'll have English black tea, please. <br>Waiter: I'll be right back with your order."
+  }
+];
+let globalQNum = 0;
+const qMap = {};
+const userAnswers = {};
+let submitted = false;
+const container = document.getElementById('quiz-container');
+sections.forEach((sec, si) => {
+  const secDiv = document.createElement('div');
+  secDiv.className = 'section';
+  let html = `<div class="section-header">${sec.title} <span class="pts">（${sec.pts}）</span></div>`;
+  if (sec.passage) { html += `<div class="passage"><div class="passage-label">📖 閱讀文章</div>${sec.passage}</div>`; }
+  sec.questions.forEach((q) => {
+    globalQNum++; const n = globalQNum;
+    qMap[n] = { ans: q.ans, exp: q.exp };
+    const labels = ['A','B','C','D'];
+    let optHtml = '';
+    q.opts.forEach((o, i) => { optHtml += `<div class="option" id="opt-${n}-${labels[i]}" onclick="choose(${n},'${labels[i]}')"><span class="option-label">(${labels[i]})</span>${o}</div>`; });
+    let qLabel = (si === 2 || si === 3) ? `(${n})` : `${n}`;
+    html += `<div class="question" id="q${n}"><div class="q-text"><span class="q-num">${qLabel}.</span> ${q.q}</div><div class="options">${optHtml}</div><div class="explanation" id="exp${n}"><div class="exp-header">💡 解析</div><div class="exp-body">${q.exp}</div></div></div>`;
+  });
+  secDiv.innerHTML = html;
+  container.appendChild(secDiv);
+});
+function choose(n, chosen) {
+  if (submitted) return;
+  userAnswers[n] = chosen;
+  const ans = qMap[n].ans;
+  ['A','B','C','D'].forEach(l => {
+    const el = document.getElementById(`opt-${n}-${l}`);
+    el.classList.remove('selected','correct','wrong','reveal-correct');
+    if (l === chosen) { el.classList.add(chosen === ans ? 'correct' : 'wrong'); }
+    else if (l === ans && chosen !== ans) { el.classList.add('reveal-correct'); }
+  });
+  document.getElementById(`exp${n}`).classList.add('show');
+  updateTopBar();
+}
+function updateTopBar() {
+  const count = Object.keys(userAnswers).length;
+  document.getElementById('answered-count').textContent = count;
+  document.getElementById('progress-fill').style.width = (count / 50 * 100) + '%';
+  let score = 0;
+  for (let q in userAnswers) { if (userAnswers[q] === qMap[q].ans) score += 2; }
+  document.getElementById('live-score').textContent = score;
+}
+function revealAll() {
+  for (let n = 1; n <= 50; n++) {
+    const ans = qMap[n].ans;
+    ['A','B','C','D'].forEach(l => {
+      const el = document.getElementById(`opt-${n}-${l}`);
+      el.classList.remove('selected','correct','wrong','reveal-correct');
+      if (l === ans) el.classList.add('reveal-correct');
+      else if (userAnswers[n] === l && l !== ans) el.classList.add('wrong');
+    });
+    document.getElementById(`exp${n}`).classList.add('show');
+  }
+  updateTopBar();
+}
+function submitAll() {
+  submitted = true; revealAll();
+  let score = 0;
+  for (let n = 1; n <= 50; n++) { if (userAnswers[n] === qMap[n].ans) score += 2; }
+  const rb = document.getElementById('result-box'); rb.classList.add('show');
+  document.getElementById('result-score').textContent = score;
+  const gr = document.getElementById('result-grade'); const det = document.getElementById('result-detail');
+  if (score >= 90) { gr.textContent = '🏆 優秀！'; gr.className = 'result-grade grade-a'; det.textContent = '表現卓越，繼續保持！'; }
+  else if (score >= 70) { gr.textContent = '👍 良好'; gr.className = 'result-grade grade-b'; det.textContent = '表現不錯，再複習錯誤的題目吧！'; }
+  else { gr.textContent = '📚 需加強'; gr.className = 'result-grade grade-c'; det.textContent = '多複習解析說明，你可以做到的！'; }
+  document.getElementById('answered-count').textContent = 50;
+  document.getElementById('live-score').textContent = score;
+  document.getElementById('progress-fill').style.width = '100%';
+  rb.scrollIntoView({ behavior: 'smooth' });
+}
+function resetAll() {
+  submitted = false;
+  for (let key in userAnswers) delete userAnswers[key];
+  for (let n = 1; n <= 50; n++) {
+    ['A','B','C','D'].forEach(l => { document.getElementById(`opt-${n}-${l}`).classList.remove('selected','correct','wrong','reveal-correct'); });
+    document.getElementById(`exp${n}`).classList.remove('show');
+  }
+  document.getElementById('result-box').classList.remove('show');
+  document.getElementById('answered-count').textContent = '0';
+  document.getElementById('live-score').textContent = '0';
+  document.getElementById('progress-fill').style.width = '0%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
