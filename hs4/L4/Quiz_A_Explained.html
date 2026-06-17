@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L4 卷A 解析版 — Dopamine: Finding Balance for a Happier Life</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", sans-serif; font-size: 17px; line-height: 1.7; background: #f0f2f5; color: #1d1d1f; padding-bottom: 48px; }
+header { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 20px 16px; text-align: center; }
+header h1 { font-size: 20px; margin-bottom: 4px; }
+header p { font-size: 14px; opacity: 0.85; }
+.top-bar { background: white; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.1); gap: 8px; }
+.top-bar .score-info { font-size: 15px; font-weight: bold; color: #1a1a2e; white-space: nowrap; }
+.btn-reveal { background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 10px; padding: 8px 14px; font-size: 14px; font-weight: bold; cursor: pointer; white-space: nowrap; -webkit-tap-highlight-color: transparent; }
+.progress-bar { height: 4px; background: #e0e0e0; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); transition: width 0.3s; width: 0%; }
+.section { background: white; margin: 14px 10px 0; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
+.section-header { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 13px 16px; font-size: 16px; font-weight: bold; }
+.section-header .pts { font-size: 12px; opacity: 0.9; font-weight: normal; }
+.question { padding: 15px 16px; border-bottom: 1px solid #f0f0f0; }
+.question:last-child { border-bottom: none; }
+.q-text { font-size: 16px; margin-bottom: 11px; font-weight: 500; line-height: 1.6; }
+.q-num { color: #667eea; font-weight: bold; margin-right: 4px; }
+.options { display: flex; flex-direction: column; gap: 7px; }
+.option { display: flex; align-items: flex-start; gap: 9px; padding: 10px 13px; border: 2px solid #e0e0e0; border-radius: 11px; cursor: pointer; transition: all 0.15s; font-size: 16px; line-height: 1.5; background: #fafafa; -webkit-tap-highlight-color: transparent; }
+.option:active { transform: scale(0.98); }
+.option.selected { border-color: #667eea; background: #f0f0ff; }
+.option.correct { border-color: #34c759; background: #f0fff4; }
+.option.wrong { border-color: #ff3b30; background: #fff5f5; }
+.option.reveal-correct { border-color: #34c759; background: #f0fff4; }
+.option-label { font-weight: bold; color: #667eea; min-width: 22px; flex-shrink: 0; }
+.option.correct .option-label, .option.reveal-correct .option-label { color: #34c759; }
+.option.wrong .option-label { color: #ff3b30; }
+.explanation { display: none; margin-top: 10px; background: #fafbff; border-radius: 10px; border: 1px solid #e3e6f0; overflow: hidden; }
+.explanation.show { display: block; }
+.exp-header { display: flex; align-items: center; gap: 6px; padding: 8px 13px; font-size: 14px; font-weight: bold; background: #f0f0ff; color: #667eea; }
+.exp-body { padding: 10px 13px; font-size: 15px; line-height: 1.7; color: #333; }
+.exp-key { color: #2e7d32; font-weight: bold; }
+.passage { background: #f8f9ff; border-left: 4px solid #667eea; padding: 13px 15px; margin: 0 16px 10px; border-radius: 0 8px 8px 0; font-size: 15px; line-height: 1.75; }
+.passage-label { font-weight: bold; color: #667eea; margin-bottom: 7px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+.btn-submit { display: block; width: calc(100% - 28px); margin: 18px auto 0; padding: 15px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 13px; font-size: 17px; font-weight: bold; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.btn-submit:active { opacity: 0.9; transform: scale(0.98); }
+.result-box { display: none; margin: 14px 10px; background: white; border-radius: 16px; padding: 22px 18px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
+.result-box.show { display: block; }
+.result-score { font-size: 50px; font-weight: bold; color: #667eea; line-height: 1.1; }
+.result-total { font-size: 20px; color: #666; margin-bottom: 10px; }
+.result-grade { font-size: 18px; font-weight: bold; padding: 7px 18px; border-radius: 18px; display: inline-block; margin-bottom: 14px; }
+.grade-a { background: #f0fff4; color: #1a7a3c; }
+.grade-b { background: #fff9e6; color: #b7791f; }
+.grade-c { background: #fff5f5; color: #c0392b; }
+.btn-reset { display: inline-block; padding: 11px 26px; background: #f0f0f7; color: #667eea; border: none; border-radius: 11px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 6px; }
+</style>
+</head>
+<body>
+<a href="/" style="position:fixed;top:14px;left:14px;background:#2b4c8c;color:#fff;padding:7px 16px;border-radius:8px;text-decoration:none;font-size:0.9rem;font-weight:600;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,0.18);">&#8592; &#22238;&#39318;&#39052;</a>
+<header>
+  <h1>L4 Dopamine: Finding Balance for a Happier Life — 卷A 解析版</h1>
+  <p>單字、文法、克漏字、閱讀測驗｜選完即顯示解析</p>
+</header>
+<div class="top-bar">
+  <span class="score-info">進度 <span id="answered-count">0</span>/50 ｜ 得分 <span id="live-score">0</span>/100</span>
+  <button class="btn-reveal" onclick="revealAll()">📖 顯示全部解析</button>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+<div id="quiz-container"></div>
+<button class="btn-submit" onclick="submitAll()">📝 交卷 / 查看成績</button>
+<div class="result-box" id="result-box">
+  <div class="result-score" id="result-score">0</div>
+  <div class="result-total">/ 100 分</div>
+  <div class="result-grade" id="result-grade"></div>
+  <div style="color:#666;font-size:15px;margin-bottom:14px;" id="result-detail"></div>
+  <button class="btn-reset" onclick="resetAll()">🔄 重新作答</button>
+</div>
+<script>
+const sections = [
+  {
+    "title": "第一大題：字彙選擇",
+    "pts": "15 題 × 2 分 = 30 分",
+    "questions": [
+      {
+        "q": "Dopamine is a _______ chemical that strongly affects how we feel and act.",
+        "opts": [
+          "powerful",
+          "constant",
+          "frequent",
+          "instant"
+        ],
+        "ans": "A",
+        "note": "強大的；powerful 修飾 chemical。",
+        "exp": "<span class=\"exp-key\">powerful（強大的）</span>──強大的；powerful 修飾 chemical。<br>❌ constant = 不斷的；frequent = 頻繁的；instant = 立即的；瞬間；其餘選項語意不符。"
+      },
+      {
+        "q": "These sudden feelings are closely _______ to dopamine in the brain.",
+        "opts": [
+          "released",
+          "linked",
+          "engaged",
+          "paused"
+        ],
+        "ans": "B",
+        "note": "be linked to 與……有關聯。",
+        "exp": "<span class=\"exp-key\">linked（有關聯的）</span>──be linked to 與……有關聯。<br>❌ released = 釋放；engaged = 投入的；專注的；其餘選項語意不符。"
+      },
+      {
+        "q": "When you finish a _______ task, your brain releases dopamine as a reward.",
+        "opts": [
+          "serious",
+          "balanced",
+          "rewarding",
+          "emotional"
+        ],
+        "ans": "C",
+        "note": "有益的；值得做的。",
+        "exp": "<span class=\"exp-key\">rewarding（有益的；值得的）</span>──有益的；值得做的。<br>❌ serious = 嚴重的；balanced = 均衡的；emotional = 情緒化的；其餘選項語意不符。"
+      },
+      {
+        "q": "Dopamine is _______ in your brain whenever you do something enjoyable.",
+        "opts": [
+          "paused",
+          "recommended",
+          "ensured",
+          "released"
+        ],
+        "ans": "D",
+        "note": "釋放。",
+        "exp": "<span class=\"exp-key\">released（釋放）</span>──釋放。<br>❌ 其餘選項語意不符。"
+      },
+      {
+        "q": "Dopamine drives you to _______ in new activities and stay active.",
+        "opts": [
+          "participate",
+          "ensure",
+          "recommend",
+          "release"
+        ],
+        "ans": "A",
+        "note": "participate in 參與。",
+        "exp": "<span class=\"exp-key\">participate（參與）</span>──participate in 參與。<br>❌ ensure = 確保；recommend = 推薦；建議；release = 釋放；其餘選項語意不符。"
+      },
+      {
+        "q": "A good night's sleep helps keep you focused and _______ at school.",
+        "opts": [
+          "constant",
+          "engaged",
+          "frequent",
+          "instant"
+        ],
+        "ans": "B",
+        "note": "投入的；專注的。",
+        "exp": "<span class=\"exp-key\">engaged（投入的；專注的）</span>──投入的；專注的。<br>❌ constant = 不斷的；frequent = 頻繁的；instant = 立即的；瞬間；其餘選項語意不符。"
+      },
+      {
+        "q": "_______ snacking all day long can cause too much dopamine to be released.",
+        "opts": [
+          "Engaged",
+          "Powerful",
+          "Constant",
+          "Rewarding"
+        ],
+        "ans": "C",
+        "note": "不斷的；持續的。",
+        "exp": "<span class=\"exp-key\">Constant（不斷的）</span>──不斷的；持續的。<br>❌ Engaged = 投入的；專注的；Powerful = 強大的；Rewarding = 有益的；值得的；其餘選項語意不符。"
+      },
+      {
+        "q": "Using social media too much leads to _______ release of dopamine.",
+        "opts": [
+          "frequent",
+          "engaged",
+          "instant",
+          "balanced"
+        ],
+        "ans": "D",
+        "note": "頻繁的；經常的。",
+        "exp": "<span class=\"exp-key\">balanced（均衡的）</span>──頻繁的；經常的。<br>❌ frequent = 頻繁的；engaged = 投入的；專注的；instant = 立即的；瞬間；其餘選項語意不符。"
+      },
+      {
+        "q": "When dopamine is low, even small _______ can feel too hard to finish.",
+        "opts": [
+          "tasks",
+          "experts",
+          "rewards",
+          "links"
+        ],
+        "ans": "A",
+        "note": "任務；工作。",
+        "exp": "<span class=\"exp-key\">tasks（任務）</span>──任務；工作。<br>❌ experts = 專家；rewards = 獎勵；其餘選項語意不符。"
+      },
+      {
+        "q": "In serious cases, very low dopamine can lead to _______.",
+        "opts": [
+          "balance",
+          "depression",
+          "pleasure",
+          "reward"
+        ],
+        "ans": "B",
+        "note": "憂鬱症。",
+        "exp": "<span class=\"exp-key\">depression（憂鬱症）</span>──憂鬱症。<br>❌ balance = 平衡；pleasure = 愉悅；reward = 獎勵；其餘選項語意不符。"
+      },
+      {
+        "q": "To _______ a healthy dopamine level, you should sleep and eat well.",
+        "opts": [
+          "participate",
+          "release",
+          "ensure",
+          "pause"
+        ],
+        "ans": "C",
+        "note": "確保；保證。",
+        "exp": "<span class=\"exp-key\">ensure（確保）</span>──確保；保證。<br>❌ participate = 參與；release = 釋放；pause = 暫停；其餘選項語意不符。"
+      },
+      {
+        "q": "Health _______ recommend small, positive steps to stay balanced.",
+        "opts": [
+          "links",
+          "tasks",
+          "rewards",
+          "experts"
+        ],
+        "ans": "D",
+        "note": "專家。",
+        "exp": "<span class=\"exp-key\">experts（專家）</span>──專家。<br>❌ tasks = 任務；rewards = 獎勵；其餘選項語意不符。"
+      },
+      {
+        "q": "Doctors _______ that we limit our daily screen time.",
+        "opts": [
+          "recommend",
+          "release",
+          "ensure",
+          "link"
+        ],
+        "ans": "A",
+        "note": "推薦；建議。",
+        "exp": "<span class=\"exp-key\">recommend（推薦；建議）</span>──推薦；建議。<br>❌ release = 釋放；ensure = 確保；link = 連結；其餘選項語意不符。"
+      },
+      {
+        "q": "When you _______ to think before acting, you make better choices.",
+        "opts": [
+          "release",
+          "pause",
+          "link",
+          "ensure"
+        ],
+        "ans": "B",
+        "note": "暫停；停頓。",
+        "exp": "<span class=\"exp-key\">pause（暫停）</span>──暫停；停頓。<br>❌ release = 釋放；link = 連結；ensure = 確保；其餘選項語意不符。"
+      },
+      {
+        "q": "As you build healthier habits, you rely on _______ rewards less.",
+        "opts": [
+          "engaged",
+          "constant",
+          "instant",
+          "powerful"
+        ],
+        "ans": "C",
+        "note": "立即的；瞬間的。",
+        "exp": "<span class=\"exp-key\">instant（立即的；瞬間）</span>──立即的；瞬間的。<br>❌ engaged = 投入的；專注的；constant = 不斷的；powerful = 強大的；其餘選項語意不符。"
+      }
+    ]
+  },
+  {
+    "title": "第二大題：文法選擇",
+    "pts": "15 題 × 2 分 = 30 分",
+    "questions": [
+      {
+        "q": "Dopamine is a chemical _______ causes your brain to feel pleasure.",
+        "opts": [
+          "whose",
+          "who",
+          "what",
+          "that"
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">that</span>──先行詞 chemical 為物，關係代名詞作主詞用 that/which。<br>❌ who 用於人；what 不可引導形容詞子句；whose 為所有格。"
+      },
+      {
+        "q": "Dopamine _______ in your brain when you do something rewarding.",
+        "opts": [
+          "is released",
+          "releases",
+          "release",
+          "are released"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">is released</span>──主詞 dopamine 為單數且為被動（被釋放），用 is + p.p.。<br>❌ releases/release 為主動；are released 主詞需複數。"
+      },
+      {
+        "q": "Constant snacking can make it hard _______ a healthy weight.",
+        "opts": [
+          "keeping",
+          "to keep",
+          "keep",
+          "kept"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">to keep</span>──make it + adj + to V 句型，it 為虛受詞，真受詞為不定詞。<br>❌ 其餘形式不合句型。"
+      },
+      {
+        "q": "_______ using social media too much, Daniel often felt tired.",
+        "opts": [
+          "Because",
+          "Although",
+          "Because of",
+          "Despite"
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">Because of</span>──後接名詞片語 (using...)，表原因用 Because of。<br>❌ Although/Because 後接子句；Despite 表讓步語意不符。"
+      },
+      {
+        "q": "Experts recommend that everyone _______ enough sleep every night.",
+        "opts": [
+          "getting",
+          "gets",
+          "got",
+          "get"
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">get</span>──recommend that S (should) + 原形動詞，should 可省略。<br>❌ gets/got/getting 不合假設語氣。"
+      },
+      {
+        "q": "_______ of these habits can affect your dopamine level.",
+        "opts": [
+          "Both",
+          "Every",
+          "Each one",
+          "Much"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">Both</span>──Both of + 複數名詞。<br>❌ Every 後接單數名詞且不接 of；Each one of 累贅；Much 接不可數。"
+      },
+      {
+        "q": "The more dopamine you chase, _______ you may feel in the long run.",
+        "opts": [
+          "emptier",
+          "the emptier",
+          "the more empty",
+          "emptiest"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">the emptier</span>──the + 比較級…, the + 比較級… 句型。<br>❌ 缺 the 或形式錯誤。"
+      },
+      {
+        "q": "Daniel was advised _______ his screen time to feel better.",
+        "opts": [
+          "reduce",
+          "reducing",
+          "to reduce",
+          "reduced"
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">to reduce</span>──be advised + to V。<br>❌ 其餘形式不合句型。"
+      },
+      {
+        "q": "Before _______ to bed, try to put your phone away.",
+        "opts": [
+          "goes",
+          "go",
+          "went",
+          "going"
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">going</span>──介系詞 before 後接動名詞 V-ing。<br>❌ 介系詞後不接原形或過去式。"
+      },
+      {
+        "q": "Exercise is one of the _______ ways to release dopamine healthily.",
+        "opts": [
+          "best",
+          "better",
+          "good",
+          "well"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">best</span>──one of the + 最高級 + 複數名詞。<br>❌ better 為比較級；good/well 非最高級。"
+      },
+      {
+        "q": "Dopamine is _______ a strong chemical that it can change our behavior.",
+        "opts": [
+          "such",
+          "so",
+          "very",
+          "too"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">so</span>──so + adj + that 句型；此處 strong 為形容詞。<br>❌ such 須接名詞片語；very/too 不接 that 結果子句。"
+      },
+      {
+        "q": "Never before _______ scientists understood dopamine so well.",
+        "opts": [
+          "had",
+          "has",
+          "have",
+          "did"
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">have</span>──否定副詞置句首倒裝，主詞 scientists 為複數且用現在完成式 have + p.p.。<br>❌ has 主詞需單數；had/did 時態不合。"
+      },
+      {
+        "q": "If Daniel _______ more sleep, he would feel less tired.",
+        "opts": [
+          "has got",
+          "gets",
+          "get",
+          "got"
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">got</span>──與現在事實相反的假設，if 子句用過去式。<br>❌ 其餘時態不合假設語氣。"
+      },
+      {
+        "q": "Daniel _______ stay up late, but now he sleeps early.",
+        "opts": [
+          "used to",
+          "is used to",
+          "uses to",
+          "was used to"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">used to</span>──used to + 原形表過去習慣。<br>❌ be used to + V-ing 表習慣於；uses to 不存在。"
+      },
+      {
+        "q": "Not until he read the article _______ Daniel change his habits.",
+        "opts": [
+          "does",
+          "did",
+          "do",
+          "was"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">did</span>──Not until 置句首主句倒裝，過去式用 did + 原形。<br>❌ does/do 時態不合；was 後不接原形。"
+      }
+    ]
+  },
+  {
+    "title": "第三大題：克漏字填充",
+    "pts": "10 題 × 2 分 = 20 分",
+    "questions": [
+      {
+        "q": "(31)",
+        "opts": [
+          "constant",
+          "powerful",
+          "rewarding",
+          "instant"
+        ],
+        "ans": "C",
+        "note": "有益的；值得做的事。",
+        "exp": "<span class=\"exp-key\">rewarding（有益的；值得的）</span>──有益的；值得做的事。<br>❌ constant = 不斷的；powerful = 強大的；instant = 立即的；瞬間；其餘選項語意不符。"
+      },
+      {
+        "q": "(32)",
+        "opts": [
+          "linked",
+          "ensured",
+          "paused",
+          "released"
+        ],
+        "ans": "D",
+        "note": "釋放。",
+        "exp": "<span class=\"exp-key\">released（釋放）</span>──釋放。<br>❌ linked = 有關聯的；其餘選項語意不符。"
+      },
+      {
+        "q": "(33)",
+        "opts": [
+          "participate",
+          "recommend",
+          "ensure",
+          "balance"
+        ],
+        "ans": "A",
+        "note": "participate in 參與。",
+        "exp": "<span class=\"exp-key\">participate（參與）</span>──participate in 參與。<br>❌ recommend = 推薦；建議；ensure = 確保；balance = 平衡；其餘選項語意不符。"
+      },
+      {
+        "q": "(34)",
+        "opts": [
+          "engaged",
+          "constant",
+          "balanced",
+          "instant"
+        ],
+        "ans": "B",
+        "note": "不斷的。",
+        "exp": "<span class=\"exp-key\">constant（不斷的）</span>──不斷的。<br>❌ engaged = 投入的；專注的；balanced = 均衡的；instant = 立即的；瞬間；其餘選項語意不符。"
+      },
+      {
+        "q": "(35)",
+        "opts": [
+          "powerful",
+          "rewarding",
+          "frequent",
+          "engaged"
+        ],
+        "ans": "C",
+        "note": "頻繁的。",
+        "exp": "<span class=\"exp-key\">frequent（頻繁的）</span>──頻繁的。<br>❌ powerful = 強大的；rewarding = 有益的；值得的；engaged = 投入的；專注的；其餘選項語意不符。"
+      },
+      {
+        "q": "(36)",
+        "opts": [
+          "Instead",
+          "However",
+          "Therefore",
+          "Moreover"
+        ],
+        "ans": "D",
+        "note": "此外；補充說明。",
+        "exp": "<span class=\"exp-key\">Moreover（此外）</span>──此外；補充說明。<br>❌ 其餘選項語意不符。"
+      },
+      {
+        "q": "(37)",
+        "opts": [
+          "depression",
+          "balance",
+          "reward",
+          "pleasure"
+        ],
+        "ans": "A",
+        "note": "憂鬱症。",
+        "exp": "<span class=\"exp-key\">depression（憂鬱症）</span>──憂鬱症。<br>❌ balance = 平衡；reward = 獎勵；pleasure = 愉悅；其餘選項語意不符。"
+      },
+      {
+        "q": "(38)",
+        "opts": [
+          "tasks",
+          "experts",
+          "links",
+          "desires"
+        ],
+        "ans": "B",
+        "note": "專家。",
+        "exp": "<span class=\"exp-key\">experts（專家）</span>──專家。<br>❌ tasks = 任務；desires = 慾望；其餘選項語意不符。"
+      },
+      {
+        "q": "(39)",
+        "opts": [
+          "ensure",
+          "release",
+          "recommend",
+          "link"
+        ],
+        "ans": "C",
+        "note": "建議。",
+        "exp": "<span class=\"exp-key\">recommend（推薦；建議）</span>──建議。<br>❌ ensure = 確保；release = 釋放；link = 連結；其餘選項語意不符。"
+      },
+      {
+        "q": "(40)",
+        "opts": [
+          "reward",
+          "release",
+          "link",
+          "pause"
+        ],
+        "ans": "D",
+        "note": "暫停思考。",
+        "exp": "<span class=\"exp-key\">pause（暫停）</span>──暫停思考。<br>❌ reward = 獎勵；release = 釋放；link = 連結；其餘選項語意不符。"
+      }
+    ],
+    "passage": "Dopamine is a chemical that makes your brain feel pleasure. When you do something <strong>(31)</strong>, dopamine is <strong>(32)</strong> in your brain and pushes you to <strong>(33)</strong> in new activities. However, <strong>(34)</strong> snacking or too much social media can cause <strong>(35)</strong> release of dopamine, which is not healthy. <strong>(36)</strong>, poor sleep can bring about low dopamine and even <strong>(37)</strong>. Health <strong>(38)</strong> <strong>(39)</strong> small steps, and it helps to <strong>(40)</strong> before you act."
+  },
+  {
+    "title": "第四大題：閱讀測驗",
+    "pts": "10 題 × 2 分 = 20 分",
+    "questions": [
+      {
+        "q": "According to Passage 1, what does dopamine make your brain feel?",
+        "opts": [
+          "Pleasure",
+          "Fear",
+          "Pain",
+          "Boredom"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">Pleasure</span>──文中 \"causes your brain to feel pleasure\"。<br>❌ 其餘未提及。"
+      },
+      {
+        "q": "What can cause frequent release of dopamine according to Passage 1?",
+        "opts": [
+          "Exercise and sleep",
+          "Constant snacking and too much social media",
+          "Reading books",
+          "Drinking water"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">Constant snacking and too much social media</span>──文中明確指出。<br>❌ 運動與睡眠是健康做法，非過量釋放原因。"
+      },
+      {
+        "q": "In serious cases, what can low dopamine lead to?",
+        "opts": [
+          "Energy",
+          "Happiness",
+          "Depression",
+          "Focus"
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">Depression</span>──\"in serious cases this can lead to depression\"。<br>❌ 其餘與低多巴胺結果相反。"
+      },
+      {
+        "q": "What do experts recommend to keep a healthy dopamine level?",
+        "opts": [
+          "Skipping meals",
+          "Eating more snacks",
+          "Using more social media",
+          "Small positive steps like exercise and good sleep"
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">Small positive steps...</span>──文中列出運動、均衡飲食、充足睡眠。<br>❌ 其餘為不健康行為。"
+      },
+      {
+        "q": "What is the main idea of Passage 1?",
+        "opts": [
+          "Keeping dopamine in balance leads to a healthier life",
+          "Dopamine is always harmful",
+          "We should avoid all pleasure",
+          "Sleep has no effect on dopamine"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">Keeping dopamine in balance...</span>──全文強調平衡。<br>❌ 其餘與主旨相反。"
+      },
+      {
+        "q": "Why does Daniel feel sad these days according to Passage 2?",
+        "opts": [
+          "He failed an exam",
+          "He has had several late nights and is tired",
+          "He lost his phone",
+          "He had an argument"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">He has had several late nights...</span>──Daniel 說 \"I've had a few late nights recently.\"<br>❌ 其餘未提及。"
+      },
+      {
+        "q": "What does Daniel get a buzz from?",
+        "opts": [
+          "Exercising",
+          "Doing homework",
+          "Chatting with friends on social media",
+          "Sleeping early"
+        ],
+        "ans": "C",
+        "exp": "<span class=\"exp-key\">Chatting with friends on social media</span>──Daniel 的原話。<br>❌ 其餘非他所述。"
+      },
+      {
+        "q": "What is the word 'buzz' closest in meaning to in Passage 2?",
+        "opts": [
+          "A serious illness",
+          "A loud noise",
+          "A small insect",
+          "An exciting good feeling"
+        ],
+        "ans": "D",
+        "exp": "<span class=\"exp-key\">An exciting good feeling</span>──get a buzz from 指從……得到快感。<br>❌ 其餘為字面或無關義。"
+      },
+      {
+        "q": "What does Catherine suggest is the right way to release feel-good chemicals?",
+        "opts": [
+          "Exercising, sleeping well, and eating healthy foods",
+          "Staying up late",
+          "Snacking all day",
+          "Ignoring friends"
+        ],
+        "ans": "A",
+        "exp": "<span class=\"exp-key\">Exercising, sleeping well, and eating healthy foods</span>──Daniel 回應 \"Right, like exercising...\"。<br>❌ 其餘為不健康方式。"
+      },
+      {
+        "q": "What is Jeffrey's main point at the end of Passage 2?",
+        "opts": [
+          "Social media is the best cure",
+          "Healthy habits matter more than chasing quick chemical highs",
+          "Sleep is unimportant",
+          "Chemicals should be avoided completely"
+        ],
+        "ans": "B",
+        "exp": "<span class=\"exp-key\">Healthy habits matter...</span>──\"it's not just about the chemistry... good chemistry\"。<br>❌ 其餘與對話旨意不符。"
+      }
+    ],
+    "passage": "<strong>Passage 1</strong><br>Dopamine is a chemical that causes your brain to feel pleasure and pushes you to take action. When you do something rewarding, dopamine is released in your brain, and the chemical rush encourages you to repeat the behavior. It also drives you to participate in new activities and stay engaged. However, dopamine levels can become unbalanced. Constant snacking or using social media too much can cause frequent release of dopamine, which may make you overly emotional. On the other hand, poor diet or lack of sleep can bring about reduced dopamine, leaving you tired and unmotivated, and in serious cases this can lead to depression. To keep a healthy level, experts recommend small steps: set limits on screen time, exercise, eat a balanced diet, and get enough sleep. When you pause to think before acting, you make better choices in the long run.<br><br><strong>Passage 2</strong><br><strong>Daniel:</strong> I get sad easily these days. Maybe I'm just tired. I've had a few late nights recently.<br><strong>Catherine:</strong> Oh, that's a shame. Getting enough sleep is super important, you know.<br><strong>Daniel:</strong> I know, but I really get a buzz from chatting with my friends on social media!<br><strong>Jeffrey:</strong> Well, did you see this article? That buzz might not be so healthy...<br><strong>Daniel:</strong> Really? But releasing feel-good chemicals into your brain is good for you.<br><strong>Catherine:</strong> You bet! However, you need to release them in the right way.<br><strong>Daniel:</strong> Right, like exercising, sleeping well, or eating healthy foods.<br><strong>Jeffrey:</strong> So, it's not just about the chemistry. What you need is good chemistry."
+  }
+];
+let globalQNum = 0;
+const qMap = {};
+const userAnswers = {};
+let submitted = false;
+const container = document.getElementById('quiz-container');
+sections.forEach((sec, si) => {
+  const secDiv = document.createElement('div');
+  secDiv.className = 'section';
+  let html = `<div class="section-header">${sec.title} <span class="pts">（${sec.pts}）</span></div>`;
+  if (sec.passage) { html += `<div class="passage"><div class="passage-label">📖 閱讀文章</div>${sec.passage}</div>`; }
+  sec.questions.forEach((q) => {
+    globalQNum++; const n = globalQNum;
+    qMap[n] = { ans: q.ans, exp: q.exp };
+    const labels = ['A','B','C','D'];
+    let optHtml = '';
+    q.opts.forEach((o, i) => { optHtml += `<div class="option" id="opt-${n}-${labels[i]}" onclick="choose(${n},'${labels[i]}')"><span class="option-label">(${labels[i]})</span>${o}</div>`; });
+    let qLabel = (si === 2 || si === 3) ? `(${n})` : `${n}`;
+    html += `<div class="question" id="q${n}"><div class="q-text"><span class="q-num">${qLabel}.</span> ${q.q}</div><div class="options">${optHtml}</div><div class="explanation" id="exp${n}"><div class="exp-header">💡 解析</div><div class="exp-body">${q.exp}</div></div></div>`;
+  });
+  secDiv.innerHTML = html;
+  container.appendChild(secDiv);
+});
+function choose(n, chosen) {
+  if (submitted) return;
+  userAnswers[n] = chosen;
+  const ans = qMap[n].ans;
+  ['A','B','C','D'].forEach(l => {
+    const el = document.getElementById(`opt-${n}-${l}`);
+    el.classList.remove('selected','correct','wrong','reveal-correct');
+    if (l === chosen) { el.classList.add(chosen === ans ? 'correct' : 'wrong'); }
+    else if (l === ans && chosen !== ans) { el.classList.add('reveal-correct'); }
+  });
+  document.getElementById(`exp${n}`).classList.add('show');
+  updateTopBar();
+}
+function updateTopBar() {
+  const count = Object.keys(userAnswers).length;
+  document.getElementById('answered-count').textContent = count;
+  document.getElementById('progress-fill').style.width = (count / 50 * 100) + '%';
+  let score = 0;
+  for (let q in userAnswers) { if (userAnswers[q] === qMap[q].ans) score += 2; }
+  document.getElementById('live-score').textContent = score;
+}
+function revealAll() {
+  for (let n = 1; n <= 50; n++) {
+    const ans = qMap[n].ans;
+    ['A','B','C','D'].forEach(l => {
+      const el = document.getElementById(`opt-${n}-${l}`);
+      el.classList.remove('selected','correct','wrong','reveal-correct');
+      if (l === ans) el.classList.add('reveal-correct');
+      else if (userAnswers[n] === l && l !== ans) el.classList.add('wrong');
+    });
+    document.getElementById(`exp${n}`).classList.add('show');
+  }
+  updateTopBar();
+}
+function submitAll() {
+  submitted = true; revealAll();
+  let score = 0;
+  for (let n = 1; n <= 50; n++) { if (userAnswers[n] === qMap[n].ans) score += 2; }
+  const rb = document.getElementById('result-box'); rb.classList.add('show');
+  document.getElementById('result-score').textContent = score;
+  const gr = document.getElementById('result-grade'); const det = document.getElementById('result-detail');
+  if (score >= 90) { gr.textContent = '🏆 優秀！'; gr.className = 'result-grade grade-a'; det.textContent = '表現卓越，繼續保持！'; }
+  else if (score >= 70) { gr.textContent = '👍 良好'; gr.className = 'result-grade grade-b'; det.textContent = '表現不錯，再複習錯誤的題目吧！'; }
+  else { gr.textContent = '📚 需加強'; gr.className = 'result-grade grade-c'; det.textContent = '多複習解析說明，你可以做到的！'; }
+  document.getElementById('answered-count').textContent = 50;
+  document.getElementById('live-score').textContent = score;
+  document.getElementById('progress-fill').style.width = '100%';
+  rb.scrollIntoView({ behavior: 'smooth' });
+}
+function resetAll() {
+  submitted = false;
+  for (let key in userAnswers) delete userAnswers[key];
+  for (let n = 1; n <= 50; n++) {
+    ['A','B','C','D'].forEach(l => { document.getElementById(`opt-${n}-${l}`).classList.remove('selected','correct','wrong','reveal-correct'); });
+    document.getElementById(`exp${n}`).classList.remove('show');
+  }
+  document.getElementById('result-box').classList.remove('show');
+  document.getElementById('answered-count').textContent = '0';
+  document.getElementById('live-score').textContent = '0';
+  document.getElementById('progress-fill').style.width = '0%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
