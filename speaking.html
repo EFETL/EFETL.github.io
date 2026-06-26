@@ -3,1255 +3,618 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>全民英檢初級｜口說測驗練習</title>
+<title>全民英檢初級｜口說測驗</title>
 <style>
-  :root {
-    --primary: #2563eb;
-    --primary-dark: #1d4ed8;
-    --accent: #f59e0b;
-    --success: #10b981;
-    --danger: #ef4444;
-    --gray-50: #f9fafb;
-    --gray-100: #f3f4f6;
-    --gray-200: #e5e7eb;
-    --gray-400: #9ca3af;
-    --gray-600: #4b5563;
-    --gray-800: #1f2937;
-    --radius: 12px;
-    --shadow: 0 4px 20px rgba(0,0,0,0.08);
-  }
+:root {
+  --blue:#2563eb; --blue-d:#1d4ed8; --purple:#7c3aed;
+  --green:#10b981; --red:#ef4444; --amber:#f59e0b;
+  --g50:#f9fafb; --g100:#f3f4f6; --g200:#e5e7eb;
+  --g400:#9ca3af; --g600:#4b5563; --g800:#1f2937;
+  --r:14px; --sh:0 4px 20px rgba(0,0,0,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--g50);color:var(--g800);min-height:100vh}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+/* Header */
+header{background:#fff;border-bottom:1px solid var(--g200);padding:13px 18px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10}
+.logo{font-weight:700;font-size:15px;color:var(--blue);flex-shrink:0}
+.badge{font-size:11px;background:var(--blue);color:#fff;padding:3px 10px;border-radius:99px;font-weight:700;flex-shrink:0}
+.prog-wrap{flex:1;background:var(--g200);border-radius:99px;height:5px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--purple));border-radius:99px;transition:width .5s}
 
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: var(--gray-50);
-    color: var(--gray-800);
-    min-height: 100vh;
-  }
+/* Screens */
+.screen{display:none;max-width:680px;margin:0 auto;padding:24px 16px 80px}
+.screen.active{display:block}
 
-  /* ── Header ── */
-  header {
-    background: white;
-    border-bottom: 1px solid var(--gray-200);
-    padding: 16px 24px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-  }
-  header .logo {
-    font-weight: 700;
-    font-size: 18px;
-    color: var(--primary);
-  }
-  header .subtitle {
-    font-size: 13px;
-    color: var(--gray-400);
-  }
-  .progress-bar-wrap {
-    flex: 1;
-    background: var(--gray-200);
-    border-radius: 99px;
-    height: 6px;
-    overflow: hidden;
-  }
-  .progress-bar-fill {
-    height: 100%;
-    background: var(--primary);
-    border-radius: 99px;
-    transition: width 0.5s ease;
-  }
+/* Card */
+.card{background:#fff;border-radius:var(--r);padding:20px;margin-bottom:14px;box-shadow:var(--sh)}
 
-  /* ── Screens ── */
-  .screen {
-    display: none;
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 32px 20px 80px;
-  }
-  .screen.active { display: block; }
+/* Part header */
+.ph{border-radius:var(--r);padding:18px 20px;margin-bottom:18px;color:#fff}
+.ph h2{font-size:1.15rem;font-weight:800;margin-bottom:4px}
+.ph p{font-size:.83rem;opacity:.9}
 
-  /* ── Cards ── */
-  .card {
-    background: white;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 28px;
-    margin-bottom: 20px;
-  }
+/* Question */
+.qnum{font-size:11px;color:var(--g400);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+.qtext{font-size:1.3rem;font-weight:700;line-height:1.5;margin-bottom:6px}
+.qzh{font-size:.88rem;color:var(--g600);margin-bottom:18px}
 
-  .part-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--primary);
-    color: white;
-    font-size: 13px;
-    font-weight: 600;
-    padding: 4px 14px;
-    border-radius: 99px;
-    margin-bottom: 16px;
-  }
+/* Timer */
+.timer-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.timer-label{font-size:13px;color:var(--g600)}
+.timer-box{font-size:1.8rem;font-weight:800;color:var(--blue);font-variant-numeric:tabular-nums;min-width:68px;text-align:right}
+.timer-box.warn{color:var(--amber)}
+.timer-box.danger{color:var(--red)}
 
-  h1 { font-size: 26px; font-weight: 700; margin-bottom: 8px; }
-  h2 { font-size: 20px; font-weight: 700; margin-bottom: 12px; }
-  h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+/* Rec indicator */
+.rec-row{display:none;align-items:center;gap:7px;font-size:13px;color:var(--red);font-weight:600;margin-bottom:10px}
+.rec-dot{width:9px;height:9px;background:var(--red);border-radius:50%;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
 
-  p { line-height: 1.7; color: var(--gray-600); }
-  .en { font-style: italic; font-size: 14px; color: var(--gray-400); }
+/* Transcript */
+.transcript{background:var(--g50);border:2px solid var(--g200);border-radius:10px;padding:11px 14px;min-height:56px;font-size:.9rem;color:var(--g600);line-height:1.65;margin-bottom:12px;transition:border-color .2s}
+.transcript.on{border-color:var(--red)}
+.interim{color:var(--g400)}
+.ph-text{color:var(--g400);font-style:italic}
 
-  /* ── Instruction list ── */
-  .instr-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-top: 16px;
-  }
-  .instr-list li {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    font-size: 15px;
-    line-height: 1.6;
-  }
-  .instr-list .num {
-    min-width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: var(--primary);
-    color: white;
-    font-size: 13px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+/* Keywords */
+.kw-label{font-size:12px;color:var(--g400);margin-bottom:6px}
+.kw-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+.kw{font-size:12px;padding:3px 10px;border-radius:99px;font-weight:600;border:1.5px solid var(--g200);background:var(--g100);color:var(--g600)}
+.kw.hit{background:#d1fae5;color:#065f46;border-color:#6ee7b7}
+.kw.miss{background:#fee2e2;color:#991b1b;border-color:#fca5a5}
 
-  /* ── Timer ── */
-  .timer-row {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin: 20px 0;
-  }
-  .timer-box {
-    font-size: 36px;
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
-    color: var(--primary);
-    min-width: 80px;
-  }
-  .timer-box.warning { color: var(--accent); }
-  .timer-box.danger  { color: var(--danger); }
-  .timer-label { font-size: 13px; color: var(--gray-400); }
+/* Score chip */
+.chip{display:inline-block;padding:4px 14px;border-radius:99px;font-size:13px;font-weight:700}
+.chip.A{background:#d1fae5;color:#065f46}
+.chip.B{background:#dbeafe;color:#1e40af}
+.chip.C{background:#fef3c7;color:#92400e}
+.chip.D{background:#fee2e2;color:#991b1b}
 
-  /* ── Reading passage ── */
-  .passage {
-    font-size: 20px;
-    line-height: 2;
-    letter-spacing: 0.01em;
-    padding: 20px;
-    background: var(--gray-50);
-    border-radius: 8px;
-    border-left: 4px solid var(--primary);
-  }
-  .passage .word { transition: background 0.15s; border-radius: 3px; padding: 0 2px; }
-  .passage .word.matched { background: #bbf7d0; }
-  .passage .word.missed  { background: #fee2e2; text-decoration: underline dotted var(--danger); }
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 20px;border-radius:10px;font-size:14px;font-weight:600;border:none;cursor:pointer;transition:all .2s;text-decoration:none}
+.btn-p{background:var(--blue);color:#fff}.btn-p:hover{background:var(--blue-d)}
+.btn-o{background:#fff;color:var(--blue);border:2px solid var(--blue)}.btn-o:hover{background:#eff6ff}
+.btn-r{background:var(--red);color:#fff}.btn-r:hover{background:#dc2626}
+.btn-g{background:var(--green);color:#fff}.btn-g:hover{background:#059669}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
 
-  /* ── Transcript box ── */
-  .transcript-box {
-    min-height: 80px;
-    padding: 16px;
-    background: var(--gray-50);
-    border: 2px solid var(--gray-200);
-    border-radius: 8px;
-    font-size: 16px;
-    line-height: 1.7;
-    margin: 16px 0;
-    color: var(--gray-800);
-    transition: border-color 0.2s;
-  }
-  .transcript-box.recording {
-    border-color: var(--danger);
-    background: #fff5f5;
-  }
-  .transcript-box .interim { color: var(--gray-400); font-style: italic; }
-  .transcript-box .placeholder { color: var(--gray-400); font-style: italic; font-size: 15px; }
+/* Notice */
+.notice{display:flex;gap:9px;align-items:flex-start;background:#eff6ff;border:1px solid #bfdbfe;border-radius:9px;padding:11px 13px;font-size:13px;color:#1e40af;margin-bottom:13px}
 
-  /* ── Buttons ── */
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 28px;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    border: none;
-    transition: all 0.15s;
-  }
-  .btn:disabled { opacity: 0.45; cursor: not-allowed; }
-  .btn-primary { background: var(--primary); color: white; }
-  .btn-primary:hover:not(:disabled) { background: var(--primary-dark); }
-  .btn-danger  { background: var(--danger); color: white; }
-  .btn-danger:hover:not(:disabled)  { background: #dc2626; }
-  .btn-outline {
-    background: white;
-    color: var(--primary);
-    border: 2px solid var(--primary);
-  }
-  .btn-outline:hover:not(:disabled) { background: #eff6ff; }
-  .btn-success { background: var(--success); color: white; }
-  .btn-success:hover:not(:disabled) { background: #059669; }
+/* Countdown */
+.cd-area{text-align:center;padding:14px 0 6px}
+.cd-lbl{font-size:13px;color:var(--g600);margin-bottom:6px}
+.cd-num{font-size:4rem;font-weight:900;color:var(--blue);line-height:1}
 
-  .btn-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 20px;
-  }
+/* Passage */
+.passage{background:#f8fafc;border:1px solid var(--g200);border-radius:10px;padding:16px;font-size:.98rem;line-height:2;color:var(--g800);margin-bottom:14px}
+.passage-zh{font-size:.83rem;color:var(--g400);line-height:1.75;margin-top:10px;padding-top:10px;border-top:1px solid var(--g200)}
 
-  /* ── Score chip ── */
-  .score-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 16px;
-    border-radius: 99px;
-    font-weight: 700;
-    font-size: 15px;
-  }
-  .score-chip.excellent { background: #d1fae5; color: #065f46; }
-  .score-chip.good      { background: #dbeafe; color: #1e40af; }
-  .score-chip.fair      { background: #fef3c7; color: #92400e; }
-  .score-chip.poor      { background: #fee2e2; color: #991b1b; }
+/* Model answer */
+.model{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 14px;margin-top:12px;display:none}
+.model.show{display:block}
+.model h4{font-size:11px;color:#166534;font-weight:700;letter-spacing:.5px;margin-bottom:6px}
+.model p{font-size:14px;color:#166534;line-height:1.65}
 
-  /* ── Model answer ── */
-  .model-answer {
-    display: none;
-    margin-top: 16px;
-    padding: 16px;
-    background: #f0fdf4;
-    border-radius: 8px;
-    border-left: 4px solid var(--success);
-  }
-  .model-answer.visible { display: block; }
-  .model-answer h4 { font-size: 14px; color: var(--success); margin-bottom: 8px; }
-  .model-answer p  { color: var(--gray-800); font-size: 15px; }
+/* Results */
+.total-box{background:#fff;border-radius:var(--r);padding:26px;text-align:center;box-shadow:var(--sh);margin-bottom:14px}
+.total-lbl{font-size:13px;color:var(--g400);margin-bottom:8px}
+.total-num{font-size:4rem;font-weight:900;color:var(--blue);line-height:1}
+.total-den{font-size:1.1rem;color:var(--g400)}
+.total-grade{font-size:1rem;font-weight:700;margin-top:12px;color:var(--g700)}
+.rgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-bottom:14px}
+.rcell{background:#fff;border-radius:var(--r);padding:14px 10px;text-align:center;box-shadow:var(--sh)}
+.rcell-lbl{font-size:10px;color:var(--g400);font-weight:700;letter-spacing:.4px;margin-bottom:5px}
+.rcell-num{font-size:1.9rem;font-weight:800;color:var(--blue)}
+.rcell-den{font-size:12px;color:var(--g400)}
 
-  /* ── Q&A picture scene ── */
-  .scene-wrap { border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
-
-  /* ── Question card ── */
-  .question-text {
-    font-size: 22px;
-    font-weight: 600;
-    color: var(--gray-800);
-    margin-bottom: 6px;
-  }
-  .question-num {
-    font-size: 13px;
-    color: var(--gray-400);
-    margin-bottom: 4px;
-  }
-
-  /* ── Keywords display ── */
-  .keywords-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 12px;
-  }
-  .keyword-tag {
-    padding: 4px 12px;
-    border-radius: 99px;
-    font-size: 13px;
-    font-weight: 600;
-    background: var(--gray-100);
-    color: var(--gray-600);
-    border: 2px solid var(--gray-200);
-    transition: all 0.2s;
-  }
-  .keyword-tag.found {
-    background: #d1fae5;
-    color: #065f46;
-    border-color: #6ee7b7;
-  }
-
-  /* ── Results ── */
-  .result-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin: 24px 0;
-  }
-  .result-cell {
-    text-align: center;
-    padding: 20px 12px;
-    background: var(--gray-50);
-    border-radius: var(--radius);
-  }
-  .result-cell .part-label { font-size: 13px; color: var(--gray-400); margin-bottom: 8px; }
-  .result-cell .score-num  { font-size: 32px; font-weight: 800; color: var(--primary); }
-  .result-cell .score-den  { font-size: 16px; color: var(--gray-400); }
-  .total-score {
-    text-align: center;
-    padding: 28px;
-    background: linear-gradient(135deg, #eff6ff, #dbeafe);
-    border-radius: var(--radius);
-    margin-bottom: 20px;
-  }
-  .total-score .label { font-size: 16px; color: var(--gray-600); margin-bottom: 8px; }
-  .total-score .num   { font-size: 56px; font-weight: 800; color: var(--primary); line-height: 1; }
-  .total-score .den   { font-size: 22px; color: var(--gray-400); }
-
-  /* ── Notice ── */
-  .notice {
-    padding: 12px 16px;
-    border-radius: 8px;
-    font-size: 14px;
-    line-height: 1.6;
-    display: flex;
-    gap: 10px;
-    align-items: flex-start;
-  }
-  .notice-info { background: #eff6ff; color: #1e40af; }
-  .notice-warn { background: #fef3c7; color: #92400e; }
-
-  /* ── Pulse animation for recording ── */
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
-  .recording-dot {
-    width: 12px; height: 12px;
-    background: var(--danger);
-    border-radius: 50%;
-    animation: pulse 1s infinite;
-    display: inline-block;
-  }
-
-  /* ── Responsive ── */
-  @media (max-width: 500px) {
-    .result-grid { grid-template-columns: 1fr; }
-    h1 { font-size: 22px; }
-    .passage { font-size: 17px; }
-    .question-text { font-size: 19px; }
-  }
+@media(max-width:480px){.qtext{font-size:1.1rem}.rgrid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
-<!-- ── Header ── -->
 <header>
-  <div>
-    <div class="logo">GEPT 初級 口說</div>
-    <div class="subtitle">Elementary Speaking Practice</div>
-  </div>
-  <div class="progress-bar-wrap">
-    <div class="progress-bar-fill" id="progressBar" style="width:0%"></div>
-  </div>
+  <div class="logo">🎙️ GEPT 初級口說</div>
+  <div class="badge" id="hBadge">歡迎</div>
+  <div class="prog-wrap"><div class="prog-fill" id="progBar" style="width:0%"></div></div>
 </header>
 
-<!-- ══════════════════════════════════════
-     SCREEN 0 — Welcome
-════════════════════════════════════════ -->
+<!-- ══ WELCOME ══ -->
 <div class="screen active" id="screen-welcome">
-  <div class="card" style="text-align:center;padding:48px 28px">
-    <div style="font-size:48px;margin-bottom:16px">🎤</div>
-    <h1>全民英檢初級<br>口說測驗練習</h1>
-    <p class="en">GEPT Elementary Level — Speaking Test</p>
-    <p style="margin:24px 0;max-width:420px;margin-left:auto;margin-right:auto">
-      本練習模擬真實英檢初級口說測驗，共三大題。
-      系統會把你說的話<strong>轉成文字</strong>並自動比對關鍵字給分。
-    </p>
+  <div class="card" style="text-align:center;padding:32px 22px">
+    <div style="font-size:2.8rem;margin-bottom:10px">🎙️</div>
+    <h1 style="font-size:1.5rem;font-weight:800;margin-bottom:6px">全民英檢初級<br>口說測驗</h1>
+    <p style="color:var(--g600);font-size:.88rem;margin-bottom:22px">GEPT Elementary Speaking Test</p>
+    <div style="text-align:left;background:var(--g50);border-radius:10px;padding:14px;margin-bottom:20px;display:flex;flex-direction:column;gap:9px">
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <span style="background:#dbeafe;color:#1e40af;border-radius:7px;padding:2px 9px;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px">一</span>
+        <span style="font-size:13px;color:var(--g700)">複誦 <span style="color:var(--g400)">· 5 題 · 每題 15 秒</span></span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <span style="background:#ede9fe;color:#5b21b6;border-radius:7px;padding:2px 9px;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px">二</span>
+        <span style="font-size:13px;color:var(--g700)">朗讀句子與短文 <span style="color:var(--g400)">· 5 句（各 30 秒）+ 短文（45s 默讀 + 60s 朗讀）</span></span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <span style="background:#dcfce7;color:#166534;border-radius:7px;padding:2px 9px;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px">三</span>
+        <span style="font-size:13px;color:var(--g700)">回答問題 <span style="color:var(--g400)">· 7 題 · 每題 15 秒</span></span>
+      </div>
+    </div>
+    <div id="noSpeechWarn" style="display:none" class="notice">⚠️ 您的瀏覽器不支援語音辨識，請改用 Chrome 開啟。</div>
+    <button class="btn btn-p" onclick="startTest()" style="width:100%;font-size:1rem;padding:13px">🚀 開始測驗</button>
+    <a href="gept-hub.html" style="display:block;margin-top:13px;font-size:12px;color:var(--g400)">← 返回英檢初級</a>
   </div>
+</div>
 
+<!-- ══ PART 1: 複誦 ══ -->
+<div class="screen" id="screen-p1">
+  <div class="ph" style="background:linear-gradient(135deg,#2563eb,#7c3aed)">
+    <h2>第一大題　複誦</h2>
+    <p>閱讀並記住句子，倒數結束後請馬上複誦。每題 15 秒。</p>
+  </div>
   <div class="card">
-    <h3>三大題說明</h3>
-    <ul class="instr-list">
-      <li>
-        <span class="num">1</span>
-        <div>
-          <strong>朗讀短文</strong> — 看著文章大聲朗讀<br>
-          <span class="en">Read Aloud — Read the passage aloud</span>
-        </div>
-      </li>
-      <li>
-        <span class="num">2</span>
-        <div>
-          <strong>回答問題</strong> — 根據圖片回答 5 個問題（每題約 15 秒）<br>
-          <span class="en">Respond to Questions — Answer 5 questions about a picture</span>
-        </div>
-      </li>
-      <li>
-        <span class="num">3</span>
-        <div>
-          <strong>看圖敘述</strong> — 用英文描述圖片內容（60 秒）<br>
-          <span class="en">Picture Description — Describe the picture in English</span>
-        </div>
-      </li>
-    </ul>
-  </div>
-
-  <div class="notice notice-warn">
-    <span>⚠️</span>
-    <span>請使用 <strong>Chrome 瀏覽器</strong>，並允許網頁使用麥克風。語音辨識需要網路連線（使用 Google 語音服務，不需付費）。</span>
-  </div>
-
-  <div class="btn-row" style="margin-top:24px;justify-content:center">
-    <button class="btn btn-primary" onclick="startTest()" id="startBtn">
-      ▶ 開始測驗
-    </button>
-  </div>
-
-  <div id="noSpeechWarning" style="display:none;margin-top:16px">
-    <div class="notice notice-warn">
-      <span>⚠️</span>
-      <span>您的瀏覽器不支援語音辨識（Web Speech API）。請改用 Chrome 瀏覽器開啟此頁面。</span>
+    <div class="qnum" id="p1-qnum">題 1 / 5</div>
+    <div class="qtext" id="p1-text"></div>
+    <div class="qzh" id="p1-zh"></div>
+    <div class="cd-area" id="p1-cd">
+      <div class="cd-lbl">準備複誦…</div>
+      <div class="cd-num" id="p1-cd-num">3</div>
+    </div>
+    <div id="p1-rec" style="display:none">
+      <div class="timer-row">
+        <div class="timer-label">複誦時間</div>
+        <div class="timer-box danger" id="p1-timer">0:15</div>
+      </div>
+      <div class="rec-row" style="display:flex"><span class="rec-dot"></span>錄音中 Recording...</div>
+      <div class="transcript on" id="p1-tr"><span class="ph-text">正在聆聽您的聲音…</span></div>
+    </div>
+    <div id="p1-result" style="display:none">
+      <div class="kw-label">關鍵字命中 Keywords:</div>
+      <div class="kw-row" id="p1-kw"></div>
+      <div id="p1-chip"></div>
+      <div class="btn-row">
+        <button class="btn btn-p" id="p1-next" onclick="p1Next()">下一題 →</button>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════
-     SCREEN 1 — Part 1: Read Aloud
-════════════════════════════════════════ -->
-<div class="screen" id="screen-part1">
-  <div class="part-badge">第一大題 Part 1</div>
-  <h2>朗讀短文 Read Aloud</h2>
-  <p style="margin-bottom:20px">請先備答 <strong>30 秒</strong>，按下「開始錄音」後，請大聲朗讀下方文章。</p>
-  <p class="en" style="margin-bottom:24px">You have 30 seconds to prepare. Then read the passage aloud clearly.</p>
-
+<!-- ══ PART 2: 朗讀 ══ -->
+<div class="screen" id="screen-p2">
+  <div class="ph" id="p2-ph" style="background:linear-gradient(135deg,#7c3aed,#2563eb)">
+    <h2 id="p2-ph-title">第二大題　朗讀句子</h2>
+    <p id="p2-ph-desc">請朗讀以下句子，語速自然、發音清晰。</p>
+  </div>
   <div class="card">
-    <div class="timer-row">
-      <div>
-        <div class="timer-label" id="p1-timer-label">備答時間</div>
-        <div class="timer-box" id="p1-timer">0:30</div>
+    <div class="qnum" id="p2-qnum">句 1 / 6</div>
+    <div id="p2-sent-area">
+      <div class="qtext" id="p2-text"></div>
+      <div class="qzh" id="p2-zh"></div>
+    </div>
+    <div id="p2-pass-area" style="display:none">
+      <div class="passage" id="p2-passage"></div>
+    </div>
+    <!-- Prep -->
+    <div id="p2-prep">
+      <div class="timer-row">
+        <div class="timer-label">默讀準備</div>
+        <div class="timer-box" id="p2-prep-timer">0:30</div>
       </div>
-      <div id="p1-rec-indicator" style="display:none;align-items:center;gap:8px;font-size:14px;color:var(--danger);font-weight:600">
-        <span class="recording-dot"></span> 錄音中 Recording...
+      <div class="notice">📖 準備好後可直接按下方按鈕，或等倒數結束自動開始錄音。</div>
+      <div class="btn-row">
+        <button class="btn btn-p" onclick="p2StartRec()">🎤 立即開始朗讀</button>
       </div>
     </div>
-
-    <div class="passage" id="p1-passage"></div>
-
-    <div class="transcript-box" id="p1-transcript">
-      <span class="placeholder">您說的話會在這裡即時顯示……</span>
+    <!-- Recording -->
+    <div id="p2-rec" style="display:none">
+      <div class="timer-row">
+        <div class="timer-label" id="p2-rec-lbl">朗讀中</div>
+        <div class="timer-box" id="p2-rec-timer">0:30</div>
+      </div>
+      <div class="rec-row" style="display:flex"><span class="rec-dot"></span>朗讀中 Recording...</div>
+      <div class="transcript on" id="p2-tr"><span class="ph-text">正在聆聽…</span></div>
     </div>
-
-    <div class="btn-row">
-      <button class="btn btn-primary" id="p1-record-btn" onclick="toggleRecordP1()">
-        🎤 開始錄音
-      </button>
-      <button class="btn btn-outline" id="p1-done-btn" onclick="finishP1()" style="display:none">
-        ✅ 完成作答
-      </button>
-    </div>
-  </div>
-
-  <div class="card" id="p1-result" style="display:none">
-    <h3>成績分析</h3>
-    <div id="p1-score-chip" style="margin:12px 0"></div>
-    <div id="p1-passage-reviewed" class="passage" style="margin:16px 0"></div>
-    <p style="font-size:14px;color:var(--gray-400)">✅ 綠色 = 辨識到 ｜ ❌ 紅色底線 = 未辨識到</p>
-
-    <div class="btn-row" style="margin-top:24px">
-      <button class="btn btn-success" onclick="goToPart2()">下一題 Part 2 →</button>
+    <!-- Result -->
+    <div id="p2-result" style="display:none">
+      <div class="kw-label">關鍵字命中 Keywords:</div>
+      <div class="kw-row" id="p2-kw"></div>
+      <div id="p2-chip"></div>
+      <div class="btn-row">
+        <button class="btn btn-p" id="p2-next" onclick="p2Next()">下一題 →</button>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════
-     SCREEN 2 — Part 2: Respond to Questions
-════════════════════════════════════════ -->
-<div class="screen" id="screen-part2">
-  <div class="part-badge">第二大題 Part 2</div>
-  <h2>回答問題 Respond to Questions</h2>
-  <p style="margin-bottom:20px">請根據下方圖片，用英文回答 5 個問題。每題有 <strong>15 秒</strong>作答時間。</p>
-
-  <!-- SVG Park Scene -->
-  <div class="scene-wrap">
-    <svg viewBox="0 0 720 320" xmlns="http://www.w3.org/2000/svg" width="100%">
-      <!-- Sky -->
-      <rect width="720" height="320" fill="#bfdbfe"/>
-      <!-- Sun -->
-      <circle cx="640" cy="60" r="36" fill="#fde68a"/>
-      <g stroke="#fbbf24" stroke-width="3">
-        <line x1="640" y1="10" x2="640" y2="0"/>
-        <line x1="640" y1="110" x2="640" y2="120"/>
-        <line x1="590" y1="60" x2="580" y2="60"/>
-        <line x1="690" y1="60" x2="700" y2="60"/>
-        <line x1="605" y1="25" x2="598" y2="18"/>
-        <line x1="675" y1="95" x2="682" y2="102"/>
-        <line x1="675" y1="25" x2="682" y2="18"/>
-        <line x1="605" y1="95" x2="598" y2="102"/>
-      </g>
-      <!-- Ground -->
-      <rect y="230" width="720" height="90" fill="#86efac"/>
-      <!-- Path -->
-      <ellipse cx="360" cy="310" rx="180" ry="20" fill="#d1fae5" opacity="0.6"/>
-
-      <!-- Left Tree -->
-      <rect x="72" y="160" width="16" height="80" fill="#92400e"/>
-      <circle cx="80" cy="135" r="55" fill="#22c55e"/>
-      <circle cx="55" cy="155" r="38" fill="#16a34a"/>
-      <circle cx="110" cy="150" r="40" fill="#15803d"/>
-
-      <!-- Right Tree -->
-      <rect x="612" y="160" width="16" height="70" fill="#92400e"/>
-      <circle cx="620" cy="130" r="50" fill="#22c55e"/>
-      <circle cx="595" cy="148" r="35" fill="#16a34a"/>
-      <circle cx="645" cy="145" r="37" fill="#15803d"/>
-
-      <!-- Bench -->
-      <rect x="180" y="218" width="90" height="8" rx="3" fill="#a16207"/>
-      <rect x="180" y="200" width="90" height="8" rx="3" fill="#ca8a04"/>
-      <rect x="185" y="226" width="8" height="22" rx="2" fill="#a16207"/>
-      <rect x="255" y="226" width="8" height="22" rx="2" fill="#a16207"/>
-
-      <!-- Mother on bench (reading) -->
-      <!-- body -->
-      <rect x="210" y="190" width="22" height="30" rx="4" fill="#f472b6"/>
-      <!-- head -->
-      <circle cx="221" cy="182" r="12" fill="#fde68a"/>
-      <!-- book -->
-      <rect x="205" y="200" width="20" height="14" rx="2" fill="white" stroke="#93c5fd" stroke-width="1.5"/>
-      <!-- hair -->
-      <path d="M209 175 Q221 168 233 175" stroke="#92400e" stroke-width="3" fill="none"/>
-
-      <!-- Father with frisbee (left area) -->
-      <!-- body -->
-      <rect x="330" y="188" width="22" height="36" rx="4" fill="#3b82f6"/>
-      <!-- head -->
-      <circle cx="341" cy="180" r="13" fill="#fde68a"/>
-      <!-- arm raised -->
-      <line x1="352" y1="196" x2="375" y2="178" stroke="#3b82f6" stroke-width="5" stroke-linecap="round"/>
-      <!-- frisbee -->
-      <ellipse cx="382" cy="173" rx="16" ry="6" fill="#f97316"/>
-
-      <!-- Child 1 (kite left) -->
-      <rect x="440" y="200" width="14" height="30" rx="3" fill="#a78bfa"/>
-      <circle cx="447" cy="193" r="10" fill="#fde68a"/>
-      <!-- string -->
-      <line x1="447" y1="192" x2="490" y2="120" stroke="#6b7280" stroke-width="1.5"/>
-
-      <!-- Child 2 (kite right) -->
-      <rect x="470" y="204" width="14" height="28" rx="3" fill="#fb923c"/>
-      <circle cx="477" cy="197" r="10" fill="#fde68a"/>
-
-      <!-- Kite -->
-      <polygon points="490,80 510,115 490,145 470,115" fill="#ef4444" stroke="white" stroke-width="1.5"/>
-      <line x1="490" y1="80" x2="490" y2="145" stroke="white" stroke-width="1" opacity="0.5"/>
-      <line x1="470" y1="115" x2="510" y2="115" stroke="white" stroke-width="1" opacity="0.5"/>
-      <!-- kite tail -->
-      <path d="M490,145 Q500,160 488,172 Q475,182 488,194" stroke="#fbbf24" stroke-width="2" fill="none" stroke-dasharray="4,3"/>
-
-      <!-- Dog -->
-      <ellipse cx="560" cy="248" rx="28" ry="14" fill="#fbbf24"/>
-      <circle cx="586" cy="240" r="12" fill="#fbbf24"/>
-      <!-- ear -->
-      <ellipse cx="592" cy="232" rx="6" ry="10" fill="#f59e0b" transform="rotate(15,592,232)"/>
-      <!-- tail -->
-      <path d="M532,244 Q515,228 522,218" stroke="#fbbf24" stroke-width="5" fill="none" stroke-linecap="round"/>
-      <!-- legs -->
-      <line x1="546" y1="258" x2="544" y2="270" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/>
-      <line x1="556" y1="260" x2="554" y2="272" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/>
-      <line x1="566" y1="260" x2="568" y2="272" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/>
-      <line x1="576" y1="258" x2="578" y2="270" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/>
-
-      <!-- Caption -->
-      <rect x="0" y="290" width="720" height="30" fill="rgba(0,0,0,0.25)"/>
-      <text x="360" y="310" text-anchor="middle" fill="white" font-size="13" font-family="sans-serif">
-        A family enjoying a sunny day at the park
-      </text>
-    </svg>
+<!-- ══ PART 3: 回答問題 ══ -->
+<div class="screen" id="screen-p3">
+  <div class="ph" style="background:linear-gradient(135deg,#10b981,#2563eb)">
+    <h2>第三大題　回答問題</h2>
+    <p>閱讀題目後，倒數結束即開始錄音。每題 15 秒，不需完整句子。</p>
   </div>
-
-  <!-- Q card -->
-  <div class="card" id="p2-question-card">
-    <div class="question-num" id="p2-q-num">Question 1 / 5</div>
-    <div class="question-text" id="p2-q-text"></div>
-
-    <div class="timer-row">
-      <div>
-        <div class="timer-label" id="p2-timer-label">作答時間</div>
-        <div class="timer-box" id="p2-timer">0:15</div>
-      </div>
-      <div id="p2-rec-indicator" style="display:none;align-items:center;gap:8px;font-size:14px;color:var(--danger);font-weight:600">
-        <span class="recording-dot"></span> 錄音中
-      </div>
-    </div>
-
-    <div class="transcript-box" id="p2-transcript">
-      <span class="placeholder">您說的話會在這裡顯示……</span>
-    </div>
-
-    <p style="font-size:13px;color:var(--gray-400);margin-bottom:8px">關鍵字 Keywords:</p>
-    <div class="keywords-row" id="p2-keywords"></div>
-
-    <div class="model-answer" id="p2-model-answer">
-      <h4>✅ 參考答案 Model Answer</h4>
-      <p id="p2-model-text"></p>
-    </div>
-
-    <div class="btn-row">
-      <button class="btn btn-primary" id="p2-record-btn" onclick="toggleRecordP2()">🎤 開始錄音</button>
-      <button class="btn btn-outline" id="p2-next-btn" onclick="nextQuestionP2()" style="display:none">下一題 →</button>
-    </div>
-  </div>
-
-  <!-- Part 2 done → go to Part 3 -->
-  <div class="card" id="p2-done-card" style="display:none;text-align:center;padding:36px">
-    <div style="font-size:36px;margin-bottom:16px">🎉</div>
-    <h3>第二大題完成！</h3>
-    <p style="margin:12px 0">共答對 <strong id="p2-score-display">0</strong> / 5 題（至少包含一個關鍵字）</p>
-    <div class="btn-row" style="justify-content:center;margin-top:20px">
-      <button class="btn btn-success" onclick="goToPart3()">繼續 Part 3 →</button>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════
-     SCREEN 3 — Part 3: Picture Description
-════════════════════════════════════════ -->
-<div class="screen" id="screen-part3">
-  <div class="part-badge">第三大題 Part 3</div>
-  <h2>看圖敘述 Picture Description</h2>
-  <p style="margin-bottom:8px">請用英文描述下方圖片，時間 <strong>60 秒</strong>。盡量說完整的句子，描述人物、地點、正在做的事。</p>
-  <p class="en" style="margin-bottom:20px">Describe the picture in English. Speak in complete sentences about the people, the place, and what is happening.</p>
-
-  <!-- Same SVG -->
-  <div class="scene-wrap" style="margin-bottom:16px">
-    <svg viewBox="0 0 720 320" xmlns="http://www.w3.org/2000/svg" width="100%">
-      <rect width="720" height="320" fill="#bfdbfe"/>
-      <circle cx="640" cy="60" r="36" fill="#fde68a"/>
-      <g stroke="#fbbf24" stroke-width="3">
-        <line x1="640" y1="10" x2="640" y2="0"/><line x1="640" y1="110" x2="640" y2="120"/>
-        <line x1="590" y1="60" x2="580" y2="60"/><line x1="690" y1="60" x2="700" y2="60"/>
-        <line x1="605" y1="25" x2="598" y2="18"/><line x1="675" y1="95" x2="682" y2="102"/>
-        <line x1="675" y1="25" x2="682" y2="18"/><line x1="605" y1="95" x2="598" y2="102"/>
-      </g>
-      <rect y="230" width="720" height="90" fill="#86efac"/>
-      <ellipse cx="360" cy="310" rx="180" ry="20" fill="#d1fae5" opacity="0.6"/>
-      <rect x="72" y="160" width="16" height="80" fill="#92400e"/>
-      <circle cx="80" cy="135" r="55" fill="#22c55e"/>
-      <circle cx="55" cy="155" r="38" fill="#16a34a"/>
-      <circle cx="110" cy="150" r="40" fill="#15803d"/>
-      <rect x="612" y="160" width="16" height="70" fill="#92400e"/>
-      <circle cx="620" cy="130" r="50" fill="#22c55e"/>
-      <circle cx="595" cy="148" r="35" fill="#16a34a"/>
-      <circle cx="645" cy="145" r="37" fill="#15803d"/>
-      <rect x="180" y="218" width="90" height="8" rx="3" fill="#a16207"/>
-      <rect x="180" y="200" width="90" height="8" rx="3" fill="#ca8a04"/>
-      <rect x="185" y="226" width="8" height="22" rx="2" fill="#a16207"/>
-      <rect x="255" y="226" width="8" height="22" rx="2" fill="#a16207"/>
-      <rect x="210" y="190" width="22" height="30" rx="4" fill="#f472b6"/>
-      <circle cx="221" cy="182" r="12" fill="#fde68a"/>
-      <rect x="205" y="200" width="20" height="14" rx="2" fill="white" stroke="#93c5fd" stroke-width="1.5"/>
-      <path d="M209 175 Q221 168 233 175" stroke="#92400e" stroke-width="3" fill="none"/>
-      <rect x="330" y="188" width="22" height="36" rx="4" fill="#3b82f6"/>
-      <circle cx="341" cy="180" r="13" fill="#fde68a"/>
-      <line x1="352" y1="196" x2="375" y2="178" stroke="#3b82f6" stroke-width="5" stroke-linecap="round"/>
-      <ellipse cx="382" cy="173" rx="16" ry="6" fill="#f97316"/>
-      <rect x="440" y="200" width="14" height="30" rx="3" fill="#a78bfa"/>
-      <circle cx="447" cy="193" r="10" fill="#fde68a"/>
-      <line x1="447" y1="192" x2="490" y2="120" stroke="#6b7280" stroke-width="1.5"/>
-      <rect x="470" y="204" width="14" height="28" rx="3" fill="#fb923c"/>
-      <circle cx="477" cy="197" r="10" fill="#fde68a"/>
-      <polygon points="490,80 510,115 490,145 470,115" fill="#ef4444" stroke="white" stroke-width="1.5"/>
-      <line x1="490" y1="80" x2="490" y2="145" stroke="white" stroke-width="1" opacity="0.5"/>
-      <line x1="470" y1="115" x2="510" y2="115" stroke="white" stroke-width="1" opacity="0.5"/>
-      <path d="M490,145 Q500,160 488,172 Q475,182 488,194" stroke="#fbbf24" stroke-width="2" fill="none" stroke-dasharray="4,3"/>
-      <ellipse cx="560" cy="248" rx="28" ry="14" fill="#fbbf24"/>
-      <circle cx="586" cy="240" r="12" fill="#fbbf24"/>
-      <ellipse cx="592" cy="232" rx="6" ry="10" fill="#f59e0b" transform="rotate(15,592,232)"/>
-      <path d="M532,244 Q515,228 522,218" stroke="#fbbf24" stroke-width="5" fill="none" stroke-linecap="round"/>
-      <line x1="546" y1="258" x2="544" y2="270" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/>
-      <line x1="556" y1="260" x2="554" y2="272" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/>
-      <line x1="566" y1="260" x2="568" y2="272" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/>
-      <line x1="576" y1="258" x2="578" y2="270" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/>
-      <rect x="0" y="290" width="720" height="30" fill="rgba(0,0,0,0.25)"/>
-      <text x="360" y="310" text-anchor="middle" fill="white" font-size="13" font-family="sans-serif">
-        A family enjoying a sunny day at the park
-      </text>
-    </svg>
-  </div>
-
   <div class="card">
-    <div class="timer-row">
-      <div>
-        <div class="timer-label" id="p3-timer-label">準備中 Preparing...</div>
-        <div class="timer-box" id="p3-timer">0:30</div>
+    <div class="qnum" id="p3-qnum">題 1 / 7</div>
+    <div class="qtext" id="p3-text"></div>
+    <div class="qzh" id="p3-zh" style="margin-bottom:16px"></div>
+    <div class="cd-area" id="p3-cd">
+      <div class="cd-lbl">準備回答…</div>
+      <div class="cd-num" id="p3-cd-num">3</div>
+    </div>
+    <div id="p3-rec" style="display:none">
+      <div class="timer-row">
+        <div class="timer-label">作答時間</div>
+        <div class="timer-box danger" id="p3-timer">0:15</div>
       </div>
-      <div id="p3-rec-indicator" style="display:none;align-items:center;gap:8px;font-size:14px;color:var(--danger);font-weight:600">
-        <span class="recording-dot"></span> 錄音中 Recording...
+      <div class="rec-row" style="display:flex"><span class="rec-dot"></span>回答中 Recording...</div>
+      <div class="transcript on" id="p3-tr"><span class="ph-text">正在聆聽…</span></div>
+    </div>
+    <div id="p3-result" style="display:none">
+      <div class="kw-label">你說到的關鍵字:</div>
+      <div class="kw-row" id="p3-kw"></div>
+      <div class="model" id="p3-model">
+        <h4>✦ 參考答案 Model Answer</h4>
+        <p id="p3-model-text"></p>
       </div>
-    </div>
-
-    <div class="notice notice-info" style="margin-bottom:16px">
-      <span>💡</span>
-      <span>可以描述：<strong>地點、天氣、人物、動作、物品</strong>。例如：<em>There is a woman sitting on a bench...</em></span>
-    </div>
-
-    <div class="transcript-box" id="p3-transcript">
-      <span class="placeholder">您說的話會在這裡顯示……</span>
-    </div>
-
-    <p style="font-size:13px;color:var(--gray-400);margin:12px 0 8px">關鍵字 Keywords（盡量多涵蓋）:</p>
-    <div class="keywords-row" id="p3-keywords"></div>
-
-    <div class="btn-row">
-      <button class="btn btn-primary" id="p3-record-btn" onclick="toggleRecordP3()">🎤 開始錄音</button>
-      <button class="btn btn-outline" id="p3-done-btn" onclick="finishP3()" style="display:none">✅ 完成作答</button>
-    </div>
-  </div>
-
-  <div class="card" id="p3-result" style="display:none">
-    <h3>成績分析</h3>
-    <div id="p3-score-chip" style="margin:12px 0"></div>
-
-    <p style="font-size:14px;color:var(--gray-600);margin-bottom:12px">命中關鍵字：</p>
-    <div class="keywords-row" id="p3-keywords-result"></div>
-
-    <div class="model-answer visible" style="margin-top:20px">
-      <h4>✅ 參考敘述 Model Description</h4>
-      <p>This picture shows a family at the park on a sunny day. There is a woman sitting on a bench reading a book. A man is throwing a frisbee nearby. Two children are flying a kite together. There is also a dog running on the green grass. There are two big trees on both sides. It looks like a happy and warm day.</p>
-    </div>
-
-    <div class="btn-row" style="margin-top:24px">
-      <button class="btn btn-success" onclick="goToResults()">查看總成績 →</button>
+      <div class="btn-row">
+        <button class="btn btn-p" id="p3-next" onclick="p3Next()">下一題 →</button>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════
-     SCREEN 4 — Results
-════════════════════════════════════════ -->
+<!-- ══ RESULTS ══ -->
 <div class="screen" id="screen-results">
-  <h2 style="margin-bottom:24px">測驗完成 🎉</h2>
-
-  <div class="total-score">
-    <div class="label">總分 Total Score</div>
-    <div><span class="num" id="res-total">0</span><span class="den"> / 100</span></div>
-    <div id="res-grade" style="margin-top:12px;font-size:16px;font-weight:600"></div>
+  <h2 style="font-size:1.4rem;font-weight:800;margin-bottom:18px;text-align:center">📊 測驗結果</h2>
+  <div class="total-box">
+    <div class="total-lbl">總分 Total Score</div>
+    <div><span class="total-num" id="res-total">0</span><span class="total-den"> / 100</span></div>
+    <div class="total-grade" id="res-grade"></div>
   </div>
-
-  <div class="result-grid">
-    <div class="result-cell">
-      <div class="part-label">第一大題<br>朗讀短文</div>
-      <div><span class="score-num" id="res-p1">0</span><span class="score-den">/40</span></div>
+  <div class="rgrid">
+    <div class="rcell">
+      <div class="rcell-lbl">第一大題<br>複誦</div>
+      <div><span class="rcell-num" id="res-p1">0</span><span class="rcell-den">/30</span></div>
     </div>
-    <div class="result-cell">
-      <div class="part-label">第二大題<br>回答問題</div>
-      <div><span class="score-num" id="res-p2">0</span><span class="score-den">/30</span></div>
+    <div class="rcell">
+      <div class="rcell-lbl">第二大題<br>朗讀</div>
+      <div><span class="rcell-num" id="res-p2">0</span><span class="rcell-den">/40</span></div>
     </div>
-    <div class="result-cell">
-      <div class="part-label">第三大題<br>看圖敘述</div>
-      <div><span class="score-num" id="res-p3">0</span><span class="score-den">/30</span></div>
+    <div class="rcell">
+      <div class="rcell-lbl">第三大題<br>回答</div>
+      <div><span class="rcell-num" id="res-p3">0</span><span class="rcell-den">/30</span></div>
     </div>
   </div>
-
   <div class="card">
-    <h3>📌 注意事項</h3>
-    <p style="font-size:14px;margin-top:8px">本評分以「關鍵字辨識」為基礎，只評估<strong>說了哪些內容</strong>，無法評估發音準確度與流暢度。若要更精準的發音評分，建議錄音後自行對照參考答案聆聽比較。</p>
+    <h3 style="margin-bottom:8px;font-size:.95rem">📌 學習建議</h3>
+    <p id="res-tips" style="font-size:13px;color:var(--g600);line-height:1.8"></p>
   </div>
-
-  <div class="btn-row" style="justify-content:center;margin-top:8px">
-    <button class="btn btn-outline" onclick="restartTest()">↩ 重新測驗</button>
+  <div style="text-align:center;margin-top:18px">
+    <button class="btn btn-o" onclick="restartTest()">↩ 重新測驗</button>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════
-     JAVASCRIPT
-════════════════════════════════════════ -->
 <script>
-// ── Data ─────────────────────────────────────────────────────────
-const PASSAGE = "Hello, everyone! My name is Lily. I am thirteen years old and I go to Sunshine Junior High School. Every morning, I get up at six thirty and take the bus to school. My favorite subject is English because I love learning new words. After school, I usually play basketball with my friends or help my mom cook dinner. On weekends, I like reading books and watching movies. I think life is wonderful!";
-
-const PASSAGE_KEYWORDS = ["lily","thirteen","sunshine","junior","morning","six","bus","english","words","basketball","friends","cook","weekends","reading","movies","wonderful"];
-
-const QUESTIONS = [
-  {
-    q: "Where are the people in this picture?",
-    keywords: ["park","outside","outdoor","garden","nature"],
-    model: "They are in the park."
-  },
-  {
-    q: "What is the woman on the bench doing?",
-    keywords: ["reading","read","book","sitting","sit"],
-    model: "She is sitting on a bench and reading a book."
-  },
-  {
-    q: "What is the man doing?",
-    keywords: ["throwing","throw","frisbee","playing","tossing"],
-    model: "He is throwing a frisbee."
-  },
-  {
-    q: "What are the children doing?",
-    keywords: ["flying","fly","kite","playing","children","kids"],
-    model: "They are flying a kite."
-  },
-  {
-    q: "What is the weather like today?",
-    keywords: ["sunny","sunshine","bright","nice","clear","good","warm"],
-    model: "It is sunny and bright today."
-  }
+// ── Data ──────────────────────────────────────────────────
+const P1 = [
+  {t:"What would you like for breakfast?",         zh:"你早餐想吃什麼？",                           kw:["would","like","breakfast"]},
+  {t:"On Christmas Eve, we usually have a big meal.",zh:"在聖誕夜，我們通常會吃一頓大餐。",          kw:["christmas","eve","usually","big","meal"]},
+  {t:"That's the sort of thing I like to do.",     zh:"這是我喜歡做的事情。",                        kw:["sort","thing","like","do"]},
+  {t:"Which one do you want, water or juice?",     zh:"你要喝水還是果汁？",                          kw:["which","want","water","juice"]},
+  {t:"Didn't you visit the places?",               zh:"你沒去過這些地方嗎？",                        kw:["didn't","visit","places"]}
 ];
 
-const P3_KEYWORDS = [
-  "park","bench","woman","man","children","kite","frisbee","dog",
-  "tree","sunny","grass","reading","flying","throwing","running","family"
+const P2 = [
+  {pass:false, t:"Let's get it done by the afternoon.",    zh:"讓我們在下午之前完成它。",              kw:["get","done","afternoon"],          prep:30, rec:30},
+  {pass:false, t:"She lives on this island, not that one.",zh:"她住在這個島上，而不是那個島上。",      kw:["lives","island","not","that"],     prep:30, rec:30},
+  {pass:false, t:"I prefer to travel in the desert and enjoy the special sight.", zh:"我比較喜歡在沙漠旅行，並欣賞特殊的景象。", kw:["prefer","travel","desert","enjoy","special","sight"], prep:30, rec:30},
+  {pass:false, t:"This kind of product is only developed in the factory.", zh:"這種產品僅在這間工廠開發。", kw:["kind","product","only","developed","factory"], prep:30, rec:30},
+  {pass:false, t:"What an amazing childhood!",             zh:"多麼美好的童年！",                      kw:["amazing","childhood"],             prep:30, rec:30},
+  {pass:true,
+   t:"Diana was a picky girl. She threw out all the things she didn't like to eat. One day, she spotted an old man eating food that was thrown away by a restaurant. She looked at him, but she couldn't believe her eyes. After that, she kept thinking about the man. Such an experience influenced her life. She never wasted any food.",
+   zh:"載安娜是個挑食的女孩，她之前會扔掉所有她不喜歡的食物。有一天，她看到一個老人在吃被餐廳拋棄的食物，她看著他，卻無法相信自己的眼睛。從那以後，她一直想著那個人。這樣的經歷影響了她的一生，她再也不浪費任何食物。",
+   kw:["diana","picky","threw","eat","spotted","old","man","restaurant","believe","eyes","thinking","experience","influenced","wasted","food"],
+   prep:45, rec:60}
 ];
 
-// ── State ─────────────────────────────────────────────────────────
-let recognition = null;
-let isRecording  = false;
-let finalText    = "";
-let interimText  = "";
-let timerInterval = null;
+const P3 = [
+  {t:"Do you have a smart watch? If not, would you like to have one?",
+   zh:"你有智能手錶嗎？如果沒有，你是否想要一支？",
+   kw:["watch","smart","like","have","want","yes","no"],
+   model:"Yes, I have a smart watch. / No, I don't, but I'd love to have one someday."},
+  {t:"Do you prefer reading electronic books or paper books? Why?",
+   zh:"你比較喜歡閱讀電子書還是紙本書？為什麼？",
+   kw:["prefer","electronic","paper","books","because","easy","convenient","feel"],
+   model:"I prefer paper books because I enjoy the feel of turning real pages."},
+  {t:"Have you ever made any friends online? If not, will you like to give it a try?",
+   zh:"你有沒有在網路上結交過任何朋友？如果沒有，你會想試試看嗎？",
+   kw:["friends","online","try","internet","meet","yes","no"],
+   model:"Yes, I've made some friends online through social media and games."},
+  {t:"How do you spend your leisure time?",
+   zh:"你如何度過休閒時光？",
+   kw:["read","watch","play","listen","go","spend","time","music","sports"],
+   model:"I usually spend my leisure time reading books or playing sports with friends."},
+  {t:"What time did you wake up this morning? How did you get here?",
+   zh:"你今天早上幾點起床？你是怎麼來到這裡的？",
+   kw:["wake","morning","bus","train","walk","drive","clock","seven","eight","six"],
+   model:"I woke up at seven o'clock this morning and took the bus to get here."},
+  {t:"What would you do in a restaurant if you ate half of your food and found a cockroach inside?",
+   zh:"如果你在一家餐廳吃飯吃到一半，發現食物裡面有一隻蟑螂的話，你會怎麼做？",
+   kw:["tell","complain","waiter","manager","leave","stop","cockroach","call","refund"],
+   model:"I would call the waiter immediately and ask for a refund, then leave."},
+  {t:"When your friend invites you to watch a baseball game on a Saturday night, how do you reply?",
+   zh:"當你的朋友邀請你在星期六晚上去看棒球比賽時，你會如何回覆？",
+   kw:["sure","love","go","baseball","game","saturday","busy","sorry","sounds","great"],
+   model:"That sounds great! I'd love to go. What time does it start?"}
+];
 
-let p1Score = 0;
-let p2Score = 0;
-let p3Score = 0;
+// ── State ─────────────────────────────────────────────────
+let recog=null, recording=false, mainTimer=null, cdTimer=null, prepTimer=null;
+let p1i=0, p2i=0, p3i=0;
+let p1scores=[], p2scores=[], p3scores=[];
+let curFinal="";
 
-let p2CurrentQ = 0;
-let p2QScores  = [];
-let p2TimerSec = 15;
-let p3TimerSec = 60;
+// ── Helpers ───────────────────────────────────────────────
+const $=id=>document.getElementById(id);
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active')}
+function prog(p){$('progBar').style.width=p+'%'}
+function badge(t){$('hBadge').textContent=t}
+function fmt(s){return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
+function norm(w){return w.toLowerCase().replace(/[^a-z']/g,'')}
 
-// ── Speech Recognition ────────────────────────────────────────────
-function initRecognition(onResult, onEnd) {
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) return null;
-  const r = new SR();
-  r.lang = 'en-US';
-  r.continuous = true;
-  r.interimResults = true;
-  r.onresult = (e) => {
-    let fin = "", intr = "";
-    for (let i = e.resultIndex; i < e.results.length; i++) {
-      if (e.results[i].isFinal) fin += e.results[i][0].transcript + " ";
-      else intr += e.results[i][0].transcript;
+function matchKW(text,kws){
+  const words=text.toLowerCase().split(/\s+/).map(norm).filter(Boolean);
+  return kws.map(k=>({k,hit:words.some(w=>w===k||w.startsWith(k)||k.startsWith(w))}));
+}
+function renderKW(elId,results){
+  $(elId).innerHTML=results.map(r=>`<span class="kw ${r.hit?'hit':'miss'}">${r.k}</span>`).join('');
+}
+function chip(pct){
+  let c,l;
+  if(pct>=80){c='A';l='優秀 Excellent'}
+  else if(pct>=60){c='B';l='良好 Good'}
+  else if(pct>=40){c='C';l='尚可 Fair'}
+  else{c='D';l='需加強 Practice More'}
+  return `<span class="chip ${c}">${pct}% · ${l}</span>`;
+}
+
+function initRecog(onResult,onEnd){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR)return null;
+  const r=new SR();
+  r.lang='en-US'; r.continuous=true; r.interimResults=true;
+  r.onresult=e=>{
+    let fin='',intr='';
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      if(e.results[i].isFinal)fin+=e.results[i][0].transcript+' ';
+      else intr+=e.results[i][0].transcript;
     }
-    onResult(fin, intr);
+    onResult(fin,intr);
   };
-  r.onend = onEnd;
+  r.onend=onEnd;
   return r;
 }
-
-function stopRecognition() {
-  if (recognition) { try { recognition.stop(); } catch(e){} }
-  isRecording = false;
+function stopRecog(){if(recog){try{recog.stop()}catch(e){}}recording=false}
+function countdown(el,sec,onTick,onDone){
+  clearInterval(mainTimer);
+  let rem=sec;
+  el.textContent=fmt(rem); el.className='timer-box';
+  mainTimer=setInterval(()=>{
+    rem--;
+    el.textContent=fmt(rem);
+    if(rem<=5)el.className='timer-box danger';
+    else if(rem<=10)el.className='timer-box warn';
+    if(onTick)onTick(rem);
+    if(rem<=0){clearInterval(mainTimer);if(onDone)onDone();}
+  },1000);
 }
 
-// ── Timer helpers ──────────────────────────────────────────────────
-function startCountdown(el, seconds, onTick, onDone) {
-  clearInterval(timerInterval);
-  let remaining = seconds;
-  el.textContent = formatTime(remaining);
-  el.className = "timer-box";
-  timerInterval = setInterval(() => {
-    remaining--;
-    el.textContent = formatTime(remaining);
-    if (remaining <= 10) el.className = "timer-box danger";
-    else if (remaining <= 20) el.className = "timer-box warning";
-    if (onTick) onTick(remaining);
-    if (remaining <= 0) { clearInterval(timerInterval); onDone && onDone(); }
-  }, 1000);
-}
-
-function formatTime(s) {
-  return `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
-}
-
-// ── Scoring helpers ────────────────────────────────────────────────
-function scoreChipHTML(score, max) {
-  const pct = Math.round(score / max * 100);
-  let cls, label;
-  if (pct >= 80) { cls = "excellent"; label = "優秀 Excellent"; }
-  else if (pct >= 60) { cls = "good"; label = "良好 Good"; }
-  else if (pct >= 40) { cls = "fair"; label = "尚可 Fair"; }
-  else { cls = "poor"; label = "需加強 Needs Practice"; }
-  return `<span class="score-chip ${cls}">${pct}% — ${label}</span>`;
-}
-
-function normalizeWord(w) {
-  return w.toLowerCase().replace(/[^a-z']/g, '');
-}
-
-// ── Screen navigation ──────────────────────────────────────────────
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('screen-' + id).classList.add('active');
-}
-
-function setProgress(pct) {
-  document.getElementById('progressBar').style.width = pct + '%';
-}
-
-// ── Welcome ────────────────────────────────────────────────────────
-function startTest() {
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) {
-    document.getElementById('noSpeechWarning').style.display = 'block';
-    return;
+// ── Welcome ───────────────────────────────────────────────
+function startTest(){
+  if(!(window.SpeechRecognition||window.webkitSpeechRecognition)){
+    $('noSpeechWarn').style.display='flex'; return;
   }
-  showScreen('part1');
-  setProgress(10);
-  initPart1();
+  p1i=0; p1scores=[];
+  show('screen-p1'); badge('第一大題'); prog(5);
+  loadP1(0);
 }
 
-// ══ PART 1 ══════════════════════════════════════════════════════════
-let p1FinalText = "";
-
-function initPart1() {
-  // Render passage words
-  const el = document.getElementById('p1-passage');
-  el.innerHTML = PASSAGE.split(' ').map((w,i) =>
-    `<span class="word" id="pw-${i}">${w}</span> `
-  ).join('');
-
-  // 30-sec prep countdown, then enable record button
-  const timerEl = document.getElementById('p1-timer');
-  const labelEl = document.getElementById('p1-timer-label');
-  startCountdown(timerEl, 30, null, () => {
-    labelEl.textContent = "請開始朗讀";
-    document.getElementById('p1-record-btn').disabled = false;
-  });
+// ── Part 1 ────────────────────────────────────────────────
+function loadP1(i){
+  const q=P1[i];
+  $('p1-qnum').textContent=`題 ${i+1} / ${P1.length}`;
+  $('p1-text').textContent=q.t;
+  $('p1-zh').textContent=q.zh;
+  $('p1-cd').style.display='block';
+  $('p1-rec').style.display='none';
+  $('p1-result').style.display='none';
+  $('p1-cd-num').textContent=3;
+  curFinal='';
+  let c=3;
+  clearInterval(cdTimer);
+  cdTimer=setInterval(()=>{
+    c--;
+    if(c>0){$('p1-cd-num').textContent=c;}
+    else{clearInterval(cdTimer);p1Rec(q);}
+  },1000);
+}
+function p1Rec(q){
+  $('p1-cd').style.display='none';
+  $('p1-rec').style.display='block';
+  $('p1-tr').innerHTML='<span class="ph-text">正在聆聽您的聲音…</span>';
+  curFinal=''; recording=true;
+  recog=initRecog((fin,intr)=>{
+    curFinal+=fin;
+    $('p1-tr').innerHTML=(curFinal?`<span>${curFinal}</span>`:'')+
+      (intr?`<span class="interim">${intr}</span>`:'<span class="ph-text">正在聆聽…</span>');
+  },()=>{if(recording)recog.start();});
+  if(recog)recog.start();
+  countdown($('p1-timer'),15,null,()=>{if(recording)p1Score(q);});
+}
+function p1Score(q){
+  stopRecog(); clearInterval(mainTimer);
+  const res=matchKW(curFinal,q.kw);
+  const pct=Math.round(res.filter(r=>r.hit).length/q.kw.length*100);
+  p1scores.push(pct);
+  renderKW('p1-kw',res);
+  $('p1-chip').innerHTML=chip(pct);
+  $('p1-rec').style.display='none';
+  $('p1-result').style.display='block';
+  $('p1-next').textContent=p1i===P1.length-1?'完成第一大題 →':'下一題 →';
+}
+function p1Next(){
+  p1i++;
+  if(p1i<P1.length){prog(5+p1i*4);loadP1(p1i);}
+  else{p2i=0;p2scores=[];show('screen-p2');badge('第二大題');prog(30);loadP2(0);}
 }
 
-function toggleRecordP1() {
-  if (isRecording) {
-    stopRecordP1();
-  } else {
-    startRecordP1();
+// ── Part 2 ────────────────────────────────────────────────
+function loadP2(i){
+  const q=P2[i];
+  $('p2-qnum').textContent=q.pass?'短文 6 / 6':`句 ${i+1} / 6`;
+  $('p2-ph-title').textContent=q.pass?'第二大題　朗讀短文':'第二大題　朗讀句子';
+  $('p2-ph-desc').textContent=q.pass?'默讀後請朗讀一遍，語速自然。':'請朗讀以下句子，發音清晰。';
+  $('p2-sent-area').style.display=q.pass?'none':'block';
+  $('p2-pass-area').style.display=q.pass?'block':'none';
+  $('p2-prep').style.display='block';
+  $('p2-rec').style.display='none';
+  $('p2-result').style.display='none';
+  if(q.pass){
+    $('p2-passage').innerHTML=q.t+`<div class="passage-zh">${q.zh}</div>`;
+  }else{
+    $('p2-text').textContent=q.t;
+    $('p2-zh').textContent=q.zh;
   }
+  curFinal='';
+  // Prep countdown
+  clearInterval(prepTimer);
+  let rem=q.prep;
+  const pEl=$('p2-prep-timer');
+  pEl.textContent=fmt(rem); pEl.className='timer-box';
+  prepTimer=setInterval(()=>{
+    rem--;
+    pEl.textContent=fmt(rem);
+    if(rem<=5)pEl.className='timer-box danger';
+    if(rem<=0){clearInterval(prepTimer);p2StartRec();}
+  },1000);
+}
+function p2StartRec(){
+  clearInterval(prepTimer);
+  const q=P2[p2i];
+  $('p2-prep').style.display='none';
+  $('p2-rec').style.display='block';
+  $('p2-rec-lbl').textContent=q.pass?'朗讀短文中':'朗讀中';
+  $('p2-tr').innerHTML='<span class="ph-text">正在聆聽…</span>';
+  curFinal=''; recording=true;
+  recog=initRecog((fin,intr)=>{
+    curFinal+=fin;
+    $('p2-tr').innerHTML=(curFinal?`<span>${curFinal}</span>`:'')+
+      (intr?`<span class="interim">${intr}</span>`:'<span class="ph-text">正在聆聽…</span>');
+  },()=>{if(recording)recog.start();});
+  if(recog)recog.start();
+  countdown($('p2-rec-timer'),q.rec,null,()=>{if(recording)p2Score();});
+}
+function p2Score(){
+  stopRecog(); clearInterval(mainTimer);
+  const q=P2[p2i];
+  const res=matchKW(curFinal,q.kw);
+  const pct=Math.round(res.filter(r=>r.hit).length/q.kw.length*100);
+  p2scores.push(pct);
+  renderKW('p2-kw',res);
+  $('p2-chip').innerHTML=chip(pct);
+  $('p2-rec').style.display='none';
+  $('p2-result').style.display='block';
+  $('p2-next').textContent=p2i===P2.length-1?'完成第二大題 →':'下一題 →';
+}
+function p2Next(){
+  p2i++;
+  if(p2i<P2.length){prog(30+Math.round(p2i/P2.length*25));loadP2(p2i);}
+  else{p3i=0;p3scores=[];show('screen-p3');badge('第三大題');prog(60);loadP3(0);}
 }
 
-function startRecordP1() {
-  p1FinalText = "";
-  const transcriptEl = document.getElementById('p1-transcript');
-  transcriptEl.innerHTML = "";
-  transcriptEl.classList.add('recording');
-
-  document.getElementById('p1-record-btn').innerHTML = "⏹ 停止錄音";
-  document.getElementById('p1-record-btn').className = "btn btn-danger";
-  document.getElementById('p1-done-btn').style.display = "none";
-  document.getElementById('p1-rec-indicator').style.display = "flex";
-
-  isRecording = true;
-  recognition = initRecognition(
-    (fin, intr) => {
-      p1FinalText += fin;
-      transcriptEl.innerHTML =
-        (p1FinalText ? `<span>${p1FinalText}</span>` : '') +
-        (intr ? `<span class="interim">${intr}</span>` : '');
-    },
-    () => {
-      if (isRecording) recognition.start(); // keep going
-    }
-  );
-  recognition.start();
+// ── Part 3 ────────────────────────────────────────────────
+function loadP3(i){
+  const q=P3[i];
+  $('p3-qnum').textContent=`題 ${i+1} / ${P3.length}`;
+  $('p3-text').textContent=q.t;
+  $('p3-zh').textContent=q.zh;
+  $('p3-cd').style.display='block';
+  $('p3-rec').style.display='none';
+  $('p3-result').style.display='none';
+  $('p3-model').classList.remove('show');
+  $('p3-cd-num').textContent=3;
+  curFinal='';
+  let c=3;
+  clearInterval(cdTimer);
+  cdTimer=setInterval(()=>{
+    c--;
+    if(c>0){$('p3-cd-num').textContent=c;}
+    else{clearInterval(cdTimer);p3Rec(q);}
+  },1000);
+}
+function p3Rec(q){
+  $('p3-cd').style.display='none';
+  $('p3-rec').style.display='block';
+  $('p3-tr').innerHTML='<span class="ph-text">正在聆聽…</span>';
+  curFinal=''; recording=true;
+  recog=initRecog((fin,intr)=>{
+    curFinal+=fin;
+    $('p3-tr').innerHTML=(curFinal?`<span>${curFinal}</span>`:'')+
+      (intr?`<span class="interim">${intr}</span>`:'<span class="ph-text">正在聆聽…</span>');
+  },()=>{if(recording)recog.start();});
+  if(recog)recog.start();
+  countdown($('p3-timer'),15,null,()=>{if(recording)p3Score(q);});
+}
+function p3Score(q){
+  stopRecog(); clearInterval(mainTimer);
+  const res=matchKW(curFinal,q.kw);
+  const pct=Math.round(res.filter(r=>r.hit).length/q.kw.length*100);
+  p3scores.push(pct);
+  renderKW('p3-kw',res);
+  $('p3-model-text').textContent=q.model;
+  $('p3-model').classList.add('show');
+  $('p3-rec').style.display='none';
+  $('p3-result').style.display='block';
+  $('p3-next').textContent=p3i===P3.length-1?'查看總成績 →':'下一題 →';
+}
+function p3Next(){
+  p3i++;
+  if(p3i<P3.length){prog(60+Math.round(p3i/P3.length*35));loadP3(p3i);}
+  else{showResults();}
 }
 
-function stopRecordP1() {
-  stopRecognition();
-  document.getElementById('p1-record-btn').innerHTML = "🎤 重新錄音";
-  document.getElementById('p1-record-btn').className = "btn btn-outline";
-  document.getElementById('p1-done-btn').style.display = "inline-flex";
-  document.getElementById('p1-rec-indicator').style.display = "none";
-  document.getElementById('p1-transcript').classList.remove('recording');
-}
-
-function finishP1() {
-  clearInterval(timerInterval);
-  stopRecognition();
-
-  // Score: keyword overlap
-  const userWords = p1FinalText.toLowerCase().split(/\s+/).map(normalizeWord).filter(Boolean);
-  let matched = 0;
-  PASSAGE_KEYWORDS.forEach(kw => { if (userWords.includes(kw)) matched++; });
-  const pct = Math.round(matched / PASSAGE_KEYWORDS.length * 100);
-  p1Score = Math.round(pct * 0.4); // out of 40
-
-  // Highlight passage
-  const passageWords = PASSAGE.split(' ');
-  const reviewEl = document.getElementById('p1-passage-reviewed');
-  reviewEl.innerHTML = passageWords.map((w, i) => {
-    const clean = normalizeWord(w);
-    const found = userWords.includes(clean);
-    return `<span class="word ${found ? 'matched' : 'missed'}">${w}</span> `;
-  }).join('');
-
-  document.getElementById('p1-score-chip').innerHTML = scoreChipHTML(pct, 100);
-  document.getElementById('p1-result').style.display = 'block';
-  document.getElementById('p1-record-btn').disabled = true;
-  document.getElementById('p1-done-btn').style.display = 'none';
-}
-
-function goToPart2() {
-  showScreen('part2');
-  setProgress(40);
-  p2CurrentQ = 0;
-  p2QScores = [];
-  loadQuestion(0);
-}
-
-// ══ PART 2 ══════════════════════════════════════════════════════════
-let p2FinalText = "";
-let p2TimerInterval = null;
-
-function loadQuestion(idx) {
-  if (idx >= QUESTIONS.length) {
-    showP2Done();
-    return;
+// ── Results ───────────────────────────────────────────────
+function avg(arr){return arr.length?Math.round(arr.reduce((a,b)=>a+b,0)/arr.length):0}
+function showResults(){
+  prog(100); badge('成績'); show('screen-results');
+  const p1pct=avg(p1scores), p2pct=avg(p2scores), p3pct=avg(p3scores);
+  const p1pts=Math.round(p1pct*.30), p2pts=Math.round(p2pct*.40), p3pts=Math.round(p3pct*.30);
+  const total=p1pts+p2pts+p3pts;
+  $('res-p1').textContent=p1pts;
+  $('res-p2').textContent=p2pts;
+  $('res-p3').textContent=p3pts;
+  $('res-total').textContent=total;
+  let grade,tips;
+  if(total>=80){
+    grade='🏆 優等 — 具備通過英檢初級的實力！';
+    tips='表現優秀！建議持續練習，可挑戰英檢中級（Intermediate），並多聆聽英語 Podcast 磨耳力。';
+  }else if(total>=60){
+    grade='👍 良好 — 具備初級英檢基本口說能力';
+    tips='整體不錯！建議加強關鍵字覆蓋率，練習完整句子作答，並注意語調和節奏。';
+  }else if(total>=40){
+    grade='📚 尚可 — 繼續練習可以更好';
+    tips='建議三大題都多練習：複誦時說完整句子；朗讀時逐字清楚；回答問題時多用題目中的關鍵詞。';
+  }else{
+    grade='💪 需加強 — 多練習再挑戰！';
+    tips='建議每天練習 10–15 分鐘英語口說，從跟讀簡單句子開始，再慢慢挑戰完整段落。加油！';
   }
-  const q = QUESTIONS[idx];
-  p2FinalText = "";
-  isRecording = false;
-
-  document.getElementById('p2-q-num').textContent = `Question ${idx+1} / ${QUESTIONS.length}`;
-  document.getElementById('p2-q-text').textContent = q.q;
-
-  const transcriptEl = document.getElementById('p2-transcript');
-  transcriptEl.innerHTML = '<span class="placeholder">您說的話會在這裡顯示……</span>';
-  transcriptEl.classList.remove('recording');
-
-  // Keywords tags
-  const kwEl = document.getElementById('p2-keywords');
-  kwEl.innerHTML = q.keywords.map(k => `<span class="keyword-tag" id="kw2-${k}">${k}</span>`).join('');
-
-  document.getElementById('p2-model-answer').classList.remove('visible');
-  document.getElementById('p2-model-text').textContent = q.model;
-  document.getElementById('p2-record-btn').innerHTML = "🎤 開始錄音";
-  document.getElementById('p2-record-btn').className = "btn btn-primary";
-  document.getElementById('p2-next-btn').style.display = "none";
-  document.getElementById('p2-rec-indicator').style.display = "none";
-
-  // Reset timer display
-  document.getElementById('p2-timer').textContent = "0:15";
-  document.getElementById('p2-timer').className = "timer-box";
-  document.getElementById('p2-timer-label').textContent = "作答時間";
+  $('res-grade').textContent=grade;
+  $('res-tips').textContent=tips;
 }
-
-function toggleRecordP2() {
-  if (isRecording) {
-    stopRecordP2(true);
-  } else {
-    startRecordP2();
-  }
-}
-
-function startRecordP2() {
-  p2FinalText = "";
-  isRecording = true;
-
-  const transcriptEl = document.getElementById('p2-transcript');
-  transcriptEl.innerHTML = "";
-  transcriptEl.classList.add('recording');
-
-  document.getElementById('p2-record-btn').innerHTML = "⏹ 停止錄音";
-  document.getElementById('p2-record-btn').className = "btn btn-danger";
-  document.getElementById('p2-rec-indicator').style.display = "flex";
-
-  recognition = initRecognition(
-    (fin, intr) => {
-      p2FinalText += fin;
-      transcriptEl.innerHTML =
-        (p2FinalText ? `<span>${p2FinalText}</span>` : '') +
-        (intr ? `<span class="interim">${intr}</span>` : '');
-      checkP2Keywords();
-    },
-    () => { if (isRecording) recognition.start(); }
-  );
-  recognition.start();
-
-  // 15-sec auto-stop
-  const timerEl = document.getElementById('p2-timer');
-  startCountdown(timerEl, 15, null, () => {
-    if (isRecording) stopRecordP2(false);
-  });
-}
-
-function stopRecordP2(manual) {
-  stopRecognition();
-  clearInterval(timerInterval);
-  document.getElementById('p2-record-btn').innerHTML = "🎤 重新錄音";
-  document.getElementById('p2-record-btn').className = "btn btn-outline";
-  document.getElementById('p2-rec-indicator').style.display = "none";
-  document.getElementById('p2-transcript').classList.remove('recording');
-
-  checkP2Keywords();
-  document.getElementById('p2-model-answer').classList.add('visible');
-  document.getElementById('p2-next-btn').style.display = "inline-flex";
-}
-
-function checkP2Keywords() {
-  const q = QUESTIONS[p2CurrentQ];
-  const words = p2FinalText.toLowerCase().split(/\s+/).map(normalizeWord);
-  q.keywords.forEach(kw => {
-    const el = document.getElementById('kw2-' + kw);
-    if (el) el.className = 'keyword-tag' + (words.includes(kw) ? ' found' : '');
-  });
-}
-
-function nextQuestionP2() {
-  // Score this question
-  const q = QUESTIONS[p2CurrentQ];
-  const words = p2FinalText.toLowerCase().split(/\s+/).map(normalizeWord);
-  const hit = q.keywords.some(kw => words.includes(kw));
-  p2QScores.push(hit ? 1 : 0);
-
-  p2CurrentQ++;
-  loadQuestion(p2CurrentQ);
-}
-
-function showP2Done() {
-  p2Score = p2QScores.reduce((a,b)=>a+b,0) * 6; // 5 questions × 6 = 30
-  document.getElementById('p2-question-card').style.display = 'none';
-  document.getElementById('p2-score-display').textContent = p2QScores.reduce((a,b)=>a+b,0);
-  document.getElementById('p2-done-card').style.display = 'block';
-}
-
-// ══ PART 3 ══════════════════════════════════════════════════════════
-let p3FinalText = "";
-
-function goToPart3() {
-  showScreen('part3');
-  setProgress(70);
-  p3FinalText = "";
-
-  // Render keyword tags
-  const kwEl = document.getElementById('p3-keywords');
-  kwEl.innerHTML = P3_KEYWORDS.map(k => `<span class="keyword-tag" id="kw3-${k}">${k}</span>`).join('');
-
-  // 30-sec prep
-  const timerEl = document.getElementById('p3-timer');
-  const labelEl = document.getElementById('p3-timer-label');
-  labelEl.textContent = "備答時間 Preparing...";
-  startCountdown(timerEl, 30, null, () => {
-    labelEl.textContent = "開始錄音！";
-    document.getElementById('p3-record-btn').disabled = false;
-    timerEl.textContent = "準備好了";
-  });
-}
-
-function toggleRecordP3() {
-  if (isRecording) {
-    stopRecordP3();
-  } else {
-    startRecordP3();
-  }
-}
-
-function startRecordP3() {
-  p3FinalText = "";
-  isRecording = true;
-
-  const transcriptEl = document.getElementById('p3-transcript');
-  transcriptEl.innerHTML = "";
-  transcriptEl.classList.add('recording');
-
-  document.getElementById('p3-record-btn').innerHTML = "⏹ 停止錄音";
-  document.getElementById('p3-record-btn').className = "btn btn-danger";
-  document.getElementById('p3-done-btn').style.display = "inline-flex";
-  document.getElementById('p3-rec-indicator').style.display = "flex";
-
-  recognition = initRecognition(
-    (fin, intr) => {
-      p3FinalText += fin;
-      transcriptEl.innerHTML =
-        (p3FinalText ? `<span>${p3FinalText}</span>` : '') +
-        (intr ? `<span class="interim">${intr}</span>` : '');
-      checkP3Keywords();
-    },
-    () => { if (isRecording) recognition.start(); }
-  );
-  recognition.start();
-
-  // 60-sec countdown
-  const timerEl = document.getElementById('p3-timer');
-  document.getElementById('p3-timer-label').textContent = "剩餘時間";
-  startCountdown(timerEl, 60, null, () => {
-    if (isRecording) stopRecordP3();
-  });
-}
-
-function stopRecordP3() {
-  stopRecognition();
-  clearInterval(timerInterval);
-  document.getElementById('p3-record-btn').innerHTML = "🎤 重新錄音";
-  document.getElementById('p3-record-btn').className = "btn btn-outline";
-  document.getElementById('p3-rec-indicator').style.display = "none";
-  document.getElementById('p3-transcript').classList.remove('recording');
-}
-
-function checkP3Keywords() {
-  const words = p3FinalText.toLowerCase().split(/\s+/).map(normalizeWord);
-  P3_KEYWORDS.forEach(kw => {
-    const el = document.getElementById('kw3-' + kw);
-    if (el) el.className = 'keyword-tag' + (words.includes(kw) ? ' found' : '');
-  });
-}
-
-function finishP3() {
-  clearInterval(timerInterval);
-  stopRecognition();
-
-  const words = p3FinalText.toLowerCase().split(/\s+/).map(normalizeWord).filter(Boolean);
-  let matched = P3_KEYWORDS.filter(kw => words.includes(kw)).length;
-
-  // Bonus for word count (up to 5 points)
-  const wordCount = words.length;
-  const lengthBonus = Math.min(5, Math.floor(wordCount / 10));
-
-  const rawPct = Math.min(100, Math.round((matched / P3_KEYWORDS.length * 95) + lengthBonus));
-  p3Score = Math.round(rawPct * 0.30);
-
-  // Result keywords
-  const kwResEl = document.getElementById('p3-keywords-result');
-  kwResEl.innerHTML = P3_KEYWORDS.map(k => {
-    const found = words.includes(k);
-    return `<span class="keyword-tag ${found ? 'found' : ''}">${k}</span>`;
-  }).join('');
-
-  document.getElementById('p3-score-chip').innerHTML = scoreChipHTML(rawPct, 100);
-  document.getElementById('p3-result').style.display = 'block';
-  document.getElementById('p3-done-btn').style.display = 'none';
-}
-
-// ══ RESULTS ══════════════════════════════════════════════════════════
-function goToResults() {
-  showScreen('results');
-  setProgress(100);
-
-  const total = p1Score + p2Score + p3Score;
-  document.getElementById('res-total').textContent = total;
-  document.getElementById('res-p1').textContent = p1Score;
-  document.getElementById('res-p2').textContent = p2Score;
-  document.getElementById('res-p3').textContent = p3Score;
-
-  let grade = "";
-  if (total >= 80) grade = "🏆 優秀！繼續保持！";
-  else if (total >= 60) grade = "👍 良好！再多練習就能更上一層樓！";
-  else if (total >= 40) grade = "📖 尚可，建議多開口說英文！";
-  else grade = "💪 加油！每天說英文，進步看得到！";
-
-  document.getElementById('res-grade').textContent = grade;
-}
-
-function restartTest() {
-  p1Score = p2Score = p3Score = 0;
-  p2CurrentQ = 0;
-  p2QScores = [];
-  p1FinalText = p3FinalText = "";
-  isRecording = false;
-  clearInterval(timerInterval);
-  showScreen('welcome');
-  setProgress(0);
+function restartTest(){
+  stopRecog();[mainTimer,cdTimer,prepTimer].forEach(clearInterval);
+  p1i=p2i=p3i=0; p1scores=[];p2scores=[];p3scores=[];
+  prog(0); badge('歡迎'); show('screen-welcome');
 }
 </script>
 </body>
