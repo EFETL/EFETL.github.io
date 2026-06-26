@@ -151,13 +151,17 @@ header{background:#fff;border-bottom:1px solid var(--g200);padding:13px 18px;dis
 <div class="screen" id="screen-p1">
   <div class="ph" style="background:linear-gradient(135deg,#2563eb,#7c3aed)">
     <h2>第一大題　複誦</h2>
-    <p>閱讀並記住句子，倒數結束後請馬上複誦。每題 15 秒。</p>
+    <p>系統播出句子兩次，播音結束後立即複誦。每題 15 秒。</p>
   </div>
   <div class="card">
     <div class="qnum" id="p1-qnum">題 1 / 5</div>
-    <div class="qtext" id="p1-text"></div>
-    <div class="qzh" id="p1-zh"></div>
-    <div class="cd-area" id="p1-cd">
+    <!-- TTS 播音指示器 -->
+    <div id="p1-speak" style="text-align:center;padding:24px 0 16px">
+      <div style="font-size:2.6rem;margin-bottom:10px">🔊</div>
+      <div style="font-size:14px;font-weight:700;color:var(--blue);margin-bottom:4px">正在播放題目</div>
+      <div style="font-size:13px;color:var(--g400)">第 <span id="p1-play-count">1</span> 次 ／ 共 2 次</div>
+    </div>
+    <div class="cd-area" id="p1-cd" style="display:none">
       <div class="cd-lbl">準備複誦…</div>
       <div class="cd-num" id="p1-cd-num">3</div>
     </div>
@@ -409,6 +413,17 @@ function countdown(el,sec,onTick,onDone){
   },1000);
 }
 
+// ── TTS (Part 1) ──────────────────────────────────────────
+function speakTwice(text, onDone){
+  window.speechSynthesis.cancel();
+  const makeU=()=>{const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=0.9;return u;};
+  const u1=makeU(), u2=makeU();
+  $('p1-play-count').textContent='1';
+  u1.onend=()=>setTimeout(()=>{$('p1-play-count').textContent='2';window.speechSynthesis.speak(u2);},1500);
+  u2.onend=()=>setTimeout(onDone,500);
+  window.speechSynthesis.speak(u1);
+}
+
 // ── Welcome ───────────────────────────────────────────────
 function startTest(){
   if(!(window.SpeechRecognition||window.webkitSpeechRecognition)){
@@ -423,20 +438,23 @@ function startTest(){
 function loadP1(i){
   const q=P1[i];
   $('p1-qnum').textContent=`題 ${i+1} / ${P1.length}`;
-  $('p1-text').textContent=q.t;
-  $('p1-zh').textContent=q.zh;
-  $('p1-cd').style.display='block';
+  $('p1-speak').style.display='block';
+  $('p1-play-count').textContent='1';
+  $('p1-cd').style.display='none';
   $('p1-rec').style.display='none';
   $('p1-result').style.display='none';
-  $('p1-cd-num').textContent=3;
   curFinal='';
-  let c=3;
-  clearInterval(cdTimer);
-  cdTimer=setInterval(()=>{
-    c--;
-    if(c>0){$('p1-cd-num').textContent=c;}
-    else{clearInterval(cdTimer);p1Rec(q);}
-  },1000);
+  speakTwice(q.t,()=>{
+    $('p1-speak').style.display='none';
+    $('p1-cd').style.display='block';
+    $('p1-cd-num').textContent=3;
+    let c=3;
+    clearInterval(cdTimer);
+    cdTimer=setInterval(()=>{
+      c--;
+      if(c>0){$('p1-cd-num').textContent=c;}
+      else{clearInterval(cdTimer);p1Rec(q);}
+    },1000);
 }
 function p1Rec(q){
   $('p1-cd').style.display='none';
