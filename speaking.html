@@ -414,9 +414,39 @@ function countdown(el,sec,onTick,onDone){
 }
 
 // ── TTS (Part 1) ──────────────────────────────────────────
+// Priority list: Google Neural > macOS Enhanced > macOS standard > fallback
+const VOICE_PRIORITY = [
+  'Google US English',
+  'Ava (Enhanced)','Allison (Enhanced)','Susan (Enhanced)','Zoe (Enhanced)',
+  'Samantha (Enhanced)','Karen (Enhanced)','Moira (Enhanced)',
+  'Ava','Allison','Susan','Zoe','Samantha','Karen','Moira',
+  'Microsoft Aria Online (Natural)','Microsoft Jenny Online (Natural)',
+  'Microsoft Guy Online (Natural)'
+];
+let _bestVoice = null;
+function loadVoices(){
+  const voices = window.speechSynthesis.getVoices();
+  const en = voices.filter(v => /^en/.test(v.lang));
+  for(const name of VOICE_PRIORITY){
+    const v = en.find(v => v.name === name);
+    if(v){ _bestVoice = v; return; }
+  }
+  // Fall back to any en-US non-compact voice
+  _bestVoice = en.find(v => v.lang === 'en-US' && !v.name.toLowerCase().includes('compact'))
+             || en.find(v => v.lang === 'en-US')
+             || en[0] || null;
+}
+window.speechSynthesis.onvoiceschanged = loadVoices;
+loadVoices();
+
 function speakTwice(text, onDone){
   window.speechSynthesis.cancel();
-  const makeU=()=>{const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=0.9;return u;};
+  const makeU=()=>{
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang='en-US'; u.rate=0.85; u.pitch=1.0;
+    if(_bestVoice) u.voice=_bestVoice;
+    return u;
+  };
   const u1=makeU(), u2=makeU();
   $('p1-play-count').textContent='1';
   u1.onend=()=>setTimeout(()=>{$('p1-play-count').textContent='2';window.speechSynthesis.speak(u2);},1500);
