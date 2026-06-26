@@ -161,10 +161,6 @@ header{background:#fff;border-bottom:1px solid var(--g200);padding:13px 18px;dis
       <div style="font-size:14px;font-weight:700;color:var(--blue);margin-bottom:4px">正在播放題目</div>
       <div style="font-size:13px;color:var(--g400)">第 <span id="p1-play-count">1</span> 次 ／ 共 2 次</div>
     </div>
-    <div class="cd-area" id="p1-cd" style="display:none">
-      <div class="cd-lbl">準備複誦…</div>
-      <div class="cd-num" id="p1-cd-num">3</div>
-    </div>
     <div id="p1-rec" style="display:none">
       <div class="timer-row">
         <div class="timer-label">複誦時間</div>
@@ -172,11 +168,19 @@ header{background:#fff;border-bottom:1px solid var(--g200);padding:13px 18px;dis
       </div>
       <div class="rec-row" style="display:flex"><span class="rec-dot"></span>錄音中 Recording...</div>
       <div class="transcript on" id="p1-tr"><span class="ph-text">正在聆聽您的聲音…</span></div>
+      <div class="btn-row">
+        <button class="btn btn-r" onclick="p1StopManual()">⏹ 停止錄音</button>
+      </div>
     </div>
     <div id="p1-result" style="display:none">
       <div class="kw-label">關鍵字命中 Keywords:</div>
       <div class="kw-row" id="p1-kw"></div>
-      <div id="p1-chip"></div>
+      <div id="p1-chip" style="margin-bottom:10px"></div>
+      <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 14px;margin-bottom:12px">
+        <div style="font-size:11px;color:#166534;font-weight:700;letter-spacing:.5px;margin-bottom:7px">✦ 正確句子 Correct Sentence</div>
+        <div id="p1-answer-text" style="font-size:1.05rem;font-weight:700;color:#166534;line-height:1.65;margin-bottom:9px"></div>
+        <button class="btn btn-o" style="font-size:12px;padding:6px 14px" onclick="playAnswer()">🔊 再聽一次</button>
+      </div>
       <div class="btn-row">
         <button class="btn btn-p" id="p1-next" onclick="p1Next()">下一題 →</button>
       </div>
@@ -186,46 +190,40 @@ header{background:#fff;border-bottom:1px solid var(--g200);padding:13px 18px;dis
 
 <!-- ══ PART 2: 朗讀 ══ -->
 <div class="screen" id="screen-p2">
-  <div class="ph" id="p2-ph" style="background:linear-gradient(135deg,#7c3aed,#2563eb)">
-    <h2 id="p2-ph-title">第二大題　朗讀句子</h2>
-    <p id="p2-ph-desc">請朗讀以下句子，語速自然、發音清晰。</p>
+  <div class="ph" style="background:linear-gradient(135deg,#7c3aed,#2563eb)">
+    <h2>第二大題　朗讀句子與短文</h2>
+    <p>請仔細閱讀所有句子與短文，閱讀時間結束後開始朗讀。</p>
   </div>
   <div class="card">
-    <div class="qnum" id="p2-qnum">句 1 / 6</div>
-    <div id="p2-sent-area">
-      <div class="qtext" id="p2-text"></div>
-      <div class="qzh" id="p2-zh"></div>
-    </div>
-    <div id="p2-pass-area" style="display:none">
-      <div class="passage" id="p2-passage"></div>
-    </div>
-    <!-- Prep -->
+    <!-- 全部句子一次顯示 -->
+    <div id="p2-all-text" style="margin-bottom:16px"></div>
+    <!-- 閱讀準備 -->
     <div id="p2-prep">
       <div class="timer-row">
-        <div class="timer-label">默讀準備</div>
-        <div class="timer-box" id="p2-prep-timer">0:30</div>
+        <div class="timer-label">閱讀準備</div>
+        <div class="timer-box" id="p2-prep-timer">1:00</div>
       </div>
-      <div class="notice">📖 準備好後可直接按下方按鈕，或等倒數結束自動開始錄音。</div>
-      <div class="btn-row">
-        <button class="btn btn-p" onclick="p2StartRec()">🎤 立即開始朗讀</button>
-      </div>
+      <div class="notice">📖 請仔細閱讀，1 分鐘後自動開始錄音。</div>
     </div>
-    <!-- Recording -->
+    <!-- 朗讀錄音 -->
     <div id="p2-rec" style="display:none">
       <div class="timer-row">
-        <div class="timer-label" id="p2-rec-lbl">朗讀中</div>
-        <div class="timer-box" id="p2-rec-timer">0:30</div>
+        <div class="timer-label">朗讀中</div>
+        <div class="timer-box" id="p2-rec-timer">1:00</div>
       </div>
       <div class="rec-row" style="display:flex"><span class="rec-dot"></span>朗讀中 Recording...</div>
       <div class="transcript on" id="p2-tr"><span class="ph-text">正在聆聽…</span></div>
+      <div class="btn-row">
+        <button class="btn btn-r" onclick="p2StopManual()">⏹ 停止錄音</button>
+      </div>
     </div>
-    <!-- Result -->
+    <!-- 結果 -->
     <div id="p2-result" style="display:none">
       <div class="kw-label">關鍵字命中 Keywords:</div>
       <div class="kw-row" id="p2-kw"></div>
       <div id="p2-chip"></div>
       <div class="btn-row">
-        <button class="btn btn-p" id="p2-next" onclick="p2Next()">下一題 →</button>
+        <button class="btn btn-p" onclick="p2GoP3()">進入第三大題 →</button>
       </div>
     </div>
   </div>
@@ -470,23 +468,23 @@ function loadP1(i){
   $('p1-qnum').textContent=`題 ${i+1} / ${P1.length}`;
   $('p1-speak').style.display='block';
   $('p1-play-count').textContent='1';
-  $('p1-cd').style.display='none';
   $('p1-rec').style.display='none';
   $('p1-result').style.display='none';
   curFinal='';
   speakTwice(q.t,()=>{
     $('p1-speak').style.display='none';
-    $('p1-cd').style.display='block';
-    $('p1-cd-num').textContent=3;
-    let c=3;
-    clearInterval(cdTimer);
-    cdTimer=setInterval(()=>{
-      c--;
-      if(c>0){$('p1-cd-num').textContent=c;}
-      else{clearInterval(cdTimer);p1Rec(q);}
-    },1000);
+    p1Rec(q);
   });
 }
+function p1StopManual(){ if(recording) p1Score(P1[p1i]); }
+function speakAnswer(text){
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='en-US'; u.rate=0.85; u.pitch=1.0;
+  if(_bestVoice) u.voice=_bestVoice;
+  window.speechSynthesis.speak(u);
+}
+function playAnswer(){ speakAnswer(P1[p1i].t); }
 function p1Rec(q){
   $('p1-cd').style.display='none';
   $('p1-rec').style.display='block';
@@ -510,49 +508,50 @@ function p1Score(q){
   $('p1-rec').style.display='none';
   $('p1-result').style.display='block';
   $('p1-next').textContent=p1i===P1.length-1?'完成第一大題 →':'下一題 →';
+  $('p1-answer-text').textContent=q.t;
+  speakAnswer(q.t);
 }
 function p1Next(){
   p1i++;
   if(p1i<P1.length){prog(5+p1i*4);loadP1(p1i);}
-  else{p2i=0;p2scores=[];show('screen-p2');badge('第二大題');prog(30);loadP2(0);}
+  else{p2scores=[];show('screen-p2');badge('第二大題');prog(30);initP2();}
 }
 
 // ── Part 2 ────────────────────────────────────────────────
-function loadP2(i){
-  const q=P2[i];
-  $('p2-qnum').textContent=q.pass?'短文 6 / 6':`句 ${i+1} / 6`;
-  $('p2-ph-title').textContent=q.pass?'第二大題　朗讀短文':'第二大題　朗讀句子';
-  $('p2-ph-desc').textContent=q.pass?'默讀後請朗讀一遍，語速自然。':'請朗讀以下句子，發音清晰。';
-  $('p2-sent-area').style.display=q.pass?'none':'block';
-  $('p2-pass-area').style.display=q.pass?'block':'none';
+function initP2(){
+  // 顯示全部句子與短文
+  $('p2-all-text').innerHTML=P2.map((q,i)=>{
+    if(q.pass){
+      return `<div style="margin-bottom:12px">
+        <div style="font-size:11px;color:var(--g400);font-weight:700;letter-spacing:.5px;margin-bottom:6px">短文（第 6 題）</div>
+        <div class="passage">${q.t}</div>
+      </div>`;
+    }
+    return `<div style="display:flex;gap:9px;margin-bottom:9px;align-items:baseline">
+      <span style="font-size:11px;color:var(--g400);font-weight:700;flex-shrink:0;min-width:18px">${i+1}.</span>
+      <span style="font-size:.98rem;font-weight:600;line-height:1.7">${q.t}</span>
+    </div>`;
+  }).join('');
   $('p2-prep').style.display='block';
   $('p2-rec').style.display='none';
   $('p2-result').style.display='none';
-  if(q.pass){
-    $('p2-passage').innerHTML=q.t+`<div class="passage-zh">${q.zh}</div>`;
-  }else{
-    $('p2-text').textContent=q.t;
-    $('p2-zh').textContent=q.zh;
-  }
   curFinal='';
-  // Prep countdown
+  // 60 秒閱讀倒數
   clearInterval(prepTimer);
-  let rem=q.prep;
+  let rem=60;
   const pEl=$('p2-prep-timer');
   pEl.textContent=fmt(rem); pEl.className='timer-box';
   prepTimer=setInterval(()=>{
     rem--;
     pEl.textContent=fmt(rem);
-    if(rem<=5)pEl.className='timer-box danger';
+    if(rem<=10)pEl.className='timer-box danger';
     if(rem<=0){clearInterval(prepTimer);p2StartRec();}
   },1000);
 }
 function p2StartRec(){
   clearInterval(prepTimer);
-  const q=P2[p2i];
   $('p2-prep').style.display='none';
   $('p2-rec').style.display='block';
-  $('p2-rec-lbl').textContent=q.pass?'朗讀短文中':'朗讀中';
   $('p2-tr').innerHTML='<span class="ph-text">正在聆聽…</span>';
   curFinal=''; recording=true;
   recog=initRecog((fin,intr)=>{
@@ -561,24 +560,23 @@ function p2StartRec(){
       (intr?`<span class="interim">${intr}</span>`:'<span class="ph-text">正在聆聽…</span>');
   },()=>{if(recording)recog.start();});
   if(recog)recog.start();
-  countdown($('p2-rec-timer'),q.rec,null,()=>{if(recording)p2Score();});
+  countdown($('p2-rec-timer'),60,null,()=>{if(recording)p2Score();});
 }
+function p2StopManual(){ if(recording) p2Score(); }
 function p2Score(){
   stopRecog(); clearInterval(mainTimer);
-  const q=P2[p2i];
-  const res=matchKW(curFinal,q.kw);
-  const pct=Math.round(res.filter(r=>r.hit).length/q.kw.length*100);
-  p2scores.push(pct);
+  const allKw=P2.flatMap(q=>q.kw);
+  const res=matchKW(curFinal,allKw);
+  const pct=Math.round(res.filter(r=>r.hit).length/allKw.length*100);
+  p2scores=[pct];
   renderKW('p2-kw',res);
   $('p2-chip').innerHTML=chip(pct);
   $('p2-rec').style.display='none';
   $('p2-result').style.display='block';
-  $('p2-next').textContent=p2i===P2.length-1?'完成第二大題 →':'下一題 →';
 }
-function p2Next(){
-  p2i++;
-  if(p2i<P2.length){prog(30+Math.round(p2i/P2.length*25));loadP2(p2i);}
-  else{p3i=0;p3scores=[];show('screen-p3');badge('第三大題');prog(60);loadP3(0);}
+function p2GoP3(){
+  p3i=0; p3scores=[];
+  show('screen-p3'); badge('第三大題'); prog(60); loadP3(0);
 }
 
 // ── Part 3 ────────────────────────────────────────────────
