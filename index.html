@@ -1,243 +1,121 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>英檢初級 GEPT Elementary</title>
+<title>EFETL 英文練習</title>
 <style>
-  *{box-sizing:border-box;}
-  body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;
-    color:#22303f;line-height:1.6;background:linear-gradient(180deg,#eef6ff,#fff4f7 70%);min-height:100vh;}
-  .wrap{max-width:900px;margin:0 auto;padding:18px 16px 60px;}
-  .home{display:inline-block;margin-bottom:14px;color:#2b8cff;font-weight:800;text-decoration:none;
-    background:#fff;padding:7px 16px;border-radius:20px;box-shadow:0 3px 10px rgba(43,140,255,.12);font-size:.9rem;}
-  header.hero{background:linear-gradient(135deg,#5ec6ff,#7d8bff 55%,#b06bff);color:#fff;
-    border-radius:22px;padding:30px 26px;margin-bottom:28px;box-shadow:0 10px 26px rgba(125,139,255,.32);}
-  header.hero h1{margin:0 0 8px;font-size:1.8rem;text-shadow:0 1px 2px rgba(0,0,0,.12);}
-  header.hero p{margin:0;opacity:.95;font-size:.98rem;}
-  header.hero .badge{display:inline-block;margin-top:14px;background:rgba(255,255,255,.22);
-    padding:8px 14px;border-radius:12px;font-size:.85rem;}
-
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:18px;}
-
-  /* ── Active card ── */
-  .card{background:#fff;border-radius:18px;overflow:hidden;text-decoration:none;color:inherit;
-    box-shadow:0 5px 16px rgba(43,140,255,.12);transition:transform .15s,box-shadow .15s;border:1px solid #eaf1fb;display:block;}
-  .card:hover{transform:translateY(-4px);box-shadow:0 12px 26px rgba(43,140,255,.2);}
-
-  /* ── Coming-soon card ── */
-  .card-soon{background:#fff;border-radius:18px;overflow:hidden;text-decoration:none;color:inherit;
-    box-shadow:0 3px 10px rgba(43,140,255,.07);border:1px solid #eaf1fb;display:block;opacity:.72;cursor:default;}
-
-  .thumb{position:relative;line-height:0;}
-  .thumb svg{width:100%;height:auto;display:block;}
-  .soon-mask{position:absolute;inset:0;background:rgba(255,255,255,.38);
-    display:flex;align-items:flex-start;justify-content:flex-end;padding:12px;}
-  .soon-badge{background:rgba(255,200,0,.9);color:#5a3d00;font-size:.72rem;
-    font-weight:800;padding:4px 10px;border-radius:99px;letter-spacing:.5px;}
-
-  .cap{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;}
-  .cap-zh{font-weight:800;font-size:1.05rem;}
-  .cap-en{font-size:.82rem;color:#7a8694;}
-  .go{color:#2b8cff;font-weight:800;font-size:.9rem;}
-  .go-soon{color:#b0b8c4;font-weight:700;font-size:.88rem;}
-
-  footer{text-align:center;color:#7a8694;font-size:.82rem;margin-top:40px;}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+font-family: 'Noto Sans TC', '微軟正黑體', sans-serif;
+min-height: 100vh;
+background: linear-gradient(135deg, #0f2357 0%, #1a3a7a 50%, #0e5a45 100%);
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+padding: 20px;
+}
+h1 {
+color: #fff;
+font-size: 2.2rem;
+margin-bottom: 0.4em;
+letter-spacing: 3px;
+text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+}
+.subtitle {
+color: rgba(255,255,255,0.65);
+font-size: 1rem;
+margin-bottom: 3.5rem;
+letter-spacing: 2px;
+}
+.btn-grid {
+display: flex;
+gap: 28px;
+flex-wrap: wrap;
+justify-content: center;
+}
+.btn-card {
+background: rgba(255,255,255,0.1);
+border: 2px solid rgba(255,255,255,0.25);
+border-radius: 20px;
+padding: 44px 52px;
+text-decoration: none;
+color: #fff;
+text-align: center;
+transition: all 0.28s cubic-bezier(.4,0,.2,1);
+backdrop-filter: blur(12px);
+min-width: 190px;
+position: relative;
+overflow: hidden;
+}
+.btn-card:hover {
+background: rgba(255,255,255,0.22);
+border-color: rgba(255,255,255,0.6);
+transform: translateY(-6px);
+box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+}
+.btn-card .icon { font-size: 3rem; margin-bottom: 14px; display: block; }
+.btn-card .label { font-size: 1.6rem; font-weight: 700; letter-spacing: 3px; display: block; }
+.btn-card .desc { font-size: 0.82rem; color: rgba(255,255,255,0.55); margin-top: 8px; display: block; letter-spacing: 1px; }
+.btn-card.disabled {
+opacity: 0.45;
+cursor: default;
+pointer-events: none;
+}
+.coming-badge {
+position: absolute;
+top: 14px; right: 14px;
+background: rgba(255,200,0,0.85);
+color: #333;
+font-size: 0.65rem;
+font-weight: 700;
+padding: 3px 8px;
+border-radius: 20px;
+letter-spacing: 0.5px;
+}
+footer {
+margin-top: 4.5rem;
+color: rgba(255,255,255,0.3);
+font-size: 0.78rem;
+letter-spacing: 1px;
+}
+@media (max-width: 600px) {
+.btn-grid { flex-direction: column; align-items: center; }
+.btn-card { min-width: 240px; padding: 36px 48px; }
+}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <a class="home" href="index_updated.html">← 回首頁</a>
-
-  <header class="hero">
-    <h1>🌎 英檢初級　GEPT Elementary</h1>
-    <p>聽說讀寫四大能力全方位練習，模擬真實英檢初級測驗。</p>
-    <span class="badge">目前開放：口說・閱讀　更多題型陸續推出</span>
-  </header>
-
-  <div class="grid">
-
-    <!-- ── 聽 Listening (coming soon) ── -->
-    <div class="card-soon">
-      <div class="thumb">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 260" width="400" height="260" role="img" aria-label="聽力測驗">
-          <defs>
-            <linearGradient id="gL" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#f6d365"/><stop offset="1" stop-color="#fda085"/>
-            </linearGradient>
-            <filter id="sL" x="-20%" y="-20%" width="140%" height="140%">
-              <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#000" flood-opacity="0.18"/>
-            </filter>
-          </defs>
-          <rect width="400" height="260" rx="24" fill="url(#gL)"/>
-          <circle cx="340" cy="46" r="80" fill="#fff" opacity="0.13"/>
-          <circle cx="58" cy="224" r="54" fill="#fff" opacity="0.11"/>
-          <!-- Headphone arc -->
-          <path d="M122,148 Q122,72 200,72 Q278,72 278,148"
-            fill="none" stroke="#fff" stroke-width="16" stroke-linecap="round" opacity="0.95" filter="url(#sL)"/>
-          <!-- Left ear cup -->
-          <rect x="96" y="144" width="42" height="68" rx="20" fill="#fff" opacity="0.95" filter="url(#sL)"/>
-          <!-- Right ear cup -->
-          <rect x="262" y="144" width="42" height="68" rx="20" fill="#fff" opacity="0.95" filter="url(#sL)"/>
-          <!-- Labels -->
-          <text x="200" y="200" text-anchor="middle"
-            font-family="Helvetica,Arial,'PingFang TC',sans-serif"
-            font-size="82" font-weight="900" fill="#fff" opacity="0.22">聽</text>
-          <text x="30" y="244"
-            font-family="Helvetica,Arial,'PingFang TC',sans-serif"
-            font-size="32" font-weight="900" fill="#fff" filter="url(#sL)">聽力測驗</text>
-          <text x="262" y="244"
-            font-family="Helvetica,Arial,sans-serif"
-            font-size="18" font-weight="700" fill="#fff" opacity="0.88">Listening</text>
-        </svg>
-        <div class="soon-mask"><span class="soon-badge">即將推出</span></div>
-      </div>
-      <div class="cap">
-        <div><div class="cap-zh">聽力測驗</div><div class="cap-en">Listening Test</div></div>
-        <span class="go-soon">即將推出</span>
-      </div>
-    </div>
-
-    <!-- ── 說 Speaking ── -->
-    <a class="card" href="speaking.html">
-      <div class="thumb">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 260" width="400" height="260" role="img" aria-label="口說測驗">
-          <defs>
-            <linearGradient id="gS" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#b06bff"/><stop offset="1" stop-color="#7d8bff"/>
-            </linearGradient>
-            <filter id="sS" x="-20%" y="-20%" width="140%" height="140%">
-              <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#000" flood-opacity="0.18"/>
-            </filter>
-          </defs>
-          <rect width="400" height="260" rx="24" fill="url(#gS)"/>
-          <circle cx="340" cy="46" r="80" fill="#fff" opacity="0.13"/>
-          <circle cx="58" cy="224" r="54" fill="#fff" opacity="0.11"/>
-          <!-- Mic body -->
-          <rect x="166" y="42" width="68" height="108" rx="34" fill="#fff" opacity="0.95" filter="url(#sS)"/>
-          <!-- Mic lines (grille) -->
-          <line x1="182" y1="68" x2="218" y2="68" stroke="#b06bff" stroke-width="3" stroke-linecap="round"/>
-          <line x1="182" y1="82" x2="218" y2="82" stroke="#b06bff" stroke-width="3" stroke-linecap="round"/>
-          <line x1="182" y1="96" x2="218" y2="96" stroke="#b06bff" stroke-width="3" stroke-linecap="round"/>
-          <!-- Mic stand arc -->
-          <path d="M134,152 Q134,206 200,206 Q266,206 266,152"
-            fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" opacity="0.9" filter="url(#sS)"/>
-          <!-- Stand pole -->
-          <line x1="200" y1="206" x2="200" y2="236"
-            stroke="#fff" stroke-width="9" stroke-linecap="round" opacity="0.9"/>
-          <!-- Base -->
-          <line x1="166" y1="236" x2="234" y2="236"
-            stroke="#fff" stroke-width="9" stroke-linecap="round" opacity="0.9"/>
-          <!-- Labels -->
-          <text x="30" y="244"
-            font-family="Helvetica,Arial,'PingFang TC',sans-serif"
-            font-size="32" font-weight="900" fill="#fff" filter="url(#sS)">口說測驗</text>
-          <text x="262" y="244"
-            font-family="Helvetica,Arial,sans-serif"
-            font-size="18" font-weight="700" fill="#fff" opacity="0.88">Speaking</text>
-        </svg>
-      </div>
-      <div class="cap">
-        <div><div class="cap-zh">口說測驗</div><div class="cap-en">Speaking Test</div></div>
-        <span class="go">開始練習 ›</span>
-      </div>
-    </a>
-
-    <!-- ── 讀 Reading ── -->
-    <a class="card" href="gept.html">
-      <div class="thumb">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 260" width="400" height="260" role="img" aria-label="閱讀測驗">
-          <defs>
-            <linearGradient id="gR" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#5ec6ff"/><stop offset="0.5" stop-color="#7d8bff"/><stop offset="1" stop-color="#b06bff"/>
-            </linearGradient>
-            <filter id="sR" x="-20%" y="-20%" width="140%" height="140%">
-              <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#000" flood-opacity="0.20"/>
-            </filter>
-          </defs>
-          <rect width="400" height="260" rx="24" fill="url(#gR)"/>
-          <circle cx="340" cy="46" r="80" fill="#fff" opacity="0.14"/>
-          <circle cx="58" cy="224" r="54" fill="#fff" opacity="0.12"/>
-          <!-- Open book -->
-          <g transform="translate(148,44)" filter="url(#sR)">
-            <rect x="0" y="0" width="104" height="78" rx="8" fill="#fff" opacity="0.96"/>
-            <line x1="52" y1="6" x2="52" y2="72" stroke="#7d8bff" stroke-width="4"/>
-            <line x1="12" y1="22" x2="44" y2="22" stroke="#b06bff" stroke-width="4" stroke-linecap="round"/>
-            <line x1="12" y1="36" x2="44" y2="36" stroke="#b06bff" stroke-width="4" stroke-linecap="round"/>
-            <line x1="12" y1="50" x2="44" y2="50" stroke="#b06bff" stroke-width="4" stroke-linecap="round"/>
-            <line x1="60" y1="22" x2="92" y2="22" stroke="#5ec6ff" stroke-width="4" stroke-linecap="round"/>
-            <line x1="60" y1="36" x2="92" y2="36" stroke="#5ec6ff" stroke-width="4" stroke-linecap="round"/>
-            <line x1="60" y1="50" x2="92" y2="50" stroke="#5ec6ff" stroke-width="4" stroke-linecap="round"/>
-          </g>
-          <!-- Labels -->
-          <text x="30" y="200"
-            font-family="Helvetica,Arial,'PingFang TC',sans-serif"
-            font-size="30" font-weight="800" fill="#fff" opacity="0.95">GEPT 初級</text>
-          <text x="30" y="244"
-            font-family="Helvetica,Arial,'PingFang TC',sans-serif"
-            font-size="32" font-weight="900" fill="#fff" filter="url(#sR)">閱讀測驗</text>
-          <text x="262" y="244"
-            font-family="Helvetica,Arial,sans-serif"
-            font-size="18" font-weight="700" fill="#fff" opacity="0.88">Reading</text>
-        </svg>
-      </div>
-      <div class="cap">
-        <div><div class="cap-zh">閱讀測驗</div><div class="cap-en">16 回 · 每回 30 題</div></div>
-        <span class="go">開始練習 ›</span>
-      </div>
-    </a>
-
-    <!-- ── 寫 Writing (coming soon) ── -->
-    <div class="card-soon">
-      <div class="thumb">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 260" width="400" height="260" role="img" aria-label="寫作測驗">
-          <defs>
-            <linearGradient id="gW" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#43e97b"/><stop offset="1" stop-color="#38f9d7"/>
-            </linearGradient>
-            <filter id="sW" x="-20%" y="-20%" width="140%" height="140%">
-              <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#000" flood-opacity="0.18"/>
-            </filter>
-          </defs>
-          <rect width="400" height="260" rx="24" fill="url(#gW)"/>
-          <circle cx="340" cy="46" r="80" fill="#fff" opacity="0.13"/>
-          <circle cx="58" cy="224" r="54" fill="#fff" opacity="0.11"/>
-          <!-- Pencil (rotated) -->
-          <g transform="rotate(-32,200,120)">
-            <!-- eraser -->
-            <rect x="182" y="38" width="36" height="20" rx="4" fill="#ffb3ba" opacity="0.95" filter="url(#sW)"/>
-            <!-- body -->
-            <rect x="182" y="58" width="36" height="110" fill="#fff" opacity="0.95" filter="url(#sW)"/>
-            <!-- pencil lines -->
-            <line x1="190" y1="75" x2="210" y2="75" stroke="#43e97b" stroke-width="2.5" stroke-linecap="round"/>
-            <line x1="190" y1="88" x2="210" y2="88" stroke="#43e97b" stroke-width="2.5" stroke-linecap="round"/>
-            <line x1="190" y1="101" x2="210" y2="101" stroke="#43e97b" stroke-width="2.5" stroke-linecap="round"/>
-            <!-- ferrule -->
-            <rect x="182" y="166" width="36" height="10" fill="#ccc" opacity="0.7"/>
-            <!-- tip -->
-            <polygon points="182,176 218,176 200,210" fill="#ffd166" opacity="0.9" filter="url(#sW)"/>
-            <!-- tip tip -->
-            <polygon points="192,200 208,200 200,210" fill="#e0a020" opacity="0.85"/>
-          </g>
-          <!-- Labels -->
-          <text x="30" y="244"
-            font-family="Helvetica,Arial,'PingFang TC',sans-serif"
-            font-size="32" font-weight="900" fill="#fff" filter="url(#sW)">寫作測驗</text>
-          <text x="262" y="244"
-            font-family="Helvetica,Arial,sans-serif"
-            font-size="18" font-weight="700" fill="#fff" opacity="0.88">Writing</text>
-        </svg>
-        <div class="soon-mask"><span class="soon-badge">即將推出</span></div>
-      </div>
-      <div class="cap">
-        <div><div class="cap-zh">寫作測驗</div><div class="cap-en">Writing Test</div></div>
-        <span class="go-soon">即將推出</span>
-      </div>
-    </div>
-
-  </div><!-- /grid -->
-
-  <footer>EFETL © 2025　‧　GEPT 初級英檢練習</footer>
+<h1>&#128218; EFETL 英文練習</h1>
+<p class="subtitle">選擇你想練習的題型</p>
+<div class="btn-grid">
+<a href="gsat.html" class="btn-card">
+<span class="icon">&#127891;</span>
+<span class="label">學測</span>
+<span class="desc">大學學科能力測驗</span>
+</a>
+<a href="longteng.html" class="btn-card">
+<span class="icon">&#128214;</span>
+<span class="label">龍騰</span>
+<span class="desc">龍騰各冊互動測驗</span>
+</a>
+<a href="longteng-hs.html" class="btn-card">
+<span class="icon">&#128218;</span>
+<span class="label">龍騰高職</span>
+<span class="desc">龍騰高職各冊互動測驗</span>
+</a>
+<a href="tongce.html" class="btn-card">
+<span class="icon">&#128221;</span>
+<span class="label">統測</span>
+<span class="desc">技術學院聯合入學測驗</span>
+</a>
+<a href="gept-hub.html" class="btn-card">
+<span class="icon">&#127758;</span>
+<span class="label">英檢初級</span>
+<span class="desc">GEPT 初級英檢</span>
+</a>
 </div>
+<footer>EFETL &copy; 2025</footer>
 </body>
 </html>
