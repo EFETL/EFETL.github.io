@@ -159,7 +159,8 @@ header{background:#fff;border-bottom:1px solid var(--g200);padding:13px 18px;dis
     <div id="p1-speak" style="text-align:center;padding:24px 0 16px">
       <div style="font-size:2.6rem;margin-bottom:10px">🔊</div>
       <div style="font-size:14px;font-weight:700;color:var(--blue);margin-bottom:4px">正在播放題目</div>
-      <div style="font-size:13px;color:var(--g400)">第 <span id="p1-play-count">1</span> 次 ／ 共 2 次</div>
+      <div style="font-size:13px;color:var(--g400);margin-bottom:4px">第 <span id="p1-play-count">1</span> 次 ／ 共 2 次</div>
+      <div style="font-size:12px;color:var(--g400)"><span id="p1-speak-cd"></span></div>
     </div>
     <div id="p1-rec" style="display:none">
       <div class="timer-row">
@@ -437,33 +438,19 @@ function loadVoices(){
 window.speechSynthesis.onvoiceschanged = loadVoices;
 loadVoices();
 
-function speakTwice(text, onDone){
+// TTS 純播音，不負責流程控制（流程由 loadP1 的計時器決定）
+function speakTwice(text){
   window.speechSynthesis.cancel();
-  // 估算朗讀時間（rate=0.85，約每秒 2.2 個詞）作為保險 timeout
-  const est = Math.ceil(text.split(/\s+/).length / 2.2) * 1000;
   let playCount = 0;
-
   const playNext = () => {
     playCount++;
-    $('p1-play-count').textContent = String(playCount);
+    try{ $('p1-play-count').textContent = String(playCount); }catch(e){}
     const u = new SpeechSynthesisUtterance(text);
     u.lang='en-US'; u.rate=0.85; u.pitch=1.0;
-    if(_bestVoice) u.voice=_bestVoice;
-
-    let fired = false;
-    const done = () => {
-      if(fired) return; fired=true;
-      clearTimeout(fb);
-      if(playCount < 2){ setTimeout(playNext, 1500); }
-      else { setTimeout(onDone, 400); }
-    };
-    u.onend = done;
-    // Chrome onend 不觸發的保險：估算時間 + 3 秒緩衝
-    const fb = setTimeout(done, est + 3000);
+    if(_bestVoice) u.voice = _bestVoice;
+    if(playCount < 2) u.onend = () => setTimeout(playNext, 1500);
     window.speechSynthesis.speak(u);
   };
-
-  // cancel() 後稍等再 speak，避免 Chrome 立即失敗
   setTimeout(playNext, 150);
 }
 
@@ -486,10 +473,28 @@ function loadP1(i){
   $('p1-rec').style.display='none';
   $('p1-result').style.display='none';
   curFinal='';
-  speakTwice(q.t,()=>{
-    $('p1-speak').style.display='none';
-    p1Rec(q);
-  });
+
+  // 計算等待時間：每次播音估算 + 間隔 1.5s + 緩衝 1s，共播兩次
+  const words = q.t.split(/\s+/).length;
+  const perPlay = Math.ceil(words / 2.2) * 1000;
+  const totalWait = perPlay * 2 + 1500 + 1000;
+
+  // TTS 播音（純播，不管 onend）
+  speakTwice(q.t);
+
+  // 計時器控制流程：等待播完後自動進錄音
+  let rem = Math.ceil(totalWait / 1000);
+  $('p1-speak-cd').textContent = `${rem} 秒後開始錄音`;
+  clearInterval(cdTimer);
+  cdTimer = setInterval(()=>{
+    rem--;
+    if(rem > 0){ $('p1-speak-cd').textContent = `${rem} 秒後開始錄音`; }
+    else{
+      clearInterval(cdTimer);
+      $('p1-speak').style.display='none';
+      p1Rec(q);
+    }
+  }, 1000);
 }
 function p1StopManual(){ if(recording) p1Score(P1[p1i]); }
 function speakAnswer(text){
