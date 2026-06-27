@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>郵局國考法規｜EFETL 互動題庫</title>
+<style>
+:root{
+  --green:#00824a; --green-d:#005c33; --green-l:#e7f4ec;
+  --gold:#c8902a; --ink:#222; --muted:#5f6b63; --line:#d9e4dc;
+  --bg:#f6faf7; --card:#fff; --red:#c0392b; --red-l:#fdecea;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  font-size:17px; line-height:1.85; -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:920px;margin:0 auto;padding:0 18px 80px}
+header.top{
+  background:linear-gradient(135deg,var(--green),var(--green-d));
+  color:#fff;padding:30px 18px;text-align:center;
+}
+header.top .wrap{padding-bottom:0}
+header.top h1{margin:0 0 6px;font-size:1.7em;letter-spacing:1px}
+header.top p{margin:4px 0;opacity:.92;font-size:.95em}
+.backlink{display:inline-block;margin-top:12px;color:#fff;
+  border:1px solid rgba(255,255,255,.6);border-radius:20px;
+  padding:5px 16px;text-decoration:none;font-size:.9em}
+.backlink:hover{background:rgba(255,255,255,.15)}
+nav.tabs{position:sticky;top:0;z-index:20;background:var(--card);
+  border-bottom:1px solid var(--line);display:flex;gap:6px;
+  padding:8px 18px;box-shadow:0 2px 6px rgba(0,0,0,.05)}
+nav.tabs button{flex:1;border:0;background:transparent;font-size:1em;
+  font-family:inherit;padding:10px;border-radius:8px;cursor:pointer;
+  color:var(--muted);font-weight:700}
+nav.tabs button.on{background:var(--green-l);color:var(--green-d)}
+section.pane{display:none;padding-top:22px}
+section.pane.on{display:block}
+h2.sec{font-size:1.35em;color:var(--green-d);border-left:6px solid var(--green);
+  padding-left:12px;margin:30px 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:18px 20px;margin:14px 0;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.card h3{margin:0 0 10px;font-size:1.12em;color:var(--green-d)}
+.card h3 .art{font-size:.72em;color:var(--gold);font-weight:700;margin-left:8px}
+.card ul{margin:8px 0;padding-left:1.3em}
+.card li{margin:6px 0}
+.tag{display:inline-block;background:var(--green-l);color:var(--green-d);
+  border-radius:6px;padding:1px 8px;font-size:.8em;font-weight:700;margin-right:6px}
+.hl{background:#fff5d6;padding:0 3px;border-radius:3px;font-weight:700}
+.warn{color:var(--red);font-weight:700}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.96em;
+  background:#fff;border-radius:10px;overflow:hidden}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+th{background:var(--green);color:#fff;font-weight:700}
+tbody tr:nth-child(even){background:var(--green-l)}
+.mnem{background:var(--green-l);border:1px dashed var(--green);border-radius:10px;
+  padding:12px 16px;margin:12px 0;font-size:.98em}
+.mnem b{color:var(--green-d)}
+
+/* quiz */
+.quizbar{position:sticky;top:54px;z-index:15;background:#fff;border:1px solid var(--line);
+  border-radius:12px;padding:10px 16px;margin:6px 0 16px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.quizbar .score{font-weight:800;color:var(--green-d);font-size:1.05em}
+.quizbar .prog{flex:1;min-width:120px;height:10px;background:var(--green-l);
+  border-radius:8px;overflow:hidden}
+.quizbar .prog>i{display:block;height:100%;width:0;background:var(--green);transition:.3s}
+.quizbar button{border:1px solid var(--green);background:#fff;color:var(--green-d);
+  font-family:inherit;font-size:.9em;padding:6px 12px;border-radius:8px;cursor:pointer;font-weight:700}
+.quizbar button:hover{background:var(--green-l)}
+.q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:16px 18px;margin:14px 0;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.q .stem{font-weight:700;margin-bottom:12px}
+.q .stem .no{display:inline-block;background:var(--green);color:#fff;border-radius:50%;
+  width:1.7em;height:1.7em;line-height:1.7em;text-align:center;margin-right:8px;font-size:.92em}
+.opt{display:block;width:100%;text-align:left;border:1.5px solid var(--line);
+  background:#fbfdfb;border-radius:10px;padding:11px 14px;margin:7px 0;cursor:pointer;
+  font-family:inherit;font-size:1em;line-height:1.6;transition:.15s}
+.opt:hover{border-color:var(--green)}
+.opt .lab{font-weight:800;color:var(--green-d);margin-right:6px}
+.opt.correct{background:var(--green-l);border-color:var(--green);color:var(--green-d)}
+.opt.wrong{background:var(--red-l);border-color:var(--red);color:var(--red)}
+.opt.lock{cursor:default}
+.exp{margin-top:10px;padding:11px 14px;border-radius:10px;background:#f3f8f4;
+  border-left:4px solid var(--green);font-size:.97em;display:none}
+.exp.show{display:block}
+.exp b{color:var(--green-d)}
+footer{text-align:center;color:var(--muted);font-size:.85em;margin-top:40px}
+@media(max-width:520px){body{font-size:16.5px}.wrap{padding:0 12px 60px}}
+@media print{nav.tabs,.quizbar,.backlink{display:none}section.pane{display:block!important}
+  .exp{display:block!important}.q,.card{break-inside:avoid}}
+
+.hero{padding:34px 0 10px}
+.lawcard{display:flex;gap:16px;align-items:center;background:#fff;border:1px solid var(--line);
+  border-radius:14px;padding:18px 20px;margin:12px 0;text-decoration:none;color:inherit;
+  box-shadow:0 1px 4px rgba(0,0,0,.04);transition:.15s}
+.lawcard:hover{border-color:var(--green);transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,130,74,.12)}
+.lawcard .ic{font-size:2.4em}
+.lawcard h3{margin:0;color:var(--green-d);font-size:1.2em}
+.lawcard p{margin:3px 0;color:var(--muted);font-size:.92em}
+.lawcard .go{color:var(--gold);font-weight:700;font-size:.92em}
+</style>
+</head><body>
+<header class="top"><div class="wrap">
+  <h1>📮 郵局法規 國考複習中心</h1>
+  <p>郵政法 ｜ 郵件處理規則 ｜ 郵務營業規章 ｜ 郵政儲金匯兌法 ｜ 簡易人壽保險法</p>
+  <p>系統脈絡整理 + 跨法比較表 + 每部 25 題互動練習（共 125 題）</p>
+  <div style="margin-top:12px"><a class="backlink" href="/">&#8592; 回首頁</a></div>
+</div></header>
+<div class="wrap">
+  <div class="hero">
+    <h2 class="sec">選擇法規開始複習</h2>
+    
+      <a class="lawcard" href="post-office-postal-act.html">
+        <div class="ic">✉️</div>
+        <div>
+          <h3>郵政法</h3>
+          <p>民國112年6月28日修正 ｜ Postal Act</p>
+          <span class="go">重點整理 + 25 題練習 →</span>
+        </div>
+      </a>
+      <a class="lawcard" href="post-office-mail-handling.html">
+        <div class="ic">📦</div>
+        <div>
+          <h3>郵件處理規則</h3>
+          <p>民國111年5月27日修正（郵政法§48子法） ｜ Mail Handling Rules</p>
+          <span class="go">重點整理 + 25 題練習 →</span>
+        </div>
+      </a>
+      <a class="lawcard" href="post-office-mail-business.html">
+        <div class="ic">📬</div>
+        <div>
+          <h3>郵務營業規章</h3>
+          <p>中華郵政公司｜民國112年12月修正 ｜ Mail Business Regulations</p>
+          <span class="go">重點整理 + 25 題練習 →</span>
+        </div>
+      </a>
+      <a class="lawcard" href="post-office-savings-remittances.html">
+        <div class="ic">🏦</div>
+        <div>
+          <h3>郵政儲金匯兌法</h3>
+          <p>民國103年1月29日修正 ｜ Postal Savings & Remittances Act</p>
+          <span class="go">重點整理 + 25 題練習 →</span>
+        </div>
+      </a>
+      <a class="lawcard" href="post-office-life-insurance.html">
+        <div class="ic">🛡️</div>
+        <div>
+          <h3>簡易人壽保險法</h3>
+          <p>民國112年11月29日修正 ｜ Simple Life Insurance Act</p>
+          <span class="go">重點整理 + 25 題練習 →</span>
+        </div>
+      </a>
+  </div>
+  <h2 class="sec">跨五法重點比較（最常考的整合題）</h2>
+  
+<div class="card">
+  <h3>① 主管機關 / 監督機關 一覽</h3>
+  <table><thead><tr><th>法規</th><th>主管機關</th><th>監督</th><th>特別機關</th></tr></thead><tbody>
+    <tr><td>郵政法</td><td>交通部</td><td>—</td><td>—</td></tr>
+    <tr><td>郵政儲金匯兌法</td><td>交通部</td><td>金管會</td><td>外匯業務經<b>中央銀行</b>許可</td></tr>
+    <tr><td>簡易人壽保險法</td><td>交通部（中華郵政經營者）</td><td>金管會</td><td>其他保險業者經營者由<b>金管會主管</b></td></tr>
+  </tbody></table>
+  <div class="mnem"><b>口訣：</b>三法主管都是<b>交通部</b>；只要碰到「錢」（儲匯、保險）就多一個<b>金管會</b>監督；碰到「外匯」再加<b>中央銀行</b>。</div>
+</div>
+
+<div class="card">
+  <h3>② 消滅時效 / 期間 對照（超高頻）</h3>
+  <table><thead><tr><th>事項</th><th>期間</th><th>依據</th></tr></thead><tbody>
+    <tr><td>郵件補償『請求權』</td><td><b>6 個月</b>（自交寄日）</td><td>郵政法 §34</td></tr>
+    <tr><td>郵件『補償金』請求權</td><td><b>5 年</b>（自收到通知日）</td><td>郵政法 §35</td></tr>
+    <tr><td>履行補償後發現原郵件，退補償金請領</td><td><b>3 個月</b>（自收到通知日）</td><td>郵政法 §33</td></tr>
+    <tr><td>廢止郵票換新票</td><td><b>6 個月</b>（自廢止日）</td><td>郵政法 §17</td></tr>
+    <tr><td>掛號郵件查詢期限</td><td><b>6 個月</b>（自交寄次日）／國際快捷 <b>4 個月</b></td><td>郵件處理規則 §60</td></tr>
+    <tr><td>支付補償金（至遲）</td><td><b>3 個月</b>內（自查詢次日）</td><td>郵件處理規則 §63</td></tr>
+    <tr><td>掛號郵件招領期間</td><td><b>15 日</b>（自通知招領次日），屆期退寄件人</td><td>郵件處理規則 §50</td></tr>
+    <tr><td>存證信函副本保存</td><td><b>3 年</b></td><td>郵件處理規則 §34 / 規章 §116</td></tr>
+    <tr><td>無著郵件（有價值）變賣</td><td>滿 <b>3 年</b>無人認領</td><td>郵件處理規則 §59 / 規章 §204</td></tr>
+    <tr><td>報值郵件 / 保價郵件 招領</td><td>報值 <b>15 日</b>／保價 <b>30 日</b></td><td>規章 §83 / §95</td></tr>
+    <tr><td>存局候領（國內／快捷／國際）</td><td><b>15 日</b>／<b>5 日</b>／<b>2 個月</b></td><td>規章 §188 / §188-1</td></tr>
+    <tr><td>改投改寄申請有效期</td><td><b>6 個月</b>（同址限一次）</td><td>規章 §170</td></tr>
+    <tr><td>未來郵件保管期限</td><td><b>15 日 ～ 30 年</b></td><td>規章 §121-2</td></tr>
+    <tr><td>i 郵箱投入後待領</td><td>投入次日起 <b>2 日</b></td><td>規章 §221</td></tr>
+    <tr><td>郵政匯票兌領請求權</td><td><b>3 年</b>（自發票日）</td><td>儲匯法 §22</td></tr>
+    <tr><td>簡易壽險契約所生權利</td><td><b>5 年</b>（自得請求日）</td><td>簡易壽險 §25</td></tr>
+    <tr><td>壽險停效後申請復效</td><td><b>2 年</b>內</td><td>簡易壽險 §14</td></tr>
+    <tr><td>壽險解除權（知有原因後）</td><td><b>1 個月</b>消滅</td><td>簡易壽險 §16</td></tr>
+    <tr><td>壽險訂約/復效至事故滿 2 年不得解除</td><td><b>2 年</b></td><td>簡易壽險 §16</td></tr>
+  </tbody></table>
+</div>
+
+<div class="card">
+  <h3>③「視為有行為能力人」對照</h3>
+  <ul>
+    <li>郵政法 §12：無/限制行為能力人對<b>郵政事務</b>之行為 → 視為有行為能力人。</li>
+    <li>郵政儲金匯兌法 §5：無/限制行為能力人對<b>儲金匯兌事務</b>之行為 → 視為有行為能力人。</li>
+    <li>簡易人壽保險法：<b>無此條</b>（改以 §7、§7-1、§8 規範未成年人、受監護宣告人、第三人訂約）。</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h3>④ 免稅規定對照</h3>
+  <table><thead><tr><th>法規</th><th>免稅內容</th></tr></thead><tbody>
+    <tr><td>郵政法 §9</td><td>遞送郵件業務及公用物、單據<b>免納一切稅捐</b>（無年限）</td></tr>
+    <tr><td>儲匯法 §8</td><td>儲金匯兌業務於成立之日起 <b>5 年內</b>免納一切稅捐</td></tr>
+    <tr><td>儲匯法 §20</td><td><b>存簿儲金之利息</b>免一切稅捐</td></tr>
+  </tbody></table>
+</div>
+
+<div class="card">
+  <h3>⑤ 罰鍰處罰機關</h3>
+  <ul>
+    <li>郵政法：行政罰由<b>主管機關（交通部）</b>為之。</li>
+    <li>郵政儲金匯兌法 §29：罰鍰由<b>金管會</b>處罰；但未經許可辦外匯由<b>中央銀行</b>處罰，均通知交通部。</li>
+    <li>簡易人壽保險法 §40：行政處罰由<b>金管會</b>為之，並通知交通部。</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h3>⑥ 五部法規的體系關係（三層結構）</h3>
+  <p>中華郵政依《郵政法》§5 經營：遞送郵件 ｜ 儲金 ｜ 匯兌 ｜ 簡易人壽保險 ｜ 集郵及相關商品 ｜ 郵政資產營運 ｜ 受託其他業務。</p>
+  <table><thead><tr><th>層級</th><th>法規</th><th>性質</th></tr></thead><tbody>
+    <tr><td>母法</td><td>郵政法</td><td>法律（立法院通過）</td></tr>
+    <tr><td>子法</td><td>郵件處理規則</td><td>法規命令（依 §48 授權，交通部訂定）</td></tr>
+    <tr><td>內規</td><td>郵務營業規章</td><td>中華郵政公司營業規章（最細的操作規定）</td></tr>
+  </tbody></table>
+  <ul>
+    <li><b>儲金、匯兌</b>另以《郵政儲金匯兌法》規範；<b>簡易人壽保險</b>另以《簡易人壽保險法》規範。</li>
+  </ul>
+  <div class="mnem"><b>補償三層記法：</b>「能不能賠／何種郵件／時效」看<b>郵政法</b>（§29、§31、§34、§35）；「賠多少錢／查詢期限／招領」看<b>郵件處理規則</b>（§60、§63、§64）與<b>郵務營業規章</b>（§207、§210、§211）。</div>
+</div>
+
+  <footer>EFETL · 郵局國考法規複習 ｜ 依現行條文整理，正式以法規原文為準。</footer>
+</div>
+</body></html>

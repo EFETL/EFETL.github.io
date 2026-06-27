@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>郵件處理規則｜郵局國考互動練習</title>
+<style>
+:root{
+  --green:#00824a; --green-d:#005c33; --green-l:#e7f4ec;
+  --gold:#c8902a; --ink:#222; --muted:#5f6b63; --line:#d9e4dc;
+  --bg:#f6faf7; --card:#fff; --red:#c0392b; --red-l:#fdecea;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  font-size:17px; line-height:1.85; -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:920px;margin:0 auto;padding:0 18px 80px}
+header.top{
+  background:linear-gradient(135deg,var(--green),var(--green-d));
+  color:#fff;padding:30px 18px;text-align:center;
+}
+header.top .wrap{padding-bottom:0}
+header.top h1{margin:0 0 6px;font-size:1.7em;letter-spacing:1px}
+header.top p{margin:4px 0;opacity:.92;font-size:.95em}
+.backlink{display:inline-block;margin-top:12px;color:#fff;
+  border:1px solid rgba(255,255,255,.6);border-radius:20px;
+  padding:5px 16px;text-decoration:none;font-size:.9em}
+.backlink:hover{background:rgba(255,255,255,.15)}
+nav.tabs{position:sticky;top:0;z-index:20;background:var(--card);
+  border-bottom:1px solid var(--line);display:flex;gap:6px;
+  padding:8px 18px;box-shadow:0 2px 6px rgba(0,0,0,.05)}
+nav.tabs button{flex:1;border:0;background:transparent;font-size:1em;
+  font-family:inherit;padding:10px;border-radius:8px;cursor:pointer;
+  color:var(--muted);font-weight:700}
+nav.tabs button.on{background:var(--green-l);color:var(--green-d)}
+section.pane{display:none;padding-top:22px}
+section.pane.on{display:block}
+h2.sec{font-size:1.35em;color:var(--green-d);border-left:6px solid var(--green);
+  padding-left:12px;margin:30px 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:18px 20px;margin:14px 0;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.card h3{margin:0 0 10px;font-size:1.12em;color:var(--green-d)}
+.card h3 .art{font-size:.72em;color:var(--gold);font-weight:700;margin-left:8px}
+.card ul{margin:8px 0;padding-left:1.3em}
+.card li{margin:6px 0}
+.tag{display:inline-block;background:var(--green-l);color:var(--green-d);
+  border-radius:6px;padding:1px 8px;font-size:.8em;font-weight:700;margin-right:6px}
+.hl{background:#fff5d6;padding:0 3px;border-radius:3px;font-weight:700}
+.warn{color:var(--red);font-weight:700}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.96em;
+  background:#fff;border-radius:10px;overflow:hidden}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+th{background:var(--green);color:#fff;font-weight:700}
+tbody tr:nth-child(even){background:var(--green-l)}
+.mnem{background:var(--green-l);border:1px dashed var(--green);border-radius:10px;
+  padding:12px 16px;margin:12px 0;font-size:.98em}
+.mnem b{color:var(--green-d)}
+
+/* quiz */
+.quizbar{position:sticky;top:54px;z-index:15;background:#fff;border:1px solid var(--line);
+  border-radius:12px;padding:10px 16px;margin:6px 0 16px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.quizbar .score{font-weight:800;color:var(--green-d);font-size:1.05em}
+.quizbar .prog{flex:1;min-width:120px;height:10px;background:var(--green-l);
+  border-radius:8px;overflow:hidden}
+.quizbar .prog>i{display:block;height:100%;width:0;background:var(--green);transition:.3s}
+.quizbar button{border:1px solid var(--green);background:#fff;color:var(--green-d);
+  font-family:inherit;font-size:.9em;padding:6px 12px;border-radius:8px;cursor:pointer;font-weight:700}
+.quizbar button:hover{background:var(--green-l)}
+.q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:16px 18px;margin:14px 0;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.q .stem{font-weight:700;margin-bottom:12px}
+.q .stem .no{display:inline-block;background:var(--green);color:#fff;border-radius:50%;
+  width:1.7em;height:1.7em;line-height:1.7em;text-align:center;margin-right:8px;font-size:.92em}
+.opt{display:block;width:100%;text-align:left;border:1.5px solid var(--line);
+  background:#fbfdfb;border-radius:10px;padding:11px 14px;margin:7px 0;cursor:pointer;
+  font-family:inherit;font-size:1em;line-height:1.6;transition:.15s}
+.opt:hover{border-color:var(--green)}
+.opt .lab{font-weight:800;color:var(--green-d);margin-right:6px}
+.opt.correct{background:var(--green-l);border-color:var(--green);color:var(--green-d)}
+.opt.wrong{background:var(--red-l);border-color:var(--red);color:var(--red)}
+.opt.lock{cursor:default}
+.exp{margin-top:10px;padding:11px 14px;border-radius:10px;background:#f3f8f4;
+  border-left:4px solid var(--green);font-size:.97em;display:none}
+.exp.show{display:block}
+.exp b{color:var(--green-d)}
+footer{text-align:center;color:var(--muted);font-size:.85em;margin-top:40px}
+@media(max-width:520px){body{font-size:16.5px}.wrap{padding:0 12px 60px}}
+@media print{nav.tabs,.quizbar,.backlink{display:none}section.pane{display:block!important}
+  .exp{display:block!important}.q,.card{break-inside:avoid}}
+</style>
+</head><body>
+<header class="top"><div class="wrap">
+  <h1>📮 郵件處理規則</h1>
+  <p>民國111年5月27日修正（郵政法§48子法）</p>
+  <p>重點整理 + 25 題互動練習</p>
+  <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+    <a class="backlink" href="/">&#8592; 回首頁</a>
+    <a class="backlink" href="post-office.html">← 回郵局總覽</a>
+  </div>
+</div></header>
+<nav class="tabs">
+  <button class="on" data-t="notes">📖 重點整理</button>
+  <button data-t="quiz">📝 互動練習（25 題）</button>
+</nav>
+<div class="wrap">
+  <section id="notes" class="pane on">
+    
+<div class="card">
+  <h3>本規則定位與架構 <span class="art">全7章 71條</span></h3>
+  <ul>
+    <li><span class="tag">法源（§1）</span>依<b>郵政法第48條</b>授權訂定之子法（法規命令）。</li>
+    <li><span class="tag">內容不證明（§3）</span>中華郵政對寄件人交寄郵件之<b>內容</b>，除<span class="hl">存證信函留存郵局之副本</span>外，<b>不予證明</b>。</li>
+  </ul>
+  <table><thead><tr><th>章</th><th>名稱</th><th>條文</th></tr></thead><tbody>
+    <tr><td>一</td><td>總則</td><td>1–3</td></tr>
+    <tr><td>二</td><td>郵件種類及資費</td><td>4–21</td></tr>
+    <tr><td>三</td><td>郵件之特別處理</td><td>22–34</td></tr>
+    <tr><td>四</td><td>郵件之交寄</td><td>35–41</td></tr>
+    <tr><td>五</td><td>郵件運遞</td><td>42–59</td></tr>
+    <tr><td>六</td><td>郵件查詢及補償</td><td>60–69</td></tr>
+    <tr><td>七</td><td>附則</td><td>70–71</td></tr>
+  </tbody></table>
+</div>
+
+<div class="card">
+  <h3>郵件種類與資費 <span class="art">§5–§21</span></h3>
+  <ul>
+    <li>§5：明信片分<b>橫式、直式</b>；非中華郵政印製者不得刊印「郵政」字樣及郵資符誌；<b>紙質規格不合者按信函交寄</b>。</li>
+    <li>§6：明信片黏貼附件致不平整、或折疊壓製類似明信片者，<b>按信函交寄</b>。</li>
+    <li>§7／§8：郵簡分<b>國內郵簡、國際航空郵簡</b>；國內郵簡夾寄附件→劃去「郵簡」改按信函。</li>
+    <li><span class="tag">§10（必考）</span>定期刊物得登記按新聞紙/雜誌交寄：
+      <b>新聞紙</b>＝每日或每隔<span class="hl">6 日以下</span>按期發行；<b>雜誌</b>＝<span class="hl">7 日以上 3 個月以下</span>按期發行。</li>
+    <li>§11：<b>書籍</b>＝新聞紙、雜誌、型錄以外裝訂成冊之圖書；<b>型錄</b>＝內容 <span class="hl">50% 以上</span>為商品/服務之價格、功能、規格、使用方式者。</li>
+    <li>§14：可遞送物品（除禁寄、規格不符外）得作小包或包裹；<b>印刷物得作小包或包裹</b>。</li>
+    <li>§18-1：<b>郵票自發行之日起，始生交付郵費證明之效力</b>。</li>
+    <li>§19：郵票應<b>逐一分開、端正勻貼、不得重疊</b>；被掩蓋者失效。§20：經剪割、拼集、塗刮、洗刷之郵票不為遞送。</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h3>郵件之特別處理 <span class="art">§22–§34</span></h3>
+  <table><thead><tr><th>種類</th><th>定義重點</th></tr></thead><tbody>
+    <tr><td>航空郵件 §22</td><td>付航空資費、以航空郵路寄遞</td></tr>
+    <tr><td>限時郵件 §23/§24</td><td>加付限時費按班限時投遞；投入專用信箱以<b>投入時間</b>為送達時間</td></tr>
+    <tr><td>快捷郵件 §27</td><td>以最快速方法優先處理並於約定時間送達</td></tr>
+    <tr><td>掛號郵件 §28</td><td>註明「掛號」、編號登記掣給執據；<b>包裹、快捷、代收貨款亦屬掛號</b></td></tr>
+    <tr><td>報值郵件 §30</td><td>國內互寄、報明價值加付<b>報值費</b></td></tr>
+    <tr><td>保價郵件 §30</td><td>報明保價金額加付<b>保價費</b></td></tr>
+    <tr><td>代收貨款 §32</td><td>投遞時向收件人代收貨款</td></tr>
+    <tr><td>存證信函 §34</td><td>留存郵局副本作證據；副本自交寄日起<span class="hl">保存 3 年</span>，期滿銷燬</td></tr>
+  </tbody></table>
+  <p>§31：報值/保價金額<b>不得超過內裝實際價值</b>；超過者於損失時<span class="warn">不得請求任何補償</span>。</p>
+</div>
+
+<div class="card">
+  <h3>禁止交寄物品 <span class="art">§37（必考，11款）</span></h3>
+  <ul>
+    <li>有傷害郵政人員或污損郵件設備之虞者、封口金屬扣鈕鋒利者。</li>
+    <li>易燃、易爆或危險物品（立案機構特殊封裝之易壞生物學物料＋運輸憑照除外）。</li>
+    <li><b>活生動物</b>（例外：<span class="hl">蜜蜂、蠶、水蛭</span>、立案機構互寄之寄生蟲、消除害蟲之蟲類、寄日本不夾泥土之無害活紅蚯蚓）。</li>
+    <li>放射性物品；鴉片、嗎啡及麻醉物品；猥褻妨害風化物品。</li>
+    <li>寄達國禁止輸入/流通、政府禁止發售製造之物品、彩票及相關廣告、其他違禁品。</li>
+  </ul>
+  <p>§39：認為內裝禁寄物品，得請寄件人/收件人<b>當面拆驗</b>，拒絕者不予遞送（查閱不得逾越必要範圍）。§41：郵寄紙幣、金銀、寶石等貴重物品，<b>以法令許可者為限</b>。</p>
+</div>
+
+<div class="card">
+  <h3>郵件運遞與投遞 <span class="art">§42–§59</span></h3>
+  <ul>
+    <li>§43：投遞區域分<b>按址投遞區域、不按址投遞區域</b>。</li>
+    <li><span class="tag">§49 不按址投遞</span>深山、孤島、<b>羊腸小道 2 公里以上</b>非郵路必經、偏遠地區住戶平均一個月郵件<span class="hl">不足 40 件</span>、飼養動物有攻擊之虞經通知未改善者。</li>
+    <li><span class="tag">§50 招領</span>無法投交之掛號郵件送指定郵局招領，招領期間自通知招領之<b>次日起算 15 日</b>，屆期未領<b>退回寄件人</b>。</li>
+    <li>§48-1：i 郵箱<b>不予投入</b>之掛號郵件：體積過大、外包裝破損、天災故障、報值/保價/代收貨款逾公告金額、滿櫃投 2 次無空格、<b>附有回執</b>、無法重製複製。</li>
+    <li>§51：包裹得通知領取（破損須當面開驗、金額達一定數額、自辦驗關、應付費用、<b>重量 3 公斤以上且車輛通行不便</b>）。</li>
+    <li>§52：委託收寄投遞之自然人須<b>成年、國中以上畢業、身心健康</b>。</li>
+    <li>§53：新地址在原投遞區域內＝<b>改投</b>；須轉其他郵局投遞＝<b>改寄</b>。</li>
+    <li>§57：已遞交之函件（有拆過痕跡）、報值/保價郵件、包裹，<b>不得交由郵局退回</b>。</li>
+    <li><span class="tag">§58/§59 無著郵件</span>招領揭示<b>1 個月</b>無人領取為無著郵件；無價值者屆查詢期限後<b>1 個月銷燬</b>，有價值者滿<span class="hl">3 年</span>無人認領即變賣。</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h3>郵件查詢及補償 <span class="art">§60–§69（高頻數字）</span></h3>
+  <ul>
+    <li><span class="tag">§60 查詢期限</span>掛號郵件自交寄<b>次日起 6 個月</b>；<b>國際快捷</b>自交寄次日起<span class="hl">4 個月</span>。逾期得不予查詢且不負補償責任。</li>
+    <li>§62：收件人接收時未當場聲明瑕疵並已出據領取者，<b>不得請求補償</b>。</li>
+    <li>§63：應補償者，郵局至遲應自<b>查詢之次日起 3 個月內</b>支付補償金。</li>
+  </ul>
+  <table><thead><tr><th>項目</th><th>補償金額</th></tr></thead><tbody>
+    <tr><td>國內掛號函件全部遺失/被竊</td><td>每件 <b>新臺幣 575 元</b></td></tr>
+    <tr><td>國內包裹/快捷（重量 5 公斤以下）</td><td>不逾 <b>575 元</b></td></tr>
+    <tr><td>國內包裹/快捷（逾 5–10 公斤）</td><td>不逾 <b>865 元</b></td></tr>
+    <tr><td>國內包裹/快捷（逾 10 公斤）</td><td>不逾 <b>1,155 元</b></td></tr>
+    <tr><td>限時/國內快捷遞送延誤（郵政過失）</td><td>依所收<b>全部資費</b>補償</td></tr>
+    <tr><td>國際快捷遞送延誤</td><td>依全部資費<b>50%</b>補償</td></tr>
+  </tbody></table>
+  <p>§67：補償時退還郵資，但<b>保價費、報值費不退</b>。§68：交付補償金後，除遞送延誤等情形外，取得受領補償人對相關人之權利（以補償金額為限）。</p>
+</div>
+
+  </section>
+  <section id="quiz" class="pane">
+    <h2 class="sec">互動練習題（共 25 題）</h2>
+    <p style="color:var(--muted)">點選選項即時對答案，並顯示解析。</p>
+    <div class="quizbar">
+      <span class="score" id="score">答對 0 / 作答 0 （共 25 題）</span>
+      <span class="prog"><i id="bar"></i></span>
+      <button id="showAll">顯示全部解析</button>
+      <button id="reset">重做</button>
+    </div>
+    <div id="quizbox"></div>
+  </section>
+  <footer>EFETL · 郵局國考法規複習 ｜ 依現行條文整理，正式以法規原文為準。</footer>
+</div>
+<script>
+const QUESTIONS=[{"q": "郵件處理規則係依據下列何項法律授權訂定？", "o": ["郵政法第48條", "郵政儲金匯兌法第30條", "行政程序法", "民法"], "a": 0, "e": "§1：本規則依郵政法第 48 條規定訂定之，屬法規命令（子法）。"}, {"q": "中華郵政對於寄件人交寄郵件之『內容』，原則上之處理為何？", "o": ["一律證明", "除存證信函留存郵局之副本外，不予證明", "僅掛號郵件予以證明", "由收件人決定是否證明"], "a": 1, "e": "§3：對郵件內容除存證信函留存郵局之副本外，不予證明。"}, {"q": "中華郵政公司以外之人印製之明信片，其紙質、規格不合規定者，應如何交寄？", "o": ["不予收寄", "按信函交寄", "按印刷物交寄", "退還寄件人"], "a": 1, "e": "§5第5項：紙質、規格不合規定之明信片，按信函交寄。明信片黏附件不平整者亦同（§6）。"}, {"q": "依郵件處理規則第10條，得按『新聞紙』交寄之刊物，其發行頻率為何？", "o": ["每日或每隔六日以下按期發行", "七日以上三個月以下按期發行", "每月發行一次", "每季發行一次"], "a": 0, "e": "§10第2項：新聞紙為每日或每隔六日以下按期發行者；雜誌為七日以上三個月以下按期發行者。"}, {"q": "得按『雜誌』交寄之定期刊物，其發行頻率為何？", "o": ["每日發行", "每隔三日以下發行", "七日以上三個月以下按期發行", "半年發行一次"], "a": 2, "e": "§10第2項：雜誌為七日以上三個月以下按期發行者。"}, {"q": "郵件處理規則所稱『型錄』，其內容須有多少比例以上為商品或服務之價格、功能、規格及使用方式？", "o": ["百分之三十以上", "百分之五十以上", "百分之七十以上", "百分之九十以上"], "a": 1, "e": "§11：型錄指文件內容百分之五十以上為商品或服務之價格、功能、規格及使用方式者。"}, {"q": "關於郵票交付郵費證明之效力，依第18條之1之規定，自何時起發生？", "o": ["印製完成時", "自發行之日起", "自販售之日起", "自黏貼於郵件時"], "a": 1, "e": "§18-1：郵票自發行之日起，始生交付郵費證明之效力。"}, {"q": "郵件上之郵票應如何黏貼？", "o": ["可重疊黏貼", "應逐一分開、端正勻貼、不得重疊", "集中黏貼於右下角即可", "僅須黏牢，位置不限"], "a": 1, "e": "§19：郵票應逐一分開端正勻貼，不得重疊；其被掩蓋者，失其效用。"}, {"q": "下列何種郵件『不屬於』掛號郵件？", "o": ["包裹", "快捷郵件", "代收貨款郵件", "平信"], "a": 3, "e": "§28：掛號郵件須註明掛號、編號登記掣給執據；包裹、快捷及代收貨款等郵件亦屬掛號郵件。平信非掛號。"}, {"q": "報值郵件或保價郵件之報值/保價金額超過內裝物品實際價值時，於有損失時之補償為何？", "o": ["按報值金額全額補償", "不得請求任何補償", "補償一半", "補償實際價值加計利息"], "a": 1, "e": "§31：報值/保價金額不得超過實際價值；超過部分於有損失時，不得請求任何補償。"}, {"q": "存證信函留存郵局之副本，自交寄日起由郵局保存多久後銷燬？", "o": ["1 年", "2 年", "3 年", "5 年"], "a": 2, "e": "§34第2項：存證信函留存郵局之副本，自交寄日起由郵局保存三年，期滿後銷燬之。"}, {"q": "下列何者並『非』郵件處理規則第37條原則禁止交寄之物品例外（即下列何者仍屬可寄）？", "o": ["一般易燃液體", "蜜蜂、蠶、水蛭", "放射性物品", "鴉片、嗎啡"], "a": 1, "e": "§37第4款：活生動物原則禁寄，但蜜蜂、蠶、水蛭、立案機構寄生蟲、消除害蟲蟲類、寄日本無害活紅蚯蚓等為例外。其餘均屬禁寄。"}, {"q": "郵局認為郵件內裝有禁寄物品時，得請寄件人或收件人如何處理？拒絕者效果為何？", "o": ["逕行開拆查驗", "當面拆驗，拒絕者不予遞送", "送交警察機關", "沒入郵件"], "a": 1, "e": "§39：得請寄件人或收件人當面拆驗，拒絕拆驗者不予遞送；拆驗查閱不得逾越必要範圍。"}, {"q": "郵寄法定紙幣、金銀條塊、寶石珍飾等貴重物品，依第41條之限制為何？", "o": ["一律禁止郵寄", "以法令許可者為限", "僅限保價郵件", "僅限掛號郵件"], "a": 1, "e": "§41：郵寄貴重物品以法令許可者為限。"}, {"q": "下列何種地區，中華郵政公司得不按址投遞郵件？", "o": ["羊腸小道在二公里以上、非郵路所必經之地區", "市區大樓", "郵路必經之村落", "設有管理員之社區"], "a": 0, "e": "§49：深山、孤島、羊腸小道二公里以上非郵路必經、偏遠地區住戶平均一個月郵件不足四十件等，得不按址投遞。"}, {"q": "偏遠地區住戶或村落，平均一個月郵件不足多少件者，得不按址投遞？", "o": ["不足 20 件", "不足 30 件", "不足 40 件", "不足 50 件"], "a": 2, "e": "§49第1項第4款：偏遠地區住戶或村落，平均一個月郵件不足四十件者。"}, {"q": "無法投交之掛號郵件送交指定郵局招領，其招領期間自通知招領之次日起算多久？屆期未領如何處理？", "o": ["10 日，屆期銷燬", "15 日，屆期退回寄件人", "30 日，屆期變賣", "7 日，屆期招領揭示"], "a": 1, "e": "§50：招領期間自通知招領之次日起算十五日，屆期未領者，退回寄件人。"}, {"q": "下列何種情形，中華郵政公司『不予』將掛號郵件投入 i 郵箱？", "o": ["體積適中且無破損", "附有回執", "收件人在家", "平常郵件"], "a": 1, "e": "§48-1：附有回執、體積過大、外包裝破損、金額逾公告、滿櫃投二次無空格、無法重製複製等，不予投入 i 郵箱。"}, {"q": "包裹重量達多少以上且收件人地址車輛通行不便者，得通知收件人至郵局領取？", "o": ["二公斤以上", "三公斤以上", "五公斤以上", "十公斤以上"], "a": 1, "e": "§51第5款：重量在三公斤以上，其收件人地址車輛通行不便者，得通知收件人至郵局領取。"}, {"q": "中華郵政委託收寄或投遞郵件之受託人為『自然人』者，應具備之條件為何？", "o": ["年滿十八歲、高中畢業", "成年、國民中學以上學校畢業及身心健康", "年滿十六歲即可", "須為公務人員"], "a": 1, "e": "§52第2項第1款：受託人為自然人者，須成年、國民中學以上學校畢業及身心健康。"}, {"q": "郵件因地址變更須改向新地址投交，新地址在原投遞區域『內』者，稱為？", "o": ["改寄", "改投", "轉寄", "退回"], "a": 1, "e": "§53：新地址在原投遞區域內者為改投；新地址不在原投遞區域內須轉其他郵局投遞者為改寄。"}, {"q": "掛號郵件之查詢期限，原則上自交寄之次日起算多久？", "o": ["三個月", "四個月", "六個月", "一年"], "a": 2, "e": "§60：掛號郵件查詢期限自交寄之次日起算六個月；但國際快捷郵件為四個月。逾期得不予查詢且不負補償責任。"}, {"q": "應予補償之郵件，郵局至遲應於何時內支付補償金？", "o": ["查詢之次日起一個月內", "查詢之次日起三個月內", "查詢之次日起六個月內", "郵件交寄日起一年內"], "a": 1, "e": "§63：應補償者，郵局至遲應自查詢之次日起三個月內支付補償金。"}, {"q": "國內掛號函件（包裹、快捷、報值、保價以外）全部遺失或被竊時，每件補償金額為何？", "o": ["新臺幣 300 元", "新臺幣 575 元", "新臺幣 865 元", "新臺幣 1,155 元"], "a": 1, "e": "§64第1項第1款：國內掛號函件每件補償新臺幣 575 元。"}, {"q": "無著郵件中內裝『有價值或得為買賣標的』之物品，自郵件交寄日起滿多久無人認領即予變賣？", "o": ["一年", "二年", "三年", "五年"], "a": 2, "e": "§59：有價值或得為買賣標的者，自交寄日起滿三年無人認領即變賣（無價值者屆查詢期限後一個月銷燬）。"}];
+
+function renderQuiz(data){
+  const box=document.getElementById('quizbox');
+  data.forEach((it,i)=>{
+    const q=document.createElement('div');q.className='q';
+    const opts=it.o.map((t,j)=>`<button class="opt" data-i="${i}" data-j="${j}">`+
+      `<span class="lab">(${'ABCD'[j]})</span>${t}</button>`).join('');
+    q.innerHTML=`<div class="stem"><span class="no">${i+1}</span>${it.q}</div>`+
+      `<div class="opts">${opts}</div>`+
+      `<div class="exp" id="exp${i}"><b>✅ 答案：(${'ABCD'[it.a]})</b><br>${it.e}</div>`;
+    box.appendChild(q);
+  });
+  const answered=new Array(data.length).fill(false);let correct=0;
+  box.addEventListener('click',e=>{
+    const b=e.target.closest('.opt');if(!b)return;
+    const i=+b.dataset.i,j=+b.dataset.j;if(answered[i])return;
+    answered[i]=true;
+    const q=box.children[i];const btns=q.querySelectorAll('.opt');
+    btns.forEach((bt,k)=>{bt.classList.add('lock');
+      if(k===data[i].a)bt.classList.add('correct');});
+    if(j!==data[i].a)btns[j].classList.add('wrong');else correct++;
+    document.getElementById('exp'+i).classList.add('show');
+    update();
+  });
+  function update(){
+    const done=answered.filter(Boolean).length;
+    document.getElementById('score').textContent=`答對 ${correct} / 作答 ${done} （共 ${data.length} 題）`;
+    document.getElementById('bar').style.width=(done/data.length*100)+'%';
+  }
+  document.getElementById('showAll').onclick=()=>{
+    document.querySelectorAll('.exp').forEach(x=>x.classList.add('show'));
+    box.querySelectorAll('.q').forEach((q,i)=>{
+      q.querySelectorAll('.opt').forEach((bt,k)=>{bt.classList.add('lock');
+        if(k===data[i].a)bt.classList.add('correct');});
+    });
+  };
+  document.getElementById('reset').onclick=()=>{location.reload();};
+  update();
+}
+
+
+document.querySelectorAll('nav.tabs button').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.remove('on'));
+    document.querySelectorAll('section.pane').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    document.getElementById(b.dataset.t).classList.add('on');
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+});
+
+renderQuiz(QUESTIONS);
+</script>
+</body></html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>郵政儲金匯兌法｜郵局國考互動練習</title>
+<style>
+:root{
+  --green:#00824a; --green-d:#005c33; --green-l:#e7f4ec;
+  --gold:#c8902a; --ink:#222; --muted:#5f6b63; --line:#d9e4dc;
+  --bg:#f6faf7; --card:#fff; --red:#c0392b; --red-l:#fdecea;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  font-size:17px; line-height:1.85; -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:920px;margin:0 auto;padding:0 18px 80px}
+header.top{
+  background:linear-gradient(135deg,var(--green),var(--green-d));
+  color:#fff;padding:30px 18px;text-align:center;
+}
+header.top .wrap{padding-bottom:0}
+header.top h1{margin:0 0 6px;font-size:1.7em;letter-spacing:1px}
+header.top p{margin:4px 0;opacity:.92;font-size:.95em}
+.backlink{display:inline-block;margin-top:12px;color:#fff;
+  border:1px solid rgba(255,255,255,.6);border-radius:20px;
+  padding:5px 16px;text-decoration:none;font-size:.9em}
+.backlink:hover{background:rgba(255,255,255,.15)}
+nav.tabs{position:sticky;top:0;z-index:20;background:var(--card);
+  border-bottom:1px solid var(--line);display:flex;gap:6px;
+  padding:8px 18px;box-shadow:0 2px 6px rgba(0,0,0,.05)}
+nav.tabs button{flex:1;border:0;background:transparent;font-size:1em;
+  font-family:inherit;padding:10px;border-radius:8px;cursor:pointer;
+  color:var(--muted);font-weight:700}
+nav.tabs button.on{background:var(--green-l);color:var(--green-d)}
+section.pane{display:none;padding-top:22px}
+section.pane.on{display:block}
+h2.sec{font-size:1.35em;color:var(--green-d);border-left:6px solid var(--green);
+  padding-left:12px;margin:30px 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:18px 20px;margin:14px 0;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.card h3{margin:0 0 10px;font-size:1.12em;color:var(--green-d)}
+.card h3 .art{font-size:.72em;color:var(--gold);font-weight:700;margin-left:8px}
+.card ul{margin:8px 0;padding-left:1.3em}
+.card li{margin:6px 0}
+.tag{display:inline-block;background:var(--green-l);color:var(--green-d);
+  border-radius:6px;padding:1px 8px;font-size:.8em;font-weight:700;margin-right:6px}
+.hl{background:#fff5d6;padding:0 3px;border-radius:3px;font-weight:700}
+.warn{color:var(--red);font-weight:700}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.96em;
+  background:#fff;border-radius:10px;overflow:hidden}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+th{background:var(--green);color:#fff;font-weight:700}
+tbody tr:nth-child(even){background:var(--green-l)}
+.mnem{background:var(--green-l);border:1px dashed var(--green);border-radius:10px;
+  padding:12px 16px;margin:12px 0;font-size:.98em}
+.mnem b{color:var(--green-d)}
+
+/* quiz */
+.quizbar{position:sticky;top:54px;z-index:15;background:#fff;border:1px solid var(--line);
+  border-radius:12px;padding:10px 16px;margin:6px 0 16px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.quizbar .score{font-weight:800;color:var(--green-d);font-size:1.05em}
+.quizbar .prog{flex:1;min-width:120px;height:10px;background:var(--green-l);
+  border-radius:8px;overflow:hidden}
+.quizbar .prog>i{display:block;height:100%;width:0;background:var(--green);transition:.3s}
+.quizbar button{border:1px solid var(--green);background:#fff;color:var(--green-d);
+  font-family:inherit;font-size:.9em;padding:6px 12px;border-radius:8px;cursor:pointer;font-weight:700}
+.quizbar button:hover{background:var(--green-l)}
+.q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:16px 18px;margin:14px 0;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.q .stem{font-weight:700;margin-bottom:12px}
+.q .stem .no{display:inline-block;background:var(--green);color:#fff;border-radius:50%;
+  width:1.7em;height:1.7em;line-height:1.7em;text-align:center;margin-right:8px;font-size:.92em}
+.opt{display:block;width:100%;text-align:left;border:1.5px solid var(--line);
+  background:#fbfdfb;border-radius:10px;padding:11px 14px;margin:7px 0;cursor:pointer;
+  font-family:inherit;font-size:1em;line-height:1.6;transition:.15s}
+.opt:hover{border-color:var(--green)}
+.opt .lab{font-weight:800;color:var(--green-d);margin-right:6px}
+.opt.correct{background:var(--green-l);border-color:var(--green);color:var(--green-d)}
+.opt.wrong{background:var(--red-l);border-color:var(--red);color:var(--red)}
+.opt.lock{cursor:default}
+.exp{margin-top:10px;padding:11px 14px;border-radius:10px;background:#f3f8f4;
+  border-left:4px solid var(--green);font-size:.97em;display:none}
+.exp.show{display:block}
+.exp b{color:var(--green-d)}
+footer{text-align:center;color:var(--muted);font-size:.85em;margin-top:40px}
+@media(max-width:520px){body{font-size:16.5px}.wrap{padding:0 12px 60px}}
+@media print{nav.tabs,.quizbar,.backlink{display:none}section.pane{display:block!important}
+  .exp{display:block!important}.q,.card{break-inside:avoid}}
+</style>
+</head><body>
+<header class="top"><div class="wrap">
+  <h1>📮 郵政儲金匯兌法</h1>
+  <p>民國103年1月29日修正</p>
+  <p>重點整理 + 25 題互動練習</p>
+  <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+    <a class="backlink" href="/">&#8592; 回首頁</a>
+    <a class="backlink" href="post-office.html">← 回郵局總覽</a>
+  </div>
+</div></header>
+<nav class="tabs">
+  <button class="on" data-t="notes">📖 重點整理</button>
+  <button data-t="quiz">📝 互動練習（25 題）</button>
+</nav>
+<div class="wrap">
+  <section id="notes" class="pane on">
+    
+<div class="card">
+  <h3>本法定位與架構 <span class="art">全5章 31條</span></h3>
+  <ul>
+    <li><span class="tag">立法目的（§1）</span>鼓勵國民<span class="hl">儲蓄</span>、促進<span class="hl">資本形成</span>、配合國家政策、增進民眾便利、保障郵政儲金匯兌安全。</li>
+    <li><span class="tag">主管／監督（§2）</span>事務由中華郵政辦理，<b>屬交通部主管</b>，業務受<b>金融監督管理委員會監督</b>；涉及<b>外匯</b>業務者，應經<span class="hl">中央銀行許可</span>。</li>
+  </ul>
+  <table><thead><tr><th>章</th><th>名稱</th><th>條文</th></tr></thead><tbody>
+    <tr><td>一</td><td>總則</td><td>1–13</td></tr>
+    <tr><td>二</td><td>郵政儲金</td><td>14–20</td></tr>
+    <tr><td>三</td><td>郵政匯兌</td><td>21–25</td></tr>
+    <tr><td>四</td><td>罰則</td><td>26–29</td></tr>
+    <tr><td>五</td><td>附則</td><td>30–31</td></tr>
+  </tbody></table>
+  <div class="mnem"><b>三機關記法：</b>主管＝交通部；監督＝金管會；外匯＝中央銀行。罰鍰由金管會處罰，但「外匯」之罰由中央銀行為之（§29）。</div>
+</div>
+
+<div class="card">
+  <h3>郵政儲金之種類 <span class="art">§3（必考）</span></h3>
+  <table><thead><tr><th>種類</th><th>定義重點</th></tr></thead><tbody>
+    <tr><td>存簿儲金</td><td>憑<b>儲金簿</b>或約定方式，<b>隨時</b>存入或提取</td></tr>
+    <tr><td>定期儲金</td><td>有<b>一定時期限制</b>，憑<b>存單</b>或約定方式提取</td></tr>
+    <tr><td>劃撥儲金</td><td>以帳戶辦理存、提、匯、撥、轉帳，得申請領用<b>劃撥支票</b>，並得接受他人存款</td></tr>
+  </tbody></table>
+</div>
+
+<div class="card">
+  <h3>郵政匯兌之種類 <span class="art">§4</span></h3>
+  <table><thead><tr><th>種類</th><th>定義重點</th></tr></thead><tbody>
+    <tr><td>國內匯兌</td><td>公眾以一定金額委託中華郵政支付與<b>國內</b>受款人</td></tr>
+    <tr><td>國際匯兌</td><td>委託轉付<b>國外</b>受款人，及接受通匯國匯入轉付國內受款人</td></tr>
+    <tr><td>郵政禮券</td><td>中華郵政發行、依面額對持有人<b>無條件付款</b>之<span class="hl">無記名有價證券</span></td></tr>
+  </tbody></table>
+  <ul>
+    <li>§21：匯兌分<span class="hl">票匯、電匯</span>二種；除電匯外，應以<b>郵政匯票或郵政禮券</b>為憑。</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h3>總則重要規定 <span class="art">§5–§13</span></h3>
+  <ul>
+    <li>§5：無/限制行為能力人對儲金匯兌事務之行為，<span class="hl">視為有行為能力人之行為</span>。</li>
+    <li>§6：得請取款人出示必要證明確認真偽。</li>
+    <li>§7：儲金匯兌業務之<b>會計帳務應獨立處理</b>。</li>
+    <li><span class="tag">§8</span>儲金匯兌業務及公用物、單據，於中華郵政<b>成立之日起 <span class="hl">5 年內</span>免納一切稅捐</b>。</li>
+    <li>§9：辦理儲金利率<b>應以年率為準</b>，並於營業場所揭示。</li>
+    <li>§10：應建立<b>內部控制及稽核制度</b>；辦法由交通部會同金管會定之。</li>
+    <li><span class="tag">§11</span>非依<b>法院裁判</b>、<b>檢察機關書面通知</b>或<b>其他法律</b>規定，不得接受第三人停止帳戶交易或給付匯款之請求；且對顧客資料應<b>保守秘密</b>。</li>
+    <li>§12：違反法令章程或有礙健全經營，金管會得糾正、命限期改善，並得撤銷決議、停止部分業務、解職停職、其他必要處置（外匯違規由<b>中央銀行</b>停業）。</li>
+    <li>§13：金管會得隨時派員或委託機構檢查業務財務。</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h3>郵政儲金 <span class="art">§14–§20</span></h3>
+  <ul>
+    <li>§14：初次存入由郵局按種類發給儲金簿或單據作為憑證。</li>
+    <li><span class="tag">§15</span>憑證或印鑑遺失應辦<b>掛失止付</b>；<b>未辦妥掛失止付前</b>，中華郵政依規定程序並已盡<span class="hl">善良管理人注意義務</span>所為之給付，<b>縱係冒領亦不負責任</b>。</li>
+    <li>§16：劃撥儲金之劃撥支票業務，<span class="hl">準用票據法</span>有關支票之規定。</li>
+    <li>§18：儲金運用範圍：①轉存中央銀行 ②轉存其他金融機構 ③投資公債、公司債、金融債券、短期票券 ④投資受益憑證及上市(櫃)股票 ⑤參與金融同業拆款市場 ⑥提供中長期資金轉存辦理重大建設及民間投資 ⑦其他經核准者。</li>
+    <li><span class="tag">§19</span>存簿儲金<b>每一人或每一團體僅得為一戶</b>；計息設<b>最高存款限額</b>，超過之數<b>不給利息</b>；政府機關、自治團體、公益法人<b>不適用</b>限額。</li>
+    <li><span class="tag">§20</span>存簿儲金之<b>利息免一切稅捐</b>。</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h3>郵政匯兌 <span class="art">§21–§25</span></h3>
+  <ul>
+    <li>§21：分票匯、電匯；除電匯外以郵政匯票或郵政禮券為憑；應記載事項由中華郵政擬訂報交通部核定。</li>
+    <li><span class="tag">§22</span>郵政匯票受款人之<b>兌領請求權</b>，自發票日起算<span class="hl">3 年</span>不行使，因時效消滅。</li>
+    <li>§23：逾期未兌款，中華郵政通知匯款人領回，匯款人<b>不得要求退還匯費</b>。</li>
+    <li>§24：匯票遺失或毀損得申請掛失或繳回並領回匯款，原匯票作廢；已兌領者拒絕受理。</li>
+    <li>§25：國際匯兌依萬國郵政聯盟協定或雙邊協定辦理，未規定者依本法。</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h3>罰則 <span class="art">§26–§29</span></h3>
+  <table><thead><tr><th>條文</th><th>情形</th><th>罰鍰</th></tr></thead><tbody>
+    <tr><td>§26</td><td>利率未以年率/未揭示、未建內控稽核、違法停帳或洩密、運用違規、未經央行許可辦外匯等</td><td>30 萬–150 萬元</td></tr>
+    <tr><td>§27</td><td>規避妨礙拒絕檢查、隱匿毀損帳冊、拒答或答復不實、逾期不實提報等</td><td>50 萬–250 萬元</td></tr>
+  </tbody></table>
+  <ul>
+    <li>§28：受罰時得對應負責之人<b>求償</b>。</li>
+    <li>§29：罰鍰由<b>金管會</b>處罰；但 §26 第6款（未經許可辦外匯）由<b>中央銀行</b>為之；均應通知交通部；屆期不繳移送強制執行。</li>
+  </ul>
+</div>
+
+  </section>
+  <section id="quiz" class="pane">
+    <h2 class="sec">互動練習題（共 25 題）</h2>
+    <p style="color:var(--muted)">點選選項即時對答案，並顯示解析。</p>
+    <div class="quizbar">
+      <span class="score" id="score">答對 0 / 作答 0 （共 25 題）</span>
+      <span class="prog"><i id="bar"></i></span>
+      <button id="showAll">顯示全部解析</button>
+      <button id="reset">重做</button>
+    </div>
+    <div id="quizbox"></div>
+  </section>
+  <footer>EFETL · 郵局國考法規複習 ｜ 依現行條文整理，正式以法規原文為準。</footer>
+</div>
+<script>
+const QUESTIONS=[{"q": "郵政儲金匯兌法第1條揭示之立法目的，不包括下列何者？", "o": ["鼓勵國民儲蓄", "促進資本形成", "保障郵政儲金匯兌安全", "提供國民基本經濟保障"], "a": 3, "e": "§1：鼓勵儲蓄、促進資本形成、配合國家政策、增進民眾便利、保障安全。『提供國民基本經濟保障』為簡易人壽保險法第1條之用語。"}, {"q": "郵政儲金匯兌事務之主管機關及業務監督機關，分別為何？", "o": ["金管會主管、中央銀行監督", "交通部主管、金管會監督", "中央銀行主管、交通部監督", "交通部主管、中央銀行監督"], "a": 1, "e": "§2：屬交通部主管，業務受金管會監督；涉及外匯業務者應經中央銀行許可。"}, {"q": "涉及外匯業務之經營，依郵政儲金匯兌法應經下列何機關許可？", "o": ["金管會", "中央銀行", "交通部", "財政部"], "a": 1, "e": "§2：其涉及外匯業務經營者，應經中央銀行許可。"}, {"q": "下列何者『不是』郵政儲金匯兌法第3條所定郵政儲金之種類？", "o": ["存簿儲金", "定期儲金", "劃撥儲金", "信託儲金"], "a": 3, "e": "§3：郵政儲金種類為存簿儲金、定期儲金、劃撥儲金三種。"}, {"q": "得辦理存、提、匯、撥、轉帳，並得申請領用劃撥支票、接受他人存款者，屬於何種儲金？", "o": ["存簿儲金", "定期儲金", "劃撥儲金", "活期儲金"], "a": 2, "e": "§3第3款：劃撥儲金得辦理存款、提款、匯款、撥款、轉帳及申請領用劃撥支票，並得接受他人存款。"}, {"q": "下列何者『非』郵政匯兌之種類？", "o": ["國內匯兌", "國際匯兌", "郵政禮券", "郵政公債"], "a": 3, "e": "§4：郵政匯兌種類為國內匯兌、國際匯兌、郵政禮券。"}, {"q": "關於『郵政禮券』之性質，下列敘述何者正確？", "o": ["記名有價證券", "由中華郵政發行、依面額對持有人無條件付款之無記名有價證券", "僅限本人兌領之憑證", "屬於定期儲金之一種"], "a": 1, "e": "§4第3款：郵政禮券係中華郵政發行，並依面額對持有人無條件付款之無記名有價證券。"}, {"q": "無行為能力人或限制行為能力人關於郵政儲金及匯兌事務對中華郵政所為之行為，依第5條視為？", "o": ["無效", "效力未定", "視為有行為能力人之行為", "須經法定代理人承認"], "a": 2, "e": "§5：視為有行為能力人之行為（與郵政法 §12 相同立法精神）。"}, {"q": "中華郵政經營之郵政儲金匯兌業務及相關公用物、單據，於成立之日起多久內免納一切稅捐？", "o": ["3 年內", "5 年內", "10 年內", "永久免納"], "a": 1, "e": "§8：於中華郵政公司成立之日起 5 年內，免納一切稅捐。"}, {"q": "中華郵政辦理郵政儲金之利率，依第9條應以何為準並如何處理？", "o": ["以月率為準，報金管會核定", "以年率為準，並於營業場所揭示", "以日率為準，逕行公告", "由顧客與郵局議定"], "a": 1, "e": "§9：利率應以年率為準，並於營業場所揭示。"}, {"q": "關於儲金匯兌業務之會計帳務，依第7條應如何處理？", "o": ["併入郵件業務帳務", "應獨立處理", "由金管會代為處理", "每 5 年結算一次"], "a": 1, "e": "§7：郵政儲金匯兌業務之會計帳務應獨立處理之。"}, {"q": "中華郵政原則上於何種情形始得接受第三人關於停止帳戶交易或給付匯款之請求？", "o": ["第三人以書面請求即可", "依法院之裁判、檢察機關之書面通知或其他法律之規定", "經顧客口頭同意", "經分行經理核准"], "a": 1, "e": "§11第1項：非依法院裁判、檢察機關書面通知或其他法律規定，不得接受第三人之該等請求。"}, {"q": "儲戶提取存款之憑證或印鑑遺失，在尚未辦妥掛失止付前，中華郵政已盡善良管理人注意義務所為之給付，縱係冒領，其責任為何？", "o": ["仍應全額賠償", "不負責任", "賠償一半", "由保險公司理賠"], "a": 1, "e": "§15：掛失止付前，依規定程序並已盡善良管理人注意義務所為之給付，縱係冒領，亦不負責任。"}, {"q": "劃撥儲金之劃撥支票業務，依郵政儲金匯兌法第16條準用何種法律之規定？", "o": ["民法", "公司法", "票據法有關支票之規定", "銀行法"], "a": 2, "e": "§16：辦理劃撥支票業務，準用票據法有關支票之規定。"}, {"q": "下列何者『非』郵政儲金第18條所定之運用範圍？", "o": ["轉存中央銀行", "投資公債、公司債、金融債券及短期票券", "直接放款予一般民眾購屋", "參與金融同業拆款市場"], "a": 2, "e": "§18運用範圍含轉存央行/他行、投資公債公司債金融債券短期票券、投資受益憑證及上市櫃股票、金融同業拆款、中長期資金轉存等；不含對一般民眾直接放款。"}, {"q": "存簿儲金每一人或每一團體得開立幾戶？", "o": ["不限戶數", "僅得為一戶", "至多三戶", "每年一戶"], "a": 1, "e": "§19第1項：存簿儲金，每一人或每一團體僅得為一戶。"}, {"q": "存簿儲金超過計息最高存款限額之數，其利息如何計算？", "o": ["按一半利率計息", "不給利息", "按定存利率計息", "由郵局自行決定"], "a": 1, "e": "§19第2項：超過限額之數，不給利息。（政府機關、自治團體、公益法人不適用該限額）"}, {"q": "關於存簿儲金之利息，依第20條之規定為何？", "o": ["應課徵所得稅", "應免一切稅捐", "僅免營業稅", "由金管會決定是否課稅"], "a": 1, "e": "§20：存簿儲金之利息，應免一切稅捐。"}, {"q": "郵政匯兌除『電匯』外，應以下列何者為憑？", "o": ["存摺", "郵政匯票或郵政禮券", "身分證", "劃撥支票"], "a": 1, "e": "§21第2項：郵政匯兌除電匯外，應以郵政匯票或郵政禮券為憑；匯兌分票匯、電匯二種。"}, {"q": "郵政匯票受款人之兌領請求權，自發票日起算多久不行使，因時效而消滅？", "o": ["1 年", "2 年", "3 年", "5 年"], "a": 2, "e": "§22：自發票日起算 3 年間不行使，因時效而消滅。"}, {"q": "郵政匯票逾兌領期間未經兌款者，中華郵政通知匯款人領回時，關於匯費之處理為何？", "o": ["全額退還匯費", "匯款人不得要求退還匯費", "退還一半匯費", "由受款人領取匯費"], "a": 1, "e": "§23：逾期未兌款通知匯款人領回，匯款人不得要求退還匯費。"}, {"q": "國際匯兌之處理，除依萬國郵政聯盟之郵政匯兌協定或雙邊協定外，依何規定辦理？", "o": ["銀行法", "本法（郵政儲金匯兌法）", "外匯管理條例", "由中央銀行個案決定"], "a": 1, "e": "§25：除依萬國郵政聯盟協定及施行細則或雙邊協定外，依本法之規定辦理。"}, {"q": "中華郵政規避、妨礙或拒絕金管會之檢查，依第27條可處之罰鍰為何？", "o": ["30 萬–150 萬元", "50 萬–250 萬元", "20 萬–100 萬元", "100 萬–500 萬元"], "a": 1, "e": "§27：妨礙檢查、隱匿毀損帳冊等情形，處 50 萬元以上 250 萬元以下罰鍰。"}, {"q": "依郵政儲金匯兌法所定罰鍰，原則上由何機關處罰？惟『未經許可辦理外匯業務』之罰由何機關為之？", "o": ["交通部處罰；外匯由金管會", "金管會處罰；外匯由中央銀行", "中央銀行處罰；外匯由金管會", "行政院處罰；外匯由交通部"], "a": 1, "e": "§29：罰鍰由金管會處罰；但 §26 第6款（未經中央銀行許可辦外匯）之處罰由中央銀行為之，並通知交通部。"}, {"q": "中華郵政依罰則規定受罰後，得對下列何者求償？", "o": ["主管機關", "應負責之人", "顧客", "受款人"], "a": 1, "e": "§28：中華郵政依前二條（§26、§27）規定受罰時，得對應負責之人求償。"}];
+
+function renderQuiz(data){
+  const box=document.getElementById('quizbox');
+  data.forEach((it,i)=>{
+    const q=document.createElement('div');q.className='q';
+    const opts=it.o.map((t,j)=>`<button class="opt" data-i="${i}" data-j="${j}">`+
+      `<span class="lab">(${'ABCD'[j]})</span>${t}</button>`).join('');
+    q.innerHTML=`<div class="stem"><span class="no">${i+1}</span>${it.q}</div>`+
+      `<div class="opts">${opts}</div>`+
+      `<div class="exp" id="exp${i}"><b>✅ 答案：(${'ABCD'[it.a]})</b><br>${it.e}</div>`;
+    box.appendChild(q);
+  });
+  const answered=new Array(data.length).fill(false);let correct=0;
+  box.addEventListener('click',e=>{
+    const b=e.target.closest('.opt');if(!b)return;
+    const i=+b.dataset.i,j=+b.dataset.j;if(answered[i])return;
+    answered[i]=true;
+    const q=box.children[i];const btns=q.querySelectorAll('.opt');
+    btns.forEach((bt,k)=>{bt.classList.add('lock');
+      if(k===data[i].a)bt.classList.add('correct');});
+    if(j!==data[i].a)btns[j].classList.add('wrong');else correct++;
+    document.getElementById('exp'+i).classList.add('show');
+    update();
+  });
+  function update(){
+    const done=answered.filter(Boolean).length;
+    document.getElementById('score').textContent=`答對 ${correct} / 作答 ${done} （共 ${data.length} 題）`;
+    document.getElementById('bar').style.width=(done/data.length*100)+'%';
+  }
+  document.getElementById('showAll').onclick=()=>{
+    document.querySelectorAll('.exp').forEach(x=>x.classList.add('show'));
+    box.querySelectorAll('.q').forEach((q,i)=>{
+      q.querySelectorAll('.opt').forEach((bt,k)=>{bt.classList.add('lock');
+        if(k===data[i].a)bt.classList.add('correct');});
+    });
+  };
+  document.getElementById('reset').onclick=()=>{location.reload();};
+  update();
+}
+
+
+document.querySelectorAll('nav.tabs button').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.remove('on'));
+    document.querySelectorAll('section.pane').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    document.getElementById(b.dataset.t).classList.add('on');
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+});
+
+renderQuiz(QUESTIONS);
+</script>
+</body></html>

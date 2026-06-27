@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>簡易人壽保險法｜郵局國考互動練習</title>
+<style>
+:root{
+  --green:#00824a; --green-d:#005c33; --green-l:#e7f4ec;
+  --gold:#c8902a; --ink:#222; --muted:#5f6b63; --line:#d9e4dc;
+  --bg:#f6faf7; --card:#fff; --red:#c0392b; --red-l:#fdecea;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  font-size:17px; line-height:1.85; -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:920px;margin:0 auto;padding:0 18px 80px}
+header.top{
+  background:linear-gradient(135deg,var(--green),var(--green-d));
+  color:#fff;padding:30px 18px;text-align:center;
+}
+header.top .wrap{padding-bottom:0}
+header.top h1{margin:0 0 6px;font-size:1.7em;letter-spacing:1px}
+header.top p{margin:4px 0;opacity:.92;font-size:.95em}
+.backlink{display:inline-block;margin-top:12px;color:#fff;
+  border:1px solid rgba(255,255,255,.6);border-radius:20px;
+  padding:5px 16px;text-decoration:none;font-size:.9em}
+.backlink:hover{background:rgba(255,255,255,.15)}
+nav.tabs{position:sticky;top:0;z-index:20;background:var(--card);
+  border-bottom:1px solid var(--line);display:flex;gap:6px;
+  padding:8px 18px;box-shadow:0 2px 6px rgba(0,0,0,.05)}
+nav.tabs button{flex:1;border:0;background:transparent;font-size:1em;
+  font-family:inherit;padding:10px;border-radius:8px;cursor:pointer;
+  color:var(--muted);font-weight:700}
+nav.tabs button.on{background:var(--green-l);color:var(--green-d)}
+section.pane{display:none;padding-top:22px}
+section.pane.on{display:block}
+h2.sec{font-size:1.35em;color:var(--green-d);border-left:6px solid var(--green);
+  padding-left:12px;margin:30px 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:18px 20px;margin:14px 0;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.card h3{margin:0 0 10px;font-size:1.12em;color:var(--green-d)}
+.card h3 .art{font-size:.72em;color:var(--gold);font-weight:700;margin-left:8px}
+.card ul{margin:8px 0;padding-left:1.3em}
+.card li{margin:6px 0}
+.tag{display:inline-block;background:var(--green-l);color:var(--green-d);
+  border-radius:6px;padding:1px 8px;font-size:.8em;font-weight:700;margin-right:6px}
+.hl{background:#fff5d6;padding:0 3px;border-radius:3px;font-weight:700}
+.warn{color:var(--red);font-weight:700}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.96em;
+  background:#fff;border-radius:10px;overflow:hidden}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+th{background:var(--green);color:#fff;font-weight:700}
+tbody tr:nth-child(even){background:var(--green-l)}
+.mnem{background:var(--green-l);border:1px dashed var(--green);border-radius:10px;
+  padding:12px 16px;margin:12px 0;font-size:.98em}
+.mnem b{color:var(--green-d)}
+
+/* quiz */
+.quizbar{position:sticky;top:54px;z-index:15;background:#fff;border:1px solid var(--line);
+  border-radius:12px;padding:10px 16px;margin:6px 0 16px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.quizbar .score{font-weight:800;color:var(--green-d);font-size:1.05em}
+.quizbar .prog{flex:1;min-width:120px;height:10px;background:var(--green-l);
+  border-radius:8px;overflow:hidden}
+.quizbar .prog>i{display:block;height:100%;width:0;background:var(--green);transition:.3s}
+.quizbar button{border:1px solid var(--green);background:#fff;color:var(--green-d);
+  font-family:inherit;font-size:.9em;padding:6px 12px;border-radius:8px;cursor:pointer;font-weight:700}
+.quizbar button:hover{background:var(--green-l)}
+.q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:16px 18px;margin:14px 0;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.q .stem{font-weight:700;margin-bottom:12px}
+.q .stem .no{display:inline-block;background:var(--green);color:#fff;border-radius:50%;
+  width:1.7em;height:1.7em;line-height:1.7em;text-align:center;margin-right:8px;font-size:.92em}
+.opt{display:block;width:100%;text-align:left;border:1.5px solid var(--line);
+  background:#fbfdfb;border-radius:10px;padding:11px 14px;margin:7px 0;cursor:pointer;
+  font-family:inherit;font-size:1em;line-height:1.6;transition:.15s}
+.opt:hover{border-color:var(--green)}
+.opt .lab{font-weight:800;color:var(--green-d);margin-right:6px}
+.opt.correct{background:var(--green-l);border-color:var(--green);color:var(--green-d)}
+.opt.wrong{background:var(--red-l);border-color:var(--red);color:var(--red)}
+.opt.lock{cursor:default}
+.exp{margin-top:10px;padding:11px 14px;border-radius:10px;background:#f3f8f4;
+  border-left:4px solid var(--green);font-size:.97em;display:none}
+.exp.show{display:block}
+.exp b{color:var(--green-d)}
+footer{text-align:center;color:var(--muted);font-size:.85em;margin-top:40px}
+@media(max-width:520px){body{font-size:16.5px}.wrap{padding:0 12px 60px}}
+@media print{nav.tabs,.quizbar,.backlink{display:none}section.pane{display:block!important}
+  .exp{display:block!important}.q,.card{break-inside:avoid}}
+</style>
+</head><body>
+<header class="top"><div class="wrap">
+  <h1>📮 簡易人壽保險法</h1>
+  <p>民國112年11月29日修正</p>
+  <p>重點整理 + 25 題互動練習</p>
+  <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+    <a class="backlink" href="/">&#8592; 回首頁</a>
+    <a class="backlink" href="post-office.html">← 回郵局總覽</a>
+  </div>
+</div></header>
+<nav class="tabs">
+  <button class="on" data-t="notes">📖 重點整理</button>
+  <button data-t="quiz">📝 互動練習（25 題）</button>
+</nav>
+<div class="wrap">
+  <section id="notes" class="pane on">
+    
+<div class="card">
+  <h3>本法定位與特色 <span class="art">全 43 條</span></h3>
+  <ul>
+    <li><span class="tag">立法目的（§1）</span>提供國民<span class="hl">基本經濟保障</span>、健全簡易人壽保險制度、便利<b>全民投保</b>、增進社會福祉。</li>
+    <li><span class="tag">主管／監督（§2）</span>中華郵政經營者<b>屬交通部主管，業務受金管會監督</b>；其他保險業者經營簡易人壽保險，由<b>金管會主管</b>。</li>
+    <li><span class="tag">保險人（§3）</span>郵政簡易人壽保險以<span class="hl">中華郵政公司</span>為保險人。</li>
+  </ul>
+  <div class="mnem"><b>兩大特色（最常考）：</b>①§6 對被保險人<b>免施健康檢查</b>；②§12 保險費<b>不得以訴訟請求交付</b>（與一般保險法不同）。</div>
+</div>
+
+<div class="card">
+  <h3>險種與保險金額 <span class="art">§4、§5</span></h3>
+  <ul>
+    <li>§4：簡易人壽保險包括<b>生存保險、死亡保險、生死合險</b>；並得以<b>附約</b>方式經營<b>健康保險及傷害保險</b>。</li>
+    <li>§5：最高、最低保險金額及同一被保險人保險金額總數，由<span class="hl">交通部會同金管會</span>定之；超過限額部分之契約<span class="warn">無效</span>，所繳保險費<b>無息退還</b>。</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h3>被保險人資格與限制 <span class="art">§6–§9</span></h3>
+  <ul>
+    <li><span class="tag">§6</span>對被保險人<span class="hl">免施健康檢查</span>。</li>
+    <li><span class="tag">§7</span><b>非中華民國國民不得為被保險人</b>；以<b>未滿 15 歲</b>未成年人為被保險人者，除健康保險及喪葬費用給付外，其餘死亡給付約定<b>於滿 15 歲時始生效</b>；喪葬費用保險金額不得超過<b>遺產稅喪葬費扣除額之半</b>。</li>
+    <li>§7-1：以受監護宣告尚未撤銷者為被保險人，除健康及喪葬費用給付外，其餘死亡給付<b>無效</b>。</li>
+    <li><span class="tag">§8</span>契約得由本人或第三人訂立；<b>由第三人訂立且約定保險金額，未經被保險人書面同意者，契約無效</b>；被保險人得隨時以書面撤銷其同意（視為要保人終止契約）。</li>
+    <li>§9：以他人為被保險人，須要保人與被保險人有<b>保險利益</b>。</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h3>契約成立、效力與停復效 <span class="art">§10–§14</span></h3>
+  <ul>
+    <li>§10／§11：同意承保後填發保險單；契約<b>自填發保險單之日</b>生效（預收第一期保費者，溯自預收時起負責）。</li>
+    <li><span class="tag">§12</span>保險人對保險費<span class="hl">不得以訴訟請求交付</span>。</li>
+    <li><span class="tag">§13（停效）</span>續期保險費自繳費日起<b>1 個月未交付</b>，保險人應於<b>10 日內催告</b>，並自當期繳費日起算<span class="hl">3 個月為寬限期</span>；寬限期屆滿仍未交付，契約<b>效力停止</b>；停效後發生事故，保險人不負責任。</li>
+    <li><span class="tag">§14（復效）</span>停效後要保人得於<span class="hl">2 年內</span>申請恢復效力；經同意者溯自繳清應繳保費及利息之日恢復。</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h3>據實說明與解除權 <span class="art">§15、§16</span></h3>
+  <ul>
+    <li>§15：訂約或申請復效時，要保人及被保險人對保險人書面詢問應<b>據實說明</b>；故意隱匿、過失遺漏或不實說明足以變更/減少危險估計者，保險人得<b>解除契約</b>（事故發生後亦同；能證明與危險無關者除外）。</li>
+    <li><span class="tag">§16（除斥期間）</span>解除權自保險人<b>知有解除原因後 1 個月</b>不行使而消滅；或自契約訂立/復效至事故發生<span class="hl">滿 2 年</span>，即有可解除原因亦不得解除。</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h3>受益人與契約終止 <span class="art">§17、§18、§22</span></h3>
+  <ul>
+    <li>§17：要保人得指定或變更受益人（被保險人為第三人時應先得其書面同意）；<b>未指定受益人</b>且以死亡為給付事由者，保險金作為<b>被保險人之遺產</b>。</li>
+    <li>§18：要保人得隨時聲明終止契約，其<b>終止效力不溯及既往</b>。</li>
+    <li>§22：受益人<b>故意致被保險人於死</b>或傷害者，<b>無請求權</b>；有其他受益人由其平均領受，無其他受益人則作為遺產。</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h3>不負給付責任之事由 <span class="art">§20</span></h3>
+  <ul>
+    <li>被保險人於契約生效或復效後<span class="hl">1 年以內故意自殺</span>。</li>
+    <li>要保人故意致被保險人於死。</li>
+    <li>被保險人因犯罪處死、拒捕或越獄致死。</li>
+    <li>健康／傷害保險被保險人故意自殺、墮胎或犯罪行為所致之疾病傷害失能死亡等。</li>
+  </ul>
+  <p>※ 上列情形保險人仍應依 §21 辦理保單價值準備金之返還或給付。</p>
+</div>
+
+<div class="card">
+  <h3>保單借款、代位與時效 <span class="art">§23–§26</span></h3>
+  <ul>
+    <li><span class="tag">§23</span>保險費<b>付足 1 年以上</b>者，要保人得以保險單為質，在<b>保單價值準備金額內</b>向保險人借款。</li>
+    <li><span class="tag">§24</span>保險人<span class="warn">不得代位</span>行使要保人或受益人對第三人之請求權。</li>
+    <li><span class="tag">§25</span>由保險契約所生之權利，自得請求之日起<span class="hl">逾 5 年不行使而消滅</span>。</li>
+    <li>§26：第三人訂立之契約，其權利移轉或出質，非經被保險人書面承認不生效力。</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h3>資金、會計與罰則 <span class="art">§27–§40</span></h3>
+  <ul>
+    <li>§27：郵政簡易人壽保險資金運用（除存款外）依保險法相關規定；得經交通部核可提供重大公共建設融資，總額不得超過資金總額 <b>30%</b>。</li>
+    <li>§28：會計帳務<b>應獨立處理</b>。</li>
+    <li><span class="tag">§29</span>資本由交通部會商金管會核定，按實收資本總額 <span class="hl">15%</span> 繳存保證金於國庫。</li>
+    <li>§35：背信掏空致中華郵政受損→ 1–7 年有期徒刑，得併科 3,000 萬以下罰金（共同犯加重二分之一；未遂犯罰之）。</li>
+    <li>§40：本法所定<b>行政處罰由金管會為之</b>，並應通知交通部。</li>
+  </ul>
+</div>
+
+  </section>
+  <section id="quiz" class="pane">
+    <h2 class="sec">互動練習題（共 25 題）</h2>
+    <p style="color:var(--muted)">點選選項即時對答案，並顯示解析。</p>
+    <div class="quizbar">
+      <span class="score" id="score">答對 0 / 作答 0 （共 25 題）</span>
+      <span class="prog"><i id="bar"></i></span>
+      <button id="showAll">顯示全部解析</button>
+      <button id="reset">重做</button>
+    </div>
+    <div id="quizbox"></div>
+  </section>
+  <footer>EFETL · 郵局國考法規複習 ｜ 依現行條文整理，正式以法規原文為準。</footer>
+</div>
+<script>
+const QUESTIONS=[{"q": "簡易人壽保險法第1條之立法目的，下列何者正確？", "o": ["促進資本形成", "提供國民基本經濟保障、便利全民投保、增進社會福祉", "保障郵政儲金匯兌安全", "健全郵政發展提供普遍服務"], "a": 1, "e": "§1：為提供國民基本經濟保障，健全簡易人壽保險制度，便利全民投保，增進社會福祉。其餘為其他三法之目的。"}, {"q": "中華郵政公司經營之簡易人壽保險，其主管機關及業務監督機關為何？", "o": ["金管會主管、交通部監督", "交通部主管、金管會監督", "交通部主管、中央銀行監督", "金管會主管、中央銀行監督"], "a": 1, "e": "§2第1項：由中華郵政經營者屬交通部主管，業務並受金管會監督。"}, {"q": "郵政簡易人壽保險之保險人為下列何者？", "o": ["交通部", "金管會", "中華郵政公司", "財團法人保險安定基金"], "a": 2, "e": "§3：以中華郵政公司為保險人，依法負保險給付責任。"}, {"q": "簡易人壽保險『得以附約方式經營』之保險為下列何者？", "o": ["生存保險與死亡保險", "健康保險與傷害保險", "年金保險與投資型保險", "財產保險與責任保險"], "a": 1, "e": "§4：本體含生存、死亡、生死合險；得以附約方式經營健康保險及傷害保險。"}, {"q": "郵政簡易人壽保險之最高、最低保險金額，由下列何者定之？", "o": ["中華郵政公司", "交通部會同金管會", "金管會單獨", "行政院"], "a": 1, "e": "§5第1項：由交通部會同金融監督管理委員會定之。"}, {"q": "投保金額超過法定限額時，其超過部分之契約效力與保費處理為何？", "o": ["契約有效，保費照收", "超過部分契約無效，所繳保費無息退還", "契約全部無效", "超過部分保費加計利息退還"], "a": 1, "e": "§5第2項：超過部分之契約無效，超過部分所繳保險費應予無息退還。"}, {"q": "簡易人壽保險對於被保險人，於核保時之健康檢查規定為何？", "o": ["一律須體檢", "免施以健康檢查", "保額逾百萬須體檢", "由保險人自行決定"], "a": 1, "e": "§6：簡易人壽保險對於被保險人，免施以健康檢查（為其重要特色）。"}, {"q": "下列何者『不得』為簡易人壽保險之被保險人？", "o": ["未成年人", "受監護宣告之人", "非中華民國國民", "65 歲以上之人"], "a": 2, "e": "§7第1項：非中華民國國民，不得為被保險人。"}, {"q": "以未滿 15 歲之未成年人為被保險人者，其死亡給付（除健康保險及喪葬費用外）之約定，於何時始生效力？", "o": ["契約成立時", "被保險人滿 15 歲時", "被保險人滿 18 歲時", "繳足一年保費時"], "a": 1, "e": "§7第2項：除健康保險及喪葬費用之給付外，其餘死亡給付之約定於被保險人滿 15 歲時始生效力。"}, {"q": "由第三人訂立之簡易人壽保險契約並約定保險金額，未經被保險人書面同意者，其效力為何？", "o": ["有效", "效力未定", "契約無效", "得撤銷"], "a": 2, "e": "§8第2項：由第三人訂立且約定保險金額，未經被保險人書面同意者，其契約無效。"}, {"q": "簡易人壽保險契約原則上自何時發生效力？", "o": ["要保人簽名時", "填發保險單之日", "繳交第一期保費時", "保險事故發生時"], "a": 1, "e": "§11：保險契約自填發保險單之日發生效力（預收第一期保費者，溯自預收時起負責）。"}, {"q": "關於簡易人壽保險之保險費，下列敘述何者正確？", "o": ["保險人得以訴訟請求交付", "保險人不得以訴訟請求交付", "逾期得聲請法院強制執行", "得移送行政執行"], "a": 1, "e": "§12：簡易人壽保險之保險人，對於保險費，不得以訴訟請求交付（重要特色）。"}, {"q": "續期保險費自繳費日起一個月未交付者，保險人應於幾日內催告？寬限期間為多久？", "o": ["10 日內催告，寬限 3 個月", "15 日內催告，寬限 1 個月", "30 日內催告，寬限 2 個月", "7 日內催告，寬限 6 個月"], "a": 0, "e": "§13第1項：應於 10 日內催告，並自當期繳費日起算 3 個月為寬限期間。"}, {"q": "保險契約因未交保費而停止效力後，要保人得於多久內申請恢復契約效力？", "o": ["6 個月內", "1 年內", "2 年內", "5 年內"], "a": 2, "e": "§14第1項：保險契約停止效力後，要保人得於 2 年以內申請恢復契約效力。"}, {"q": "保險人之契約解除權，自其知有解除之原因後多久不行使而消滅？", "o": ["1 個月", "3 個月", "6 個月", "1 年"], "a": 0, "e": "§16第1項：解除權自保險人知有解除原因後，經過 1 個月不行使而消滅。"}, {"q": "自契約訂立或恢復效力至保險事故發生屆滿多久，即使有可解除之原因，保險人亦不得解除契約？", "o": ["1 年", "2 年", "3 年", "5 年"], "a": 1, "e": "§16第1項：自契約訂立或恢復效力至事故發生滿 2 年，即有可解除原因亦不得解除契約。"}, {"q": "以被保險人死亡為給付事由，要保人『未指定受益人』時，其保險金額如何處理？", "o": ["歸保險人所有", "作為被保險人之遺產", "平均分給法定繼承人外之人", "返還已繳保費"], "a": 1, "e": "§17第2項：未指定受益人時，以被保險人死亡為給付事由者，保險金額作為被保險人之遺產。"}, {"q": "要保人隨時向保險人聲明終止保險契約，其終止之效力為何？", "o": ["溯及契約成立時", "不溯及既往", "溯及前一期繳費日", "須經保險人同意始生效"], "a": 1, "e": "§18：要保人得隨時聲明終止契約，其終止效力不溯及既往。"}, {"q": "被保險人於保險契約發生效力或恢復效力後多久以內故意自殺，保險人不負給付保險金額之責任？", "o": ["6 個月", "1 年", "2 年", "3 年"], "a": 1, "e": "§20第1款：被保險人於契約生效或復效後 1 年以內故意自殺者，保險人不負給付責任（仍依 §21 辦理保單價值準備金）。"}, {"q": "受益人故意致被保險人於死，雖未致死，關於其保險金請求權為何？", "o": ["仍得全額請求", "無請求死亡人壽保險金額之權", "得請求一半", "得請求保單價值準備金"], "a": 1, "e": "§22第1項：受益人故意致被保險人於死或雖未致死者，無請求死亡人壽保險金額之權。"}, {"q": "要保人申請以保險單為質向保險人借款，須具備何項前提條件？", "o": ["保險費付足 1 年以上", "契約成立滿 3 個月", "繳足兩期保費", "經被保險人同意"], "a": 0, "e": "§23第1項：保險費付足 1 年以上者，要保人得以保險單為質，在保單價值準備金額內申請借款。"}, {"q": "關於簡易人壽保險之保險人代位權，下列敘述何者正確？", "o": ["得代位行使對第三人之請求權", "不得代位行使要保人或受益人因保險事故對第三人之請求權", "僅傷害保險得代位", "經被保險人同意得代位"], "a": 1, "e": "§24：保險人不得代位行使要保人或受益人因保險事故所生對於第三人之請求權。"}, {"q": "由簡易人壽保險契約所發生之權利，自得為請求之日起多久不行使而消滅？", "o": ["2 年", "3 年", "5 年", "10 年"], "a": 2, "e": "§25：由保險契約所發生之權利，自得為請求之日起，逾 5 年不行使而消滅。"}, {"q": "郵政簡易人壽保險之資本，應按實收資本總額多少比例繳存保證金於國庫？", "o": ["百分之十", "百分之十五", "百分之二十", "百分之三十"], "a": 1, "e": "§29：按實收資本總額百分之十五繳存保證金於國庫（資本由交通部會商金管會核定）。"}, {"q": "簡易人壽保險法所定之行政處罰，由下列何機關為之？", "o": ["交通部", "金融監督管理委員會", "中央銀行", "行政院"], "a": 1, "e": "§40：本法所定之行政處罰，由金融監督管理委員會為之，並應通知交通部。"}];
+
+function renderQuiz(data){
+  const box=document.getElementById('quizbox');
+  data.forEach((it,i)=>{
+    const q=document.createElement('div');q.className='q';
+    const opts=it.o.map((t,j)=>`<button class="opt" data-i="${i}" data-j="${j}">`+
+      `<span class="lab">(${'ABCD'[j]})</span>${t}</button>`).join('');
+    q.innerHTML=`<div class="stem"><span class="no">${i+1}</span>${it.q}</div>`+
+      `<div class="opts">${opts}</div>`+
+      `<div class="exp" id="exp${i}"><b>✅ 答案：(${'ABCD'[it.a]})</b><br>${it.e}</div>`;
+    box.appendChild(q);
+  });
+  const answered=new Array(data.length).fill(false);let correct=0;
+  box.addEventListener('click',e=>{
+    const b=e.target.closest('.opt');if(!b)return;
+    const i=+b.dataset.i,j=+b.dataset.j;if(answered[i])return;
+    answered[i]=true;
+    const q=box.children[i];const btns=q.querySelectorAll('.opt');
+    btns.forEach((bt,k)=>{bt.classList.add('lock');
+      if(k===data[i].a)bt.classList.add('correct');});
+    if(j!==data[i].a)btns[j].classList.add('wrong');else correct++;
+    document.getElementById('exp'+i).classList.add('show');
+    update();
+  });
+  function update(){
+    const done=answered.filter(Boolean).length;
+    document.getElementById('score').textContent=`答對 ${correct} / 作答 ${done} （共 ${data.length} 題）`;
+    document.getElementById('bar').style.width=(done/data.length*100)+'%';
+  }
+  document.getElementById('showAll').onclick=()=>{
+    document.querySelectorAll('.exp').forEach(x=>x.classList.add('show'));
+    box.querySelectorAll('.q').forEach((q,i)=>{
+      q.querySelectorAll('.opt').forEach((bt,k)=>{bt.classList.add('lock');
+        if(k===data[i].a)bt.classList.add('correct');});
+    });
+  };
+  document.getElementById('reset').onclick=()=>{location.reload();};
+  update();
+}
+
+
+document.querySelectorAll('nav.tabs button').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.remove('on'));
+    document.querySelectorAll('section.pane').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    document.getElementById(b.dataset.t).classList.add('on');
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+});
+
+renderQuiz(QUESTIONS);
+</script>
+</body></html>
