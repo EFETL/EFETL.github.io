@@ -86,7 +86,7 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;padding:13px 18px;display
   <a class="back" href="speaking5.html">← 返回口說測驗</a>
   <div class="ph">
     <h2>第三大題　回答問題 Respond to Questions</h2>
-    <p>題目顯示後倒數 3 秒開始錄音，每題 15 秒，回答不需完整句子。</p>
+    <p>題目將以語音播出，播完後自動開始錄音，每題 15 秒，作答後才會顯示題目文字。</p>
   </div>
 
   <!-- 測驗中 -->
@@ -98,8 +98,8 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;padding:13px 18px;display
 
       <!-- 倒數 -->
       <div class="cd-box" id="cd-box">
-        <div class="cd-lbl">準備回答…</div>
-        <div class="cd-num" id="cd-num">3</div>
+        <div style="font-size:2rem;margin-bottom:8px">🔊</div>
+        <div class="cd-lbl" id="cd-lbl">正在播放題目...</div>
       </div>
 
       <!-- 錄音 -->
@@ -191,27 +191,49 @@ const QS = [
    model:"I plan to study hard, learn new skills, and gain experience by working part-time."}
 ];
 
-let qi=0, scores=[], recog=null, recording=false, cdTimer=null, recTimer=null, curFinal='';
+let qi=0, scores=[], recog=null, recording=false, ttsTimer=null, recTimer=null, curFinal='';
+
+const VOICE_PREF=['Google US English','Ava (Enhanced)','Allison (Enhanced)','Samantha (Enhanced)','Ava','Allison','Samantha','Karen','Moira'];
+let ttsVoice=null;
+function initVoice(){
+  const all=speechSynthesis.getVoices();
+  for(const name of VOICE_PREF){const v=all.find(v=>v.name===name);if(v){ttsVoice=v;break;}}
+  if(!ttsVoice&&all.length) ttsVoice=all.find(v=>v.lang&&v.lang.startsWith('en'))||all[0];
+}
+if(speechSynthesis.onvoiceschanged!==undefined) speechSynthesis.onvoiceschanged=initVoice;
+initVoice();
+
+function speakOnce(text){
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='en-US'; u.rate=0.9;
+  if(ttsVoice) u.voice=ttsVoice;
+  speechSynthesis.speak(u);
+}
 
 function loadQ(i){
   const q=QS[i];
+  clearTimeout(ttsTimer); clearInterval(recTimer);
+  speechSynthesis.cancel();
+
   document.getElementById('prog').style.width=(i/QS.length*80)+'%';
   document.getElementById('qnum').textContent=`題 ${i+1} / ${QS.length}`;
+
   document.getElementById('qtext').textContent=q.t;
   document.getElementById('qzh').textContent=q.zh;
+  document.getElementById('qtext').style.display='none';
+  document.getElementById('qzh').style.display='none';
+
   document.getElementById('cd-box').style.display='block';
+  document.getElementById('cd-lbl').textContent='🔊 正在播放題目...';
   document.getElementById('rec-area').style.display='none';
   document.getElementById('result-area').style.display='none';
-  document.getElementById('cd-num').textContent='3';
   curFinal='';
 
-  let c=3;
-  clearInterval(cdTimer);
-  cdTimer=setInterval(()=>{
-    c--;
-    if(c>0){ document.getElementById('cd-num').textContent=String(c); }
-    else{ clearInterval(cdTimer); startRec(q); }
-  },1000);
+  // 播放兩次，用 timer 估算播完時間
+  speakOnce(q.t);
+  const onceMs=(q.t.split(' ').length*480)+500;
+  setTimeout(()=>speakOnce(q.t), onceMs+600);
+  ttsTimer=setTimeout(()=>startRec(q), onceMs*2+1400);
 }
 
 function startRec(q){
@@ -263,6 +285,10 @@ function scoreQ(q){
   recording=false;
   if(recog){ try{recog.stop();}catch(e){} recog=null; }
 
+  // 揭示題目
+  document.getElementById('qtext').style.display='block';
+  document.getElementById('qzh').style.display='block';
+
   const words=curFinal.toLowerCase().split(/\s+/).map(w=>w.replace(/[^a-z']/g,'')).filter(Boolean);
   const res=q.kw.map(k=>({k,hit:words.some(w=>w===k||w.startsWith(k)||k.startsWith(w))}));
   const pct=Math.round(res.filter(r=>r.hit).length/q.kw.length*100);
@@ -305,7 +331,6 @@ function showDone(){
   else g='💪 需加強';
   document.getElementById('final-grade').textContent=g;
 
-  // 顯示三大題總分（若有存在 sessionStorage）
   const p1=sessionStorage.getItem('p1score');
   const p2=sessionStorage.getItem('p2score');
   if(p1||p2){
@@ -317,7 +342,8 @@ function showDone(){
 }
 
 function restart(){
-  clearInterval(cdTimer); clearInterval(recTimer);
+  clearTimeout(ttsTimer); clearInterval(recTimer);
+  speechSynthesis.cancel();
   recording=false; curFinal=''; qi=0; scores=[];
   if(recog){ try{recog.stop();}catch(e){} recog=null; }
   document.getElementById('done-area').style.display='none';
@@ -326,6 +352,7 @@ function restart(){
 }
 
 loadQ(0);
+
 </script>
 </body>
 </html>
