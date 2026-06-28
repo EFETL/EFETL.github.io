@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>民法繼承篇｜民法國考互動複習</title>
+<style>
+:root{
+  --green:#00824a; --green-d:#005c33; --green-l:#e7f4ec;
+  --gold:#c8902a; --ink:#222; --muted:#5f6b63; --line:#d9e4dc;
+  --bg:#f6faf7; --card:#fff; --red:#c0392b; --red-l:#fdecea;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  font-size:17px; line-height:1.85; -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:920px;margin:0 auto;padding:0 18px 80px}
+header.top{
+  background:linear-gradient(135deg,var(--green),var(--green-d));
+  color:#fff;padding:30px 18px;text-align:center;
+}
+header.top .wrap{padding-bottom:0}
+header.top h1{margin:0 0 6px;font-size:1.7em;letter-spacing:1px}
+header.top p{margin:4px 0;opacity:.92;font-size:.95em}
+.backlink{display:inline-block;margin-top:12px;color:#fff;
+  border:1px solid rgba(255,255,255,.6);border-radius:20px;
+  padding:5px 16px;text-decoration:none;font-size:.9em}
+.backlink:hover{background:rgba(255,255,255,.15)}
+nav.tabs{position:sticky;top:0;z-index:20;background:var(--card);
+  border-bottom:1px solid var(--line);display:flex;gap:6px;
+  padding:8px 18px;box-shadow:0 2px 6px rgba(0,0,0,.05)}
+nav.tabs button{flex:1;border:0;background:transparent;font-size:1em;
+  font-family:inherit;padding:10px;border-radius:8px;cursor:pointer;
+  color:var(--muted);font-weight:700}
+nav.tabs button.on{background:var(--green-l);color:var(--green-d)}
+section.pane{display:none;padding-top:22px}
+section.pane.on{display:block}
+h2.sec{font-size:1.35em;color:var(--green-d);border-left:6px solid var(--green);
+  padding-left:12px;margin:30px 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:18px 20px;margin:14px 0;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.card h3{margin:0 0 10px;font-size:1.12em;color:var(--green-d)}
+.card h3 .art{font-size:.72em;color:var(--gold);font-weight:700;margin-left:8px}
+.card ul{margin:8px 0;padding-left:1.3em}
+.card li{margin:6px 0}
+.tag{display:inline-block;background:var(--green-l);color:var(--green-d);
+  border-radius:6px;padding:1px 8px;font-size:.8em;font-weight:700;margin-right:6px}
+.hl{background:#fff5d6;padding:0 3px;border-radius:3px;font-weight:700}
+.warn{color:var(--red);font-weight:700}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.96em;
+  background:#fff;border-radius:10px;overflow:hidden}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+th{background:var(--green);color:#fff;font-weight:700}
+tbody tr:nth-child(even){background:var(--green-l)}
+.mnem{background:var(--green-l);border:1px dashed var(--green);border-radius:10px;
+  padding:12px 16px;margin:12px 0;font-size:.98em}
+.mnem b{color:var(--green-d)}
+
+/* quiz */
+.quizbar{position:sticky;top:54px;z-index:15;background:#fff;border:1px solid var(--line);
+  border-radius:12px;padding:10px 16px;margin:6px 0 16px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.quizbar .score{font-weight:800;color:var(--green-d);font-size:1.05em}
+.quizbar .prog{flex:1;min-width:120px;height:10px;background:var(--green-l);
+  border-radius:8px;overflow:hidden}
+.quizbar .prog>i{display:block;height:100%;width:0;background:var(--green);transition:.3s}
+.quizbar button{border:1px solid var(--green);background:#fff;color:var(--green-d);
+  font-family:inherit;font-size:.9em;padding:6px 12px;border-radius:8px;cursor:pointer;font-weight:700}
+.quizbar button:hover{background:var(--green-l)}
+.q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:16px 18px;margin:14px 0;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.q .stem{font-weight:700;margin-bottom:12px}
+.q .stem .no{display:inline-block;background:var(--green);color:#fff;border-radius:50%;
+  width:1.7em;height:1.7em;line-height:1.7em;text-align:center;margin-right:8px;font-size:.92em}
+.opt{display:block;width:100%;text-align:left;border:1.5px solid var(--line);
+  background:#fbfdfb;border-radius:10px;padding:11px 14px;margin:7px 0;cursor:pointer;
+  font-family:inherit;font-size:1em;line-height:1.6;transition:.15s}
+.opt:hover{border-color:var(--green)}
+.opt .lab{font-weight:800;color:var(--green-d);margin-right:6px}
+.opt.correct{background:var(--green-l);border-color:var(--green);color:var(--green-d)}
+.opt.wrong{background:var(--red-l);border-color:var(--red);color:var(--red)}
+.opt.lock{cursor:default}
+.exp{margin-top:10px;padding:11px 14px;border-radius:10px;background:#f3f8f4;
+  border-left:4px solid var(--green);font-size:.97em;display:none}
+.exp.show{display:block}
+.exp b{color:var(--green-d)}
+footer{text-align:center;color:var(--muted);font-size:.85em;margin-top:40px}
+@media(max-width:520px){body{font-size:16.5px}.wrap{padding:0 12px 60px}}
+@media print{nav.tabs,.quizbar,.backlink{display:none}section.pane{display:block!important}
+  .exp{display:block!important}.q,.card{break-inside:avoid}}
+
+.lawart{border-left:3px solid var(--green);background:#fff;border-radius:0 8px 8px 0;
+  padding:9px 13px;margin:9px 0;border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.lawart b{color:var(--green-d)}
+.lawart .pa{display:block;margin:3px 0;color:var(--ink)}
+.lawcard{display:flex;gap:16px;align-items:center;background:#fff;border:1px solid var(--line);
+  border-radius:14px;padding:18px 20px;margin:12px 0;text-decoration:none;color:inherit;
+  box-shadow:0 1px 4px rgba(0,0,0,.04);transition:.15s}
+.lawcard:hover{border-color:var(--green);transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,130,74,.12)}
+.lawcard .ic{font-size:2.3em}
+.lawcard h3{margin:0;color:var(--green-d);font-size:1.18em}
+.lawcard p{margin:3px 0;color:var(--muted);font-size:.9em}
+.lawcard .go{color:var(--gold);font-weight:700;font-size:.9em}
+.hero{padding:30px 0 6px}
+</style>
+</head><body>
+<header class="top"><div class="wrap">
+  <h1>📜 民法繼承篇</h1>
+  <p>繼承篇（38 條）</p>
+  <p>條文重點 + 20 題歷年考古題</p>
+  <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+    <a class="backlink" href="/">&#8592; 回首頁</a><a class="backlink" href="civil-law.html">← 回民法總覽</a>
+  </div>
+</div></header>
+<nav class="tabs">
+  <button class="on" data-t="notes">📖 條文重點</button>
+  <button data-t="quiz">📝 互動練習（20）</button>
+</nav>
+<div class="wrap">
+  <section id="notes" class="pane on">
+    <h2 class="sec">民法繼承篇・高頻條文</h2>
+    <div class="mnem">章節範圍：第一章「遺產繼承人」1138–1146 條；第二章「遺產之繼承」1147–1185 條；第三章「遺囑」1186–1225 條。</div>
+    <div class="lawart"><b>第 1138 條</b><span class="pa">1. 遺產繼承人，除配偶外，依左列順序定之：</span><span class="pa">2. 一、直系血親卑親屬。</span><span class="pa">3. 二、父母。</span><span class="pa">4. 三、兄弟姊妹。</span><span class="pa">5. 四、祖父母。</span></div>
+<div class="lawart"><b>第 1140 條</b><span class="pa">第一千一百三十八條所定第一順序之繼承人，有於繼承開始前死亡或喪失繼承權者，由其直系血親卑親屬代位繼承其應繼分。</span></div>
+<div class="lawart"><b>第 1141 條</b><span class="pa">同一順序之繼承人有數人時，按人數平均繼承。但法律另有規定者，不在此限。</span></div>
+<div class="lawart"><b>第 1144 條</b><span class="pa">1. 配偶有相互繼承遺產之權，其應繼分，依左列各款定之：</span><span class="pa">2. 一、與第一千一百三十八條所定第一順序之繼承人同為繼承時，其應繼分與他繼承人平均。</span><span class="pa">3. 二、與第一千一百三十八條所定第二順序或第三順序之繼承人同為繼承時，其應繼分為遺產二分之一。</span><span class="pa">4. 三、與第一千一百三十八條所定第四順序之繼承人同為繼承時，其應繼分為遺產三分之二。</span><span class="pa">5. 四、無第一千一百三十八條所定第一順序至第四順序之繼承人時，其應繼分為遺產全部。</span></div>
+<div class="lawart"><b>第 1145 條</b><span class="pa">1. 有左列各款情事之一者，喪失其繼承權：</span><span class="pa">2. 一、故意致被繼承人或應繼承人於死或雖未致死因而受刑之宣告者。</span><span class="pa">3. 二、以詐欺或脅迫使被繼承人為關於繼承之遺囑，或使其撤回或變更之者。</span><span class="pa">4. 三、以詐欺或脅迫妨害被繼承人為關於繼承之遺囑，或妨害其撤回或變更之者。</span><span class="pa">5. 四、偽造、變造、隱匿或湮滅被繼承人關於繼承之遺囑者。</span><span class="pa">6. 五、對於被繼承人有重大之虐待或侮辱情事，經被繼承人表示其不得繼承者。</span><span class="pa">7. 前項第二款至第四款之規定，如經被繼承人宥恕者，其繼承權不喪失。</span></div>
+<div class="lawart"><b>第 1146 條</b><span class="pa">1. 繼承權被侵害者，被害人或其法定代理人得請求回復之。</span><span class="pa">2. 前項回復請求權，自知悉被侵害之時起，二年間不行使而消滅；自繼承開始時起逾十年者亦同。</span></div>
+<div class="lawart"><b>第 1147 條</b><span class="pa">繼承，因被繼承人死亡而開始。</span></div>
+<div class="lawart"><b>第 1148 條</b><span class="pa">1. 繼承人自繼承開始時，除本法另有規定外，承受被繼承人財產上之一切權利、義務。但權利、義務專屬於被繼承人本身者，不在此限。</span><span class="pa">2. 繼承人對於被繼承人之債務，以因繼承所得遺產為限，負清償責任。</span></div>
+<div class="lawart"><b>第 1148-1 條</b><span class="pa">1. 繼承人在繼承開始前二年內，從被繼承人受有財產之贈與者，該財產視為其所得遺產。</span><span class="pa">2. 前項財產如已移轉或滅失，其價額，依贈與時之價值計算。</span></div>
+<div class="lawart"><b>第 1149 條</b><span class="pa">被繼承人生前繼續扶養之人，應由親屬會議依其所受扶養之程度及其他關係，酌給遺產。</span></div>
+<div class="lawart"><b>第 1151 條</b><span class="pa">繼承人有數人時，在分割遺產前，各繼承人對於遺產全部為公同共有。</span></div>
+<div class="lawart"><b>第 1154 條</b><span class="pa">繼承人對於被繼承人之權利、義務，不因繼承而消滅。</span></div>
+<div class="lawart"><b>第 1156 條</b><span class="pa">1. 繼承人於知悉其得繼承之時起三個月內開具遺產清冊陳報法院。</span><span class="pa">2. 前項三個月期間，法院因繼承人之聲請，認為必要時，得延展之。</span><span class="pa">3. 繼承人有數人時，其中一人已依第一項開具遺產清冊陳報法院者，其他繼承人視為已陳報。</span></div>
+<div class="lawart"><b>第 1159 條</b><span class="pa">1. 在第一千一百五十七條所定之一定期限屆滿後，繼承人對於在該一定期限內報明之債權及繼承人所已知之債權，均應按其數額，比例計算，以遺產分別償還。但不得害及有優先權人之利益。</span><span class="pa">2. 繼承人對於繼承開始時未屆清償期之債權，亦應依第一項規定予以清償。</span><span class="pa">3. 前項未屆清償期之債權，於繼承開始時，視為已到期。其無利息者，其債權額應扣除自第一千一百五十七條所定之一定期限屆滿時起至到期時止之法定利息。</span></div>
+<div class="lawart"><b>第 1161 條</b><span class="pa">1. 繼承人違反第一千一百五十八條至第一千一百六十條之規定，致被繼承人之債權人受有損害者，應負賠償之責。</span><span class="pa">2. 前項受有損害之人，對於不當受領之債權人或受遺贈人，得請求返還其不當受領之數額。</span><span class="pa">3. 繼承人對於不當受領之債權人或受遺贈人，不得請求返還其不當受領之數額。</span></div>
+<div class="lawart"><b>第 1163 條</b><span class="pa">1. 繼承人中有下列各款情事之一者，不得主張第一千一百四十八條第二項所定之利益：</span><span class="pa">2. 一、隱匿遺產情節重大。</span><span class="pa">3. 二、在遺產清冊為虛偽之記載情節重大。</span><span class="pa">4. 三、意圖詐害被繼承人之債權人之權利而為遺產之處分。</span></div>
+<div class="lawart"><b>第 1165 條</b><span class="pa">1. 被繼承人之遺囑，定有分割遺產之方法，或託他人代定者，從其所定。</span><span class="pa">2. 遺囑禁止遺產之分割者，其禁止之效力以十年為限。</span></div>
+<div class="lawart"><b>第 1166 條</b><span class="pa">1. 胎兒為繼承人時，非保留其應繼分，他繼承人不得分割遺產。</span><span class="pa">2. 胎兒關於遺產之分割，以其母為代理人。</span></div>
+<div class="lawart"><b>第 1168 條</b><span class="pa">遺產分割後，各繼承人按其所得部分，對於他繼承人因分割而得之遺產，負與出賣人同一之擔保責任。</span></div>
+<div class="lawart"><b>第 1172 條</b><span class="pa">繼承人中如對於被繼承人負有債務者，於遺產分割時，應按其債務數額，由該繼承人之應繼分內扣還。</span></div>
+<div class="lawart"><b>第 1173 條</b><span class="pa">1. 繼承人中有在繼承開始前因結婚、分居或營業，已從被繼承人受有財產之贈與者，應將該贈與價額加入繼承開始時被繼承人所有之財產中，為應繼遺產。但被繼承人於贈與時有反對之意思表示者，不在此限。</span><span class="pa">2. 前項贈與價額，應於遺產分割時，由該繼承人之應繼分中扣除。</span><span class="pa">3. 贈與價額，依贈與時之價值計算。</span></div>
+<div class="lawart"><b>第 1174 條</b><span class="pa">1. 繼承人得拋棄其繼承權。</span><span class="pa">2. 前項拋棄，應於知悉其得繼承之時起三個月內，以書面向法院為之。</span><span class="pa">3. 拋棄繼承後，應以書面通知因其拋棄而應為繼承之人。但不能通知者，不在此限。</span></div>
+<div class="lawart"><b>第 1176 條</b><span class="pa">1. 第一千一百三十八條所定第一順序之繼承人中有拋棄繼承權者，其應繼分歸屬於其他同為繼承之人。</span><span class="pa">2. 第二順序至第四順序之繼承人中，有拋棄繼承權者，其應繼分歸屬於其他同一順序之繼承人。</span><span class="pa">3. 與配偶同為繼承之同一順序繼承人均拋棄繼承權，而無後順序之繼承人時，其應繼分歸屬於配偶。</span><span class="pa">4. 配偶拋棄繼承權者，其應繼分歸屬於與其同為繼承之人。</span><span class="pa">5. 第一順序之繼承人，其親等近者均拋棄繼承權時，由次親等之直系血親卑親屬繼承。</span><span class="pa">6. 先順序繼承人均拋棄其繼承權時，由次順序之繼承人繼承。其次順序繼承人有無不明或第四順序之繼承人均拋棄其繼承權者，準用關於無人承認繼承之規定。</span><span class="pa">7. 因他人拋棄繼承而應為繼承之人，為拋棄繼承時，應於知悉其得繼承之日起三個月內為之。</span></div>
+<div class="lawart"><b>第 1178 條</b><span class="pa">1. 親屬會議依前條規定為報明後，法院應依公示催告程序，定六個月以上之期限，公告繼承人，命其於期限內承認繼承。</span><span class="pa">2. 無親屬會議或親屬會議未於前條所定期限內選定遺產管理人者，利害關係人或檢察官，得聲請法院選任遺產管理人，並由法院依前項規定為公示催告。</span></div>
+<div class="lawart"><b>第 1185 條</b><span class="pa">第一千一百七十八條所定之期限屆滿，無繼承人承認繼承時，其遺產於清償債權並交付遺贈物後，如有賸餘，歸屬國庫。</span></div>
+<div class="lawart"><b>第 1186 條</b><span class="pa">1. 無行為能力人，不得為遺囑。</span><span class="pa">2. 限制行為能力人，無須經法定代理人之允許，得為遺囑。但未滿十六歲者，不得為遺囑。</span></div>
+<div class="lawart"><b>第 1187 條</b><span class="pa">遺囑人於不違反關於特留分規定之範圍內，得以遺囑自由處分遺產。</span></div>
+<div class="lawart"><b>第 1189 條</b><span class="pa">1. 遺囑應依左列方式之一為之：</span><span class="pa">2. 一、自書遺囑。</span><span class="pa">3. 二、公證遺囑。</span><span class="pa">4. 三、密封遺囑。</span><span class="pa">5. 四、代筆遺囑。</span><span class="pa">6. 五、口授遺囑。</span></div>
+<div class="lawart"><b>第 1190 條</b><span class="pa">自書遺囑者，應自書遺囑全文，記明年、月、日，並親自簽名；如有增減、塗改，應註明增減、塗改之處所及字數，另行簽名。</span></div>
+<div class="lawart"><b>第 1191 條</b><span class="pa">1. 公證遺囑，應指定二人以上之見證人，在公證人前口述遺囑意旨，由公證人筆記、宣讀、講解，經遺囑人認可後，記明年、月、日，由公證人、見證人及遺囑人同行簽名，遺囑人不能簽名者，由公證人將其事由記明，使按指印代之。</span><span class="pa">2. 前項所定公證人之職務，在無公證人之地，得由法院書記官行之，僑民在中華民國領事駐在地為遺囑時，得由領事行之。</span></div>
+<div class="lawart"><b>第 1192 條</b><span class="pa">1. 密封遺囑，應於遺囑上簽名後，將其密封，於封縫處簽名，指定二人以上之見證人，向公證人提出，陳述其為自己之遺囑，如非本人自寫，並陳述繕寫人之姓名、住所，由公證人於封面記明該遺囑提出之年、月、日及遺囑人所為之陳述，與遺囑人及見證人同行簽名。</span><span class="pa">2. 前條第二項之規定，於前項情形準用之。</span></div>
+<div class="lawart"><b>第 1195 條</b><span class="pa">1. 遺囑人因生命危急或其他特殊情形，不能依其他方式為遺囑者，得依左列方式之一為口授遺囑：</span><span class="pa">2. 一、由遺囑人指定二人以上之見證人，並口授遺囑意旨，由見證人中之一人，將該遺囑意旨，據實作成筆記，並記明年、月、日，與其他見證人同行簽名。</span><span class="pa">3. 二、由遺囑人指定二人以上之見證人，並口述遺囑意旨、遺囑人姓名及年、月、日，由見證人全體口述遺囑之為真正及見證人姓名，全部予以錄音，將錄音帶當場密封，並記明年、月、日，由見證人全體在封縫處同行簽名。</span></div>
+<div class="lawart"><b>第 1198 條</b><span class="pa">1. 下列之人，不得為遺囑見證人：</span><span class="pa">2. 一、未成年人。</span><span class="pa">3. 二、受監護或輔助宣告之人。</span><span class="pa">4. 三、繼承人及其配偶或其直系血親。</span><span class="pa">5. 四、受遺贈人及其配偶或其直系血親。</span><span class="pa">6. 五、為公證人或代行公證職務人之同居人助理人或受僱人。</span></div>
+<div class="lawart"><b>第 1199 條</b><span class="pa">遺囑自遺囑人死亡時發生效力。</span></div>
+<div class="lawart"><b>第 1220 條</b><span class="pa">前後遺囑有相牴觸者，其牴觸之部分，前遺囑視為撤回。</span></div>
+<div class="lawart"><b>第 1222 條</b><span class="pa">遺囑人故意破毀或塗銷遺囑，或在遺囑上記明廢棄之意思者，其遺囑視為撤回。</span></div>
+<div class="lawart"><b>第 1223 條</b><span class="pa">1. 繼承人之特留分，依左列各款之規定：</span><span class="pa">2. 一、直系血親卑親屬之特留分，為其應繼分二分之一。</span><span class="pa">3. 二、父母之特留分，為其應繼分二分之一。</span><span class="pa">4. 三、配偶之特留分，為其應繼分二分之一。</span><span class="pa">5. 四、兄弟姊妹之特留分，為其應繼分三分之一。</span><span class="pa">6. 五、祖父母之特留分，為其應繼分三分之一。</span></div>
+<div class="lawart"><b>第 1225 條</b><span class="pa">應得特留分之人，如因被繼承人所為之遺贈，致其應得之數不足者，得按其不足之數由遺贈財產扣減之。受遺贈人有數人時，應按其所得遺贈價額比例扣減。</span></div>
+  </section>
+  <section id="quiz" class="pane">
+    <h2 class="sec">歷年考古題（已核對現行民法，共 20 題）</h2>
+    <p style="color:var(--muted)">點選即時對答，解析附條號與出處；題首【§】為所屬條號。</p>
+    <div class="quizbar">
+      <span class="score" id="qscore">答對 0 / 作答 0 （共 20 題）</span>
+      <span class="prog"><i id="qbar"></i></span>
+      <button id="qshowAll">顯示全部解析</button>
+      <button id="qreset">重做</button>
+    </div>
+    <div id="qbox"></div>
+  </section>
+  <footer>EFETL · 民法國考複習 ｜ 條文依現行民法，正式以法規原文為準。</footer>
+</div>
+<script>
+const QD=[{"q": "【§1138】依民法規定，遺產繼承人除配偶外，第一順序之繼承人為下列何者？", "o": ["父母", "兄弟姊妹", "直系血親卑親屬", "祖父母"], "a": 2, "e": "§1138：遺產繼承人除配偶外依序為直系血親卑親屬、父母、兄弟姊妹、祖父母，第一順序為直系血親卑親屬。（初等/地特一般行政常見題）"}, {"q": "【§1138】甲死亡，遺有配偶乙、父母丙丁，並無子女、孫子女。下列關於繼承人之敘述何者正確？", "o": ["僅配偶乙一人繼承", "配偶乙與父母丙丁共同繼承", "配偶乙與兄弟姊妹共同繼承", "由父母丙丁繼承，配偶乙不得繼承"], "a": 1, "e": "§1138、§1144：無第一順序時由第二順序父母繼承，配偶恆為繼承人，故乙與丙丁共同繼承。（高普考民法概要常見題）"}, {"q": "【§1140】關於代位繼承，下列敘述何者正確？", "o": ["第二順序繼承人死亡時，其子女得代位繼承", "第一順序繼承人於繼承開始前死亡，由其直系血親卑親屬代位繼承其應繼分", "繼承人拋棄繼承者，其子女得代位繼承", "代位繼承人繼承之數額，不以被代位人之應繼分為限"], "a": 1, "e": "§1140：限第一順序繼承人於繼承開始前死亡或喪失繼承權時，由其直系血親卑親屬代位繼承「其應繼分」；拋棄繼承非代位事由。（司法特考/地特常見題）"}, {"q": "【§1141】同一順序之繼承人有數人時，其應繼分原則上如何定之？", "o": ["按出生先後分配", "按人數平均繼承", "由最年長者多分", "由法院斟酌定之"], "a": 1, "e": "§1141：同一順序繼承人有數人時按人數平均繼承，但法律另有規定者不在此限。（初等/鐵路特考常見題）"}, {"q": "【§1144】被繼承人甲死亡，遺有配偶乙及兄弟姊妹二人，無直系血親卑親屬及父母。配偶乙之應繼分為何？", "o": ["遺產全部", "遺產三分之二", "遺產二分之一", "與兄弟姊妹平均"], "a": 2, "e": "§1144第2款：配偶與第二或第三順序（父母/兄弟姊妹）同為繼承時，應繼分為遺產二分之一，餘由兄弟姊妹均分。（高普考/地特常見題）"}, {"q": "【§1144】甲死亡，遺有配偶及祖父母，別無其他繼承人。配偶之應繼分為遺產之多少？", "o": ["二分之一", "三分之二", "三分之一", "全部"], "a": 1, "e": "§1144第3款：配偶與第四順序（祖父母）同為繼承時，其應繼分為遺產三分之二。（初等/國營常見題）"}, {"q": "【§1145】下列何者非民法第1145條所定喪失繼承權之事由？", "o": ["偽造、變造被繼承人關於繼承之遺囑", "以詐欺或脅迫使被繼承人為關於繼承之遺囑", "故意致被繼承人於死，因而受刑之宣告", "繼承人積欠被繼承人大筆債務未還"], "a": 3, "e": "§1145：喪失繼承權事由限故意致死受刑宣告、詐欺脅迫遺囑、偽造變造隱匿湮滅遺囑、重大虐待侮辱經表示不得繼承等；單純積欠債務非失權事由。（高普考/司法特考常見題）"}, {"q": "【§1146】繼承權被侵害者，其繼承回復請求權，自知悉被侵害之時起，多久不行使而消滅？", "o": ["一年", "二年", "三年", "五年"], "a": 1, "e": "§1146：繼承回復請求權自知悉被侵害之時起二年間不行使而消滅；自繼承開始時起逾十年者亦同。（地特/司法特考常見題）"}, {"q": "【§1147】依民法規定，繼承因下列何項事由而開始？", "o": ["被繼承人受監護宣告", "被繼承人死亡", "被繼承人失蹤滿一年", "繼承人聲請開始繼承"], "a": 1, "e": "§1147：繼承因被繼承人死亡而開始。（初等/鐵路特考常見題）"}, {"q": "【§1148】關於現行民法之法定繼承責任，下列敘述何者正確？", "o": ["繼承人須以自己固有財產對被繼承人全部債務負無限清償責任", "繼承人對被繼承人之債務，以因繼承所得遺產為限負清償責任", "繼承人僅承受權利，不承受義務", "須向法院聲請限定繼承，始能以遺產為限負責"], "a": 1, "e": "§1148Ⅱ：現行法採全面限定（概括）繼承，繼承人對被繼承人債務以因繼承所得遺產為限負清償責任，毋庸聲請。（高普考/國營常見題）"}, {"q": "【§1148-1】繼承人於繼承開始前幾年內，從被繼承人受有財產之贈與者，該財產視為其所得遺產？", "o": ["一年內", "二年內", "三年內", "五年內"], "a": 1, "e": "§1148-1Ⅰ：繼承人於繼承開始前二年內從被繼承人受有財產之贈與，該財產視為其所得遺產（對外計算清償責任）。（高普考/地特常見題）"}, {"q": "【§1156】繼承人依民法規定開具遺產清冊陳報法院，原則上應於知悉得繼承之時起多久內為之？", "o": ["一個月內", "二個月內", "三個月內", "六個月內"], "a": 2, "e": "§1156Ⅰ：繼承人於知悉其得繼承之時起三個月內開具遺產清冊陳報法院；法院並得因繼承人之聲請延展之。（司法特考/地特常見題）"}, {"q": "【§1173】繼承人中有在繼承開始前因下列何種事由受被繼承人贈與，於分割遺產時應將贈與價額歸入應繼遺產（歸扣）？", "o": ["因留學受贈學費", "因日常生活受贈零用金", "因結婚、分居或營業受有財產之贈與", "因受贈生日禮物"], "a": 2, "e": "§1173Ⅰ：繼承人因「結婚、分居或營業」受贈與者，應將贈與價額加入應繼遺產（歸扣），但被繼承人贈與時有反對意思者不在此限。（高普考/地特常見題）"}, {"q": "【§1174】關於拋棄繼承，下列敘述何者正確？", "o": ["應於知悉得繼承之時起六個月內為之", "得以口頭向其他繼承人表示即可", "應於知悉得繼承之時起三個月內以書面向法院為之", "須得全體繼承人同意始生效力"], "a": 2, "e": "§1174：繼承人得拋棄繼承權，應於知悉其得繼承之時起三個月內以書面向法院為之，並通知因其拋棄而應為繼承之人。（高普考/鐵路特考/國營常見題）"}, {"q": "【§1176】第一順序繼承人中之一人拋棄繼承權者，其應繼分原則上如何處理？", "o": ["歸屬國庫", "歸屬於其他同為繼承之人", "由其直系血親卑親屬代位繼承", "平均分配予次順序繼承人"], "a": 1, "e": "§1176Ⅰ：第一順序繼承人中拋棄繼承權者，其應繼分歸屬於其他同為繼承之人（非代位）。（地特/初等常見題）"}, {"q": "【§1186】關於遺囑能力，下列敘述何者正確？", "o": ["無行為能力人經法定代理人允許得為遺囑", "限制行為能力人為遺囑須經法定代理人允許", "限制行為能力人為遺囑無須經法定代理人允許，但未滿16歲者不得為遺囑", "滿18歲始得為遺囑"], "a": 2, "e": "§1186：無行為能力人不得為遺囑；限制行為能力人無須法定代理人允許得為遺囑，但未滿十六歲者不得為遺囑。（高普考/司法特考常見題）"}, {"q": "【§1189】下列何者非民法所定之遺囑法定方式？", "o": ["自書遺囑", "公證遺囑", "錄影遺囑", "密封遺囑"], "a": 2, "e": "§1189：遺囑方式限自書、公證、密封、代筆、口授五種，並無「錄影遺囑」。（初等/地特常見題）"}, {"q": "【§1190】關於自書遺囑之要件，下列敘述何者正確？", "o": ["得由他人代筆書寫後遺囑人簽名即可", "應自書遺囑全文、記明年月日並親自簽名", "僅須遺囑人口述、見證人記錄", "無須記明日期，僅須簽名"], "a": 1, "e": "§1190：自書遺囑應自書遺囑全文，記明年、月、日並親自簽名；有增減塗改應註明處所字數另行簽名。（高普考常見題）"}, {"q": "【§1223】依民法規定，直系血親卑親屬之特留分為其應繼分之多少？", "o": ["應繼分三分之一", "應繼分二分之一", "應繼分三分之二", "應繼分全部"], "a": 1, "e": "§1223：直系血親卑親屬、父母、配偶之特留分為其應繼分二分之一；兄弟姊妹、祖父母為三分之一。（高普考/地特/國營常見題）"}, {"q": "【§1223】下列何者之特留分為其應繼分之三分之一？", "o": ["配偶", "父母", "直系血親卑親屬", "兄弟姊妹"], "a": 3, "e": "§1223第4、5款：兄弟姊妹、祖父母之特留分為應繼分三分之一；直系血親卑親屬、父母、配偶則為二分之一。（初等/鐵路特考常見題）"}];
+
+function renderQuiz(data, ns){
+  const box=document.getElementById(ns+'box');
+  if(!data.length){box.innerHTML='<p style=\'color:var(--muted)\'>本編暫無收錄考題。</p>';return;}
+  data.forEach((it,i)=>{
+    const q=document.createElement('div');q.className='q';
+    const opts=it.o.map((t,j)=>`<button class="opt" data-i="${i}" data-j="${j}"><span class="lab">(${'ABCDE'[j]})</span>${t}</button>`).join('');
+    q.innerHTML=`<div class="stem"><span class="no">${i+1}</span>${it.q}</div><div class="opts">${opts}</div>`+
+      `<div class="exp" id="${ns}exp${i}"><b>✅ 答案：(${'ABCDE'[it.a]})</b><br>${it.e}</div>`;
+    box.appendChild(q);
+  });
+  const answered=new Array(data.length).fill(false);let correct=0;
+  box.addEventListener('click',e=>{const b=e.target.closest('.opt');if(!b)return;
+    const i=+b.dataset.i,j=+b.dataset.j;if(answered[i])return;answered[i]=true;
+    const c=box.children[i],bs=c.querySelectorAll('.opt');
+    bs.forEach((bt,k)=>{bt.classList.add('lock');if(k===data[i].a)bt.classList.add('correct');});
+    if(j!==data[i].a)bs[j].classList.add('wrong');else correct++;
+    document.getElementById(ns+'exp'+i).classList.add('show');upd();});
+  function upd(){const d=answered.filter(Boolean).length;
+    document.getElementById(ns+'score').textContent=`答對 ${correct} / 作答 ${d} （共 ${data.length} 題）`;
+    document.getElementById(ns+'bar').style.width=(d/data.length*100)+'%';}
+  document.getElementById(ns+'showAll').onclick=()=>{box.querySelectorAll('.exp').forEach(x=>x.classList.add('show'));
+    box.querySelectorAll('.q').forEach((c,i)=>c.querySelectorAll('.opt').forEach((bt,k)=>{bt.classList.add('lock');if(k===data[i].a)bt.classList.add('correct');}));};
+  document.getElementById(ns+'reset').onclick=()=>location.reload();upd();
+}
+
+
+document.querySelectorAll('nav.tabs button').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.remove('on'));
+    document.querySelectorAll('section.pane').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    document.getElementById(b.dataset.t).classList.add('on');
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+});
+
+renderQuiz(QD,'q');
+</script>
+</body></html>

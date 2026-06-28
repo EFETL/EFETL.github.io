@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>民法債編各論｜民法國考互動複習</title>
+<style>
+:root{
+  --green:#00824a; --green-d:#005c33; --green-l:#e7f4ec;
+  --gold:#c8902a; --ink:#222; --muted:#5f6b63; --line:#d9e4dc;
+  --bg:#f6faf7; --card:#fff; --red:#c0392b; --red-l:#fdecea;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  font-size:17px; line-height:1.85; -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:920px;margin:0 auto;padding:0 18px 80px}
+header.top{
+  background:linear-gradient(135deg,var(--green),var(--green-d));
+  color:#fff;padding:30px 18px;text-align:center;
+}
+header.top .wrap{padding-bottom:0}
+header.top h1{margin:0 0 6px;font-size:1.7em;letter-spacing:1px}
+header.top p{margin:4px 0;opacity:.92;font-size:.95em}
+.backlink{display:inline-block;margin-top:12px;color:#fff;
+  border:1px solid rgba(255,255,255,.6);border-radius:20px;
+  padding:5px 16px;text-decoration:none;font-size:.9em}
+.backlink:hover{background:rgba(255,255,255,.15)}
+nav.tabs{position:sticky;top:0;z-index:20;background:var(--card);
+  border-bottom:1px solid var(--line);display:flex;gap:6px;
+  padding:8px 18px;box-shadow:0 2px 6px rgba(0,0,0,.05)}
+nav.tabs button{flex:1;border:0;background:transparent;font-size:1em;
+  font-family:inherit;padding:10px;border-radius:8px;cursor:pointer;
+  color:var(--muted);font-weight:700}
+nav.tabs button.on{background:var(--green-l);color:var(--green-d)}
+section.pane{display:none;padding-top:22px}
+section.pane.on{display:block}
+h2.sec{font-size:1.35em;color:var(--green-d);border-left:6px solid var(--green);
+  padding-left:12px;margin:30px 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:18px 20px;margin:14px 0;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.card h3{margin:0 0 10px;font-size:1.12em;color:var(--green-d)}
+.card h3 .art{font-size:.72em;color:var(--gold);font-weight:700;margin-left:8px}
+.card ul{margin:8px 0;padding-left:1.3em}
+.card li{margin:6px 0}
+.tag{display:inline-block;background:var(--green-l);color:var(--green-d);
+  border-radius:6px;padding:1px 8px;font-size:.8em;font-weight:700;margin-right:6px}
+.hl{background:#fff5d6;padding:0 3px;border-radius:3px;font-weight:700}
+.warn{color:var(--red);font-weight:700}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.96em;
+  background:#fff;border-radius:10px;overflow:hidden}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+th{background:var(--green);color:#fff;font-weight:700}
+tbody tr:nth-child(even){background:var(--green-l)}
+.mnem{background:var(--green-l);border:1px dashed var(--green);border-radius:10px;
+  padding:12px 16px;margin:12px 0;font-size:.98em}
+.mnem b{color:var(--green-d)}
+
+/* quiz */
+.quizbar{position:sticky;top:54px;z-index:15;background:#fff;border:1px solid var(--line);
+  border-radius:12px;padding:10px 16px;margin:6px 0 16px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.quizbar .score{font-weight:800;color:var(--green-d);font-size:1.05em}
+.quizbar .prog{flex:1;min-width:120px;height:10px;background:var(--green-l);
+  border-radius:8px;overflow:hidden}
+.quizbar .prog>i{display:block;height:100%;width:0;background:var(--green);transition:.3s}
+.quizbar button{border:1px solid var(--green);background:#fff;color:var(--green-d);
+  font-family:inherit;font-size:.9em;padding:6px 12px;border-radius:8px;cursor:pointer;font-weight:700}
+.quizbar button:hover{background:var(--green-l)}
+.q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:16px 18px;margin:14px 0;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.q .stem{font-weight:700;margin-bottom:12px}
+.q .stem .no{display:inline-block;background:var(--green);color:#fff;border-radius:50%;
+  width:1.7em;height:1.7em;line-height:1.7em;text-align:center;margin-right:8px;font-size:.92em}
+.opt{display:block;width:100%;text-align:left;border:1.5px solid var(--line);
+  background:#fbfdfb;border-radius:10px;padding:11px 14px;margin:7px 0;cursor:pointer;
+  font-family:inherit;font-size:1em;line-height:1.6;transition:.15s}
+.opt:hover{border-color:var(--green)}
+.opt .lab{font-weight:800;color:var(--green-d);margin-right:6px}
+.opt.correct{background:var(--green-l);border-color:var(--green);color:var(--green-d)}
+.opt.wrong{background:var(--red-l);border-color:var(--red);color:var(--red)}
+.opt.lock{cursor:default}
+.exp{margin-top:10px;padding:11px 14px;border-radius:10px;background:#f3f8f4;
+  border-left:4px solid var(--green);font-size:.97em;display:none}
+.exp.show{display:block}
+.exp b{color:var(--green-d)}
+footer{text-align:center;color:var(--muted);font-size:.85em;margin-top:40px}
+@media(max-width:520px){body{font-size:16.5px}.wrap{padding:0 12px 60px}}
+@media print{nav.tabs,.quizbar,.backlink{display:none}section.pane{display:block!important}
+  .exp{display:block!important}.q,.card{break-inside:avoid}}
+
+.lawart{border-left:3px solid var(--green);background:#fff;border-radius:0 8px 8px 0;
+  padding:9px 13px;margin:9px 0;border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.lawart b{color:var(--green-d)}
+.lawart .pa{display:block;margin:3px 0;color:var(--ink)}
+.lawcard{display:flex;gap:16px;align-items:center;background:#fff;border:1px solid var(--line);
+  border-radius:14px;padding:18px 20px;margin:12px 0;text-decoration:none;color:inherit;
+  box-shadow:0 1px 4px rgba(0,0,0,.04);transition:.15s}
+.lawcard:hover{border-color:var(--green);transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,130,74,.12)}
+.lawcard .ic{font-size:2.3em}
+.lawcard h3{margin:0;color:var(--green-d);font-size:1.18em}
+.lawcard p{margin:3px 0;color:var(--muted);font-size:.9em}
+.lawcard .go{color:var(--gold);font-weight:700;font-size:.9em}
+.hero{padding:30px 0 6px}
+</style>
+</head><body>
+<header class="top"><div class="wrap">
+  <h1>📑 民法債編各論</h1>
+  <p>債篇（二）債各（77 條）</p>
+  <p>條文重點 + 24 題歷年考古題</p>
+  <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+    <a class="backlink" href="/">&#8592; 回首頁</a><a class="backlink" href="civil-law.html">← 回民法總覽</a>
+  </div>
+</div></header>
+<nav class="tabs">
+  <button class="on" data-t="notes">📖 條文重點</button>
+  <button data-t="quiz">📝 互動練習（24）</button>
+</nav>
+<div class="wrap">
+  <section id="notes" class="pane on">
+    <h2 class="sec">民法債編各論・高頻條文</h2>
+    <div class="mnem">章節範圍：第一節「買賣」345–397 條；第五節「租賃」421–463-1 條；第七節「僱傭」482–489 條；第八節「承攬」490–514 條；第十節「委任」528–552 條。</div>
+    <div class="lawart"><b>第 345 條</b><span class="pa">1. 稱買賣者，謂當事人約定一方移轉財產權於他方，他方支付價金之契約。</span><span class="pa">2. 當事人就標的物及其價金互相同意時，買賣契約即為成立。</span></div>
+<div class="lawart"><b>第 353 條</b><span class="pa">出賣人不履行第三百四十八條至第三百五十一條所定之義務者，買受人得依關於債務不履行之規定，行使其權利。</span></div>
+<div class="lawart"><b>第 355 條</b><span class="pa">1. 買受人於契約成立時，知其物有前條第一項所稱之瑕疵者，出賣人不負擔保之責。</span><span class="pa">2. 買受人因重大過失，而不知有前條第一項所稱之瑕疵者，出賣人如未保證其無瑕疵時，不負擔保之責。但故意不告知其瑕疵者，不在此限。</span></div>
+<div class="lawart"><b>第 359 條</b><span class="pa">買賣因物有瑕疵，而出賣人依前五條之規定，應負擔保之責者，買受人得解除其契約或請求減少其價金。但依情形，解除契約顯失公平者，買受人僅得請求減少價金。</span></div>
+<div class="lawart"><b>第 364 條</b><span class="pa">1. 買賣之物，僅指定種類者，如其物有瑕疵，買受人得不解除契約或請求減少價金，而即時請求另行交付無瑕疵之物。</span><span class="pa">2. 出賣人就前項另行交付之物，仍負擔保責任。</span></div>
+<div class="lawart"><b>第 365 條</b><span class="pa">1. 買受人因物有瑕疵，而得解除契約或請求減少價金者，其解除權或請求權，於買受人依第三百五十六條規定為通知後六個月間不行使或自物之交付時起經過五年而消滅。</span><span class="pa">2. 前項關於六個月期間之規定，於出賣人故意不告知瑕疵者，不適用之。</span></div>
+<div class="lawart"><b>第 366 條</b><span class="pa">以特約免除或限制出賣人關於權利或物之瑕疵擔保義務者，如出賣人故意不告知其瑕疵，其特約為無效。</span></div>
+<div class="lawart"><b>第 373 條</b><span class="pa">買賣標的物之利益及危險，自交付時起，均由買受人承受負擔，但契約另有訂定者，不在此限。</span></div>
+<div class="lawart"><b>第 374 條</b><span class="pa">買受人請求將標的物送交清償地以外之處所者，自出賣人交付其標的物於為運送之人或承攬運送人時起，標的物之危險，由買受人負擔。</span></div>
+<div class="lawart"><b>第 398 條</b><span class="pa">當事人雙方約定互相移轉金錢以外之財產權者，準用關於買賣之規定。</span></div>
+<div class="lawart"><b>第 408 條</b><span class="pa">1. 贈與物之權利未移轉前，贈與人得撤銷其贈與。其一部已移轉者，得就其未移轉之部分撤銷之。</span><span class="pa">2. 前項規定，於經公證之贈與，或為履行道德上義務而為贈與者，不適用之。</span></div>
+<div class="lawart"><b>第 410 條</b><span class="pa">贈與人僅就其故意或重大過失，對於受贈人負給付不能之責任。</span></div>
+<div class="lawart"><b>第 416 條</b><span class="pa">1. 受贈人對於贈與人，有左列情事之一者，贈與人得撤銷其贈與：</span><span class="pa">2. 一、對於贈與人、其配偶、直系血親、三親等內旁系血親或二親等內姻親，有故意侵害之行為，依刑法有處罰之明文者。</span><span class="pa">3. 二、對於贈與人有扶養義務而不履行者。</span><span class="pa">4. 前項撤銷權，自贈與人知有撤銷原因之時起，一年內不行使而消滅。贈與人對於受贈人已為宥恕之表示者，亦同。</span></div>
+<div class="lawart"><b>第 421 條</b><span class="pa">1. 稱租賃者，謂當事人約定，一方以物租與他方使用收益，他方支付租金之契約。</span><span class="pa">2. 前項租金，得以金錢或租賃物之孳息充之。</span></div>
+<div class="lawart"><b>第 422 條</b><span class="pa">不動產之租賃契約，其期限逾一年者，應以字據訂立之，未以字據訂立者，視為不定期限之租賃。</span></div>
+<div class="lawart"><b>第 422-1 條</b><span class="pa">租用基地建築房屋者，承租人於契約成立後，得請求出租人為地上權之登記。</span></div>
+<div class="lawart"><b>第 425 條</b><span class="pa">1. 出租人於租賃物交付後，承租人占有中，縱將其所有權讓與第三人，其租賃契約，對於受讓人仍繼續存在。</span><span class="pa">2. 前項規定，於未經公證之不動產租賃契約，其期限逾五年或未定期限者，不適用之。</span></div>
+<div class="lawart"><b>第 426-1 條</b><span class="pa">租用基地建築房屋，承租人房屋所有權移轉時，其基地租賃契約，對於房屋受讓人，仍繼續存在。</span></div>
+<div class="lawart"><b>第 426-2 條</b><span class="pa">1. 租用基地建築房屋，出租人出賣基地時，承租人有依同樣條件優先承買之權。承租人出賣房屋時，基地所有人有依同樣條件優先承買之權。</span><span class="pa">2. 前項情形，出賣人應將出賣條件以書面通知優先承買權人。優先承買權人於通知達到後十日內未以書面表示承買者，視為放棄。</span><span class="pa">3. 出賣人未以書面通知優先承買權人而為所有權之移轉登記者，不得對抗優先承買權人。</span></div>
+<div class="lawart"><b>第 427 條</b><span class="pa">就租賃物應納之一切稅捐，由出租人負擔。</span></div>
+<div class="lawart"><b>第 428 條</b><span class="pa">租賃物為動物者，其飼養費由承租人負擔。</span></div>
+<div class="lawart"><b>第 430 條</b><span class="pa">租賃關係存續中，租賃物如有修繕之必要，應由出租人負擔者，承租人得定相當期限，催告出租人修繕，如出租人於其期限內不為修繕者，承租人得終止契約或自行修繕而請求出租人償還其費用或於租金中扣除之。</span></div>
+<div class="lawart"><b>第 432 條</b><span class="pa">1. 承租人應以善良管理人之注意，保管租賃物，租賃物有生產力者，並應保持其生產力。</span><span class="pa">2. 承租人違反前項義務，致租賃物毀損、滅失者，負損害賠償責任。但依約定之方法或依物之性質而定之方法為使用、收益，致有變更或毀損者，不在此限。</span></div>
+<div class="lawart"><b>第 434 條</b><span class="pa">租賃物因承租人之重大過失，致失火而毀損、滅失者，承租人對於出租人負損害賠償責任。</span></div>
+<div class="lawart"><b>第 439 條</b><span class="pa">承租人應依約定日期，支付租金；無約定者，依習慣；無約定亦無習慣者，應於租賃期滿時支付之。如租金分期支付者，於每期屆滿時支付之。如租賃物之收益有季節者，於收益季節終了時支付之。</span></div>
+<div class="lawart"><b>第 440 條</b><span class="pa">1. 承租人租金支付有遲延者，出租人得定相當期限，催告承租人支付租金，如承租人於其期限內不為支付，出租人得終止契約。</span><span class="pa">2. 租賃物為房屋者，遲付租金之總額，非達二個月之租額，不得依前項之規定，終止契約。其租金約定於每期開始時支付者，並應於遲延給付逾二個月時，始得終止契約。</span><span class="pa">3. 租用建築房屋之基地，遲付租金之總額，達二年之租額時，適用前項之規定。</span></div>
+<div class="lawart"><b>第 443 條</b><span class="pa">1. 承租人非經出租人承諾，不得將租賃物轉租於他人。但租賃物為房屋者，除有反對之約定外，承租人得將其一部分轉租於他人。</span><span class="pa">2. 承租人違反前項規定，將租賃物轉租於他人者，出租人得終止契約。</span></div>
+<div class="lawart"><b>第 445 條</b><span class="pa">1. 不動產之出租人，就租賃契約所生之債權，對於承租人之物置於該不動產者，有留置權。但禁止扣押之物，不在此限。</span><span class="pa">2. 前項情形，僅於已得請求之損害賠償及本期與以前未交之租金之限度內，得就留置物取償。</span></div>
+<div class="lawart"><b>第 449 條</b><span class="pa">1. 租賃契約之期限，不得逾二十年。逾二十年者，縮短為二十年。</span><span class="pa">2. 前項期限，當事人得更新之。</span><span class="pa">3. 租用基地建築房屋者，不適用第一項之規定。</span></div>
+<div class="lawart"><b>第 456 條</b><span class="pa">1. 出租人就租賃物所受損害對於承租人之賠償請求權，承租人之償還費用請求權及工作物取回權，均因二年間不行使而消滅。</span><span class="pa">2. 前項期間，於出租人，自受租賃物返還時起算。於承租人，自租賃關係終止時起算。</span></div>
+<div class="lawart"><b>第 464 條</b><span class="pa">稱使用借貸者，謂當事人一方以物交付他方，而約定他方於無償使用後返還其物之契約。</span></div>
+<div class="lawart"><b>第 465-1 條</b><span class="pa">使用借貸預約成立後，預約貸與人得撤銷其約定。但預約借用人已請求履行預約而預約貸與人未即時撤銷者，不在此限。</span></div>
+<div class="lawart"><b>第 467 條</b><span class="pa">1. 借用人應依約定方法，使用借用物；無約定方法者，應以依借用物之性質而定之方法使用之。</span><span class="pa">2. 借用人非經貸與人之同意，不得允許第三人使用借用物。</span></div>
+<div class="lawart"><b>第 474 條</b><span class="pa">1. 稱消費借貸者，謂當事人一方移轉金錢或其他代替物之所有權於他方，而約定他方以種類、品質、數量相同之物返還之契約。</span><span class="pa">2. 當事人之一方對他方負金錢或其他代替物之給付義務而約定以之作為消費借貸之標的者，亦成立消費借貸。</span></div>
+<div class="lawart"><b>第 483 條</b><span class="pa">1. 如依情形，非受報酬即不服勞務者，視為允與報酬。</span><span class="pa">2. 未定報酬額者，按照價目表所定給付之；無價目表者，按照習慣給付。</span></div>
+<div class="lawart"><b>第 489 條</b><span class="pa">1. 當事人之一方，遇有重大事由，其僱傭契約，縱定有期限，仍得於期限屆滿前終止之。</span><span class="pa">2. 前項事由，如因當事人一方之過失而生者，他方得向其請求損害賠償。</span></div>
+<div class="lawart"><b>第 490 條</b><span class="pa">1. 稱承攬者，謂當事人約定，一方為他方完成一定之工作，他方俟工作完成，給付報酬之契約。</span><span class="pa">2. 約定由承攬人供給材料者，其材料之價額，推定為報酬之一部。</span></div>
+<div class="lawart"><b>第 491 條</b><span class="pa">1. 如依情形，非受報酬即不為完成其工作者，視為允與報酬。</span><span class="pa">2. 未定報酬額者，按照價目表所定給付之；無價目表者，按照習慣給付。</span></div>
+<div class="lawart"><b>第 493 條</b><span class="pa">1. 工作有瑕疵者，定作人得定相當期限，請求承攬人修補之。</span><span class="pa">2. 承攬人不於前項期限內修補者，定作人得自行修補，並得向承攬人請求償還修補必要之費用。</span><span class="pa">3. 如修補所需費用過鉅者，承攬人得拒絕修補，前項規定，不適用之。</span></div>
+<div class="lawart"><b>第 501-1 條</b><span class="pa">以特約免除或限制承攬人關於工作之瑕疵擔保義務者，如承攬人故意不告知其瑕疵，其特約為無效。</span></div>
+<div class="lawart"><b>第 514-1 條</b><span class="pa">1. 稱旅遊營業人者，謂以提供旅客旅遊服務為營業而收取旅遊費用之人。</span><span class="pa">2. 前項旅遊服務，係指安排旅程及提供交通、膳宿、導遊或其他有關之服務。</span></div>
+<div class="lawart"><b>第 528 條</b><span class="pa">稱委任者，謂當事人約定，一方委託他方處理事務，他方允為處理之契約。</span></div>
+<div class="lawart"><b>第 529 條</b><span class="pa">關於勞務給付之契約，不屬於法律所定其他契約之種類者，適用關於委任之規定。</span></div>
+<div class="lawart"><b>第 534 條</b><span class="pa">1. 受任人受概括委任者，得為委任人為一切行為。但為左列行為，須有特別之授權：</span><span class="pa">2. 一、不動產之出賣或設定負擔。</span><span class="pa">3. 二、不動產之租賃其期限逾二年者。</span><span class="pa">4. 三、贈與。</span><span class="pa">5. 四、和解。</span><span class="pa">6. 五、起訴。</span><span class="pa">7. 六、提付仲裁。</span></div>
+<div class="lawart"><b>第 537 條</b><span class="pa">受任人應自己處理委任事務。但經委任人之同意或另有習慣或有不得已之事由者，得使第三人代為處理。</span></div>
+<div class="lawart"><b>第 543 條</b><span class="pa">委任人非經受任人之同意，不得將處理委任事務之請求權，讓與第三人。</span></div>
+<div class="lawart"><b>第 547 條</b><span class="pa">報酬縱未約定，如依習慣或依委任事務之性質，應給與報酬者，受任人得請求報酬。</span></div>
+<div class="lawart"><b>第 549 條</b><span class="pa">1. 當事人之任何一方，得隨時終止委任契約。</span><span class="pa">2. 當事人之一方，於不利於他方之時期終止契約者，應負損害賠償責任。但因非可歸責於該當事人之事由，致不得不終止契約者，不在此限。</span></div>
+<div class="lawart"><b>第 554 條</b><span class="pa">1. 經理人對於第三人之關係，就商號或其分號，或其事務之一部，視為其有為管理上之一切必要行為之權。</span><span class="pa">2. 經理人，除有書面之授權外，對於不動產，不得買賣，或設定負擔。</span><span class="pa">3. 前項關於不動產買賣之限制，於以買賣不動產為營業之商號經理人，不適用之。</span></div>
+<div class="lawart"><b>第 565 條</b><span class="pa">稱居間者，謂當事人約定，一方為他方報告訂約之機會或為訂約之媒介，他方給付報酬之契約。</span></div>
+<div class="lawart"><b>第 566 條</b><span class="pa">1. 如依情形，非受報酬即不為報告訂約機會或媒介者，視為允與報酬。</span><span class="pa">2. 未定報酬額者，按照價目表所定給付之。無價目表者，按照習慣給付。</span></div>
+<div class="lawart"><b>第 573 條</b><span class="pa">因婚姻居間而約定報酬者，就其報酬無請求權。</span></div>
+<div class="lawart"><b>第 576 條</b><span class="pa">稱行紀者，謂以自己之名義，為他人之計算，為動產之買賣或其他商業上之交易，而受報酬之營業。</span></div>
+<div class="lawart"><b>第 589 條</b><span class="pa">1. 稱寄託者，謂當事人一方以物交付他方，他方允為保管之契約。</span><span class="pa">2. 受寄人除契約另有訂定或依情形非受報酬即不為保管者外，不得請求報酬。</span></div>
+<div class="lawart"><b>第 590 條</b><span class="pa">受寄人保管寄託物，應與處理自己事務為同一之注意，其受有報酬者，應以善良管理人之注意為之。</span></div>
+<div class="lawart"><b>第 603 條</b><span class="pa">寄託物為金錢時，推定其為消費寄託。</span></div>
+<div class="lawart"><b>第 606 條</b><span class="pa">旅店或其他供客人住宿為目的之場所主人，對於客人所攜帶物品之毀損、喪失，應負責任。但因不可抗力或因物之性質或因客人自己或其伴侶、隨從或來賓之故意或過失所致者，不在此限。</span></div>
+<div class="lawart"><b>第 634 條</b><span class="pa">運送人對於運送物之喪失、毀損或遲到，應負責任。但運送人能證明其喪失、毀損或遲到，係因不可抗力或因運送物之性質或因託運人或受貨人之過失而致者，不在此限。</span></div>
+<div class="lawart"><b>第 663 條</b><span class="pa">承攬運送人，除契約另有訂定外，得自行運送物品。如自行運送，其權利義務，與運送人同。</span></div>
+<div class="lawart"><b>第 667 條</b><span class="pa">1. 稱合夥者，謂二人以上互約出資以經營共同事業之契約。</span><span class="pa">2. 前項出資，得為金錢或其他財產權，或以勞務、信用或其他利益代之。</span><span class="pa">3. 金錢以外之出資，應估定價額為其出資額。未經估定者，以他合夥人之平均出資額視為其出資額。</span></div>
+<div class="lawart"><b>第 668 條</b><span class="pa">各合夥人之出資及其他合夥財產，為合夥人全體之公同共有。</span></div>
+<div class="lawart"><b>第 681 條</b><span class="pa">合夥財產不足清償合夥之債務時，各合夥人對於不足之額，連帶負其責任。</span></div>
+<div class="lawart"><b>第 686 條</b><span class="pa">1. 合夥未定有存續期間，或經訂明以合夥人中一人之終身，為其存續期間者，各合夥人得聲明退夥，但應於兩個月前通知他合夥人。</span><span class="pa">2. 前項退夥，不得於退夥有不利於合夥事務之時期為之。</span><span class="pa">3. 合夥縱定有存續期間，如合夥人有非可歸責於自己之重大事由，仍得聲明退夥，不受前二項規定之限制。</span></div>
+<div class="lawart"><b>第 691 條</b><span class="pa">1. 合夥成立後，非經合夥人全體之同意，不得允許他人加入為合夥人。</span><span class="pa">2. 加入為合夥人者，對於其加入前合夥所負之債務，與他合夥人負同一之責任。</span></div>
+<div class="lawart"><b>第 692 條</b><span class="pa">1. 合夥因左列事項之一而解散：</span><span class="pa">2. 一、合夥存續期限屆滿者。</span><span class="pa">3. 二、合夥人全體同意解散者。</span><span class="pa">4. 三、合夥之目的事業已完成或不能完成者。</span></div>
+<div class="lawart"><b>第 709-5 條</b><span class="pa">首期合會金不經投標，由會首取得，其餘各期由得標會員取得。</span></div>
+<div class="lawart"><b>第 709-7 條</b><span class="pa">1. 會員應於每期標會後三日內交付會款。</span><span class="pa">2. 會首應於前項期限內，代得標會員收取會款，連同自己之會款，於期滿之翌日前交付得標會員。逾期未收取之會款，會首應代為給付。</span><span class="pa">3. 會首依前項規定收取會款，在未交付得標會員前，對其喪失、毀損，應負責任。但因可歸責於得標會員之事由致喪失、毀損者，不在此限。</span><span class="pa">4. 會首依第二項規定代為給付後，得請求未給付之會員附加利息償還之。</span></div>
+<div class="lawart"><b>第 709-8 條</b><span class="pa">1. 會首非經會員全體之同意，不得將其權利及義務移轉於他人。</span><span class="pa">2. 會員非經會首及會員全體之同意，不得退會，亦不得將自己之會份轉讓於他人。</span></div>
+<div class="lawart"><b>第 709-9 條</b><span class="pa">1. 因會首破產、逃匿或有其他事由致合會不能繼續進行時，會首及已得標會員應給付之各期會款，應於每屆標會期日平均交付於未得標之會員。但另有約定者，依其約定。</span><span class="pa">2. 會首就已得標會員依前項規定應給付之各期會款，負連帶責任。</span><span class="pa">3. 會首或已得標會員依第一項規定應平均交付於未得標會員之會款遲延給付，其遲付之數額已達兩期之總額時，該未得標會員得請求其給付全部會款。</span><span class="pa">4. 第一項情形，得由未得標之會員共同推選一人或數人處理相關事宜。</span></div>
+<div class="lawart"><b>第 742 條</b><span class="pa">1. 主債務人所有之抗辯，保證人得主張之。</span><span class="pa">2. 主債務人拋棄其抗辯者，保證人仍得主張之。</span></div>
+<div class="lawart"><b>第 742-1 條</b><span class="pa">保證人得以主債務人對於債權人之債權，主張抵銷。</span></div>
+<div class="lawart"><b>第 745 條</b><span class="pa">保證人於債權人未就主債務人之財產強制執行而無效果前，對於債權人得拒絕清償。</span></div>
+<div class="lawart"><b>第 746 條</b><span class="pa">1. 有下列各款情形之一者，保證人不得主張前條之權利：</span><span class="pa">2. 一、保證人拋棄前條之權利。</span><span class="pa">3. 二、主債務人受破產宣告。</span><span class="pa">4. 三、主債務人之財產不足清償其債務。</span></div>
+<div class="lawart"><b>第 756-1 條</b><span class="pa">1. 稱人事保證者，謂當事人約定，一方於他方之受僱人將來因職務上之行為而應對他方為損害賠償時，由其代負賠償責任之契約。</span><span class="pa">2. 前項契約，應以書面為之。</span></div>
+<div class="lawart"><b>第 756-4 條</b><span class="pa">1. 人事保證未定期間者，保證人得隨時終止契約。</span><span class="pa">2. 前項終止契約，應於三個月前通知僱用人。但當事人約定較短之期間者，從其約定。</span></div>
+<div class="lawart"><b>第 756-6 條</b><span class="pa">1. 有左列情形之一者，法院得減輕保證人之賠償金額或免除之：</span><span class="pa">2. 一、有前條第一項各款之情形而僱用人不即通知保證人者。</span><span class="pa">3. 二、僱用人對受僱人之選任或監督有疏懈者。</span></div>
+<div class="lawart"><b>第 756-7 條</b><span class="pa">1. 人事保證關係因左列事由而消滅：</span><span class="pa">2. 一、保證之期間屆滿。</span><span class="pa">3. 二、保證人死亡、破產或喪失行為能力。</span><span class="pa">4. 三、受僱人死亡、破產或喪失行為能力。</span><span class="pa">5. 四、受僱人之僱傭關係消滅。</span></div>
+  </section>
+  <section id="quiz" class="pane">
+    <h2 class="sec">歷年考古題（已核對現行民法，共 24 題）</h2>
+    <p style="color:var(--muted)">點選即時對答，解析附條號與出處；題首【§】為所屬條號。</p>
+    <div class="quizbar">
+      <span class="score" id="qscore">答對 0 / 作答 0 （共 24 題）</span>
+      <span class="prog"><i id="qbar"></i></span>
+      <button id="qshowAll">顯示全部解析</button>
+      <button id="qreset">重做</button>
+    </div>
+    <div id="qbox"></div>
+  </section>
+  <footer>EFETL · 民法國考複習 ｜ 條文依現行民法，正式以法規原文為準。</footer>
+</div>
+<script>
+const QD=[{"q": "【§345】民法第345條第1項「稱買賣者，謂當事人約定一方移轉財產權於他方，他方支付價金之契約」，此種立法方式屬於何種解釋？", "o": ["論理解釋", "歷史解釋", "立法解釋", "系統解釋"], "a": 2, "e": "§345：法條以「稱…謂…」直接界定概念，屬立法解釋。（102年鐵路特考佐級 法學大意）"}, {"q": "【§355】下列何種情形，出賣人仍應負物之瑕疵擔保責任？", "o": ["買受人於契約成立時知物有瑕疵", "買受人因重大過失不知物有瑕疵，出賣人並未保證無瑕疵且未故意不告知", "買受人因重大過失不知物有瑕疵，但出賣人故意不告知該瑕疵", "買受人於契約成立時知物有瑕疵，出賣人未為保證"], "a": 2, "e": "§355：買受人因重大過失不知瑕疵者出賣人原則不負責，但出賣人「故意不告知」者不在此限，故C仍應負責。（阿摩民法題庫）"}, {"q": "【§359】關於買賣物之瑕疵擔保，下列敘述何者正確？", "o": ["出賣人故意不告知物之瑕疵者，買受人僅得請求減少價金不得解除契約", "買賣之物僅缺少出賣人所保證之品質者，買受人僅得請求減少價金不得解除契約", "除契約另有訂定外，解除契約顯失公平者，買受人不得解除契約僅得請求減少價金", "買受人解除契約後仍當然得再請求履行利益之損害賠償"], "a": 2, "e": "§359：買受人得解除契約或請求減少價金，但解除顯失公平者僅得請求減少價金。（105年地特三等 法制/財稅）"}, {"q": "【§365】下列權利之性質，何者為形成權？", "o": ["所有物返還請求權", "不當得利返還請求權", "買受人之減少價金請求權", "租賃物返還請求權"], "a": 2, "e": "§365：減少價金請求權名為請求權實為形成權，受除斥期間拘束；其餘三者為請求權。（103年地特五等一般行政 法學大意）"}, {"q": "【§373】買賣契約成立後、標的物交付前，買賣之物因不可歸責於雙方之事由（無名火）燒毀。價金給付之危險由何人負擔？", "o": ["買受人", "雙方平均負擔", "出賣人", "由法院裁定之"], "a": 2, "e": "§373：標的物之利益及危險自「交付時起」移轉於買受人；交付前滅失之危險由出賣人負擔。（103年初等 法學大意）"}, {"q": "【§398】依民法第398條規定，當事人雙方約定互相移轉金錢以外之財產權者，準用關於下列何者之規定？", "o": ["買賣", "贈與", "互易", "租賃"], "a": 0, "e": "§398：互易準用「買賣」之規定。（地方特考 法學大意）"}, {"q": "【§425】關於民法「買賣不破租賃」（§425）之規定，下列敘述何者正確？", "o": ["凡未經公證之不動產租賃契約，一律不適用之", "只要期限不逾十年，未經公證之不動產租賃契約仍有適用", "只要未定期限，縱經公證之不動產租賃契約仍不能適用", "必須出租人已將租賃物交付，由承租人占有中，方有適用"], "a": 3, "e": "§425Ⅰ：須租賃物已交付、承租人占有中始有適用；Ⅱ排除「未經公證且逾5年或未定期限」者。（106年一般警察特考四等 法學緒論）"}, {"q": "【§440】甲將其房屋出租於乙，乙積欠租金。依民法第440條，下列關於出租人終止租約之敘述何者正確？", "o": ["乙一有遲付租金，甲即得逕行終止契約", "甲須定相當期限催告乙支付租金，乙逾期仍不支付，甲始得終止契約", "房屋租賃，乙遲付租金總額未達一個月之租額，甲不得終止契約", "甲縱未經催告，亦得隨時終止契約並請求乙遷讓房屋"], "a": 1, "e": "§440：遲付租金須定相當期限催告，逾期不付始得終止（Ⅰ）；房屋租賃遲付總額非達「二個月」租額不得終止（Ⅱ），故B正確、C誤。（依現行法核對）"}, {"q": "【§449】民法第449條第1項前段「租賃契約之期限，不得逾二十年」。關於此規定，下列何者正確？", "o": ["違反此規定者，租賃契約全部無效", "期限屆滿後，當事人不得更新租約", "於租用基地建築房屋之租賃契約，亦適用二十年上限", "本條僅適用於定有期限之租賃，不適用於不定期限之租賃"], "a": 3, "e": "§449：逾20年縮短為20年（非無效，A誤）；得更新（Ⅱ，B誤）；租地建屋不受20年上限（Ⅲ，C誤）；僅規範定有期限者。（96年地特三等法制 民法）"}, {"q": "【§467】依民法規定，下列何者非屬貸與人得終止使用借貸契約之事由？", "o": ["借用人受監護宣告", "貸與人因不可預知之情事，自己需用借用物", "借用人未經貸與人同意，允許第三人使用借用物", "因借用人怠於注意，致借用物毀損或有毀損之虞"], "a": 0, "e": "§467、§472：貸與人需用借用物、未經同意允許第三人使用、怠於注意致毀損等為終止事由；受監護宣告非屬之。（108年地特四等 法學知識）"}, {"q": "【§474】下列何者為要物契約？", "o": ["租賃契約", "僱傭契約", "消費借貸契約", "買賣契約"], "a": 2, "e": "§474：消費借貸須移轉金錢或代替物所有權始成立，屬要物契約；租賃、僱傭、買賣為諾成契約。（102年台電/中油/台水）"}, {"q": "【§490】依民法第490條，當事人約定一方為他方完成一定之工作，他方俟工作完成給付報酬之契約，稱為下列何者？", "o": ["委任", "僱傭", "承攬", "居間"], "a": 2, "e": "§490Ⅰ：承攬重在「工作之完成」並俟完成後給付報酬。（104年台電新進僱用）"}, {"q": "【§493】關於承攬之瑕疵擔保責任，下列敘述何者正確？", "o": ["工作物為建築物時，瑕疵雖非重要，定作人仍得解除契約", "修補瑕疵所需費用過鉅者，承攬人得拒絕修補", "工作物瑕疵係因定作人所供給材料之性質而生者，定作人仍得請求承攬人修補", "定作人之瑕疵擔保權利，自工作物交付後經過半年始發現者，一律不得主張"], "a": 1, "e": "§493：定作人得定期請求修補（Ⅰ），但修補費用過鉅者承攬人得拒絕修補（Ⅲ）；C因定作人供給材料所致原則不得主張（§496）。（111年郵政/公路升資員級 民法）"}, {"q": "【§528】稱委任者，謂當事人約定一方委託他方處理事務，他方允為處理之契約。關於委任，下列敘述何者錯誤？", "o": ["受任人因處理委任事務支出之必要費用，委任人負償還義務", "受任人因處理委任事務支出之有益費用，委任人均負償還義務", "受任人因處理委任事務負擔必要債務者，委任人負代清償義務", "受任人處理委任事務，因非可歸責於己之事由致受損害者，得向委任人請求賠償"], "a": 1, "e": "§528為定義；§546限「必要費用」及「必要債務」，「有益費用」非當然償還，故B錯誤。（110年地方特考四等 法學知識）"}, {"q": "【§549】依民法規定，關於受任人之權利及義務，下列敘述何者正確？", "o": ["受任人受有報酬者，應以善良管理人之注意處理委任事務", "受任人於處理委任事務前，不得向委任人請求預付必要費用", "受任人必有代理權", "受任人不得隨時終止委任契約"], "a": 0, "e": "A正確（§535有償受任人負善良管理人注意）；B錯（§545得請求預付）；C錯（委任不必然有代理權）；D錯（§549Ⅰ任一方得隨時終止）。（106年專技普考不動產經紀人 民法概要）"}, {"q": "【§565】關於居間契約之敘述，下列何者正確？", "o": ["居間人所支出之費用，均得向當事人請求償還", "居間人因媒介所得之報酬，原則上由契約當事人雙方平均負擔", "居間人未經特別授權，亦得為當事人受領給付", "婚姻居間約定報酬者，其居間契約無效"], "a": 1, "e": "§565定義；B正確（§570雙方平均負擔）；A錯（§569原則不得請求費用）；C錯（§574非經特別授權不得受領給付）；D錯（§573婚姻居間報酬無請求權，但契約非無效）。（103年高考三級）"}, {"q": "【§573】甲委託乙代為尋覓對象結婚，並承諾事成後給予乙報酬10萬元。關於此婚姻居間契約，下列何者正確？", "o": ["甲乙間之契約無效", "乙得對甲請求給付報酬", "乙對甲無報酬請求權", "婚姻居間契約不得約定報酬"], "a": 2, "e": "§573：因婚姻居間而約定報酬者，就其報酬無請求權；契約本身非無效、亦非不得約定報酬，居間人僅無「請求權」。（112年專技普考不動產經紀人 民法概要）"}, {"q": "【§634】甲委託乙運送水晶雕塑品一件至丙處。關於運送契約，下列敘述何者正確？", "o": ["運送物因包皮有易見之瑕疵而毀損時，運送人雖接收時不為保留仍不負責", "運送物有喪失、毀損或遲到者，賠償額應依託運人交付運送時之市價計算", "運送物送達目的地時，運送人應即通知受貨人丙", "運送人只要有急迫情事，即得逕行變更託運人之指示"], "a": 2, "e": "§634通常事變責任；C正確（§643到達目的地應即通知受貨人）；A錯（§635包皮有易見瑕疵不保留者應負責）；B錯（§638依應交付時目的地之價值計算）；D錯（§633原則須等候指示）。（106年普考 民法概要）"}, {"q": "【§667】下列關於合夥之敘述，何者正確？", "o": ["合夥之出資僅得以金錢或其他財產權為之", "合夥之通常事務，得由有執行權之各合夥人單獨執行之", "除契約另有訂定外，合夥之決議按出資多寡決定表決權數", "執行合夥事務之合夥人，對外不構成他合夥人之代表"], "a": 1, "e": "§667Ⅱ出資得以勞務信用代之（A錯）；§671Ⅲ通常事務得單獨執行（B對）；§673推定每人一表決權（C錯）；§679執行事務合夥人對外為代表（D錯）。（110年地方特考四等財稅行政 民法概要）"}, {"q": "【§709-5】稱合會者，謂由會首邀集二人以上為會員，互約交付會款及標取合會金之契約。下列關於合會之敘述，何者錯誤？", "o": ["法人不得為會員", "會首不得兼為同一合會之會員", "無行為能力人不得參加其法定代理人為會首之合會", "首期合會金應經投標，由得標會員取得"], "a": 3, "e": "§709-5：首期合會金「不經投標」由會首取得，其餘各期由得標會員取得，故D錯誤；A、B、C依§709-2正確。（113年地方特考四等 法學知識）"}, {"q": "【§742】依民法保證之規定，下列敘述何者錯誤？", "o": ["主債務人所有之抗辯，保證人得主張之", "保證人不得以主債務人對於債權人之債權主張抵銷", "主債務人拋棄其抗辯者，保證人仍得主張之", "保證為當事人約定，一方於他方之債務人不履行債務時，由其代負履行責任之契約"], "a": 1, "e": "§742、§739：A、C、D正確；B錯誤，依§742-1保證人得以主債務人對債權人之債權主張抵銷。（107年鐵路特考員級運輸營業 民法概要）"}, {"q": "【§745】民法第745條規定「保證人於債權人未就主債務人之財產強制執行而無效果前，對於債權人得拒絕清償」，此保證人之權利稱為？", "o": ["窮困抗辯權", "時效抗辯權", "先訴抗辯權", "同時履行抗辯權"], "a": 2, "e": "§745：保證人於債權人未就主債務人財產強制執行而無效果前得拒絕清償，此為先訴抗辯權（檢索抗辯權）。（115年初等 法學大意）"}, {"q": "【§746】下列關於保證人「先訴抗辯權」之敘述，何者錯誤？", "o": ["保證人得事先拋棄先訴抗辯權", "主債務人受破產宣告時，保證人不得主張先訴抗辯權", "主債務人之財產不足清償其債務時，保證人不得主張先訴抗辯權", "保證契約成立後主債務人住所變更致債權人請求發生困難時，保證人不得主張先訴抗辯權"], "a": 3, "e": "§746：保證人不得主張先訴抗辯權者僅三款（拋棄、主債務人受破產宣告、主債務人財產不足清償）；「住所變更」之舊第4款已於99年修法刪除，故D錯誤。（103年初等 法學大意）"}, {"q": "【§756-1】甲與乙以書面約定，甲於乙之受僱人丙將來因職務上之行為應對乙負損害賠償時，由甲代丙負賠償責任。甲乙所訂者為何種契約？", "o": ["承攬契約", "人事保證契約", "僱傭契約", "委任契約"], "a": 1, "e": "§756-1：人事保證謂一方於他方之受僱人將來因職務上行為應對他方為損害賠償時由其代負賠償責任之契約，應以書面為之。（111年關務/身障特考三等 法學知識）"}];
+
+function renderQuiz(data, ns){
+  const box=document.getElementById(ns+'box');
+  if(!data.length){box.innerHTML='<p style=\'color:var(--muted)\'>本編暫無收錄考題。</p>';return;}
+  data.forEach((it,i)=>{
+    const q=document.createElement('div');q.className='q';
+    const opts=it.o.map((t,j)=>`<button class="opt" data-i="${i}" data-j="${j}"><span class="lab">(${'ABCDE'[j]})</span>${t}</button>`).join('');
+    q.innerHTML=`<div class="stem"><span class="no">${i+1}</span>${it.q}</div><div class="opts">${opts}</div>`+
+      `<div class="exp" id="${ns}exp${i}"><b>✅ 答案：(${'ABCDE'[it.a]})</b><br>${it.e}</div>`;
+    box.appendChild(q);
+  });
+  const answered=new Array(data.length).fill(false);let correct=0;
+  box.addEventListener('click',e=>{const b=e.target.closest('.opt');if(!b)return;
+    const i=+b.dataset.i,j=+b.dataset.j;if(answered[i])return;answered[i]=true;
+    const c=box.children[i],bs=c.querySelectorAll('.opt');
+    bs.forEach((bt,k)=>{bt.classList.add('lock');if(k===data[i].a)bt.classList.add('correct');});
+    if(j!==data[i].a)bs[j].classList.add('wrong');else correct++;
+    document.getElementById(ns+'exp'+i).classList.add('show');upd();});
+  function upd(){const d=answered.filter(Boolean).length;
+    document.getElementById(ns+'score').textContent=`答對 ${correct} / 作答 ${d} （共 ${data.length} 題）`;
+    document.getElementById(ns+'bar').style.width=(d/data.length*100)+'%';}
+  document.getElementById(ns+'showAll').onclick=()=>{box.querySelectorAll('.exp').forEach(x=>x.classList.add('show'));
+    box.querySelectorAll('.q').forEach((c,i)=>c.querySelectorAll('.opt').forEach((bt,k)=>{bt.classList.add('lock');if(k===data[i].a)bt.classList.add('correct');}));};
+  document.getElementById(ns+'reset').onclick=()=>location.reload();upd();
+}
+
+
+document.querySelectorAll('nav.tabs button').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.remove('on'));
+    document.querySelectorAll('section.pane').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    document.getElementById(b.dataset.t).classList.add('on');
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+});
+
+renderQuiz(QD,'q');
+</script>
+</body></html>

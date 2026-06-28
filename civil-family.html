@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>民法親屬篇｜民法國考互動複習</title>
+<style>
+:root{
+  --green:#00824a; --green-d:#005c33; --green-l:#e7f4ec;
+  --gold:#c8902a; --ink:#222; --muted:#5f6b63; --line:#d9e4dc;
+  --bg:#f6faf7; --card:#fff; --red:#c0392b; --red-l:#fdecea;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  font-size:17px; line-height:1.85; -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:920px;margin:0 auto;padding:0 18px 80px}
+header.top{
+  background:linear-gradient(135deg,var(--green),var(--green-d));
+  color:#fff;padding:30px 18px;text-align:center;
+}
+header.top .wrap{padding-bottom:0}
+header.top h1{margin:0 0 6px;font-size:1.7em;letter-spacing:1px}
+header.top p{margin:4px 0;opacity:.92;font-size:.95em}
+.backlink{display:inline-block;margin-top:12px;color:#fff;
+  border:1px solid rgba(255,255,255,.6);border-radius:20px;
+  padding:5px 16px;text-decoration:none;font-size:.9em}
+.backlink:hover{background:rgba(255,255,255,.15)}
+nav.tabs{position:sticky;top:0;z-index:20;background:var(--card);
+  border-bottom:1px solid var(--line);display:flex;gap:6px;
+  padding:8px 18px;box-shadow:0 2px 6px rgba(0,0,0,.05)}
+nav.tabs button{flex:1;border:0;background:transparent;font-size:1em;
+  font-family:inherit;padding:10px;border-radius:8px;cursor:pointer;
+  color:var(--muted);font-weight:700}
+nav.tabs button.on{background:var(--green-l);color:var(--green-d)}
+section.pane{display:none;padding-top:22px}
+section.pane.on{display:block}
+h2.sec{font-size:1.35em;color:var(--green-d);border-left:6px solid var(--green);
+  padding-left:12px;margin:30px 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:18px 20px;margin:14px 0;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.card h3{margin:0 0 10px;font-size:1.12em;color:var(--green-d)}
+.card h3 .art{font-size:.72em;color:var(--gold);font-weight:700;margin-left:8px}
+.card ul{margin:8px 0;padding-left:1.3em}
+.card li{margin:6px 0}
+.tag{display:inline-block;background:var(--green-l);color:var(--green-d);
+  border-radius:6px;padding:1px 8px;font-size:.8em;font-weight:700;margin-right:6px}
+.hl{background:#fff5d6;padding:0 3px;border-radius:3px;font-weight:700}
+.warn{color:var(--red);font-weight:700}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.96em;
+  background:#fff;border-radius:10px;overflow:hidden}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+th{background:var(--green);color:#fff;font-weight:700}
+tbody tr:nth-child(even){background:var(--green-l)}
+.mnem{background:var(--green-l);border:1px dashed var(--green);border-radius:10px;
+  padding:12px 16px;margin:12px 0;font-size:.98em}
+.mnem b{color:var(--green-d)}
+
+/* quiz */
+.quizbar{position:sticky;top:54px;z-index:15;background:#fff;border:1px solid var(--line);
+  border-radius:12px;padding:10px 16px;margin:6px 0 16px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.quizbar .score{font-weight:800;color:var(--green-d);font-size:1.05em}
+.quizbar .prog{flex:1;min-width:120px;height:10px;background:var(--green-l);
+  border-radius:8px;overflow:hidden}
+.quizbar .prog>i{display:block;height:100%;width:0;background:var(--green);transition:.3s}
+.quizbar button{border:1px solid var(--green);background:#fff;color:var(--green-d);
+  font-family:inherit;font-size:.9em;padding:6px 12px;border-radius:8px;cursor:pointer;font-weight:700}
+.quizbar button:hover{background:var(--green-l)}
+.q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:16px 18px;margin:14px 0;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.q .stem{font-weight:700;margin-bottom:12px}
+.q .stem .no{display:inline-block;background:var(--green);color:#fff;border-radius:50%;
+  width:1.7em;height:1.7em;line-height:1.7em;text-align:center;margin-right:8px;font-size:.92em}
+.opt{display:block;width:100%;text-align:left;border:1.5px solid var(--line);
+  background:#fbfdfb;border-radius:10px;padding:11px 14px;margin:7px 0;cursor:pointer;
+  font-family:inherit;font-size:1em;line-height:1.6;transition:.15s}
+.opt:hover{border-color:var(--green)}
+.opt .lab{font-weight:800;color:var(--green-d);margin-right:6px}
+.opt.correct{background:var(--green-l);border-color:var(--green);color:var(--green-d)}
+.opt.wrong{background:var(--red-l);border-color:var(--red);color:var(--red)}
+.opt.lock{cursor:default}
+.exp{margin-top:10px;padding:11px 14px;border-radius:10px;background:#f3f8f4;
+  border-left:4px solid var(--green);font-size:.97em;display:none}
+.exp.show{display:block}
+.exp b{color:var(--green-d)}
+footer{text-align:center;color:var(--muted);font-size:.85em;margin-top:40px}
+@media(max-width:520px){body{font-size:16.5px}.wrap{padding:0 12px 60px}}
+@media print{nav.tabs,.quizbar,.backlink{display:none}section.pane{display:block!important}
+  .exp{display:block!important}.q,.card{break-inside:avoid}}
+
+.lawart{border-left:3px solid var(--green);background:#fff;border-radius:0 8px 8px 0;
+  padding:9px 13px;margin:9px 0;border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.lawart b{color:var(--green-d)}
+.lawart .pa{display:block;margin:3px 0;color:var(--ink)}
+.lawcard{display:flex;gap:16px;align-items:center;background:#fff;border:1px solid var(--line);
+  border-radius:14px;padding:18px 20px;margin:12px 0;text-decoration:none;color:inherit;
+  box-shadow:0 1px 4px rgba(0,0,0,.04);transition:.15s}
+.lawcard:hover{border-color:var(--green);transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,130,74,.12)}
+.lawcard .ic{font-size:2.3em}
+.lawcard h3{margin:0;color:var(--green-d);font-size:1.18em}
+.lawcard p{margin:3px 0;color:var(--muted);font-size:.9em}
+.lawcard .go{color:var(--gold);font-weight:700;font-size:.9em}
+.hero{padding:30px 0 6px}
+</style>
+</head><body>
+<header class="top"><div class="wrap">
+  <h1>👪 民法親屬篇</h1>
+  <p>親屬篇（48 條）</p>
+  <p>條文重點 + 18 題歷年考古題</p>
+  <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+    <a class="backlink" href="/">&#8592; 回首頁</a><a class="backlink" href="civil-law.html">← 回民法總覽</a>
+  </div>
+</div></header>
+<nav class="tabs">
+  <button class="on" data-t="notes">📖 條文重點</button>
+  <button data-t="quiz">📝 互動練習（18）</button>
+</nav>
+<div class="wrap">
+  <section id="notes" class="pane on">
+    <h2 class="sec">民法親屬篇・高頻條文</h2>
+    <div class="mnem">章節範圍：第二章「婚姻」972–1058 條；第三章「父母子女」1059–1090 條。</div>
+    <div class="lawart"><b>第 967 條</b><span class="pa">1. 稱直系血親者，謂己身所從出或從己身所出之血親。</span><span class="pa">2. 稱旁系血親者，謂非直系血親，而與己身出於同源之血親。</span></div>
+<div class="lawart"><b>第 968 條</b><span class="pa">血親親等之計算，直系血親，從己身上下數，以一世為一親等；旁系血親，從己身數至同源之直系血親，再由同源之直系血親，數至與之計算親等之血親，以其總世數為親等之數。</span></div>
+<div class="lawart"><b>第 969 條</b><span class="pa">稱姻親者，謂血親之配偶、配偶之血親及配偶之血親之配偶。</span></div>
+<div class="lawart"><b>第 970 條</b><span class="pa">1. 姻親之親系及親等之計算如左：</span><span class="pa">2. 一、血親之配偶，從其配偶之親系及親等。</span><span class="pa">3. 二、配偶之血親，從其與配偶之親系及親等。</span><span class="pa">4. 三、配偶之血親之配偶，從其與配偶之親系及親等。</span></div>
+<div class="lawart"><b>第 971 條</b><span class="pa">姻親關係，因離婚而消滅；結婚經撤銷者亦同。</span></div>
+<div class="lawart"><b>第 972 條</b><span class="pa">婚約，應由男女當事人自行訂定。</span></div>
+<div class="lawart"><b>第 973 條</b><span class="pa">男女未滿十七歲者，不得訂定婚約。</span></div>
+<div class="lawart"><b>第 978 條</b><span class="pa">婚約當事人之一方，無第九百七十六條之理由而違反婚約者，對於他方因此所受之損害，應負賠償之責。</span></div>
+<div class="lawart"><b>第 980 條</b><span class="pa">男女未滿十八歲者，不得結婚。</span></div>
+<div class="lawart"><b>第 981 條</b><span class="pa">（刪除）</span></div>
+<div class="lawart"><b>第 983 條</b><span class="pa">1. 與左列親屬，不得結婚︰</span><span class="pa">2. 一、直系血親及直系姻親。</span><span class="pa">3. 二、旁系血親在六親等以內者。但因收養而成立之四親等及六親等旁系血親，輩分相同者，不在此限。</span><span class="pa">4. 三、旁系姻親在五親等以內，輩分不相同者。</span><span class="pa">5. 前項直系姻親結婚之限制，於姻親關係消滅後，亦適用之。</span><span class="pa">6. 第一項直系血親及直系姻親結婚之限制，於因收養而成立之直系親屬間，在收養關係終止後，亦適用之。</span></div>
+<div class="lawart"><b>第 988 條</b><span class="pa">1. 結婚有下列情形之一者，無效：</span><span class="pa">2. 一、不具備第九百八十二條之方式。</span><span class="pa">3. 二、違反第九百八十三條規定。</span><span class="pa">4. 三、違反第九百八十五條規定。但重婚之雙方當事人因善意且無過失信賴一方前婚姻消滅之兩願離婚登記或離婚確定判決而結婚者，不在此限。</span></div>
+<div class="lawart"><b>第 988-1 條</b><span class="pa">1. 前條第三款但書之情形，前婚姻自後婚姻成立之日起視為消滅。</span><span class="pa">2. 前婚姻視為消滅之效力，除法律另有規定外，準用離婚之效力。但剩餘財產已為分配或協議者，仍依原分配或協議定之，不得另行主張。</span><span class="pa">3. 依第一項規定前婚姻視為消滅者，其剩餘財產差額之分配請求權，自請求權人知有剩餘財產之差額時起，二年間不行使而消滅。自撤銷兩願離婚登記或廢棄離婚判決確定時起，逾五年者，亦同。</span><span class="pa">4. 前婚姻依第一項規定視為消滅者，無過失之前婚配偶得向他方請求賠償。</span><span class="pa">5. 前項情形，雖非財產上之損害，前婚配偶亦得請求賠償相當之金額。</span><span class="pa">6. 前項請求權，不得讓與或繼承。但已依契約承諾或已起訴者，不在此限。</span></div>
+<div class="lawart"><b>第 990 條</b><span class="pa">（刪除）</span></div>
+<div class="lawart"><b>第 996 條</b><span class="pa">當事人之一方，於結婚時係在無意識或精神錯亂中者，得於常態回復後六個月內向法院請求撤銷之。</span></div>
+<div class="lawart"><b>第 1000 條</b><span class="pa">1. 夫妻各保有其本姓。但得書面約定以其本姓冠以配偶之姓，並向戶政機關登記。</span><span class="pa">2. 冠姓之一方得隨時回復其本姓。但於同一婚姻關係存續中以一次為限。</span></div>
+<div class="lawart"><b>第 1001 條</b><span class="pa">夫妻互負同居之義務。但有不能同居之正當理由者，不在此限。</span></div>
+<div class="lawart"><b>第 1003-1 條</b><span class="pa">1. 家庭生活費用，除法律或契約另有約定外，由夫妻各依其經濟能力、家事勞動或其他情事分擔之。</span><span class="pa">2. 因前項費用所生之債務，由夫妻負連帶責任。</span></div>
+<div class="lawart"><b>第 1004 條</b><span class="pa">夫妻得於結婚前或結婚後，以契約就本法所定之約定財產制中，選擇其一，為其夫妻財產制。</span></div>
+<div class="lawart"><b>第 1005 條</b><span class="pa">夫妻未以契約訂立夫妻財產制者，除本法另有規定外，以法定財產制，為其夫妻財產制。</span></div>
+<div class="lawart"><b>第 1008 條</b><span class="pa">1. 夫妻財產制契約之訂立、變更或廢止，非經登記，不得以之對抗第三人。</span><span class="pa">2. 前項夫妻財產制契約之登記，不影響依其他法律所為財產權登記之效力。</span><span class="pa">3. 第一項之登記，另以法律定之。</span></div>
+<div class="lawart"><b>第 1010 條</b><span class="pa">1. 夫妻之一方有左列各款情形之一時，法院因他方之請求，得宣告改用分別財產制：</span><span class="pa">2. 一、依法應給付家庭生活費用而不給付時。</span><span class="pa">3. 二、夫或妻之財產不足清償其債務時。</span><span class="pa">4. 三、依法應得他方同意所為之財產處分，他方無正當理由拒絕同意時。</span><span class="pa">5. 四、有管理權之一方對於共同財產之管理顯有不當，經他方請求改善而不改善時。</span><span class="pa">6. 五、因不當減少其婚後財產，而對他方剩餘財產分配請求權有侵害之虞時。</span><span class="pa">7. 六、有其他重大事由時。</span><span class="pa">8. 夫妻之總財產不足清償總債務或夫妻難於維持共同生活，不同居已達六個月以上時，前項規定於夫妻均適用之。</span></div>
+<div class="lawart"><b>第 1017 條</b><span class="pa">1. 夫或妻之財產分為婚前財產與婚後財產，由夫妻各自所有。不能證明為婚前或婚後財產者，推定為婚後財產；不能證明為夫或妻所有之財產，推定為夫妻共有。</span><span class="pa">2. 夫或妻婚前財產，於婚姻關係存續中所生之孳息，視為婚後財產。</span><span class="pa">3. 夫妻以契約訂立夫妻財產制後，於婚姻關係存續中改用法定財產制者，其改用前之財產視為婚前財產。</span></div>
+<div class="lawart"><b>第 1018-1 條</b><span class="pa">夫妻於家庭生活費用外，得協議一定數額之金錢，供夫或妻自由處分。</span></div>
+<div class="lawart"><b>第 1030-1 條</b><span class="pa">1. 法定財產制關係消滅時，夫或妻現存之婚後財產，扣除婚姻關係存續所負債務後，如有剩餘，其雙方剩餘財產之差額，應平均分配。但下列財產不在此限：</span><span class="pa">2. 一、因繼承或其他無償取得之財產。</span><span class="pa">3. 二、慰撫金。</span><span class="pa">4. 夫妻之一方對於婚姻生活無貢獻或協力，或有其他情事，致平均分配有失公平者，法院得調整或免除其分配額。</span><span class="pa">5. 法院為前項裁判時，應綜合衡酌夫妻婚姻存續期間之家事勞動、子女照顧養育、對家庭付出之整體協力狀況、共同生活及分居時間之久暫、婚後財產取得時間、雙方之經濟能力等因素。</span><span class="pa">6. 第一項請求權，不得讓與或繼承。但已依契約承諾，或已起訴者，不在此限。</span><span class="pa">7. 第一項剩餘財產差額之分配請求權，自請求權人知有剩餘財產之差額時起，二年間不行使而消滅。自法定財產制關係消滅時起，逾五年者，亦同。</span></div>
+<div class="lawart"><b>第 1030-2 條</b><span class="pa">1. 夫或妻之一方以其婚後財產清償其婚前所負債務，或以其婚前財產清償婚姻關係存續中所負債務，除已補償者外，於法定財產制關係消滅時，應分別納入現存之婚後財產或婚姻關係存續中所負債務計算。</span><span class="pa">2. 夫或妻之一方以其前條第一項但書之財產清償婚姻關係存續中其所負債務者，適用前項之規定。</span></div>
+<div class="lawart"><b>第 1030-3 條</b><span class="pa">1. 夫或妻為減少他方對於剩餘財產之分配，而於法定財產制關係消滅前五年內處分其婚後財產者，應將該財產追加計算，視為現存之婚後財產。但為履行道德上義務所為之相當贈與，不在此限。</span><span class="pa">2. 前項情形，分配權利人於義務人不足清償其應得之分配額時，得就其不足額，對受領之第三人於其所受利益內請求返還。但受領為有償者，以顯不相當對價取得者為限。</span><span class="pa">3. 前項對第三人之請求權，於知悉其分配權利受侵害時起二年間不行使而消滅。自法定財產制關係消滅時起，逾五年者，亦同。</span></div>
+<div class="lawart"><b>第 1030-4 條</b><span class="pa">1. 夫妻現存之婚後財產，其價值計算以法定財產制關係消滅時為準。但夫妻因判決而離婚者，以起訴時為準。</span><span class="pa">2. 依前條應追加計算之婚後財產，其價值計算以處分時為準。</span></div>
+<div class="lawart"><b>第 1031-1 條</b><span class="pa">1. 左列財產為特有財產：</span><span class="pa">2. 一、專供夫或妻個人使用之物。</span><span class="pa">3. 二、夫或妻職業上必需之物。</span><span class="pa">4. 三、夫或妻所受之贈物，經贈與人以書面聲明為其特有財產者。</span><span class="pa">5. 前項所定之特有財產，適用關於分別財產制之規定。</span></div>
+<div class="lawart"><b>第 1032 條</b><span class="pa">1. 共同財產，由夫妻共同管理。但約定由一方管理者，從其約定。</span><span class="pa">2. 共同財產之管理費用，由共同財產負擔。</span></div>
+<div class="lawart"><b>第 1050 條</b><span class="pa">兩願離婚，應以書面為之，有二人以上證人之簽名並應向戶政機關為離婚之登記。</span></div>
+<div class="lawart"><b>第 1052 條</b><span class="pa">1. 夫妻之一方，有下列情形之一者，他方得向法院請求離婚：</span><span class="pa">2. 一、重婚。</span><span class="pa">3. 二、與配偶以外之人合意性交。</span><span class="pa">4. 三、夫妻之一方對他方為不堪同居之虐待。</span><span class="pa">5. 四、夫妻之一方對他方之直系親屬為虐待，或夫妻一方之直系親屬對他方為虐待，致不堪為共同生活。</span><span class="pa">6. 五、夫妻之一方以惡意遺棄他方在繼續狀態中。</span><span class="pa">7. 六、夫妻之一方意圖殺害他方。</span><span class="pa">8. 七、有不治之惡疾。</span><span class="pa">9. 八、有重大不治之精神病。</span><span class="pa">10. 九、生死不明已逾三年。</span><span class="pa">11. 十、因故意犯罪，經判處有期徒刑逾六個月確定。</span><span class="pa">12. 有前項以外之重大事由，難以維持婚姻者，夫妻之一方得請求離婚。但其事由應由夫妻之一方負責者，僅他方得請求離婚。</span></div>
+<div class="lawart"><b>第 1053 條</b><span class="pa">對於前條第一款、第二款之情事，有請求權之一方，於事前同意或事後宥恕，或知悉後已逾六個月，或自其情事發生後已逾二年者，不得請求離婚。</span></div>
+<div class="lawart"><b>第 1055 條</b><span class="pa">1. 夫妻離婚者，對於未成年子女權利義務之行使或負擔，依協議由一方或雙方共同任之。未為協議或協議不成者，法院得依夫妻之一方、主管機關、社會福利機構或其他利害關係人之請求或依職權酌定之。</span><span class="pa">2. 前項協議不利於子女者，法院得依主管機關、社會福利機構或其他利害關係人之請求或依職權為子女之利益改定之。</span><span class="pa">3. 行使、負擔權利義務之一方未盡保護教養之義務或對未成年子女有不利之情事者，他方、未成年子女、主管機關、社會福利機構或其他利害關係人得為子女之利益，請求法院改定之。</span><span class="pa">4. 前三項情形，法院得依請求或依職權，為子女之利益酌定權利義務行使負擔之內容及方法。</span><span class="pa">5. 法院得依請求或依職權，為未行使或負擔權利義務之一方酌定其與未成年子女會面交往之方式及期間。但其會面交往有妨害子女之利益者，法院得依請求或依職權變更之。</span></div>
+<div class="lawart"><b>第 1059 條</b><span class="pa">1. 父母於子女出生登記前，應以書面約定子女從父姓或母姓。未約定或約定不成者，於戶政事務所抽籤決定之。</span><span class="pa">2. 子女經出生登記後，於未成年前，得由父母以書面約定變更為父姓或母姓。</span><span class="pa">3. 子女已成年者，得變更為父姓或母姓。</span><span class="pa">4. 前二項之變更，各以一次為限。</span><span class="pa">5. 有下列各款情形之一，法院得依父母之一方或子女之請求，為子女之利益，宣告變更子女之姓氏為父姓或母姓：</span><span class="pa">6. 一、父母離婚者。</span><span class="pa">7. 二、父母之一方或雙方死亡者。</span><span class="pa">8. 三、父母之一方或雙方生死不明滿三年者。</span><span class="pa">9. 四、父母之一方顯有未盡保護或教養義務之情事者。</span></div>
+<div class="lawart"><b>第 1063 條</b><span class="pa">1. 妻之受胎，係在婚姻關係存續中者，推定其所生子女為婚生子女。</span><span class="pa">2. 前項推定，夫妻之一方或子女能證明子女非為婚生子女者，得提起否認之訴。</span><span class="pa">3. 前項否認之訴，夫妻之一方自知悉該子女非為婚生子女，或子女自知悉其非為婚生子女之時起二年內為之。但子女於未成年時知悉者，仍得於成年後二年內為之。</span></div>
+<div class="lawart"><b>第 1065 條</b><span class="pa">1. 非婚生子女經生父認領者，視為婚生子女。其經生父撫育者，視為認領。</span><span class="pa">2. 非婚生子女與其生母之關係，視為婚生子女，無須認領。</span></div>
+<div class="lawart"><b>第 1067 條</b><span class="pa">1. 有事實足認其為非婚生子女之生父者，非婚生子女或其生母或其他法定代理人，得向生父提起認領之訴。</span><span class="pa">2. 前項認領之訴，於生父死亡後，得向生父之繼承人為之。生父無繼承人者，得向社會福利主管機關為之。</span></div>
+<div class="lawart"><b>第 1073 條</b><span class="pa">1. 收養者之年齡，應長於被收養者二十歲以上。但夫妻共同收養時，夫妻之一方長於被收養者二十歲以上，而他方僅長於被收養者十六歲以上，亦得收養。</span><span class="pa">2. 夫妻之一方收養他方之子女時，應長於被收養者十六歲以上。</span></div>
+<div class="lawart"><b>第 1073-1 條</b><span class="pa">1. 下列親屬不得收養為養子女：</span><span class="pa">2. 一、直系血親。</span><span class="pa">3. 二、直系姻親。但夫妻之一方，收養他方之子女者，不在此限。</span><span class="pa">4. 三、旁系血親在六親等以內及旁系姻親在五親等以內，輩分不相當者。</span></div>
+<div class="lawart"><b>第 1075 條</b><span class="pa">除夫妻共同收養外，一人不得同時為二人之養子女。</span></div>
+<div class="lawart"><b>第 1076 條</b><span class="pa">夫妻之一方被收養時，應得他方之同意。但他方不能為意思表示或生死不明已逾三年者，不在此限。</span></div>
+<div class="lawart"><b>第 1079 條</b><span class="pa">1. 收養應以書面為之，並向法院聲請認可。</span><span class="pa">2. 收養有無效、得撤銷之原因或違反其他法律規定者，法院應不予認可。</span></div>
+<div class="lawart"><b>第 1079-3 條</b><span class="pa">收養自法院認可裁定確定時，溯及於收養契約成立時發生效力。但第三人已取得之權利，不受影響。</span></div>
+<div class="lawart"><b>第 1079-5 條</b><span class="pa">1. 收養子女，違反第一千零七十四條之規定者，收養者之配偶得請求法院撤銷之。但自知悉其事實之日起，已逾六個月，或自法院認可之日起已逾一年者，不得請求撤銷。</span><span class="pa">2. 收養子女，違反第一千零七十六條或第一千零七十六條之二第二項之規定者，被收養者之配偶或法定代理人得請求法院撤銷之。但自知悉其事實之日起，已逾六個月，或自法院認可之日起已逾一年者，不得請求撤銷。</span><span class="pa">3. 依前二項之規定，經法院判決撤銷收養者，準用第一千零八十二條及第一千零八十三條之規定。</span></div>
+<div class="lawart"><b>第 1080 條</b><span class="pa">1. 養父母與養子女之關係，得由雙方合意終止之。</span><span class="pa">2. 前項終止，應以書面為之。養子女為未成年人者，並應向法院聲請認可。</span><span class="pa">3. 法院依前項規定為認可時，應依養子女最佳利益為之。</span><span class="pa">4. 養子女為未成年人者，終止收養自法院認可裁定確定時發生效力。</span><span class="pa">5. 養子女未滿七歲者，其終止收養關係之意思表示，由收養終止後為其法定代理人之人為之。</span><span class="pa">6. 養子女為滿七歲以上之未成年人者，其終止收養關係，應得收養終止後為其法定代理人之人之同意。</span><span class="pa">7. 夫妻共同收養子女者，其合意終止收養應共同為之。但有下列情形之一者，得單獨終止：</span><span class="pa">8. 一、夫妻之一方不能為意思表示或生死不明已逾三年。</span><span class="pa">9. 二、夫妻之一方於收養後死亡。</span><span class="pa">10. 三、夫妻離婚。</span><span class="pa">11. 夫妻之一方依前項但書規定單獨終止收養者，其效力不及於他方。</span></div>
+<div class="lawart"><b>第 1101 條</b><span class="pa">1. 監護人對於受監護人之財產，非為受監護人之利益，不得使用、代為或同意處分。</span><span class="pa">2. 監護人為下列行為，非經法院許可，不生效力：</span><span class="pa">3. 一、代理受監護人購置或處分不動產。</span><span class="pa">4. 二、代理受監護人，就供其居住之建築物或其基地出租、供他人使用或終止租賃。</span><span class="pa">5. 監護人不得以受監護人之財產為投資。但購買公債、國庫券、中央銀行儲蓄券、金融債券、可轉讓定期存單、金融機構承兌匯票或保證商業本票，不在此限。</span></div>
+<div class="lawart"><b>第 1117 條</b><span class="pa">1. 受扶養權利者，以不能維持生活而無謀生能力者為限。</span><span class="pa">2. 前項無謀生能力之限制，於直系血親尊親屬，不適用之。</span></div>
+  </section>
+  <section id="quiz" class="pane">
+    <h2 class="sec">歷年考古題（已核對現行民法，共 18 題）</h2>
+    <p style="color:var(--muted)">點選即時對答，解析附條號與出處；題首【§】為所屬條號。</p>
+    <div class="quizbar">
+      <span class="score" id="qscore">答對 0 / 作答 0 （共 18 題）</span>
+      <span class="prog"><i id="qbar"></i></span>
+      <button id="qshowAll">顯示全部解析</button>
+      <button id="qreset">重做</button>
+    </div>
+    <div id="qbox"></div>
+  </section>
+  <footer>EFETL · 民法國考複習 ｜ 條文依現行民法，正式以法規原文為準。</footer>
+</div>
+<script>
+const QD=[{"q": "【§967】己身所從出或從己身所出之血親，依民法規定稱為下列何者？", "o": ["旁系姻親", "直系姻親", "旁系血親", "直系血親"], "a": 3, "e": "§967Ⅰ：稱直系血親者，謂己身所從出或從己身所出之血親。（100年鐵路特考佐級事務管理 法學大意）"}, {"q": "【§968】自己與表兄弟姊妹之間，為何種親屬關係？", "o": ["旁系血親四親等", "旁系姻親四親等", "旁系血親二親等", "旁系姻親二親等"], "a": 0, "e": "§968：旁系血親從己身數至同源直系血親再數至該血親。己身→父母(1)→祖父母(2,同源)→伯叔姑舅姨(3)→表兄弟姊妹(4)，故為旁系血親四親等。（112年台電新進僱用 法律常識）"}, {"q": "【§969】我國民法所稱之姻親，包含下列何種組合？①血親之配偶 ②配偶之血親 ③血親之配偶之血親 ④配偶之血親之配偶", "o": ["①②③", "①②④", "①③④", "②③④"], "a": 1, "e": "§969：姻親謂血親之配偶、配偶之血親、配偶之血親之配偶，即①②④。「血親之配偶之血親」（親家）非民法上姻親。（94年升官等委任僑務行政 公民）"}, {"q": "【§970】關於親系與親等，自己與「繼母之表兄」的關係，下列敘述何者正確？", "o": ["無親屬關係", "旁系姻親三親等", "旁系姻親四親等", "旁系姻親五親等"], "a": 0, "e": "§969、§970：繼母為父之配偶（直系姻親），惟「繼母之表兄」屬配偶之血親之配偶之血親，逾越§969姻親三類範圍（姻親不及於姻親之血親），故無親屬關係。（110年初等 法學大意）"}, {"q": "【§980】依現行民法規定，男女至少須滿幾歲始得結婚？", "o": ["男女均須滿18歲", "男滿17歲、女滿15歲", "男滿16歲、女滿18歲", "男滿18歲、女滿16歲"], "a": 0, "e": "§980現行條文（112.1.1施行）：男女未滿十八歲者不得結婚。本題原為舊題（舊法男18女16），依現行法應為A。（102年台電 法律常識，依現行法更正）"}, {"q": "【§983】下列何種結婚，非屬近親禁止結婚之規範範圍？", "o": ["與離婚後之前小姨子（前妻之妹）結婚", "與終止收養後之前養女結婚", "與自己兒子離婚後之前媳婦結婚", "與叔叔死亡後守寡之叔母結婚"], "a": 0, "e": "§983：旁系姻親（前妻之妹）之姻親關係因離婚而消滅，再婚不受限；B、C、D之姻親或收養終止後輩分限制仍存續。（111年專技普考不動產經紀人 民法概要）"}, {"q": "【§988】重婚，在現行民法中之效力為何？", "o": ["無效", "得撤銷", "效力未定", "以上皆非"], "a": 0, "e": "§985禁止重婚，違反者依§988③為無效（善意且無過失信賴前婚消滅之兩願離婚登記或離婚確定判決而結婚者除外）。（95年基層警察特考四等 法學緒論）"}, {"q": "【§988】違反民法第983條近親禁婚規定而結婚者，其效力為何？", "o": ["有效", "得撤銷", "無效", "效力未定"], "a": 2, "e": "§988②：結婚違反§983者無效（非得撤銷）。（改寫自專技普考不動產經紀人 §988考點）"}, {"q": "【§1030-1】法定財產制關係消滅時，夫或妻現存之婚後財產，扣除婚姻關係存續所負債務後如有剩餘，其雙方剩餘財產之差額應平均分配，此項權利稱為：", "o": ["贍養費請求權", "遺產繼承權", "遺產酌給請求權", "剩餘財產分配請求權"], "a": 3, "e": "§1030-1Ⅰ：法定財產制消滅時雙方婚後財產差額應平均分配，即剩餘財產分配請求權。（102年鐵路特考佐級事務管理 法學大意）"}, {"q": "【§1052】下列何者非屬民法第1052條第1項所定之裁判離婚事由？", "o": ["夫妻之一方對他方為不堪同居之虐待", "夫妻一方對他方之直系親屬為虐待，致不堪為共同生活", "生死不明已逾一年", "因故意犯罪，經判處有期徒刑逾六個月確定"], "a": 2, "e": "§1052Ⅰ⑨：「生死不明已逾三年」始為離婚事由，「逾一年」為陷阱（一年為§976婚約解除標準）。（105年鐵路特考佐級事務管理 法學大意）"}, {"q": "【§1055】依民法規定，有關離婚之敘述，下列何者正確？", "o": ["離婚之種類僅分為兩願離婚與裁判離婚二種", "兩願離婚應以書面為之並有二人以上證人簽名即能成立", "繼父母對繼子女為虐待致不堪為共同生活者，為裁判離婚事由之一", "夫妻裁判離婚者，對未成年子女權利義務之行使負擔，應直接由法院依職權以子女最佳利益酌定之"], "a": 2, "e": "§1055：離婚後親權優先由父母協議，協議不成或不利子女時法院始介入，故D「直接由法院依職權」錯誤；B兩願離婚尚須戶政登記（§1050）始成立；C符合§1052Ⅰ④。（113年普考 法學知識）"}, {"q": "【§1059】下列何種身分行為，無須以書面為之？", "o": ["生父認領非婚生子女", "子女從父姓或母姓之約定", "夫妻財產制契約之訂立", "收養"], "a": 0, "e": "§1059Ⅰ子女稱姓之約定應以書面；§1007夫妻財產制契約須書面；§1079收養須書面；認領（§1065）為無要式行為。（103年鐵路升資佐級晉員級 法學知識）"}, {"q": "【§1063】妻之受胎係在婚姻關係存續中者，推定其所生子女為婚生子女。下列敘述何者正確？", "o": ["親生父對受推定為他人婚生子女者，得自行舉證推翻該推定", "受推定之子女不得自行舉證證明其為非婚生子女", "主張該子女為婚生子女之夫妻一方須負舉證責任", "主張該子女非為婚生子女之夫妻一方須負舉證責任"], "a": 3, "e": "§1063：受婚生推定者得由夫妻一方或子女提起否認之訴，主張「非婚生」者須負舉證責任。（103年一般警察特考四等 法學緒論）"}, {"q": "【§1065】生父承認其與非婚生子女有父子（女）關係之意思表示，稱之為：", "o": ["收養", "認領", "準正", "扶養"], "a": 1, "e": "§1065Ⅰ：非婚生子女經生父認領者視為婚生子女；其經生父撫育者視為認領。（90年專技特考不動產經紀人 民法概要）"}, {"q": "【§1073】收養人與被收養人之年齡間隔，原則上應為幾歲以上？", "o": ["16歲", "18歲", "20歲", "22歲"], "a": 2, "e": "§1073Ⅰ：收養者之年齡應長於被收養者20歲以上（夫妻共同收養或收養他方子女有16歲之例外）。（96年原民特考五等 法學大意）"}, {"q": "【§1079-3】收養經法院認可裁定確定後，其效力自何時發生？", "o": ["法院認可收養之裁定確定時", "向法院聲請認可收養時", "收養契約成立（書面訂立）時", "收養人與被收養人口頭合意時"], "a": 2, "e": "§1079-3：收養自法院認可裁定確定時，溯及於收養契約成立時發生效力（但第三人已取得之權利不受影響）。（105年一般警察特考四等 法學緒論）"}, {"q": "【§1101】監護人代理受監護人為下列何種行為時，須經法院許可始生效力？", "o": ["向銀行貸款", "接受他人贈與之輪椅", "購置不動產", "向無權占有人請求返還所有物"], "a": 2, "e": "§1101Ⅱ①：監護人代理受監護人購置或處分不動產，非經法院許可不生效力。（104年初等一般行政 法學大意）"}, {"q": "【§1117】受扶養權利者，以不能維持生活而無謀生能力者為限，但下列何種親屬不受「無謀生能力」之限制？", "o": ["直系血親尊親屬", "旁系血親尊親屬", "直系血親卑親屬", "旁系血親卑親屬"], "a": 0, "e": "§1117Ⅱ：前項無謀生能力之限制，於直系血親尊親屬不適用之。（96年警察特考四等 法學知識）"}];
+
+function renderQuiz(data, ns){
+  const box=document.getElementById(ns+'box');
+  if(!data.length){box.innerHTML='<p style=\'color:var(--muted)\'>本編暫無收錄考題。</p>';return;}
+  data.forEach((it,i)=>{
+    const q=document.createElement('div');q.className='q';
+    const opts=it.o.map((t,j)=>`<button class="opt" data-i="${i}" data-j="${j}"><span class="lab">(${'ABCDE'[j]})</span>${t}</button>`).join('');
+    q.innerHTML=`<div class="stem"><span class="no">${i+1}</span>${it.q}</div><div class="opts">${opts}</div>`+
+      `<div class="exp" id="${ns}exp${i}"><b>✅ 答案：(${'ABCDE'[it.a]})</b><br>${it.e}</div>`;
+    box.appendChild(q);
+  });
+  const answered=new Array(data.length).fill(false);let correct=0;
+  box.addEventListener('click',e=>{const b=e.target.closest('.opt');if(!b)return;
+    const i=+b.dataset.i,j=+b.dataset.j;if(answered[i])return;answered[i]=true;
+    const c=box.children[i],bs=c.querySelectorAll('.opt');
+    bs.forEach((bt,k)=>{bt.classList.add('lock');if(k===data[i].a)bt.classList.add('correct');});
+    if(j!==data[i].a)bs[j].classList.add('wrong');else correct++;
+    document.getElementById(ns+'exp'+i).classList.add('show');upd();});
+  function upd(){const d=answered.filter(Boolean).length;
+    document.getElementById(ns+'score').textContent=`答對 ${correct} / 作答 ${d} （共 ${data.length} 題）`;
+    document.getElementById(ns+'bar').style.width=(d/data.length*100)+'%';}
+  document.getElementById(ns+'showAll').onclick=()=>{box.querySelectorAll('.exp').forEach(x=>x.classList.add('show'));
+    box.querySelectorAll('.q').forEach((c,i)=>c.querySelectorAll('.opt').forEach((bt,k)=>{bt.classList.add('lock');if(k===data[i].a)bt.classList.add('correct');}));};
+  document.getElementById(ns+'reset').onclick=()=>location.reload();upd();
+}
+
+
+document.querySelectorAll('nav.tabs button').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.remove('on'));
+    document.querySelectorAll('section.pane').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    document.getElementById(b.dataset.t).classList.add('on');
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+});
+
+renderQuiz(QD,'q');
+</script>
+</body></html>

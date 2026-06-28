@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>民法債編總論｜民法國考互動複習</title>
+<style>
+:root{
+  --green:#00824a; --green-d:#005c33; --green-l:#e7f4ec;
+  --gold:#c8902a; --ink:#222; --muted:#5f6b63; --line:#d9e4dc;
+  --bg:#f6faf7; --card:#fff; --red:#c0392b; --red-l:#fdecea;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  font-size:17px; line-height:1.85; -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:920px;margin:0 auto;padding:0 18px 80px}
+header.top{
+  background:linear-gradient(135deg,var(--green),var(--green-d));
+  color:#fff;padding:30px 18px;text-align:center;
+}
+header.top .wrap{padding-bottom:0}
+header.top h1{margin:0 0 6px;font-size:1.7em;letter-spacing:1px}
+header.top p{margin:4px 0;opacity:.92;font-size:.95em}
+.backlink{display:inline-block;margin-top:12px;color:#fff;
+  border:1px solid rgba(255,255,255,.6);border-radius:20px;
+  padding:5px 16px;text-decoration:none;font-size:.9em}
+.backlink:hover{background:rgba(255,255,255,.15)}
+nav.tabs{position:sticky;top:0;z-index:20;background:var(--card);
+  border-bottom:1px solid var(--line);display:flex;gap:6px;
+  padding:8px 18px;box-shadow:0 2px 6px rgba(0,0,0,.05)}
+nav.tabs button{flex:1;border:0;background:transparent;font-size:1em;
+  font-family:inherit;padding:10px;border-radius:8px;cursor:pointer;
+  color:var(--muted);font-weight:700}
+nav.tabs button.on{background:var(--green-l);color:var(--green-d)}
+section.pane{display:none;padding-top:22px}
+section.pane.on{display:block}
+h2.sec{font-size:1.35em;color:var(--green-d);border-left:6px solid var(--green);
+  padding-left:12px;margin:30px 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:18px 20px;margin:14px 0;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.card h3{margin:0 0 10px;font-size:1.12em;color:var(--green-d)}
+.card h3 .art{font-size:.72em;color:var(--gold);font-weight:700;margin-left:8px}
+.card ul{margin:8px 0;padding-left:1.3em}
+.card li{margin:6px 0}
+.tag{display:inline-block;background:var(--green-l);color:var(--green-d);
+  border-radius:6px;padding:1px 8px;font-size:.8em;font-weight:700;margin-right:6px}
+.hl{background:#fff5d6;padding:0 3px;border-radius:3px;font-weight:700}
+.warn{color:var(--red);font-weight:700}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.96em;
+  background:#fff;border-radius:10px;overflow:hidden}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+th{background:var(--green);color:#fff;font-weight:700}
+tbody tr:nth-child(even){background:var(--green-l)}
+.mnem{background:var(--green-l);border:1px dashed var(--green);border-radius:10px;
+  padding:12px 16px;margin:12px 0;font-size:.98em}
+.mnem b{color:var(--green-d)}
+
+/* quiz */
+.quizbar{position:sticky;top:54px;z-index:15;background:#fff;border:1px solid var(--line);
+  border-radius:12px;padding:10px 16px;margin:6px 0 16px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.quizbar .score{font-weight:800;color:var(--green-d);font-size:1.05em}
+.quizbar .prog{flex:1;min-width:120px;height:10px;background:var(--green-l);
+  border-radius:8px;overflow:hidden}
+.quizbar .prog>i{display:block;height:100%;width:0;background:var(--green);transition:.3s}
+.quizbar button{border:1px solid var(--green);background:#fff;color:var(--green-d);
+  font-family:inherit;font-size:.9em;padding:6px 12px;border-radius:8px;cursor:pointer;font-weight:700}
+.quizbar button:hover{background:var(--green-l)}
+.q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:16px 18px;margin:14px 0;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.q .stem{font-weight:700;margin-bottom:12px}
+.q .stem .no{display:inline-block;background:var(--green);color:#fff;border-radius:50%;
+  width:1.7em;height:1.7em;line-height:1.7em;text-align:center;margin-right:8px;font-size:.92em}
+.opt{display:block;width:100%;text-align:left;border:1.5px solid var(--line);
+  background:#fbfdfb;border-radius:10px;padding:11px 14px;margin:7px 0;cursor:pointer;
+  font-family:inherit;font-size:1em;line-height:1.6;transition:.15s}
+.opt:hover{border-color:var(--green)}
+.opt .lab{font-weight:800;color:var(--green-d);margin-right:6px}
+.opt.correct{background:var(--green-l);border-color:var(--green);color:var(--green-d)}
+.opt.wrong{background:var(--red-l);border-color:var(--red);color:var(--red)}
+.opt.lock{cursor:default}
+.exp{margin-top:10px;padding:11px 14px;border-radius:10px;background:#f3f8f4;
+  border-left:4px solid var(--green);font-size:.97em;display:none}
+.exp.show{display:block}
+.exp b{color:var(--green-d)}
+footer{text-align:center;color:var(--muted);font-size:.85em;margin-top:40px}
+@media(max-width:520px){body{font-size:16.5px}.wrap{padding:0 12px 60px}}
+@media print{nav.tabs,.quizbar,.backlink{display:none}section.pane{display:block!important}
+  .exp{display:block!important}.q,.card{break-inside:avoid}}
+
+.lawart{border-left:3px solid var(--green);background:#fff;border-radius:0 8px 8px 0;
+  padding:9px 13px;margin:9px 0;border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.lawart b{color:var(--green-d)}
+.lawart .pa{display:block;margin:3px 0;color:var(--ink)}
+.lawcard{display:flex;gap:16px;align-items:center;background:#fff;border:1px solid var(--line);
+  border-radius:14px;padding:18px 20px;margin:12px 0;text-decoration:none;color:inherit;
+  box-shadow:0 1px 4px rgba(0,0,0,.04);transition:.15s}
+.lawcard:hover{border-color:var(--green);transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,130,74,.12)}
+.lawcard .ic{font-size:2.3em}
+.lawcard h3{margin:0;color:var(--green-d);font-size:1.18em}
+.lawcard p{margin:3px 0;color:var(--muted);font-size:.9em}
+.lawcard .go{color:var(--gold);font-weight:700;font-size:.9em}
+.hero{padding:30px 0 6px}
+</style>
+</head><body>
+<header class="top"><div class="wrap">
+  <h1>🤝 民法債編總論</h1>
+  <p>債篇（一）債總（71 條）</p>
+  <p>條文重點 + 30 題歷年考古題</p>
+  <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+    <a class="backlink" href="/">&#8592; 回首頁</a><a class="backlink" href="civil-law.html">← 回民法總覽</a>
+  </div>
+</div></header>
+<nav class="tabs">
+  <button class="on" data-t="notes">📖 條文重點</button>
+  <button data-t="quiz">📝 互動練習（30）</button>
+</nav>
+<div class="wrap">
+  <section id="notes" class="pane on">
+    <h2 class="sec">民法債編總論・高頻條文</h2>
+    <div class="mnem">章節範圍：第一節「債之發生」153–198 條；第三節「債之效力」219–270 條。</div>
+    <div class="lawart"><b>第 153 條</b><span class="pa">1. 當事人互相表示意思一致者，無論其為明示或默示，契約即為成立。</span><span class="pa">2. 當事人對於必要之點，意思一致，而對於非必要之點，未經表示意思者，推定其契約為成立，關於該非必要之點，當事人意思不一致時，法院應依其事件之性質定之。</span></div>
+<div class="lawart"><b>第 154 條</b><span class="pa">1. 契約之要約人，因要約而受拘束。但要約當時預先聲明不受拘束，或依其情形或事件之性質，可認當事人無受其拘束之意思者，不在此限。</span><span class="pa">2. 貨物標定賣價陳列者，視為要約。但價目表之寄送，不視為要約。</span></div>
+<div class="lawart"><b>第 156 條</b><span class="pa">對話為要約者，非立時承諾，即失其拘束力。</span></div>
+<div class="lawart"><b>第 158 條</b><span class="pa">要約定有承諾期限者，非於其期限內為承諾，失其拘束力。</span></div>
+<div class="lawart"><b>第 161 條</b><span class="pa">1. 依習慣或依其事件之性質，承諾無須通知者，在相當時期內，有可認為承諾之事實時，其契約為成立。</span><span class="pa">2. 前項規定，於要約人要約當時預先聲明承諾無須通知者準用之。</span></div>
+<div class="lawart"><b>第 164 條</b><span class="pa">1. 以廣告聲明對完成一定行為之人給與報酬者，為懸賞廣告。廣告人對於完成該行為之人，負給付報酬之義務。</span><span class="pa">2. 數人先後分別完成前項行為時，由最先完成該行為之人，取得報酬請求權；數人共同或同時分別完成行為時，由行為人共同取得報酬請求權。</span><span class="pa">3. 前項情形，廣告人善意給付報酬於最先通知之人時，其給付報酬之義務，即為消滅。</span><span class="pa">4. 前三項規定，於不知有廣告而完成廣告所定行為之人，準用之。</span></div>
+<div class="lawart"><b>第 166 條</b><span class="pa">契約當事人約定其契約須用一定方式者，在該方式未完成前，推定其契約不成立。</span></div>
+<div class="lawart"><b>第 167 條</b><span class="pa">代理權係以法律行為授與者，其授與應向代理人或向代理人對之為代理行為之第三人，以意思表示為之。</span></div>
+<div class="lawart"><b>第 170 條</b><span class="pa">1. 無代理權人以代理人之名義所為之法律行為，非經本人承認，對於本人不生效力。</span><span class="pa">2. 前項情形，法律行為之相對人，得定相當期限，催告本人確答是否承認，如本人逾期未為確答者，視為拒絕承認。</span></div>
+<div class="lawart"><b>第 171 條</b><span class="pa">無代理權人所為之法律行為，其相對人於本人未承認前，得撤回之。但為法律行為時，明知其無代理權者，不在此限。</span></div>
+<div class="lawart"><b>第 172 條</b><span class="pa">未受委任，並無義務，而為他人管理事務者，其管理應依本人明示或可得推知之意思，以有利於本人之方法為之。</span></div>
+<div class="lawart"><b>第 176 條</b><span class="pa">1. 管理事務，利於本人，並不違反本人明示或可得推知之意思者，管理人為本人支出必要或有益之費用，或負擔債務，或受損害時，得請求本人償還其費用及自支出時起之利息，或清償其所負擔之債務，或賠償其損害。</span><span class="pa">2. 第一百七十四條第二項規定之情形，管理人管理事務，雖違反本人之意思，仍有前項之請求權。</span></div>
+<div class="lawart"><b>第 177 條</b><span class="pa">1. 管理事務不合於前條之規定時，本人仍得享有因管理所得之利益，而本人所負前條第一項對於管理人之義務，以其所得之利益為限。</span><span class="pa">2. 前項規定，於管理人明知為他人之事務，而為自己之利益管理之者，準用之。</span></div>
+<div class="lawart"><b>第 179 條</b><span class="pa">無法律上之原因而受利益，致他人受損害者，應返還其利益。雖有法律上之原因，而其後已不存在者，亦同。</span></div>
+<div class="lawart"><b>第 180 條</b><span class="pa">1. 給付，有左列情形之一者，不得請求返還：</span><span class="pa">2. 一、給付係履行道德上之義務者。</span><span class="pa">3. 二、債務人於未到期之債務因清償而為給付者。</span><span class="pa">4. 三、因清償債務而為給付，於給付時明知無給付之義務者。</span><span class="pa">5. 四、因不法之原因而為給付者。但不法之原因僅於受領人一方存在時，不在此限。</span></div>
+<div class="lawart"><b>第 181 條</b><span class="pa">不當得利之受領人，除返還其所受之利益外，如本於該利益更有所取得者，並應返還。但依其利益之性質或其他情形不能返還者，應償還其價額。</span></div>
+<div class="lawart"><b>第 184 條</b><span class="pa">1. 因故意或過失，不法侵害他人之權利者，負損害賠償責任。故意以背於善良風俗之方法，加損害於他人者亦同。</span><span class="pa">2. 違反保護他人之法律，致生損害於他人者，負賠償責任。但能證明其行為無過失者，不在此限。</span></div>
+<div class="lawart"><b>第 185 條</b><span class="pa">1. 數人共同不法侵害他人之權利者，連帶負損害賠償責任。不能知其中孰為加害人者亦同。</span><span class="pa">2. 造意人及幫助人，視為共同行為人。</span></div>
+<div class="lawart"><b>第 187 條</b><span class="pa">1. 無行為能力人或限制行為能力人，不法侵害他人之權利者，以行為時有識別能力為限，與其法定代理人連帶負損害賠償責任。行為時無識別能力者，由其法定代理人負損害賠償責任。</span><span class="pa">2. 前項情形，法定代理人如其監督並未疏懈，或縱加以相當之監督，而仍不免發生損害者，不負賠償責任。</span><span class="pa">3. 如不能依前二項規定受損害賠償時，法院因被害人之聲請，得斟酌行為人及其法定代理人與被害人之經濟狀況，令行為人或其法定代理人為全部或一部之損害賠償。</span><span class="pa">4. 前項規定，於其他之人，在無意識或精神錯亂中所為之行為致第三人受損害時，準用之。</span></div>
+<div class="lawart"><b>第 190 條</b><span class="pa">1. 動物加損害於他人者，由其占有人負損害賠償責任。但依動物之種類及性質已為相當注意之管束，或縱為相當注意之管束而仍不免發生損害者，不在此限。</span><span class="pa">2. 動物係由第三人或他動物之挑動，致加損害於他人者，其占有人對於該第三人或該他動物之占有人，有求償權。</span></div>
+<div class="lawart"><b>第 191-1 條</b><span class="pa">1. 商品製造人因其商品之通常使用或消費所致他人之損害，負賠償責任。但其對於商品之生產、製造或加工、設計並無欠缺或其損害非因該項欠缺所致或於防止損害之發生，已盡相當之注意者，不在此限。</span><span class="pa">2. 前項所稱商品製造人，謂商品之生產、製造、加工業者。其在商品上附加標章或其他文字、符號，足以表彰係其自己所生產、製造、加工者，視為商品製造人。</span><span class="pa">3. 商品之生產、製造或加工、設計，與其說明書或廣告內容不符者，視為有欠缺。</span><span class="pa">4. 商品輸入業者，應與商品製造人負同一之責任。</span></div>
+<div class="lawart"><b>第 192 條</b><span class="pa">1. 不法侵害他人致死者，對於支出醫療及增加生活上需要之費用或殯葬費之人，亦應負損害賠償責任。</span><span class="pa">2. 被害人對於第三人負有法定扶養義務者，加害人對於該第三人亦應負損害賠償責任。</span><span class="pa">3. 第一百九十三條第二項之規定，於前項損害賠償適用之。</span></div>
+<div class="lawart"><b>第 193 條</b><span class="pa">1. 不法侵害他人之身體或健康者，對於被害人因此喪失或減少勞動能力或增加生活上之需要時，應負損害賠償責任。</span><span class="pa">2. 前項損害賠償，法院得因當事人之聲請，定為支付定期金。但須命加害人提出擔保。</span></div>
+<div class="lawart"><b>第 194 條</b><span class="pa">不法侵害他人致死者，被害人之父、母、子、女及配偶，雖非財產上之損害，亦得請求賠償相當之金額。</span></div>
+<div class="lawart"><b>第 195 條</b><span class="pa">1. 不法侵害他人之身體、健康、名譽、自由、信用、隱私、貞操，或不法侵害其他人格法益而情節重大者，被害人雖非財產上之損害，亦得請求賠償相當之金額。其名譽被侵害者，並得請求回復名譽之適當處分。</span><span class="pa">2. 前項請求權，不得讓與或繼承。但以金額賠償之請求權已依契約承諾，或已起訴者，不在此限。</span><span class="pa">3. 前二項規定，於不法侵害他人基於父、母、子、女或配偶關係之身分法益而情節重大者，準用之。</span></div>
+<div class="lawart"><b>第 197 條</b><span class="pa">1. 因侵權行為所生之損害賠償請求權，自請求權人知有損害及賠償義務人時起，二年間不行使而消滅，自有侵權行為時起，逾十年者亦同。</span><span class="pa">2. 損害賠償之義務人，因侵權行為受利益，致被害人受損害者，於前項時效完成後，仍應依關於不當得利之規定，返還其所受之利益於被害人。</span></div>
+<div class="lawart"><b>第 201 條</b><span class="pa">以特種通用貨幣之給付為債之標的者，如其貨幣至給付期失通用效力時，應給以他種通用貨幣。</span></div>
+<div class="lawart"><b>第 202 條</b><span class="pa">以外國通用貨幣定給付額者，債務人得按給付時、給付地之市價，以中華民國通用貨幣給付之。但訂明應以外國通用貨幣為給付者，不在此限。</span></div>
+<div class="lawart"><b>第 203 條</b><span class="pa">應付利息之債務，其利率未經約定，亦無法律可據者，週年利率為百分之五。</span></div>
+<div class="lawart"><b>第 205 條</b><span class="pa">約定利率，超過週年百分之十六者，超過部分之約定，無效。</span></div>
+<div class="lawart"><b>第 208 條</b><span class="pa">於數宗給付中得選定其一者，其選擇權屬於債務人。但法律另有規定或契約另有訂定者，不在此限。</span></div>
+<div class="lawart"><b>第 213 條</b><span class="pa">1. 負損害賠償責任者，除法律另有規定或契約另有訂定外，應回復他方損害發生前之原狀。</span><span class="pa">2. 因回復原狀而應給付金錢者，自損害發生時起，加給利息。</span><span class="pa">3. 第一項情形，債權人得請求支付回復原狀所必要之費用，以代回復原狀。</span></div>
+<div class="lawart"><b>第 216 條</b><span class="pa">1. 損害賠償，除法律另有規定或契約另有訂定外，應以填補債權人所受損害及所失利益為限。</span><span class="pa">2. 依通常情形，或依已定之計劃、設備或其他特別情事，可得預期之利益，視為所失利益。</span></div>
+<div class="lawart"><b>第 217 條</b><span class="pa">1. 損害之發生或擴大，被害人與有過失者，法院得減輕賠償金額，或免除之。</span><span class="pa">2. 重大之損害原因，為債務人所不及知，而被害人不預促其注意或怠於避免或減少損害者，為與有過失。</span><span class="pa">3. 前二項之規定，於被害人之代理人或使用人與有過失者，準用之。</span></div>
+<div class="lawart"><b>第 222 條</b><span class="pa">故意或重大過失之責任，不得預先免除。</span></div>
+<div class="lawart"><b>第 225 條</b><span class="pa">1. 因不可歸責於債務人之事由，致給付不能者，債務人免給付義務。</span><span class="pa">2. 債務人因前項給付不能之事由，對第三人有損害賠償請求權者，債權人得向債務人請求讓與其損害賠償請求權，或交付其所受領之賠償物。</span></div>
+<div class="lawart"><b>第 227 條</b><span class="pa">1. 因可歸責於債務人之事由，致為不完全給付者，債權人得依關於給付遲延或給付不能之規定行使其權利。</span><span class="pa">2. 因不完全給付而生前項以外之損害者，債權人並得請求賠償。</span></div>
+<div class="lawart"><b>第 229 條</b><span class="pa">1. 給付有確定期限者，債務人自期限屆滿時起，負遲延責任。</span><span class="pa">2. 給付無確定期限者，債務人於債權人得請求給付時，經其催告而未為給付，自受催告時起，負遲延責任。其經債權人起訴而送達訴狀，或依督促程序送達支付命令，或為其他相類之行為者，與催告有同一之效力。</span><span class="pa">3. 前項催告定有期限者，債務人自期限屆滿時起負遲延責任。</span></div>
+<div class="lawart"><b>第 230 條</b><span class="pa">因不可歸責於債務人之事由，致未為給付者，債務人不負遲延責任。</span></div>
+<div class="lawart"><b>第 233 條</b><span class="pa">1. 遲延之債務，以支付金錢為標的者，債權人得請求依法定利率計算之遲延利息。但約定利率較高者，仍從其約定利率。</span><span class="pa">2. 對於利息，無須支付遲延利息。</span><span class="pa">3. 前二項情形，債權人證明有其他損害者，並得請求賠償。</span></div>
+<div class="lawart"><b>第 241 條</b><span class="pa">1. 有交付不動產義務之債務人，於債權人遲延後，得拋棄其占有。</span><span class="pa">2. 前項拋棄，應預先通知債權人。但不能通知者，不在此限。</span></div>
+<div class="lawart"><b>第 242 條</b><span class="pa">債務人怠於行使其權利時，債權人因保全債權，得以自己之名義，行使其權利。但專屬於債務人本身者，不在此限。</span></div>
+<div class="lawart"><b>第 246 條</b><span class="pa">1. 以不能之給付為契約標的者，其契約為無效。但其不能情形可以除去，而當事人訂約時並預期於不能之情形除去後為給付者，其契約仍為有效。</span><span class="pa">2. 附停止條件或始期之契約，於條件成就或期限屆至前，不能之情形已除去者，其契約為有效。</span></div>
+<div class="lawart"><b>第 247 條</b><span class="pa">1. 契約因以不能之給付為標的而無效者，當事人於訂約時知其不能或可得而知者，對於非因過失而信契約為有效致受損害之他方當事人，負賠償責任。</span><span class="pa">2. 給付一部不能，而契約就其他部分仍為有效者，或依選擇而定之數宗給付中有一宗給付不能者，準用前項之規定。</span><span class="pa">3. 前二項損害賠償請求權，因二年間不行使而消滅。</span></div>
+<div class="lawart"><b>第 247-1 條</b><span class="pa">1. 依照當事人一方預定用於同類契約之條款而訂定之契約，為左列各款之約定，按其情形顯失公平者，該部分約定無效：</span><span class="pa">2. 一、免除或減輕預定契約條款之當事人之責任者。</span><span class="pa">3. 二、加重他方當事人之責任者。</span><span class="pa">4. 三、使他方當事人拋棄權利或限制其行使權利者。</span><span class="pa">5. 四、其他於他方當事人有重大不利益者。</span></div>
+<div class="lawart"><b>第 248 條</b><span class="pa">訂約當事人之一方，由他方受有定金時，推定其契約成立。</span></div>
+<div class="lawart"><b>第 250 條</b><span class="pa">1. 當事人得約定債務人於債務不履行時，應支付違約金。</span><span class="pa">2. 違約金，除當事人另有訂定外，視為因不履行而生損害之賠償總額。其約定如債務人不於適當時期或不依適當方法履行債務時，即須支付違約金者，債權人除得請求履行債務外，違約金視為因不於適當時期或不依適當方法履行債務所生損害之賠償總額。</span></div>
+<div class="lawart"><b>第 252 條</b><span class="pa">約定之違約金額過高者，法院得減至相當之數額。</span></div>
+<div class="lawart"><b>第 254 條</b><span class="pa">契約當事人之一方遲延給付者，他方當事人得定相當期限催告其履行，如於期限內不履行時，得解除其契約。</span></div>
+<div class="lawart"><b>第 258 條</b><span class="pa">1. 解除權之行使，應向他方當事人以意思表示為之。</span><span class="pa">2. 契約當事人之一方有數人者，前項意思表示，應由其全體或向其全體為之。</span><span class="pa">3. 解除契約之意思表示，不得撤銷。</span></div>
+<div class="lawart"><b>第 260 條</b><span class="pa">解除權之行使，不妨礙損害賠償之請求。</span></div>
+<div class="lawart"><b>第 263 條</b><span class="pa">第二百五十八條及第二百六十條之規定，於當事人依法律之規定終止契約者準用之。</span></div>
+<div class="lawart"><b>第 264 條</b><span class="pa">1. 因契約互負債務者，於他方當事人未為對待給付前，得拒絕自己之給付。但自己有先為給付之義務者，不在此限。</span><span class="pa">2. 他方當事人已為部分之給付時，依其情形，如拒絕自己之給付有違背誠實及信用方法者，不得拒絕自己之給付。</span></div>
+<div class="lawart"><b>第 266 條</b><span class="pa">1. 因不可歸責於雙方當事人之事由，致一方之給付全部不能者，他方免為對待給付之義務；如僅一部不能者，應按其比例減少對待給付。</span><span class="pa">2. 前項情形，已為全部或一部之對待給付者，得依關於不當得利之規定，請求返還。</span></div>
+<div class="lawart"><b>第 276 條</b><span class="pa">1. 債權人向連帶債務人中之一人免除債務，而無消滅全部債務之意思表示者，除該債務人應分擔之部分外，他債務人仍不免其責任。</span><span class="pa">2. 前項規定，於連帶債務人中之一人消滅時效已完成者準用之。</span></div>
+<div class="lawart"><b>第 277 條</b><span class="pa">連帶債務人中之一人，對於債權人有債權者，他債務人以該債務人應分擔之部分為限，得主張抵銷。</span></div>
+<div class="lawart"><b>第 297 條</b><span class="pa">1. 債權之讓與，非經讓與人或受讓人通知債務人，對於債務人不生效力。但法律另有規定者，不在此限。</span><span class="pa">2. 受讓人將讓與人所立之讓與字據提示於債務人者，與通知有同一之效力。</span></div>
+<div class="lawart"><b>第 301 條</b><span class="pa">第三人與債務人訂立契約承擔其債務者，非經債權人承認，對於債權人不生效力。</span></div>
+<div class="lawart"><b>第 303 條</b><span class="pa">1. 債務人因其法律關係所得對抗債權人之事由，承擔人亦得以之對抗債權人。但不得以屬於債務人之債權為抵銷。</span><span class="pa">2. 承擔人因其承擔債務之法律關係所得對抗債務人之事由，不得以之對抗債權人。</span></div>
+<div class="lawart"><b>第 307 條</b><span class="pa">債之關係消滅者，其債權之擔保及其他從屬之權利亦同時消滅。</span></div>
+<div class="lawart"><b>第 311 條</b><span class="pa">1. 債之清償，得由第三人為之。但當事人另有訂定或依債之性質不得由第三人清償者，不在此限。</span><span class="pa">2. 第三人之清償，債務人有異議時，債權人得拒絕其清償。但第三人就債之履行有利害關係者，債權人不得拒絕。</span></div>
+<div class="lawart"><b>第 316 條</b><span class="pa">定有清償期者，債權人不得於期前請求清償，如無反對之意思表示時，債務人得於期前為清償。</span></div>
+<div class="lawart"><b>第 319 條</b><span class="pa">債權人受領他種給付以代原定之給付者，其債之關係消滅。</span></div>
+<div class="lawart"><b>第 320 條</b><span class="pa">因清償債務而對於債權人負擔新債務者，除當事人另有意思表示外，若新債務不履行時，其舊債務仍不消滅。</span></div>
+<div class="lawart"><b>第 322 條</b><span class="pa">1. 清償人不為前條之指定者，依左列之規定，定其應抵充之債務：</span><span class="pa">2. 一、債務已屆清償期者，儘先抵充。</span><span class="pa">3. 二、債務均已屆清償期或均未屆清償期者，以債務之擔保最少者，儘先抵充；擔保相等者，以債務人因清償而獲益最多者，儘先抵充；獲益相等者，以先到期之債務，儘先抵充。</span><span class="pa">4. 三、獲益及清償期均相等者，各按比例，抵充其一部。</span></div>
+<div class="lawart"><b>第 329 條</b><span class="pa">債權人得隨時受取提存物，如債務人之清償，係對債權人之給付而為之者，在債權人未為對待給付或提出相當擔保前，得阻止其受取提存物。</span></div>
+<div class="lawart"><b>第 331 條</b><span class="pa">給付物不適於提存，或有毀損滅失之虞，或提存需費過鉅者，清償人得聲請清償地之法院拍賣，而提存其價金。</span></div>
+<div class="lawart"><b>第 339 條</b><span class="pa">因故意侵權行為而負擔之債，其債務人不得主張抵銷。</span></div>
+<div class="lawart"><b>第 340 條</b><span class="pa">受債權扣押命令之第三債務人，於扣押後，始對其債權人取得債權者，不得以其所取得之債權與受扣押之債權為抵銷。</span></div>
+<div class="lawart"><b>第 343 條</b><span class="pa">債權人向債務人表示免除其債務之意思者，債之關係消滅。</span></div>
+<div class="lawart"><b>第 344 條</b><span class="pa">債權與其債務同歸一人時，債之關係消滅。但其債權為他人權利之標的或法律另有規定者，不在此限。</span></div>
+  </section>
+  <section id="quiz" class="pane">
+    <h2 class="sec">歷年考古題（已核對現行民法，共 30 題）</h2>
+    <p style="color:var(--muted)">點選即時對答，解析附條號與出處；題首【§】為所屬條號。</p>
+    <div class="quizbar">
+      <span class="score" id="qscore">答對 0 / 作答 0 （共 30 題）</span>
+      <span class="prog"><i id="qbar"></i></span>
+      <button id="qshowAll">顯示全部解析</button>
+      <button id="qreset">重做</button>
+    </div>
+    <div id="qbox"></div>
+  </section>
+  <footer>EFETL · 民法國考複習 ｜ 條文依現行民法，正式以法規原文為準。</footer>
+</div>
+<script>
+const QD=[{"q": "【§153】下列關於契約成立之敘述，何者正確？", "o": ["除非特別約定，否則契約不可因交錯要約而成立", "依習慣承諾無須通知者，在相當時期內有可認為承諾之事實時，其契約成立", "報社送報至完全行為能力人某甲住宅而為要約，甲取而閱之，契約即成立", "要約人預先聲明承諾無須通知者，因相對人無受拘束義務，故縱有可認為承諾之事實，契約仍不成立"], "a": 1, "e": "§153、§161：契約因要約承諾一致而成立，亦得因意思實現（§161Ⅰ）成立。送報至住宅僅要約引誘。（110年身障特考三等財稅行政 民法）"}, {"q": "【§154】下列何者為要約？", "o": ["價目表之寄送", "房屋出租招貼", "報紙刊登徵才廣告", "貨物標定賣價陳列"], "a": 3, "e": "§154Ⅱ：貨物標定賣價陳列者視為要約；價目表之寄送不視為要約。A、B、C為要約引誘。（96年初等 法學大意）"}, {"q": "【§164】依民法之規定，下列有關懸賞廣告之敘述，何者正確？", "o": ["數人先後分別完成廣告行為時，由最先通知者取得報酬請求權", "數人同時分別完成行為時，由最先為該行為者取得報酬請求權", "不知有廣告而完成廣告所定行為之人，無從成立懸賞廣告", "廣告人善意給付報酬於最先通知之人時，其給付報酬之義務即消滅"], "a": 3, "e": "§164：先後完成者由最先完成之人取得（A錯）；同時完成共同取得（B錯）；§164Ⅳ不知有廣告而完成行為者準用（C錯）；§164Ⅲ善意給付於最先通知者義務消滅（D對）。（107年地特四等 法學知識）"}, {"q": "【§166】契約當事人約定其契約須用一定方式者，在該方式未完成前，契約之效力為何？", "o": ["推定其契約成立", "推定其契約不成立", "視為其契約成立", "視為其契約不成立"], "a": 1, "e": "§166：約定須用一定方式者，方式未完成前「推定」契約不成立。（94年身障特考五等 法學大意）"}, {"q": "【§179】依民法第179條規定，無法律上之原因而受利益，致他人受損害者，應返還其利益，稱為：", "o": ["無因管理", "有因管理", "不當得利", "無權代理"], "a": 2, "e": "§179：無法律上之原因而受利益致他人受損害，應返還利益，即不當得利。（98年國安特考五等法學大意）"}, {"q": "【§180】依民法第180條規定，下列給付何者仍得請求返還？", "o": ["給付係履行道德上之義務者", "債務人於未到期之債務因清償而為給付者", "因清償債務而為給付，於給付時明知無給付之義務者", "因清償債務而為給付，於給付時不知無給付之義務者"], "a": 3, "e": "§180：履行道德義務、清償未到期債務、明知無債務而給付、不法原因給付不得返還；給付時「不知」無給付義務者仍得依不當得利請求返還。（112年南區國稅局約僱 法學緒論）"}, {"q": "【§181】不當得利受領人於受領時不知無法律上之原因而受利益者，關於應返還利益之範圍，下列敘述何者錯誤？", "o": ["受領人僅負返還現存利益之責任", "受領人須返還受領時之原利益並附加利息償還，如有損害亦應賠償", "受領人之利益原形雖不存在，但所獲財產總額之增加仍存在者，負返還責任", "受領人受領之利益已不存在者，免負返還或償還價額之責任"], "a": 1, "e": "§182：善意受領人僅就現存利益返還，已不存在者免責；B係惡意受領人之返還範圍，套用於善意受領人即屬錯誤。（110年一般警察特考四等）"}, {"q": "【§184】下列關於民法第184條所定侵權行為之敘述，何者錯誤？", "o": ["本條規定3個獨立的請求權基礎", "本條係以故意責任原則為基礎", "本條區別「權利」與「利益」而為區別性的權益保護", "本條侵權行為之成立要件，原則上應由被害人負舉證責任"], "a": 1, "e": "§184：以「故意或過失」之過失責任原則為基礎，非僅故意責任，故B錯誤。（104年普考財稅/商業行政 民法概要）"}, {"q": "【§185】下列關於連帶責任之敘述，何者錯誤？", "o": ["甲與乙共同不法侵害丙之權利，甲乙應負連帶損害賠償責任", "承攬人甲因執行承攬事項不法侵害乙之權利，定作人丙原則上應與甲負連帶損害賠償責任", "合夥財產不足清償合夥債務時，合夥人甲乙丙對於不足之額應負連帶責任", "繼承人甲乙丙對於被繼承人丁之債務，以因繼承所得遺產為限應負連帶責任"], "a": 1, "e": "§185共同侵權連帶（A對）；§189定作人原則「不」負損害賠償責任（除定作或指示有過失外），故B錯誤。（103年司法官/律師 綜合法學二）"}, {"q": "【§187】依民法第187條，無行為能力人或限制行為能力人不法侵害他人之權利者，以行為時具有下列何種能力為限，始與其法定代理人連帶負損害賠償責任？", "o": ["行為能力", "履約能力", "權利能力", "識別能力"], "a": 3, "e": "§187Ⅰ：行為時「有識別能力」者，始與法定代理人連帶負賠償責任。（107年台電新進僱用 法律常識）"}, {"q": "【§191-1】民法第191條之1所定之商品製造人責任，性質為何？", "o": ["無過失責任", "過失責任", "推定過失責任", "衡平責任"], "a": 2, "e": "§191-1：商品製造人能證明無過失等情形者不負責任，學說稱推定過失責任（中間責任），採舉證責任倒置。（98年關務升官等 法學知識）"}, {"q": "【§197】因侵權行為所生之損害賠償請求權，因下列何種情形而消滅？", "o": ["自損害發生時起，二年間不行使", "自侵權行為時起，五年間不行使", "自請求權人知有損害及賠償義務人時起，二年間不行使", "自請求權發生時起，十五年間不行使"], "a": 2, "e": "§197Ⅰ：自知有損害及賠償義務人時起2年、自有侵權行為時起逾10年不行使而消滅。（93年初等人事行政 法學大意）"}, {"q": "【§213】我國民法規定損害賠償之方法為：", "o": ["回復原狀為原則", "金錢賠償為原則", "自力救濟為原則", "保證人賠償為原則"], "a": 0, "e": "§213：損害賠償以回復原狀為原則、金錢賠償為例外。（99年司法特考五等錄事 法學大意）"}, {"q": "【§216】民法第216條第1項規定損害賠償應填補所受損害及所失利益。下列敘述何者錯誤？", "o": ["採全部賠償原則", "「契約另有訂定」諸如違約金約定或和解契約均屬之", "人身受侵害不能工作致收入減少亦屬「所受損害」", "「所受損害」又稱積極損害，「所失利益」又稱消極損害"], "a": 3, "e": "§216：所受損害=積極損害、所失利益=消極損害，D顛倒故錯誤。（104年普考財稅/商業行政 民法概要）"}, {"q": "【§217】下列有關民事損害賠償之敘述，何者錯誤？", "o": ["賠償範圍以被害人所受之損害為限，所失利益不包括在內", "賠償範圍包括所受損害及所失利益", "損害之發生或擴大被害人與有過失時，法院得減輕賠償金額", "損害之發生或擴大被害人與有過失時，法院得免除賠償金額"], "a": 0, "e": "§217Ⅰ與有過失得減輕或免除（C、D對）；A漏列所失利益違反§216Ⅰ故錯誤。（97年司法特考三等司法事務官 法學知識）"}, {"q": "【§222】民法第222條規定「故意或重大過失之責任，不得預先免除」。下列敘述何者正確？", "o": ["依反對解釋，非故意或非重大過失之責任，得預先免除", "依當然解釋，輕過失責任當然亦不得預先免除", "依限縮解釋，輕過失責任不得預先免除", "依擴張解釋，無過失亦應負責"], "a": 0, "e": "§222僅禁止故意或重大過失責任預先免除，依反對解釋輕過失責任得預先免除。（97年司法特考三等 法學知識；依法條核對）"}, {"q": "【§225】甲向乙購買A玉珮一塊，約定3天後給付。2天後乙家遭強盜洗劫，玉珮被搶走。下列敘述何者正確？", "o": ["甲與乙皆免除給付義務", "甲與乙仍應互負給付義務", "甲得解除與乙所訂之買賣契約", "甲與乙之買賣為種類之債，無給付不能之問題"], "a": 0, "e": "§225Ⅰ因不可歸責於債務人致給付不能，乙免給付義務；§266Ⅰ對待給付亦消滅，故甲乙皆免給付義務。（106年普考財稅/商業行政 民法概要）"}, {"q": "【§227】下列何者不適用民法第227條的不完全給付？", "o": ["捷運公司未維修電車門致夾傷乘客", "公車離站時司機不顧地上積水駛離，濺起水花淋濕剛下車乘客", "出賣人貪圖高價將標的物轉售他人並移轉所有權", "油漆工人借用定作人廁所弄髒廁所"], "a": 2, "e": "§227：C標的物已轉售並移轉所有權屬給付不能（§226），非不完全給付；A、B、D為加害給付。（95年原民特考四等財稅行政 民法概要）"}, {"q": "【§229】關於給付遲延，下列敘述何者錯誤？", "o": ["給付有確定期限者，債務人自期限屆滿時起負遲延責任", "因不可歸責於債務人之事由致未為給付者，債務人不負遲延責任", "遲延後之給付於債權人無利益者，債權人得拒絕給付並請求賠償因不履行而生之損害", "遲延之債務以支付金錢為標的者，債權人僅得請求遲延利息"], "a": 3, "e": "§229確定期限自屆滿時起負遲延（A對）；§230不可歸責不負遲延（B對）；§233Ⅲ如能證明有其他損害並得請求賠償，故D「僅得請求遲延利息」錯誤。（111年調查特考三等，涵蓋§229/§230/§233）"}, {"q": "【§247-1】關於定型化契約，下列敘述何者正確？", "o": ["簽訂前應有10日以內之合理審閱期間", "違反審閱期間規定者，該條款不構成契約內容，但消費者仍得主張其有效", "定型化契約條款違反誠信原則者，不論情節均屬無效", "定型化契約條款違反平等互惠原則者，均屬無效"], "a": 1, "e": "§247-1／消保法：審閱期間為30日以內（A錯）；違反者該條款不構成契約內容但消費者得主張有效（B對）；違反誠信/平等互惠係推定顯失公平、該部分無效非一律無效。（114年關務特考四等 法學知識）"}, {"q": "【§252】依民法第252條規定，約定違約金過高者法院得減至相當之數額，下列敘述何者正確？", "o": ["僅適用於懲罰性違約金", "僅適用於損害賠償總額預定之違約金", "於債務不履行時，對懲罰性及損害賠償總額預定之違約金均適用", "僅於違約定金適用"], "a": 2, "e": "§252：違約金過高者法院得酌減，實務認對懲罰性及損害賠償額預定性違約金均適用。（99年鐵路特考高員三級 民法）"}, {"q": "【§254】債務人給付遲延，債權人依民法第254條解除契約，此解除權之性質為何？", "o": ["支配權", "請求權", "形成權", "抗辯權"], "a": 2, "e": "§254：催告逾期不履行得解除契約；解除權因一方意思表示即使法律關係消滅，性質為形成權。（111年司法特考五等錄事 法學大意）"}, {"q": "【§263】依民法規定，關於契約終止之敘述，下列何者錯誤？", "o": ["終止權之行使，不妨礙損害賠償之請求", "契約終止後，除法律另有規定或契約另有訂定外，當事人雙方負回復原狀義務", "終止權之行使，應向他方當事人以意思表示為之", "契約當事人之一方有數人者，終止權之行使應由其全體或向其全體為之"], "a": 1, "e": "§263準用§258、§260：終止向將來消滅契約效力，不生回復原狀義務（回復原狀為解除之效果§259），故B錯誤。（105年農田水利會 民法及民訴概要）"}, {"q": "【§264】下列何項敘述，符合民法「同時履行抗辯」之概念？", "o": ["因侵權行為對被害人取得債權者，被害人對該債權之廢止請求權雖時效消滅仍得拒絕履行", "因不可歸責於雙方之事由致一方給付全部不能者，他方免為對待給付之義務", "因契約互負債務者，於他方未為對待給付前，得拒絕自己之給付", "保證人於債權人未就主債務人財產強制執行而無效果前，對債權人得拒絕清償"], "a": 2, "e": "§264同時履行抗辯：他方未為對待給付前得拒絕自己給付。A為§198、B為§266、D為§745先訴抗辯權。（111年關務/身障特考三等 法學知識）"}, {"q": "【§276】下列何者屬連帶債務人中一人所生之事項，對其他連帶債務人具有（限制）絕對效力？", "o": ["給付遲延", "確定判決", "受領遲延", "消滅時效完成"], "a": 3, "e": "§276Ⅱ：連帶債務人中一人消滅時效完成者，他債務人就該人應分擔部分同免責任，屬限制絕對效力；給付遲延、受領遲延屬相對效力。（100年稅務特考三等 民法）"}, {"q": "【§297】依民法有關債權讓與之規定，下列敘述何者錯誤？", "o": ["禁止扣押之債權，不得讓與", "未支付之利息，推定其隨同原本移轉於受讓人", "債權之讓與，非經債務人書面同意，對於債務人不生效力", "讓與債權時，該債權之擔保及其他從屬之權利原則上隨同移轉於受讓人"], "a": 2, "e": "§297：債權讓與非經讓與人或受讓人「通知」債務人，對債務人不生效力；為通知對抗要件，不以債務人書面同意為要件，故C錯誤。（108年金融研訓院授信法規）"}, {"q": "【§301】依民法規定，下列有關債務承擔之敘述，何者正確？", "o": ["第三人與債權人訂約承擔債務者，其債務於債務人承諾時移轉於該第三人", "第三人與債務人訂約承擔其債務者，須經債權人承認始對債權人發生效力", "承擔人因承擔債務之法律關係所得對抗債務人之事由，得以之對抗債權人", "債權人拒絕承認時，僅承擔之第三人得撤銷其承擔契約"], "a": 1, "e": "§301：第三人與債務人訂立承擔契約須經債權人承認始對債權人生效。A為§300、C違§303Ⅱ、D為§302（債務人或承擔人均得撤銷）。（113年高考三級 法學知識）"}, {"q": "【§311】依民法規定，有關第三人清償，下列敘述何者錯誤？", "o": ["有利害關係之第三人，包括保證人、抵押物提供人、連帶債務人等", "有利害關係之第三人代償，債權人不得拒絕", "無利害關係之第三人代償，又稱「法定之債權讓與」", "有利害關係之第三人代償後，得於清償限度內代位行使債權人之債權"], "a": 2, "e": "§311、§312：有利害關係之第三人清償債權人不得拒絕，並依§312代位（即法定之債權讓與）；C將「無利害關係」誤稱故錯誤。（109年金融研訓院授信實務）"}, {"q": "【§320】甲積欠乙貨款，遂以自己開立之銀行支票對乙為清償，此種情形通稱為：", "o": ["代物清償", "代位求償", "新債清償", "代替給付"], "a": 2, "e": "§320：因清償舊債務而對債權人負擔新債務（簽發支票）者，新債務不履行時舊債務仍不消滅，學說稱新債清償（間接給付）。（100年初等人事行政 法學大意）"}, {"q": "【§339】依民法規定，下列有關抵銷之敘述，何者錯誤？", "o": ["禁止扣押之債，其債務人不得主張抵銷", "因故意侵權行為而負擔之債，其債權人不得主張抵銷", "清償地不同之債務，亦得為抵銷", "約定應向第三人為給付之債務人，不得以其債務與他方當事人對於自己之債務為抵銷"], "a": 1, "e": "§339：因故意侵權行為而負擔之債，其「債務人」不得主張抵銷（保護被害人），題目寫「債權人不得」故錯誤。A為§338、C為§336、D為§340。（103年地特四等 法學知識）"}];
+
+function renderQuiz(data, ns){
+  const box=document.getElementById(ns+'box');
+  if(!data.length){box.innerHTML='<p style=\'color:var(--muted)\'>本編暫無收錄考題。</p>';return;}
+  data.forEach((it,i)=>{
+    const q=document.createElement('div');q.className='q';
+    const opts=it.o.map((t,j)=>`<button class="opt" data-i="${i}" data-j="${j}"><span class="lab">(${'ABCDE'[j]})</span>${t}</button>`).join('');
+    q.innerHTML=`<div class="stem"><span class="no">${i+1}</span>${it.q}</div><div class="opts">${opts}</div>`+
+      `<div class="exp" id="${ns}exp${i}"><b>✅ 答案：(${'ABCDE'[it.a]})</b><br>${it.e}</div>`;
+    box.appendChild(q);
+  });
+  const answered=new Array(data.length).fill(false);let correct=0;
+  box.addEventListener('click',e=>{const b=e.target.closest('.opt');if(!b)return;
+    const i=+b.dataset.i,j=+b.dataset.j;if(answered[i])return;answered[i]=true;
+    const c=box.children[i],bs=c.querySelectorAll('.opt');
+    bs.forEach((bt,k)=>{bt.classList.add('lock');if(k===data[i].a)bt.classList.add('correct');});
+    if(j!==data[i].a)bs[j].classList.add('wrong');else correct++;
+    document.getElementById(ns+'exp'+i).classList.add('show');upd();});
+  function upd(){const d=answered.filter(Boolean).length;
+    document.getElementById(ns+'score').textContent=`答對 ${correct} / 作答 ${d} （共 ${data.length} 題）`;
+    document.getElementById(ns+'bar').style.width=(d/data.length*100)+'%';}
+  document.getElementById(ns+'showAll').onclick=()=>{box.querySelectorAll('.exp').forEach(x=>x.classList.add('show'));
+    box.querySelectorAll('.q').forEach((c,i)=>c.querySelectorAll('.opt').forEach((bt,k)=>{bt.classList.add('lock');if(k===data[i].a)bt.classList.add('correct');}));};
+  document.getElementById(ns+'reset').onclick=()=>location.reload();upd();
+}
+
+
+document.querySelectorAll('nav.tabs button').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.remove('on'));
+    document.querySelectorAll('section.pane').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    document.getElementById(b.dataset.t).classList.add('on');
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+});
+
+renderQuiz(QD,'q');
+</script>
+</body></html>

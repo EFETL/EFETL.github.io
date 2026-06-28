@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>民法物權篇｜民法國考互動複習</title>
+<style>
+:root{
+  --green:#00824a; --green-d:#005c33; --green-l:#e7f4ec;
+  --gold:#c8902a; --ink:#222; --muted:#5f6b63; --line:#d9e4dc;
+  --bg:#f6faf7; --card:#fff; --red:#c0392b; --red-l:#fdecea;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  font-size:17px; line-height:1.85; -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:920px;margin:0 auto;padding:0 18px 80px}
+header.top{
+  background:linear-gradient(135deg,var(--green),var(--green-d));
+  color:#fff;padding:30px 18px;text-align:center;
+}
+header.top .wrap{padding-bottom:0}
+header.top h1{margin:0 0 6px;font-size:1.7em;letter-spacing:1px}
+header.top p{margin:4px 0;opacity:.92;font-size:.95em}
+.backlink{display:inline-block;margin-top:12px;color:#fff;
+  border:1px solid rgba(255,255,255,.6);border-radius:20px;
+  padding:5px 16px;text-decoration:none;font-size:.9em}
+.backlink:hover{background:rgba(255,255,255,.15)}
+nav.tabs{position:sticky;top:0;z-index:20;background:var(--card);
+  border-bottom:1px solid var(--line);display:flex;gap:6px;
+  padding:8px 18px;box-shadow:0 2px 6px rgba(0,0,0,.05)}
+nav.tabs button{flex:1;border:0;background:transparent;font-size:1em;
+  font-family:inherit;padding:10px;border-radius:8px;cursor:pointer;
+  color:var(--muted);font-weight:700}
+nav.tabs button.on{background:var(--green-l);color:var(--green-d)}
+section.pane{display:none;padding-top:22px}
+section.pane.on{display:block}
+h2.sec{font-size:1.35em;color:var(--green-d);border-left:6px solid var(--green);
+  padding-left:12px;margin:30px 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:18px 20px;margin:14px 0;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.card h3{margin:0 0 10px;font-size:1.12em;color:var(--green-d)}
+.card h3 .art{font-size:.72em;color:var(--gold);font-weight:700;margin-left:8px}
+.card ul{margin:8px 0;padding-left:1.3em}
+.card li{margin:6px 0}
+.tag{display:inline-block;background:var(--green-l);color:var(--green-d);
+  border-radius:6px;padding:1px 8px;font-size:.8em;font-weight:700;margin-right:6px}
+.hl{background:#fff5d6;padding:0 3px;border-radius:3px;font-weight:700}
+.warn{color:var(--red);font-weight:700}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.96em;
+  background:#fff;border-radius:10px;overflow:hidden}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+th{background:var(--green);color:#fff;font-weight:700}
+tbody tr:nth-child(even){background:var(--green-l)}
+.mnem{background:var(--green-l);border:1px dashed var(--green);border-radius:10px;
+  padding:12px 16px;margin:12px 0;font-size:.98em}
+.mnem b{color:var(--green-d)}
+
+/* quiz */
+.quizbar{position:sticky;top:54px;z-index:15;background:#fff;border:1px solid var(--line);
+  border-radius:12px;padding:10px 16px;margin:6px 0 16px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.quizbar .score{font-weight:800;color:var(--green-d);font-size:1.05em}
+.quizbar .prog{flex:1;min-width:120px;height:10px;background:var(--green-l);
+  border-radius:8px;overflow:hidden}
+.quizbar .prog>i{display:block;height:100%;width:0;background:var(--green);transition:.3s}
+.quizbar button{border:1px solid var(--green);background:#fff;color:var(--green-d);
+  font-family:inherit;font-size:.9em;padding:6px 12px;border-radius:8px;cursor:pointer;font-weight:700}
+.quizbar button:hover{background:var(--green-l)}
+.q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:16px 18px;margin:14px 0;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.q .stem{font-weight:700;margin-bottom:12px}
+.q .stem .no{display:inline-block;background:var(--green);color:#fff;border-radius:50%;
+  width:1.7em;height:1.7em;line-height:1.7em;text-align:center;margin-right:8px;font-size:.92em}
+.opt{display:block;width:100%;text-align:left;border:1.5px solid var(--line);
+  background:#fbfdfb;border-radius:10px;padding:11px 14px;margin:7px 0;cursor:pointer;
+  font-family:inherit;font-size:1em;line-height:1.6;transition:.15s}
+.opt:hover{border-color:var(--green)}
+.opt .lab{font-weight:800;color:var(--green-d);margin-right:6px}
+.opt.correct{background:var(--green-l);border-color:var(--green);color:var(--green-d)}
+.opt.wrong{background:var(--red-l);border-color:var(--red);color:var(--red)}
+.opt.lock{cursor:default}
+.exp{margin-top:10px;padding:11px 14px;border-radius:10px;background:#f3f8f4;
+  border-left:4px solid var(--green);font-size:.97em;display:none}
+.exp.show{display:block}
+.exp b{color:var(--green-d)}
+footer{text-align:center;color:var(--muted);font-size:.85em;margin-top:40px}
+@media(max-width:520px){body{font-size:16.5px}.wrap{padding:0 12px 60px}}
+@media print{nav.tabs,.quizbar,.backlink{display:none}section.pane{display:block!important}
+  .exp{display:block!important}.q,.card{break-inside:avoid}}
+
+.lawart{border-left:3px solid var(--green);background:#fff;border-radius:0 8px 8px 0;
+  padding:9px 13px;margin:9px 0;border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.lawart b{color:var(--green-d)}
+.lawart .pa{display:block;margin:3px 0;color:var(--ink)}
+.lawcard{display:flex;gap:16px;align-items:center;background:#fff;border:1px solid var(--line);
+  border-radius:14px;padding:18px 20px;margin:12px 0;text-decoration:none;color:inherit;
+  box-shadow:0 1px 4px rgba(0,0,0,.04);transition:.15s}
+.lawcard:hover{border-color:var(--green);transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,130,74,.12)}
+.lawcard .ic{font-size:2.3em}
+.lawcard h3{margin:0;color:var(--green-d);font-size:1.18em}
+.lawcard p{margin:3px 0;color:var(--muted);font-size:.9em}
+.lawcard .go{color:var(--gold);font-weight:700;font-size:.9em}
+.hero{padding:30px 0 6px}
+</style>
+</head><body>
+<header class="top"><div class="wrap">
+  <h1>🏠 民法物權篇</h1>
+  <p>物權篇（76 條）</p>
+  <p>條文重點 + 35 題歷年考古題</p>
+  <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+    <a class="backlink" href="/">&#8592; 回首頁</a><a class="backlink" href="civil-law.html">← 回民法總覽</a>
+  </div>
+</div></header>
+<nav class="tabs">
+  <button class="on" data-t="notes">📖 條文重點</button>
+  <button data-t="quiz">📝 互動練習（35）</button>
+</nav>
+<div class="wrap">
+  <section id="notes" class="pane on">
+    <h2 class="sec">民法物權篇・高頻條文</h2>
+    <div class="mnem">章節範圍：第一章「通則」757–764 條；第二章「所有權」765–831 條；第六章「抵押權」860–883 條；第十章「占有」940–966 條。</div>
+    <div class="lawart"><b>第 757 條</b><span class="pa">物權除依法律或習慣外，不得創設。</span></div>
+<div class="lawart"><b>第 758 條</b><span class="pa">1. 不動產物權，依法律行為而取得、設定、喪失及變更者，非經登記，不生效力。</span><span class="pa">2. 前項行為，應以書面為之。</span></div>
+<div class="lawart"><b>第 759 條</b><span class="pa">因繼承、強制執行、徵收、法院之判決或其他非因法律行為，於登記前已取得不動產物權者，應經登記，始得處分其物權。</span></div>
+<div class="lawart"><b>第 761 條</b><span class="pa">1. 動產物權之讓與，非將動產交付，不生效力。但受讓人已占有動產者，於讓與合意時，即生效力。</span><span class="pa">2. 讓與動產物權，而讓與人仍繼續占有動產者，讓與人與受讓人間，得訂立契約，使受讓人因此取得間接占有，以代交付。</span><span class="pa">3. 讓與動產物權，如其動產由第三人占有時，讓與人得以對於第三人之返還請求權，讓與於受讓人，以代交付。</span></div>
+<div class="lawart"><b>第 763 條</b><span class="pa">1. 所有權以外之物權，及以該物權為標的物之權利，歸屬於一人者，其權利因混同而消滅。</span><span class="pa">2. 前條但書之規定，於前項情形準用之。</span></div>
+<div class="lawart"><b>第 764 條</b><span class="pa">1. 物權除法律另有規定外，因拋棄而消滅。</span><span class="pa">2. 前項拋棄，第三人有以該物權為標的物之其他物權或於該物權有其他法律上之利益者，非經該第三人同意，不得為之。</span><span class="pa">3. 拋棄動產物權者，並應拋棄動產之占有。</span></div>
+<div class="lawart"><b>第 767 條</b><span class="pa">1. 所有人對於無權占有或侵奪其所有物者，得請求返還之。對於妨害其所有權者，得請求除去之。有妨害其所有權之虞者，得請求防止之。</span><span class="pa">2. 前項規定，於所有權以外之物權，準用之。</span></div>
+<div class="lawart"><b>第 768 條</b><span class="pa">以所有之意思，十年間和平、公然、繼續占有他人之動產者，取得其所有權。</span></div>
+<div class="lawart"><b>第 769 條</b><span class="pa">以所有之意思，二十年間和平、公然、繼續占有他人未登記之不動產者，得請求登記為所有人。</span></div>
+<div class="lawart"><b>第 770 條</b><span class="pa">以所有之意思，十年間和平、公然、繼續占有他人未登記之不動產，而其占有之始為善意並無過失者，得請求登記為所有人。</span></div>
+<div class="lawart"><b>第 772 條</b><span class="pa">前五條之規定，於所有權以外財產權之取得，準用之。於已登記之不動產，亦同。</span></div>
+<div class="lawart"><b>第 793 條</b><span class="pa">土地所有人於他人之土地、建築物或其他工作物有瓦斯、蒸氣、臭氣、煙氣、熱氣、灰屑、喧囂、振動及其他與此相類者侵入時，得禁止之。但其侵入輕微，或按土地形狀、地方習慣，認為相當者，不在此限。</span></div>
+<div class="lawart"><b>第 796 條</b><span class="pa">1. 土地所有人建築房屋非因故意或重大過失逾越地界者，鄰地所有人如知其越界而不即提出異議，不得請求移去或變更其房屋。但土地所有人對於鄰地因此所受之損害，應支付償金。</span><span class="pa">2. 前項情形，鄰地所有人得請求土地所有人，以相當之價額購買越界部分之土地及因此形成之畸零地，其價額由當事人協議定之；不能協議者，得請求法院以判決定之。</span></div>
+<div class="lawart"><b>第 798 條</b><span class="pa">果實自落於鄰地者，視為屬於鄰地所有人。但鄰地為公用地者，不在此限。</span></div>
+<div class="lawart"><b>第 799-1 條</b><span class="pa">1. 區分所有建築物共有部分之修繕費及其他負擔，由各所有人按其應有部分分擔之。但規約另有約定者，不在此限。</span><span class="pa">2. 前項規定，於專有部分經依前條第三項之約定供區分所有建築物之所有人共同使用者，準用之。</span><span class="pa">3. 規約之內容依區分所有建築物之專有部分、共有部分及其基地之位置、面積、使用目的、利用狀況、區分所有人已否支付對價及其他情事，按其情形顯失公平者，不同意之區分所有人得於規約成立後三個月內，請求法院撤銷之。</span><span class="pa">4. 區分所有人間依規約所生之權利義務，繼受人應受拘束；其依其他約定所生之權利義務，特定繼受人對於約定之內容明知或可得而知者，亦同。</span></div>
+<div class="lawart"><b>第 801 條</b><span class="pa">動產之受讓人占有動產，而受關於占有規定之保護者，縱讓與人無移轉所有權之權利，受讓人仍取得其所有權。</span></div>
+<div class="lawart"><b>第 805 條</b><span class="pa">1. 遺失物自通知或最後招領之日起六個月內，有受領權之人認領時，拾得人、招領人、警察或自治機關，於通知、招領及保管之費用受償後，應將其物返還之。</span><span class="pa">2. 有受領權之人認領遺失物時，拾得人得請求報酬。但不得超過其物財產上價值十分之一；其不具有財產上價值者，拾得人亦得請求相當之報酬。</span><span class="pa">3. 有受領權人依前項規定給付報酬顯失公平者，得請求法院減少或免除其報酬。</span><span class="pa">4. 第二項報酬請求權，因六個月間不行使而消滅。</span><span class="pa">5. 第一項費用之支出者或得請求報酬之拾得人，在其費用或報酬未受清償前，就該遺失物有留置權；其權利人有數人時，遺失物占有人視為為全體權利人占有。</span></div>
+<div class="lawart"><b>第 805-1 條</b><span class="pa">1. 有下列情形之一者，不得請求前條第二項之報酬：</span><span class="pa">2. 一、在公眾得出入之場所或供公眾往來之交通設備內，由其管理人或受僱人拾得遺失物。</span><span class="pa">3. 二、拾得人未於七日內通知、報告或交存拾得物，或經查詢仍隱匿其拾得遺失物之事實。</span><span class="pa">4. 三、有受領權之人為特殊境遇家庭、低收入戶、中低收入戶、依法接受急難救助、災害救助，或有其他急迫情事者。</span></div>
+<div class="lawart"><b>第 811 條</b><span class="pa">動產因附合而為不動產之重要成分者，不動產所有人，取得動產所有權。</span></div>
+<div class="lawart"><b>第 813 條</b><span class="pa">動產與他人之動產混合，不能識別，或識別需費過鉅者，準用前條之規定。</span></div>
+<div class="lawart"><b>第 814 條</b><span class="pa">加工於他人之動產者，其加工物之所有權，屬於材料所有人。但因加工所增之價值顯逾材料之價值者，其加工物之所有權屬於加工人。</span></div>
+<div class="lawart"><b>第 815 條</b><span class="pa">依前四條之規定，動產之所有權消滅者，該動產上之其他權利，亦同消滅。</span></div>
+<div class="lawart"><b>第 816 條</b><span class="pa">因前五條之規定而受損害者，得依關於不當得利之規定，請求償還價額。</span></div>
+<div class="lawart"><b>第 817 條</b><span class="pa">1. 數人按其應有部分，對於一物有所有權者，為共有人。</span><span class="pa">2. 各共有人之應有部分不明者，推定其為均等。</span></div>
+<div class="lawart"><b>第 819 條</b><span class="pa">1. 各共有人，得自由處分其應有部分。</span><span class="pa">2. 共有物之處分、變更、及設定負擔，應得共有人全體之同意。</span></div>
+<div class="lawart"><b>第 823 條</b><span class="pa">1. 各共有人，除法令另有規定外，得隨時請求分割共有物。但因物之使用目的不能分割或契約訂有不分割之期限者，不在此限。</span><span class="pa">2. 前項約定不分割之期限，不得逾五年；逾五年者，縮短為五年。但共有之不動產，其契約訂有管理之約定時，約定不分割之期限，不得逾三十年；逾三十年者，縮短為三十年。</span><span class="pa">3. 前項情形，如有重大事由，共有人仍得隨時請求分割。</span></div>
+<div class="lawart"><b>第 824 條</b><span class="pa">1. 共有物之分割，依共有人協議之方法行之。</span><span class="pa">2. 分割之方法不能協議決定，或於協議決定後因消滅時效完成經共有人拒絕履行者，法院得因任何共有人之請求，命為下列之分配：</span><span class="pa">3. 一、以原物分配於各共有人。但各共有人均受原物之分配顯有困難者，得將原物分配於部分共有人。</span><span class="pa">4. 二、原物分配顯有困難時，得變賣共有物，以價金分配於各共有人；或以原物之一部分分配於各共有人，他部分變賣，以價金分配於各共有人。</span><span class="pa">5. 以原物為分配時，如共有人中有未受分配，或不能按其應有部分受分配者，得以金錢補償之。</span><span class="pa">6. 以原物為分配時，因共有人之利益或其他必要情形，得就共有物之一部分仍維持共有。</span><span class="pa">7. 共有人相同之數不動產，除法令另有規定外，共有人得請求合併分割。</span><span class="pa">8. 共有人部分相同之相鄰數不動產，各該不動產均具應有部分之共有人，經各不動產應有部分過半數共有人之同意，得適用前項規定，請求合併分割。但法院認合併分割為不適當者，仍分別分割之。</span><span class="pa">9. 變賣共有物時，除買受人為共有人外，共有人有依相同條件優先承買之權，有二人以上願優先承買者，以抽籤定之。</span></div>
+<div class="lawart"><b>第 824-1 條</b><span class="pa">1. 共有人自共有物分割之效力發生時起，取得分得部分之所有權。</span><span class="pa">2. 應有部分有抵押權或質權者，其權利不因共有物之分割而受影響。但有下列情形之一者，其權利移存於抵押人或出質人所分得之部分：</span><span class="pa">3. 一、權利人同意分割。</span><span class="pa">4. 二、權利人已參加共有物分割訴訟。</span><span class="pa">5. 三、權利人經共有人告知訴訟而未參加。</span><span class="pa">6. 前項但書情形，於以價金分配或以金錢補償者，準用第八百八十一條第一項、第二項或第八百九十九條第一項規定。</span><span class="pa">7. 前條第三項之情形，如為不動產分割者，應受補償之共有人，就其補償金額，對於補償義務人所分得之不動產，有抵押權。</span><span class="pa">8. 前項抵押權應於辦理共有物分割登記時，一併登記，其次序優先於第二項但書之抵押權。</span></div>
+<div class="lawart"><b>第 826-1 條</b><span class="pa">1. 不動產共有人間關於共有物使用、管理、分割或禁止分割之約定或依第八百二十條第一項規定所為之決定，於登記後，對於應有部分之受讓人或取得物權之人，具有效力。其由法院裁定所定之管理，經登記後，亦同。</span><span class="pa">2. 動產共有人間就共有物為前項之約定、決定或法院所為之裁定，對於應有部分之受讓人或取得物權之人，以受讓或取得時知悉其情事或可得而知者為限，亦具有效力。</span><span class="pa">3. 共有物應有部分讓與時，受讓人對讓與人就共有物因使用、管理或其他情形所生之負擔連帶負清償責任。</span></div>
+<div class="lawart"><b>第 827 條</b><span class="pa">1. 依法律規定、習慣或法律行為，成一公同關係之數人，基於其公同關係，而共有一物者，為公同共有人。</span><span class="pa">2. 前項依法律行為成立之公同關係，以有法律規定或習慣者為限。</span><span class="pa">3. 各公同共有人之權利，及於公同共有物之全部。</span></div>
+<div class="lawart"><b>第 828 條</b><span class="pa">1. 公同共有人之權利義務，依其公同關係所由成立之法律、法律行為或習慣定之。</span><span class="pa">2. 第八百二十條、第八百二十一條及第八百二十六條之一規定，於公同共有準用之。</span><span class="pa">3. 公同共有物之處分及其他之權利行使，除法律另有規定外，應得公同共有人全體之同意。</span></div>
+<div class="lawart"><b>第 829 條</b><span class="pa">公同關係存續中，各公同共有人，不得請求分割其公同共有物。</span></div>
+<div class="lawart"><b>第 834 條</b><span class="pa">地上權無支付地租之約定者，地上權人得隨時拋棄其權利。</span></div>
+<div class="lawart"><b>第 851 條</b><span class="pa">稱不動產役權者，謂以他人不動產供自己不動產通行、汲水、採光、眺望、電信或其他以特定便宜之用為目的之權。</span></div>
+<div class="lawart"><b>第 860 條</b><span class="pa">稱普通抵押權者，謂債權人對於債務人或第三人不移轉占有而供其債權擔保之不動產，得就該不動產賣得價金優先受償之權。</span></div>
+<div class="lawart"><b>第 861 條</b><span class="pa">1. 抵押權所擔保者為原債權、利息、遲延利息、違約金及實行抵押權之費用。但契約另有約定者，不在此限。</span><span class="pa">2. 得優先受償之利息、遲延利息、一年或不及一年定期給付之違約金債權，以於抵押權人實行抵押權聲請強制執行前五年內發生及於強制執行程序中發生者為限。</span></div>
+<div class="lawart"><b>第 862 條</b><span class="pa">1. 抵押權之效力，及於抵押物之從物與從權利。</span><span class="pa">2. 第三人於抵押權設定前，就從物取得之權利，不受前項規定之影響。</span><span class="pa">3. 以建築物為抵押者，其附加於該建築物而不具獨立性之部分，亦為抵押權效力所及。但其附加部分為獨立之物，如係於抵押權設定後附加者，準用第八百七十七條之規定。</span></div>
+<div class="lawart"><b>第 866 條</b><span class="pa">1. 不動產所有人設定抵押權後，於同一不動產上，得設定地上權或其他以使用收益為目的之物權，或成立租賃關係。但其抵押權不因此而受影響。</span><span class="pa">2. 前項情形，抵押權人實行抵押權受有影響者，法院得除去該權利或終止該租賃關係後拍賣之。</span><span class="pa">3. 不動產所有人設定抵押權後，於同一不動產上，成立第一項以外之權利者，準用前項之規定。</span></div>
+<div class="lawart"><b>第 868 條</b><span class="pa">抵押之不動產如經分割，或讓與其一部，或擔保一債權之數不動產而以其一讓與他人者，其抵押權不因此而受影響。</span></div>
+<div class="lawart"><b>第 870 條</b><span class="pa">抵押權不得由債權分離而為讓與，或為其他債權之擔保。</span></div>
+<div class="lawart"><b>第 870-1 條</b><span class="pa">1. 同一抵押物有多數抵押權者，抵押權人得以下列方法調整其可優先受償之分配額。但他抵押權人之利益不受影響：</span><span class="pa">2. 一、為特定抵押權人之利益，讓與其抵押權之次序。</span><span class="pa">3. 二、為特定後次序抵押權人之利益，拋棄其抵押權之次序。</span><span class="pa">4. 三、為全體後次序抵押權人之利益，拋棄其抵押權之次序。</span><span class="pa">5. 前項抵押權次序之讓與或拋棄，非經登記，不生效力。並應於登記前，通知債務人、抵押人及共同抵押人。</span><span class="pa">6. 因第一項調整而受利益之抵押權人，亦得實行調整前次序在先之抵押權。</span><span class="pa">7. 調整優先受償分配額時，其次序在先之抵押權所擔保之債權，如有第三人之不動產為同一債權之擔保者，在因調整後增加負擔之限度內，以該不動產為標的物之抵押權消滅。但經該第三人同意者，不在此限。</span></div>
+<div class="lawart"><b>第 871 條</b><span class="pa">1. 抵押人之行為，足使抵押物之價值減少者，抵押權人得請求停止其行為。如有急迫之情事，抵押權人得自為必要之保全處分。</span><span class="pa">2. 因前項請求或處分所生之費用，由抵押人負擔。其受償次序優先於各抵押權所擔保之債權。</span></div>
+<div class="lawart"><b>第 873-1 條</b><span class="pa">1. 約定於債權已屆清償期而未為清償時，抵押物之所有權移屬於抵押權人者，非經登記，不得對抗第三人。</span><span class="pa">2. 抵押權人請求抵押人為抵押物所有權之移轉時，抵押物價值超過擔保債權部分，應返還抵押人；不足清償擔保債權者，仍得請求債務人清償。</span><span class="pa">3. 抵押人在抵押物所有權移轉於抵押權人前，得清償抵押權擔保之債權，以消滅該抵押權。</span></div>
+<div class="lawart"><b>第 875 條</b><span class="pa">為同一債權之擔保，於數不動產上設定抵押權，而未限定各個不動產所負擔之金額者，抵押權人得就各個不動產賣得之價金，受債權全部或一部之清償。</span></div>
+<div class="lawart"><b>第 876 條</b><span class="pa">1. 設定抵押權時，土地及其土地上之建築物，同屬於一人所有，而僅以土地或僅以建築物為抵押者，於抵押物拍賣時，視為已有地上權之設定，其地租、期間及範圍由當事人協議定之。不能協議者，得聲請法院以判決定之。</span><span class="pa">2. 設定抵押權時，土地及其土地上之建築物，同屬於一人所有，而以土地及建築物為抵押者，如經拍賣，其土地與建築物之拍定人各異時，適用前項之規定。</span></div>
+<div class="lawart"><b>第 877 條</b><span class="pa">1. 土地所有人於設定抵押權後，在抵押之土地上營造建築物者，抵押權人於必要時，得於強制執行程序中聲請法院將其建築物與土地併付拍賣。但對於建築物之價金，無優先受清償之權。</span><span class="pa">2. 前項規定，於第八百六十六條第二項及第三項之情形，如抵押之不動產上，有該權利人或經其同意使用之人之建築物者，準用之。</span></div>
+<div class="lawart"><b>第 880 條</b><span class="pa">以抵押權擔保之債權，其請求權已因時效而消滅，如抵押權人，於消滅時效完成後，五年間不實行其抵押權者，其抵押權消滅。</span></div>
+<div class="lawart"><b>第 881-1 條</b><span class="pa">1. 稱最高限額抵押權者，謂債務人或第三人提供其不動產為擔保，就債權人對債務人一定範圍內之不特定債權，在最高限額內設定之抵押權。</span><span class="pa">2. 最高限額抵押權所擔保之債權，以由一定法律關係所生之債權或基於票據所生之權利為限。</span><span class="pa">3. 基於票據所生之權利，除本於與債務人間依前項一定法律關係取得者外，如抵押權人係於債務人已停止支付、開始清算程序，或依破產法有和解、破產之聲請或有公司重整之聲請，而仍受讓票據者，不屬最高限額抵押權所擔保之債權。但抵押權人不知其情事而受讓者，不在此限。</span></div>
+<div class="lawart"><b>第 881-15 條</b><span class="pa">最高限額抵押權所擔保之債權，其請求權已因時效而消滅，如抵押權人於消滅時效完成後，五年間不實行其抵押權者，該債權不再屬於最高限額抵押權擔保之範圍。</span></div>
+<div class="lawart"><b>第 882 條</b><span class="pa">地上權、農育權及典權，均得為抵押權之標的物。</span></div>
+<div class="lawart"><b>第 885 條</b><span class="pa">1. 質權之設定，因供擔保之動產移轉於債權人占有而生效力。</span><span class="pa">2. 質權人不得使出質人或債務人代自己占有質物。</span></div>
+<div class="lawart"><b>第 891 條</b><span class="pa">質權人於質權存續中，得以自己之責任，將質物轉質於第三人。其因轉質所受不可抗力之損失，亦應負責。</span></div>
+<div class="lawart"><b>第 897 條</b><span class="pa">動產質權，因質權人將質物返還於出質人或交付於債務人而消滅。返還或交付質物時，為質權繼續存在之保留者，其保留無效。</span></div>
+<div class="lawart"><b>第 899 條</b><span class="pa">1. 動產質權，因質物滅失而消滅。但出質人因滅失得受賠償或其他利益者，不在此限。</span><span class="pa">2. 質權人對於前項出質人所得行使之賠償或其他請求權仍有質權，其次序與原質權同。</span><span class="pa">3. 給付義務人因故意或重大過失向出質人為給付者，對於質權人不生效力。</span><span class="pa">4. 前項情形，質權人得請求出質人交付其給付物或提存其給付之金錢。</span><span class="pa">5. 質物因毀損而得受之賠償或其他利益，準用前四項之規定。</span></div>
+<div class="lawart"><b>第 900 條</b><span class="pa">稱權利質權者，謂以可讓與之債權或其他權利為標的物之質權。</span></div>
+<div class="lawart"><b>第 905 條</b><span class="pa">1. 為質權標的物之債權，以金錢給付為內容，而其清償期先於其所擔保債權之清償期者，質權人得請求債務人提存之，並對提存物行使其質權。</span><span class="pa">2. 為質權標的物之債權，以金錢給付為內容，而其清償期後於其所擔保債權之清償期者，質權人於其清償期屆至時，得就擔保之債權額，為給付之請求。</span></div>
+<div class="lawart"><b>第 907 條</b><span class="pa">為質權標的物之債權，其債務人受質權設定之通知者，如向出質人或質權人一方為清償時，應得他方之同意。他方不同意時，債務人應提存其為清償之給付物。</span></div>
+<div class="lawart"><b>第 910 條</b><span class="pa">1. 質權以有價證券為標的物者，其附屬於該證券之利息證券、定期金證券或其他附屬證券，以已交付於質權人者為限，亦為質權效力所及。</span><span class="pa">2. 附屬之證券，係於質權設定後發行者，除另有約定外，質權人得請求發行人或出質人交付之。</span></div>
+<div class="lawart"><b>第 926 條</b><span class="pa">1. 出典人於典權存續中，表示讓與其典物之所有權於典權人者，典權人得按時價找貼，取得典物所有權。</span><span class="pa">2. 前項找貼，以一次為限。</span></div>
+<div class="lawart"><b>第 928 條</b><span class="pa">1. 稱留置權者，謂債權人占有他人之動產，而其債權之發生與該動產有牽連關係，於債權已屆清償期未受清償時，得留置該動產之權。</span><span class="pa">2. 債權人因侵權行為或其他不法之原因而占有動產者，不適用前項之規定。其占有之始明知或因重大過失而不知該動產非為債務人所有者，亦同。</span></div>
+<div class="lawart"><b>第 929 條</b><span class="pa">商人間因營業關係而占有之動產，與其因營業關係所生之債權，視為有前條所定之牽連關係。</span></div>
+<div class="lawart"><b>第 932 條</b><span class="pa">債權人於其債權未受全部清償前，得就留置物之全部，行使其留置權。但留置物為可分者，僅得依其債權與留置物價值之比例行使之。</span></div>
+<div class="lawart"><b>第 933 條</b><span class="pa">第八百八十八條至第八百九十條及第八百九十二條之規定，於留置權準用之。</span></div>
+<div class="lawart"><b>第 940 條</b><span class="pa">對於物有事實上管領之力者，為占有人。</span></div>
+<div class="lawart"><b>第 941 條</b><span class="pa">地上權人、農育權人、典權人、質權人、承租人、受寄人，或基於其他類似之法律關係，對於他人之物為占有者，該他人為間接占有人。</span></div>
+<div class="lawart"><b>第 942 條</b><span class="pa">受僱人、學徒、家屬或基於其他類似之關係，受他人之指示，而對於物有管領之力者，僅該他人為占有人。</span></div>
+<div class="lawart"><b>第 944 條</b><span class="pa">1. 占有人推定其為以所有之意思，善意、和平、公然及無過失占有。</span><span class="pa">2. 經證明前後兩時為占有者，推定前後兩時之間，繼續占有。</span></div>
+<div class="lawart"><b>第 948 條</b><span class="pa">1. 以動產所有權，或其他物權之移轉或設定為目的，而善意受讓該動產之占有者，縱其讓與人無讓與之權利，其占有仍受法律之保護。但受讓人明知或因重大過失而不知讓與人無讓與之權利者，不在此限。</span><span class="pa">2. 動產占有之受讓，係依第七百六十一條第二項規定為之者，以受讓人受現實交付且交付時善意為限，始受前項規定之保護。</span></div>
+<div class="lawart"><b>第 949 條</b><span class="pa">1. 占有物如係盜贓、遺失物或其他非基於原占有人之意思而喪失其占有者，原占有人自喪失占有之時起二年以內，得向善意受讓之現占有人請求回復其物。</span><span class="pa">2. 依前項規定回復其物者，自喪失其占有時起，回復其原來之權利。</span></div>
+<div class="lawart"><b>第 950 條</b><span class="pa">盜贓、遺失物或其他非基於原占有人之意思而喪失其占有之物，如現占有人由公開交易場所，或由販賣與其物同種之物之商人，以善意買得者，非償還其支出之價金，不得回復其物。</span></div>
+<div class="lawart"><b>第 951 條</b><span class="pa">盜贓、遺失物或其他非基於原占有人之意思而喪失其占有之物，如係金錢或未記載權利人之有價證券，不得向其善意受讓之現占有人請求回復。</span></div>
+<div class="lawart"><b>第 956 條</b><span class="pa">惡意占有人或無所有意思之占有人，就占有物之滅失或毀損，如係因可歸責於自己之事由所致者，對於回復請求人，負賠償之責。</span></div>
+<div class="lawart"><b>第 957 條</b><span class="pa">惡意占有人，因保存占有物所支出之必要費用，對於回復請求人，得依關於無因管理之規定，請求償還。</span></div>
+<div class="lawart"><b>第 960 條</b><span class="pa">1. 占有人，對於侵奪或妨害其占有之行為，得以己力防禦之。</span><span class="pa">2. 占有物被侵奪者，如係不動產，占有人得於侵奪後，即時排除加害人而取回之；如係動產，占有人得就地或追蹤向加害人取回之。</span></div>
+<div class="lawart"><b>第 962 條</b><span class="pa">占有人，其占有被侵奪者，得請求返還其占有物；占有被妨害者，得請求除去其妨害；占有有被妨害之虞者，得請求防止其妨害。</span></div>
+<div class="lawart"><b>第 963 條</b><span class="pa">前條請求權，自侵奪或妨害占有或危險發生後，一年間不行使而消滅。</span></div>
+  </section>
+  <section id="quiz" class="pane">
+    <h2 class="sec">歷年考古題（已核對現行民法，共 35 題）</h2>
+    <p style="color:var(--muted)">點選即時對答，解析附條號與出處；題首【§】為所屬條號。</p>
+    <div class="quizbar">
+      <span class="score" id="qscore">答對 0 / 作答 0 （共 35 題）</span>
+      <span class="prog"><i id="qbar"></i></span>
+      <button id="qshowAll">顯示全部解析</button>
+      <button id="qreset">重做</button>
+    </div>
+    <div id="qbox"></div>
+  </section>
+  <footer>EFETL · 民法國考複習 ｜ 條文依現行民法，正式以法規原文為準。</footer>
+</div>
+<script>
+const QD=[{"q": "【§757】依民法第757條物權法定主義，物權除依法律或習慣外不得創設。下列何者違反物權法定主義？", "o": ["設定不移轉占有之動產質權", "設定不移轉抵押不動產占有之不動產抵押權", "設定土地上一定空間之區分地上權", "移轉專有部分所有權"], "a": 0, "e": "§757、§884：動產質權以移轉占有為設定生效要件，「不移轉占有之動產質權」屬法律未定之物權，違反物權法定主義。（112年一般警察特考四等 法學知識）"}, {"q": "【§758】依民法第758條「不動產物權，依法律行為而取得、設定、喪失及變更者，非經登記不生效力」。此處所謂「法律行為」，不包括下列何者？", "o": ["訂立贈與契約之行為", "移轉所有權之行為", "設定普通抵押權之行為", "拋棄區分地上權之行為"], "a": 0, "e": "§758規範「物權行為（處分行為）」須登記生效；訂立贈與契約為「債權行為」，不待登記即生效，非本條所指。（113年初等 法學大意）"}, {"q": "【§758】依民法第758條第1項，不動產物權行為以登記為要件。關於不動產物權行為，下列敘述何者錯誤？", "o": ["以登記為公示手段", "其登記乃宣示登記", "應以書面為之", "不以交付不動產為要件"], "a": 1, "e": "§758：本條登記為「設權登記（生效登記）」，非「宣示登記」（宣示登記指§759非因法律行為之變動）；Ⅱ並要求應以書面為之。（111年初等 法學大意）"}, {"q": "【§759】下列何者非屬民法第759條規定之非因法律行為而發生不動產物權得喪變更之情形？", "o": ["強制執行", "徵收", "給付判決", "繼承"], "a": 2, "e": "§759：因繼承、強制執行、徵收、法院之判決（限形成判決）等非因法律行為取得不動產物權者，登記前已取得；「給付判決」非形成判決，不在本條之列。（110年地特五等 法學大意）"}, {"q": "【§761】民法第761條第1項後段但書「但受讓人已占有動產者，於讓與合意時即生效力」，為何種類型之交付方式？", "o": ["簡易交付", "占有改定", "指示交付", "現實交付"], "a": 0, "e": "§761Ⅰ但書：受讓人已先占有動產，僅須讓與合意即生效力，為「簡易交付」。（108年臺鐵營運人員 民法）"}, {"q": "【§764】下列何者非屬單獨行為？", "o": ["贈與契約", "物權之拋棄", "解除權之行使", "撤銷權之行使"], "a": 0, "e": "§764：物權拋棄為單獨行為；贈與為契約（雙方行為），非單獨行為。（110年一般警察特考四等 法學知識）"}, {"q": "【§767】下列關於民法第767條所有權物上請求權之敘述，何者錯誤？", "o": ["已登記不動產所有人之所有物回復請求權，無消滅時效之適用", "已登記不動產所有人之妨害除去請求權，無消滅時效之適用", "不動產役權人亦得行使所有權之物上請求權", "違章建築之買受人亦得行使所有物返還請求權"], "a": 3, "e": "§767：違章建築買受人僅取得事實上處分權而非所有權，無§767物上請求權（D錯）。已登記不動產之物上請求權無消滅時效適用（釋字107、164）；§767Ⅱ準用於他物權人。（104年稅務特考四等 民法概要）"}, {"q": "【§768】依民法第768條，以所有之意思，幾年間和平公然占有他人之動產者，取得其所有權？", "o": ["五年", "十年", "十五年", "二十年"], "a": 1, "e": "§768：以所有之意思10年間和平公然繼續占有他人動產者取得所有權（§768-1另定善意無過失者5年）。（92年身障特考五等 法學大意）"}, {"q": "【§769】關於未登記不動產所有權時效取得之要件與法律效果，下列敘述何者錯誤？", "o": ["以所有之意思為占有", "和平占有", "公然占有", "取得不動產所有權"], "a": 3, "e": "§769、§770：時效完成後僅「得請求登記為所有人」，非當然取得所有權，須完成登記始取得（D錯）。（112年地特四等 法學知識）"}, {"q": "【§772】以時效取得地上權之不動產，其限制為何？", "o": ["限於已登記之不動產", "限於未登記之不動產", "限於無主之不動產", "已登記及未登記之不動產皆可"], "a": 3, "e": "§772準用§769、§770：所有權以外財產權（如地上權）之時效取得，依實務見解不以未登記不動產為限，已登記不動產亦得時效取得地上權。（101年高考三級 民法）"}, {"q": "【§796】民法第796條規定，土地所有人建築房屋非因故意或重大過失逾越地界者，鄰地所有人如知其越界而不即提出異議，不得請求移去或變更其房屋。下列何者正確？", "o": ["將廚廁建於鄰地者，可主張廚廁屬「建築房屋」不得拆除", "房屋全部建於鄰地者，可主張符合「越界建築」不得拆除", "立體停車場越界，鄰地所有人可主張其非「建築房屋」而請求拆除", "於房屋整體之外越界加建房屋，鄰地所有人可請求拆除該加建部分"], "a": 3, "e": "§796僅適用「房屋本體」之越界且須非因故意或重大過失；房屋全部建於鄰地、附屬廚廁或加建部分均不受保護，鄰地所有人得請求拆除。（105年不動產經紀人 民法概要）"}, {"q": "【§798】按民法第798條，果實自落於鄰地者，下列敘述何者正確？", "o": ["鄰地為公用地者，屬鄰地所有權人", "鄰地為公用地者，屬果實種植所有權人", "鄰地為私有地者，屬果實種植所有權人", "不論公有地或私有地，均屬鄰地所有權人"], "a": 1, "e": "§798：果實自落於鄰地者視為屬於鄰地所有人，但鄰地為公用地者不在此限（仍屬原種植所有人）。（100年台水公司甄試 民法物權）"}, {"q": "【§799-1】依民法第799條，稱區分所有建築物者，謂數人區分一建築物而各專有其一部。關於區分所有建築物，下列敘述何者錯誤？", "o": ["區分所有人就基地成立分別共有", "區分所有人專有「整棟建築物」之所有權", "區分所有人就共同部分成立分別共有", "區分所有人得自由讓與其專有部分"], "a": 1, "e": "§799：區分所有人僅就「專有部分」有單獨所有權，非專有整棟建築物（B錯）；就共同部分及基地應有部分成立分別共有。（112年鐵路特考佐級 法學大意）"}, {"q": "【§801】下列何種由無權處分人所為之動產所有權移轉方式，其受讓人之善意不受法律之保護？", "o": ["現實交付", "簡易交付", "占有改定", "讓與返還請求權"], "a": 2, "e": "§801、§948Ⅱ：善意受讓以「現實受讓占有」為要件；占有改定受讓人未現實取得占有，其善意不受保護。（107年台水公司甄試 民法物權）"}, {"q": "【§805】有受領權之人認領遺失物時，拾得人得請求報酬，但不得超過其物財產上價值幾分之幾？", "o": ["二分之一", "四分之一", "八分之一", "十分之一"], "a": 3, "e": "§805Ⅱ：拾得人得請求報酬，但不得超過其物財產上價值「十分之一」（已由原三分之一修正為十分之一）。（105年經濟部所屬事業新進職員 法學緒論）"}, {"q": "【§811】依民法第811條，動產因附合而為不動產之重要成分時，由何人取得該動產所有權？", "o": ["動產所有人", "不動產所有人", "動產及不動產所有人共有", "由雙方協商定之"], "a": 1, "e": "§811：動產因附合而為不動產之重要成分者，「不動產所有人」取得動產所有權。（106年台水公司甄試 民法物權）"}, {"q": "【§814】依民法規定，加工於他人之動產，而加工所增之價值顯逾材料之價值者，下列何者正確？", "o": ["加工物所有權屬材料所有人，加工人依不當得利請求償還價額", "加工物所有權屬加工人，材料所有人依不當得利請求償還價額", "加工物所有權屬材料所有人，加工人依無因管理請求償還價額", "加工物所有權屬加工人，材料所有人依無因管理請求償還價額"], "a": 1, "e": "§814：加工物所有權原則屬材料所有人，但加工所增價值顯逾材料價值者屬「加工人」；受損害之材料所有人依§816以不當得利規定請求償還價額。（108年地特五等 法學大意）"}, {"q": "【§816】因添附而受損害者，依民法第816條規定，得依關於下列何種規定請求償還價額？", "o": ["無因管理", "不當得利", "侵權行為", "債務不履行"], "a": 1, "e": "§816：因添附（附合、混合、加工）喪失權利而受損害者，得依「不當得利」之規定請求償還價額。（102年稅務特考三等 民法）"}, {"q": "【§819】共有物之處分、變更及設定負擔，應得共有人全體之同意。下列何者無須得共有人全體之同意？", "o": ["共有物所有權之全部拋棄", "以共有之全部不動產設定抵押權", "將共有物由建地變為農地", "共有動產之應有部分移轉"], "a": 3, "e": "§819Ⅰ：各共有人得自由處分其應有部分，無須全體同意；§819Ⅱ之共有物本身處分、變更、設定負擔始須全體同意。（111年普考 法學知識）"}, {"q": "【§823】依民法第823條，不動產各共有人訂有管理契約並約定不分割期限者，關於該期限下列何者正確？", "o": ["不得逾五年；逾五年者縮短為五年", "不得逾十年；逾十年者縮短為十年", "不得逾二十年；逾二十年者縮短為二十年", "不得逾三十年；逾三十年者縮短為三十年"], "a": 3, "e": "§823Ⅱ：約定不分割期限原則不得逾5年；但共有「不動產」且訂有管理契約者不得逾30年，逾30年縮短為30年。（105年台水公司甄試 民法物權）"}, {"q": "【§824】下列何種權利是請求權？", "o": ["共有物裁判分割請求權", "共有物協議分割履行請求權", "遺產分割請求權", "買賣標的物瑕疵之價金減少請求權"], "a": 1, "e": "§824：裁判分割請求權為「形成權」；協議分割成立後請求他共有人履行協議之請求權，始為真正之「請求權」。（107年司法官／律師 綜合法學二）"}, {"q": "【§824-1】甲乙丙分別共有A地各三分之一並已登記。甲以其應有部分設定普通抵押權於丁。丙請求分割A地。下列敘述何者錯誤？", "o": ["丁同意A地分割者，其抵押權移存於甲因分割所分得之部分", "丁僅經通知A地分割者，其抵押權移存於甲因分割所分得之部分", "丁經共有人告知訴訟而未參加者，其抵押權移存於甲因分割所分得之部分", "丁已參加共有物分割訴訟，其抵押權移存於甲因分割所分得之部分"], "a": 1, "e": "§824-1Ⅱ但書：抵押權僅於「①權利人同意分割、②已參加分割訴訟、③經告知訴訟而未參加」三情形移存於抵押人分得部分；「僅經通知分割」非上述三者，不生移存效果。（112年司法特考四等 民法概要）"}, {"q": "【§827】下列何者非屬公同共有關係？", "o": ["數繼承人對於繼承所得之遺產", "合夥人對於其合夥財產", "派下權人對未辦法人登記之祭祀公業之財產", "區分所有權人對區分所有建築物之共有部分"], "a": 3, "e": "§827：公同共有基於公同關係（繼承、合夥、祭祀公業等）；區分所有建築物之共同部分為「分別共有」（§799Ⅳ），非公同共有。（104年稅務特考四等 民法概要）"}, {"q": "【§828】下列關於公同共有之敘述，何者正確？", "o": ["公同共有人依應有部分享有公同共有物之所有權", "公同共有人在公同關係存續中，得隨時請求分割公同共有物", "公同共有物之處分及其他權利行使，除法律或契約另有規定外，應得全體公同共有人之同意", "公同共有人得自由處分其應有部分"], "a": 2, "e": "§827Ⅲ、§828、§829：公同共有「無應有部分」（A、D錯）；公同關係存續中不得請求分割（B錯）；§828Ⅲ處分及權利行使應得全體同意（C對）。（109年初等 法學大意）"}, {"q": "【§860】民法第860條規定普通抵押權之標的限於「不動產」，據此動產不得作為民法上抵押權之標的物。此結論係以何種解釋方法得出？", "o": ["反面解釋", "限縮解釋", "擴張解釋", "類推解釋"], "a": 0, "e": "§860：條文明定標的為「不動產」，由此反面推得「動產不得設定」，屬反面（反對）解釋。（112年地特五等 法學大意）"}, {"q": "【§880】依民法第880條，以抵押權擔保之債權其請求權已因時效消滅，抵押權人於消滅時效完成後，經過多久不實行其抵押權者，其抵押權消滅？", "o": ["五年", "七年", "十年", "十五年"], "a": 0, "e": "§880：以抵押權擔保之債權其請求權罹於時效後，抵押權人於消滅時效完成後「五年間」不實行抵押權者，其抵押權消滅（除斥期間）。（96年地特三等法制 民法）"}, {"q": "【§881-15】最高限額抵押權所擔保之債權，其請求權已因時效消滅，抵押權人於消滅時效完成後幾年間不實行抵押權者，該債權不再屬於最高限額抵押權擔保之範圍？", "o": ["五年", "十年", "十五年", "三十年"], "a": 0, "e": "§881-15：最高限額抵押權所擔保債權之請求權時效消滅後，抵押權人於消滅時效完成後「五年間」不實行抵押權者，該債權不再屬擔保範圍。（97年鐵路特考佐級 民法大意）"}, {"q": "【§885】下列關於動產質權之敘述，何者正確？", "o": ["質權人得使出質人或債務人代自己占有質物", "質權人不負保管質物之義務", "質權人得使用或出租其質物", "質權人係經許可以受質為營業者，僅得就質物行使其權利"], "a": 3, "e": "§885Ⅱ：質權人不得使出質人或債務人代自己占有質物（A錯）；§888負善良管理人保管義務、非經同意不得使用出租（B、C錯）；§899-2營業質僅得就質物行使權利（D對）。（111年鐵路特考員級 民法概要）"}, {"q": "【§928】下列何者並非留置權成立之積極要件？", "o": ["須動產之留置不違反公共秩序或善良風俗", "須債權人占有屬於他人之動產", "須債權已屆清償期", "須債權之發生與該動產有牽連關係"], "a": 0, "e": "§928：留置權之積極（成立）要件為占有他人動產、債權與動產有牽連關係、債權已屆清償期；「不違反公序良俗」為§930消極（排除）要件，非積極要件。（101年原民特考五等 法學大意）"}, {"q": "【§941】依民法第941條規定，下列何者為間接占有人？", "o": ["地上權人", "典權人", "質權人", "出租人"], "a": 3, "e": "§941：地上權人、典權人、質權人、承租人等「直接占有」他人之物，而使其占有之人（如出租人、所有人）為「間接占有人」。（106年台水公司甄試 民法物權）"}, {"q": "【§942】甲將自己M汽車出租給乙，乙將M汽車交給其受僱司機丙保管及駕駛。下列何者正確？", "o": ["甲為M車之直接占有人", "乙為M車之直接占有人", "丙為M車之直接占有人", "甲乙丙均為M車之占有人"], "a": 1, "e": "§941、§942：甲（出租人）為間接占有人；乙基於租賃為直接占有人；丙受僱依指示管領為「占有輔助人」（§942），非占有人。（109年一般警察／鐵路特考三等 法學知識）"}, {"q": "【§944】依民法第943條第1項，占有人於占有物上行使之權利推定其適法有此權利。下列何者於此項推定範圍之列？", "o": ["承租人占有其所承租轎車之權利", "普通地上權人占有地上權標的物之權利", "受寄人保管寄託之鑽石", "所有人占有其所有之腳踏車"], "a": 3, "e": "§943：占有人行使之權利推定適法；但Ⅱ第2款「行使所有權以外之權利對使其占有之人」不適用推定（承租人、地上權人、受寄人對其相對人不受推定）；所有人占有自有物行使所有權受推定。（113年初等 法學大意）"}, {"q": "【§948】下列何種由無權處分人所為之動產所有權移轉方式，其受讓人之善意不受法律之保護？", "o": ["現實交付", "簡易交付", "占有改定", "讓與返還請求權"], "a": 2, "e": "§948Ⅱ：善意受讓動產所有權須受讓人「現實占有」標的物；占有改定受讓人未取得現實占有，善意不受保護。（107年台水公司甄試 民法物權）"}, {"q": "【§949】民法第949條盜贓遺失物之回復請求權規定，依實務見解，所謂「盜贓」不包含下列何者行為奪取之物？", "o": ["搶奪", "強盜", "詐欺", "竊盜"], "a": 2, "e": "§949：盜贓、遺失物或其他「非基於原占有人意思」喪失占有之物，原占有人得於喪失占有2年內請求回復。詐欺係被害人基於（有瑕疵之）意思交付，非「非基於意思喪失占有」，故非屬盜贓。（103年關務／身障特考四等 法學緒論）"}, {"q": "【§962】關於民法第962條「占有人，其占有被侵奪者，得請求返還其占有物」之規定，下列敘述何者錯誤？", "o": ["惡意之無權占有人不得主張本條之請求權", "本條請求權自侵奪或妨害占有後一年間不行使而消滅", "數人共同占有一物時，各占有人就其占有物使用之範圍，不得互相請求本條占有之保護", "數人共同占有一物時，各占有人均得就占有物之全部，對第三人行使本條之權利"], "a": 0, "e": "§962、§960：占有人物上請求權不問善意惡意、有權無權，凡占有被侵奪均得行使，惡意無權占有人亦得主張（A錯）；§963一年除斥期間；§965共同占有之相互與對外關係如C、D。（112年地特五等 法學大意）"}];
+
+function renderQuiz(data, ns){
+  const box=document.getElementById(ns+'box');
+  if(!data.length){box.innerHTML='<p style=\'color:var(--muted)\'>本編暫無收錄考題。</p>';return;}
+  data.forEach((it,i)=>{
+    const q=document.createElement('div');q.className='q';
+    const opts=it.o.map((t,j)=>`<button class="opt" data-i="${i}" data-j="${j}"><span class="lab">(${'ABCDE'[j]})</span>${t}</button>`).join('');
+    q.innerHTML=`<div class="stem"><span class="no">${i+1}</span>${it.q}</div><div class="opts">${opts}</div>`+
+      `<div class="exp" id="${ns}exp${i}"><b>✅ 答案：(${'ABCDE'[it.a]})</b><br>${it.e}</div>`;
+    box.appendChild(q);
+  });
+  const answered=new Array(data.length).fill(false);let correct=0;
+  box.addEventListener('click',e=>{const b=e.target.closest('.opt');if(!b)return;
+    const i=+b.dataset.i,j=+b.dataset.j;if(answered[i])return;answered[i]=true;
+    const c=box.children[i],bs=c.querySelectorAll('.opt');
+    bs.forEach((bt,k)=>{bt.classList.add('lock');if(k===data[i].a)bt.classList.add('correct');});
+    if(j!==data[i].a)bs[j].classList.add('wrong');else correct++;
+    document.getElementById(ns+'exp'+i).classList.add('show');upd();});
+  function upd(){const d=answered.filter(Boolean).length;
+    document.getElementById(ns+'score').textContent=`答對 ${correct} / 作答 ${d} （共 ${data.length} 題）`;
+    document.getElementById(ns+'bar').style.width=(d/data.length*100)+'%';}
+  document.getElementById(ns+'showAll').onclick=()=>{box.querySelectorAll('.exp').forEach(x=>x.classList.add('show'));
+    box.querySelectorAll('.q').forEach((c,i)=>c.querySelectorAll('.opt').forEach((bt,k)=>{bt.classList.add('lock');if(k===data[i].a)bt.classList.add('correct');}));};
+  document.getElementById(ns+'reset').onclick=()=>location.reload();upd();
+}
+
+
+document.querySelectorAll('nav.tabs button').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.remove('on'));
+    document.querySelectorAll('section.pane').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    document.getElementById(b.dataset.t).classList.add('on');
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+});
+
+renderQuiz(QD,'q');
+</script>
+</body></html>

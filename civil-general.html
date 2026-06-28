@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>民法總則篇｜民法國考互動複習</title>
+<style>
+:root{
+  --green:#00824a; --green-d:#005c33; --green-l:#e7f4ec;
+  --gold:#c8902a; --ink:#222; --muted:#5f6b63; --line:#d9e4dc;
+  --bg:#f6faf7; --card:#fff; --red:#c0392b; --red-l:#fdecea;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  font-size:17px; line-height:1.85; -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:920px;margin:0 auto;padding:0 18px 80px}
+header.top{
+  background:linear-gradient(135deg,var(--green),var(--green-d));
+  color:#fff;padding:30px 18px;text-align:center;
+}
+header.top .wrap{padding-bottom:0}
+header.top h1{margin:0 0 6px;font-size:1.7em;letter-spacing:1px}
+header.top p{margin:4px 0;opacity:.92;font-size:.95em}
+.backlink{display:inline-block;margin-top:12px;color:#fff;
+  border:1px solid rgba(255,255,255,.6);border-radius:20px;
+  padding:5px 16px;text-decoration:none;font-size:.9em}
+.backlink:hover{background:rgba(255,255,255,.15)}
+nav.tabs{position:sticky;top:0;z-index:20;background:var(--card);
+  border-bottom:1px solid var(--line);display:flex;gap:6px;
+  padding:8px 18px;box-shadow:0 2px 6px rgba(0,0,0,.05)}
+nav.tabs button{flex:1;border:0;background:transparent;font-size:1em;
+  font-family:inherit;padding:10px;border-radius:8px;cursor:pointer;
+  color:var(--muted);font-weight:700}
+nav.tabs button.on{background:var(--green-l);color:var(--green-d)}
+section.pane{display:none;padding-top:22px}
+section.pane.on{display:block}
+h2.sec{font-size:1.35em;color:var(--green-d);border-left:6px solid var(--green);
+  padding-left:12px;margin:30px 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:18px 20px;margin:14px 0;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.card h3{margin:0 0 10px;font-size:1.12em;color:var(--green-d)}
+.card h3 .art{font-size:.72em;color:var(--gold);font-weight:700;margin-left:8px}
+.card ul{margin:8px 0;padding-left:1.3em}
+.card li{margin:6px 0}
+.tag{display:inline-block;background:var(--green-l);color:var(--green-d);
+  border-radius:6px;padding:1px 8px;font-size:.8em;font-weight:700;margin-right:6px}
+.hl{background:#fff5d6;padding:0 3px;border-radius:3px;font-weight:700}
+.warn{color:var(--red);font-weight:700}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.96em;
+  background:#fff;border-radius:10px;overflow:hidden}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+th{background:var(--green);color:#fff;font-weight:700}
+tbody tr:nth-child(even){background:var(--green-l)}
+.mnem{background:var(--green-l);border:1px dashed var(--green);border-radius:10px;
+  padding:12px 16px;margin:12px 0;font-size:.98em}
+.mnem b{color:var(--green-d)}
+
+/* quiz */
+.quizbar{position:sticky;top:54px;z-index:15;background:#fff;border:1px solid var(--line);
+  border-radius:12px;padding:10px 16px;margin:6px 0 16px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.quizbar .score{font-weight:800;color:var(--green-d);font-size:1.05em}
+.quizbar .prog{flex:1;min-width:120px;height:10px;background:var(--green-l);
+  border-radius:8px;overflow:hidden}
+.quizbar .prog>i{display:block;height:100%;width:0;background:var(--green);transition:.3s}
+.quizbar button{border:1px solid var(--green);background:#fff;color:var(--green-d);
+  font-family:inherit;font-size:.9em;padding:6px 12px;border-radius:8px;cursor:pointer;font-weight:700}
+.quizbar button:hover{background:var(--green-l)}
+.q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:16px 18px;margin:14px 0;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.q .stem{font-weight:700;margin-bottom:12px}
+.q .stem .no{display:inline-block;background:var(--green);color:#fff;border-radius:50%;
+  width:1.7em;height:1.7em;line-height:1.7em;text-align:center;margin-right:8px;font-size:.92em}
+.opt{display:block;width:100%;text-align:left;border:1.5px solid var(--line);
+  background:#fbfdfb;border-radius:10px;padding:11px 14px;margin:7px 0;cursor:pointer;
+  font-family:inherit;font-size:1em;line-height:1.6;transition:.15s}
+.opt:hover{border-color:var(--green)}
+.opt .lab{font-weight:800;color:var(--green-d);margin-right:6px}
+.opt.correct{background:var(--green-l);border-color:var(--green);color:var(--green-d)}
+.opt.wrong{background:var(--red-l);border-color:var(--red);color:var(--red)}
+.opt.lock{cursor:default}
+.exp{margin-top:10px;padding:11px 14px;border-radius:10px;background:#f3f8f4;
+  border-left:4px solid var(--green);font-size:.97em;display:none}
+.exp.show{display:block}
+.exp b{color:var(--green-d)}
+footer{text-align:center;color:var(--muted);font-size:.85em;margin-top:40px}
+@media(max-width:520px){body{font-size:16.5px}.wrap{padding:0 12px 60px}}
+@media print{nav.tabs,.quizbar,.backlink{display:none}section.pane{display:block!important}
+  .exp{display:block!important}.q,.card{break-inside:avoid}}
+
+.lawart{border-left:3px solid var(--green);background:#fff;border-radius:0 8px 8px 0;
+  padding:9px 13px;margin:9px 0;border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.lawart b{color:var(--green-d)}
+.lawart .pa{display:block;margin:3px 0;color:var(--ink)}
+.lawcard{display:flex;gap:16px;align-items:center;background:#fff;border:1px solid var(--line);
+  border-radius:14px;padding:18px 20px;margin:12px 0;text-decoration:none;color:inherit;
+  box-shadow:0 1px 4px rgba(0,0,0,.04);transition:.15s}
+.lawcard:hover{border-color:var(--green);transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,130,74,.12)}
+.lawcard .ic{font-size:2.3em}
+.lawcard h3{margin:0;color:var(--green-d);font-size:1.18em}
+.lawcard p{margin:3px 0;color:var(--muted);font-size:.9em}
+.lawcard .go{color:var(--gold);font-weight:700;font-size:.9em}
+.hero{padding:30px 0 6px}
+</style>
+</head><body>
+<header class="top"><div class="wrap">
+  <h1>📘 民法總則篇</h1>
+  <p>總則篇（68 條）</p>
+  <p>條文重點 + 33 題歷年考古題</p>
+  <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+    <a class="backlink" href="/">&#8592; 回首頁</a><a class="backlink" href="civil-law.html">← 回民法總覽</a>
+  </div>
+</div></header>
+<nav class="tabs">
+  <button class="on" data-t="notes">📖 條文重點</button>
+  <button data-t="quiz">📝 互動練習（33）</button>
+</nav>
+<div class="wrap">
+  <section id="notes" class="pane on">
+    <h2 class="sec">民法總則篇・高頻條文</h2>
+    <div class="mnem">章節範圍：第二章「人」6–65 條；第四章「法律行為」71–118 條；第六章「消滅時效」125–147 條。</div>
+    <div class="lawart"><b>第 1 條</b><span class="pa">民事，法律所未規定者，依習慣；無習慣者，依法理。</span></div>
+<div class="lawart"><b>第 2 條</b><span class="pa">民事所適用之習慣，以不背於公共秩序或善良風俗者為限。</span></div>
+<div class="lawart"><b>第 3 條</b><span class="pa">1. 依法律之規定，有使用文字之必要者，得不由本人自寫，但必須親自簽名。</span><span class="pa">2. 如有用印章代簽名者，其蓋章與簽名生同等之效力。</span><span class="pa">3. 如以指印、十字或其他符號代簽名者，在文件上，經二人簽名證明，亦與簽名生同等之效力。</span></div>
+<div class="lawart"><b>第 6 條</b><span class="pa">人之權利能力，始於出生，終於死亡。</span></div>
+<div class="lawart"><b>第 7 條</b><span class="pa">胎兒以將來非死產者為限，關於其個人利益之保護，視為既已出生。</span></div>
+<div class="lawart"><b>第 8 條</b><span class="pa">1. 失蹤人失蹤滿七年後，法院得因利害關係人或檢察官之聲請，為死亡之宣告。</span><span class="pa">2. 失蹤人為八十歲以上者，得於失蹤滿三年後，為死亡之宣告。</span><span class="pa">3. 失蹤人為遭遇特別災難者，得於特別災難終了滿一年後，為死亡之宣告。</span></div>
+<div class="lawart"><b>第 11 條</b><span class="pa">二人以上同時遇難，不能證明其死亡之先後時，推定其為同時死亡。</span></div>
+<div class="lawart"><b>第 13 條</b><span class="pa">1. 未滿七歲之未成年人，無行為能力。</span><span class="pa">2. 滿七歲以上之未成年人，有限制行為能力。</span></div>
+<div class="lawart"><b>第 14 條</b><span class="pa">1. 對於因精神障礙或其他心智缺陷，致不能為意思表示或受意思表示，或不能辨識其意思表示之效果者，法院得因本人、配偶、四親等內之親屬、最近一年有同居事實之其他親屬、檢察官、主管機關、社會福利機構、輔助人、意定監護受任人或其他利害關係人之聲請，為監護之宣告。</span><span class="pa">2. 受監護之原因消滅時，法院應依前項聲請權人之聲請，撤銷其宣告。</span><span class="pa">3. 法院對於監護之聲請，認為未達第一項之程度者，得依第十五條之一第一項規定，為輔助之宣告。</span><span class="pa">4. 受監護之原因消滅，而仍有輔助之必要者，法院得依第十五條之一第一項規定，變更為輔助之宣告。</span></div>
+<div class="lawart"><b>第 15 條</b><span class="pa">受監護宣告之人，無行為能力。</span></div>
+<div class="lawart"><b>第 15-1 條</b><span class="pa">1. 對於因精神障礙或其他心智缺陷，致其為意思表示或受意思表示，或辨識其意思表示效果之能力，顯有不足者，法院得因本人、配偶、四親等內之親屬、最近一年有同居事實之其他親屬、檢察官、主管機關或社會福利機構之聲請，為輔助之宣告。</span><span class="pa">2. 受輔助之原因消滅時，法院應依前項聲請權人之聲請，撤銷其宣告。</span><span class="pa">3. 受輔助宣告之人有受監護之必要者，法院得依第十四條第一項規定，變更為監護之宣告。</span></div>
+<div class="lawart"><b>第 15-2 條</b><span class="pa">1. 受輔助宣告之人為下列行為時，應經輔助人同意。但純獲法律上利益，或依其年齡及身分、日常生活所必需者，不在此限：</span><span class="pa">2. 一、為獨資、合夥營業或為法人之負責人。</span><span class="pa">3. 二、為消費借貸、消費寄託、保證、贈與或信託。</span><span class="pa">4. 三、為訴訟行為。</span><span class="pa">5. 四、為和解、調解、調處或簽訂仲裁契約。</span><span class="pa">6. 五、為不動產、船舶、航空器、汽車或其他重要財產之處分、設定負擔、買賣、租賃或借貸。</span><span class="pa">7. 六、為遺產分割、遺贈、拋棄繼承權或其他相關權利。</span><span class="pa">8. 七、法院依前條聲請權人或輔助人之聲請，所指定之其他行為。</span><span class="pa">9. 第七十八條至第八十三條規定，於未依前項規定得輔助人同意之情形，準用之。</span><span class="pa">10. 第八十五條規定，於輔助人同意受輔助宣告之人為第一項第一款行為時，準用之。</span><span class="pa">11. 第一項所列應經同意之行為，無損害受輔助宣告之人利益之虞，而輔助人仍不為同意時，受輔助宣告之人得逕行聲請法院許可後為之。</span></div>
+<div class="lawart"><b>第 16 條</b><span class="pa">權利能力及行為能力，不得拋棄。</span></div>
+<div class="lawart"><b>第 17 條</b><span class="pa">1. 自由不得拋棄。</span><span class="pa">2. 自由之限制，以不背於公共秩序或善良風俗者為限。</span></div>
+<div class="lawart"><b>第 18 條</b><span class="pa">1. 人格權受侵害時，得請求法院除去其侵害；有受侵害之虞時，得請求防止之。</span><span class="pa">2. 前項情形，以法律有特別規定者為限，得請求損害賠償或慰撫金。</span></div>
+<div class="lawart"><b>第 20 條</b><span class="pa">1. 依一定事實，足認以久住之意思，住於一定之地域者，即為設定其住所於該地。</span><span class="pa">2. 一人同時不得有兩住所。</span></div>
+<div class="lawart"><b>第 25 條</b><span class="pa">法人非依本法或其他法律之規定，不得成立。</span></div>
+<div class="lawart"><b>第 26 條</b><span class="pa">法人於法令限制內，有享受權利負擔義務之能力。但專屬於自然人之權利義務，不在此限。</span></div>
+<div class="lawart"><b>第 27 條</b><span class="pa">1. 法人應設董事。董事有數人者，法人事務之執行，除章程另有規定外，取決於全體董事過半數之同意。</span><span class="pa">2. 董事就法人一切事務，對外代表法人。董事有數人者，除章程另有規定外，各董事均得代表法人。</span><span class="pa">3. 對於董事代表權所加之限制，不得對抗善意第三人。</span><span class="pa">4. 法人得設監察人，監察法人事務之執行。監察人有數人者，除章程另有規定外，各監察人均得單獨行使監察權。</span></div>
+<div class="lawart"><b>第 28 條</b><span class="pa">法人對於其董事或其他有代表權之人因執行職務所加於他人之損害，與該行為人連帶負賠償之責任。</span></div>
+<div class="lawart"><b>第 35 條</b><span class="pa">1. 法人之財產不能清償債務時，董事應即向法院聲請破產。</span><span class="pa">2. 不為前項聲請，致法人之債權人受損害時，有過失之董事，應負賠償責任，其有二人以上時，應連帶負責。</span></div>
+<div class="lawart"><b>第 45 條</b><span class="pa">以營利為目的之社團，其取得法人資格，依特別法之規定。</span></div>
+<div class="lawart"><b>第 48 條</b><span class="pa">1. 社團設立時，應登記之事項如左：</span><span class="pa">2. 一、目的。</span><span class="pa">3. 二、名稱。</span><span class="pa">4. 三、主事務所及分事務所。</span><span class="pa">5. 四、董事之姓名及住所。設有監察人者，其姓名及住所。</span><span class="pa">6. 五、財產之總額。</span><span class="pa">7. 六、應受設立許可者，其許可之年、月、日。</span><span class="pa">8. 七、定有出資方法者，其方法。</span><span class="pa">9. 八、定有代表法人之董事者，其姓名。</span><span class="pa">10. 九、定有存立時期者，其時期。</span><span class="pa">11. 社團之登記，由董事向其主事務所及分事務所所在地之主管機關行之，並應附具章程備案。</span></div>
+<div class="lawart"><b>第 56 條</b><span class="pa">1. 總會之召集程序或決議方法，違反法令或章程時，社員得於決議後三個月內請求法院撤銷其決議。但出席社員，對召集程序或決議方法，未當場表示異議者，不在此限。</span><span class="pa">2. 總會決議之內容違反法令或章程者，無效。</span></div>
+<div class="lawart"><b>第 57 條</b><span class="pa">社團得隨時以全體社員三分二以上之可決解散之。</span></div>
+<div class="lawart"><b>第 59 條</b><span class="pa">財團於登記前，應得主管機關之許可。</span></div>
+<div class="lawart"><b>第 60 條</b><span class="pa">1. 設立財團者，應訂立捐助章程。但以遺囑捐助者，不在此限。</span><span class="pa">2. 捐助章程，應訂明法人目的及所捐財產。</span><span class="pa">3. 以遺囑捐助設立財團法人者，如無遺囑執行人時，法院得依主管機關、檢察官或利害關係人之聲請，指定遺囑執行人。</span></div>
+<div class="lawart"><b>第 64 條</b><span class="pa">財團董事，有違反捐助章程之行為時，法院得因主管機關、檢察官或利害關係人之聲請，宣告其行為為無效。</span></div>
+<div class="lawart"><b>第 66 條</b><span class="pa">1. 稱不動產者，謂土地及其定著物。</span><span class="pa">2. 不動產之出產物，尚未分離者，為該不動產之部分。</span></div>
+<div class="lawart"><b>第 67 條</b><span class="pa">稱動產者，為前條所稱不動產以外之物。</span></div>
+<div class="lawart"><b>第 68 條</b><span class="pa">1. 非主物之成分，常助主物之效用，而同屬於一人者，為從物。但交易上有特別習慣者，依其習慣。</span><span class="pa">2. 主物之處分，及於從物。</span></div>
+<div class="lawart"><b>第 69 條</b><span class="pa">1. 稱天然孳息者，謂果實、動物之產物及其他依物之用法所收穫之出產物。</span><span class="pa">2. 稱法定孳息者，謂利息、租金及其他因法律關係所得之收益。</span></div>
+<div class="lawart"><b>第 70 條</b><span class="pa">1. 有收取天然孳息權利之人，其權利存續期間內，取得與原物分離之孳息。</span><span class="pa">2. 有收取法定孳息權利之人，按其權利存續期間內之日數，取得其孳息。</span></div>
+<div class="lawart"><b>第 71 條</b><span class="pa">法律行為，違反強制或禁止之規定者，無效。但其規定並不以之為無效者，不在此限。</span></div>
+<div class="lawart"><b>第 72 條</b><span class="pa">法律行為，有背於公共秩序或善良風俗者，無效。</span></div>
+<div class="lawart"><b>第 74 條</b><span class="pa">1. 法律行為，係乘他人之急迫、輕率或無經驗，使其為財產上之給付或為給付之約定，依當時情形顯失公平者，法院得因利害關係人之聲請，撤銷其法律行為或減輕其給付。</span><span class="pa">2. 前項聲請，應於法律行為後一年內為之。</span></div>
+<div class="lawart"><b>第 77 條</b><span class="pa">限制行為能力人為意思表示及受意思表示，應得法定代理人之允許。但純獲法律上利益，或依其年齡及身分、日常生活所必需者，不在此限。</span></div>
+<div class="lawart"><b>第 78 條</b><span class="pa">限制行為能力人未得法定代理人之允許，所為之單獨行為，無效。</span></div>
+<div class="lawart"><b>第 79 條</b><span class="pa">限制行為能力人未得法定代理人之允許，所訂立之契約，須經法定代理人之承認，始生效力。</span></div>
+<div class="lawart"><b>第 80 條</b><span class="pa">1. 前條契約相對人，得定一個月以上之期限，催告法定代理人，確答是否承認。</span><span class="pa">2. 於前項期限內，法定代理人不為確答者，視為拒絕承認。</span></div>
+<div class="lawart"><b>第 86 條</b><span class="pa">表意人無欲為其意思表示所拘束之意，而為意思表示者，其意思表示，不因之無效。但其情形為相對人所明知者，不在此限。</span></div>
+<div class="lawart"><b>第 87 條</b><span class="pa">1. 表意人與相對人通謀而為虛偽意思表示者，其意思表示無效。但不得以其無效對抗善意第三人。</span><span class="pa">2. 虛偽意思表示，隱藏他項法律行為者，適用關於該項法律行為之規定。</span></div>
+<div class="lawart"><b>第 88 條</b><span class="pa">1. 意思表示之內容有錯誤，或表意人若知其事情即不為意思表示者，表意人得將其意思表示撤銷之。但以其錯誤或不知事情，非由表意人自己之過失者為限。</span><span class="pa">2. 當事人之資格或物之性質，若交易上認為重要者，其錯誤，視為意思表示內容之錯誤。</span></div>
+<div class="lawart"><b>第 91 條</b><span class="pa">依第八十八條及第八十九條之規定撤銷意思表示時，表意人對於信其意思表示為有效而受損害之相對人或第三人，應負賠償責任。但其撤銷之原因，受害人明知或可得而知者，不在此限。</span></div>
+<div class="lawart"><b>第 92 條</b><span class="pa">1. 因被詐欺或被脅迫而為意思表示者，表意人得撤銷其意思表示。但詐欺係由第三人所為者，以相對人明知其事實或可得而知者為限，始得撤銷之。</span><span class="pa">2. 被詐欺而為之意思表示，其撤銷不得以之對抗善意第三人。</span></div>
+<div class="lawart"><b>第 93 條</b><span class="pa">前條之撤銷，應於發見詐欺或脅迫終止後，一年內為之。但自意思表示後，經過十年，不得撤銷。</span></div>
+<div class="lawart"><b>第 95 條</b><span class="pa">1. 非對話而為意思表示者，其意思表示，以通知達到相對人時，發生效力。但撤回之通知，同時或先時到達者，不在此限。</span><span class="pa">2. 表意人於發出通知後死亡或喪失行為能力或其行為能力受限制者，其意思表示，不因之失其效力。</span></div>
+<div class="lawart"><b>第 96 條</b><span class="pa">向無行為能力人或限制行為能力人為意思表示者，以其通知達到其法定代理人時，發生效力。</span></div>
+<div class="lawart"><b>第 99 條</b><span class="pa">1. 附停止條件之法律行為，於條件成就時，發生效力。</span><span class="pa">2. 附解除條件之法律行為，於條件成就時，失其效力。</span><span class="pa">3. 依當事人之特約，使條件成就之效果，不於條件成就之時發生者，依其特約。</span></div>
+<div class="lawart"><b>第 103 條</b><span class="pa">1. 代理人於代理權限內，以本人名義所為之意思表示，直接對本人發生效力。</span><span class="pa">2. 前項規定，於應向本人為意思表示，而向其代理人為之者，準用之。</span></div>
+<div class="lawart"><b>第 104 條</b><span class="pa">代理人所為或所受意思表示之效力，不因其為限制行為能力人而受影響。</span></div>
+<div class="lawart"><b>第 107 條</b><span class="pa">代理權之限制及撤回，不得以之對抗善意第三人。但第三人因過失而不知其事實者，不在此限。</span></div>
+<div class="lawart"><b>第 110 條</b><span class="pa">無代理權人，以他人之代理人名義所為之法律行為，對於善意之相對人，負損害賠償之責。</span></div>
+<div class="lawart"><b>第 111 條</b><span class="pa">法律行為之一部分無效者，全部皆為無效。但除去該部分亦可成立者，則其他部分，仍為有效。</span></div>
+<div class="lawart"><b>第 116 條</b><span class="pa">1. 撤銷及承認，應以意思表示為之。</span><span class="pa">2. 如相對人確定者，前項意思表示，應向相對人為之。</span></div>
+<div class="lawart"><b>第 118 條</b><span class="pa">1. 無權利人就權利標的物所為之處分，經有權利人之承認始生效力。</span><span class="pa">2. 無權利人就權利標的物為處分後，取得其權利者，其處分自始有效。但原權利人或第三人已取得之利益，不因此而受影響。</span><span class="pa">3. 前項情形，若數處分相牴觸時，以其最初之處分為有效。</span></div>
+<div class="lawart"><b>第 120 條</b><span class="pa">1. 以時定期間者，即時起算。</span><span class="pa">2. 以日、星期、月或年定期間者，其始日不算入。</span></div>
+<div class="lawart"><b>第 125 條</b><span class="pa">請求權，因十五年間不行使而消滅。但法律所定期間較短者，依其規定。</span></div>
+<div class="lawart"><b>第 126 條</b><span class="pa">利息、紅利、租金、贍養費、退職金及其他一年或不及一年之定期給付債權，其各期給付請求權，因五年間不行使而消滅。</span></div>
+<div class="lawart"><b>第 127 條</b><span class="pa">1. 左列各款請求權，因二年間不行使而消滅：</span><span class="pa">2. 一、旅店、飲食店及娛樂場之住宿費、飲食費、座費、消費物之代價及其墊款。</span><span class="pa">3. 二、運送費及運送人所墊之款。</span><span class="pa">4. 三、以租賃動產為營業者之租價。</span><span class="pa">5. 四、醫生、藥師、看護生之診費、藥費、報酬及其墊款。</span><span class="pa">6. 五、律師、會計師、公證人之報酬及其墊款。</span><span class="pa">7. 六、律師、會計師、公證人所收當事人物件之交還。</span><span class="pa">8. 七、技師、承攬人之報酬及其墊款。</span><span class="pa">9. 八、商人、製造人、手工業人所供給之商品及產物之代價。</span></div>
+<div class="lawart"><b>第 128 條</b><span class="pa">消滅時效，自請求權可行使時起算。以不行為為目的之請求權，自為行為時起算。</span></div>
+<div class="lawart"><b>第 129 條</b><span class="pa">1. 消滅時效，因左列事由而中斷：</span><span class="pa">2. 一、請求。</span><span class="pa">3. 二、承認。</span><span class="pa">4. 三、起訴。</span><span class="pa">5. 左列事項，與起訴有同一效力：</span><span class="pa">6. 一、依督促程序，聲請發支付命令。</span><span class="pa">7. 二、聲請調解或提付仲裁。</span><span class="pa">8. 三、申報和解債權或破產債權。</span><span class="pa">9. 四、告知訴訟。</span><span class="pa">10. 五、開始執行行為或聲請強制執行。</span></div>
+<div class="lawart"><b>第 130 條</b><span class="pa">時效因請求而中斷者，若於請求後六個月內不起訴，視為不中斷。</span></div>
+<div class="lawart"><b>第 137 條</b><span class="pa">1. 時效中斷者，自中斷之事由終止時，重行起算。</span><span class="pa">2. 因起訴而中斷之時效，自受確定判決，或因其他方法訴訟終結時，重行起算。</span><span class="pa">3. 經確定判決或其他與確定判決有同一效力之執行名義所確定之請求權，其原有消滅時效期間不滿五年者，因中斷而重行起算之時效期間為五年。</span></div>
+<div class="lawart"><b>第 139 條</b><span class="pa">時效之期間終止時，因天災或其他不可避之事變，致不能中斷其時效者，自其妨礙事由消滅時起，一個月內，其時效不完成。</span></div>
+<div class="lawart"><b>第 144 條</b><span class="pa">1. 時效完成後，債務人得拒絕給付。</span><span class="pa">2. 請求權已經時效消滅，債務人仍為履行之給付者，不得以不知時效為理由，請求返還；其以契約承認該債務或提出擔保者亦同。</span></div>
+<div class="lawart"><b>第 147 條</b><span class="pa">時效期間，不得以法律行為加長或減短之，並不得預先拋棄時效之利益。</span></div>
+<div class="lawart"><b>第 150 條</b><span class="pa">1. 因避免自己或他人生命、身體、自由或財產上急迫之危險所為之行為，不負損害賠償之責。但以避免危險所必要，並未逾越危險所能致之損害程度者為限。</span><span class="pa">2. 前項情形，其危險之發生，如行為人有責任者，應負損害賠償之責。</span></div>
+  </section>
+  <section id="quiz" class="pane">
+    <h2 class="sec">歷年考古題（已核對現行民法，共 33 題）</h2>
+    <p style="color:var(--muted)">點選即時對答，解析附條號與出處；題首【§】為所屬條號。</p>
+    <div class="quizbar">
+      <span class="score" id="qscore">答對 0 / 作答 0 （共 33 題）</span>
+      <span class="prog"><i id="qbar"></i></span>
+      <button id="qshowAll">顯示全部解析</button>
+      <button id="qreset">重做</button>
+    </div>
+    <div id="qbox"></div>
+  </section>
+  <footer>EFETL · 民法國考複習 ｜ 條文依現行民法，正式以法規原文為準。</footer>
+</div>
+<script>
+const QD=[{"q": "【§1】依民法規定，民事問題之適用順序，下列何者正確？", "o": ["法律 → 習慣 → 法理", "習慣 → 法律 → 法理", "法理 → 習慣 → 法律", "法律 → 法理 → 習慣"], "a": 0, "e": "§1：民事，法律所未規定者，依習慣；無習慣者，依法理。故順序為法律、習慣、法理。（民法總則題庫）"}, {"q": "【§6】依民法第6條規定，自然人之權利能力，始於何時、終於何時？", "o": ["始於受胎，終於死亡", "始於出生，終於死亡", "始於出生，終於失蹤宣告", "始於受胎，終於死亡宣告"], "a": 1, "e": "§6：人之權利能力，始於出生，終於死亡。（民法總則題庫）"}, {"q": "【§7】民法第7條規定：胎兒以將來非死產者為限，關於其個人利益之保護，視為既已出生。學說上稱呼此種條件為：", "o": ["意定停止條件", "意定解除條件", "法定停止條件", "法定解除條件"], "a": 3, "e": "§7：通說採「法定解除條件說」，胎兒於出生前即取得權利能力，若將來死產則溯及喪失。（102年原民特考四等財稅行政 民法概要）"}, {"q": "【§8】依民法第8條對失蹤人為死亡宣告之期限，下列敘述何者正確？", "o": ["遭遇特別災難者，得於災難終了滿三年後宣告", "一般失蹤人，失蹤滿七年後得宣告", "失蹤人為八十歲以上者，得於失蹤滿一年後宣告", "利害關係人應向檢察官聲請死亡宣告"], "a": 1, "e": "§8：一般失蹤滿7年、80歲以上滿3年、特別災難終了滿1年，由法院宣告。（108年壽險證照題庫）"}, {"q": "【§11】二人以上同時遇難，不能證明其死亡之先後時，依民法第11條規定應如何處理？", "o": ["推定年長者先死亡", "推定年幼者先死亡", "推定其為同時死亡", "由法院依職權認定死亡先後"], "a": 2, "e": "§11：二人以上同時遇難，不能證明其死亡之先後時，推定其為同時死亡。（民法總則題庫）"}, {"q": "【§13】依民法第13條規定，關於未成年人之行為能力，下列敘述何者正確？", "o": ["未滿七歲之未成年人，有限制行為能力", "滿七歲以上之未成年人，無行為能力", "未滿七歲之未成年人，無行為能力", "滿七歲以上之未成年人，有完全行為能力"], "a": 2, "e": "§13：未滿七歲之未成年人，無行為能力；滿七歲以上之未成年人，有限制行為能力。（民法總則題庫）"}, {"q": "【§15】關於受監護宣告之人，下列敘述何者有錯誤？", "o": ["就其財產訴訟無訴訟能力", "得經監護人同意後有效為訴訟行為", "有當事人能力", "就其撤銷監護宣告之訴有訴訟能力"], "a": 1, "e": "§15：受監護宣告之人無行為能力，意思表示無效，須由法定代理人代為，不能「經同意後」自行有效為行為，故B錯誤。（100年原民特考五等錄事 民訴大意）"}, {"q": "【§15-1】受輔助宣告之人，其行為能力為何？", "o": ["無權利能力人", "無行為能力人", "限制行為能力人", "有行為能力人"], "a": 3, "e": "§15-1、§15-2：受輔助宣告之人本質上仍為有行為能力人，僅就特定重要行為應經輔助人同意。（100年公務升官等薦任商業行政 民法）"}, {"q": "【§16】下列關於權利能力之敘述，何者錯誤？", "o": ["權利能力不得拋棄", "僅自然人得享有權利能力", "人之權利能力，始於出生", "人之權利能力，終於死亡"], "a": 1, "e": "§16：權利能力及行為能力不得拋棄；惟法人亦有權利能力(§26)，非僅自然人享有，故B錯誤。（107年鐵路特考佐級事務管理 法學大意）"}, {"q": "【§26】下列有關法人之敘述，何者正確？", "o": ["法人於發起人聲請許可時，取得權利能力", "法人之權利能力與自然人之權利能力無任何差異", "法人有接受遺贈之能力", "法人進入清算程序時，其權利能力消滅"], "a": 2, "e": "§26：法人於法令限制內有享受權利、負擔義務之能力，但專屬自然人者除外，故法人可受遺贈。（99年高考三級 民法）"}, {"q": "【§28】民法第28條規定法人對於其董事或「其他有代表權之人」因執行職務所加於他人之損害負連帶賠償責任。下列何者符合「其他有代表權之人」？", "o": ["公司之受僱人", "法人之清算人", "公司之律師", "董事之配偶"], "a": 1, "e": "§28：「其他有代表權之人」指依法令章程對外代表法人之人，如清算人。受僱人、律師、配偶均非代表法人之人。（114年臺綜大系統轉學考 民法總則）"}, {"q": "【§35】法人之財產不能清償債務時，董事應即向下列何者聲請破產？", "o": ["法院", "人民團體主管機關", "目的事業主管機關", "社員大會"], "a": 0, "e": "§35：法人之財產不能清償債務時，董事應即向法院聲請破產；不為聲請致債權人受損害者，有過失之董事負賠償責任。（108年原民特考四等 民法概要）"}, {"q": "【§56】民法第56條第1項關於社團總會決議得撤銷之規定，下列敘述何者正確？", "o": ["須總會決議之內容違反法令或章程", "撤銷權之行使，須以意思表示為之", "須自社員知決議有得撤銷之原因時起，3個月內為之", "須以社團法人為行使撤銷權之相對人"], "a": 3, "e": "§56 I：召集程序或決議方法違反法令章程時，社員得於決議後3個月內訴請法院撤銷，相對人為社團法人。內容違法者為無效非撤銷。（107年司律三等 綜合法學二）"}, {"q": "【§57】下列有關社團法人之敘述，何者有誤？", "o": ["社團得隨時以全體社員四分之三以上同意，解散之", "社員總會之決議，原則以出席社員過半數決議之", "總會由董事召集之，每年至少召集一次", "社團得經全體社員三分之二以上書面同意，變更章程"], "a": 0, "e": "§57：社團得隨時以全體社員「三分之二以上之可決」解散之，非四分之三，故A有誤。（105年經濟部所屬事業新進職員 民法）"}, {"q": "【§66】下列何者屬於民法第66條所稱之「定著物」？", "o": ["野臺戲棚", "紀念碑", "蘋果樹", "樣品屋"], "a": 1, "e": "§66：定著物指繼續密切附著於土地、非土地成分而有獨立經濟價值之物（如房屋、紀念碑）。野臺戲棚、樣品屋為臨時可拆，蘋果樹屬土地出產物。（108年鐵路特考員級運輸營業 民法概要）"}, {"q": "【§68】依民法第68條規定，關於從物，下列敘述何者正確？", "o": ["主物之處分，不及於從物", "從物縱與主物不同屬一人，仍為從物", "非主物之成分，常助主物之效用，而同屬於一人者，為從物", "從物之處分，當然及於主物"], "a": 2, "e": "§68：非主物之成分，常助主物之效用，而同屬於一人者為從物；主物之處分及於從物。（民法總則題庫）"}, {"q": "【§69】下列何者為法定孳息？", "o": ["租金", "金礦", "稻穀", "雞蛋"], "a": 0, "e": "§69 II：法定孳息謂利息、租金及其他因法律關係所得之收益。租金為法定孳息；其餘屬天然孳息。（民法測驗題庫）"}, {"q": "【§71】依民法第71條規定，法律行為違反強制或禁止之規定者，其效力如何？", "o": ["得撤銷", "效力未定", "無效，但其規定並不以之為無效者，不在此限", "一律有效"], "a": 2, "e": "§71：法律行為違反強制或禁止之規定者，無效；但其規定並不以之為無效者，不在此限。（民法總則題庫）"}, {"q": "【§72】甲乙約定由乙擔任職業殺手殺害丙並支付報酬，此契約之效力如何？", "o": ["有效", "效力未定", "得撤銷", "無效"], "a": 3, "e": "§72：法律行為有背於公共秩序或善良風俗者，無效。約定殺人顯背善良風俗，自始無效。（民法總則題庫）"}, {"q": "【§77】下列有關行為能力的敘述，何者正確？", "o": ["限制行為能力人未得允許所為之任何法律行為，只要經承認即生效力", "法定代理人未允許處分之財產，限制行為能力人就該財產所訂之契約無效", "法定代理人允許限制行為能力人獨立營業者，關於其經營之各個行為，無須再得允許", "限制行為能力人用詐術使人信其為有行為能力人者，其法律行為無效"], "a": 2, "e": "§77原則須得允許（純獲利益或日常必需除外）；C係§85經允許獨立營業者於其營業有行為能力。A錯（單獨行為無效§78）、B錯（效力未定）、D錯（用詐術者行為有效§83）。（100年初等一般行政 法學大意）"}, {"q": "【§79】限制行為能力人未得法定代理人允許所訂立之契約，若相對人於訂約時知其未得允許，則相對人得行使何種權利？", "o": ["得定相當期限，催告法定代理人，確答是否承認", "未經承認前，得撤回之", "得定一個月以上之期限，催告法定代理人，確答是否承認", "經承認後，得撤銷之"], "a": 2, "e": "§79契約效力未定；§80相對人得定一個月以上期限催告確答。相對人「知其未得允許」者依§82但書無撤回權，故僅得催告。（101年高考三級 民法）"}, {"q": "【§87】通謀虛偽意思表示無效，但不得以其無效對抗善意第三人。下列關於「善意第三人」之敘述，何者正確？", "o": ["只限於與相對人有繼承關係的善意第三人", "只限於與相對人為法律行為的善意第三人", "包括法律行為及事實行為的善意第三人", "包括法律行為、侵權行為及事實行為的一切善意第三人"], "a": 1, "e": "§87 I 但書旨在保護交易安全，所稱善意第三人限於信賴該虛偽表示而與相對人「為法律行為」並取得權利者。（98年高考三級 民法）"}, {"q": "【§92】下列關於民法規定詐欺之敘述，何者錯誤？", "o": ["消極隱匿事實，必須是當事人有告知義務，才會構成詐欺", "因被詐欺而為意思表示者，其意思表示自始無效", "由第三人為詐欺者，以相對人明知或可得而知者為限，始得撤銷", "被詐欺而為意思表示者，得撤銷之，但不得以其撤銷對抗善意第三人"], "a": 1, "e": "§92：被詐欺而為之意思表示為「得撤銷」而非自始無效，故B錯誤。（108年郵政佐級晉員級 民法概要）"}, {"q": "【§93】因被詐欺而為意思表示者，依民法第93條，撤銷應於發見詐欺後幾年內為之？自意思表示後經過幾年不得撤銷？", "o": ["1年；5年", "2年；5年", "1年；10年", "2年；10年"], "a": 2, "e": "§93：撤銷應於發見詐欺或脅迫終止後「一年內」為之，但自意思表示後經過「十年」不得撤銷。（104年台水升任甄試 民法；依法條為準）"}, {"q": "【§95】關於意思表示之到達與生效，依民法規定，下列敘述何者正確？", "o": ["向無行為能力人為意思表示時，應以書面通知其法定代理人時始生效力", "非對話而為意思表示時，以通知達到相對人或其配偶、受僱人時發生效力", "表意人於發出通知後喪失行為能力者，其意思表示為效力未定", "對話人為意思表示者，以相對人了解時，發生效力"], "a": 3, "e": "§95非對話採到達主義，以達到相對人時生效（B錯）；發出後死亡或喪失行為能力不影響效力（C錯）；D為§94對話人了解時生效。（110年鐵路/國安特考佐級 法學大意）"}, {"q": "【§99】附條件之法律行為，於條件成就時「發生效力」者，該條件為：", "o": ["停止條件", "成立條件", "解除條件", "終止條件"], "a": 0, "e": "§99：附停止條件之法律行為，於條件成就時發生效力；附解除條件者於條件成就時失其效力。（民法總則題庫）"}, {"q": "【§104】下列關於代理之敘述，何者錯誤？", "o": ["代理人所為或所受意思表示之效力，因其為限制行為能力人而受影響", "代理人經本人之許諾，或專履行債務者，得為自己代理", "代理權之限制及撤回，不得對抗無過失之善意第三人", "代理人依照本人所指示之意思而為代理時，其意思表示是否有被詐欺，應就本人決之"], "a": 0, "e": "§104：代理人所為或所受意思表示之效力「不因」其為限制行為能力人而受影響，A將「不因」誤為「因」故錯誤。（112年初等 法學大意）"}, {"q": "【§118】下列關於民法第118條無權處分行為效力之敘述，何者正確？", "o": ["經有權利人之承認，溯及行為時發生效力", "經有權利人之承認，於承認時發生效力", "無權處分人於處分後取得權利者，自取得權利時起有效", "無權處分之規定，對於債權行為及物權行為均有適用"], "a": 0, "e": "§118 I：無權利人之處分經有權利人承認始生效力，並依§115溯及成立時生效；處分後取得權利者其處分自始有效（C錯）；僅適用處分行為（D錯）。（105年司律三等 綜合法學二）"}, {"q": "【§120】租賃自99年6月1日起租，租期一年。依民法第120條第2項「始日不算入」及第121條，此租賃關係何時終了？", "o": ["100年6月1日", "100年6月2日", "100年5月30日", "100年5月31日"], "a": 3, "e": "§120 II、§121 I：始日99/6/1不算入，自99/6/2起算一年，末日100/5/31終止。（101年司法官三等 綜合法學二）"}, {"q": "【§125】下列何種請求權之消滅時效期間為15年？", "o": ["侵權行為損害賠償請求權", "借貸物返還請求權", "律師之報酬請求權", "娛樂場之住宿費請求權"], "a": 1, "e": "§125：請求權因15年間不行使而消滅，較短期間者從其規定。借貸物返還無較短規定適用15年；侵權2年/10年、律師報酬2年、住宿費2年。（111年鐵路員級 法學知識）"}, {"q": "【§127】依民法第127條規定，技師、承攬人之報酬及其墊款之消滅時效為幾年？", "o": ["1年", "2年", "5年", "15年"], "a": 1, "e": "§127⑦：技師、承攬人之報酬及其墊款請求權，因二年間不行使而消滅。（108年台電新進僱用 法律常識）"}, {"q": "【§129】下列何者非屬民法第129條規定之消滅時效中斷事由？", "o": ["債務人逃匿", "請求", "承認", "起訴"], "a": 0, "e": "§129：中斷事由為「請求、承認、起訴」，「債務人逃匿」非法定中斷事由。（104年台電新進僱用 法律常識）"}, {"q": "【§144】依民法第144條之規定，消滅時效完成之效力為何？", "o": ["債務人得拒絕給付", "債權人之債權消滅", "債務人免除遲延責任", "債務人仍為履行之給付者，得請求返還"], "a": 0, "e": "§144：時效完成後債務人得拒絕給付（抗辯權，債權不消滅）；已給付者不得以不知時效請求返還。（101年台電職員級企管 法學緒論）"}];
+
+function renderQuiz(data, ns){
+  const box=document.getElementById(ns+'box');
+  if(!data.length){box.innerHTML='<p style=\'color:var(--muted)\'>本編暫無收錄考題。</p>';return;}
+  data.forEach((it,i)=>{
+    const q=document.createElement('div');q.className='q';
+    const opts=it.o.map((t,j)=>`<button class="opt" data-i="${i}" data-j="${j}"><span class="lab">(${'ABCDE'[j]})</span>${t}</button>`).join('');
+    q.innerHTML=`<div class="stem"><span class="no">${i+1}</span>${it.q}</div><div class="opts">${opts}</div>`+
+      `<div class="exp" id="${ns}exp${i}"><b>✅ 答案：(${'ABCDE'[it.a]})</b><br>${it.e}</div>`;
+    box.appendChild(q);
+  });
+  const answered=new Array(data.length).fill(false);let correct=0;
+  box.addEventListener('click',e=>{const b=e.target.closest('.opt');if(!b)return;
+    const i=+b.dataset.i,j=+b.dataset.j;if(answered[i])return;answered[i]=true;
+    const c=box.children[i],bs=c.querySelectorAll('.opt');
+    bs.forEach((bt,k)=>{bt.classList.add('lock');if(k===data[i].a)bt.classList.add('correct');});
+    if(j!==data[i].a)bs[j].classList.add('wrong');else correct++;
+    document.getElementById(ns+'exp'+i).classList.add('show');upd();});
+  function upd(){const d=answered.filter(Boolean).length;
+    document.getElementById(ns+'score').textContent=`答對 ${correct} / 作答 ${d} （共 ${data.length} 題）`;
+    document.getElementById(ns+'bar').style.width=(d/data.length*100)+'%';}
+  document.getElementById(ns+'showAll').onclick=()=>{box.querySelectorAll('.exp').forEach(x=>x.classList.add('show'));
+    box.querySelectorAll('.q').forEach((c,i)=>c.querySelectorAll('.opt').forEach((bt,k)=>{bt.classList.add('lock');if(k===data[i].a)bt.classList.add('correct');}));};
+  document.getElementById(ns+'reset').onclick=()=>location.reload();upd();
+}
+
+
+document.querySelectorAll('nav.tabs button').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.remove('on'));
+    document.querySelectorAll('section.pane').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    document.getElementById(b.dataset.t).classList.add('on');
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+});
+
+renderQuiz(QD,'q');
+</script>
+</body></html>
