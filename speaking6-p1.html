@@ -92,10 +92,17 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;padding:13px 18px;display
 
       <!-- 播音區 -->
       <div class="speak-box" id="speak-box">
-        <div class="icon">🔊</div>
-        <div class="lbl">正在播放題目</div>
-        <div class="sub">第 <span id="play-count">1</span> 次 ／ 共 2 次</div>
-        <div class="cd" id="speak-cd">—</div>
+        <div id="speak-ready">
+          <div class="icon">🎧</div>
+          <div class="lbl" style="color:#1f2937;margin-bottom:14px">準備好了嗎？</div>
+          <button class="btn btn-p" onclick="startPlay()">▶ 播放題目</button>
+        </div>
+        <div id="speak-playing" style="display:none">
+          <div class="icon">🔊</div>
+          <div class="lbl">正在播放題目</div>
+          <div class="sub">第 <span id="play-count">1</span> 次 ／ 共 2 次</div>
+          <div class="cd" id="speak-cd">播放中…</div>
+        </div>
       </div>
 
       <!-- 錄音區 -->
@@ -151,7 +158,7 @@ const QS = [
   {t:"He decided to climb the mountain because he wanted to see the view.", kw:["decided","climb","mountain","see","view"]}
 ];
 
-let qi=0, scores=[], recog=null, recording=false, recTimer=null, speakTimer=null, curFinal='', bestVoice=null;
+let qi=0, scores=[], recog=null, recording=false, recTimer=null, curFinal='', bestVoice=null;
 
 // ── 語音 ──
 const VOICE_PREF=['Google US English','Ava (Enhanced)','Allison (Enhanced)','Samantha (Enhanced)','Ava','Allison','Samantha','Karen','Moira'];
@@ -173,19 +180,24 @@ function tts(text, rate=0.85){
   },200);
 }
 
-function speakTwice(text){
+function speakTwice(text, onDone){
   window.speechSynthesis.cancel();
   let cnt=0;
   const go=()=>{
     cnt++;
     document.getElementById('play-count').textContent=String(cnt);
+    document.getElementById('speak-cd').textContent='播放中…';
     const u=new SpeechSynthesisUtterance(text);
     u.lang='en-US'; u.rate=0.85;
     if(bestVoice) u.voice=bestVoice;
-    if(cnt<2) u.onend=()=>setTimeout(go,1500);
+    if(cnt<2){
+      u.onend=()=>{ document.getElementById('speak-cd').textContent='準備第 2 次…'; setTimeout(go,1500); };
+    } else {
+      u.onend=()=>onDone();
+    }
     window.speechSynthesis.speak(u);
   };
-  setTimeout(go,200);
+  setTimeout(go,300);
 }
 
 // ── 題目 ──
@@ -197,22 +209,15 @@ function loadQ(i){
   document.getElementById('rec-area').style.display='none';
   document.getElementById('result-area').style.display='none';
   document.getElementById('play-count').textContent='1';
+  document.getElementById('speak-ready').style.display='block';
+  document.getElementById('speak-playing').style.display='none';
   curFinal='';
+}
 
-  // 播音（fire-and-forget，不等 onend）
-  speakTwice(q.t);
-
-  // 計時器控制流程：估算播完時間後進錄音
-  const words=q.t.split(/\s+/).length;
-  const total=Math.ceil(words/2.2)*2000+2500; // 兩次播音 + 間隔 + 緩衝
-  let rem=Math.ceil(total/1000);
-  document.getElementById('speak-cd').textContent=`${rem} 秒`;
-  clearInterval(speakTimer);
-  speakTimer=setInterval(()=>{
-    rem--;
-    if(rem>0){ document.getElementById('speak-cd').textContent=`${rem} 秒`; }
-    else{ clearInterval(speakTimer); startRec(q); }
-  },1000);
+function startPlay(){
+  document.getElementById('speak-ready').style.display='none';
+  document.getElementById('speak-playing').style.display='block';
+  speakTwice(QS[qi].t, ()=>startRec(QS[qi]));
 }
 
 // ── 錄音 ──
