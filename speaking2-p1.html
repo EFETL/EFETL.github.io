@@ -74,10 +74,17 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;padding:13px 18px;display
     <div class="card">
       <div class="qnum" id="qnum">題 1 / 5</div>
       <div class="speak-box" id="speak-box">
-        <div class="icon">🔊</div>
-        <div class="lbl">正在播放題目</div>
-        <div class="sub">第 <span id="play-count">1</span> 次 ／ 共 2 次</div>
-        <div class="cd" id="speak-cd">—</div>
+        <div id="speak-ready">
+          <div class="icon">🎧</div>
+          <div class="lbl" style="color:#1f2937;margin-bottom:14px">準備好了嗎？</div>
+          <button class="btn btn-p" onclick="startPlay()">▶ 播放題目</button>
+        </div>
+        <div id="speak-playing" style="display:none">
+          <div class="icon">🔊</div>
+          <div class="lbl">正在播放題目</div>
+          <div class="sub">第 <span id="play-count">1</span> 次 ／ 共 2 次</div>
+          <div class="cd" id="speak-cd">播放中…</div>
+        </div>
       </div>
       <div id="rec-area" style="display:none">
         <div class="timer-row">
@@ -125,13 +132,14 @@ const QS = [
   {t:"I always clean my bedroom before going to bed.", kw:["clean","bedroom","before","bed"]},
   {t:"He was absent from school because he had a bad cold.", kw:["absent","school","because","cold"]}
 ];
-let qi=0,scores=[],recog=null,recording=false,recTimer=null,speakTimer=null,curFinal='',bestVoice=null;
+let qi=0,scores=[],recog=null,recording=false,recTimer=null,curFinal='',bestVoice=null;
 const VOICE_PREF=['Google US English','Ava (Enhanced)','Allison (Enhanced)','Samantha (Enhanced)','Ava','Allison','Samantha','Karen','Moira'];
 function loadVoices(){const vs=window.speechSynthesis.getVoices().filter(v=>/^en/.test(v.lang));for(const name of VOICE_PREF){const v=vs.find(v=>v.name===name);if(v){bestVoice=v;return;}}bestVoice=vs.find(v=>v.lang==='en-US')||vs[0]||null;}
 window.speechSynthesis.onvoiceschanged=loadVoices;loadVoices();
 function tts(text,rate=0.85){window.speechSynthesis.cancel();setTimeout(()=>{const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=rate;if(bestVoice)u.voice=bestVoice;window.speechSynthesis.speak(u);},200);}
-function speakTwice(text){window.speechSynthesis.cancel();let cnt=0;const go=()=>{cnt++;document.getElementById('play-count').textContent=String(cnt);const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=0.85;if(bestVoice)u.voice=bestVoice;if(cnt<2)u.onend=()=>setTimeout(go,1500);window.speechSynthesis.speak(u);};setTimeout(go,200);}
-function loadQ(i){const q=QS[i];document.getElementById('prog').style.width=(i/QS.length*100)+'%';document.getElementById('qnum').textContent=`題 ${i+1} / ${QS.length}`;document.getElementById('speak-box').style.display='block';document.getElementById('rec-area').style.display='none';document.getElementById('result-area').style.display='none';document.getElementById('play-count').textContent='1';curFinal='';speakTwice(q.t);const words=q.t.split(/\s+/).length;const total=Math.ceil(words/2.2)*2000+2500;let rem=Math.ceil(total/1000);document.getElementById('speak-cd').textContent=`${rem} 秒`;clearInterval(speakTimer);speakTimer=setInterval(()=>{rem--;if(rem>0){document.getElementById('speak-cd').textContent=`${rem} 秒`;}else{clearInterval(speakTimer);startRec(q);}},1000);}
+function speakTwice(text,onDone){window.speechSynthesis.cancel();let cnt=0;const go=()=>{cnt++;document.getElementById('play-count').textContent=String(cnt);document.getElementById('speak-cd').textContent='播放中…';const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=0.85;if(bestVoice)u.voice=bestVoice;if(cnt<2){u.onend=()=>{document.getElementById('speak-cd').textContent='準備第 2 次…';setTimeout(go,1500);};}else{u.onend=()=>onDone();}window.speechSynthesis.speak(u);};setTimeout(go,300);}
+function loadQ(i){const q=QS[i];document.getElementById('prog').style.width=(i/QS.length*100)+'%';document.getElementById('qnum').textContent=`題 ${i+1} / ${QS.length}`;document.getElementById('speak-box').style.display='block';document.getElementById('rec-area').style.display='none';document.getElementById('result-area').style.display='none';document.getElementById('play-count').textContent='1';document.getElementById('speak-ready').style.display='block';document.getElementById('speak-playing').style.display='none';curFinal='';}
+function startPlay(){document.getElementById('speak-ready').style.display='none';document.getElementById('speak-playing').style.display='block';speakTwice(QS[qi].t,()=>startRec(QS[qi]));}
 function startRec(q){document.getElementById('speak-box').style.display='none';document.getElementById('rec-area').style.display='block';document.getElementById('transcript').innerHTML='<span style="color:#9ca3af;font-style:italic">正在聆聽您的聲音…</span>';curFinal='';recording=true;const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(SR){recog=new SR();recog.lang='en-US';recog.continuous=true;recog.interimResults=true;recog.onresult=e=>{let fin='',intr='';for(let i=e.resultIndex;i<e.results.length;i++){if(e.results[i].isFinal)fin+=e.results[i][0].transcript+' ';else intr+=e.results[i][0].transcript;}curFinal+=fin;document.getElementById('transcript').innerHTML=(curFinal?`<span>${curFinal}</span>`:'')+( intr?`<span style="color:#9ca3af">${intr}</span>`:'<span style="color:#9ca3af;font-style:italic">正在聆聽…</span>');};recog.onerror=()=>{};recog.onend=()=>{if(recording){try{recog.start();}catch(e){}}};try{recog.start();}catch(e){}}let rem=15;setTimer(rem);clearInterval(recTimer);recTimer=setInterval(()=>{rem--;setTimer(rem);if(rem<=0){clearInterval(recTimer);if(recording)scoreQ(q);}},1000);}
 function setTimer(rem){const el=document.getElementById('rec-timer');el.textContent='0:'+String(rem).padStart(2,'0');el.className='timer-val'+(rem<=5?' danger':rem<=10?' warn':'');}
 function stopManual(){if(recording)scoreQ(QS[qi]);}
