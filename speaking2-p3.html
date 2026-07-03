@@ -98,8 +98,15 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;padding:13px 18px;display
 
       <!-- 倒數 -->
       <div class="cd-box" id="cd-box">
-        <div style="font-size:2rem;margin-bottom:8px">🔊</div>
-        <div class="cd-lbl" id="cd-lbl">正在播放題目...</div>
+        <div id="cd-ready">
+          <div style="font-size:2rem;margin-bottom:8px">🎧</div>
+          <div class="cd-lbl" style="color:#1f2937;margin-bottom:14px">準備好了嗎？</div>
+          <button class="btn btn-p" onclick="startPlay()">▶ 播放題目</button>
+        </div>
+        <div id="cd-playing" style="display:none">
+          <div style="font-size:2rem;margin-bottom:8px">🔊</div>
+          <div class="cd-lbl" id="cd-lbl">正在播放題目...</div>
+        </div>
       </div>
 
       <!-- 錄音 -->
@@ -203,11 +210,29 @@ function initVoice(){
 if(speechSynthesis.onvoiceschanged!==undefined) speechSynthesis.onvoiceschanged=initVoice;
 initVoice();
 
-function speakOnce(text){
-  const u=new SpeechSynthesisUtterance(text);
-  u.lang='en-US'; u.rate=0.9;
-  if(ttsVoice) u.voice=ttsVoice;
-  speechSynthesis.speak(u);
+function speakTwice(text,onDone){
+  window.speechSynthesis.cancel();
+  let cnt=0;
+  const go=()=>{
+    cnt++;
+    document.getElementById('cd-lbl').textContent='正在播放題目...';
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang='en-US'; u.rate=0.9;
+    if(ttsVoice) u.voice=ttsVoice;
+    if(cnt<2){
+      u.onend=()=>{ document.getElementById('cd-lbl').textContent='準備播放第 2 次…'; setTimeout(go,1000); };
+    } else {
+      u.onend=()=>onDone();
+    }
+    window.speechSynthesis.speak(u);
+  };
+  setTimeout(go,300);
+}
+
+function startPlay(){
+  document.getElementById('cd-ready').style.display='none';
+  document.getElementById('cd-playing').style.display='block';
+  speakTwice(QS[qi].t,()=>startRec(QS[qi]));
 }
 
 function loadQ(i){
@@ -224,16 +249,11 @@ function loadQ(i){
   document.getElementById('qzh').style.display='none';
 
   document.getElementById('cd-box').style.display='block';
-  document.getElementById('cd-lbl').textContent='🔊 正在播放題目...';
+  document.getElementById('cd-ready').style.display='block';
+  document.getElementById('cd-playing').style.display='none';
   document.getElementById('rec-area').style.display='none';
   document.getElementById('result-area').style.display='none';
   curFinal='';
-
-  // 播放兩次，用 timer 估算播完時間
-  speakOnce(q.t);
-  const onceMs=(q.t.split(' ').length*480)+500;
-  setTimeout(()=>speakOnce(q.t), onceMs+600);
-  ttsTimer=setTimeout(()=>startRec(q), onceMs*2+1400);
 }
 
 function startRec(q){
