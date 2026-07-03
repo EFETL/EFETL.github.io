@@ -115,10 +115,9 @@
   <a href="gept-writing.html" style="display:inline-block;margin-bottom:14px;color:var(--primary);text-decoration:none;font-size:16px;font-weight:700">← 回寫作題庫</a>
 
   <header class="hero">
-    <span class="badge">自我對照版 ‧ 免費 ‧ 離線可用</span>
     <h1>全民英檢初級 寫作練習</h1>
     <div class="en">GEPT Elementary · Writing Practice</div>
-    <p>動手「寫」，不是選選擇題。每題寫完按 <b>檢查</b> 看即時回饋，再按 <b>看解答</b> 對照標準答案與文法解析。</p>
+    <p>動手「寫」，不是選選擇題。單句題寫完按 <b>看解答與評分</b> 對照標準答案、看得分與文法解析；段落題可按 <b>🤖 請 AI 老師批改</b> 得到即時回饋。</p>
   </header>
 
   <div class="progress">第 <b>1</b> 回　·　完成度 <b><span id="done">0</span></b> / 15 題單句　·　段落題 1 篇</div>
@@ -145,7 +144,7 @@
 
   <div class="card">
     <div class="qhead"><span class="orig">看圖寫一篇約 50 字的短文</span><span class="pagemark" style="float:none;margin-left:auto">第 4 頁</span></div>
-    <p style="font-size:16px;margin:4px 0 12px">上個星期五的晚上，Tom 躺在床上滑手機滑到一半時，突然發生強烈地震。 後來發生了什麼事呢？請依下面四格圖片寫一篇約 50 字的短文。</p>
+    <p id="essayTopic" style="font-size:16px;margin:4px 0 12px">上個星期五的晚上，Tom 躺在床上滑手機滑到一半時，突然發生強烈地震。 後來發生了什麼事呢？請依下面四格圖片寫一篇約 50 字的短文。</p>
 
     <div class="panels">
       <div class="panel"><svg viewBox="0 0 220 160" xmlns="http://www.w3.org/2000/svg">
@@ -286,8 +285,8 @@
     </div>
   </div>
 
-  <footer>全民英檢初級 寫作 ‧ 互動練習　|　自我對照版（免費 ‧ 離線可用）<br>
-    可選配：AI 老師批改作文（接 Claude API）｜上線到 quiz.efetl.com / teaching.efetl.com</footer>
+  <footer>全民英檢初級 寫作 ‧ 互動練習<br>
+    段落寫作可用 🤖 AI 老師批改（文法／拼字／中式英文＋給分）｜quiz.efetl.com</footer>
 </div>
 
 <script>
@@ -539,8 +538,7 @@ function renderText(list, containerId, which){
         <div class="cue">${cueHtml}</div>
         <input class="answer" id="${id}" placeholder="在這裡寫出完整句子…">
         <div class="btnrow">
-          <button class="btn-check" onclick="checkText('${which}',${i})">檢查</button>
-          <button class="btn-reveal" onclick="revealText('${which}',${i})">看解答</button>
+          <button class="btn-reveal" onclick="revealText('${which}',${i})">看解答與評分</button>
         </div>
         <div class="feedback" id="${id}_fb"></div>
       </div>`);
@@ -549,24 +547,22 @@ function renderText(list, containerId, which){
 function getList(which){ return which==='r'?rewriteQ:combineQ; }
 function cid(which){ return which==='r'?'rewrite':'combine'; }
 
-function checkText(which,i){
+function revealText(which,i){
   const q = getList(which)[i];
   const id = cid(which)+"_"+i;
   const fb = document.getElementById(id+"_fb");
   const val = norm(document.getElementById(id).value);
-  if(!val){ flash(fb,"fb-warn","✏️ 先寫一句再按檢查唷。"); return; }
-  if(q.accepts.includes(val)){
-    flash(fb,"fb-ok",`✅ 完全正確！<div class="answer-line">${q.model}</div>`);
-    markDone(id);
-  }else{
-    flash(fb,"fb-warn","📝 已記錄你的答案。寫作常有多種寫法，點「看解答」對照參考句吧 👇");
-  }
-}
-function revealText(which,i){
-  const q = getList(which)[i];
-  const fb = document.getElementById(cid(which)+"_"+i+"_fb");
   const note = q.flag ? `<div class="explain">⚠️ ${q.flag}</div>` : "";
-  flash(fb,"fb-ok",`<b>參考答案</b><div class="answer-line">${q.model}</div>
+  let score;
+  if(!val){
+    score = `<b>📊 得分：0 分</b>（未作答）`;
+  }else if(q.accepts.includes(val)){
+    score = `<b>📊 得分：1 分</b> ✅ 答對了！`; markDone(id);
+  }else{
+    score = `<b>📊 得分：0 分</b>　你的答案與參考不同；寫作常有多種正確寫法，請對照下方參考句自我判斷。`;
+  }
+  flash(fb,"fb-ok",`<div style="margin-bottom:6px">${score}</div>
+     <b>參考答案</b><div class="answer-line">${q.model}</div>
      <div class="explain">💡 ${q.explain}</div>${note}`);
 }
 
@@ -585,8 +581,7 @@ function renderReorder(){
         <div class="builder" id="build_${i}"></div>
         <div class="pool" id="pool_${i}">${pool}</div>
         <div class="btnrow">
-          <button class="btn-check" onclick="checkReorder(${i})">檢查</button>
-          <button class="btn-reveal" onclick="revealReorder(${i})">看解答</button>
+          <button class="btn-reveal" onclick="revealReorder(${i})">看解答與評分</button>
           <button class="btn-ghost" onclick="resetReorder(${i})">重排</button>
         </div>
         <div class="feedback" id="ro_${i}_fb"></div>
@@ -605,17 +600,19 @@ function drawBuilder(i){
   else bState[i].forEach((ti,pos)=> h+=`<span class="chip" onclick="unpick(${i},${pos})">${q.tokens[ti]}</span>`);
   h+=`<span class="frame">${q.suffix}</span>`; b.innerHTML=h;
 }
-function checkReorder(i){
-  const q=reorderQ[i], fb=document.getElementById("ro_"+i+"_fb");
-  const picked=bState[i].map(ti=>q.tokens[ti]);
-  if(picked.length===0){ flash(fb,"fb-warn","✏️ 先點字卡排出句子。"); return; }
-  if(picked.join("|")===q.answer.join("|")){
-    flash(fb,"fb-ok",`✅ 排對了！<div class="answer-line">${q.model}</div>`); markDone("ro_"+i);
-  }else flash(fb,"fb-warn","🤔 順序還不對，再調整看看，或點「看解答」對照。");
-}
 function revealReorder(i){
   const q=reorderQ[i], fb=document.getElementById("ro_"+i+"_fb");
-  flash(fb,"fb-ok",`<b>正確句子</b><div class="answer-line">${q.model}</div>
+  const picked=bState[i].map(ti=>q.tokens[ti]);
+  let score;
+  if(picked.length===0){
+    score = `<b>📊 得分：0 分</b>（未排列）`;
+  }else if(picked.join("|")===q.answer.join("|")){
+    score = `<b>📊 得分：1 分</b> ✅ 排對了！`; markDone("ro_"+i);
+  }else{
+    score = `<b>📊 得分：0 分</b>　順序還不對，對照下方正確句看看。`;
+  }
+  flash(fb,"fb-ok",`<div style="margin-bottom:6px">${score}</div>
+     <b>正確句子</b><div class="answer-line">${q.model}</div>
      <div class="explain">💡 ${q.explain}</div>`);
 }
 function resetReorder(i){
@@ -637,10 +634,12 @@ function toggleEssay(){ document.getElementById("essayFb").classList.toggle("sho
 /* ====== AI 老師批改（零成本：複製指令 → 開 AI 貼上） ====== */
 let lastAiPrompt = "";
 function buildEssayPrompt(essay){
+  const topicEl = document.getElementById("essayTopic");
+  const topic = topicEl ? topicEl.textContent.trim() : "看圖寫一篇約 50 字的英文短文。";
   return `你是一位親切又專業的「全民英檢初級（GEPT Elementary）」英文寫作老師，正在批改台灣國中程度學生的看圖寫作。請全程用「繁體中文」批改，語氣鼓勵、具體、學生看得懂。
 
 【題目情境】
-上個星期五的晚上，Tom 躺在床上滑手機，突然發生強烈地震。請依四格圖片寫一篇約 50 字的短文，描述後來發生的事。
+${topic}
 
 【學生寫的作文】
 ${essay}
@@ -670,16 +669,12 @@ function askAI(){
       <li>在對話框按「貼上」（電腦 Ctrl+V／Mac ⌘+V；手機長按選貼上）</li>
       <li>送出，就會看到文法、拼字、中式英文的批改和分數！</li>
     </ol>
-    <div class="explain" style="margin:2px 0 6px;font-weight:700;color:var(--ok)">🟢 免登入（推薦，沒帳號也能用）</div>
+    <div class="explain" style="margin:2px 0 6px;font-weight:700;color:var(--ok)">🟢 ChatGPT 免登入、沒帳號也能用</div>
     <div class="btnrow" style="margin-top:0">
       <a class="linkbtn btn-check" target="_blank" rel="noopener" href="${chatgptUrl}">開 ChatGPT ↗</a>
-    </div>
-    <div class="explain" style="margin:12px 0 6px;font-weight:700;color:var(--muted)">🔑 需登入帳號</div>
-    <div class="btnrow" style="margin-top:0">
-      <a class="linkbtn btn-reveal" target="_blank" rel="noopener" href="https://gemini.google.com/app">開 Gemini（需 Google 帳號）↗</a>
       <button class="btn-ghost" onclick="recopyPrompt(this)">再複製一次指令</button>
     </div>
-    <div class="explain" style="margin-top:8px">💡 有些 AI 會自動帶入指令；若沒有，直接在對話框「貼上」即可。建議在師長／家長陪同下使用。</div>
+    <div class="explain" style="margin-top:8px">💡 ChatGPT 有時會自動帶入指令；若沒有，直接在對話框「貼上」即可。建議在師長／家長陪同下使用。</div>
     <details style="margin-top:8px">
       <summary style="cursor:pointer;font-size:16px;color:var(--muted)">看／手動複製完整批改指令</summary>
       <textarea id="aiPromptBox" class="answer" readonly style="min-height:120px;margin-top:8px"></textarea>
