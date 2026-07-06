@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEPT 初級 聽力測驗　第1回</title>
+<style>
+  :root{
+    --blue:#2b8cff; --blue-dark:#1f6fe0;
+    --coral:#ff7a59; --amber:#ffb02e; --pink:#ff5d8f;
+    --bg:#f3f9ff; --card:#ffffff; --line:#e3edf9;
+    --green:#22b573; --green-bg:#e4f8ef;
+    --red:#ff5a5a; --red-bg:#ffecec;
+    --gray:#6b7785;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;
+    background:linear-gradient(180deg,#fff5ec,#fff9f4 70%);color:#22303f;line-height:1.6;
+    -webkit-text-size-adjust:100%;}
+  .wrap{max-width:760px;margin:0 auto;padding:16px;}
+  header.top{background:linear-gradient(135deg,#f6d365,#fda085 60%,#ff7a9c);color:#fff;
+    border-radius:18px;padding:24px 22px;margin-bottom:16px;box-shadow:0 8px 22px rgba(253,160,133,.35);}
+  header.top h1{margin:0 0 6px;font-size:1.5rem;text-shadow:0 1px 2px rgba(0,0,0,.14);}
+  header.top p{margin:0;font-size:.92rem;opacity:.96;}
+  .meta{margin-top:14px;font-size:.86rem;background:rgba(255,255,255,.24);
+    padding:9px 13px;border-radius:10px;}
+  .notice{background:#fffbeb;border:1.5px solid #f59e0b;border-radius:12px;
+    padding:11px 15px;margin-bottom:14px;font-size:.86rem;color:#78350f;
+    display:flex;align-items:flex-start;gap:9px;line-height:1.55;}
+  .notice .ic{font-size:1.1rem;flex-shrink:0;margin-top:1px;}
+  .sticky{position:sticky;top:0;z-index:20;padding:10px 0;
+    background:linear-gradient(180deg,#fff5ec 70%,rgba(255,245,236,0));}
+  .bar{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:11px 16px;display:flex;align-items:center;gap:12px;font-size:.9rem;
+    box-shadow:0 4px 12px rgba(253,160,133,.14);}
+  .bar .track{flex:1;height:9px;background:#f1e4dc;border-radius:6px;overflow:hidden;}
+  .bar .fill{height:100%;width:0;border-radius:6px;
+    background:linear-gradient(90deg,#ffb02e,#ff7a59);transition:width .35s;}
+  .bar #count{font-weight:700;color:#e0740a;}
+  .section-title{color:#fff;font-weight:800;border-radius:12px;
+    padding:10px 16px;margin:24px 0 6px;font-size:1.05rem;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);}
+  .section-title.s0{background:linear-gradient(135deg,#ff9a6c,#ff6f91);}
+  .section-title.s1{background:linear-gradient(135deg,#4dd0e1,#2b8cff);}
+  .section-title.s2{background:linear-gradient(135deg,#9b8bff,#b06bff);}
+  .section-title.s3{background:linear-gradient(135deg,#43cea2,#3ab0d6);}
+  .section-desc{font-size:.86rem;color:var(--gray);margin:0 4px 10px;}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:15px 17px;margin:12px 0;box-shadow:0 3px 10px rgba(253,160,133,.09);}
+  .qhead{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+  .qhead .num{display:inline-block;color:#fff;background:var(--coral);font-weight:700;
+    border-radius:8px;padding:1px 10px;font-size:.92rem;}
+  .play{display:inline-flex;align-items:center;gap:7px;border:0;cursor:pointer;
+    color:#fff;font-weight:800;font-size:.92rem;border-radius:22px;padding:8px 16px;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);box-shadow:0 4px 12px rgba(255,93,143,.3);}
+  .play:active{transform:translateY(1px);}
+  .play.playing{background:linear-gradient(135deg,#22b573,#1a9e63);}
+  .play .wave{font-size:.8rem;opacity:.9;}
+  .hintq{font-size:.8rem;color:var(--gray);}
+  .fig{text-align:center;margin:4px 0 12px;}
+  .fig svg{max-width:100%;height:auto;}
+  .pic-img{border-radius:9px;border:1px solid #e6ded7;object-fit:cover;}
+  .fig .pic-img{max-width:230px;width:100%;max-height:150px;}
+  .opt{display:flex;align-items:flex-start;gap:10px;border:2px solid var(--line);
+    border-radius:11px;padding:10px 13px;margin:8px 0;cursor:pointer;transition:.15s;
+    font-size:.95rem;background:#fbfdff;}
+  .opt:hover{border-color:var(--coral);background:#fff4ee;}
+  .opt input{margin-top:3px;accent-color:var(--coral);}
+  .opt .lab{font-weight:800;color:var(--coral);min-width:18px;}
+  .opt.sel{border-color:var(--coral);background:#ffeee6;}
+  .opt.correct{border-color:var(--green);background:var(--green-bg);}
+  .opt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .opt.lock{cursor:default;}
+  /* picture options (Part 4) */
+  .picopts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:6px 0;}
+  .picopt{border:2px solid var(--line);border-radius:12px;padding:9px 6px;cursor:pointer;
+    text-align:center;transition:.15s;background:#fbfdff;display:flex;flex-direction:column;align-items:center;gap:6px;}
+  .picopt:hover{border-color:var(--coral);background:#fff4ee;}
+  .picopt.sel{border-color:var(--coral);background:#ffeee6;}
+  .picopt.correct{border-color:var(--green);background:var(--green-bg);}
+  .picopt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .picopt .lab{font-weight:800;color:var(--coral);align-self:flex-start;margin-left:4px;}
+  .picopt.correct .lab{color:var(--green);}.picopt.wrong .lab{color:var(--red);}
+  .picopt img.pic-img{width:100%;height:82px;}
+  .picopt svg{width:100%;max-width:96px;height:auto;}
+  .legend{display:flex;gap:12px;justify-content:center;font-size:.72rem;margin:2px 0 6px;color:#556;flex-wrap:wrap;}
+  .legend i{display:inline-block;width:11px;height:11px;border:1px solid #999;margin-right:4px;vertical-align:-1px;}
+  table.mini{border-collapse:collapse;font-size:.62rem;margin:0 auto;}
+  table.mini th{background:#33414f;color:#fff;padding:2px 4px;}
+  table.mini td{border:1px solid #bbb;padding:2px 4px;text-align:center;}
+  .board{background:#111;color:#ffd24a;border-radius:5px;padding:5px;font-family:"Courier New",monospace;display:inline-block;}
+  .board table{border-collapse:collapse;font-size:.6rem;color:#ffd24a;}
+  .board th{color:#7fd7ff;padding:1px 4px;border-bottom:1px solid #444;}
+  .board td{padding:1px 4px;text-align:center;}
+  .exp{display:none;margin-top:11px;border-top:2px dashed #ffe1c2;padding-top:11px;font-size:.9rem;}
+  .exp.show{display:block;}
+  .exp .tag{display:inline-block;font-weight:800;color:#fff;background:var(--green);
+    border-radius:7px;padding:2px 10px;font-size:.8rem;margin-bottom:7px;}
+  .exp .tag.miss{background:var(--red);}
+  .exp .scriptbox{background:#f4f8ff;border-radius:8px;padding:7px 11px;margin:5px 0;font-size:.88rem;color:#20364d;}
+  .exp .scriptbox b{color:var(--blue-dark);}
+  .exp .en{color:#1c4f7a;background:#eef7ff;border-radius:8px;padding:6px 10px;margin:5px 0;}
+  .exp .zh{color:#7a4a12;background:#fff7ea;border-radius:8px;padding:6px 10px;margin:5px 0;}
+  .actions{position:sticky;bottom:0;padding:14px 0 6px;margin-top:18px;
+    background:linear-gradient(transparent,#fff9f4 35%);}
+  button.submit{width:100%;color:#fff;border:0;border-radius:14px;padding:16px;
+    font-size:1.08rem;font-weight:800;cursor:pointer;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);
+    box-shadow:0 6px 16px rgba(255,93,143,.35);}
+  button.submit:active{transform:translateY(1px);}
+  button.reset{width:100%;background:#fff;color:var(--coral);border:2px solid var(--coral);
+    border-radius:14px;padding:14px;font-size:1rem;font-weight:800;cursor:pointer;margin-top:10px;display:none;}
+  .result{display:none;background:var(--card);border:3px solid transparent;border-radius:16px;
+    padding:22px;margin:16px 0;text-align:center;
+    background-image:linear-gradient(#fff,#fff),linear-gradient(135deg,#ffb02e,#ff7a59,#ff5d8f);
+    background-origin:border-box;background-clip:padding-box,border-box;
+    box-shadow:0 8px 22px rgba(255,122,89,.18);}
+  .result.show{display:block;}
+  .result .score{font-size:2.8rem;font-weight:900;
+    background:linear-gradient(135deg,#ff7a59,#ff5d8f);-webkit-background-clip:text;
+    background-clip:text;-webkit-text-fill-color:transparent;}
+  .result .sub{color:var(--gray);font-size:.95rem;}
+  .result .bd{display:flex;justify-content:center;gap:18px;margin-top:12px;flex-wrap:wrap;font-size:.95rem;}
+  .result .bd span{font-weight:800;}
+  .hint{text-align:center;font-size:.85rem;color:var(--gray);margin-top:9px;min-height:1.2em;}
+  footer{text-align:center;color:var(--gray);font-size:.8rem;margin:24px 0;}
+</style>
+</head>
+<body>
+<a href="gept-listening.html" style="position:fixed;top:12px;left:12px;background:rgba(255,255,255,.92);color:#ff6f91;padding:7px 15px;border-radius:20px;text-decoration:none;font-size:.85rem;font-weight:800;z-index:999;box-shadow:0 3px 10px rgba(0,0,0,.15);">&#8592; 回聽力題庫</a>
+<div class="wrap">
+  <header class="top">
+    <h1>GEPT 初級　聽力測驗　<span style="opacity:.9">第1回</span></h1>
+    <p>互動聽力練習　&middot;　依官方四大題型與難度命題</p>
+    <div class="meta">共 4 大題、30 題　|　每題按 🔊 播放，聆聽後作答　|　送出後顯示聽力原文、中英解析與分數</div>
+  </header>
+
+  <div class="notice">
+    <span class="ic">🎧</span>
+    <span>每題皆附<strong>語音朗讀音檔</strong>，iPhone、Android 各廠牌手機與電腦瀏覽器皆可播放（請開啟媒體音量）。點各題的 <strong>🔊 播放</strong> 鈕聆聽；正式考試每題只播一次，練習時可重播。</span>
+  </div>
+
+  <div class="sticky">
+    <div class="bar">
+      <span>作答進度</span>
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <span id="count">0 / 30</span>
+    </div>
+  </div>
+
+  <form id="quiz"></form>
+
+  <div class="result" id="result">
+    <div class="score" id="scoreNum">0</div>
+    <div class="sub" id="scoreTxt">分</div>
+    <div class="bd">
+      <span style="color:var(--green)">答對 <b id="rOk">0</b></span>
+      <span style="color:var(--red)">答錯 <b id="rNo">0</b></span>
+      <span style="color:var(--gray)">未作答 <b id="rBlank">0</b></span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="submit" id="submitBtn">送出並查看解析</button>
+    <div class="hint" id="hint">尚未作答任何題目</div>
+    <button type="button" class="reset" id="resetBtn">重新作答</button>
+  </div>
+
+  <footer>GEPT 初級聽力　互動練習　&middot;　第二顆腦 / GEPT初級</footer>
+</div>
+
+<script>
+/* ====== 圖形素材 ====== */
+const IMG = n => `<img class="pic-img" src="gept-listening-img/1/${n}.jpg" alt="${n}">`;
+const SVG_BALL = `<svg width="150" height="108" viewBox="0 0 150 110"><rect x="30" y="36" width="90" height="8" fill="none" stroke="#1a1a1a" stroke-width="2.5"/><line x1="38" y1="44" x2="38" y2="96" stroke="#1a1a1a" stroke-width="2.5"/><line x1="112" y1="44" x2="112" y2="96" stroke="#1a1a1a" stroke-width="2.5"/><circle cx="75" cy="78" r="15" fill="none" stroke="#1a1a1a" stroke-width="2.5"/><path d="M62 72 q13 8 26 0 M75 63 v30 M63 84 q12 -6 24 0" fill="none" stroke="#1a1a1a" stroke-width="1.5"/></svg>`;
+const SVG_BAR = `<svg width="240" height="150" viewBox="0 0 240 150"><text x="120" y="14" text-anchor="middle" font-size="12" font-weight="700">Students' Favorite Sports</text><line x1="34" y1="24" x2="34" y2="112" stroke="#1a1a1a" stroke-width="1.6"/><line x1="34" y1="112" x2="222" y2="112" stroke="#1a1a1a" stroke-width="1.6"/><g stroke="#eee"><line x1="34" y1="90" x2="222" y2="90"/><line x1="34" y1="68" x2="222" y2="68"/><line x1="34" y1="46" x2="222" y2="46"/></g><rect x="48" y="74" width="30" height="38" fill="#e9e9e9" stroke="#1a1a1a" stroke-width="1.4"/><rect x="94" y="36" width="30" height="76" fill="#e9e9e9" stroke="#1a1a1a" stroke-width="1.4"/><rect x="140" y="56" width="30" height="56" fill="#e9e9e9" stroke="#1a1a1a" stroke-width="1.4"/><rect x="186" y="84" width="30" height="28" fill="#e9e9e9" stroke="#1a1a1a" stroke-width="1.4"/><g font-size="9.5" text-anchor="middle"><text x="63" y="124">Baseball</text><text x="109" y="124">Basketball</text><text x="155" y="124">Swimming</text><text x="201" y="124">Tennis</text></g></svg>`;
+const SVG_CLOCK = `<svg width="110" height="100" viewBox="0 0 120 110"><circle cx="60" cy="54" r="40" fill="#fff" stroke="#1a1a1a" stroke-width="3"/><g stroke="#1a1a1a" stroke-width="2" stroke-linecap="round"><line x1="60" y1="18" x2="60" y2="25"/><line x1="60" y1="83" x2="60" y2="90"/><line x1="24" y1="54" x2="31" y2="54"/><line x1="89" y1="54" x2="96" y2="54"/></g><line x1="60" y1="54" x2="42" y2="69" stroke="#1a1a1a" stroke-width="3.5" stroke-linecap="round"/><line x1="60" y1="54" x2="60" y2="88" stroke="#1a1a1a" stroke-width="3" stroke-linecap="round"/><circle cx="60" cy="54" r="3.5" fill="#1a1a1a"/></svg>`;
+const SVG_SHIRT = `<svg width="150" height="105" viewBox="0 0 150 110"><path d="M40 26 l18 -8 q17 12 34 0 l18 8 -14 18 -8 -5 v42 h-52 v-42 l-8 5z" fill="#fff" stroke="#1a1a1a" stroke-width="2.5" stroke-linejoin="round"/><rect x="84" y="76" width="54" height="27" rx="4" fill="#fff" stroke="#1a1a1a" stroke-width="2" transform="rotate(8 111 89)"/><text x="111" y="86" font-size="11" text-anchor="middle" transform="rotate(8 111 89)">$500</text><text x="111" y="99" font-size="11" font-weight="700" fill="#e6007e" text-anchor="middle" transform="rotate(8 111 89)">20% OFF</text></svg>`;
+const pie = (a,b,c)=>`<svg viewBox="0 0 90 90">${a}${b}${c}<circle cx="45" cy="45" r="32" fill="none" stroke="#1a1a1a" stroke-width="1.6"/></svg>`;
+const SL_W=`<path d="M45 45 L45 13 A32 32 0 0 1 45 77 Z" fill="#e6007e"/>`, SL_Wb=`<path d="M45 45 L45 77 A32 32 0 0 1 13 45 Z" fill="#9a9a9a"/>`, SL_Wk=`<path d="M45 45 L13 45 A32 32 0 0 1 45 13 Z" fill="#eaeaea"/>`;
+const PIE_BUS=pie(`<path d="M45 45 L45 13 A32 32 0 0 1 77 45 Z" fill="#e6007e"/>`,`<path d="M45 45 L77 45 A32 32 0 0 1 13 45 Z" fill="#9a9a9a"/>`,`<path d="M45 45 L13 45 A32 32 0 0 1 45 13 Z" fill="#eaeaea"/>`);
+const PIE_WALK=pie(SL_W,SL_Wb,SL_Wk);
+const PIE_BIKE=pie(`<path d="M45 45 L45 13 A32 32 0 0 1 77 45 Z" fill="#e6007e"/>`,`<path d="M45 45 L77 45 A32 32 0 0 1 45 77 Z" fill="#9a9a9a"/>`,`<path d="M45 45 L45 77 A32 32 0 0 1 45 13 Z" fill="#eaeaea"/>`);
+const tbl=(t,p)=>`<table class="mini"><tr><th colspan="3">Train Schedule</th></tr><tr><th>To</th><th>Time</th><th>Platform</th></tr><tr><td>Kaohsiung</td><td>${t}</td><td>${p}</td></tr></table>`;
+const brd=(f,to,g)=>`<div class="board"><table><tr><th>Flight</th><th>To</th><th>Gate</th></tr><tr><td>${f}</td><td>${to}</td><td>${g}</td></tr></table></div>`;
+const PIE_LEGEND=`<div class="legend"><span><i style="background:#e6007e"></i>Walk 走路</span><span><i style="background:#9a9a9a"></i>Bus 公車</span><span><i style="background:#eaeaea"></i>Bike 腳踏車</span></div>`;
+
+/* ====== 大題 ====== */
+const PARTS=[
+ {t:"第一大題　看圖辨義",d:"共 5 題（1–5）。看圖並聆聽問題，從 A、B、C 三個選項中選出最適合的答案。"},
+ {t:"第二大題　問答",d:"共 10 題（6–15）。聆聽一個問句或直述句，選出最適合的回答。"},
+ {t:"第三大題　簡短對話",d:"共 10 題（16–25）。聆聽一段對話與問題，選出最適合的答案。"},
+ {t:"第四大題　短文聽解",d:"共 5 題（26–30）。聆聽一段短文與問題，從三張圖片中選出最適合的一張。"}
+];
+
+/* ====== 題庫 ====== */
+const Q=[
+/* --- Part 1 --- */
+{n:1,p:0,fig:IMG('sunny'),seg:[{v:'N',t:"For question one, please look at the picture. How is the weather today?"}],
+ o:["It's rainy and cold.","It's sunny and warm.","It's windy and snowy."],a:1,
+ sen:"For question one, look at the picture. How is the weather today?",
+ szh:"第一題，請看圖片。今天天氣如何？",
+ en:"The photo shows green fields and a clear blue sky — a sunny, warm day.",
+ zh:"照片是綠地與晴朗藍天，天氣晴朗溫暖，故選 B。rainy 下雨、snowy 下雪皆不符。"},
+{n:2,p:0,fig:SVG_BALL,seg:[{v:'N',t:"For question two, please look at the picture. What is true about the picture?"}],
+ o:["The ball is under the table.","The ball is on the table.","The ball is behind the door."],a:0,
+ sen:"For question two, look at the picture. What is true about the picture?",
+ szh:"第二題，請看圖片。關於這張圖，何者正確？",
+ en:"The ball is directly below the table, so we use 'under'.",
+ zh:"球在桌子正下方，用 under（在…下面），故選 A。on 在上面、behind 在後面皆不符。"},
+{n:3,p:0,fig:SVG_BAR,seg:[{v:'N',t:"For question three, please look at the chart. According to the chart, which sport is the most popular?"}],
+ o:["Baseball.","Basketball.","Tennis."],a:1,
+ sen:"For question three, look at the chart. According to the chart, which sport is the most popular?",
+ szh:"第三題，請看圖表。根據圖表，哪一種運動最受歡迎？",
+ en:"On the bar chart, Basketball has the tallest bar, so it is the most popular.",
+ zh:"長條圖中籃球的長條最高，最受歡迎，故選 B。"},
+{n:4,p:0,fig:SVG_CLOCK,seg:[{v:'N',t:"For question four, please look at the picture. What time is it now?"}],
+ o:["It's seven fifteen.","It's eight thirty.","It's seven thirty."],a:2,
+ sen:"For question four, look at the picture. What time is it now?",
+ szh:"第四題，請看圖片。現在幾點鐘？",
+ en:"The hour hand is between 7 and 8 and the minute hand points to 6 (30), so it is 7:30.",
+ zh:"時針在 7 與 8 之間、分針指 6（30 分），為 7:30，故選 C。也可說 half past seven。"},
+{n:5,p:0,fig:SVG_SHIRT,seg:[{v:'N',t:"For question five, please look at the picture. How much do you have to pay for the shirt?"}],
+ o:["$400","$500","$300"],a:0,
+ sen:"For question five, look at the picture. How much do you have to pay for the shirt?",
+ szh:"第五題，請看圖片。這件襯衫需要付多少錢？",
+ en:"The shirt is $500 with 20% off: 500 × 0.8 = 400.",
+ zh:"原價 500 元打八折（20% off），500×0.8=400，故選 A。"},
+/* --- Part 2 --- */
+{n:6,p:1,seg:[{v:'N',t:"Question six. Would you like something to drink?"}],
+ o:["No, I'm not hungry at all.","It's on the kitchen table.","Yes, a glass of juice, please."],a:2,
+ sen:"Would you like something to drink?",szh:"你想喝點什麼嗎？",
+ en:"The question offers a drink, so the best reply says what you'd like to drink.",
+ zh:"問要不要喝東西，答想喝什麼最恰當，故選 C。A 用 hungry（餓）答非所問。"},
+{n:7,p:1,seg:[{v:'N',t:"Question seven. How often do you exercise?"}],
+ o:["For about two hours.","Three times a week.","At the gym near my house."],a:1,
+ sen:"How often do you exercise?",szh:"你多久運動一次？",
+ en:"'How often' asks about frequency; 'three times a week' answers it.",
+ zh:"How often 問頻率，答『一週三次』，故選 B。A 是持續多久、C 是地點。"},
+{n:8,p:1,seg:[{v:'N',t:"Question eight. Why were you late for school this morning?"}],
+ o:["Because I missed the bus.","I'll be there in ten minutes.","School starts at eight."],a:0,
+ sen:"Why were you late for school this morning?",szh:"你今天早上為什麼上學遲到？",
+ en:"'Why' asks for a reason; 'Because I missed the bus' gives it.",
+ zh:"Why 問原因，用 Because 說明，故選 A。"},
+{n:9,p:1,seg:[{v:'N',t:"Question nine. Could you help me carry these boxes?"}],
+ o:["You're welcome.","Here you are.","Sure, no problem."],a:2,
+ sen:"Could you help me carry these boxes?",szh:"你可以幫我搬這些箱子嗎？",
+ en:"A request for help is accepted with 'Sure, no problem.'",
+ zh:"請求幫忙，答應說 Sure, no problem.，故選 C。"},
+{n:10,p:1,seg:[{v:'N',t:"Question ten. What does your father do?"}],
+ o:["He is fine, thank you.","He is a police officer.","He is doing the dishes."],a:1,
+ sen:"What does your father do?",szh:"你的父親從事什麼工作？",
+ en:"'What does your father do?' asks about his job.",
+ zh:"問職業，答工作，故選 B。C 用 do 的字面『正在做』設陷阱。"},
+{n:11,p:1,seg:[{v:'N',t:"Question eleven. How was your trip to Japan?"}],
+ o:["It was wonderful!","By airplane.","For about a week."],a:0,
+ sen:"How was your trip to Japan?",szh:"你的日本之旅如何？",
+ en:"'How was...?' asks for an impression; 'It was wonderful!'",
+ zh:"How was…? 問感想，答『非常棒』，故選 A。"},
+{n:12,p:1,seg:[{v:'N',t:"Question twelve. Whose umbrella is this?"}],
+ o:["It's raining outside.","It's over there.","It's mine."],a:2,
+ sen:"Whose umbrella is this?",szh:"這是誰的雨傘？",
+ en:"'Whose' asks about the owner; 'It's mine.'",
+ zh:"Whose 問所有人，答 It's mine.，故選 C。別被 raining 誤導。"},
+{n:13,p:1,seg:[{v:'N',t:"Question thirteen. Do you mind if I sit here?"}],
+ o:["Not at all. Go ahead.","Yes, I'd love to.","I'm sitting down now."],a:0,
+ sen:"Do you mind if I sit here?",szh:"你介意我坐這裡嗎？",
+ en:"'Do you mind...?' — to agree, answer in the negative: 'Not at all.'",
+ zh:"Do you mind…? 同意要用否定 Not at all.，故選 A。回 Yes 反而是『我介意』。"},
+{n:14,p:1,seg:[{v:'N',t:"Question fourteen. I'm really sorry I broke your cup."}],
+ o:["You're welcome.","That's all right. Don't worry.","Congratulations!"],a:1,
+ sen:"I'm really sorry I broke your cup.",szh:"很抱歉我打破了你的杯子。",
+ en:"The speaker apologizes; the reply reassures: 'That's all right.'",
+ zh:"對方道歉，回應 That's all right.，故選 B。"},
+{n:15,p:1,seg:[{v:'N',t:"Question fifteen. What time does the movie start?"}],
+ o:["In the movie theater.","With my classmates.","At seven o'clock."],a:2,
+ sen:"What time does the movie start?",szh:"電影幾點開始？",
+ en:"'What time' asks for a time; 'At seven o'clock.'",
+ zh:"What time 問時間，答 At seven o'clock，故選 C。"},
+/* --- Part 3 --- */
+{n:16,p:2,seg:[{v:'W',t:"Excuse me, how can I get to the train station?"},{v:'M',t:"Go straight and turn left at the second corner."},{v:'W',t:"Thank you very much."},{v:'N',t:"Question. What is the woman doing?"}],
+ o:["Asking for directions.","Buying a train ticket.","Driving a car."],a:0,
+ sen:"W: Excuse me, how can I get to the train station? &nbsp;M: Go straight and turn left at the second corner. &nbsp;W: Thank you very much. &nbsp;Q: What is the woman doing?",
+ szh:"女：不好意思，請問怎麼去火車站？　男：直走，第二個轉角左轉。　女：非常謝謝你。　問：女士正在做什麼？",
+ en:"She asks how to get to the station and he gives directions — she is asking for directions.",
+ zh:"她問怎麼去車站、他指路，故是問路，選 A。"},
+{n:17,p:2,seg:[{v:'M',t:"I'd like a hamburger and a Coke, please."},{v:'W',t:"For here or to go?"},{v:'M',t:"To go, please."},{v:'N',t:"Question. Where are they talking?"}],
+ o:["At a library.","At a hospital.","At a fast-food restaurant."],a:2,
+ sen:"M: I'd like a hamburger and a Coke, please. &nbsp;W: For here or to go? &nbsp;M: To go, please. &nbsp;Q: Where are they talking?",
+ szh:"男：我要一個漢堡和一杯可樂。　女：內用還是外帶？　男：外帶，謝謝。　問：他們在哪裡對話？",
+ en:"Words like hamburger, Coke, and 'for here or to go' point to a fast-food restaurant.",
+ zh:"由 hamburger、Coke、內用或外帶等，判斷在速食餐廳，選 C。"},
+{n:18,p:2,seg:[{v:'W',t:"You look tired today. Are you okay?"},{v:'M',t:"I stayed up late studying for the math test."},{v:'W',t:"You should get more sleep."},{v:'N',t:"Question. Why is the man tired?"}],
+ o:["He watched TV all night.","He studied late for a test.","He played sports all day."],a:1,
+ sen:"W: You look tired today. Are you okay? &nbsp;M: I stayed up late studying for the math test. &nbsp;W: You should get more sleep. &nbsp;Q: Why is the man tired?",
+ szh:"女：你今天看起來很累，還好嗎？　男：我為了數學考試熬夜念書。　女：你應該多睡一點。　問：男士為什麼很累？",
+ en:"He says he stayed up late studying for a test — that's why he's tired.",
+ zh:"他熬夜念書準備考試，所以累，選 B。"},
+{n:19,p:2,seg:[{v:'M',t:"What's wrong? You look pale."},{v:'W',t:"I have a headache and a fever."},{v:'M',t:"You should see a doctor."},{v:'N',t:"Question. What is the woman's problem?"}],
+ o:["She is sick.","She is hungry.","She is bored."],a:0,
+ sen:"M: What's wrong? You look pale. &nbsp;W: I have a headache and a fever. &nbsp;M: You should see a doctor. &nbsp;Q: What is the woman's problem?",
+ szh:"男：怎麼了？你臉色好蒼白。　女：我頭痛而且發燒。　男：你應該去看醫生。　問：女士怎麼了？",
+ en:"She has a headache and a fever, so she is sick.",
+ zh:"她頭痛發燒、要看醫生，是生病了，選 A。"},
+{n:20,p:2,seg:[{v:'W',t:"How much is this T-shirt?"},{v:'M',t:"It's three hundred dollars each."},{v:'W',t:"Okay, I'll take two."},{v:'N',t:"Question. How much will the woman pay?"}],
+ o:["$300","$500","$600"],a:2,
+ sen:"W: How much is this T-shirt? &nbsp;M: It's three hundred dollars each. &nbsp;W: Okay, I'll take two. &nbsp;Q: How much will the woman pay?",
+ szh:"女：這件 T 恤多少錢？　男：每件三百元。　女：好，我買兩件。　問：女士要付多少錢？",
+ en:"Each T-shirt is $300 and she takes two: 300 × 2 = 600.",
+ zh:"每件 300 元，買兩件，300×2=600，選 C。"},
+{n:21,p:2,seg:[{v:'W',t:"Happy birthday! This is a little gift for you."},{v:'M',t:"Wow, thank you! Can I open it now?"},{v:'W',t:"Sure, go ahead."},{v:'N',t:"Question. What is the woman giving the man?"}],
+ o:["A birthday cake.","A present.","A card."],a:1,
+ sen:"W: Happy birthday! This is a little gift for you. &nbsp;M: Wow, thank you! Can I open it now? &nbsp;W: Sure, go ahead. &nbsp;Q: What is the woman giving the man?",
+ szh:"女：生日快樂！這是給你的小禮物。　男：哇，謝謝！我可以現在打開嗎？　女：當然，請打開吧。　問：女士要給男士什麼？",
+ en:"She gives a 'little gift' that he can open — a present.",
+ zh:"她給可以打開的小禮物，選 B。gift = present。"},
+{n:22,p:2,seg:[{v:'M',t:"Hello, may I speak to Kevin, please?"},{v:'W',t:"Sorry, he's not here right now. May I take a message?"},{v:'M',t:"No thanks. I'll call back later."},{v:'N',t:"Question. What is the man doing?"}],
+ o:["Making a phone call.","Writing a letter.","Visiting his friend."],a:0,
+ sen:"M: Hello, may I speak to Kevin, please? &nbsp;W: Sorry, he's not here right now. May I take a message? &nbsp;M: No thanks. I'll call back later. &nbsp;Q: What is the man doing?",
+ szh:"男：哈囉，請問 Kevin 在嗎？　女：抱歉，他現在不在。需要留言嗎？　男：不用了，我晚點再打。　問：男士正在做什麼？",
+ en:"'May I speak to...', 'take a message', 'call back' show he is on the phone.",
+ zh:"由 speak to、take a message、call back 等電話用語，他在打電話，選 A。"},
+{n:23,p:2,seg:[{v:'W',t:"Do you want to go hiking this weekend?"},{v:'M',t:"I'd love to, but the weather report says it will rain."},{v:'W',t:"Then let's go to the movies instead."},{v:'N',t:"Question. What will they probably do this weekend?"}],
+ o:["Go hiking.","Stay home and sleep.","Watch a movie."],a:2,
+ sen:"W: Do you want to go hiking this weekend? &nbsp;M: I'd love to, but the weather report says it will rain. &nbsp;W: Then let's go to the movies instead. &nbsp;Q: What will they probably do this weekend?",
+ szh:"女：這週末想去健行嗎？　男：我很想，但氣象報告說會下雨。　女：那我們改去看電影吧。　問：他們週末可能會做什麼？",
+ en:"Hiking is cancelled because of rain, so they'll watch a movie instead.",
+ zh:"因下雨改去看電影（instead），選 C。"},
+{n:24,p:2,seg:[{v:'M',t:"Can I help you find something?"},{v:'W',t:"Yes, I'm looking for a gift for my mother."},{v:'M',t:"How about these flowers? They're on sale today."},{v:'N',t:"Question. What is the man's job?"}],
+ o:["A teacher.","A shop clerk.","A doctor."],a:1,
+ sen:"M: Can I help you find something? &nbsp;W: Yes, I'm looking for a gift for my mother. &nbsp;M: How about these flowers? They're on sale today. &nbsp;Q: What is the man's job?",
+ szh:"男：需要我幫您找東西嗎？　女：好，我在找送媽媽的禮物。　男：這些花如何？今天特價。　問：男士的工作是什麼？",
+ en:"He offers help and mentions items 'on sale' — he is a shop clerk.",
+ zh:"他主動幫忙並提到特價商品，是店員，選 B。"},
+{n:25,p:2,seg:[{v:'W',t:"Did you finish the science report?"},{v:'M',t:"Not yet. I need one more day."},{v:'W',t:"But it's due tomorrow!"},{v:'N',t:"Question. When is the report due?"}],
+ o:["Tomorrow.","Today.","Next week."],a:0,
+ sen:"W: Did you finish the science report? &nbsp;M: Not yet. I need one more day. &nbsp;W: But it's due tomorrow! &nbsp;Q: When is the report due?",
+ szh:"女：你寫完自然科報告了嗎？　男：還沒，我還需要一天。　女：可是明天就要交了！　問：報告什麼時候要交？",
+ en:"She says 'it's due tomorrow', so the report is due tomorrow.",
+ zh:"她說明天要交（due tomorrow），選 A。"},
+/* --- Part 4 --- */
+{n:26,p:3,pic:true,seg:[{v:'N',t:"For question twenty-six, look at the three pictures. Good morning. Here is today's weather. It is cloudy now, but it will rain heavily in the afternoon. Please remember to bring your umbrella when you go out. Question. What will the weather be like this afternoon?"}],
+ o:[IMG('sunny'),IMG('snow'),IMG('rain')],a:2,
+ sen:"Good morning. Here is today's weather. It is cloudy now, but it will rain heavily in the afternoon. Please remember to bring your umbrella when you go out. &nbsp;Q: What will the weather be like this afternoon?",
+ szh:"早安。以下是今天的天氣。現在多雲，但下午將下大雨，出門請記得帶傘。　問：今天下午天氣會如何？",
+ en:"The talk says it will rain heavily in the afternoon, so choose the rain picture.",
+ zh:"短文說下午會下大雨，選下雨的圖 C。cloudy 是現在的天氣（干擾）。"},
+{n:27,p:3,pic:true,legend:true,seg:[{v:'N',t:"For question twenty-seven, look at the three pictures. In our class survey, we asked forty students how they come to school. Half of them walk to school. A quarter of them come by bus, and the rest ride their bikes. Question. Which pie chart shows the survey result?"}],
+ o:[PIE_BUS,PIE_WALK,PIE_BIKE],a:1,
+ sen:"In our class survey, we asked forty students how they come to school. Half of them walk to school. A quarter of them come by bus, and the rest ride their bikes. &nbsp;Q: Which pie chart shows the survey result?",
+ szh:"在班上的調查中，我們問了四十位學生如何上學。一半走路，四分之一搭公車，其餘騎腳踏車。　問：哪一個圓餅圖顯示調查結果？",
+ en:"Half walk, a quarter by bus, the rest (a quarter) by bike — the walk slice is half.",
+ zh:"一半走路、四分之一公車、其餘騎車，走路（粉紅）占一半，選 B。"},
+{n:28,p:3,pic:true,seg:[{v:'N',t:"For question twenty-eight, look at the three pictures. Attention, passengers. The train to Kaohsiung that was supposed to leave at ten o'clock will be delayed. It will now leave at ten thirty from Platform two. Question. Which schedule is correct now?"}],
+ o:[tbl('10:00','2'),tbl('10:30','3'),tbl('10:30','2')],a:2,
+ sen:"Attention, passengers. The train to Kaohsiung that was supposed to leave at ten o'clock will be delayed. It will now leave at ten thirty from Platform 2. &nbsp;Q: Which schedule is correct now?",
+ szh:"各位旅客請注意。原訂十點開往高雄的火車將誤點，改為十點半從第二月台發車。　問：現在哪一個時刻表正確？",
+ en:"The 10:00 train is delayed to 10:30 from Platform 2 — the correct schedule is 10:30 / Platform 2.",
+ zh:"原訂 10:00 誤點改 10:30、第2月台，正確是 10:30/第2月台，選 C。"},
+{n:29,p:3,pic:true,seg:[{v:'N',t:"For question twenty-nine, look at the three pictures. Good afternoon. This is the final call for passengers on flight B R one zero eight to Tokyo. Please go to Gate five now. The gate will close in ten minutes. Question. Which flight information is correct?"}],
+ o:[brd('BR108','TOKYO','5'),brd('BR108','TOKYO','15'),brd('BR180','TAIPEI','5')],a:0,
+ sen:"Good afternoon. This is the final call for passengers on flight BR108 to Tokyo. Please go to Gate 5 now. The gate will close in ten minutes. &nbsp;Q: Which flight information is correct?",
+ szh:"午安。這是搭乘 BR108 前往東京旅客的最後登機廣播。請立即前往 5 號登機門，登機門將於十分鐘後關閉。　問：哪一個航班資訊正確？",
+ en:"Flight BR108 to Tokyo, Gate 5 — all three match in picture A.",
+ zh:"班機 BR108、東京、Gate 5 三者全對的是 A。B 登機門錯、C 班機與目的地錯。"},
+{n:30,p:3,pic:true,seg:[{v:'N',t:"For question thirty, look at the three pictures. I usually go to school by bus. But this morning the bus was too crowded, so I decided to ride my bike instead. It took me twenty minutes to get to school. Question. How did the speaker go to school this morning?"}],
+ o:[IMG('bus'),IMG('bike'),IMG('walk')],a:1,
+ sen:"I usually go to school by bus. But this morning the bus was too crowded, so I decided to ride my bike instead. It took me twenty minutes to get to school. &nbsp;Q: How did the speaker go to school this morning?",
+ szh:"我通常搭公車上學，但今天早上公車太擠，所以我改騎腳踏車，花了二十分鐘到學校。　問：說話者今天早上如何上學？",
+ en:"He usually takes the bus, but today it was crowded so he rode his bike.",
+ zh:"今天公車太擠改騎腳踏車（instead），選 B。"}
+];
+
+/* ====== 音檔播放（AAC/.m4a，各廠牌手機皆支援）====== */
+let curAudio=null, curBtn=null;
+function resetPlayBtn(b){ if(!b) return; b.classList.remove('playing'); b.querySelector('.txt').textContent = b.dataset.played?'重播':'播放'; }
+function stopAudio(){ if(curAudio) curAudio.pause(); if(curBtn) resetPlayBtn(curBtn); curAudio=null; curBtn=null; }
+function playAudio(audio,btn){
+  if(curAudio===audio){                       // 同一題：暫停 / 繼續
+    if(audio.paused){ audio.play(); btn.classList.add('playing'); btn.querySelector('.txt').textContent='播放中…'; }
+    else { audio.pause(); }
+    return;
+  }
+  if(curAudio){ curAudio.pause(); resetPlayBtn(curBtn); }   // 換題：停掉上一段
+  curAudio=audio; curBtn=btn; btn.dataset.played='1';
+  btn.classList.add('playing'); btn.querySelector('.txt').textContent='播放中…';
+  audio.play().catch(()=>resetPlayBtn(btn));
+}
+
+/* ====== 產生畫面 ====== */
+const form=document.getElementById('quiz');
+let lastP=-1;
+Q.forEach(q=>{
+  if(q.p!==lastP){
+    const st=document.createElement('div'); st.className='section-title s'+q.p; st.textContent=PARTS[q.p].t;
+    const sd=document.createElement('div'); sd.className='section-desc'; sd.textContent=PARTS[q.p].d;
+    form.appendChild(st); form.appendChild(sd); lastP=q.p;
+  }
+  const card=document.createElement('div'); card.className='q'; card.id='q'+q.n;
+  const head=document.createElement('div'); head.className='qhead';
+  head.innerHTML=`<span class="num">${q.n}</span>
+    <button type="button" class="play"><span class="wave">🔊</span><span class="txt">播放</span></button>
+    <span class="hintq">聆聽後作答</span>`;
+  card.appendChild(head);
+  const audio=document.createElement('audio'); audio.preload='none'; audio.src='gept-listening-audio/1/q'+q.n+'.m4a'; card.appendChild(audio);
+  const pbtn=head.querySelector('.play');
+  pbtn.addEventListener('click',()=>playAudio(audio,pbtn));
+  audio.addEventListener('ended',()=>{ if(curBtn===pbtn){ resetPlayBtn(pbtn); curAudio=null; curBtn=null; } });
+  audio.addEventListener('pause',()=>{ if(curAudio===audio && curBtn===pbtn && !audio.ended){ pbtn.classList.remove('playing'); pbtn.querySelector('.txt').textContent='繼續'; } });
+  if(q.fig){ const f=document.createElement('div'); f.className='fig'; f.innerHTML=q.fig; card.appendChild(f); }
+  if(q.pic){
+    if(q.legend){ const lg=document.createElement('div'); lg.innerHTML=PIE_LEGEND; card.appendChild(lg.firstChild); }
+    const wrap=document.createElement('div'); wrap.className='picopts';
+    q.o.forEach((opt,i)=>{
+      const cell=document.createElement('label'); cell.className='picopt'; cell.dataset.i=i;
+      cell.innerHTML=`<span class="lab">${'ABC'[i]}</span>${opt}<input type="radio" name="q${q.n}" value="${i}" hidden>`;
+      cell.querySelector('input').addEventListener('change',()=>{ card.querySelectorAll('.picopt').forEach(o=>o.classList.remove('sel')); cell.classList.add('sel'); updateProgress(); });
+      wrap.appendChild(cell);
+    });
+    card.appendChild(wrap);
+  } else {
+    q.o.forEach((opt,i)=>{
+      const lab=document.createElement('label'); lab.className='opt'; lab.dataset.i=i;
+      lab.innerHTML=`<input type="radio" name="q${q.n}" value="${i}"><span class="lab">${'ABC'[i]}</span><span>${opt}</span>`;
+      lab.querySelector('input').addEventListener('change',()=>{ card.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel')); lab.classList.add('sel'); updateProgress(); });
+      card.appendChild(lab);
+    });
+  }
+  const exp=document.createElement('div'); exp.className='exp'; exp.id='exp'+q.n; card.appendChild(exp);
+  form.appendChild(card);
+});
+
+const submitBtn=document.getElementById('submitBtn');
+const resetBtn=document.getElementById('resetBtn');
+const hint=document.getElementById('hint');
+const TOT=Q.length;
+function answeredCount(){ let c=0; Q.forEach(q=>{ if(form.querySelector(`input[name="q${q.n}"]:checked`)) c++; }); return c; }
+function updateProgress(){
+  const c=answeredCount();
+  document.getElementById('count').textContent=`${c} / ${TOT}`;
+  document.getElementById('fill').style.width=(c/TOT*100)+'%';
+  hint.textContent = c===TOT ? '已完成全部 30 題' : (c===0 ? '尚未作答任何題目（仍可送出查看解析）' : `已作答 ${c} 題，未作答 ${TOT-c} 題（仍可送出）`);
+}
+
+submitBtn.addEventListener('click',()=>{
+  stopAudio();
+  let ok=0, blank=0;
+  Q.forEach(q=>{
+    const sel=form.querySelector(`input[name="q${q.n}"]:checked`);
+    const pick=sel?parseInt(sel.value):null;
+    if(pick===null) blank++;
+    const card=document.getElementById('q'+q.n);
+    const cls=q.pic?'.picopt':'.opt';
+    card.querySelectorAll(cls).forEach(o=>{
+      o.classList.add('lock');
+      const inp=o.querySelector('input'); if(inp) inp.disabled=true;
+      const i=parseInt(o.dataset.i);
+      if(i===q.a) o.classList.add('correct');
+      if(pick!==null && i===pick && pick!==q.a) o.classList.add('wrong');
+    });
+    const correct=pick===q.a; if(correct) ok++;
+    const exp=document.getElementById('exp'+q.n);
+    const tag=correct?'答對':(pick===null?'未作答':'答錯');
+    exp.innerHTML=`<span class="tag ${correct?'':'miss'}">${tag}　正解：${'ABC'[q.a]}</span>
+      <div class="scriptbox"><b>聽力原文</b>　${q.sen}<br><span style="color:#7a4a12">${q.szh}</span></div>
+      <div class="en"><b>EN</b>&nbsp;${q.en}</div><div class="zh"><b>中</b>&nbsp;${q.zh}</div>`;
+    exp.classList.add('show');
+  });
+  document.getElementById('scoreNum').textContent=Math.round(ok/TOT*100);
+  document.getElementById('scoreTxt').textContent=`分（答對 ${ok} / ${TOT} 題）`;
+  document.getElementById('rOk').textContent=ok;
+  document.getElementById('rNo').textContent=TOT-ok-blank;
+  document.getElementById('rBlank').textContent=blank;
+  const res=document.getElementById('result'); res.classList.add('show');
+  submitBtn.style.display='none'; hint.style.display='none'; resetBtn.style.display='block';
+  res.scrollIntoView({behavior:'smooth'});
+});
+
+resetBtn.addEventListener('click',()=>{
+  stopAudio(); form.reset();
+  Q.forEach(q=>{
+    const card=document.getElementById('q'+q.n);
+    card.querySelectorAll('.opt,.picopt').forEach(o=>{o.classList.remove('sel','correct','wrong','lock');const inp=o.querySelector('input');if(inp)inp.disabled=false;});
+    document.getElementById('exp'+q.n).classList.remove('show');
+  });
+  document.getElementById('result').classList.remove('show');
+  submitBtn.style.display='block'; hint.style.display='block'; resetBtn.style.display='none';
+  updateProgress(); window.scrollTo({top:0,behavior:'smooth'});
+});
+
+updateProgress();
+</script>
+</body>
+</html>
