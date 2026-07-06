@@ -137,7 +137,7 @@
 
   <div class="notice">
     <span class="ic">🎧</span>
-    <span>本測驗以<strong>瀏覽器語音朗讀</strong>題目（建議使用 <strong>Google Chrome</strong> 並開啟喇叭音量）。點各題的 <strong>🔊 播放</strong> 鈕聆聽；正式考試每題只播一次，練習時可重播。</span>
+    <span>每題皆附<strong>語音朗讀音檔</strong>，iPhone、Android 各廠牌手機與電腦瀏覽器皆可播放（請開啟媒體音量）。點各題的 <strong>🔊 播放</strong> 鈕聆聽；正式考試每題只播一次，練習時可重播。</span>
   </div>
 
   <div class="sticky">
@@ -371,32 +371,20 @@ const Q=[
  zh:"今天公車太擠改騎腳踏車（instead），選 B。"}
 ];
 
-/* ====== 語音朗讀 ====== */
-let VOICES=[];
-function loadVoices(){ VOICES=(speechSynthesis.getVoices()||[]).filter(v=>/^en/i.test(v.lang)); }
-loadVoices();
-if('onvoiceschanged' in speechSynthesis) speechSynthesis.onvoiceschanged=loadVoices;
-const FEM=/(female|samantha|victoria|karen|moira|tessa|fiona|zira|susan|allison|ava|serena|kate|catherine|zoe)/i;
-const MAL=/(male|daniel|alex|fred|aaron|arthur|david|rishi|george|oliver|tom|mark|guy)/i;
-function pickVoice(kind){
-  if(!VOICES.length) return null;
-  if(kind==='W'){ return VOICES.find(v=>FEM.test(v.name)) || VOICES[0]; }
-  if(kind==='M'){ return VOICES.find(v=>MAL.test(v.name)) || VOICES.find(v=>!FEM.test(v.name)) || VOICES[0]; }
-  return VOICES.find(v=>/US/i.test(v.lang)) || VOICES[0];
-}
-let curBtn=null;
-function stopSpeak(){ speechSynthesis.cancel(); if(curBtn){curBtn.classList.remove('playing');curBtn.querySelector('.txt').textContent='播放';curBtn=null;} }
-function playSegs(segs,btn){
-  stopSpeak(); curBtn=btn; btn.classList.add('playing'); btn.querySelector('.txt').textContent='播放中…';
-  let done=0;
-  segs.forEach(s=>{
-    const u=new SpeechSynthesisUtterance(s.t);
-    u.lang='en-US'; u.rate=0.82;
-    u.pitch = s.v==='W'?1.2 : (s.v==='M'?0.75:1.0);
-    const vo=pickVoice(s.v); if(vo) u.voice=vo;
-    u.onend=()=>{ done++; if(done===segs.length && curBtn===btn){ btn.classList.remove('playing'); btn.querySelector('.txt').textContent='重播'; curBtn=null; } };
-    speechSynthesis.speak(u);
-  });
+/* ====== 音檔播放（AAC/.m4a，各廠牌手機皆支援）====== */
+let curAudio=null, curBtn=null;
+function resetPlayBtn(b){ if(!b) return; b.classList.remove('playing'); b.querySelector('.txt').textContent = b.dataset.played?'重播':'播放'; }
+function stopAudio(){ if(curAudio) curAudio.pause(); if(curBtn) resetPlayBtn(curBtn); curAudio=null; curBtn=null; }
+function playAudio(audio,btn){
+  if(curAudio===audio){                       // 同一題：暫停 / 繼續
+    if(audio.paused){ audio.play(); btn.classList.add('playing'); btn.querySelector('.txt').textContent='播放中…'; }
+    else { audio.pause(); }
+    return;
+  }
+  if(curAudio){ curAudio.pause(); resetPlayBtn(curBtn); }   // 換題：停掉上一段
+  curAudio=audio; curBtn=btn; btn.dataset.played='1';
+  btn.classList.add('playing'); btn.querySelector('.txt').textContent='播放中…';
+  audio.play().catch(()=>resetPlayBtn(btn));
 }
 
 /* ====== 產生畫面 ====== */
@@ -413,8 +401,12 @@ Q.forEach(q=>{
   head.innerHTML=`<span class="num">${q.n}</span>
     <button type="button" class="play"><span class="wave">🔊</span><span class="txt">播放</span></button>
     <span class="hintq">聆聽後作答</span>`;
-  head.querySelector('.play').addEventListener('click',function(){ playSegs(q.seg,this); });
   card.appendChild(head);
+  const audio=document.createElement('audio'); audio.preload='none'; audio.src='gept-listening-audio/q'+q.n+'.m4a'; card.appendChild(audio);
+  const pbtn=head.querySelector('.play');
+  pbtn.addEventListener('click',()=>playAudio(audio,pbtn));
+  audio.addEventListener('ended',()=>{ if(curBtn===pbtn){ resetPlayBtn(pbtn); curAudio=null; curBtn=null; } });
+  audio.addEventListener('pause',()=>{ if(curAudio===audio && curBtn===pbtn && !audio.ended){ pbtn.classList.remove('playing'); pbtn.querySelector('.txt').textContent='繼續'; } });
   if(q.fig){ const f=document.createElement('div'); f.className='fig'; f.innerHTML=q.fig; card.appendChild(f); }
   if(q.pic){
     if(q.legend){ const lg=document.createElement('div'); lg.innerHTML=PIE_LEGEND; card.appendChild(lg.firstChild); }
@@ -451,7 +443,7 @@ function updateProgress(){
 }
 
 submitBtn.addEventListener('click',()=>{
-  stopSpeak();
+  stopAudio();
   let ok=0, blank=0;
   Q.forEach(q=>{
     const sel=form.querySelector(`input[name="q${q.n}"]:checked`);
@@ -485,7 +477,7 @@ submitBtn.addEventListener('click',()=>{
 });
 
 resetBtn.addEventListener('click',()=>{
-  stopSpeak(); form.reset();
+  stopAudio(); form.reset();
   Q.forEach(q=>{
     const card=document.getElementById('q'+q.n);
     card.querySelectorAll('.opt,.picopt').forEach(o=>{o.classList.remove('sel','correct','wrong','lock');const inp=o.querySelector('input');if(inp)inp.disabled=false;});
