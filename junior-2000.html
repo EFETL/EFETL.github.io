@@ -114,6 +114,9 @@ header.top{display:flex;align-items:center;gap:12px;padding:8px 2px 16px}
 .spell-audio{text-align:center;margin:10px 0 18px}
 .big-speak{background:var(--primary);color:#fff;border-radius:999px;width:76px;height:76px;font-size:2rem;box-shadow:var(--shadow)}
 .big-speak:active{transform:scale(.92)}
+.play-btn{display:inline-flex;align-items:center;gap:8px;background:var(--primary);color:#fff;font-weight:800;font-size:1.05rem;padding:13px 26px;border-radius:999px;box-shadow:var(--shadow);letter-spacing:.02em}
+.play-btn:active{transform:scale(.95)}
+.play-btn .ic{font-size:1.35rem}
 .spell-input{width:100%;max-width:360px;display:block;margin:0 auto;font-size:1.3rem;text-align:center;padding:12px;border:2px solid var(--line);border-radius:12px;letter-spacing:.05em;font-weight:700;color:var(--primary-d)}
 .spell-input:focus{outline:none;border-color:var(--primary)}
 .spell-hint{text-align:center;font-size:1.1rem;letter-spacing:.35em;color:var(--muted);margin:12px 0;font-family:ui-monospace,monospace;min-height:1.4em}
@@ -230,8 +233,19 @@ function pickVoice(){
        || vs.find(v=>/^en/i.test(v.lang)) || null;
 }
 if('speechSynthesis' in window){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
+/* iOS/Safari 需要在使用者手勢中先「解鎖」語音，之後 setTimeout 內的朗讀才會有聲音 */
+let __voiceUnlocked=false;
+function unlockVoice(){
+  if(__voiceUnlocked || !('speechSynthesis' in window)) return;
+  __voiceUnlocked=true;
+  try{ if(!VOICE)pickVoice(); const u=new SpeechSynthesisUtterance(' '); u.volume=0; speechSynthesis.speak(u); }catch(e){}
+}
+document.addEventListener('pointerdown', unlockVoice, true);
+document.addEventListener('touchstart', unlockVoice, {capture:true, passive:true});
+document.addEventListener('click', unlockVoice, true);
 function speak(text){
   if(!('speechSynthesis' in window))return;
+  try{ if(speechSynthesis.paused)speechSynthesis.resume(); }catch(e){}
   speechSynthesis.cancel();
   const u=new SpeechSynthesisUtterance(text);
   u.lang='en-US'; u.rate=.9; if(VOICE)u.voice=VOICE;
@@ -400,7 +414,8 @@ function renderSpell(){
    <div class="panel">
     <div class="scoreline"><span>第 ${spPos+1} / ${spList.length} 題</span><span>得分 ${spScore}</span></div>
     <div class="q-sub">聽發音，拼出這個英文單字（提示：${w.zh}）</div>
-    <div class="spell-audio"><button class="big-speak" onclick="speak('${w.w.replace(/'/g,"\\'")}')">🔊</button></div>
+    <div class="spell-audio"><button class="play-btn" onclick="speak('${w.w.replace(/'/g,"\\'")}')"><span class="ic">🔊</span>播放發音 Play</button>
+    <div style="font-size:.72rem;color:var(--muted);margin-top:8px">點按鈕即可聽發音，可重複點</div></div>
     <input class="spell-input" id="spIn" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="type here…">
     <div class="spell-hint" id="spHint"></div>
     <div class="feedback" id="spFb"></div>
@@ -410,9 +425,11 @@ function renderSpell(){
       <button class="btn ghost sm" onclick="skipSpell()">跳過 ▸</button>
     </div>
    </div>`;
-  const inp=document.getElementById('spIn');inp.focus();
+  const inp=document.getElementById('spIn');
+  const isTouch=('ontouchstart' in window)||navigator.maxTouchPoints>0;
+  if(!isTouch)inp.focus(); // 手機不自動搶 focus，避免鍵盤彈出干擾播放
   inp.addEventListener('keydown',e=>{if(e.key==='Enter')checkSpell();});
-  setTimeout(()=>speak(w.w),200);
+  speak(w.w);                       // 同步在手勢內朗讀（iOS 解鎖後每題都能自動出聲）
 }
 function spellHint(){
   const w=WORDS[spList[spPos]].w;spReveal=Math.min(spReveal+1,w.length);
