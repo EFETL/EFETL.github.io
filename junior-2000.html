@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>國中 2000 單字 · 記憶闖關 | Junior High 2000 Words</title>
+<style>
+:root{
+  --bg:#f6f4ef; --ink:#2b2b33; --muted:#7a7a86; --line:#e7e3da;
+  --primary:#2f6f6b; --primary-d:#265a57; --primary-l:#e3efee;
+  --accent:#e0803a; --accent-l:#fbeede; --gold:#e6b422;
+  --green:#3f9d5a; --green-l:#e6f4ea; --red:#d1544a; --red-l:#fbe7e5;
+  --card:#ffffff; --shadow:0 2px 10px rgba(40,40,50,.06),0 6px 24px rgba(40,40,50,.05);
+  --radius:18px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  background:var(--bg); color:var(--ink); line-height:1.55; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:920px;margin:0 auto;padding:18px 16px 90px}
+a{color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+.hidden{display:none!important}
+
+/* header */
+header.top{display:flex;align-items:center;gap:12px;padding:8px 2px 16px}
+.brand{display:flex;flex-direction:column}
+.brand .en{font-weight:800;font-size:1.28rem;letter-spacing:-.02em;color:var(--primary-d)}
+.brand .zh{font-size:.82rem;color:var(--muted);margin-top:-2px}
+.spacer{flex:1}
+.pill{font-size:.72rem;background:var(--primary-l);color:var(--primary-d);padding:5px 11px;border-radius:999px;font-weight:700}
+
+/* hero intro */
+.hero{background:linear-gradient(135deg,#2f6f6b,#3f8f7c);color:#fff;border-radius:var(--radius);padding:22px 22px;box-shadow:var(--shadow);margin-bottom:18px}
+.hero h1{margin:0 0 4px;font-size:1.35rem;letter-spacing:-.01em}
+.hero p{margin:0;opacity:.92;font-size:.9rem}
+.methods{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px}
+.method{background:rgba(255,255,255,.14);border-radius:12px;padding:10px 8px;text-align:center;font-size:.72rem}
+.method b{display:block;font-size:1.25rem;margin-bottom:3px}
+@media(max-width:560px){.methods{grid-template-columns:repeat(2,1fr)}}
+
+/* round grid */
+.section-title{display:flex;align-items:baseline;gap:8px;margin:6px 2px 12px}
+.section-title h2{font-size:1.05rem;margin:0}
+.section-title span{font-size:.78rem;color:var(--muted)}
+.rounds{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:640px){.rounds{grid-template-columns:repeat(2,1fr)}}
+.rc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 13px;box-shadow:var(--shadow);text-align:left;transition:transform .12s,box-shadow .12s;position:relative;overflow:hidden}
+.rc:active{transform:scale(.97)}
+.rc .no{font-size:.72rem;color:var(--accent);font-weight:800;letter-spacing:.04em}
+.rc .rng{font-size:18px;font-weight:700;margin:3px 0 2px;color:var(--primary-d);word-break:break-all}
+.rc .cnt{font-size:.72rem;color:var(--muted)}
+.bar{height:6px;background:#eee7db;border-radius:6px;margin-top:10px;overflow:hidden}
+.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--green),#5fbf7d);width:0;transition:width .4s}
+.rc .pct{position:absolute;top:11px;right:12px;font-size:.68rem;font-weight:800;color:var(--green)}
+.star-badge{position:absolute;bottom:12px;right:12px;font-size:.72rem;color:var(--gold)}
+
+/* round view */
+.subhead{display:flex;align-items:center;gap:10px;margin:2px 2px 14px}
+.back{font-size:.9rem;font-weight:700;color:var(--primary-d);display:flex;align-items:center;gap:5px;padding:6px 4px}
+.subhead h2{font-size:1.1rem;margin:0}
+.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:6px}
+@media(max-width:560px){.modes{grid-template-columns:repeat(2,1fr)}}
+.mode{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 10px;text-align:center;box-shadow:var(--shadow);transition:transform .12s}
+.mode:active{transform:scale(.96)}
+.mode .ic{font-size:1.7rem}
+.mode .t{font-weight:800;font-size:.92rem;margin-top:5px;color:var(--primary-d)}
+.mode .d{font-size:.7rem;color:var(--muted);margin-top:2px}
+.mode .tag{display:inline-block;margin-top:7px;font-size:.63rem;background:var(--accent-l);color:var(--accent);padding:2px 8px;border-radius:999px;font-weight:700}
+
+/* generic panel */
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;margin-top:14px}
+.rowbtns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn{background:var(--primary);color:#fff;font-weight:700;padding:11px 20px;border-radius:12px;font-size:.92rem;box-shadow:var(--shadow)}
+.btn.ghost{background:#fff;color:var(--primary-d);border:1.5px solid var(--primary)}
+.btn.sm{padding:8px 14px;font-size:.82rem}
+.btn:active{transform:translateY(1px)}
+
+/* flashcard */
+.progress-line{text-align:center;font-size:.78rem;color:var(--muted);margin-bottom:8px}
+.flash{perspective:1200px;margin:6px auto 16px;max-width:460px}
+.flash-inner{position:relative;width:100%;min-height:240px;transition:transform .5s;transform-style:preserve-3d;cursor:pointer}
+.flash.flipped .flash-inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:var(--radius);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;border:1px solid var(--line)}
+.face.front{background:linear-gradient(160deg,#ffffff,#f3f7f6)}
+.face.back{background:linear-gradient(160deg,#fff8ef,#fdeede);transform:rotateY(180deg)}
+.word-en{font-size:2.4rem;font-weight:800;letter-spacing:-.02em;color:var(--primary-d);word-break:break-word}
+.pos{font-size:.85rem;color:var(--accent);font-weight:700;margin-top:4px;font-style:italic}
+.word-zh{font-size:1.9rem;font-weight:800;color:var(--accent)}
+.hintflip{font-size:.72rem;color:var(--muted);margin-top:14px}
+.speak{margin-top:12px;background:var(--primary-l);color:var(--primary-d);border-radius:999px;width:52px;height:52px;font-size:1.4rem;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow)}
+.speak:active{transform:scale(.9)}
+.fc-controls{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:460px;margin:0 auto}
+.nav-btn{background:#fff;border:1.5px solid var(--line);border-radius:12px;width:48px;height:48px;font-size:1.3rem;color:var(--primary-d);box-shadow:var(--shadow)}
+.mark-row{display:flex;gap:10px;justify-content:center;margin-top:14px}
+.mark{border-radius:12px;padding:9px 16px;font-weight:700;font-size:.85rem;border:1.5px solid var(--line);background:#fff}
+.mark.know.on{background:var(--green-l);border-color:var(--green);color:var(--green)}
+.mark.star.on{background:#fdf6df;border-color:var(--gold);color:#b8860b}
+
+/* quiz */
+.q-word{text-align:center;font-size:2rem;font-weight:800;color:var(--primary-d);margin:6px 0 2px;word-break:break-word}
+.q-sub{text-align:center;font-size:.8rem;color:var(--muted);margin-bottom:16px}
+.opts{display:grid;gap:10px}
+.opt{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:13px 16px;font-size:18px;text-align:left;font-weight:600;transition:.12s}
+.opt:active{transform:scale(.99)}
+.opt.correct{background:var(--green-l);border-color:var(--green);color:#1f7a3d}
+.opt.wrong{background:var(--red-l);border-color:var(--red);color:#b23b32}
+.opt.dim{opacity:.5}
+.scoreline{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);margin-bottom:6px}
+
+/* spell */
+.spell-audio{text-align:center;margin:10px 0 18px}
+.big-speak{background:var(--primary);color:#fff;border-radius:999px;width:76px;height:76px;font-size:2rem;box-shadow:var(--shadow)}
+.big-speak:active{transform:scale(.92)}
+.spell-input{width:100%;max-width:360px;display:block;margin:0 auto;font-size:1.3rem;text-align:center;padding:12px;border:2px solid var(--line);border-radius:12px;letter-spacing:.05em;font-weight:700;color:var(--primary-d)}
+.spell-input:focus{outline:none;border-color:var(--primary)}
+.spell-hint{text-align:center;font-size:1.1rem;letter-spacing:.35em;color:var(--muted);margin:12px 0;font-family:ui-monospace,monospace;min-height:1.4em}
+.feedback{text-align:center;font-weight:700;min-height:1.6em;margin-top:10px}
+.feedback.ok{color:var(--green)}
+.feedback.no{color:var(--red)}
+
+/* match */
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mcell{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px 10px;text-align:center;font-weight:700;font-size:18px;min-height:54px;display:flex;align-items:center;justify-content:center;transition:.12s;word-break:break-word}
+.mcell.sel{background:var(--primary-l);border-color:var(--primary);color:var(--primary-d)}
+.mcell.done{background:var(--green-l);border-color:var(--green);color:var(--green);opacity:.65}
+.mcell.err{background:var(--red-l);border-color:var(--red)}
+.mcell .en{font-weight:800}
+
+/* result */
+.result{text-align:center;padding:20px}
+.result .big{font-size:3rem;font-weight:900;color:var(--primary-d)}
+.result .emoji{font-size:3.2rem}
+.result p{color:var(--muted)}
+
+/* toast */
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#2b2b33;color:#fff;padding:10px 18px;border-radius:999px;font-size:.85rem;opacity:0;transition:.3s;z-index:50;pointer-events:none}
+.toast.show{opacity:.95}
+
+footer{text-align:center;color:var(--muted);font-size:.72rem;padding:26px 0 10px}
+.count-chip{font-size:.7rem;color:var(--muted);text-align:center;margin-top:4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <span class="en">2000 Word Quest</span>
+      <span class="zh">國中 2000 單字 · 記憶闖關</span>
+    </div>
+    <div class="spacer"></div>
+    <button class="pill" id="resetBtn" title="清除進度">↺ 重設進度</button>
+  </header>
+
+  <!-- HOME -->
+  <div id="home">
+    <div class="hero">
+      <h1>用「記憶科學」背單字 🧠</h1>
+      <p>把 <b id="totalWords"></b> 個國中必考單字切成 20 回，每回用四種遊戲反覆訓練。<br>Learn smarter with spaced repetition, active recall &amp; sound.</p>
+      <div class="methods">
+        <div class="method"><b>🔁</b>間隔重複<br><small>Spaced</small></div>
+        <div class="method"><b>🧩</b>主動回想<br><small>Recall</small></div>
+        <div class="method"><b>🔊</b>聽覺記憶<br><small>Audio</small></div>
+        <div class="method"><b>🎮</b>遊戲闖關<br><small>Games</small></div>
+      </div>
+    </div>
+
+    <div class="section-title">
+      <h2>選擇回數 Choose a Round</h2>
+      <span>綠色進度＝已標記「學會」的比例</span>
+    </div>
+    <div class="rounds" id="roundGrid"></div>
+    <footer>提示：點單字卡上的 🔊 可聽美式發音。所有進度自動存在本機瀏覽器。</footer>
+  </div>
+
+  <!-- ROUND MENU -->
+  <div id="roundView" class="hidden">
+    <div class="subhead">
+      <button class="back" onclick="goHome()">‹ 回首頁</button>
+      <h2 id="roundTitle"></h2>
+    </div>
+    <div class="count-chip" id="roundRange"></div>
+    <div class="modes" style="margin-top:14px">
+      <button class="mode" onclick="startFlash()"><div class="ic">📖</div><div class="t">單字卡</div><div class="d">Flashcards</div><div class="tag">看＋聽＋翻</div></button>
+      <button class="mode" onclick="startQuiz()"><div class="ic">🎯</div><div class="t">選擇題</div><div class="d">Quiz</div><div class="tag">中英互測</div></button>
+      <button class="mode" onclick="startSpell()"><div class="ic">✍️</div><div class="t">聽寫拼字</div><div class="d">Spelling</div><div class="tag">聽音拼字</div></button>
+      <button class="mode" onclick="startMatch()"><div class="ic">🔗</div><div class="t">配對遊戲</div><div class="d">Matching</div><div class="tag">限時連連看</div></button>
+      <button class="mode" onclick="startReview()"><div class="ic">⭐</div><div class="t">重點複習</div><div class="d">Review</div><div class="tag">只練星號</div></button>
+    </div>
+    <div class="panel" style="text-align:center">
+      <div style="font-size:.85rem;color:var(--muted)">本回學習進度</div>
+      <div class="bar" style="max-width:320px;margin:10px auto"><i id="roundBarFill"></i></div>
+      <div id="roundStat" style="font-size:.82rem;color:var(--primary-d);font-weight:700"></div>
+    </div>
+  </div>
+
+  <!-- GAME AREA -->
+  <div id="gameView" class="hidden">
+    <div class="subhead">
+      <button class="back" onclick="backToRound()">‹ 返回</button>
+      <h2 id="gameTitle"></h2>
+    </div>
+    <div id="gameBody"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const WORDS = [{"w":"able","pos":"adj","zh":"有能力的"},{"w":"about","pos":"prep","zh":"有關"},{"w":"above","pos":"adv","zh":"在上方"},{"w":"abroad","pos":"adv","zh":"在國外"},{"w":"absent","pos":"adj","zh":"缺席的"},{"w":"accept","pos":"v","zh":"接受"},{"w":"accident","pos":"n","zh":"意外"},{"w":"across","pos":"prep","zh":"在…對面"},{"w":"act","pos":"n","zh":"行為"},{"w":"action","pos":"n","zh":"活動"},{"w":"active","pos":"adj","zh":"積極的"},{"w":"activity","pos":"n","zh":"活動"},{"w":"actor","pos":"n","zh":"男演員"},{"w":"actress","pos":"n","zh":"女演員"},{"w":"actually","pos":"adv","zh":"確實"},{"w":"add","pos":"v","zh":"增加"},{"w":"address","pos":"n","zh":"地址"},{"w":"admire","pos":"v","zh":"欽佩"},{"w":"adult","pos":"n","zh":"成人"},{"w":"advertisement","pos":"n","zh":"廣告"},{"w":"advice","pos":"n","zh":"勸告"},{"w":"advise","pos":"v","zh":"勸告"},{"w":"affect","pos":"v","zh":"影響"},{"w":"afraid","pos":"adj","zh":"害怕的"},{"w":"after","pos":"conj","zh":"在…之後"},{"w":"afternoon","pos":"n","zh":"下午"},{"w":"again","pos":"adv","zh":"再度"},{"w":"against","pos":"prep","zh":"靠著"},{"w":"age","pos":"n","zh":"年齡"},{"w":"ago","pos":"adv","zh":"…之前"},{"w":"agree","pos":"v","zh":"同意"},{"w":"ahead","pos":"adv","zh":"向前"},{"w":"aim","pos":"n","zh":"目標"},{"w":"air","pos":"n","zh":"空氣"},{"w":"airplane","pos":"n","zh":"飛機"},{"w":"airport","pos":"n","zh":"機場"},{"w":"alarm","pos":"n","zh":"警報器"},{"w":"album","pos":"n","zh":"相簿"},{"w":"alike","pos":"adv","zh":"相同地"},{"w":"alive","pos":"adj","zh":"活的"},{"w":"all","pos":"adj","zh":"全部的"},{"w":"allow","pos":"v","zh":"允許"},{"w":"almost","pos":"adv","zh":"幾乎"},{"w":"alone","pos":"adv","zh":"獨自地"},{"w":"along","pos":"prep","zh":"沿著"},{"w":"aloud","pos":"adv","zh":"大聲地"},{"w":"already","pos":"adv","zh":"已經"},{"w":"also","pos":"adv","zh":"也"},{"w":"altogether","pos":"adv","zh":"總共"},{"w":"always","pos":"adv","zh":"總是"},{"w":"ambulance","pos":"n","zh":"救護車"},{"w":"among","pos":"prep","zh":"在…之間"},{"w":"ancient","pos":"adj","zh":"古代的"},{"w":"angel","pos":"n","zh":"天使"},{"w":"anger","pos":"n","zh":"憤怒"},{"w":"angry","pos":"adj","zh":"生氣的"},{"w":"ankle","pos":"n","zh":"腳踝"},{"w":"animal","pos":"n","zh":"動物"},{"w":"another","pos":"adj","zh":"另外的"},{"w":"answer","pos":"n","zh":"答案"},{"w":"ant","pos":"n","zh":"螞蟻"},{"w":"any","pos":"adj","zh":"任何的"},{"w":"anyone","pos":"pron","zh":"任何人"},{"w":"anything","pos":"n","zh":"任何事物"},{"w":"anywhere","pos":"adv","zh":"任何地方"},{"w":"apartment","pos":"n","zh":"公寓"},{"w":"apologize","pos":"v","zh":"道歉"},{"w":"appear","pos":"v","zh":"出現"},{"w":"apple","pos":"n","zh":"蘋果"},{"w":"appreciate","pos":"v","zh":"欣賞"},{"w":"April","pos":"n","zh":"四月"},{"w":"area","pos":"n","zh":"地區"},{"w":"argue","pos":"v","zh":"爭論"},{"w":"arm","pos":"n","zh":"手臂"},{"w":"armchair","pos":"n","zh":"扶手椅"},{"w":"army","pos":"n","zh":"軍隊"},{"w":"around","pos":"adv","zh":"在附近"},{"w":"arrange","pos":"v","zh":"安排"},{"w":"arrive","pos":"v","zh":"到達"},{"w":"art","pos":"n","zh":"藝術"},{"w":"artist","pos":"n","zh":"藝術家"},{"w":"as","pos":"prep","zh":"像，如同"},{"w":"ask","pos":"v","zh":"詢問"},{"w":"asleep","pos":"adj","zh":"睡著的"},{"w":"assistant","pos":"n","zh":"助手"},{"w":"assume","pos":"v","zh":"假設"},{"w":"attack","pos":"n","zh":"攻擊"},{"w":"attention","pos":"n","zh":"注意力"},{"w":"August","pos":"n","zh":"八月"},{"w":"aunt","pos":"n","zh":"姑媽"},{"w":"autumn","pos":"n","zh":"秋天"},{"w":"available","pos":"adj","zh":"可獲得的"},{"w":"avoid","pos":"v","zh":"避免"},{"w":"away","pos":"adv","zh":"不在"},{"w":"baby","pos":"n","zh":"嬰兒"},{"w":"baby sitter","pos":"n","zh":"保母"},{"w":"back","pos":"n","zh":"背部"},{"w":"backward(s)","pos":"adv","zh":"向後地"},{"w":"bad","pos":"adj","zh":"壞的"},{"w":"badminton","pos":"n","zh":"羽毛球"},{"w":"bag","pos":"n","zh":"袋子"},{"w":"bake","pos":"v","zh":"烘烤"},{"w":"bakery","pos":"n","zh":"麵包店"},{"w":"balcony","pos":"n","zh":"陽臺"},{"w":"ball","pos":"n","zh":"球"},{"w":"balloon","pos":"n","zh":"氣球"},{"w":"banana","pos":"n","zh":"香蕉"},{"w":"band","pos":"n","zh":"樂團"},{"w":"bank","pos":"n","zh":"銀行"},{"w":"barbecue","pos":"v","zh":"火烤"},{"w":"barber","pos":"n","zh":"理髮師"},{"w":"bark","pos":"v","zh":"吠叫"},{"w":"base","pos":"n","zh":"基礎"},{"w":"baseball","pos":"n","zh":"棒球"},{"w":"basement","pos":"n","zh":"地下室"},{"w":"basic","pos":"adj","zh":"基礎的"},{"w":"basket","pos":"n","zh":"籃子"},{"w":"basketball","pos":"n","zh":"籃球"},{"w":"bat","pos":"n","zh":"蝙蝠"},{"w":"bath","pos":"n","zh":"沐浴"},{"w":"bathe","pos":"v","zh":"沐浴"},{"w":"bathroom","pos":"n","zh":"浴室"},{"w":"beach","pos":"n","zh":"沙灘"},{"w":"bean","pos":"n","zh":"豆子"},{"w":"bear","pos":"n","zh":"熊"},{"w":"beard","pos":"n","zh":"鬍鬚"},{"w":"beat","pos":"v","zh":"拍打"},{"w":"beautiful","pos":"adj","zh":"美麗的"},{"w":"beauty","pos":"n","zh":"美貌"},{"w":"because","pos":"conj","zh":"因為"},{"w":"become","pos":"v","zh":"成為"},{"w":"bed","pos":"n","zh":"床"},{"w":"bedroom","pos":"n","zh":"臥室"},{"w":"bee","pos":"n","zh":"蜜蜂"},{"w":"beef","pos":"n","zh":"牛肉"},{"w":"beer","pos":"n","zh":"啤酒"},{"w":"before","pos":"conj","zh":"在…之前"},{"w":"begin","pos":"v","zh":"開始"},{"w":"beginner","pos":"n","zh":"初學者"},{"w":"beginning","pos":"n","zh":"開始"},{"w":"behave","pos":"v","zh":"表現"},{"w":"behind","pos":"adv","zh":"在之後"},{"w":"believe","pos":"v","zh":"相信"},{"w":"bell","pos":"n","zh":"鈴"},{"w":"belong","pos":"v","zh":"屬於"},{"w":"below","pos":"adv","zh":"在下面"},{"w":"belt","pos":"n","zh":"皮帶"},{"w":"bench","pos":"n","zh":"長凳"},{"w":"besides","pos":"adv","zh":"此外"},{"w":"between","pos":"prep","zh":"在…之間"},{"w":"beyond","pos":"prep","zh":"超出"},{"w":"bicycle","pos":"n","zh":"腳踏車"},{"w":"big","pos":"adj","zh":"大的"},{"w":"bill","pos":"n","zh":"帳單；鈔票"},{"w":"biology","pos":"n","zh":"生物學"},{"w":"bird","pos":"n","zh":"鳥"},{"w":"birthday","pos":"n","zh":"生日"},{"w":"bite","pos":"v","zh":"咬"},{"w":"bitter","pos":"adj","zh":"痛苦的"},{"w":"black","pos":"adj","zh":"黑的"},{"w":"blackboard","pos":"n","zh":"黑板"},{"w":"blame","pos":"v","zh":"責怪"},{"w":"blank","pos":"adj","zh":"空白的"},{"w":"blanket","pos":"n","zh":"毯子"},{"w":"blind","pos":"adj","zh":"失明的"},{"w":"block","pos":"n","zh":"街區"},{"w":"blood","pos":"n","zh":"血"},{"w":"bloody","pos":"adj","zh":"血腥的"},{"w":"blow","pos":"v","zh":"吹"},{"w":"blue","pos":"adj","zh":"藍的"},{"w":"boat","pos":"n","zh":"船"},{"w":"body","pos":"n","zh":"身體"},{"w":"boil","pos":"v","zh":"燒開"},{"w":"bomb","pos":"n","zh":"炸彈"},{"w":"bone","pos":"n","zh":"骨頭"},{"w":"book","pos":"n","zh":"書"},{"w":"bookcase","pos":"n","zh":"書櫥"},{"w":"bored","pos":"adj","zh":"厭倦的"},{"w":"born","pos":"adj","zh":"天生的"},{"w":"borrow","pos":"v","zh":"借"},{"w":"boss","pos":"n","zh":"老闆"},{"w":"both","pos":"pron","zh":"兩者"},{"w":"bother","pos":"v","zh":"使煩惱"},{"w":"bottle","pos":"n","zh":"瓶子"},{"w":"bottom","pos":"n","zh":"底部"},{"w":"bow","pos":"n","zh":"弓"},{"w":"bowl","pos":"n","zh":"碗"},{"w":"bowling","pos":"n","zh":"保齡球"},{"w":"box","pos":"n","zh":"箱子"},{"w":"boy","pos":"n","zh":"男孩"},{"w":"brain","pos":"n","zh":"腦"},{"w":"branch","pos":"n","zh":"分店"},{"w":"brand","pos":"n","zh":"品牌"},{"w":"brave","pos":"adj","zh":"勇敢的"},{"w":"bread","pos":"n","zh":"麵包"},{"w":"break","pos":"v","zh":"弄壞"},{"w":"breakfast","pos":"n","zh":"早餐"},{"w":"brick","pos":"n","zh":"磚塊"},{"w":"bridge","pos":"n","zh":"橋"},{"w":"brief","pos":"adj","zh":"短暫的"},{"w":"bright","pos":"adj","zh":"明亮的"},{"w":"bring","pos":"v","zh":"帶來"},{"w":"broad","pos":"adj","zh":"寬闊的"},{"w":"broadcast","pos":"v","zh":"廣播"},{"w":"brother","pos":"n","zh":"兄弟"},{"w":"brown","pos":"adj","zh":"棕色的"},{"w":"brunch","pos":"n","zh":"早午餐"},{"w":"brush","pos":"n","zh":"刷子"},{"w":"bucket","pos":"n","zh":"桶子"},{"w":"buffet","pos":"n","zh":"自助餐"},{"w":"bug","pos":"n","zh":"昆蟲"},{"w":"build","pos":"v","zh":"建造"},{"w":"building","pos":"n","zh":"建築物"},{"w":"bun","pos":"n","zh":"圓麵包"},{"w":"bundle","pos":"n","zh":"(一)包，束"},{"w":"burn","pos":"v","zh":"燒"},{"w":"burst","pos":"v","zh":"爆裂"},{"w":"bus","pos":"n","zh":"公車"},{"w":"business","pos":"n","zh":"商業"},{"w":"businessman","pos":"n","zh":"商人"},{"w":"busy","pos":"adj","zh":"忙碌的"},{"w":"but","pos":"conj","zh":"但是"},{"w":"butter","pos":"n","zh":"奶油"},{"w":"butterfly","pos":"n","zh":"蝴蝶"},{"w":"button","pos":"n","zh":"鈕扣"},{"w":"buy","pos":"v","zh":"買"},{"w":"by","pos":"prep","zh":"沿；用…方法"},{"w":"cabbage","pos":"n","zh":"甘藍菜"},{"w":"cable","pos":"n","zh":"電纜"},{"w":"cafeteria","pos":"n","zh":"自助餐廳"},{"w":"cage","pos":"n","zh":"鳥籠"},{"w":"cake","pos":"n","zh":"蛋糕"},{"w":"calendar","pos":"n","zh":"日曆"},{"w":"call","pos":"n","zh":"呼叫"},{"w":"calm","pos":"adj","zh":"平靜的"},{"w":"camera","pos":"n","zh":"照相機"},{"w":"camp","pos":"v","zh":"紮營"},{"w":"campus","pos":"n","zh":"校園"},{"w":"can","pos":"aux","zh":"能夠"},{"w":"cancel","pos":"v","zh":"取消"},{"w":"cancer","pos":"n","zh":"癌症"},{"w":"candle","pos":"n","zh":"蠟燭"},{"w":"candy","pos":"n","zh":"糖果"},{"w":"cap","pos":"n","zh":"帽子"},{"w":"captain","pos":"n","zh":"隊長"},{"w":"car","pos":"n","zh":"車子"},{"w":"card","pos":"n","zh":"卡片"},{"w":"care","pos":"v","zh":"關心"},{"w":"careful","pos":"adj","zh":"小心的"},{"w":"careless","pos":"adj","zh":"粗心的"},{"w":"carpet","pos":"n","zh":"地毯"},{"w":"carrot","pos":"n","zh":"胡蘿蔔"},{"w":"carry","pos":"v","zh":"拿，運送"},{"w":"cartoon","pos":"n","zh":"卡通"},{"w":"case","pos":"n","zh":"例子"},{"w":"cash","pos":"n","zh":"現金"},{"w":"cassette","pos":"n","zh":"卡帶"},{"w":"castle","pos":"n","zh":"城堡"},{"w":"cat","pos":"n","zh":"貓"},{"w":"catch","pos":"v","zh":"追捕"},{"w":"cause","pos":"v","zh":"導致"},{"w":"ceiling","pos":"n","zh":"天花板"},{"w":"celebrate","pos":"v","zh":"慶祝"},{"w":"cell","pos":"n","zh":"細胞"},{"w":"cent","pos":"n","zh":"分"},{"w":"center","pos":"n","zh":"中央"},{"w":"centimeter","pos":"n","zh":"公分"},{"w":"central","pos":"adj","zh":"中央的"},{"w":"century","pos":"n","zh":"世紀"},{"w":"cereal","pos":"n","zh":"穀類食物"},{"w":"certain","pos":"adj","zh":"確實的"},{"w":"chair","pos":"n","zh":"椅子"},{"w":"chalk","pos":"n","zh":"粉筆"},{"w":"chance","pos":"n","zh":"機會"},{"w":"change","pos":"v","zh":"改變"},{"w":"channel","pos":"n","zh":"電視臺"},{"w":"character","pos":"n","zh":"性格"},{"w":"charge","pos":"v","zh":"收費"},{"w":"chart","pos":"n","zh":"圖表"},{"w":"chase","pos":"v","zh":"追趕"},{"w":"cheap","pos":"adj","zh":"便宜的"},{"w":"cheat","pos":"v","zh":"欺騙"},{"w":"check","pos":"v","zh":"檢查"},{"w":"cheer","pos":"v","zh":"歡呼"},{"w":"cheese","pos":"n","zh":"起司"},{"w":"chemical","pos":"adj","zh":"化學的"},{"w":"chess","pos":"n","zh":"西洋棋"},{"w":"chicken","pos":"n","zh":"雞"},{"w":"chief","pos":"n","zh":"首領"},{"w":"child","pos":"n","zh":"小孩"},{"w":"childish","pos":"adj","zh":"幼稚的"},{"w":"childlike","pos":"adj","zh":"天真的"},{"w":"chin","pos":"n","zh":"下巴"},{"w":"chocolate","pos":"n","zh":"巧克力"},{"w":"choice","pos":"n","zh":"選擇"},{"w":"choose","pos":"v","zh":"選擇"},{"w":"chopstick","pos":"n","zh":"筷子"},{"w":"Christmas","pos":"n","zh":"耶誕節"},{"w":"chubby","pos":"adj","zh":"豐滿的"},{"w":"church","pos":"n","zh":"教堂"},{"w":"claim","pos":"v","zh":"主張"},{"w":"circle","pos":"n","zh":"圓圈"},{"w":"city","pos":"n","zh":"城市"},{"w":"clap","pos":"v","zh":"拍(手)"},{"w":"class","pos":"n","zh":"班級"},{"w":"classic","pos":"adj","zh":"古典的"},{"w":"classmate","pos":"n","zh":"同學"},{"w":"classroom","pos":"n","zh":"班級"},{"w":"clay","pos":"n","zh":"黏土"},{"w":"clean","pos":"adj","zh":"乾淨的"},{"w":"clear","pos":"adj","zh":"清楚的"},{"w":"clerk","pos":"n","zh":"店員"},{"w":"clever","pos":"adj","zh":"聰明的"},{"w":"climate","pos":"n","zh":"氣候"},{"w":"climb","pos":"v","zh":"攀爬"},{"w":"clock","pos":"n","zh":"時鐘"},{"w":"close","pos":"v","zh":"關"},{"w":"closet","pos":"n","zh":"櫥櫃"},{"w":"clothes","pos":"n","zh":"衣服"},{"w":"cloud","pos":"n","zh":"雲"},{"w":"club","pos":"n","zh":"俱樂部"},{"w":"coach","pos":"n","zh":"教練"},{"w":"coast","pos":"n","zh":"海岸"},{"w":"coat","pos":"n","zh":"大衣"},{"w":"cockroach","pos":"n","zh":"蟑螂"},{"w":"coffee","pos":"n","zh":"咖啡"},{"w":"coin","pos":"n","zh":"硬幣"},{"w":"coke","pos":"n","zh":"可樂"},{"w":"cold","pos":"adj","zh":"冷的"},{"w":"collect","pos":"v","zh":"收集"},{"w":"college","pos":"n","zh":"大學"},{"w":"color","pos":"n","zh":"顏色"},{"w":"colorful","pos":"adj","zh":"多采多姿的"},{"w":"comb","pos":"n","zh":"梳子"},{"w":"come","pos":"v","zh":"來"},{"w":"comfortable","pos":"adj","zh":"舒服的"},{"w":"command","pos":"v","zh":"命令"},{"w":"comment","pos":"n","zh":"意見"},{"w":"common","pos":"adj","zh":"共同的"},{"w":"company","pos":"n","zh":"公司"},{"w":"compare","pos":"v","zh":"比較"},{"w":"complain","pos":"v","zh":"抱怨"},{"w":"complaint","pos":"n","zh":"抱怨"},{"w":"complete","pos":"adj","zh":"完整的"},{"w":"computer","pos":"n","zh":"電腦"},{"w":"concern","pos":"n","zh":"擔心"},{"w":"confident","pos":"adj","zh":"有自信的"},{"w":"conflict","pos":"n","zh":"衝突"},{"w":"confuse","pos":"v","zh":"使迷惑"},{"w":"congratulation","pos":"n","zh":"道賀"},{"w":"connect","pos":"v","zh":"連接"},{"w":"consider","pos":"v","zh":"考慮"},{"w":"considerate","pos":"adj","zh":"體貼的"},{"w":"contact","pos":"v","zh":"聯絡"},{"w":"continue","pos":"v","zh":"使繼續"},{"w":"contract","pos":"n","zh":"合約"},{"w":"control","pos":"v","zh":"控制"},{"w":"convenient","pos":"adj","zh":"方便的"},{"w":"conversation","pos":"n","zh":"對話"},{"w":"cook","pos":"v","zh":"煮"},{"w":"cookie","pos":"n","zh":"點心"},{"w":"cool","pos":"adj","zh":"涼的"},{"w":"copy","pos":"v","zh":"複製"},{"w":"corn","pos":"n","zh":"玉米"},{"w":"corner","pos":"n","zh":"角落"},{"w":"correct","pos":"adj","zh":"正確的"},{"w":"cost","pos":"v","zh":"花費"},{"w":"cotton","pos":"n","zh":"棉花"},{"w":"couch","pos":"n","zh":"長沙發"},{"w":"cough","pos":"v","zh":"咳嗽"},{"w":"count","pos":"v","zh":"計數"},{"w":"country","pos":"n","zh":"國家"},{"w":"couple","pos":"n","zh":"一對"},{"w":"courage","pos":"n","zh":"勇氣"},{"w":"course","pos":"n","zh":"課程"},{"w":"court","pos":"n","zh":"法院；球場"},{"w":"cousin","pos":"n","zh":"表(堂)兄弟姊妹"},{"w":"cover","pos":"v","zh":"覆蓋"},{"w":"cow","pos":"n","zh":"母牛"},{"w":"cowboy","pos":"n","zh":"牛仔"},{"w":"crab","pos":"n","zh":"螃蟹"},{"w":"crayon","pos":"n","zh":"蠟筆"},{"w":"crazy","pos":"adj","zh":"瘋狂的"},{"w":"cream","pos":"n","zh":"乳液"},{"w":"create","pos":"v","zh":"創造"},{"w":"crime","pos":"n","zh":"罪"},{"w":"cross","pos":"v","zh":"穿過"},{"w":"crowd","pos":"n","zh":"人群"},{"w":"cruel","pos":"adj","zh":"殘忍的"},{"w":"cry","pos":"v","zh":"哭"},{"w":"culture","pos":"n","zh":"文化"},{"w":"cup","pos":"n","zh":"杯子"},{"w":"cure","pos":"n","zh":"治療"},{"w":"curious","pos":"adj","zh":"好奇的"},{"w":"current","pos":"adj","zh":"現在的"},{"w":"curtain","pos":"n","zh":"窗簾"},{"w":"curve","pos":"n","zh":"曲線"},{"w":"custom","pos":"n","zh":"習慣"},{"w":"customer","pos":"v","zh":"顧客"},{"w":"cut","pos":"v","zh":"切割"},{"w":"cute","pos":"adj","zh":"可愛的"},{"w":"damage","pos":"v","zh":"損害"},{"w":"dance","pos":"v","zh":"跳舞"},{"w":"danger","pos":"n","zh":"危險"},{"w":"dangerous","pos":"adj","zh":"危險的"},{"w":"dark","pos":"adj","zh":"黑的"},{"w":"data","pos":"n","zh":"資料"},{"w":"date","pos":"n","zh":"日期"},{"w":"daughter","pos":"n","zh":"女兒"},{"w":"dawn","pos":"n","zh":"黎明"},{"w":"day","pos":"n","zh":"一天"},{"w":"dead","pos":"adj","zh":"死的"},{"w":"deaf","pos":"adj","zh":"聾的"},{"w":"deal","pos":"n","zh":"交易"},{"w":"dear","pos":"adj","zh":"親愛的"},{"w":"death","pos":"n","zh":"死亡"},{"w":"debate","pos":"n","zh":"辯論"},{"w":"December","pos":"n","zh":"十二月"},{"w":"decide","pos":"v","zh":"決定"},{"w":"decision","pos":"n","zh":"決定"},{"w":"decorate","pos":"v","zh":"裝飾"},{"w":"decrease","pos":"v","zh":"減少"},{"w":"deep","pos":"adj","zh":"深的"},{"w":"deer","pos":"n","zh":"鹿"},{"w":"degree","pos":"n","zh":"程度"},{"w":"delicious","pos":"adj","zh":"美味的"},{"w":"deliver","pos":"v","zh":"投遞"},{"w":"dentist","pos":"n","zh":"牙醫"},{"w":"deny","pos":"v","zh":"否認"},{"w":"department","pos":"n","zh":"部門"},{"w":"depend","pos":"v","zh":"依賴"},{"w":"describe","pos":"v","zh":"描述"},{"w":"desert","pos":"n","zh":"沙漠"},{"w":"design","pos":"v","zh":"設計"},{"w":"desire","pos":"n","zh":"慾望"},{"w":"desk","pos":"n","zh":"書桌"},{"w":"dessert","pos":"n","zh":"甜點"},{"w":"detect","pos":"v","zh":"查出"},{"w":"develop","pos":"v","zh":"發展"},{"w":"dial","pos":"v","zh":"撥電話"},{"w":"diamond","pos":"n","zh":"鑽石"},{"w":"diary","pos":"n","zh":"日記"},{"w":"dictionary","pos":"n","zh":"字典"},{"w":"die","pos":"v","zh":"死"},{"w":"diet","pos":"n","zh":"飲食"},{"w":"difference","pos":"n","zh":"差異"},{"w":"different","pos":"adj","zh":"不同的"},{"w":"difficult","pos":"adj","zh":"困難的"},{"w":"difficulty","pos":"n","zh":"困難"},{"w":"dig","pos":"v","zh":"挖掘"},{"w":"diligent","pos":"adj","zh":"勤勉的"},{"w":"diplomat","pos":"n","zh":"外交官"},{"w":"dinner","pos":"n","zh":"晚餐"},{"w":"dinosaur","pos":"n","zh":"恐龍"},{"w":"direct","pos":"adj","zh":"直的"},{"w":"direction","pos":"n","zh":"方向"},{"w":"dirty","pos":"adj","zh":"骯髒的"},{"w":"disagree","pos":"v","zh":"不同意"},{"w":"disappear","pos":"v","zh":"消失"},{"w":"discover","pos":"v","zh":"發現"},{"w":"discuss","pos":"v","zh":"討論"},{"w":"discussion","pos":"n","zh":"討論"},{"w":"dish","pos":"n","zh":"盤子"},{"w":"dishonest","pos":"adj","zh":"不誠實的"},{"w":"distance","pos":"n","zh":"距離"},{"w":"distant","pos":"adj","zh":"遠的"},{"w":"divide","pos":"v","zh":"分割"},{"w":"dizzy","pos":"adj","zh":"頭暈的"},{"w":"doctor","pos":"n","zh":"醫生"},{"w":"dog","pos":"n","zh":"狗"},{"w":"doll","pos":"n","zh":"洋娃娃"},{"w":"dollar","pos":"n","zh":"元"},{"w":"dolphin","pos":"n","zh":"海豚"},{"w":"donkey","pos":"n","zh":"驢"},{"w":"door","pos":"n","zh":"門"},{"w":"dot","pos":"n","zh":"點"},{"w":"double","pos":"v","zh":"加倍"},{"w":"doubt","pos":"v","zh":"懷疑"},{"w":"doughnut","pos":"n","zh":"甜甜圈"},{"w":"dove","pos":"n","zh":"鴿子"},{"w":"down","pos":"adv","zh":"向下"},{"w":"downstairs","pos":"adv","zh":"在樓下"},{"w":"downtown","pos":"n","zh":"商業區"},{"w":"dozen","pos":"n","zh":"(一)打"},{"w":"drag","pos":"v","zh":"拖"},{"w":"dragon","pos":"n","zh":"龍"},{"w":"drama","pos":"n","zh":"戲劇"},{"w":"draw","pos":"v","zh":"拉"},{"w":"drawer","pos":"n","zh":"抽屜"},{"w":"dream","pos":"n","zh":"夢"},{"w":"dress","pos":"n","zh":"洋裝"},{"w":"drink","pos":"v","zh":"喝"},{"w":"drive","pos":"v","zh":"開車"},{"w":"driver","pos":"n","zh":"駕駛人"},{"w":"drop","pos":"v","zh":"落下"},{"w":"drug","pos":"n","zh":"藥；毒品"},{"w":"drum","pos":"n","zh":"鼓"},{"w":"dry","pos":"adj","zh":"乾的"},{"w":"dryer","pos":"n","zh":"烘乾機"},{"w":"duck","pos":"n","zh":"鴨子"},{"w":"dumb","pos":"adj","zh":"笨的；啞的"},{"w":"dumpling","pos":"n","zh":"餃子"},{"w":"during","pos":"prep","zh":"在…期間"},{"w":"duty","pos":"n","zh":"義務"},{"w":"each","pos":"adj","zh":"每個"},{"w":"eagle","pos":"n","zh":"老鷹"},{"w":"ear","pos":"n","zh":"耳朵"},{"w":"early","pos":"adj","zh":"早的"},{"w":"earn","pos":"v","zh":"獲得"},{"w":"earring","pos":"n","zh":"耳環"},{"w":"earth","pos":"n","zh":"地球"},{"w":"ease","pos":"v","zh":"放鬆"},{"w":"east","pos":"n","zh":"東方"},{"w":"eastern","pos":"adj","zh":"東方的"},{"w":"easy","pos":"adj","zh":"容易的"},{"w":"eat","pos":"v","zh":"吃"},{"w":"edge","pos":"n","zh":"邊緣"},{"w":"education","pos":"n","zh":"教育"},{"w":"effect","pos":"n","zh":"影響"},{"w":"effort","pos":"n","zh":"努力"},{"w":"egg","pos":"n","zh":"蛋"},{"w":"eight","pos":"n","zh":"八"},{"w":"eighteen","pos":"n","zh":"十八"},{"w":"eighty","pos":"n","zh":"八十"},{"w":"either","pos":"pron","zh":"(兩者中)任何一個"},{"w":"elder","pos":"adj","zh":"年長的"},{"w":"elect","pos":"v","zh":"選出"},{"w":"elephant","pos":"n","zh":"大象"},{"w":"eleven","pos":"n","zh":"十一"},{"w":"electric","pos":"adj","zh":"電的"},{"w":"else","pos":"adv","zh":"其他"},{"w":"embarrass","pos":"v","zh":"使尷尬"},{"w":"emotion","pos":"n","zh":"情緒"},{"w":"emphasize","pos":"v","zh":"強調"},{"w":"employ","pos":"v","zh":"雇用"},{"w":"empty","pos":"adj","zh":"空的"},{"w":"end","pos":"v","zh":"結束"},{"w":"enemy","pos":"n","zh":"敵人"},{"w":"energetic","pos":"adj","zh":"精力充沛的"},{"w":"energy","pos":"n","zh":"精力"},{"w":"engine","pos":"n","zh":"引擎"},{"w":"engineer","pos":"n","zh":"工程師"},{"w":"enjoy","pos":"v","zh":"享受"},{"w":"enough","pos":"adj","zh":"足夠的"},{"w":"enter","pos":"v","zh":"進入"},{"w":"entrance","pos":"n","zh":"入口"},{"w":"envelope","pos":"n","zh":"信封"},{"w":"environment","pos":"n","zh":"自然環境"},{"w":"envy","pos":"v","zh":"忌妒"},{"w":"equal","pos":"adj","zh":"相等的"},{"w":"eraser","pos":"n","zh":"橡皮擦"},{"w":"error","pos":"n","zh":"錯誤"},{"w":"especially","pos":"adv","zh":"特別地"},{"w":"eve","pos":"n","zh":"前夕"},{"w":"even","pos":"adv","zh":"甚至"},{"w":"evening","pos":"n","zh":"傍晚"},{"w":"event","pos":"n","zh":"事件"},{"w":"ever","pos":"adv","zh":"從來"},{"w":"every","pos":"adj","zh":"每個"},{"w":"evil","pos":"n","zh":"惡魔"},{"w":"exact","pos":"adj","zh":"正確的"},{"w":"exam","pos":"n","zh":"考試"},{"w":"example","pos":"n","zh":"例子"},{"w":"excellent","pos":"adj","zh":"優秀的"},{"w":"except","pos":"prep","zh":"除…之外"},{"w":"excite","pos":"v","zh":"使…興奮"},{"w":"excuse","pos":"v","zh":"原諒"},{"w":"exercise","pos":"n","zh":"運動"},{"w":"exist","pos":"v","zh":"存在"},{"w":"exit","pos":"n","zh":"出口"},{"w":"expect","pos":"v","zh":"期望"},{"w":"expensive","pos":"adj","zh":"昂貴的"},{"w":"experience","pos":"n","zh":"經驗"},{"w":"explain","pos":"v","zh":"說明"},{"w":"express","pos":"v","zh":"表達"},{"w":"extra","pos":"adj","zh":"額外的"},{"w":"eye","pos":"n","zh":"眼睛"},{"w":"eyebrow","pos":"n","zh":"眉毛"},{"w":"face","pos":"n","zh":"臉"},{"w":"fact","pos":"n","zh":"事實"},{"w":"factory","pos":"n","zh":"工廠"},{"w":"fail","pos":"v","zh":"失敗"},{"w":"fair","pos":"adj","zh":"公平的"},{"w":"fall","pos":"v","zh":"倒下"},{"w":"false","pos":"adj","zh":"錯的"},{"w":"family","pos":"n","zh":"家"},{"w":"famous","pos":"adj","zh":"著名的"},{"w":"fan","pos":"n","zh":"電扇"},{"w":"fancy","pos":"n","zh":"想像力"},{"w":"fantastic","pos":"adj","zh":"極好的"},{"w":"far","pos":"adj","zh":"遠方的"},{"w":"farm","pos":"n","zh":"農場"},{"w":"farmer","pos":"n","zh":"農夫"},{"w":"fashion","pos":"n","zh":"流行"},{"w":"fast","pos":"adj","zh":"快的"},{"w":"fat","pos":"adj","zh":"肥胖的"},{"w":"father","pos":"n","zh":"父親"},{"w":"faucet","pos":"n","zh":"水龍頭"},{"w":"fault","pos":"n","zh":"缺點"},{"w":"favorite","pos":"adj","zh":"最喜歡的"},{"w":"fear","pos":"n","zh":"害怕"},{"w":"February","pos":"n","zh":"二月"},{"w":"fee","pos":"n","zh":"費用"},{"w":"feed","pos":"v","zh":"餵養"},{"w":"feel","pos":"v","zh":"感覺"},{"w":"feeling","pos":"n","zh":"感覺"},{"w":"female","pos":"n","zh":"女性"},{"w":"fence","pos":"n","zh":"柵欄"},{"w":"festival","pos":"n","zh":"節慶"},{"w":"fever","pos":"n","zh":"發燒"},{"w":"few","pos":"adj","zh":"少數的"},{"w":"fifteen","pos":"n","zh":"十五"},{"w":"fifty","pos":"n","zh":"五十"},{"w":"fight","pos":"n","zh":"戰鬥"},{"w":"fill","pos":"v","zh":"裝滿"},{"w":"film","pos":"n","zh":"電影"},{"w":"final","pos":"adj","zh":"最後的"},{"w":"finally","pos":"adv","zh":"最後"},{"w":"find","pos":"v","zh":"找到"},{"w":"fine","pos":"adj","zh":"精巧的"},{"w":"finger","pos":"n","zh":"指頭"},{"w":"finish","pos":"v","zh":"結束"},{"w":"fire","pos":"n","zh":"火"},{"w":"first","pos":"adj","zh":"第一的"},{"w":"fish","pos":"n","zh":"魚"},{"w":"fisherman","pos":"n","zh":"漁夫"},{"w":"fit","pos":"v","zh":"適合"},{"w":"five","pos":"n","zh":"五"},{"w":"fix","pos":"v","zh":"固定"},{"w":"flag","pos":"n","zh":"旗幟"},{"w":"flash","pos":"n","zh":"閃光"},{"w":"flashlight","pos":"n","zh":"手電筒"},{"w":"flight","pos":"n","zh":"飛機航次"},{"w":"flood","pos":"n","zh":"洪水"},{"w":"floor","pos":"n","zh":"地板"},{"w":"flour","pos":"n","zh":"麵粉"},{"w":"flower","pos":"n","zh":"花"},{"w":"flu","pos":"n","zh":"流行性感冒"},{"w":"flute","pos":"n","zh":"長笛"},{"w":"fly","pos":"v","zh":"飛"},{"w":"focus","pos":"n","zh":"焦點"},{"w":"fog","pos":"n","zh":"霧"},{"w":"foggy","pos":"adj","zh":"濃霧的"},{"w":"follow","pos":"v","zh":"跟隨"},{"w":"food","pos":"n","zh":"食物"},{"w":"fool","pos":"n","zh":"傻子"},{"w":"foolish","pos":"adj","zh":"愚笨的"},{"w":"foot","pos":"n","zh":"腳"},{"w":"football","pos":"n","zh":"足球"},{"w":"for","pos":"prep","zh":"為了"},{"w":"force","pos":"v","zh":"強迫"},{"w":"foreign","pos":"adj","zh":"外國的"},{"w":"foreigner","pos":"n","zh":"外國人"},{"w":"forest","pos":"n","zh":"森林"},{"w":"forget","pos":"v","zh":"忘記"},{"w":"forgive","pos":"v","zh":"原諒"},{"w":"fork","pos":"n","zh":"叉子"},{"w":"form","pos":"v","zh":"形成"},{"w":"formal","pos":"adj","zh":"正式的"},{"w":"former","pos":"adj","zh":"前者的"},{"w":"forty","pos":"n","zh":"四十"},{"w":"forward(s)","pos":"adv","zh":"向前"},{"w":"four","pos":"n","zh":"四"},{"w":"fourteen","pos":"n","zh":"十四"},{"w":"fox","pos":"n","zh":"狐狸"},{"w":"frank","pos":"adj","zh":"直率的"},{"w":"free","pos":"adj","zh":"自由的"},{"w":"freedom","pos":"n","zh":"自由"},{"w":"fresh","pos":"adj","zh":"新鮮的"},{"w":"Friday","pos":"n","zh":"星期五"},{"w":"friend","pos":"n","zh":"朋友"},{"w":"friendly","pos":"adj","zh":"友好的"},{"w":"frighten","pos":"v","zh":"使害怕"},{"w":"frog","pos":"n","zh":"青蛙"},{"w":"from","pos":"prep","zh":"從…"},{"w":"front","pos":"adj","zh":"前面的"},{"w":"fruit","pos":"n","zh":"水果"},{"w":"fry","pos":"v","zh":"油炸"},{"w":"full","pos":"adj","zh":"滿的"},{"w":"fun","pos":"n","zh":"趣味"},{"w":"function","pos":"n","zh":"功能"},{"w":"funny","pos":"adj","zh":"好笑的"},{"w":"furniture","pos":"n","zh":"傢俱"},{"w":"future","pos":"n","zh":"未來"},{"w":"gain","pos":"v","zh":"獲得"},{"w":"game","pos":"n","zh":"遊戲"},{"w":"garage","pos":"n","zh":"車庫"},{"w":"garden","pos":"n","zh":"花園"},{"w":"garbage","pos":"n","zh":"垃圾"},{"w":"gas","pos":"n","zh":"瓦斯"},{"w":"gate","pos":"n","zh":"大門"},{"w":"gather","pos":"v","zh":"集合"},{"w":"general","pos":"adj","zh":"一般的"},{"w":"generous","pos":"adj","zh":"慷慨的"},{"w":"genius","pos":"n","zh":"天才"},{"w":"gentle","pos":"adj","zh":"溫和的"},{"w":"gentleman","pos":"n","zh":"紳士"},{"w":"geography","pos":"n","zh":"地理"},{"w":"gesture","pos":"n","zh":"姿勢，手勢"},{"w":"get","pos":"v","zh":"得到"},{"w":"ghost","pos":"n","zh":"鬼"},{"w":"giant","pos":"adj","zh":"巨大的"},{"w":"gift","pos":"n","zh":"禮物"},{"w":"girl","pos":"n","zh":"女孩"},{"w":"give","pos":"v","zh":"給予"},{"w":"glad","pos":"adj","zh":"高興的"},{"w":"glass","pos":"n","zh":"玻璃"},{"w":"glasses","pos":"n","zh":"眼鏡"},{"w":"glove","pos":"n","zh":"手套"},{"w":"glue","pos":"n","zh":"膠水"},{"w":"go","pos":"v","zh":"去"},{"w":"goal","pos":"n","zh":"目標"},{"w":"goat","pos":"n","zh":"山羊"},{"w":"god","pos":"n","zh":"上帝"},{"w":"gold","pos":"n","zh":"黃金"},{"w":"golden","pos":"adj","zh":"金色的"},{"w":"golf","pos":"n","zh":"高爾夫球"},{"w":"good","pos":"adj","zh":"好的"},{"w":"goodness","pos":"n","zh":"善良"},{"w":"goose","pos":"n","zh":"鵝"},{"w":"government","pos":"n","zh":"政府"},{"w":"grade","pos":"n","zh":"分數"},{"w":"gram","pos":"n","zh":"克"},{"w":"grandfather","pos":"n","zh":"祖父"},{"w":"grandmother","pos":"n","zh":"祖母"},{"w":"grandson","pos":"n","zh":"孫子"},{"w":"grape","pos":"n","zh":"葡萄"},{"w":"grass","pos":"n","zh":"草"},{"w":"gray","pos":"adj","zh":"灰色的"},{"w":"great","pos":"adj","zh":"傑出的"},{"w":"greedy","pos":"adj","zh":"貪心的"},{"w":"green","pos":"adj","zh":"綠色的"},{"w":"greet","pos":"v","zh":"問候"},{"w":"ground","pos":"n","zh":"土地"},{"w":"group","pos":"n","zh":"群，組"},{"w":"grow","pos":"v","zh":"生長"},{"w":"guard","pos":"n","zh":"警衛"},{"w":"guava","pos":"n","zh":"番石榴"},{"w":"guess","pos":"v","zh":"猜測"},{"w":"guest","pos":"n","zh":"客人"},{"w":"guide","pos":"v","zh":"引導"},{"w":"guitar","pos":"n","zh":"吉他"},{"w":"gun","pos":"n","zh":"槍"},{"w":"guy","pos":"n","zh":"小伙子"},{"w":"gym","pos":"n","zh":"體育館"},{"w":"habit","pos":"n","zh":"習慣"},{"w":"hair","pos":"n","zh":"頭髮"},{"w":"half","pos":"adj","zh":"一半的"},{"w":"hall","pos":"n","zh":"大廳"},{"w":"Halloween","pos":"n","zh":"萬聖節"},{"w":"ham","pos":"n","zh":"火腿"},{"w":"hamburger","pos":"n","zh":"漢堡"},{"w":"hammer","pos":"n","zh":"槌子"},{"w":"hand","pos":"n","zh":"手"},{"w":"handkerchief","pos":"n","zh":"手帕"},{"w":"handle","pos":"v","zh":"處理"},{"w":"handsome","pos":"adj","zh":"英俊的"},{"w":"hang","pos":"v","zh":"掛"},{"w":"hanger","pos":"n","zh":"衣架"},{"w":"happen","pos":"v","zh":"發生"},{"w":"happy","pos":"adj","zh":"快樂的"},{"w":"hard","pos":"adj","zh":"難的"},{"w":"hardly","pos":"adv","zh":"幾乎不"},{"w":"hat","pos":"n","zh":"帽子"},{"w":"hate","pos":"v","zh":"憎恨"},{"w":"have","pos":"v","zh":"有"},{"w":"head","pos":"n","zh":"頭"},{"w":"headache","pos":"n","zh":"頭痛"},{"w":"health","pos":"n","zh":"健康"},{"w":"healthy","pos":"adj","zh":"健康的"},{"w":"hear","pos":"v","zh":"聽"},{"w":"heart","pos":"n","zh":"心臟"},{"w":"heat","pos":"n","zh":"熱"},{"w":"heater","pos":"n","zh":"熱水器"},{"w":"heavy","pos":"adj","zh":"重的"},{"w":"height","pos":"n","zh":"高度"},{"w":"helicopter","pos":"n","zh":"直升機"},{"w":"help","pos":"n","zh":"幫忙"},{"w":"helpful","pos":"adj","zh":"有助益的"},{"w":"hen","pos":"n","zh":"母雞"},{"w":"here","pos":"adv","zh":"在這裡"},{"w":"hero","pos":"n","zh":"英雄"},{"w":"hide","pos":"v","zh":"藏"},{"w":"high","pos":"adj","zh":"高的"},{"w":"highway","pos":"n","zh":"公路"},{"w":"hike","pos":"n","zh":"遠足"},{"w":"hill","pos":"n","zh":"小山丘"},{"w":"hip","pos":"n","zh":"臀部"},{"w":"hippo","pos":"n","zh":"河馬"},{"w":"hire","pos":"v","zh":"雇用"},{"w":"history","pos":"n","zh":"歷史"},{"w":"hit","pos":"v","zh":"打"},{"w":"hobby","pos":"n","zh":"嗜好"},{"w":"hold","pos":"v","zh":"抓住"},{"w":"hole","pos":"n","zh":"洞"},{"w":"holiday","pos":"n","zh":"假日"},{"w":"home","pos":"n","zh":"家"},{"w":"homework","pos":"n","zh":"作業"},{"w":"honest","pos":"adj","zh":"誠實的"},{"w":"honesty","pos":"n","zh":"誠實"},{"w":"honey","pos":"n","zh":"蜂蜜"},{"w":"hop","pos":"n","zh":"跳躍"},{"w":"hope","pos":"n","zh":"希望"},{"w":"horrible","pos":"adj","zh":"恐怖的"},{"w":"horse","pos":"n","zh":"馬"},{"w":"hospital","pos":"n","zh":"醫院"},{"w":"host","pos":"n","zh":"主人"},{"w":"hot","pos":"adj","zh":"熱的"},{"w":"hotel","pos":"n","zh":"旅館"},{"w":"hour","pos":"n","zh":"小時"},{"w":"house","pos":"n","zh":"房子"},{"w":"housewife","pos":"n","zh":"家庭主婦"},{"w":"housework","pos":"n","zh":"家事"},{"w":"how","pos":"adv","zh":"如何"},{"w":"however","pos":"adv","zh":"然而"},{"w":"huge","pos":"adj","zh":"巨大的"},{"w":"human","pos":"n","zh":"人"},{"w":"humble","pos":"adj","zh":"謙虛的"},{"w":"humid","pos":"adj","zh":"潮溼的"},{"w":"humor","pos":"n","zh":"幽默"},{"w":"humorous","pos":"adj","zh":"幽默的"},{"w":"hundred","pos":"n","zh":"一百"},{"w":"hunger","pos":"n","zh":"飢餓"},{"w":"hungry","pos":"adj","zh":"飢餓的"},{"w":"hunt","pos":"v","zh":"狩獵"},{"w":"hunter","pos":"n","zh":"獵人"},{"w":"hurry","pos":"v","zh":"匆忙"},{"w":"hurt","pos":"v","zh":"受傷"},{"w":"husband","pos":"n","zh":"丈夫"},{"w":"ice","pos":"n","zh":"冰"},{"w":"idea","pos":"n","zh":"想法"},{"w":"if","pos":"conj","zh":"假如"},{"w":"ignore","pos":"v","zh":"忽視"},{"w":"ill","pos":"adj","zh":"生病的"},{"w":"imagine","pos":"v","zh":"想像"},{"w":"impolite","pos":"adj","zh":"不禮貌的"},{"w":"importance","pos":"n","zh":"重要性"},{"w":"important","pos":"adj","zh":"重要的"},{"w":"impossible","pos":"adj","zh":"不可能的"},{"w":"improve","pos":"v","zh":"改進"},{"w":"in","pos":"prep","zh":"在…之中"},{"w":"inch","pos":"n","zh":"英吋"},{"w":"include","pos":"v","zh":"包括"},{"w":"income","pos":"n","zh":"收入"},{"w":"increase","pos":"v","zh":"增加"},{"w":"independent","pos":"adj","zh":"獨立的"},{"w":"indicate","pos":"v","zh":"指示"},{"w":"influence","pos":"n","zh":"影響"},{"w":"information","pos":"n","zh":"資訊"},{"w":"ink","pos":"n","zh":"墨水"},{"w":"insect","pos":"n","zh":"昆蟲"},{"w":"inside","pos":"adv","zh":"在內部地"},{"w":"insist","pos":"v","zh":"堅持"},{"w":"inspire","pos":"v","zh":"激勵"},{"w":"instance","pos":"n","zh":"例子"},{"w":"instant","pos":"adj","zh":"立即的"},{"w":"instrument","pos":"n","zh":"樂器"},{"w":"intelligent","pos":"adj","zh":"聰明的"},{"w":"interest","pos":"n","zh":"興趣"},{"w":"interested","pos":"adj","zh":"感興趣的"},{"w":"interesting","pos":"adj","zh":"有趣的"},{"w":"international","pos":"adj","zh":"國際的"},{"w":"Internet","pos":"n","zh":"網路"},{"w":"Interrupt","pos":"v","zh":"打擾"},{"w":"interview","pos":"n","zh":"訪問"},{"w":"into","pos":"prep","zh":"進入…之內"},{"w":"introduce","pos":"v","zh":"介紹"},{"w":"invent","pos":"v","zh":"發明"},{"w":"invitation","pos":"n","zh":"邀請"},{"w":"invite","pos":"v","zh":"邀請"},{"w":"iron","pos":"n","zh":"熨斗"},{"w":"island","pos":"n","zh":"島"},{"w":"item","pos":"n","zh":"項目"},{"w":"jacket","pos":"n","zh":"外套"},{"w":"jam","pos":"n","zh":"果醬"},{"w":"January","pos":"n","zh":"一月"},{"w":"jazz","pos":"n","zh":"爵士樂"},{"w":"jealous","pos":"adj","zh":"妒忌的"},{"w":"jeans","pos":"n","zh":"牛仔褲"},{"w":"jeep","pos":"n","zh":"吉普車"},{"w":"job","pos":"n","zh":"工作"},{"w":"jog","pos":"v","zh":"慢跑"},{"w":"join","pos":"v","zh":"參加"},{"w":"joke","pos":"n","zh":"笑話"},{"w":"journalist","pos":"n","zh":"新聞記者"},{"w":"joy","pos":"n","zh":"喜悅"},{"w":"judge","pos":"v","zh":"判斷"},{"w":"juice","pos":"n","zh":"果汁"},{"w":"July","pos":"n","zh":"七月"},{"w":"jump","pos":"v","zh":"跳"},{"w":"June","pos":"n","zh":"六月"},{"w":"just","pos":"adv","zh":"剛才"},{"w":"keep","pos":"v","zh":"(使)保持"},{"w":"ketchup","pos":"n","zh":"番茄醬"},{"w":"key","pos":"n","zh":"鑰匙"},{"w":"kick","pos":"v","zh":"踢"},{"w":"kid","pos":"n","zh":"小孩"},{"w":"kill","pos":"v","zh":"殺死"},{"w":"kilogram","pos":"n","zh":"公斤"},{"w":"kilometer","pos":"n","zh":"公里"},{"w":"kind","pos":"adj","zh":"仁慈的"},{"w":"kindergarten","pos":"n","zh":"幼稚園"},{"w":"king","pos":"n","zh":"國王"},{"w":"kingdom","pos":"n","zh":"王國"},{"w":"kiss","pos":"n","zh":"吻"},{"w":"kitchen","pos":"n","zh":"廚房"},{"w":"kite","pos":"n","zh":"風箏"},{"w":"kitten","pos":"n","zh":"小貓"},{"w":"knee","pos":"n","zh":"膝蓋"},{"w":"knife","pos":"n","zh":"刀"},{"w":"knock","pos":"v","zh":"敲"},{"w":"know","pos":"v","zh":"知道"},{"w":"knowledge","pos":"n","zh":"知識"},{"w":"lack","pos":"v","zh":"缺乏"},{"w":"lady","pos":"n","zh":"女士"},{"w":"lake","pos":"n","zh":"湖泊"},{"w":"lamb","pos":"n","zh":"小羊"},{"w":"lamp","pos":"n","zh":"燈"},{"w":"land","pos":"n","zh":"土地"},{"w":"language","pos":"n","zh":"語言"},{"w":"lantern","pos":"n","zh":"燈籠"},{"w":"large","pos":"adj","zh":"大的"},{"w":"last","pos":"adj","zh":"最後的"},{"w":"late","pos":"adj","zh":"晚的"},{"w":"later","pos":"adj","zh":"稍晚的"},{"w":"latest","pos":"adj","zh":"最新的"},{"w":"laugh","pos":"n","zh":"笑聲"},{"w":"law","pos":"n","zh":"法律"},{"w":"lawyer","pos":"n","zh":"律師"},{"w":"lay","pos":"v","zh":"放置"},{"w":"lazy","pos":"adj","zh":"懶惰的"},{"w":"lead","pos":"v","zh":"領導"},{"w":"leader","pos":"n","zh":"領袖"},{"w":"leaf","pos":"n","zh":"葉子"},{"w":"learn","pos":"v","zh":"學習"},{"w":"least","pos":"adv","zh":"最少"},{"w":"leave","pos":"v","zh":"離開"},{"w":"left","pos":"adj","zh":"左邊的"},{"w":"leg","pos":"n","zh":"腿"},{"w":"legal","pos":"adj","zh":"合法的"},{"w":"lemon","pos":"n","zh":"檸檬"},{"w":"lend","pos":"v","zh":"借"},{"w":"less","pos":"adj","zh":"較少的"},{"w":"lesson","pos":"n","zh":"課"},{"w":"let","pos":"v","zh":"讓"},{"w":"letter","pos":"n","zh":"信"},{"w":"lettuce","pos":"n","zh":"生菜"},{"w":"level","pos":"n","zh":"水準"},{"w":"library","pos":"n","zh":"圖書館"},{"w":"lick","pos":"v","zh":"舔"},{"w":"lid","pos":"n","zh":"蓋子"},{"w":"lie","pos":"n","zh":"謊言"},{"w":"life","pos":"n","zh":"生命"},{"w":"lift","pos":"v","zh":"抬起"},{"w":"light","pos":"n","zh":"燈"},{"w":"lightning","pos":"n","zh":"閃電"},{"w":"like","pos":"v","zh":"喜歡"},{"w":"likely","pos":"adv","zh":"可能"},{"w":"lily","pos":"n","zh":"百合花"},{"w":"limit","pos":"n","zh":"限度"},{"w":"line","pos":"n","zh":"線"},{"w":"link","pos":"n","zh":"關聯"},{"w":"lion","pos":"n","zh":"獅子"},{"w":"lip","pos":"n","zh":"嘴唇"},{"w":"liquid","pos":"n","zh":"液體"},{"w":"list","pos":"v","zh":"把…列表"},{"w":"listen","pos":"v","zh":"聽"},{"w":"liter","pos":"n","zh":"升(容量單位)"},{"w":"little","pos":"adj","zh":"少的"},{"w":"live","pos":"v","zh":"居住"},{"w":"loaf","pos":"n","zh":"一條(麵包)"},{"w":"local","pos":"adj","zh":"本地的"},{"w":"lock","pos":"n","zh":"鎖"},{"w":"locker","pos":"n","zh":"寄物櫃"},{"w":"lonely","pos":"adj","zh":"寂寞的"},{"w":"long","pos":"v","zh":"渴望"},{"w":"look","pos":"v","zh":"看"},{"w":"lose","pos":"v","zh":"失去"},{"w":"loser","pos":"n","zh":"失敗者"},{"w":"lot","pos":"n","zh":"許多"},{"w":"loud","pos":"adj","zh":"大聲的"},{"w":"love","pos":"n","zh":"愛"},{"w":"lovely","pos":"adj","zh":"可愛的"},{"w":"lover","pos":"n","zh":"情人"},{"w":"low","pos":"adj","zh":"低的"},{"w":"luck","pos":"n","zh":"運氣"},{"w":"lucky","pos":"adj","zh":"幸運的"},{"w":"lunch","pos":"n","zh":"午餐"},{"w":"machine","pos":"n","zh":"機器"},{"w":"mad","pos":"adj","zh":"生氣的"},{"w":"magazine","pos":"n","zh":"雜誌"},{"w":"magic","pos":"n","zh":"魔術"},{"w":"magician","pos":"n","zh":"魔術師"},{"w":"mail","pos":"n","zh":"郵件"},{"w":"main","pos":"adj","zh":"主要的"},{"w":"maintain","pos":"v","zh":"維持"},{"w":"major","pos":"adj","zh":"主要的"},{"w":"make","pos":"v","zh":"做"},{"w":"male","pos":"n","zh":"男性"},{"w":"mall","pos":"n","zh":"商場"},{"w":"man","pos":"n","zh":"男人"},{"w":"manager","pos":"n","zh":"經理"},{"w":"mango","pos":"n","zh":"芒果"},{"w":"manner","pos":"n","zh":"態度"},{"w":"many","pos":"adj","zh":"許多的"},{"w":"map","pos":"n","zh":"地圖"},{"w":"March","pos":"n","zh":"三月"},{"w":"mark","pos":"n","zh":"標記"},{"w":"market","pos":"n","zh":"市場"},{"w":"marriage","pos":"n","zh":"結婚"},{"w":"married","pos":"adj","zh":"已婚的"},{"w":"marry","pos":"v","zh":"結婚"},{"w":"marvelous","pos":"adj","zh":"非凡的"},{"w":"mask","pos":"n","zh":"面具"},{"w":"mass","pos":"n","zh":"塊"},{"w":"master","pos":"n","zh":"大師"},{"w":"mat","pos":"n","zh":"墊子"},{"w":"match","pos":"n","zh":"比賽"},{"w":"mate","pos":"n","zh":"配偶"},{"w":"material","pos":"n","zh":"材料"},{"w":"matter","pos":"n","zh":"事情"},{"w":"maximum","pos":"adj","zh":"最多的"},{"w":"may","pos":"aux","zh":"可能"},{"w":"maybe","pos":"adv","zh":"也許"},{"w":"meal","pos":"n","zh":"餐"},{"w":"mean","pos":"v","zh":"意指"},{"w":"meaning","pos":"n","zh":"意思"},{"w":"measure","pos":"v","zh":"測量"},{"w":"meat","pos":"n","zh":"肉類"},{"w":"mechanic","pos":"n","zh":"技工"},{"w":"media","pos":"n","zh":"大眾傳媒"},{"w":"medicine","pos":"n","zh":"藥"},{"w":"medium","pos":"adj","zh":"中等的"},{"w":"meet","pos":"v","zh":"見面"},{"w":"meeting","pos":"n","zh":"會議"},{"w":"member","pos":"n","zh":"會員"},{"w":"memory","pos":"n","zh":"記憶"},{"w":"menu","pos":"n","zh":"菜單"},{"w":"message","pos":"n","zh":"信息"},{"w":"metal","pos":"n","zh":"金屬"},{"w":"meter","pos":"n","zh":"公尺"},{"w":"method","pos":"n","zh":"方法"},{"w":"microwave","pos":"n","zh":"微波爐"},{"w":"middle","pos":"adj","zh":"中間的"},{"w":"midnight","pos":"n","zh":"午夜"},{"w":"mile","pos":"n","zh":"英里"},{"w":"milk","pos":"n","zh":"牛奶"},{"w":"million","pos":"n","zh":"百萬"},{"w":"mind","pos":"v","zh":"介意"},{"w":"mine","pos":"n","zh":"礦"},{"w":"minor","pos":"adj","zh":"次要的"},{"w":"minus","pos":"prep","zh":"減"},{"w":"minute","pos":"n","zh":"分"},{"w":"mirror","pos":"n","zh":"鏡子"},{"w":"Miss","pos":"n","zh":"小姐"},{"w":"mistake","pos":"n","zh":"錯誤"},{"w":"mix","pos":"v","zh":"混合"},{"w":"model","pos":"n","zh":"模特兒"},{"w":"modern","pos":"adj","zh":"現代的"},{"w":"moment","pos":"n","zh":"片刻"},{"w":"Monday","pos":"n","zh":"星期一"},{"w":"money","pos":"n","zh":"錢"},{"w":"monkey","pos":"n","zh":"猴子"},{"w":"monster","pos":"n","zh":"妖怪"},{"w":"month","pos":"n","zh":"月份"},{"w":"moon","pos":"n","zh":"月亮"},{"w":"more","pos":"adj","zh":"更多的"},{"w":"morning","pos":"n","zh":"早上"},{"w":"mop","pos":"n","zh":"拖把"},{"w":"mosquito","pos":"n","zh":"蚊子"},{"w":"most","pos":"adj","zh":"最多的"},{"w":"mother","pos":"n","zh":"母親"},{"w":"motion","pos":"n","zh":"動作"},{"w":"motorcycle","pos":"n","zh":"摩托車"},{"w":"mountain","pos":"n","zh":"山"},{"w":"mouse","pos":"n","zh":"老鼠"},{"w":"mouth","pos":"n","zh":"嘴巴"},{"w":"move","pos":"v","zh":"移動"},{"w":"movement","pos":"n","zh":"動作"},{"w":"movie","pos":"n","zh":"電影"},{"w":"Mr.","pos":"n","zh":"先生"},{"w":"MRT","pos":"n","zh":"捷運"},{"w":"mud","pos":"n","zh":"泥濘"},{"w":"mug","pos":"n","zh":"馬克杯"},{"w":"museum","pos":"n","zh":"博物館"},{"w":"music","pos":"n","zh":"音樂"},{"w":"musician","pos":"n","zh":"音樂家"},{"w":"must","pos":"aux","zh":"必須"},{"w":"nail","pos":"n","zh":"釘子"},{"w":"name","pos":"n","zh":"名字"},{"w":"napkin","pos":"n","zh":"餐巾"},{"w":"narrow","pos":"adj","zh":"狹窄的"},{"w":"nation","pos":"n","zh":"國家"},{"w":"national","pos":"adj","zh":"國家的"},{"w":"natural","pos":"adj","zh":"自然的"},{"w":"nature","pos":"n","zh":"自然"},{"w":"naughty","pos":"adj","zh":"頑皮的"},{"w":"near","pos":"adj","zh":"接近的"},{"w":"nearly","pos":"adv","zh":"幾乎"},{"w":"necessary","pos":"adj","zh":"必要的"},{"w":"neck","pos":"n","zh":"脖子"},{"w":"necklace","pos":"n","zh":"項鍊"},{"w":"need","pos":"v","zh":"需要"},{"w":"needle","pos":"n","zh":"針"},{"w":"negative","pos":"adj","zh":"負面的"},{"w":"neighbor","pos":"n","zh":"鄰居"},{"w":"neither","pos":"adv","zh":"既不…也不"},{"w":"nephew","pos":"n","zh":"姪子，外甥"},{"w":"nervous","pos":"adj","zh":"緊張的"},{"w":"nest","pos":"n","zh":"鳥巢"},{"w":"never","pos":"adv","zh":"從未"},{"w":"new","pos":"adj","zh":"新的"},{"w":"news","pos":"n","zh":"新聞"},{"w":"newspaper","pos":"n","zh":"報紙"},{"w":"next","pos":"adj","zh":"下一個的"},{"w":"nice","pos":"adj","zh":"友善的"},{"w":"niece","pos":"n","zh":"姪女，甥女"},{"w":"night","pos":"n","zh":"夜晚"},{"w":"nine","pos":"n","zh":"九"},{"w":"nineteen","pos":"n","zh":"十九"},{"w":"ninety","pos":"n","zh":"九十"},{"w":"no","pos":"adv","zh":"不"},{"w":"nod","pos":"v","zh":"點頭"},{"w":"noise","pos":"n","zh":"噪音"},{"w":"noisy","pos":"adj","zh":"吵雜的"},{"w":"none","pos":"pron","zh":"沒有人"},{"w":"noodle","pos":"n","zh":"麵條"},{"w":"noon","pos":"n","zh":"中午"},{"w":"nor","pos":"conj","zh":"也不"},{"w":"north","pos":"n","zh":"北方"},{"w":"nose","pos":"n","zh":"鼻子"},{"w":"not","pos":"adv","zh":"不是"},{"w":"note","pos":"n","zh":"便條"},{"w":"notebook","pos":"n","zh":"筆記本"},{"w":"nothing","pos":"pron","zh":"沒有什麼"},{"w":"notice","pos":"v","zh":"注意到"},{"w":"novel","pos":"n","zh":"小說"},{"w":"November","pos":"n","zh":"十一月"},{"w":"now","pos":"adv","zh":"現在"},{"w":"number","pos":"n","zh":"數字"},{"w":"nurse","pos":"n","zh":"護士"},{"w":"nut","pos":"n","zh":"堅果"},{"w":"obey","pos":"v","zh":"聽從"},{"w":"object","pos":"n","zh":"物體"},{"w":"ocean","pos":"n","zh":"海洋"},{"w":"o’clock","pos":"adv","zh":"…點鐘"},{"w":"October","pos":"n","zh":"十月"},{"w":"of","pos":"prep","zh":"…的"},{"w":"off","pos":"prep","zh":"從…離開"},{"w":"offer","pos":"v","zh":"提出"},{"w":"office","pos":"n","zh":"辦公室"},{"w":"officer","pos":"n","zh":"警官，官員"},{"w":"often","pos":"adv","zh":"經常"},{"w":"oil","pos":"n","zh":"石油"},{"w":"okay","pos":"adj","zh":"可以的"},{"w":"old","pos":"adj","zh":"老的"},{"w":"omit","pos":"v","zh":"省略"},{"w":"on","pos":"prep","zh":"在…上面"},{"w":"once","pos":"adv","zh":"一次"},{"w":"one","pos":"adj","zh":"一個的"},{"w":"onion","pos":"n","zh":"洋蔥"},{"w":"only","pos":"adj","zh":"唯一的"},{"w":"open","pos":"v","zh":"打開"},{"w":"operate","pos":"v","zh":"操作"},{"w":"opinion","pos":"n","zh":"意見"},{"w":"or","pos":"conj","zh":"或者"},{"w":"orange","pos":"n","zh":"柑橘"},{"w":"order","pos":"n","zh":"命令"},{"w":"ordinary","pos":"adj","zh":"普通的"},{"w":"organ","pos":"n","zh":"器官"},{"w":"organization","pos":"n","zh":"機構"},{"w":"other","pos":"adj","zh":"其他的"},{"w":"out","pos":"adv","zh":"向外"},{"w":"outside","pos":"adv","zh":"在外面"},{"w":"oven","pos":"n","zh":"烤箱"},{"w":"over","pos":"prep","zh":"在…之上"},{"w":"overseas","pos":"adv","zh":"在國外"},{"w":"own","pos":"v","zh":"擁有"},{"w":"owner","pos":"n","zh":"物主"},{"w":"ox","pos":"n","zh":"公牛"},{"w":"pack","pos":"v","zh":"打包"},{"w":"package","pos":"n","zh":"包裹"},{"w":"page","pos":"n","zh":"頁"},{"w":"pain","pos":"n","zh":"痛苦"},{"w":"painful","pos":"adj","zh":"痛苦的"},{"w":"paint","pos":"v","zh":"畫圖"},{"w":"painter","pos":"n","zh":"畫家"},{"w":"pair","pos":"n","zh":"一對"},{"w":"pajamas","pos":"n","zh":"睡衣"},{"w":"pale","pos":"adj","zh":"蒼白的"},{"w":"pan","pos":"n","zh":"平底鍋"},{"w":"panda","pos":"n","zh":"貓熊"},{"w":"pants","pos":"n","zh":"褲子"},{"w":"papaya","pos":"n","zh":"木瓜"},{"w":"paper","pos":"n","zh":"紙"},{"w":"pardon","pos":"n","zh":"原諒"},{"w":"parent","pos":"n","zh":"父親(或母親)"},{"w":"park","pos":"n","zh":"公園"},{"w":"parrot","pos":"n","zh":"鸚鵡"},{"w":"part","pos":"n","zh":"部分"},{"w":"particular","pos":"adj","zh":"特別的"},{"w":"partner","pos":"n","zh":"夥伴"},{"w":"party","pos":"n","zh":"派對"},{"w":"pass","pos":"v","zh":"通過"},{"w":"passenger","pos":"n","zh":"乘客"},{"w":"past","pos":"adj","zh":"過去的"},{"w":"paste","pos":"n","zh":"麵糰"},{"w":"path","pos":"n","zh":"小徑"},{"w":"patient","pos":"n","zh":"病人"},{"w":"pattern","pos":"n","zh":"模式"},{"w":"pause","pos":"n","zh":"停頓"},{"w":"pay","pos":"v","zh":"付款"},{"w":"peace","pos":"n","zh":"和平"},{"w":"peaceful","pos":"adj","zh":"和平的"},{"w":"peach","pos":"n","zh":"桃子"},{"w":"pear","pos":"n","zh":"梨子"},{"w":"peanut","pos":"n","zh":"花生"},{"w":"pen","pos":"n","zh":"筆"},{"w":"pencil","pos":"n","zh":"鉛筆"},{"w":"people","pos":"n","zh":"人"},{"w":"pepper","pos":"n","zh":"胡椒粉"},{"w":"perfect","pos":"adj","zh":"完美的"},{"w":"perhaps","pos":"adv","zh":"也許"},{"w":"period","pos":"n","zh":"一段時間"},{"w":"personal","pos":"adj","zh":"個人的"},{"w":"pet","pos":"n","zh":"寵物"},{"w":"photo","pos":"n","zh":"照片"},{"w":"physics","pos":"n","zh":"物理"},{"w":"piano","pos":"n","zh":"鋼琴"},{"w":"pick","pos":"v","zh":"挑選"},{"w":"picnic","pos":"n","zh":"野餐"},{"w":"picture","pos":"n","zh":"照片"},{"w":"pie","pos":"n","zh":"派"},{"w":"piece","pos":"n","zh":"一張"},{"w":"pig","pos":"n","zh":"豬"},{"w":"pigeon","pos":"n","zh":"鴿子"},{"w":"pile","pos":"n","zh":"堆"},{"w":"pillow","pos":"n","zh":"枕頭"},{"w":"pin","pos":"n","zh":"別針"},{"w":"pineapple","pos":"n","zh":"鳳梨"},{"w":"pink","pos":"adj","zh":"粉紅色的"},{"w":"pipe","pos":"n","zh":"煙斗"},{"w":"pizza","pos":"n","zh":"披薩"},{"w":"place","pos":"n","zh":"地方"},{"w":"plain","pos":"n","zh":"平原"},{"w":"plan","pos":"n","zh":"計畫"},{"w":"planet","pos":"n","zh":"行星"},{"w":"plant","pos":"n","zh":"植物"},{"w":"plate","pos":"n","zh":"盤子"},{"w":"platform","pos":"n","zh":"月臺"},{"w":"play","pos":"v","zh":"玩"},{"w":"player","pos":"n","zh":"運動員"},{"w":"playground","pos":"n","zh":"操場"},{"w":"pleasant","pos":"adj","zh":"舒適的"},{"w":"please","pos":"v","zh":"請"},{"w":"plus","pos":"prep","zh":"加"},{"w":"pocket","pos":"n","zh":"口袋"},{"w":"poem","pos":"n","zh":"詩"},{"w":"poet","pos":"n","zh":"詩人"},{"w":"point","pos":"v","zh":"指出"},{"w":"poison","pos":"n","zh":"毒藥"},{"w":"police","pos":"n","zh":"警察"},{"w":"polite","pos":"adj","zh":"有禮貌的"},{"w":"pollute","pos":"v","zh":"汙染"},{"w":"pollution","pos":"n","zh":"汙染"},{"w":"pond","pos":"n","zh":"池塘"},{"w":"pool","pos":"n","zh":"水塘"},{"w":"poor","pos":"adj","zh":"貧窮的"},{"w":"popcorn","pos":"n","zh":"爆米花"},{"w":"popular","pos":"adj","zh":"受歡迎的"},{"w":"population","pos":"n","zh":"人口"},{"w":"pork","pos":"n","zh":"豬肉"},{"w":"port","pos":"n","zh":"港口"},{"w":"pose","pos":"n","zh":"姿勢"},{"w":"position","pos":"n","zh":"位置"},{"w":"positive","pos":"adj","zh":"肯定的"},{"w":"possible","pos":"adj","zh":"有可能的"},{"w":"post","pos":"n","zh":"郵件"},{"w":"pot","pos":"n","zh":"鍋"},{"w":"potato","pos":"n","zh":"馬鈴薯"},{"w":"pound","pos":"n","zh":"磅"},{"w":"powder","pos":"n","zh":"粉末"},{"w":"power","pos":"n","zh":"力量"},{"w":"practice","pos":"n","zh":"練習"},{"w":"praise","pos":"n","zh":"讚美"},{"w":"pray","pos":"v","zh":"禱告"},{"w":"precious","pos":"adj","zh":"珍貴的"},{"w":"prefer","pos":"v","zh":"較喜歡"},{"w":"prepare","pos":"v","zh":"準備"},{"w":"presence","pos":"n","zh":"存在"},{"w":"present","pos":"adj","zh":"現在的"},{"w":"president","pos":"n","zh":"總統；校長"},{"w":"pressure","pos":"n","zh":"壓力"},{"w":"pretty","pos":"adj","zh":"漂亮的"},{"w":"price","pos":"n","zh":"價格"},{"w":"pride","pos":"n","zh":"驕傲"},{"w":"priest","pos":"n","zh":"神父"},{"w":"primary","pos":"adj","zh":"主要的"},{"w":"prince","pos":"n","zh":"王子"},{"w":"princess","pos":"n","zh":"公主"},{"w":"principal","pos":"n","zh":"原則"},{"w":"print","pos":"v","zh":"印刷"},{"w":"prison","pos":"n","zh":"監獄"},{"w":"private","pos":"adj","zh":"私人的"},{"w":"prize","pos":"n","zh":"獎"},{"w":"probably","pos":"adv","zh":"或許"},{"w":"problem","pos":"n","zh":"問題"},{"w":"produce","pos":"v","zh":"製造"},{"w":"production","pos":"n","zh":"製造"},{"w":"professor","pos":"n","zh":"教授"},{"w":"program","pos":"n","zh":"節目"},{"w":"progress","pos":"n","zh":"進步"},{"w":"project","pos":"n","zh":"方案"},{"w":"promise","pos":"n","zh":"承諾"},{"w":"pronounce","pos":"v","zh":"發音"},{"w":"protect","pos":"v","zh":"保護"},{"w":"proud","pos":"adj","zh":"驕傲的"},{"w":"prove","pos":"v","zh":"證明"},{"w":"provide","pos":"v","zh":"提供"},{"w":"public","pos":"adj","zh":"公共的"},{"w":"pull","pos":"v","zh":"拉"},{"w":"pump","pos":"n","zh":"抽水機"},{"w":"pumpkin","pos":"n","zh":"南瓜"},{"w":"punish","pos":"v","zh":"處罰"},{"w":"puppy","pos":"n","zh":"小狗"},{"w":"purple","pos":"adj","zh":"紫色的"},{"w":"purpose","pos":"n","zh":"目的"},{"w":"purse","pos":"n","zh":"錢包"},{"w":"push","pos":"v","zh":"推"},{"w":"put","pos":"v","zh":"放置"},{"w":"puzzle","pos":"n","zh":"謎題"},{"w":"quality","pos":"n","zh":"品質"},{"w":"quantity","pos":"n","zh":"量"},{"w":"quarter","pos":"n","zh":"四分之一"},{"w":"queen","pos":"n","zh":"女王"},{"w":"question","pos":"n","zh":"問題"},{"w":"quick","pos":"adj","zh":"迅速的"},{"w":"quiet","pos":"adj","zh":"安靜的"},{"w":"quit","pos":"v","zh":"停止"},{"w":"quite","pos":"adv","zh":"相當地"},{"w":"quiz","pos":"n","zh":"小考"},{"w":"rabbit","pos":"n","zh":"兔子"},{"w":"race","pos":"n","zh":"賽跑"},{"w":"radio","pos":"n","zh":"收音機"},{"w":"railroad","pos":"n","zh":"鐵路"},{"w":"rain","pos":"n","zh":"雨"},{"w":"rainbow","pos":"n","zh":"彩虹"},{"w":"rainy","pos":"adj","zh":"多雨的"},{"w":"raise","pos":"v","zh":"增加"},{"w":"range","pos":"n","zh":"範圍"},{"w":"rare","pos":"adj","zh":"稀少的"},{"w":"rat","pos":"n","zh":"老鼠"},{"w":"rather","pos":"adv","zh":"稍微"},{"w":"reach","pos":"v","zh":"到達"},{"w":"read","pos":"v","zh":"閱讀"},{"w":"ready","pos":"adj","zh":"準備好的"},{"w":"real","pos":"adj","zh":"真的"},{"w":"realize","pos":"v","zh":"瞭解"},{"w":"really","pos":"adv","zh":"真實地"},{"w":"reason","pos":"n","zh":"理由"},{"w":"receive","pos":"v","zh":"收到"},{"w":"record","pos":"n","zh":"記錄"},{"w":"recover","pos":"v","zh":"康復"},{"w":"rectangle","pos":"n","zh":"長方形"},{"w":"recycle","pos":"v","zh":"回收"},{"w":"red","pos":"adj","zh":"紅色的"},{"w":"refrigerator","pos":"n","zh":"冰箱"},{"w":"refuse","pos":"v","zh":"拒絕"},{"w":"regard","pos":"v","zh":"認為"},{"w":"regret","pos":"n","zh":"後悔"},{"w":"regular","pos":"adj","zh":"規律的"},{"w":"reject","pos":"v","zh":"拒絕"},{"w":"relation","pos":"n","zh":"關係"},{"w":"relative","pos":"n","zh":"親戚"},{"w":"remember","pos":"v","zh":"記得"},{"w":"remind","pos":"v","zh":"提醒"},{"w":"rent","pos":"v","zh":"租借"},{"w":"repair","pos":"v","zh":"修理"},{"w":"repeat","pos":"v","zh":"重複"},{"w":"reply","pos":"v","zh":"回應"},{"w":"report","pos":"n","zh":"報告"},{"w":"reporter","pos":"n","zh":"記者"},{"w":"require","pos":"v","zh":"需要"},{"w":"respect","pos":"n","zh":"尊重"},{"w":"responsible","pos":"adj","zh":"有責任的"},{"w":"rest","pos":"n","zh":"休息"},{"w":"restaurant","pos":"n","zh":"餐廳"},{"w":"restroom","pos":"n","zh":"洗手間"},{"w":"result","pos":"n","zh":"結果"},{"w":"return","pos":"v","zh":"歸來"},{"w":"review","pos":"v","zh":"複習"},{"w":"revise","pos":"v","zh":"改變"},{"w":"rice","pos":"n","zh":"米"},{"w":"rich","pos":"adj","zh":"有錢的"},{"w":"ride","pos":"v","zh":"騎"},{"w":"right","pos":"adj","zh":"正確的"},{"w":"ring","pos":"n","zh":"戒指"},{"w":"rise","pos":"v","zh":"上升"},{"w":"river","pos":"n","zh":"河流"},{"w":"road","pos":"n","zh":"道路"},{"w":"rob","pos":"v","zh":"搶劫"},{"w":"robot","pos":"n","zh":"機器人"},{"w":"rock","pos":"n","zh":"石塊"},{"w":"role","pos":"n","zh":"角色"},{"w":"roll","pos":"v","zh":"滾動"},{"w":"roof","pos":"n","zh":"屋頂"},{"w":"room","pos":"n","zh":"房間"},{"w":"root","pos":"n","zh":"根"},{"w":"rope","pos":"n","zh":"繩子"},{"w":"rose","pos":"n","zh":"玫瑰"},{"w":"round","pos":"adj","zh":"圓的"},{"w":"row","pos":"n","zh":"一排"},{"w":"royal","pos":"adj","zh":"皇室的"},{"w":"rub","pos":"v","zh":"摩擦"},{"w":"rubber","pos":"n","zh":"橡膠"},{"w":"rude","pos":"adj","zh":"粗魯的"},{"w":"ruin","pos":"v","zh":"毀壞"},{"w":"rule","pos":"v","zh":"統治"},{"w":"ruler","pos":"n","zh":"統治者；尺"},{"w":"run","pos":"v","zh":"跑步"},{"w":"rush","pos":"v","zh":"衝進"},{"w":"sad","pos":"adj","zh":"悲傷的"},{"w":"safe","pos":"adj","zh":"安全的"},{"w":"safety","pos":"n","zh":"安全"},{"w":"sail","pos":"v","zh":"航行"},{"w":"sailor","pos":"n","zh":"水手"},{"w":"salad","pos":"n","zh":"沙拉"},{"w":"sale","pos":"n","zh":"出售"},{"w":"salt","pos":"n","zh":"鹽"},{"w":"same","pos":"adj","zh":"相同的"},{"w":"sample","pos":"n","zh":"樣品"},{"w":"sand","pos":"n","zh":"沙"},{"w":"sandwich","pos":"n","zh":"三明治"},{"w":"satisfy","pos":"v","zh":"滿意"},{"w":"Saturday","pos":"n","zh":"星期六"},{"w":"sauce","pos":"n","zh":"醬料"},{"w":"save","pos":"v","zh":"拯救"},{"w":"say","pos":"v","zh":"說"},{"w":"scare","pos":"v","zh":"(使)害怕"},{"w":"scarf","pos":"n","zh":"圍巾"},{"w":"scene","pos":"n","zh":"風景"},{"w":"scenery","pos":"n","zh":"景色"},{"w":"school","pos":"n","zh":"學校"},{"w":"science","pos":"n","zh":"科學"},{"w":"scientist","pos":"n","zh":"科學家"},{"w":"scooter","pos":"n","zh":"摩托車"},{"w":"score","pos":"n","zh":"得分"},{"w":"screen","pos":"n","zh":"螢幕"},{"w":"sea","pos":"n","zh":"海"},{"w":"seafood","pos":"n","zh":"海鮮"},{"w":"search","pos":"v","zh":"搜索"},{"w":"season","pos":"n","zh":"季節"},{"w":"seat","pos":"n","zh":"座位"},{"w":"second","pos":"adj","zh":"第二的"},{"w":"secret","pos":"n","zh":"祕密"},{"w":"secretary","pos":"n","zh":"祕書"},{"w":"section","pos":"n","zh":"部分"},{"w":"see","pos":"v","zh":"看見"},{"w":"seed","pos":"n","zh":"種子"},{"w":"seek","pos":"v","zh":"尋找"},{"w":"seem","pos":"v","zh":"似乎"},{"w":"seesaw","pos":"n","zh":"蹺蹺板"},{"w":"seldom","pos":"adv","zh":"不常"},{"w":"select","pos":"v","zh":"挑選"},{"w":"self","pos":"n","zh":"自我"},{"w":"selfish","pos":"adj","zh":"自私的"},{"w":"sell","pos":"v","zh":"販賣"},{"w":"semester","pos":"n","zh":"學期"},{"w":"send","pos":"v","zh":"送"},{"w":"sense","pos":"n","zh":"感覺官能"},{"w":"sentence","pos":"n","zh":"句子"},{"w":"September","pos":"n","zh":"九月"},{"w":"serious","pos":"adj","zh":"嚴重的"},{"w":"servant","pos":"n","zh":"僕人"},{"w":"serve","pos":"v","zh":"服務"},{"w":"service","pos":"n","zh":"服務"},{"w":"set","pos":"n","zh":"一套，一組"},{"w":"settle","pos":"v","zh":"解決"},{"w":"seven","pos":"n","zh":"七"},{"w":"seventeen","pos":"n","zh":"十七"},{"w":"seventy","pos":"n","zh":"七十"},{"w":"several","pos":"adj","zh":"幾個的"},{"w":"shake","pos":"v","zh":"搖動"},{"w":"shall","pos":"aux","zh":"將要"},{"w":"shape","pos":"n","zh":"形狀"},{"w":"share","pos":"v","zh":"分享"},{"w":"shark","pos":"n","zh":"鯊魚"},{"w":"sharp","pos":"adj","zh":"銳利的"},{"w":"sheep","pos":"n","zh":"羊"},{"w":"sheet","pos":"n","zh":"床單"},{"w":"shelf","pos":"n","zh":"架"},{"w":"shell","pos":"n","zh":"貝殼"},{"w":"shine","pos":"v","zh":"照耀"},{"w":"ship","pos":"n","zh":"船"},{"w":"shirt","pos":"n","zh":"襯衫"},{"w":"shock","pos":"n","zh":"震驚"},{"w":"shoe","pos":"n","zh":"鞋子"},{"w":"shop","pos":"n","zh":"商店"},{"w":"shoot","pos":"v","zh":"射擊"},{"w":"shore","pos":"n","zh":"岸"},{"w":"short","pos":"adj","zh":"短的"},{"w":"shorts","pos":"n","zh":"短褲"},{"w":"should","pos":"aux","zh":"應該"},{"w":"shoulder","pos":"n","zh":"肩膀"},{"w":"shout","pos":"v","zh":"大聲喊叫"},{"w":"show","pos":"v","zh":"展現"},{"w":"shower","pos":"n","zh":"淋浴"},{"w":"shrimp","pos":"n","zh":"蝦子"},{"w":"shut","pos":"v","zh":"關閉"},{"w":"shy","pos":"adj","zh":"害羞的"},{"w":"sick","pos":"adj","zh":"生病的"},{"w":"side","pos":"n","zh":"面"},{"w":"sidewalk","pos":"n","zh":"人行道"},{"w":"sight","pos":"n","zh":"視力"},{"w":"sign","pos":"v","zh":"示意"},{"w":"silence","pos":"n","zh":"沉默"},{"w":"silent","pos":"adj","zh":"沉默的"},{"w":"silk","pos":"n","zh":"絲"},{"w":"silly","pos":"adj","zh":"傻的"},{"w":"silver","pos":"n","zh":"銀"},{"w":"similar","pos":"adj","zh":"相似的"},{"w":"simple","pos":"adj","zh":"簡單的"},{"w":"simply","pos":"adv","zh":"簡單地"},{"w":"since","pos":"prep","zh":"從…時起"},{"w":"sincere","pos":"adj","zh":"真誠的"},{"w":"sing","pos":"v","zh":"唱歌"},{"w":"singer","pos":"n","zh":"歌手"},{"w":"single","pos":"adj","zh":"單一的"},{"w":"sink","pos":"v","zh":"沉"},{"w":"sir","pos":"n","zh":"先生"},{"w":"sister","pos":"n","zh":"姊妹"},{"w":"sit","pos":"v","zh":"坐"},{"w":"six","pos":"n","zh":"六"},{"w":"sixteen","pos":"n","zh":"十六"},{"w":"sixty","pos":"n","zh":"六十"},{"w":"size","pos":"n","zh":"尺碼"},{"w":"skate","pos":"v","zh":"溜冰"},{"w":"ski","pos":"v","zh":"滑雪"},{"w":"skill","pos":"n","zh":"技巧"},{"w":"skillful","pos":"adj","zh":"熟練的"},{"w":"skin","pos":"n","zh":"皮膚"},{"w":"skinny","pos":"adj","zh":"皮包骨的"},{"w":"skirt","pos":"n","zh":"裙子"},{"w":"sky","pos":"n","zh":"天空"},{"w":"sleep","pos":"v","zh":"睡覺"},{"w":"sleepy","pos":"adj","zh":"想睡的"},{"w":"slender","pos":"adj","zh":"纖細的"},{"w":"slide","pos":"v","zh":"滑動"},{"w":"slim","pos":"adj","zh":"苗條的"},{"w":"slippers","pos":"n","zh":"拖鞋"},{"w":"slow","pos":"adj","zh":"緩慢的"},{"w":"small","pos":"adj","zh":"小的"},{"w":"smart","pos":"adj","zh":"聰明的"},{"w":"smell","pos":"v","zh":"聞"},{"w":"smile","pos":"v","zh":"微笑"},{"w":"smoke","pos":"n","zh":"煙"},{"w":"snack","pos":"n","zh":"點心"},{"w":"snail","pos":"n","zh":"蝸牛"},{"w":"snake","pos":"n","zh":"蛇"},{"w":"sneakers","pos":"n","zh":"運動鞋"},{"w":"snow","pos":"n","zh":"雪"},{"w":"snowy","pos":"adj","zh":"下雪多的"},{"w":"so","pos":"adv","zh":"如此"},{"w":"soap","pos":"n","zh":"肥皂"},{"w":"soccer","pos":"n","zh":"足球"},{"w":"social","pos":"adj","zh":"社會的"},{"w":"society","pos":"n","zh":"社會"},{"w":"sock","pos":"n","zh":"襪子"},{"w":"soda","pos":"n","zh":"汽水"},{"w":"sofa","pos":"n","zh":"沙發"},{"w":"soft","pos":"adj","zh":"軟的"},{"w":"soldier","pos":"n","zh":"士兵"},{"w":"solve","pos":"v","zh":"解決"},{"w":"some","pos":"adj","zh":"一些的"},{"w":"someone","pos":"pron","zh":"某人"},{"w":"something","pos":"n","zh":"某事"},{"w":"sometimes","pos":"adv","zh":"有時候"},{"w":"somewhere","pos":"adv","zh":"在某處"},{"w":"son","pos":"n","zh":"兒子"},{"w":"song","pos":"n","zh":"歌"},{"w":"soon","pos":"adv","zh":"不久"},{"w":"sore","pos":"adj","zh":"疼痛的"},{"w":"sorry","pos":"adj","zh":"感到抱歉的"},{"w":"soul","pos":"n","zh":"靈魂"},{"w":"sound","pos":"v","zh":"聽起來"},{"w":"soup","pos":"n","zh":"湯"},{"w":"sour","pos":"adj","zh":"酸的"},{"w":"source","pos":"n","zh":"出處"},{"w":"south","pos":"n","zh":"南方"},{"w":"soy","pos":"n","zh":"醬油"},{"w":"space","pos":"n","zh":"空間"},{"w":"spaghetti","pos":"n","zh":"義大利麵"},{"w":"speak","pos":"v","zh":"講話"},{"w":"speaker","pos":"n","zh":"演講者"},{"w":"special","pos":"adj","zh":"特別的"},{"w":"speech","pos":"n","zh":"演講"},{"w":"speed","pos":"n","zh":"速度"},{"w":"spell","pos":"v","zh":"拼寫"},{"w":"spend","pos":"v","zh":"花費(時間)"},{"w":"spider","pos":"n","zh":"蜘蛛"},{"w":"spirit","pos":"n","zh":"精神"},{"w":"spoon","pos":"n","zh":"湯匙"},{"w":"sport","pos":"n","zh":"體育活動"},{"w":"spring","pos":"n","zh":"春天"},{"w":"square","pos":"n","zh":"廣場"},{"w":"stage","pos":"n","zh":"舞臺"},{"w":"stair","pos":"n","zh":"樓梯"},{"w":"stamp","pos":"n","zh":"郵票"},{"w":"stand","pos":"v","zh":"站起來"},{"w":"star","pos":"n","zh":"星星"},{"w":"start","pos":"v","zh":"開始"},{"w":"state","pos":"v","zh":"敘述"},{"w":"station","pos":"n","zh":"車站"},{"w":"stationery","pos":"n","zh":"文具"},{"w":"stay","pos":"v","zh":"停留"},{"w":"steak","pos":"n","zh":"牛排"},{"w":"steal","pos":"v","zh":"偷竊"},{"w":"steam","pos":"n","zh":"蒸汽"},{"w":"step","pos":"v","zh":"行走"},{"w":"still","pos":"adv","zh":"仍然"},{"w":"stingy","pos":"adj","zh":"小氣的"},{"w":"stomach","pos":"n","zh":"胃"},{"w":"stomachache","pos":"n","zh":"胃痛"},{"w":"stone","pos":"n","zh":"石頭"},{"w":"stop","pos":"v","zh":"停"},{"w":"store","pos":"n","zh":"商店"},{"w":"storm","pos":"n","zh":"暴風雨"},{"w":"story","pos":"n","zh":"故事"},{"w":"stove","pos":"n","zh":"火爐"},{"w":"straight","pos":"adj","zh":"直的"},{"w":"strange","pos":"adj","zh":"奇怪的"},{"w":"stranger","pos":"n","zh":"陌生人"},{"w":"straw","pos":"n","zh":"稻草"},{"w":"strawberry","pos":"n","zh":"草莓"},{"w":"stream","pos":"n","zh":"小河"},{"w":"street","pos":"n","zh":"街道"},{"w":"strike","pos":"n","zh":"罷工"},{"w":"strong","pos":"adj","zh":"強壯的"},{"w":"student","pos":"n","zh":"學生"},{"w":"study","pos":"v","zh":"學習"},{"w":"stupid","pos":"adj","zh":"笨的"},{"w":"style","pos":"n","zh":"風格"},{"w":"subject","pos":"n","zh":"科目"},{"w":"subway","pos":"n","zh":"地鐵"},{"w":"succeed","pos":"v","zh":"成功"},{"w":"success","pos":"n","zh":"成功"},{"w":"successful","pos":"adj","zh":"成功的"},{"w":"such","pos":"adj","zh":"如此的"},{"w":"sudden","pos":"adj","zh":"突然的"},{"w":"sugar","pos":"n","zh":"糖"},{"w":"suggest","pos":"v","zh":"建議"},{"w":"suit","pos":"v","zh":"適合"},{"w":"summer","pos":"n","zh":"夏天"},{"w":"sun","pos":"n","zh":"太陽"},{"w":"Sunday","pos":"n","zh":"星期天"},{"w":"sunny","pos":"adj","zh":"陽光充足的"},{"w":"super","pos":"adj","zh":"極好的"},{"w":"supermarket","pos":"n","zh":"超市"},{"w":"supper","pos":"n","zh":"晚餐"},{"w":"supply","pos":"v","zh":"提供"},{"w":"support","pos":"v","zh":"支持"},{"w":"sure","pos":"adj","zh":"確定的"},{"w":"surf","pos":"v","zh":"衝浪"},{"w":"surface","pos":"n","zh":"表面"},{"w":"surprise","pos":"v","zh":"驚訝"},{"w":"surprised","pos":"adj","zh":"感到驚訝的"},{"w":"survive","pos":"v","zh":"生存"},{"w":"swallow","pos":"v","zh":"吞嚥"},{"w":"swan","pos":"n","zh":"天鵝"},{"w":"sweater","pos":"n","zh":"毛衣"},{"w":"sweep","pos":"v","zh":"清掃"},{"w":"sweet","pos":"adj","zh":"甜的"},{"w":"swim","pos":"v","zh":"游泳"},{"w":"swing","pos":"v","zh":"搖擺"},{"w":"symbol","pos":"n","zh":"象徵"},{"w":"system","pos":"n","zh":"系統"},{"w":"table","pos":"n","zh":"桌子"},{"w":"tail","pos":"n","zh":"尾巴"},{"w":"take","pos":"v","zh":"拿"},{"w":"tale","pos":"n","zh":"故事"},{"w":"talent","pos":"n","zh":"才能"},{"w":"talk","pos":"v","zh":"說話"},{"w":"talkative","pos":"adj","zh":"多話的"},{"w":"tall","pos":"adj","zh":"高的"},{"w":"tangerine","pos":"n","zh":"橘子"},{"w":"tank","pos":"n","zh":"坦克"},{"w":"tape","pos":"n","zh":"錄音帶"},{"w":"task","pos":"n","zh":"任務"},{"w":"taste","pos":"n","zh":"味道"},{"w":"taxi","pos":"n","zh":"計程車"},{"w":"tea","pos":"n","zh":"茶"},{"w":"teach","pos":"v","zh":"教導"},{"w":"teacher","pos":"n","zh":"老師"},{"w":"team","pos":"n","zh":"隊伍"},{"w":"teapot","pos":"n","zh":"茶壺"},{"w":"tear","pos":"n","zh":"眼淚"},{"w":"teenager","pos":"n","zh":"青少年"},{"w":"telephone","pos":"n","zh":"電話"},{"w":"television","pos":"n","zh":"電視"},{"w":"tell","pos":"v","zh":"說"},{"w":"temperature","pos":"n","zh":"溫度"},{"w":"temple","pos":"n","zh":"廟宇"},{"w":"ten","pos":"n","zh":"十"},{"w":"tennis","pos":"n","zh":"網球"},{"w":"tent","pos":"n","zh":"帳篷"},{"w":"term","pos":"n","zh":"任期"},{"w":"terrible","pos":"adj","zh":"可怕的"},{"w":"terrific","pos":"adj","zh":"很棒的"},{"w":"test","pos":"n","zh":"測驗"},{"w":"textbook","pos":"n","zh":"教科書"},{"w":"than","pos":"conj","zh":"比…"},{"w":"thank","pos":"v","zh":"謝謝"},{"w":"Thanksgiving","pos":"n","zh":"感恩節"},{"w":"that","pos":"pron","zh":"那"},{"w":"theater","pos":"n","zh":"電影院"},{"w":"then","pos":"adv","zh":"然後"},{"w":"there","pos":"adv","zh":"那裡"},{"w":"therefore","pos":"adv","zh":"因此"},{"w":"these","pos":"pron","zh":"這些"},{"w":"thick","pos":"adj","zh":"厚的"},{"w":"thief","pos":"n","zh":"小偷"},{"w":"thin","pos":"adj","zh":"薄的"},{"w":"thing","pos":"n","zh":"事情"},{"w":"think","pos":"v","zh":"想"},{"w":"third","pos":"adj","zh":"第三的"},{"w":"thirsty","pos":"adj","zh":"口渴的"},{"w":"thirteen","pos":"n","zh":"十三"},{"w":"thirty","pos":"n","zh":"三十"},{"w":"this","pos":"pron","zh":"這"},{"w":"those","pos":"pron","zh":"那些"},{"w":"though","pos":"conj","zh":"雖然"},{"w":"thought","pos":"n","zh":"想法"},{"w":"thousand","pos":"n","zh":"千"},{"w":"three","pos":"n","zh":"三"},{"w":"throat","pos":"n","zh":"喉嚨"},{"w":"through","pos":"adv","zh":"自始至終"},{"w":"throw","pos":"v","zh":"投，扔"},{"w":"thumb","pos":"n","zh":"拇指"},{"w":"thunder","pos":"n","zh":"雷"},{"w":"Thursday","pos":"n","zh":"星期四"},{"w":"ticket","pos":"n","zh":"票"},{"w":"tidy","pos":"adj","zh":"整潔的"},{"w":"tie","pos":"n","zh":"領帶"},{"w":"tiger","pos":"n","zh":"老虎"},{"w":"till","pos":"conj","zh":"直到"},{"w":"time","pos":"n","zh":"時間"},{"w":"tiny","pos":"adj","zh":"極小的"},{"w":"tip","pos":"n","zh":"祕訣"},{"w":"tired","pos":"adj","zh":"疲倦的"},{"w":"title","pos":"n","zh":"標題"},{"w":"to","pos":"prep","zh":"向，朝"},{"w":"toast","pos":"n","zh":"吐司"},{"w":"today","pos":"n","zh":"今天"},{"w":"toe","pos":"n","zh":"腳趾頭"},{"w":"tofu","pos":"n","zh":"豆腐"},{"w":"together","pos":"adv","zh":"一起"},{"w":"toilet","pos":"n","zh":"馬桶"},{"w":"tomato","pos":"n","zh":"番茄"},{"w":"tomorrow","pos":"n","zh":"明天"},{"w":"tongue","pos":"n","zh":"舌頭"},{"w":"tonight","pos":"n","zh":"今晚"},{"w":"too","pos":"adv","zh":"也"},{"w":"tool","pos":"n","zh":"工具"},{"w":"tooth","pos":"n","zh":"牙齒"},{"w":"toothache","pos":"n","zh":"牙痛"},{"w":"toothbrush","pos":"n","zh":"牙刷"},{"w":"top","pos":"n","zh":"上面"},{"w":"topic","pos":"n","zh":"主題"},{"w":"total","pos":"adj","zh":"完全的"},{"w":"touch","pos":"v","zh":"感動"},{"w":"toward","pos":"prep","zh":"朝"},{"w":"towel","pos":"n","zh":"毛巾"},{"w":"tower","pos":"n","zh":"塔"},{"w":"town","pos":"n","zh":"城鎮"},{"w":"toy","pos":"n","zh":"玩具"},{"w":"trace","pos":"n","zh":"蹤跡"},{"w":"track","pos":"v","zh":"跟蹤"},{"w":"trade","pos":"n","zh":"貿易"},{"w":"tradition","pos":"n","zh":"傳統"},{"w":"traditional","pos":"adj","zh":"傳統的"},{"w":"traffic","pos":"n","zh":"交通"},{"w":"train","pos":"n","zh":"訓練"},{"w":"trap","pos":"n","zh":"陷阱"},{"w":"trash","pos":"n","zh":"垃圾"},{"w":"travel","pos":"v","zh":"旅行"},{"w":"treasure","pos":"n","zh":"寶藏"},{"w":"treat","pos":"v","zh":"對待"},{"w":"tree","pos":"n","zh":"樹"},{"w":"triangle","pos":"n","zh":"三角形"},{"w":"trick","pos":"n","zh":"惡作劇"},{"w":"trip","pos":"n","zh":"旅行"},{"w":"trouble","pos":"n","zh":"麻煩"},{"w":"trousers","pos":"n","zh":"褲子"},{"w":"truck","pos":"n","zh":"卡車"},{"w":"true","pos":"adj","zh":"真的"},{"w":"trumpet","pos":"n","zh":"喇叭"},{"w":"trust","pos":"v","zh":"相信"},{"w":"truth","pos":"n","zh":"事實"},{"w":"try","pos":"v","zh":"試圖"},{"w":"T-shirt","pos":"n","zh":"T 恤"},{"w":"tube","pos":"n","zh":"管子"},{"w":"Tuesday","pos":"n","zh":"星期二"},{"w":"Tunnel","pos":"n","zh":"隧道"},{"w":"turkey","pos":"n","zh":"火雞"},{"w":"turn","pos":"v","zh":"轉彎"},{"w":"turtle","pos":"n","zh":"烏龜"},{"w":"twelve","pos":"n","zh":"十二"},{"w":"twenty","pos":"n","zh":"二十"},{"w":"twice","pos":"adv","zh":"兩次"},{"w":"two","pos":"n","zh":"二"},{"w":"type","pos":"v","zh":"打字"},{"w":"typhoon","pos":"n","zh":"颱風"},{"w":"ugly","pos":"adj","zh":"醜陋的"},{"w":"umbrella","pos":"n","zh":"雨傘"},{"w":"uncle","pos":"n","zh":"叔伯"},{"w":"under","pos":"prep","zh":"在…下面"},{"w":"underline","pos":"v","zh":"強調"},{"w":"understand","pos":"v","zh":"了解"},{"w":"underwear","pos":"n","zh":"內衣褲"},{"w":"unhappy","pos":"adj","zh":"不快樂的"},{"w":"uniform","pos":"n","zh":"制服"},{"w":"unique","pos":"adj","zh":"獨一無二的"},{"w":"universe","pos":"n","zh":"宇宙"},{"w":"university","pos":"n","zh":"大學"},{"w":"until","pos":"prep","zh":"直到…"},{"w":"up","pos":"adv","zh":"向上"},{"w":"upper","pos":"adj","zh":"上面的"},{"w":"upstairs","pos":"adv","zh":"在樓上"},{"w":"use","pos":"v","zh":"使用"},{"w":"user","pos":"n","zh":"使用者"},{"w":"useful","pos":"adj","zh":"有用的"},{"w":"usual","pos":"adj","zh":"通常的"},{"w":"usually","pos":"adv","zh":"通常"},{"w":"vacation","pos":"n","zh":"假期"},{"w":"valley","pos":"n","zh":"山谷"},{"w":"valuable","pos":"adj","zh":"有價值的"},{"w":"value","pos":"n","zh":"價值"},{"w":"vegetable","pos":"n","zh":"蔬菜"},{"w":"vendor","pos":"n","zh":"攤販"},{"w":"very","pos":"adv","zh":"非常"},{"w":"vest","pos":"n","zh":"背心"},{"w":"victory","pos":"n","zh":"勝利"},{"w":"video","pos":"n","zh":"錄影帶"},{"w":"village","pos":"n","zh":"村莊"},{"w":"vinegar","pos":"n","zh":"醋"},{"w":"violin","pos":"n","zh":"小提琴"},{"w":"visit","pos":"v","zh":"探訪"},{"w":"visitor","pos":"n","zh":"訪客"},{"w":"vocabulary","pos":"n","zh":"字彙"},{"w":"voice","pos":"n","zh":"聲音"},{"w":"volleyball","pos":"n","zh":"排球"},{"w":"vote","pos":"v","zh":"投票"},{"w":"waist","pos":"n","zh":"腰"},{"w":"wait","pos":"v","zh":"等待"},{"w":"waiter","pos":"n","zh":"服務生"},{"w":"waitress","pos":"n","zh":"女服務生"},{"w":"wake","pos":"v","zh":"醒"},{"w":"walk","pos":"v","zh":"走"},{"w":"wall","pos":"n","zh":"牆壁"},{"w":"wallet","pos":"n","zh":"皮夾"},{"w":"want","pos":"v","zh":"想要"},{"w":"war","pos":"n","zh":"戰爭"},{"w":"warm","pos":"adj","zh":"暖和的"},{"w":"wash","pos":"v","zh":"洗滌"},{"w":"waste","pos":"v","zh":"浪費"},{"w":"watch","pos":"n","zh":"手錶"},{"w":"water","pos":"n","zh":"水"},{"w":"waterfall","pos":"n","zh":"瀑布"},{"w":"watermelon","pos":"n","zh":"西瓜"},{"w":"wave","pos":"n","zh":"波浪"},{"w":"way","pos":"n","zh":"方式"},{"w":"weak","pos":"adj","zh":"虛弱的"},{"w":"weapon","pos":"n","zh":"武器"},{"w":"wear","pos":"v","zh":"穿戴著"},{"w":"weather","pos":"n","zh":"天氣"},{"w":"wedding","pos":"n","zh":"結婚儀式"},{"w":"Wednesday","pos":"n","zh":"星期三"},{"w":"week","pos":"n","zh":"週"},{"w":"weekday","pos":"n","zh":"平日"},{"w":"weekend","pos":"n","zh":"週末"},{"w":"weight","pos":"n","zh":"重量"},{"w":"welcome","pos":"v","zh":"歡迎"},{"w":"well","pos":"adv","zh":"很好地"},{"w":"west","pos":"n","zh":"西方"},{"w":"wet","pos":"adj","zh":"溼的"},{"w":"whale","pos":"n","zh":"鯨魚"},{"w":"what","pos":"pron","zh":"什麼"},{"w":"wheel","pos":"n","zh":"車輪"},{"w":"when","pos":"pron","zh":"何時"},{"w":"where","pos":"pron","zh":"哪裡"},{"w":"whether","pos":"conj","zh":"是否"},{"w":"which","pos":"pron","zh":"哪個"},{"w":"while","pos":"conj","zh":"當…時候"},{"w":"white","pos":"adj","zh":"白色的"},{"w":"who","pos":"pron","zh":"誰"},{"w":"whole","pos":"adj","zh":"全體的"},{"w":"whose","pos":"pron","zh":"誰的"},{"w":"why","pos":"adv","zh":"為何"},{"w":"wide","pos":"adj","zh":"廣大的"},{"w":"wife","pos":"n","zh":"妻子"},{"w":"wild","pos":"adj","zh":"野生的"},{"w":"will","pos":"aux","zh":"將要"},{"w":"win","pos":"v","zh":"獲勝"},{"w":"wind","pos":"n","zh":"風"},{"w":"window","pos":"n","zh":"窗戶"},{"w":"windy","pos":"adj","zh":"風大的"},{"w":"wine","pos":"n","zh":"酒"},{"w":"wing","pos":"n","zh":"翅膀"},{"w":"winner","pos":"n","zh":"優勝者"},{"w":"winter","pos":"n","zh":"冬天"},{"w":"wire","pos":"n","zh":"電線"},{"w":"wise","pos":"adj","zh":"明智的"},{"w":"wish","pos":"v","zh":"希望"},{"w":"with","pos":"prep","zh":"有；用"},{"w":"without","pos":"prep","zh":"沒有"},{"w":"wolf","pos":"n","zh":"狼"},{"w":"woman","pos":"n","zh":"女人"},{"w":"wonder","pos":"v","zh":"驚訝"},{"w":"wonderful","pos":"adj","zh":"極好的"},{"w":"wood","pos":"n","zh":"木頭"},{"w":"wool","pos":"n","zh":"羊毛"},{"w":"word","pos":"n","zh":"字"},{"w":"work","pos":"v","zh":"工作"},{"w":"worker","pos":"n","zh":"工人"},{"w":"world","pos":"n","zh":"世界"},{"w":"worm","pos":"n","zh":"蟲"},{"w":"worry","pos":"v","zh":"擔心"},{"w":"worth","pos":"n","zh":"價值"},{"w":"wound","pos":"n","zh":"受傷"},{"w":"wrist","pos":"n","zh":"手腕"},{"w":"write","pos":"v","zh":"寫"},{"w":"writer","pos":"n","zh":"作者"},{"w":"wrong","pos":"adj","zh":"不對的"},{"w":"yard","pos":"n","zh":"院子"},{"w":"year","pos":"n","zh":"年"},{"w":"yellow","pos":"adj","zh":"黃色的"},{"w":"yes","pos":"adv","zh":"是的"},{"w":"yesterday","pos":"n","zh":"昨天"},{"w":"yet","pos":"adv","zh":"尚未"},{"w":"young","pos":"adj","zh":"年輕的"},{"w":"youth","pos":"n","zh":"青春"},{"w":"yummy","pos":"adj","zh":"好吃的"},{"w":"zero","pos":"n","zh":"零"},{"w":"zoo","pos":"n","zh":"動物園"}];
+const ROUNDS = [{"s":0,"e":98},{"s":98,"e":196},{"s":196,"e":294},{"s":294,"e":392},{"s":392,"e":489},{"s":489,"e":586},{"s":586,"e":683},{"s":683,"e":780},{"s":780,"e":877},{"s":877,"e":974},{"s":974,"e":1071},{"s":1071,"e":1168},{"s":1168,"e":1265},{"s":1265,"e":1362},{"s":1362,"e":1459},{"s":1459,"e":1556},{"s":1556,"e":1653},{"s":1653,"e":1750},{"s":1750,"e":1847},{"s":1847,"e":1944}];
+document.getElementById('totalWords').textContent = WORDS.length;
+
+/* ---------- storage ---------- */
+const LS = {
+  know: JSON.parse(localStorage.getItem('q_know')||'{}'),
+  star: JSON.parse(localStorage.getItem('q_star')||'{}'),
+};
+function save(){localStorage.setItem('q_know',JSON.stringify(LS.know));localStorage.setItem('q_star',JSON.stringify(LS.star));}
+function idxKey(i){return i;}
+
+/* ---------- speech ---------- */
+let VOICE=null;
+function pickVoice(){
+  const vs=speechSynthesis.getVoices();
+  VOICE = vs.find(v=>/en-US/i.test(v.lang)&&/female|Samantha|Google US/i.test(v.name))
+       || vs.find(v=>/en-US/i.test(v.lang))
+       || vs.find(v=>/^en/i.test(v.lang)) || null;
+}
+if('speechSynthesis' in window){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
+function speak(text){
+  if(!('speechSynthesis' in window))return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='en-US'; u.rate=.9; if(VOICE)u.voice=VOICE;
+  speechSynthesis.speak(u);
+}
+
+/* ---------- helpers ---------- */
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),1400);}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function roundWords(ri){const r=ROUNDS[ri];const out=[];for(let i=r.s;i<r.e;i++)out.push(i);return out;}
+function knowCount(ri){return roundWords(ri).filter(i=>LS.know[i]).length;}
+function starCount(ri){return roundWords(ri).filter(i=>LS.star[i]).length;}
+const POSZH={n:'名詞',v:'動詞',adj:'形容詞',adv:'副詞',prep:'介系詞',conj:'連接詞',pron:'代名詞',aux:'助動詞',int:'感嘆詞',art:'冠詞'};
+
+/* ---------- navigation ---------- */
+let curRound=0;
+const $home=document.getElementById('home'),$round=document.getElementById('roundView'),$game=document.getElementById('gameView');
+function show(el){[$home,$round,$game].forEach(e=>e.classList.add('hidden'));el.classList.remove('hidden');window.scrollTo(0,0);}
+function goHome(){renderHome();show($home);}
+function backToRound(){speechSynthesis&&speechSynthesis.cancel();openRound(curRound);}
+
+function renderHome(){
+  const g=document.getElementById('roundGrid');g.innerHTML='';
+  ROUNDS.forEach((r,ri)=>{
+    const total=r.e-r.s, kn=knowCount(ri), pct=Math.round(kn/total*100), st=starCount(ri);
+    const first=WORDS[r.s].w, last=WORDS[r.e-1].w;
+    const el=document.createElement('button');el.className='rc';
+    el.onclick=()=>openRound(ri);
+    el.innerHTML=`<div class="no">回 ${String(ri+1).padStart(2,'0')} · ROUND</div>
+      <div class="rng">${first} — ${last}</div>
+      <div class="cnt">${total} 字</div>
+      ${pct>0?`<div class="pct">${pct}%</div>`:''}
+      ${st>0?`<div class="star-badge">⭐${st}</div>`:''}
+      <div class="bar"><i style="width:${pct}%"></i></div>`;
+    g.appendChild(el);
+  });
+}
+
+function openRound(ri){
+  curRound=ri;const r=ROUNDS[ri];
+  document.getElementById('roundTitle').textContent=`第 ${ri+1} 回 · Round ${ri+1}`;
+  document.getElementById('roundRange').textContent=`${WORDS[r.s].w} … ${WORDS[r.e-1].w}　共 ${r.e-r.s} 字`;
+  const total=r.e-r.s,kn=knowCount(ri),pct=Math.round(kn/total*100);
+  document.getElementById('roundBarFill').style.width=pct+'%';
+  document.getElementById('roundStat').textContent=`已學會 ${kn} / ${total} 字（${pct}%）　⭐複習清單 ${starCount(ri)} 字`;
+  show($round);
+}
+
+/* ================= FLASHCARDS ================= */
+let fcList=[],fcPos=0,fcReviewMode=false;
+function startFlash(){fcReviewMode=false;fcList=roundWords(curRound);launchFlash('📖 單字卡 Flashcards');}
+function startReview(){
+  const list=roundWords(curRound).filter(i=>LS.star[i]||!LS.know[i]);
+  if(list.length===0){toast('太棒了！本回沒有待複習的字 🎉');return;}
+  fcReviewMode=true;fcList=shuffle(list);launchFlash('⭐ 重點複習 Review');
+}
+function launchFlash(title){
+  fcPos=0;document.getElementById('gameTitle').textContent=title;show($game);renderFlash();
+}
+function renderFlash(){
+  const wi=fcList[fcPos],w=WORDS[wi];
+  const body=document.getElementById('gameBody');
+  body.innerHTML=`
+    <div class="progress-line">${fcPos+1} / ${fcList.length}　${fcReviewMode?'複習模式':''}</div>
+    <div class="flash" id="flash">
+      <div class="flash-inner" onclick="flipCard(event)">
+        <div class="face front">
+          <div class="word-en">${w.w}</div>
+          <div class="pos">${w.pos}. ${POSZH[w.pos]||''}</div>
+          <button class="speak" onclick="event.stopPropagation();speak('${w.w.replace(/'/g,"\\'")}')">🔊</button>
+          <div class="hintflip">點卡片看中文 · Tap to flip</div>
+        </div>
+        <div class="face back">
+          <div class="word-zh">${w.zh}</div>
+          <div class="pos">${w.w}　(${w.pos}.)</div>
+          <div class="hintflip">點卡片翻回英文</div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-controls">
+      <button class="nav-btn" onclick="fcPrev()">‹</button>
+      <div class="mark-row">
+        <button class="mark know ${LS.know[wi]?'on':''}" id="mkKnow" onclick="toggleKnow(${wi})">✓ 學會了</button>
+        <button class="mark star ${LS.star[wi]?'on':''}" id="mkStar" onclick="toggleStar(${wi})">⭐ 要複習</button>
+      </div>
+      <button class="nav-btn" onclick="fcNext()">›</button>
+    </div>`;
+  setTimeout(()=>speak(w.w),180);
+}
+function flipCard(e){document.getElementById('flash').classList.toggle('flipped');}
+function fcNext(){if(fcPos<fcList.length-1){fcPos++;renderFlash();}else{flashDone();}}
+function fcPrev(){if(fcPos>0){fcPos--;renderFlash();}}
+function toggleKnow(wi){LS.know[wi]=!LS.know[wi];if(LS.know[wi]){LS.star[wi]=false;}save();document.getElementById('mkKnow').classList.toggle('on',!!LS.know[wi]);document.getElementById('mkStar').classList.toggle('on',!!LS.star[wi]);toast(LS.know[wi]?'已標記學會 ✓':'取消標記');}
+function toggleStar(wi){LS.star[wi]=!LS.star[wi];save();document.getElementById('mkStar').classList.toggle('on',!!LS.star[wi]);toast(LS.star[wi]?'加入複習清單 ⭐':'移出複習清單');}
+function flashDone(){
+  document.getElementById('gameBody').innerHTML=`<div class="panel result">
+    <div class="emoji">🎉</div><h3>這一輪看完了！</h3>
+    <p>複習是記憶的關鍵，多看幾次會更熟。</p>
+    <div class="rowbtns"><button class="btn" onclick="renderFlashRestart()">再看一次</button>
+    <button class="btn ghost" onclick="backToRound()">返回本回</button></div></div>`;
+}
+function renderFlashRestart(){fcPos=0;renderFlash();}
+
+/* ================= QUIZ ================= */
+let qList=[],qPos=0,qScore=0,qDir=0;
+function startQuiz(){
+  qList=shuffle(roundWords(curRound));qPos=0;qScore=0;
+  document.getElementById('gameTitle').textContent='🎯 選擇題 Quiz';show($game);renderQuiz();
+}
+function renderQuiz(){
+  if(qPos>=qList.length){return quizDone();}
+  const wi=qList[qPos],w=WORDS[wi];
+  qDir=Math.random()<0.5?0:1; // 0: EN->ZH, 1: ZH->EN
+  const poolIdx=shuffle(WORDS.map((_,i)=>i).filter(i=>i!==wi)).slice(0,3);
+  const options=shuffle([wi,...poolIdx]);
+  const body=document.getElementById('gameBody');
+  const promptTxt=qDir===0?w.w:w.zh;
+  const sub=qDir===0?`(${w.pos}.) 這個字是什麼意思？`:'下列哪個英文字是這個意思？';
+  body.innerHTML=`
+    <div class="panel">
+      <div class="scoreline"><span>第 ${qPos+1} / ${qList.length} 題</span><span>得分 ${qScore}</span></div>
+      <div class="q-word">${promptTxt} ${qDir===0?`<button class="speak" style="width:38px;height:38px;font-size:1rem;display:inline-flex;vertical-align:middle" onclick="speak('${w.w.replace(/'/g,"\\'")}')">🔊</button>`:''}</div>
+      <div class="q-sub">${sub}</div>
+      <div class="opts" id="opts"></div>
+    </div>`;
+  const opts=document.getElementById('opts');
+  options.forEach(oi=>{
+    const b=document.createElement('button');b.className='opt';
+    b.textContent=qDir===0?WORDS[oi].zh:WORDS[oi].w;
+    b.onclick=()=>answerQuiz(b,oi,wi,w);
+    opts.appendChild(b);
+  });
+  if(qDir===0)setTimeout(()=>speak(w.w),150);
+}
+function answerQuiz(btn,chosen,correct,w){
+  const all=[...document.querySelectorAll('.opt')];all.forEach(o=>o.onclick=null);
+  if(chosen===correct){btn.classList.add('correct');qScore++;LS.know[correct]=true;save();speak(w.w);}
+  else{
+    btn.classList.add('wrong');LS.star[correct]=true;save();
+    all.forEach(o=>{if((qDir===0?o.textContent===WORDS[correct].zh:o.textContent===WORDS[correct].w))o.classList.add('correct');});
+    all.forEach(o=>{if(!o.classList.contains('correct')&&o!==btn)o.classList.add('dim');});
+  }
+  setTimeout(()=>{qPos++;renderQuiz();},chosen===correct?750:1500);
+}
+function quizDone(){
+  const pct=Math.round(qScore/qList.length*100);
+  const emo=pct>=90?'🏆':pct>=70?'😃':pct>=50?'💪':'📚';
+  document.getElementById('gameBody').innerHTML=`<div class="panel result">
+    <div class="emoji">${emo}</div>
+    <div class="big">${qScore}<span style="font-size:1.2rem;color:var(--muted)"> / ${qList.length}</span></div>
+    <p>答對率 ${pct}%${pct>=90?'，超強！':pct>=50?'，繼續加油！':'，多練幾次一定進步！'}</p>
+    <div class="rowbtns"><button class="btn" onclick="startQuiz()">再測一次</button>
+    <button class="btn ghost" onclick="backToRound()">返回本回</button></div></div>`;
+}
+
+/* ================= SPELLING ================= */
+let spList=[],spPos=0,spScore=0,spReveal=0;
+function startSpell(){
+  spList=shuffle(roundWords(curRound));spPos=0;spScore=0;
+  document.getElementById('gameTitle').textContent='✍️ 聽寫拼字 Spelling';show($game);renderSpell();
+}
+function renderSpell(){
+  if(spPos>=spList.length)return spellDone();
+  const wi=spList[spPos],w=WORDS[wi];spReveal=0;
+  document.getElementById('gameBody').innerHTML=`
+   <div class="panel">
+    <div class="scoreline"><span>第 ${spPos+1} / ${spList.length} 題</span><span>得分 ${spScore}</span></div>
+    <div class="q-sub">聽發音，拼出這個英文單字（提示：${w.zh}）</div>
+    <div class="spell-audio"><button class="big-speak" onclick="speak('${w.w.replace(/'/g,"\\'")}')">🔊</button></div>
+    <input class="spell-input" id="spIn" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="type here…">
+    <div class="spell-hint" id="spHint"></div>
+    <div class="feedback" id="spFb"></div>
+    <div class="rowbtns">
+      <button class="btn ghost sm" onclick="spellHint()">💡 提示</button>
+      <button class="btn sm" onclick="checkSpell()">確認 Check</button>
+      <button class="btn ghost sm" onclick="skipSpell()">跳過 ▸</button>
+    </div>
+   </div>`;
+  const inp=document.getElementById('spIn');inp.focus();
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')checkSpell();});
+  setTimeout(()=>speak(w.w),200);
+}
+function spellHint(){
+  const w=WORDS[spList[spPos]].w;spReveal=Math.min(spReveal+1,w.length);
+  let s='';for(let i=0;i<w.length;i++)s+= i<spReveal?w[i]:'_';
+  document.getElementById('spHint').textContent=s.split('').join(' ');
+}
+function checkSpell(){
+  const wi=spList[spPos],w=WORDS[wi];
+  const val=(document.getElementById('spIn').value||'').trim().toLowerCase();
+  const fb=document.getElementById('spFb');
+  if(val===w.w.toLowerCase()){
+    fb.textContent='✓ 正確！ '+w.w;fb.className='feedback ok';
+    if(spReveal===0)spScore++;LS.know[wi]=true;save();speak(w.w);
+    setTimeout(()=>{spPos++;renderSpell();},900);
+  }else{
+    fb.textContent='✗ 正確答案：'+w.w;fb.className='feedback no';
+    LS.star[wi]=true;save();speak(w.w);
+    setTimeout(()=>{spPos++;renderSpell();},1600);
+  }
+}
+function skipSpell(){const wi=spList[spPos];LS.star[wi]=true;save();spPos++;renderSpell();}
+function spellDone(){
+  document.getElementById('gameBody').innerHTML=`<div class="panel result">
+    <div class="emoji">✍️🎉</div>
+    <div class="big">${spScore}<span style="font-size:1.2rem;color:var(--muted)"> / ${spList.length}</span></div>
+    <p>一次就拼對 ${spScore} 個！拼字是最扎實的記憶。</p>
+    <div class="rowbtns"><button class="btn" onclick="startSpell()">再練一次</button>
+    <button class="btn ghost" onclick="backToRound()">返回本回</button></div></div>`;
+}
+
+/* ================= MATCHING ================= */
+let mPairs=[],mSel=null,mDone=0,mStart=0,mTimer=null,mQueue=[],mRound=0;
+function startMatch(){
+  mQueue=shuffle(roundWords(curRound));mRound=0;mStart=Date.now();
+  document.getElementById('gameTitle').textContent='🔗 配對遊戲 Matching';show($game);
+  clearInterval(mTimer);mTimer=setInterval(updateMTimer,500);
+  renderMatch();
+}
+function renderMatch(){
+  const batch=mQueue.slice(mRound*6,mRound*6+6);
+  if(batch.length===0)return matchDone();
+  const leftEmpty=false;
+  const lefts=batch.map(i=>({i,txt:WORDS[i].w,type:'en'}));
+  const rights=shuffle(batch.map(i=>({i,txt:WORDS[i].zh,type:'zh'})));
+  mSel=null;mDone=0;
+  const body=document.getElementById('gameBody');
+  body.innerHTML=`<div class="panel">
+    <div class="scoreline"><span>第 ${mRound+1} 組 / ${Math.ceil(mQueue.length/6)}　配對英文↔中文</span><span id="mTime">0s</span></div>
+    <div class="match-grid" id="mgrid"></div>
+   </div>`;
+  const grid=document.getElementById('mgrid');
+  // interleave columns: build combined rows
+  const rows=Math.max(lefts.length,rights.length);
+  for(let r=0;r<rows;r++){
+    if(lefts[r]){grid.appendChild(mkCell(lefts[r]));}else{const e=document.createElement('div');grid.appendChild(e);}
+    if(rights[r]){grid.appendChild(mkCell(rights[r]));}else{const e=document.createElement('div');grid.appendChild(e);}
+  }
+}
+function mkCell(item){
+  const c=document.createElement('button');c.className='mcell';
+  c.innerHTML=item.type==='en'?`<span class="en">${item.txt}</span>`:item.txt;
+  c.dataset.i=item.i;c.dataset.type=item.type;
+  c.onclick=()=>clickCell(c);
+  return c;
+}
+function clickCell(c){
+  if(c.classList.contains('done'))return;
+  if(c.dataset.type==='en')speak(WORDS[+c.dataset.i].w);
+  if(!mSel){mSel=c;c.classList.add('sel');return;}
+  if(mSel===c){c.classList.remove('sel');mSel=null;return;}
+  if(mSel.dataset.type===c.dataset.type){mSel.classList.remove('sel');mSel=c;c.classList.add('sel');return;}
+  // check match
+  if(mSel.dataset.i===c.dataset.i){
+    mSel.classList.remove('sel');mSel.classList.add('done');c.classList.add('done');
+    LS.know[+c.dataset.i]=true;save();mSel=null;mDone++;
+    if(mDone*2>=document.querySelectorAll('#mgrid .mcell').length){
+      setTimeout(()=>{mRound++;renderMatch();},500);
+    }
+  }else{
+    const a=mSel,b=c;a.classList.add('err');b.classList.add('err');a.classList.remove('sel');
+    LS.star[+a.dataset.i]=true;LS.star[+b.dataset.i]=true;save();
+    setTimeout(()=>{a.classList.remove('err');b.classList.remove('err');},500);
+    mSel=null;
+  }
+}
+function updateMTimer(){const el=document.getElementById('mTime');if(el)el.textContent=Math.floor((Date.now()-mStart)/1000)+'s';}
+function matchDone(){
+  clearInterval(mTimer);const secs=Math.floor((Date.now()-mStart)/1000);
+  document.getElementById('gameBody').innerHTML=`<div class="panel result">
+    <div class="emoji">🔗🏁</div><h3>全部配對完成！</h3>
+    <p>總共花了 <b>${secs}</b> 秒，挑戰更快一次吧！</p>
+    <div class="rowbtns"><button class="btn" onclick="startMatch()">再玩一次</button>
+    <button class="btn ghost" onclick="backToRound()">返回本回</button></div></div>`;
+}
+
+/* ---------- reset ---------- */
+document.getElementById('resetBtn').onclick=()=>{
+  if(confirm('確定要清除所有學習進度嗎？此動作無法復原。')){
+    LS.know={};LS.star={};save();renderHome();toast('已清除所有進度');
+  }
+};
+
+/* init */
+renderHome();
+</script>
+</body>
+</html>
