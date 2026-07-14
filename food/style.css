@@ -1,0 +1,161 @@
+/* 食品群互動教材 共用樣式 */
+:root{
+  --accent:#d97a34; --accent-dark:#b45f1e; --accent-soft:#fff2e6;
+  --ink:#2b2620; --muted:#7a7166; --line:#ece4d8; --bg:#faf6f0; --card:#ffffff;
+  --ok:#2f9e6f; --ok-soft:#e5f5ee; --bad:#d1495b; --bad-soft:#fbe9ec;
+  --radius:16px; --shadow:0 2px 10px rgba(60,40,20,.06),0 8px 30px rgba(60,40,20,.05);
+  --maxw:960px;
+}
+body.k2{
+  --accent:#2f8f8a; --accent-dark:#1f6f6b; --accent-soft:#e6f4f3;
+  --bg:#f2f8f7; --line:#dcecea;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",system-ui,-apple-system,sans-serif;
+  line-height:1.75; font-size:16px; -webkit-text-size-adjust:100%;
+}
+a{color:var(--accent-dark)}
+.wrap{max-width:var(--maxw); margin:0 auto; padding:0 18px}
+
+/* Header */
+header.top{
+  background:linear-gradient(135deg,var(--accent),var(--accent-dark));
+  color:#fff; padding:30px 0 26px; box-shadow:var(--shadow);
+}
+header.top .wrap{display:flex; flex-direction:column; gap:6px}
+header.top .kicker{font-size:14px; opacity:.9; letter-spacing:2px}
+header.top h1{margin:0; font-size:26px; font-weight:800; letter-spacing:1px}
+header.top .sub{font-size:15px; opacity:.92}
+header.top .stat{margin-top:10px; display:flex; gap:16px; flex-wrap:wrap; font-size:13px}
+header.top .stat b{font-size:19px; display:block}
+
+/* Tabs */
+nav.tabs{position:sticky; top:0; z-index:30; background:var(--card);
+  border-bottom:1px solid var(--line); box-shadow:0 2px 8px rgba(0,0,0,.03)}
+nav.tabs .wrap{display:flex; gap:4px; overflow-x:auto}
+nav.tabs button{
+  border:none; background:none; padding:14px 16px; font-size:15px; font-weight:700;
+  color:var(--muted); cursor:pointer; border-bottom:3px solid transparent; white-space:nowrap;
+  font-family:inherit;
+}
+nav.tabs button.on{color:var(--accent-dark); border-bottom-color:var(--accent)}
+
+main{padding:22px 0 80px}
+section.view{display:none}
+section.view.on{display:block; animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
+
+/* Topic chips (filter) */
+.chips{display:flex; flex-wrap:wrap; gap:8px; margin:6px 0 18px}
+.chip{
+  border:1px solid var(--line); background:var(--card); color:var(--ink);
+  padding:7px 13px; border-radius:999px; font-size:13.5px; cursor:pointer; font-family:inherit;
+  transition:.15s;
+}
+.chip:hover{border-color:var(--accent)}
+.chip.on{background:var(--accent); color:#fff; border-color:var(--accent)}
+.chip .n{opacity:.7; font-size:12px; margin-inline-start:4px}
+
+/* Concept note cards */
+.note{
+  background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+  box-shadow:var(--shadow); margin-bottom:16px; overflow:hidden;
+}
+.note>summary{
+  list-style:none; cursor:pointer; padding:16px 18px; font-size:18px; font-weight:800;
+  display:flex; align-items:center; gap:10px; color:var(--accent-dark);
+}
+.note>summary::-webkit-details-marker{display:none}
+.note>summary::before{content:"▸"; transition:.2s; color:var(--accent)}
+.note[open]>summary::before{transform:rotate(90deg)}
+.note .body{padding:2px 20px 20px; border-top:1px solid var(--line)}
+.note .body h4{margin:16px 0 6px; font-size:15.5px; color:var(--accent-dark)}
+.note .body p{margin:6px 0}
+.note .lead{background:var(--accent-soft); border-radius:12px; padding:12px 14px; margin:12px 0;
+  font-size:16px}
+.note .lead b{color:var(--accent-dark)}
+
+/* Simple analogy callout（化學白話比喻） */
+.analogy{border-inline-start:4px solid var(--accent); background:var(--accent-soft);
+  padding:10px 14px; border-radius:0 12px 12px 0; margin:12px 0; font-size:16px}
+.analogy::before{content:"💡 白話比喻　"; font-weight:800; color:var(--accent-dark)}
+
+/* Tables */
+.tbl-wrap{overflow-x:auto; margin:12px 0}
+table{border-collapse:collapse; width:100%; font-size:14px; min-width:340px}
+th,td{border:1px solid var(--line); padding:8px 10px; text-align:center; vertical-align:middle}
+thead th{background:var(--accent); color:#fff; font-weight:700}
+tbody tr:nth-child(even){background:var(--accent-soft)}
+td.l,th.l{text-align:left}
+
+/* Question card */
+.qmeta{display:flex; align-items:center; gap:8px; justify-content:space-between; margin:18px 0 10px}
+.qmeta .count{color:var(--muted); font-size:14px}
+.q{
+  background:var(--card); border:1px solid var(--line); border-radius:14px;
+  box-shadow:var(--shadow); margin-bottom:14px; overflow:hidden;
+}
+.q .head{padding:14px 16px 10px; display:flex; gap:10px}
+.q .badge{flex:0 0 auto; font-size:11.5px; font-weight:700; color:var(--accent-dark);
+  background:var(--accent-soft); padding:3px 8px; border-radius:8px; height:fit-content; white-space:nowrap}
+.q .stem{font-weight:600; font-size:16px}
+.q .stem .tag{display:inline-block; font-size:11px; color:var(--muted); border:1px solid var(--line);
+  padding:1px 6px; border-radius:6px; margin-inline-start:6px; vertical-align:middle}
+.opts{list-style:none; margin:0; padding:0 16px 12px}
+.opts li{
+  border:1.5px solid var(--line); border-radius:10px; padding:9px 13px; margin:7px 0; cursor:pointer;
+  font-size:16px; transition:.12s; display:flex; gap:9px; align-items:flex-start;
+}
+.opts li:hover{border-color:var(--accent)}
+.opts li .k{font-weight:800; color:var(--muted); flex:0 0 auto}
+.opts li.correct{background:var(--ok-soft); border-color:var(--ok)}
+.opts li.correct .k{color:var(--ok)}
+.opts li.wrong{background:var(--bad-soft); border-color:var(--bad)}
+.opts li.wrong .k{color:var(--bad)}
+.opts li.locked{cursor:default}
+.explain{margin:0 16px 16px; padding:13px 15px; background:var(--accent-soft);
+  border-radius:12px; font-size:16px; display:none}
+.explain.show{display:block; animation:fade .2s}
+.explain .ans{font-weight:800; color:var(--ok); margin-bottom:4px}
+.explain .ans.est{color:var(--accent-dark)}
+.explain .chart{margin-top:10px}
+.reveal{margin:0 16px 14px}
+.reveal button{font-family:inherit; border:1px solid var(--accent); color:var(--accent-dark);
+  background:var(--card); border-radius:10px; padding:8px 16px; font-weight:700; cursor:pointer; font-size:14px}
+.reveal button:hover{background:var(--accent-soft)}
+
+/* Search */
+.search{display:flex; gap:8px; margin-bottom:14px}
+.search input{flex:1; padding:11px 14px; border:1px solid var(--line); border-radius:12px;
+  font-size:15px; font-family:inherit; background:var(--card)}
+.search input:focus{outline:2px solid var(--accent); border-color:transparent}
+
+/* Quiz */
+.quiz-start{background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+  box-shadow:var(--shadow); padding:22px; text-align:center}
+.quiz-start h3{margin:0 0 6px}
+.quiz-start .row{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin:16px 0}
+.btn{font-family:inherit; background:var(--accent); color:#fff; border:none; border-radius:12px;
+  padding:11px 22px; font-size:15px; font-weight:700; cursor:pointer; box-shadow:var(--shadow)}
+.btn:hover{background:var(--accent-dark)}
+.btn.ghost{background:var(--card); color:var(--accent-dark); border:1px solid var(--accent)}
+.pill-select{display:flex; gap:8px; flex-wrap:wrap; justify-content:center}
+.pill-select label{border:1px solid var(--line); border-radius:999px; padding:7px 14px; cursor:pointer; font-size:14px}
+.pill-select input{display:none}
+.pill-select label.on{background:var(--accent); color:#fff; border-color:var(--accent)}
+.progress{height:8px; background:var(--line); border-radius:999px; overflow:hidden; margin:4px 0 16px}
+.progress>i{display:block; height:100%; background:var(--accent); width:0; transition:.3s}
+.scorebox{text-align:center; padding:24px; background:var(--card); border-radius:var(--radius);
+  box-shadow:var(--shadow); border:1px solid var(--line)}
+.scorebox .big{font-size:44px; font-weight:800; color:var(--accent-dark)}
+
+footer{text-align:center; color:var(--muted); font-size:13px; padding:30px 18px 50px}
+.hidden{display:none!important}
+@media(max-width:600px){
+  body{font-size:16px}
+  header.top h1{font-size:22px}
+  .note>summary{font-size:16.5px}
+}
