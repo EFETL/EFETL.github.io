@@ -105,6 +105,34 @@ header .sub{font-size:14px;color:#7a7a95;margin-bottom:4px}
 .pill{display:inline-block;background:#fff;border-radius:30px;padding:8px 16px;margin:6px 4px;font-weight:800;
   box-shadow:0 3px 8px var(--shadow);cursor:pointer;color:#7aa8ff}
 .tip-inline{font-size:14px;color:#8a8aa5;margin-top:10px}
+
+/* 配對遊戲 (memory pairs) */
+.pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}
+.pcard{perspective:700px;height:92px;cursor:pointer}
+.pc-in{position:relative;width:100%;height:100%;transition:transform .4s;transform-style:preserve-3d}
+.pcard.flip .pc-in{transform:rotateY(180deg)}
+.pc-back,.pc-front{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;display:flex;
+  flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4px;overflow:hidden}
+.pc-back{background:linear-gradient(135deg,#b9a7ff,#8f7bff);color:#fff;font-size:32px;font-weight:800;box-shadow:0 4px 0 rgba(120,100,200,.35)}
+.pc-front{background:#fff;border:3px solid var(--pc);transform:rotateY(180deg)}
+.pc-emoji{font-size:30px;line-height:1}
+.pc-en{font-size:13px;font-weight:800;color:var(--ink);word-break:break-word;line-height:1.1;margin-top:2px}
+.pc-zh{font-size:16px;font-weight:800;color:var(--ink);padding:0 2px}
+.pcard.done .pc-front{background:#d6f7ec;border-color:#4cc9a3}
+.pcard.done{cursor:default}
+
+/* 連連看 (connect) */
+.ll{position:relative;display:flex;justify-content:space-between;gap:34px}
+.lllines{position:absolute;inset:0;pointer-events:none;z-index:0}
+.llcol{display:flex;flex-direction:column;gap:12px;flex:1;position:relative;z-index:1}
+.llbtn{border:none;border-radius:16px;padding:13px 8px;font-size:16px;font-weight:800;cursor:pointer;
+  background:#fff;border:3px solid #ffd0e2;color:var(--ink);box-shadow:0 3px 0 #f3c9dd;transition:transform .1s}
+.llbtn:active{transform:scale(.96)}
+.llbtn.sel{border-color:#7cc4ff;background:#eaf5ff;box-shadow:0 3px 0 #a9d4ff}
+.llbtn.mm{border-color:#4cc9a3;background:#d6f7ec;color:#2f9c7d;box-shadow:0 3px 0 #9be3cd;cursor:default}
+.llbtn.bad{border-color:#ff8a8a;background:#ffe3e3;animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.lle{font-size:20px}
 footer{text-align:center;color:#a7a4bd;font-size:12px;margin-top:30px}
 </style>
 </head>
@@ -196,11 +224,15 @@ function roundView(i,mode){
     +tab('study','📖 翻卡學習',mode)
     +tab('pic','🖼️ 看圖選字',mode)
     +tab('quiz','🎯 中英測驗',mode)
+    +tab('pair','🃏 配對遊戲',mode)
+    +tab('match','🔗 連連看',mode)
     +'</div><div id="mbody"></div>';
   view.innerHTML=h; window.scrollTo(0,0);
   if(mode==='study')studyMode(r,i);
   else if(mode==='pic')quizMode(r,i,'pic');
-  else quizMode(r,i,'quiz');
+  else if(mode==='quiz')quizMode(r,i,'quiz');
+  else if(mode==='pair')pairMode(r,i);
+  else matchMode(r,i);
 }
 function tab(m,label,cur){return '<button class="tab '+(m===cur?'on':'')+'" onclick="roundView(CUR,\''+m+'\')">'+label+'</button>';}
 window.roundView=roundView;
@@ -289,6 +321,116 @@ function quizMode(r,i,kind){
       +'</div></div>';
   }
   render();
+}
+
+// ---- 配對遊戲 (memory pairs) ----
+function pairMode(r,i){
+  const mb=document.getElementById('mbody');
+  const N=Math.min(6,r.length);
+  const pick=shuffle(r).slice(0,N);
+  let cards=[];
+  pick.forEach((w,wi)=>{ cards.push({wi,side:'en',w}); cards.push({wi,side:'zh',w}); });
+  cards=shuffle(cards);
+  let flipped=[], matched=0, moves=0, lock=false;
+  mb.innerHTML='<div class="q">'
+    +'<div class="qbar"><span>🃏 配對遊戲</span><span id="pmoves">步數 0</span></div>'
+    +'<div class="tip-inline" style="margin:0 0 6px">翻開兩張，把「英文＋圖」和「中文」湊成一對！🔊 翻到英文會唸給你聽</div>'
+    +'<div class="pgrid" id="pgrid"></div><div id="pfb"></div></div>';
+  const grid=document.getElementById('pgrid');
+  cards.forEach((c)=>{
+    const col=PALETTE[c.wi%PALETTE.length];
+    const face=c.side==='en'
+      ? '<div class="pc-emoji">'+(c.w.emoji||'📘')+'</div><div class="pc-en">'+c.w.en+'</div>'
+      : '<div class="pc-zh">'+c.w.zh+'</div>';
+    const el=document.createElement('div'); el.className='pcard';
+    el.innerHTML='<div class="pc-in"><div class="pc-back">?</div><div class="pc-front" style="--pc:'+col+'">'+face+'</div></div>';
+    el.onclick=()=>{
+      if(lock||el.classList.contains('flip')||el.classList.contains('done'))return;
+      el.classList.add('flip'); flipped.push({el,c});
+      if(c.side==='en')speak(c.w.en);
+      if(flipped.length===2){
+        moves++; document.getElementById('pmoves').textContent='步數 '+moves;
+        const a=flipped[0], b=flipped[1];
+        if(a.c.wi===b.c.wi){ lock=true;
+          setTimeout(()=>{ a.el.classList.add('done'); b.el.classList.add('done'); flipped=[]; lock=false; matched++;
+            if(matched===N)finishPair(moves); },420);
+        }else{ lock=true;
+          setTimeout(()=>{ a.el.classList.remove('flip'); b.el.classList.remove('flip'); flipped=[]; lock=false; },820);
+        }
+      }
+    };
+    grid.appendChild(el);
+  });
+  function finishPair(mv){
+    const st=ST['r'+i]||{}; st.studied=true; ST['r'+i]=st; save(ST);
+    document.getElementById('pfb').innerHTML='<div style="text-align:center;margin-top:14px">'
+      +'<div style="font-size:60px">🎉</div><div class="sc">全部配對成功！只用了 '+mv+' 步</div>'
+      +'<div style="margin-top:10px"><span class="pill" onclick="roundView(CUR,\'pair\')">🔄 再玩一次</span>'
+      +'<span class="pill" onclick="roundView(CUR,\'study\')">📖 回去複習</span>'
+      +(CUR+1<ROUNDS.length?'<span class="pill" onclick="openRound('+(CUR+1)+')">➡️ 下一回</span>':'')+'</div></div>';
+  }
+}
+
+// ---- 連連看 (connect) ----
+function matchMode(r,i){
+  const mb=document.getElementById('mbody');
+  const N=Math.min(6,r.length);
+  const pick=shuffle(r).slice(0,N);
+  const left=pick.map((w,k)=>({w,k}));
+  const right=shuffle(pick.map((w,k)=>({w,k})));
+  let selL=null, selR=null, done=0;
+  mb.innerHTML='<div class="q">'
+    +'<div class="qbar"><span>🔗 連連看</span><span id="lldone">0 / '+N+'</span></div>'
+    +'<div class="tip-inline" style="margin:0 0 10px">左邊點「英文」，右邊點「中文」，把配對連成一條線！</div>'
+    +'<div class="ll" id="llwrap"><svg class="lllines" id="lllines"></svg>'
+    +'<div class="llcol" id="llL"></div><div class="llcol" id="llR"></div></div>'
+    +'<div id="llfb"></div></div>';
+  const L=document.getElementById('llL'), R=document.getElementById('llR');
+  left.forEach(it=>{ const b=document.createElement('button'); b.className='llbtn'; b.dataset.k=it.k;
+    b.innerHTML='<span class="lle">'+(it.w.emoji||'📘')+'</span> '+it.w.en;
+    b.onclick=()=>{ if(b.classList.contains('mm'))return; speak(it.w.en);
+      L.querySelectorAll('.sel').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); selL=b; tryMatch(); };
+    L.appendChild(b); });
+  right.forEach(it=>{ const b=document.createElement('button'); b.className='llbtn'; b.dataset.k=it.k; b.textContent=it.w.zh;
+    b.onclick=()=>{ if(b.classList.contains('mm'))return;
+      R.querySelectorAll('.sel').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); selR=b; tryMatch(); };
+    R.appendChild(b); });
+  function tryMatch(){
+    if(!selL||!selR)return;
+    const a=selL, b=selR;
+    if(a.dataset.k===b.dataset.k){
+      a.classList.add('mm'); b.classList.add('mm'); a.classList.remove('sel'); b.classList.remove('sel');
+      drawLine(a,b); selL=selR=null; done++; document.getElementById('lldone').textContent=done+' / '+N;
+      if(done===N)finishMatch();
+    }else{
+      a.classList.add('bad'); b.classList.add('bad'); const x=a,y=b; selL=selR=null;
+      setTimeout(()=>{ x.classList.remove('bad','sel'); y.classList.remove('bad','sel'); },560);
+    }
+  }
+  function drawLine(a,b){
+    const wrap=document.getElementById('llwrap'), svg=document.getElementById('lllines');
+    const wr=wrap.getBoundingClientRect(), ar=a.getBoundingClientRect(), br=b.getBoundingClientRect();
+    svg.setAttribute('width',wr.width); svg.setAttribute('height',wr.height);
+    svg.setAttribute('viewBox','0 0 '+wr.width+' '+wr.height);
+    const x1=ar.right-wr.left, y1=ar.top+ar.height/2-wr.top;
+    const x2=br.left-wr.left, y2=br.top+br.height/2-wr.top;
+    const col=PALETTE[(+a.dataset.k)%PALETTE.length];
+    const ns='http://www.w3.org/2000/svg';
+    const ln=document.createElementNS(ns,'line');
+    ln.setAttribute('x1',x1);ln.setAttribute('y1',y1);ln.setAttribute('x2',x2);ln.setAttribute('y2',y2);
+    ln.setAttribute('stroke',col);ln.setAttribute('stroke-width','4');ln.setAttribute('stroke-linecap','round');
+    svg.appendChild(ln);
+    [[x1,y1],[x2,y2]].forEach(p=>{const c=document.createElementNS(ns,'circle');
+      c.setAttribute('cx',p[0]);c.setAttribute('cy',p[1]);c.setAttribute('r','5');c.setAttribute('fill',col);svg.appendChild(c);});
+  }
+  function finishMatch(){
+    const st=ST['r'+i]||{}; st.studied=true; ST['r'+i]=st; save(ST);
+    document.getElementById('llfb').innerHTML='<div style="text-align:center;margin-top:16px">'
+      +'<div style="font-size:60px">🎊</div><div class="sc">全部連對，太厲害了！</div>'
+      +'<div style="margin-top:10px"><span class="pill" onclick="roundView(CUR,\'match\')">🔄 再玩一次</span>'
+      +'<span class="pill" onclick="roundView(CUR,\'study\')">📖 回去複習</span>'
+      +(CUR+1<ROUNDS.length?'<span class="pill" onclick="openRound('+(CUR+1)+')">➡️ 下一回</span>':'')+'</div></div>';
+  }
 }
 
 home();
