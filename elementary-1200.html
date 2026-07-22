@@ -30,6 +30,10 @@ header h1{margin:.1em 0;font-size:30px;color:#ff5e93;text-shadow:2px 2px 0 #fff,
 header .sub{font-size:14px;color:#7a7a95;margin-bottom:4px}
 .mascot{font-size:52px;line-height:1;display:inline-block;animation:bob 2.4s ease-in-out infinite}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.vhint{max-width:520px;margin:10px auto 0;background:#fff6d6;border:3px solid #ffe08a;border-radius:20px;
+  padding:10px 16px;font-size:14px;line-height:1.55;color:#8a6d2f;box-shadow:0 4px 12px rgba(200,170,80,.25);
+  animation:bob 3.2s ease-in-out infinite}
+.vhint b{color:#e8830a}
 
 /* home round grid */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px;margin-top:14px}
@@ -111,6 +115,7 @@ footer{text-align:center;color:#a7a4bd;font-size:12px;margin-top:30px}
     <div class="mascot" id="mascot">🦉</div>
     <h1>國小 1200 單字 · 記憶樂園</h1>
     <div class="sub">教育部國中小基本英語字彙 · 20 字一回 · 記憶法闖關</div>
+    <div class="vhint" id="voicehint">📢 <b>小提醒</b>：手機（尤其 iPhone）第一次請先<b>點畫面任何一處</b>解鎖發音，之後點卡通圖或 🔊 就會唸出來囉！</div>
   </header>
   <div id="view"></div>
   <footer>用「圖像＋諧音＋反覆回想」記單字最有效 🌈 進度會自動存在這台裝置</footer>
@@ -146,7 +151,7 @@ let ST=load();
 
 // ---- speech ----
 let voiceReady=false;
-function unlockVoice(){ if(voiceReady)return; try{const u=new SpeechSynthesisUtterance(' ');u.volume=0;speechSynthesis.speak(u);voiceReady=true;}catch(e){} }
+function unlockVoice(){ var vh=document.getElementById('voicehint'); if(vh){vh.style.transition='opacity .4s,transform .4s';vh.style.opacity='0';vh.style.transform='scale(.9)';setTimeout(function(){vh.style.display='none';},400);} if(voiceReady)return; try{const u=new SpeechSynthesisUtterance(' ');u.volume=0;speechSynthesis.speak(u);voiceReady=true;}catch(e){} }
 document.addEventListener('touchstart',unlockVoice,{once:true});
 document.addEventListener('click',unlockVoice,{once:true});
 function speak(t){ try{ speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(t.replace(/[()]/g,' '));
