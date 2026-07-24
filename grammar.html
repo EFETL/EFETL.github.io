@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/favicon.svg">
+<title>初級文法 · 假設語氣 Subjunctive Mood</title>
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;
+    color:#22303f;line-height:1.65;background:linear-gradient(180deg,#eef6ff,#fff4f7 70%);min-height:100vh;}
+  .wrap{max-width:820px;margin:0 auto;padding:18px 16px 70px;}
+  .home{display:inline-block;margin-bottom:14px;color:#ff7aa8;font-weight:800;text-decoration:none;
+    background:#fff;padding:7px 16px;border-radius:20px;box-shadow:0 3px 10px rgba(255,122,168,.18);font-size:.9rem;}
+
+  header.hero{background:linear-gradient(135deg,#ff9a9e,#fad0c4 50%,#ffb6e6);color:#5a2540;
+    border-radius:22px;padding:28px 26px;margin-bottom:22px;box-shadow:0 10px 26px rgba(255,154,158,.35);}
+  header.hero h1{margin:0 0 8px;font-size:1.7rem;text-shadow:0 1px 2px rgba(255,255,255,.35);}
+  header.hero p{margin:0;font-size:.96rem;opacity:.95;}
+
+  /* tabs */
+  .tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+  .tab{flex:1 1 auto;min-width:140px;border:none;cursor:pointer;font-weight:800;font-size:.92rem;
+    padding:12px 10px;border-radius:16px;background:#fff;color:#7a8694;
+    box-shadow:0 3px 10px rgba(43,140,255,.10);transition:.15s;line-height:1.3;}
+  .tab small{display:block;font-weight:600;font-size:.72rem;opacity:.8;margin-top:2px;}
+  .tab.active{color:#fff;transform:translateY(-2px);}
+  .tab[data-k="present"].active{background:linear-gradient(135deg,#5ec6ff,#7d8bff);}
+  .tab[data-k="past"].active{background:linear-gradient(135deg,#b06bff,#7d8bff);}
+  .tab[data-k="future"].active{background:linear-gradient(135deg,#ffa63e,#ff6ea9);}
+
+  .panel{display:none;}
+  .panel.active{display:block;}
+
+  .formula{background:#fff;border-radius:14px;padding:12px 16px;margin-bottom:16px;
+    font-size:.86rem;color:#4a5766;border-left:5px solid #ffb6e6;box-shadow:0 3px 10px rgba(43,140,255,.08);}
+  .formula b{color:#c2568f;}
+
+  .q{background:#fff;border-radius:16px;padding:16px 18px;margin-bottom:14px;
+    box-shadow:0 4px 14px rgba(43,140,255,.10);border:1px solid #eef1f8;}
+  .qtop{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;}
+  .qnum{flex:0 0 auto;width:26px;height:26px;border-radius:50%;background:#ffe3ef;color:#c2568f;
+    font-weight:800;font-size:.82rem;display:flex;align-items:center;justify-content:center;}
+  .fact{font-size:.98rem;color:#33414f;}
+  .fact .lab{display:inline-block;font-size:.7rem;font-weight:800;color:#8a94a2;
+    background:#f0f3f8;border-radius:8px;padding:1px 7px;margin-right:6px;vertical-align:2px;}
+  .rewrite{font-size:1.02rem;line-height:2.2;color:#22303f;}
+  .rewrite input{font-family:inherit;font-size:.98rem;font-weight:700;color:#2b6fff;text-align:center;
+    border:none;border-bottom:2px solid #c9d4e6;background:#f7faff;border-radius:6px 6px 0 0;
+    padding:3px 6px;margin:0 2px;min-width:90px;outline:none;transition:.15s;}
+  .rewrite input:focus{border-bottom-color:#ff7aa8;background:#fff6fa;}
+  .rewrite input.ok{border-bottom-color:#22b07a;background:#eafaf2;color:#0f7a52;}
+  .rewrite input.no{border-bottom-color:#ff5b7f;background:#fff0f3;color:#d23b5e;}
+  .hint{font-size:.72rem;color:#a0a9b6;}
+
+  .exp{display:none;margin-top:12px;padding:12px 14px;border-radius:12px;
+    background:#f4f9ff;border-left:4px solid #7d8bff;font-size:.9rem;}
+  .exp.show{display:block;}
+  .exp .ans{font-weight:800;color:#2b6fff;}
+  .exp .zh{color:#4a5766;margin-top:4px;}
+
+  .bar{position:sticky;bottom:0;margin-top:20px;display:flex;gap:12px;align-items:center;
+    background:rgba(255,255,255,.92);backdrop-filter:blur(6px);padding:12px 14px;border-radius:16px;
+    box-shadow:0 -3px 16px rgba(43,140,255,.12);}
+  .btn{border:none;cursor:pointer;font-weight:800;font-size:.95rem;padding:12px 22px;border-radius:14px;
+    background:linear-gradient(135deg,#ff7aa8,#ff9a9e);color:#fff;box-shadow:0 5px 14px rgba(255,122,168,.35);}
+  .btn.ghost{background:#fff;color:#ff7aa8;box-shadow:0 3px 10px rgba(255,122,168,.18);}
+  .score{font-weight:800;color:#c2568f;font-size:1rem;}
+
+  footer{text-align:center;color:#9aa4b2;font-size:.8rem;margin-top:34px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="home" href="gept-hub.html">← 回英檢初級</a>
+
+  <header class="hero">
+    <h1>🧩 初級文法 · 假設語氣</h1>
+    <p>Subjunctive Mood　依時態填空改寫，每種時態 20 題。填好按「送出」看解析與白話翻譯。</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" data-k="present">與現在事實相反<small>Present Unreal</small></button>
+    <button class="tab" data-k="past">與過去事實相反<small>Past Unreal</small></button>
+    <button class="tab" data-k="future">與未來的假設<small>Future / Unreal</small></button>
+  </div>
+
+  <div id="app"></div>
+
+  <div class="bar">
+    <button class="btn" id="submit">送出批改</button>
+    <button class="btn ghost" id="reset">重作</button>
+    <span class="score" id="score"></span>
+  </div>
+
+  <footer>EFETL © 2025　‧　GEPT 初級英檢 · 文法練習</footer>
+</div>
+
+<script>
+const DATA = [
+{key:"present", title:"與現在事實相反", sub:"Present Unreal",
+ formula:'If + 主詞 + <b>過去式</b>（be 一律用 <b>were</b>），主詞 + <b>would / could</b> + 原形動詞',
+ items:[
+  {fact:"I am not rich, so I can't buy a car.", pre:"If I ", a1:"were|was", h1:"be", mid:" rich, I ", a2:"could buy", h2:"can buy", post:" a car.", zh:"我要是有錢，就買得起車了。"},
+  {fact:"She is busy, so she doesn't come.", pre:"If she ", a1:"were not|was not", h1:"be, 否定", mid:" busy, she ", a2:"would come", h2:"come", post:".", zh:"她要是不忙，就會來啦。"},
+  {fact:"I don't have time, so I can't help you.", pre:"If I ", a1:"had", h1:"have", mid:" time, I ", a2:"could help", h2:"can help", post:" you.", zh:"我要是有空，就能幫你了。"},
+  {fact:"He doesn't study hard, so he fails.", pre:"If he ", a1:"studied", h1:"study", mid:" hard, he ", a2:"would not fail", h2:"not fail", post:".", zh:"他要是用功一點，就不會被當了。"},
+  {fact:"It is raining, so we can't go out.", pre:"If it ", a1:"were not|was not", h1:"be, 否定", mid:" raining, we ", a2:"could go", h2:"can go", post:" out.", zh:"要不是在下雨，我們早就出去了。"},
+  {fact:"I don't know her number, so I can't call her.", pre:"If I ", a1:"knew", h1:"know", mid:" her number, I ", a2:"could call", h2:"can call", post:" her.", zh:"我要是知道她電話，就打給她了。"},
+  {fact:"You don't listen to me, so you make mistakes.", pre:"If you ", a1:"listened", h1:"listen", mid:" to me, you ", a2:"would not make", h2:"not make", post:" mistakes.", zh:"你要是肯聽我的，就不會出錯了。"},
+  {fact:"We are poor, so we don't travel abroad.", pre:"If we ", a1:"were|was", h1:"be", mid:" rich, we ", a2:"would travel", h2:"travel", post:" abroad.", zh:"我們要是有錢，早就出國玩了。"},
+  {fact:"I can't speak French, so I can't talk to him.", pre:"If I ", a1:"could speak", h1:"can speak", mid:" French, I ", a2:"could talk", h2:"can talk", post:" to him.", zh:"我要是會講法文，就能跟他聊了。"},
+  {fact:"She is sick, so she doesn't go to school.", pre:"If she ", a1:"were not|was not", h1:"be, 否定", mid:" sick, she ", a2:"would go", h2:"go", post:" to school.", zh:"她要是沒生病，就會去上學了。"},
+  {fact:"I don't have a car, so I take the bus.", pre:"If I ", a1:"had", h1:"have", mid:" a car, I ", a2:"would not take", h2:"not take", post:" the bus.", zh:"我要是有車，就不用搭公車了。"},
+  {fact:"He is lazy, so he doesn't succeed.", pre:"If he ", a1:"were not|was not", h1:"be, 否定", mid:" lazy, he ", a2:"would succeed", h2:"succeed", post:".", zh:"他要是不那麼懶，早就成功了。"},
+  {fact:"They live far away, so they don't visit us.", pre:"If they ", a1:"lived", h1:"live", mid:" nearby, they ", a2:"would visit", h2:"visit", post:" us.", zh:"他們要是住得近，就會來找我們了。"},
+  {fact:"I am tired, so I don't go jogging.", pre:"If I ", a1:"were not|was not", h1:"be, 否定", mid:" tired, I ", a2:"would go", h2:"go", post:" jogging.", zh:"我要是不累，就去慢跑了。"},
+  {fact:"You don't eat vegetables, so you aren't healthy.", pre:"If you ", a1:"ate", h1:"eat", mid:" vegetables, you ", a2:"would be", h2:"be", post:" healthy.", zh:"你要是肯吃菜，身體就會好了。"},
+  {fact:"I don't have money, so I can't lend you some.", pre:"If I ", a1:"had", h1:"have", mid:" money, I ", a2:"could lend", h2:"can lend", post:" you some.", zh:"我要是有錢，就借你一點了。"},
+  {fact:"It is cold, so we stay at home.", pre:"If it ", a1:"were not|was not", h1:"be, 否定", mid:" cold, we ", a2:"would go", h2:"go", post:" outside.", zh:"要不是這麼冷，我們就出門了。"},
+  {fact:"She doesn't love him, so she won't marry him.", pre:"If she ", a1:"loved", h1:"love", mid:" him, she ", a2:"would marry", h2:"marry", post:" him.", zh:"她要是愛他，就會嫁給他了。"},
+  {fact:"I don't know the answer, so I can't tell you.", pre:"If I ", a1:"knew", h1:"know", mid:" the answer, I ", a2:"could tell", h2:"can tell", post:" you.", zh:"我要是知道答案，就告訴你了。"},
+  {fact:"We don't have a map, so we get lost.", pre:"If we ", a1:"had", h1:"have", mid:" a map, we ", a2:"would not get", h2:"not get", post:" lost.", zh:"我們要是有地圖，就不會迷路了。"}
+ ]},
+{key:"past", title:"與過去事實相反", sub:"Past Unreal",
+ formula:'If + 主詞 + <b>had + 過去分詞</b>，主詞 + <b>would / could have + 過去分詞</b>',
+ items:[
+  {fact:"I didn't have money, so I didn't buy it.", pre:"If I ", a1:"had had", h1:"have", mid:" money, I ", a2:"would have bought", h2:"buy", post:" it.", zh:"我當初要是有錢，早就買下來了。"},
+  {fact:"She was busy, so she didn't come to the party.", pre:"If she ", a1:"had not been", h1:"be, 否定", mid:" busy, she ", a2:"would have come", h2:"come", post:" to the party.", zh:"她那時要是不忙，就會來派對了。"},
+  {fact:"He didn't study, so he failed the exam.", pre:"If he ", a1:"had studied", h1:"study", mid:", he ", a2:"would not have failed", h2:"not fail", post:" the exam.", zh:"他當初要是有讀書，就不會考砸了。"},
+  {fact:"It rained, so we didn't go hiking.", pre:"If it ", a1:"had not rained", h1:"rain, 否定", mid:", we ", a2:"would have gone", h2:"go", post:" hiking.", zh:"那天要不是下雨，我們就去爬山了。"},
+  {fact:"I didn't know you were sick, so I didn't visit you.", pre:"If I ", a1:"had known", h1:"know", mid:" you were sick, I ", a2:"would have visited", h2:"visit", post:" you.", zh:"我當時要是知道你生病，早就去看你了。"},
+  {fact:"You didn't tell me the truth, so I got angry.", pre:"If you ", a1:"had told", h1:"tell", mid:" me the truth, I ", a2:"would not have got|would not have gotten", h2:"not get", post:" angry.", zh:"你當初要是說實話，我就不會生氣了。"},
+  {fact:"They missed the train, so they were late.", pre:"If they ", a1:"had not missed", h1:"miss, 否定", mid:" the train, they ", a2:"would not have been", h2:"not be", post:" late.", zh:"他們要是沒錯過火車，就不會遲到了。"},
+  {fact:"I didn't set the alarm, so I overslept.", pre:"If I ", a1:"had set", h1:"set", mid:" the alarm, I ", a2:"would not have overslept", h2:"not oversleep", post:".", zh:"我要是有設鬧鐘，就不會睡過頭了。"},
+  {fact:"He drove carelessly, so he had an accident.", pre:"If he ", a1:"had driven", h1:"drive", mid:" carefully, he ", a2:"would not have had", h2:"not have", post:" an accident.", zh:"他要是開車小心點，就不會出車禍了。"},
+  {fact:"She didn't take the medicine, so she didn't get better.", pre:"If she ", a1:"had taken", h1:"take", mid:" the medicine, she ", a2:"would have got|would have gotten", h2:"get", post:" better.", zh:"她當初要是有吃藥，早就好了。"},
+  {fact:"We didn't book a hotel, so we had no place to stay.", pre:"If we ", a1:"had booked", h1:"book", mid:" a hotel, we ", a2:"would have had", h2:"have", post:" a place to stay.", zh:"我們要是有訂飯店，就不會沒地方住了。"},
+  {fact:"I forgot my umbrella, so I got wet.", pre:"If I ", a1:"had not forgotten", h1:"forget, 否定", mid:" my umbrella, I ", a2:"would not have got|would not have gotten", h2:"not get", post:" wet.", zh:"我要是沒忘記帶傘，就不會淋濕了。"},
+  {fact:"He didn't save money, so he couldn't buy a house.", pre:"If he ", a1:"had saved", h1:"save", mid:" money, he ", a2:"could have bought", h2:"can buy", post:" a house.", zh:"他當初要是有存錢，早就買得起房子了。"},
+  {fact:"You didn't invite her, so she didn't come.", pre:"If you ", a1:"had invited", h1:"invite", mid:" her, she ", a2:"would have come", h2:"come", post:".", zh:"你當初要是有邀她，她就會來了。"},
+  {fact:"I was careless, so I lost my wallet.", pre:"If I ", a1:"had not been", h1:"be, 否定", mid:" careless, I ", a2:"would not have lost", h2:"not lose", post:" my wallet.", zh:"我要是沒那麼粗心，就不會弄丟皮夾了。"},
+  {fact:"They didn't prepare well, so they lost the game.", pre:"If they ", a1:"had prepared", h1:"prepare", mid:" well, they ", a2:"would have won", h2:"win", post:" the game.", zh:"他們要是有準備好，早就贏了。"},
+  {fact:"She didn't wear a coat, so she caught a cold.", pre:"If she ", a1:"had worn", h1:"wear", mid:" a coat, she ", a2:"would not have caught", h2:"not catch", post:" a cold.", zh:"她要是有穿外套，就不會感冒了。"},
+  {fact:"I didn't hear the phone, so I missed your call.", pre:"If I ", a1:"had heard", h1:"hear", mid:" the phone, I ", a2:"would not have missed", h2:"not miss", post:" your call.", zh:"我要是有聽到電話，就不會漏接了。"},
+  {fact:"He spent all his money, so he went bankrupt.", pre:"If he ", a1:"had not spent", h1:"spend, 否定", mid:" all his money, he ", a2:"would not have gone", h2:"not go", post:" bankrupt.", zh:"他要是沒把錢花光，就不會破產了。"},
+  {fact:"We started late, so we didn't finish on time.", pre:"If we ", a1:"had started", h1:"start", mid:" early, we ", a2:"would have finished", h2:"finish", post:" on time.", zh:"我們要是早點開始，就能準時做完了。"}
+ ]},
+{key:"future", title:"與未來的假設", sub:"Future / Unreal",
+ formula:'If + 主詞 + <b>should</b> + 原形 / <b>were to</b> + 原形，主詞 + <b>would / could</b> + 原形（表未來極不可能）',
+ items:[
+  {fact:"除非太陽打西邊出來，我才會改變心意。", pre:"If the sun ", a1:"were to rise", h1:"rise", mid:" in the west, I ", a2:"would change", h2:"change", post:" my mind.", zh:"were to + 原形：假設幾乎不可能發生的未來。"},
+  {fact:"萬一我明天失敗了，我就再試一次。", pre:"If I ", a1:"should fail", h1:"fail", mid:" tomorrow, I ", a2:"would try", h2:"try", post:" again.", zh:"should + 原形：萬一（可能性低的未來）。"},
+  {fact:"萬一明天下雨，我們就取消行程。", pre:"If it ", a1:"should rain", h1:"rain", mid:" tomorrow, we ", a2:"would cancel", h2:"cancel", post:" the trip.", zh:"should = 萬一。"},
+  {fact:"假如你真的中了樂透，你會拿去幹嘛？", pre:"If you ", a1:"were to win", h1:"win", mid:" the lottery, what ", a2:"would", h2:"助動詞", post:" you do?", zh:"were to + 原形：純假設的未來。"},
+  {fact:"萬一他打電話來，麻煩幫我留個話。", pre:"If he ", a1:"should call", h1:"call", mid:", please ", a2:"take", h2:"take（祈使）", post:" a message.", zh:"should 條件句可搭配祈使句。"},
+  {fact:"假如我能重活一次，我會過得不一樣。", pre:"If I ", a1:"were to be born", h1:"be born", mid:" again, I ", a2:"would live", h2:"live", post:" differently.", zh:"were to：不可能實現的假想。"},
+  {fact:"假如地球停止轉動，我們全都活不成。", pre:"If the earth ", a1:"were to stop", h1:"stop", mid:" turning, we all ", a2:"would die", h2:"die", post:".", zh:"were to：與事實極不可能的未來。"},
+  {fact:"萬一她來了，叫她等一下。", pre:"If she ", a1:"should come", h1:"come", mid:", ", a2:"tell", h2:"tell（祈使）", post:" her to wait.", zh:"should = 萬一，主句可用祈使。"},
+  {fact:"假如哪天再遇到她，我會跟她道歉。", pre:"If we ", a1:"were to meet", h1:"meet", mid:" again, I ", a2:"would apologize", h2:"apologize", post:".", zh:"were to：假想的未來。"},
+  {fact:"萬一你需要幫忙，打給我就對了。", pre:"If you ", a1:"should need", h1:"need", mid:" help, just ", a2:"call", h2:"call（祈使）", post:" me.", zh:"should = 萬一。"},
+  {fact:"就算我明天就死，也沒什麼好遺憾的。", pre:"If I ", a1:"should die", h1:"die", mid:" tomorrow, I ", a2:"would have", h2:"have", post:" no regrets.", zh:"should：假設不太可能的未來。"},
+  {fact:"萬一真的打起仗來，很多人會遭殃。", pre:"If a war ", a1:"were to break out", h1:"break out", mid:", many people ", a2:"would suffer", h2:"suffer", post:".", zh:"were to：假想的未來事件。"},
+  {fact:"萬一他改變主意，跟我說一聲。", pre:"If he ", a1:"should change", h1:"change", mid:" his mind, ", a2:"let", h2:"let（祈使）", post:" me know.", zh:"should = 萬一。"},
+  {fact:"假如他們願意給我這份工作，我會接。", pre:"If they ", a1:"were to offer", h1:"offer", mid:" me the job, I ", a2:"would accept", h2:"accept", post:" it.", zh:"were to：假想的未來。"},
+  {fact:"萬一下週下雪，我們就去滑雪。", pre:"If it ", a1:"should snow", h1:"snow", mid:" next week, we ", a2:"would go", h2:"go", post:" skiing.", zh:"should = 萬一。"},
+  {fact:"假如我當上總統，我會照顧窮人。", pre:"If I ", a1:"were to become", h1:"become", mid:" president, I ", a2:"would help", h2:"help", post:" the poor.", zh:"were to：與現實極不可能的假設。"},
+  {fact:"萬一你碰到他，幫我跟他問好。", pre:"If you ", a1:"should see", h1:"see", mid:" him, ", a2:"give", h2:"give（祈使）", post:" him my regards.", zh:"should = 萬一。"},
+  {fact:"假如價格翻一倍，就沒人要買了。", pre:"If the price ", a1:"were to double", h1:"double", mid:", no one ", a2:"would buy", h2:"buy", post:" it.", zh:"were to：假想的未來。"},
+  {fact:"萬一我丟了工作，我就自己出來創業。", pre:"If I ", a1:"should lose", h1:"lose", mid:" my job, I ", a2:"would start", h2:"start", post:" my own business.", zh:"should = 萬一。"},
+  {fact:"假如大家都出手幫忙，問題馬上就解決了。", pre:"If everyone ", a1:"were to help", h1:"help", mid:", the problem ", a2:"would be solved", h2:"be solved", post:".", zh:"were to：假想的未來。"}
+ ]}
+];
+
+// ── grading helpers ──
+function norm(s){
+  return (s||"").toLowerCase().trim()
+    .replace(/[.,!?]/g,"")
+    .replace(/can't/g,"can not")
+    .replace(/won't/g,"will not")
+    .replace(/'ve/g," have")
+    .replace(/'re/g," are")
+    .replace(/'ll/g," will")
+    .replace(/n't/g," not")
+    .replace(/\s+/g," ").trim();
+}
+function accepts(ans, val){
+  const targets = ans.split("|").map(norm);
+  return targets.includes(norm(val));
+}
+function firstAns(ans){ return ans.split("|")[0]; }
+
+const app = document.getElementById("app");
+
+DATA.forEach(sec=>{
+  const p = document.createElement("div");
+  p.className = "panel" + (sec.key==="present" ? " active" : "");
+  p.dataset.k = sec.key;
+  let html = '<div class="formula">📐 ' + sec.formula + '</div>';
+  sec.items.forEach((it,i)=>{
+    const factLab = /[一-鿿]/.test(it.fact) ? "中文" : "事實";
+    html +=
+      '<div class="q" data-i="'+i+'">'+
+        '<div class="qtop"><span class="qnum">'+(i+1)+'</span>'+
+          '<div class="fact"><span class="lab">'+factLab+'</span>'+it.fact+'</div></div>'+
+        '<div class="rewrite">'+it.pre+
+          '<input data-b="1" size="10" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="?"> '+
+          '<span class="hint">('+it.h1+')</span>'+it.mid+
+          '<input data-b="2" size="12" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="?"> '+
+          '<span class="hint">('+it.h2+')</span>'+it.post+
+        '</div>'+
+        '<div class="exp"><div class="ans">✔ '+it.pre.trim()+' <u>'+firstAns(it.a1)+'</u> '+it.mid.trim()+' <u>'+firstAns(it.a2)+'</u> '+it.post.trim()+'</div>'+
+          '<div class="zh">💬 '+it.zh+'</div></div>'+
+      '</div>';
+  });
+  p.innerHTML = html;
+  app.appendChild(p);
+});
+
+// ── tabs ──
+document.querySelectorAll(".tab").forEach(t=>{
+  t.addEventListener("click",()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+    document.querySelectorAll(".panel").forEach(x=>x.classList.remove("active"));
+    t.classList.add("active");
+    document.querySelector('.panel[data-k="'+t.dataset.k+'"]').classList.add("active");
+    document.getElementById("score").textContent="";
+    window.scrollTo({top:0,behavior:"smooth"});
+  });
+});
+
+function activeSec(){
+  const k = document.querySelector(".panel.active").dataset.k;
+  return DATA.find(s=>s.key===k);
+}
+
+document.getElementById("submit").addEventListener("click",()=>{
+  const panel = document.querySelector(".panel.active");
+  const sec = activeSec();
+  let correct=0;
+  panel.querySelectorAll(".q").forEach(q=>{
+    const it = sec.items[+q.dataset.i];
+    const ins = q.querySelectorAll("input");
+    let ok=true;
+    [it.a1,it.a2].forEach((ans,idx)=>{
+      const el=ins[idx];
+      if(accepts(ans, el.value)){ el.classList.add("ok"); el.classList.remove("no"); }
+      else { el.classList.add("no"); el.classList.remove("ok"); ok=false; }
+    });
+    q.querySelector(".exp").classList.add("show");
+    if(ok) correct++;
+  });
+  const total = sec.items.length;
+  document.getElementById("score").textContent =
+    "「"+sec.title+"」答對 "+correct+" / "+total+" 題";
+  window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
+});
+
+document.getElementById("reset").addEventListener("click",()=>{
+  const panel = document.querySelector(".panel.active");
+  panel.querySelectorAll("input").forEach(i=>{i.value="";i.classList.remove("ok","no");});
+  panel.querySelectorAll(".exp").forEach(e=>e.classList.remove("show"));
+  document.getElementById("score").textContent="";
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+</script>
+</body>
+</html>
