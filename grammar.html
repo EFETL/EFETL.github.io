@@ -61,6 +61,23 @@
   .exp .ans{font-weight:800;color:#2b6fff;}
   .exp .zh{color:#4a5766;margin-top:4px;}
 
+  /* group divider between 說明 / 練習 */
+  .group-h{display:flex;align-items:center;gap:8px;margin:22px 2px 12px;font-weight:800;font-size:1rem;}
+  .group-h .tag{color:#fff;border-radius:99px;padding:4px 12px;font-size:.82rem;}
+  .group-h.demo .tag{background:linear-gradient(135deg,#5ec6ff,#7d8bff);}
+  .group-h.prac .tag{background:linear-gradient(135deg,#ff7aa8,#ff9a9e);}
+  .group-h .sub{color:#8a94a2;font-weight:600;font-size:.82rem;}
+
+  /* 說明卡（示範，已填好答案） */
+  .q.demo{background:linear-gradient(180deg,#f2f9ff,#fff);border-color:#dcecff;}
+  .qnum.d{background:#dcecff;color:#3b6fd4;}
+  .rewrite.show{line-height:1.9;}
+  .rewrite .hl{color:#0f7a52;background:#eafaf2;border-radius:6px;padding:1px 6px;font-weight:800;
+    border-bottom:2px solid #22b07a;}
+  .demoexp{margin-top:10px;padding:11px 14px;border-radius:12px;background:#fff;border-left:4px solid #5ec6ff;font-size:.9rem;}
+  .demoexp .why{color:#33414f;}
+  .demoexp .zh{color:#4a5766;margin-top:5px;}
+
   .bar{position:sticky;bottom:0;margin-top:20px;display:flex;gap:12px;align-items:center;
     background:rgba(255,255,255,.92);backdrop-filter:blur(6px);padding:12px 14px;border-radius:16px;
     box-shadow:0 -3px 16px rgba(43,140,255,.12);}
@@ -78,7 +95,7 @@
 
   <header class="hero">
     <h1>🧩 初級文法 · 假設語氣</h1>
-    <p>Subjunctive Mood　依時態填空改寫，每種時態 20 題。填好按「送出」看解析與白話翻譯。</p>
+    <p>Subjunctive Mood　每種時態 20 句：前 10 句「示範說明」看懂怎麼改，後 10 句「填空練習」按送出批改。</p>
   </header>
 
   <div class="tabs">
@@ -219,26 +236,57 @@ function firstAns(ans){ return ans.split("|")[0]; }
 
 const app = document.getElementById("app");
 
+const DEMO_COUNT = 10;  // 每個時態前 10 句為說明，後 10 句為練習
+
+// 白話文法說明（依時態自動帶入該句的關鍵字）
+const NOTE = {
+  present:(a1,a2)=>'與現在事實相反：if 子句動詞改<b>過去式</b>（be 動詞用 were），這裡是「'+a1+'」；主句用 <b>would／could ＋ 原形</b>，這裡是「'+a2+'」。',
+  past:(a1,a2)=>'與過去事實相反：if 子句用「<b>had ＋ 過去分詞</b>」，這裡是「'+a1+'」；主句用 <b>would／could have ＋ 過去分詞</b>，這裡是「'+a2+'」。',
+  future:(a1,a2)=>'對未來的假設：if 子句用 <b>should／were to ＋ 原形</b>，這裡是「'+a1+'」；主句用 <b>would／could ＋ 原形</b>，這裡是「'+a2+'」。',
+  mixed:(a1,a2)=>'過去的條件、現在的結果：if 子句用「<b>had ＋ 過去分詞</b>」，這裡是「'+a1+'」；主句用 <b>would／could ＋ 原形（不加 have）</b>，這裡是「'+a2+'」。'
+};
+
 DATA.forEach(sec=>{
   const p = document.createElement("div");
   p.className = "panel" + (sec.key==="present" ? " active" : "");
   p.dataset.k = sec.key;
   let html = '<div class="formula">📐 ' + sec.formula + '</div>';
+  html += '<div class="group-h demo"><span class="tag">📖 示範說明</span><span class="sub">先看懂前 '+DEMO_COUNT+' 句怎麼改</span></div>';
   sec.items.forEach((it,i)=>{
     const factLab = /[一-鿿]/.test(it.fact) ? "中文" : "事實";
-    html +=
-      '<div class="q" data-i="'+i+'">'+
-        '<div class="qtop"><span class="qnum">'+(i+1)+'</span>'+
-          '<div class="fact"><span class="lab">'+factLab+'</span>'+it.fact+'</div></div>'+
-        '<div class="rewrite">'+it.pre+
-          '<input data-b="1" size="10" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="?"> '+
-          '<span class="hint">('+it.h1+')</span>'+it.mid+
-          '<input data-b="2" size="12" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="?"> '+
-          '<span class="hint">('+it.h2+')</span>'+it.post+
-        '</div>'+
-        '<div class="exp"><div class="ans">✔ '+it.pre.trim()+' <u>'+firstAns(it.a1)+'</u> '+it.mid.trim()+' <u>'+firstAns(it.a2)+'</u> '+it.post.trim()+'</div>'+
-          '<div class="zh">💬 '+it.zh+'</div></div>'+
-      '</div>';
+    if(i===DEMO_COUNT){
+      html += '<div class="group-h prac"><span class="tag">✏️ 換你練習</span><span class="sub">填空後按「送出批改」</span></div>';
+    }
+    if(i < DEMO_COUNT){
+      // 說明卡：直接顯示完整正解 + 白話說明
+      const note = NOTE[sec.key] ? NOTE[sec.key](firstAns(it.a1), firstAns(it.a2)) : '';
+      html +=
+        '<div class="q demo">'+
+          '<div class="qtop"><span class="qnum d">'+(i+1)+'</span>'+
+            '<div class="fact"><span class="lab">'+factLab+'</span>'+it.fact+'</div></div>'+
+          '<div class="rewrite show">'+it.pre+
+            '<span class="hl">'+firstAns(it.a1)+'</span>'+it.mid+
+            '<span class="hl">'+firstAns(it.a2)+'</span>'+it.post+
+          '</div>'+
+          '<div class="demoexp"><div class="why">💡 '+note+'</div>'+
+            '<div class="zh">💬 '+it.zh+'</div></div>'+
+        '</div>';
+    } else {
+      // 練習卡：填空作答
+      html +=
+        '<div class="q practice" data-i="'+i+'">'+
+          '<div class="qtop"><span class="qnum">'+(i+1)+'</span>'+
+            '<div class="fact"><span class="lab">'+factLab+'</span>'+it.fact+'</div></div>'+
+          '<div class="rewrite">'+it.pre+
+            '<input data-b="1" size="10" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="?"> '+
+            '<span class="hint">('+it.h1+')</span>'+it.mid+
+            '<input data-b="2" size="12" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="?"> '+
+            '<span class="hint">('+it.h2+')</span>'+it.post+
+          '</div>'+
+          '<div class="exp"><div class="ans">✔ '+it.pre.trim()+' <u>'+firstAns(it.a1)+'</u> '+it.mid.trim()+' <u>'+firstAns(it.a2)+'</u> '+it.post.trim()+'</div>'+
+            '<div class="zh">💬 '+it.zh+'</div></div>'+
+        '</div>';
+    }
   });
   p.innerHTML = html;
   app.appendChild(p);
@@ -265,7 +313,8 @@ document.getElementById("submit").addEventListener("click",()=>{
   const panel = document.querySelector(".panel.active");
   const sec = activeSec();
   let correct=0;
-  panel.querySelectorAll(".q").forEach(q=>{
+  const cards = panel.querySelectorAll(".q.practice");
+  cards.forEach(q=>{
     const it = sec.items[+q.dataset.i];
     const ins = q.querySelectorAll("input");
     let ok=true;
@@ -277,9 +326,9 @@ document.getElementById("submit").addEventListener("click",()=>{
     q.querySelector(".exp").classList.add("show");
     if(ok) correct++;
   });
-  const total = sec.items.length;
+  const total = cards.length;
   document.getElementById("score").textContent =
-    "「"+sec.title+"」答對 "+correct+" / "+total+" 題";
+    "「"+sec.title+"」練習答對 "+correct+" / "+total+" 題";
   window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
 });
 
