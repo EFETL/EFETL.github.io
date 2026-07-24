@@ -151,7 +151,7 @@ const PASSAGE = {
 };
 const ALL_KW = [...SENTENCES.flatMap(s=>s.kw), ...PASSAGE.kw];
 
-let recog=null, recording=false, prepTimer=null, recTimer=null, curFinal='', score=null;
+let recog=null, recording=false, prepTimer=null, recTimer=null, curFinal='',curFinalBase='', score=null;
 
 // 建立題目列表
 function buildList(){
@@ -190,7 +190,7 @@ function startRec(){
   document.getElementById('prep-area').style.display='none';
   document.getElementById('rec-area').style.display='block';
   document.getElementById('transcript').innerHTML='<span style="color:#9ca3af;font-style:italic">正在聆聽…</span>';
-  curFinal=''; recording=true;
+  curFinal='',curFinalBase=''; recording=true;
   document.getElementById('prog').style.width='50%';
 
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
@@ -199,17 +199,17 @@ function startRec(){
     recog.lang='en-US'; recog.continuous=true; recog.interimResults=true;
     recog.onresult=e=>{
       let fin='',intr='';
-      for(let i=e.resultIndex;i<e.results.length;i++){
+      for(let i=0;i<e.results.length;i++){
         if(e.results[i].isFinal) fin+=e.results[i][0].transcript+' ';
         else intr+=e.results[i][0].transcript;
       }
-      curFinal+=fin;
+      curFinal=curFinalBase+fin;
       document.getElementById('transcript').innerHTML=
         (curFinal?`<span>${curFinal}</span>`:'')+
         (intr?`<span style="color:#9ca3af">${intr}</span>`:'<span style="color:#9ca3af;font-style:italic">正在聆聽…</span>');
     };
     recog.onerror=handleRecogError;
-    recog.onend=()=>{ if(recording){ try{recog.start();}catch(e){} } };
+    recog.onend=()=>{ if(recording){ curFinalBase=curFinal; try{recog.start();}catch(e){} } };
     try{ recog.start(); }catch(e){}
   }
 
@@ -264,7 +264,7 @@ function showDone(){
 
 function restart(){
   clearInterval(prepTimer); clearInterval(recTimer);
-  recording=false; curFinal=''; score=null;
+  recording=false; curFinal='',curFinalBase=''; score=null;
   if(recog){ try{recog.stop();}catch(e){} recog=null; }
   document.getElementById('done-area').style.display='none';
   document.getElementById('quiz-area').style.display='block';

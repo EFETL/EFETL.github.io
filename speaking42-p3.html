@@ -198,33 +198,50 @@ const QS = [
    model:"I think the countryside is better because it is quiet and the air is very clean."}
 ];
 
-let qi=0, scores=[], recog=null, recording=false, ttsTimer=null, recTimer=null, curFinal='';
+let qi=0, scores=[], recog=null, recording=false, ttsTimer=null, recTimer=null, curFinal='',curFinalBase='';
 
 const VOICE_PREF=['Google US English','Ava (Enhanced)','Allison (Enhanced)','Samantha (Enhanced)','Ava','Allison','Samantha','Karen','Moira'];
-let ttsVoice=null;
+let voiceCandidates=[];
 function initVoice(){
   const all=speechSynthesis.getVoices();
-  for(const name of VOICE_PREF){const v=all.find(v=>v.name===name);if(v){ttsVoice=v;break;}}
-  if(!ttsVoice&&all.length) ttsVoice=all.find(v=>v.lang&&v.lang.startsWith('en'))||all[0];
+  const named=VOICE_PREF.map(name=>all.find(v=>v.name===name)).filter(Boolean);
+  const rest=all.filter(v=>v.lang&&v.lang.startsWith('en')&&!named.includes(v));
+  const local=rest.filter(v=>v.localService);
+  voiceCandidates=[...named,...local,...rest,null];
 }
 if(speechSynthesis.onvoiceschanged!==undefined) speechSynthesis.onvoiceschanged=initVoice;
 initVoice();
 
-function speakTwice(text,onDone){
+function speakWithFallback(text, rate, tries, onDone){
+  tries = tries||0;
+  if(tries>=voiceCandidates.length || tries>6){
+    if(typeof __micBanner==='function') __micBanner('🔇 語音播放失敗，可能是網路限制或裝置問題。請確認網路連線，或改用電腦版 Chrome／其他裝置。','err');
+    if(onDone) onDone();
+    return;
+  }
+  const voice=voiceCandidates[tries];
+  window.speechSynthesis.resume();
   window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='en-US'; u.rate=rate;
+  if(voice) u.voice=voice;
+  let started=false, done=false;
+  u.onstart=()=>{ started=true; };
+  u.onend=()=>{ if(done) return; done=true; if(onDone) onDone(); };
+  u.onerror=()=>{ if(done) return; done=true; if(!started){ speakWithFallback(text,rate,tries+1,onDone); } else if(onDone) onDone(); };
+  setTimeout(()=>{ if(done||started) return; done=true; window.speechSynthesis.cancel(); speakWithFallback(text,rate,tries+1,onDone); },1300);
+  window.speechSynthesis.speak(u);
+}
+
+function speakTwice(text,onDone){
   let cnt=0;
   const go=()=>{
     cnt++;
     document.getElementById('cd-lbl').textContent='正在播放題目...';
-    const u=new SpeechSynthesisUtterance(text);
-    u.lang='en-US'; u.rate=0.9;
-    if(ttsVoice) u.voice=ttsVoice;
-    if(cnt<2){
-      u.onend=()=>{ document.getElementById('cd-lbl').textContent='準備播放第 2 次…'; setTimeout(go,1000); };
-    } else {
-      u.onend=()=>onDone();
-    }
-    window.speechSynthesis.speak(u);
+    speakWithFallback(text, 0.9, 0, ()=>{
+      if(cnt<2){ document.getElementById('cd-lbl').textContent='準備播放第 2 次…'; setTimeout(go,1000); }
+      else onDone();
+    });
   };
   setTimeout(go,300);
 }
@@ -253,14 +270,14 @@ function loadQ(i){
   document.getElementById('cd-playing').style.display='none';
   document.getElementById('rec-area').style.display='none';
   document.getElementById('result-area').style.display='none';
-  curFinal='';
+  curFinal='',curFinalBase='';
 }
 
 function startRec(q){
   document.getElementById('cd-box').style.display='none';
   document.getElementById('rec-area').style.display='block';
   document.getElementById('transcript').innerHTML='<span style="color:#9ca3af;font-style:italic">正在聆聽…</span>';
-  curFinal=''; recording=true;
+  curFinal='',curFinalBase=''; recording=true;
 
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(SR){
@@ -268,17 +285,17 @@ function startRec(q){
     recog.lang='en-US'; recog.continuous=true; recog.interimResults=true;
     recog.onresult=e=>{
       let fin='',intr='';
-      for(let i=e.resultIndex;i<e.results.length;i++){
+      for(let i=0;i<e.results.length;i++){
         if(e.results[i].isFinal) fin+=e.results[i][0].transcript+' ';
         else intr+=e.results[i][0].transcript;
       }
-      curFinal+=fin;
+      curFinal=curFinalBase+fin;
       document.getElementById('transcript').innerHTML=
         (curFinal?`<span>${curFinal}</span>`:'')+
         (intr?`<span style="color:#9ca3af">${intr}</span>`:'<span style="color:#9ca3af;font-style:italic">正在聆聽…</span>');
     };
     recog.onerror=handleRecogError;
-    recog.onend=()=>{ if(recording){ try{recog.start();}catch(e){} } };
+    recog.onend=()=>{ if(recording){ curFinalBase=curFinal; try{recog.start();}catch(e){} } };
     try{ recog.start(); }catch(e){}
   }
 
@@ -364,7 +381,7 @@ function showDone(){
 function restart(){
   clearTimeout(ttsTimer); clearInterval(recTimer);
   speechSynthesis.cancel();
-  recording=false; curFinal=''; qi=0; scores=[];
+  recording=false; curFinal='',curFinalBase=''; qi=0; scores=[];
   if(recog){ try{recog.stop();}catch(e){} recog=null; }
   document.getElementById('done-area').style.display='none';
   document.getElementById('quiz-area').style.display='block';

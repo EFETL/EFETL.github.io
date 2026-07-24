@@ -161,49 +161,60 @@ const QS = [
   {t:"We had a barbecue in the garden last summer evening.", kw:["barbecue","garden","summer","evening"]}
 ];
 
-let qi=0, scores=[], recog=null, recording=false, recTimer=null, curFinal='', bestVoice=null;
+let qi=0, scores=[], recog=null, recording=false, recTimer=null, curFinal='',curFinalBase='', bestVoice=null;
 
 // ── 語音 ──
+// ── 語音（含容錯：部分裝置/校網會讓網路語音沒聲音，自動偵測並改用本機語音重試）──
 const VOICE_PREF=['Google US English','Ava (Enhanced)','Allison (Enhanced)','Samantha (Enhanced)','Ava','Allison','Samantha','Karen','Moira'];
+let voiceCandidates=[];
 function loadVoices(){
   const vs=window.speechSynthesis.getVoices().filter(v=>/^en/.test(v.lang));
-  for(const name of VOICE_PREF){ const v=vs.find(v=>v.name===name); if(v){bestVoice=v;return;} }
-  bestVoice=vs.find(v=>v.lang==='en-US')||vs[0]||null;
+  const named=VOICE_PREF.map(name=>vs.find(v=>v.name===name)).filter(Boolean);
+  const rest=vs.filter(v=>!named.includes(v));
+  const local=rest.filter(v=>v.localService);
+  voiceCandidates=[...named,...local,...rest,null];
+  bestVoice=voiceCandidates[0]||null;
 }
 window.speechSynthesis.onvoiceschanged=loadVoices;
 loadVoices();
 
-function tts(text, rate=0.85){
+function speakWithFallback(text, rate, tries, onDone){
+  tries = tries||0;
+  if(tries>=voiceCandidates.length || tries>6){
+    if(typeof __micBanner==='function') __micBanner('🔇 語音播放失敗，可能是網路限制或裝置問題。請確認網路連線，或改用電腦版 Chrome／其他裝置。','err');
+    if(onDone) onDone();
+    return;
+  }
+  const voice=voiceCandidates[tries];
+  window.speechSynthesis.resume();
   window.speechSynthesis.cancel();
-  setTimeout(()=>{
-    const u=new SpeechSynthesisUtterance(text);
-    u.lang='en-US'; u.rate=rate;
-    if(bestVoice) u.voice=bestVoice;
-    window.speechSynthesis.speak(u);
-  },200);
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='en-US'; u.rate=rate;
+  if(voice) u.voice=voice;
+  let started=false, done=false;
+  u.onstart=()=>{ started=true; };
+  u.onend=()=>{ if(done) return; done=true; if(onDone) onDone(); };
+  u.onerror=()=>{ if(done) return; done=true; if(!started){ speakWithFallback(text,rate,tries+1,onDone); } else if(onDone) onDone(); };
+  setTimeout(()=>{ if(done||started) return; done=true; window.speechSynthesis.cancel(); speakWithFallback(text,rate,tries+1,onDone); },1300);
+  window.speechSynthesis.speak(u);
 }
 
+function tts(text, rate=0.85){ speakWithFallback(text, rate, 0, null); }
+
 function speakTwice(text, onDone){
-  window.speechSynthesis.cancel();
   let cnt=0;
   const go=()=>{
     cnt++;
     document.getElementById('play-count').textContent=String(cnt);
     document.getElementById('speak-cd').textContent='播放中…';
-    const u=new SpeechSynthesisUtterance(text);
-    u.lang='en-US'; u.rate=0.85;
-    if(bestVoice) u.voice=bestVoice;
-    if(cnt<2){
-      u.onend=()=>{ document.getElementById('speak-cd').textContent='準備第 2 次…'; setTimeout(go,1500); };
-    } else {
-      u.onend=()=>onDone();
-    }
-    window.speechSynthesis.speak(u);
+    speakWithFallback(text, 0.85, 0, ()=>{
+      if(cnt<2){ document.getElementById('speak-cd').textContent='準備第 2 次…'; setTimeout(go,1500); }
+      else onDone();
+    });
   };
   setTimeout(go,300);
 }
 
-// ── 題目 ──
 function loadQ(i){
   const q=QS[i];
   document.getElementById('prog').style.width=(i/QS.length*100)+'%';
@@ -214,7 +225,7 @@ function loadQ(i){
   document.getElementById('play-count').textContent='1';
   document.getElementById('speak-ready').style.display='block';
   document.getElementById('speak-playing').style.display='none';
-  curFinal='';
+  curFinal='',curFinalBase='';
 }
 
 function startPlay(){
@@ -228,7 +239,7 @@ function startRec(q){
   document.getElementById('speak-box').style.display='none';
   document.getElementById('rec-area').style.display='block';
   document.getElementById('transcript').innerHTML='<span style="color:#9ca3af;font-style:italic">正在聆聽您的聲音…</span>';
-  curFinal=''; recording=true;
+  curFinal='',curFinalBase=''; recording=true;
 
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(SR){
@@ -236,17 +247,17 @@ function startRec(q){
     recog.lang='en-US'; recog.continuous=true; recog.interimResults=true;
     recog.onresult=e=>{
       let fin='',intr='';
-      for(let i=e.resultIndex;i<e.results.length;i++){
+      for(let i=0;i<e.results.length;i++){
         if(e.results[i].isFinal) fin+=e.results[i][0].transcript+' ';
         else intr+=e.results[i][0].transcript;
       }
-      curFinal+=fin;
+      curFinal=curFinalBase+fin;
       document.getElementById('transcript').innerHTML=
         (curFinal?`<span>${curFinal}</span>`:'')+
         (intr?`<span style="color:#9ca3af">${intr}</span>`:'<span style="color:#9ca3af;font-style:italic">正在聆聽…</span>');
     };
     recog.onerror=handleRecogError;
-    recog.onend=()=>{ if(recording){ try{recog.start();}catch(e){} } };
+    recog.onend=()=>{ if(recording){ curFinalBase=curFinal; try{recog.start();}catch(e){} } };
     try{ recog.start(); }catch(e){}
   }
 
