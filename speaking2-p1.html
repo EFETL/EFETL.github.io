@@ -143,7 +143,7 @@ function tts(text,rate=0.85){window.speechSynthesis.cancel();setTimeout(()=>{con
 function speakTwice(text,onDone){window.speechSynthesis.cancel();let cnt=0;const go=()=>{cnt++;document.getElementById('play-count').textContent=String(cnt);document.getElementById('speak-cd').textContent='播放中…';const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=0.85;if(bestVoice)u.voice=bestVoice;if(cnt<2){u.onend=()=>{document.getElementById('speak-cd').textContent='準備第 2 次…';setTimeout(go,1500);};}else{u.onend=()=>onDone();}window.speechSynthesis.speak(u);};setTimeout(go,300);}
 function loadQ(i){const q=QS[i];document.getElementById('prog').style.width=(i/QS.length*100)+'%';document.getElementById('qnum').textContent=`題 ${i+1} / ${QS.length}`;document.getElementById('speak-box').style.display='block';document.getElementById('rec-area').style.display='none';document.getElementById('result-area').style.display='none';document.getElementById('play-count').textContent='1';document.getElementById('speak-ready').style.display='block';document.getElementById('speak-playing').style.display='none';curFinal='';}
 function startPlay(){document.getElementById('speak-ready').style.display='none';document.getElementById('speak-playing').style.display='block';speakTwice(QS[qi].t,()=>startRec(QS[qi]));}
-function startRec(q){document.getElementById('speak-box').style.display='none';document.getElementById('rec-area').style.display='block';document.getElementById('transcript').innerHTML='<span style="color:#9ca3af;font-style:italic">正在聆聽您的聲音…</span>';curFinal='';recording=true;const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(SR){recog=new SR();recog.lang='en-US';recog.continuous=true;recog.interimResults=true;recog.onresult=e=>{let fin='',intr='';for(let i=e.resultIndex;i<e.results.length;i++){if(e.results[i].isFinal)fin+=e.results[i][0].transcript+' ';else intr+=e.results[i][0].transcript;}curFinal+=fin;document.getElementById('transcript').innerHTML=(curFinal?`<span>${curFinal}</span>`:'')+( intr?`<span style="color:#9ca3af">${intr}</span>`:'<span style="color:#9ca3af;font-style:italic">正在聆聽…</span>');};recog.onerror=()=>{};recog.onend=()=>{if(recording){try{recog.start();}catch(e){}}};try{recog.start();}catch(e){}}let rem=15;setTimer(rem);clearInterval(recTimer);recTimer=setInterval(()=>{rem--;setTimer(rem);if(rem<=0){clearInterval(recTimer);if(recording)scoreQ(q);}},1000);}
+function startRec(q){document.getElementById('speak-box').style.display='none';document.getElementById('rec-area').style.display='block';document.getElementById('transcript').innerHTML='<span style="color:#9ca3af;font-style:italic">正在聆聽您的聲音…</span>';curFinal='';recording=true;const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(SR){recog=new SR();recog.lang='en-US';recog.continuous=true;recog.interimResults=true;recog.onresult=e=>{let fin='',intr='';for(let i=e.resultIndex;i<e.results.length;i++){if(e.results[i].isFinal)fin+=e.results[i][0].transcript+' ';else intr+=e.results[i][0].transcript;}curFinal+=fin;document.getElementById('transcript').innerHTML=(curFinal?`<span>${curFinal}</span>`:'')+( intr?`<span style="color:#9ca3af">${intr}</span>`:'<span style="color:#9ca3af;font-style:italic">正在聆聽…</span>');};recog.onerror=handleRecogError;recog.onend=()=>{if(recording){try{recog.start();}catch(e){}}};try{recog.start();}catch(e){}}let rem=15;setTimer(rem);clearInterval(recTimer);recTimer=setInterval(()=>{rem--;setTimer(rem);if(rem<=0){clearInterval(recTimer);if(recording)scoreQ(q);}},1000);}
 function setTimer(rem){const el=document.getElementById('rec-timer');el.textContent='0:'+String(rem).padStart(2,'0');el.className='timer-val'+(rem<=5?' danger':rem<=10?' warn':'');}
 function stopManual(){if(recording)scoreQ(QS[qi]);}
 function scoreQ(q){clearInterval(recTimer);recording=false;if(recog){try{recog.stop();}catch(e){}recog=null;}window.speechSynthesis.cancel();const words=curFinal.toLowerCase().split(/\s+/).map(w=>w.replace(/[^a-z']/g,'')).filter(Boolean);const res=q.kw.map(k=>({k,hit:words.some(w=>w===k||w.startsWith(k)||k.startsWith(w))}));const pct=Math.round(res.filter(r=>r.hit).length/q.kw.length*100);scores.push(pct);document.getElementById('rec-area').style.display='none';document.getElementById('result-area').style.display='block';document.getElementById('kw-row').innerHTML=res.map(r=>`<span class="kw ${r.hit?'hit':'miss'}">${r.k}</span>`).join('');let cls,lbl;if(pct>=80){cls='A';lbl='優秀 Excellent';}else if(pct>=60){cls='B';lbl='良好 Good';}else if(pct>=40){cls='C';lbl='尚可 Fair';}else{cls='D';lbl='需加強 Practice More';}document.getElementById('score-chip').innerHTML=`<span class="chip ${cls}">${pct}% · ${lbl}</span>`;document.getElementById('answer-text').textContent=q.t;document.getElementById('next-btn').textContent=qi===QS.length-1?'查看成績 →':'下一題 →';tts(q.t);}
@@ -152,6 +152,35 @@ function nextQ(){qi++;if(qi<QS.length){loadQ(qi);}else{showDone();}}
 function showDone(){document.getElementById('quiz-area').style.display='none';document.getElementById('done-area').style.display='block';document.getElementById('prog').style.width='100%';const avg=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);const pts=Math.round(avg*0.3);document.getElementById('final-score').textContent=pts;let g;if(avg>=80)g='🏆 優等';else if(avg>=60)g='👍 良好';else if(avg>=40)g='📚 尚可';else g='💪 需加強';document.getElementById('final-grade').textContent=g;sessionStorage.setItem('p1score',pts);}
 function restart(){qi=0;scores=[];document.getElementById('done-area').style.display='none';document.getElementById('quiz-area').style.display='block';loadQ(0);}
 loadQ(0);
+
+/* ===== 麥克風 / 瀏覽器相容性提示（自動注入） ===== */
+function __micBanner(html, kind){
+  var el=document.getElementById('__micWarn');
+  if(!el){
+    el=document.createElement('div'); el.id='__micWarn';
+    el.style.cssText='position:fixed;left:0;right:0;top:0;z-index:99999;padding:11px 40px 11px 16px;font-size:14px;line-height:1.55;font-family:-apple-system,"PingFang TC","Noto Sans TC",sans-serif;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.15)';
+    document.body.appendChild(el);
+  }
+  el.style.background = kind==='err' ? '#fee2e2' : '#fffbeb';
+  el.style.color = kind==='err' ? '#991b1b' : '#78350f';
+  el.innerHTML = html + ' <span onclick="var b=document.getElementById(\'__micWarn\');if(b)b.remove();" style="position:absolute;right:14px;top:9px;cursor:pointer;font-weight:700">✕</span>';
+}
+(function(){
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){
+    __micBanner('⚠️ 這個瀏覽器不支援語音辨識，無法錄音計分。請改用<b>電腦版 Chrome</b>（iPhone／iPad 目前不支援）。','err');
+  }
+})();
+function handleRecogError(e){
+  var c=e&&e.error;
+  if(c==='not-allowed'||c==='service-not-allowed'){
+    __micBanner('🎤 麥克風權限被拒。請點網址列的<b>鎖頭圖示 → 允許麥克風</b>，再重新整理頁面。','err');
+  } else if(c==='audio-capture'){
+    __micBanner('🎤 找不到麥克風。請確認裝置有麥克風且未靜音，並在系統設定允許瀏覽器使用麥克風。','err');
+  }
+  /* no-speech / aborted 屬正常情況，不提示 */
+}
+
 </script>
 </body>
 </html>

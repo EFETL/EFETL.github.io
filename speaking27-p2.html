@@ -208,7 +208,7 @@ function startRec(){
         (curFinal?`<span>${curFinal}</span>`:'')+
         (intr?`<span style="color:#9ca3af">${intr}</span>`:'<span style="color:#9ca3af;font-style:italic">正在聆聽…</span>');
     };
-    recog.onerror=()=>{};
+    recog.onerror=handleRecogError;
     recog.onend=()=>{ if(recording){ try{recog.start();}catch(e){} } };
     try{ recog.start(); }catch(e){}
   }
@@ -278,6 +278,35 @@ function restart(){
 // 啟動
 buildList();
 startPrep();
+
+/* ===== 麥克風 / 瀏覽器相容性提示（自動注入） ===== */
+function __micBanner(html, kind){
+  var el=document.getElementById('__micWarn');
+  if(!el){
+    el=document.createElement('div'); el.id='__micWarn';
+    el.style.cssText='position:fixed;left:0;right:0;top:0;z-index:99999;padding:11px 40px 11px 16px;font-size:14px;line-height:1.55;font-family:-apple-system,"PingFang TC","Noto Sans TC",sans-serif;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.15)';
+    document.body.appendChild(el);
+  }
+  el.style.background = kind==='err' ? '#fee2e2' : '#fffbeb';
+  el.style.color = kind==='err' ? '#991b1b' : '#78350f';
+  el.innerHTML = html + ' <span onclick="var b=document.getElementById(\'__micWarn\');if(b)b.remove();" style="position:absolute;right:14px;top:9px;cursor:pointer;font-weight:700">✕</span>';
+}
+(function(){
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){
+    __micBanner('⚠️ 這個瀏覽器不支援語音辨識，無法錄音計分。請改用<b>電腦版 Chrome</b>（iPhone／iPad 目前不支援）。','err');
+  }
+})();
+function handleRecogError(e){
+  var c=e&&e.error;
+  if(c==='not-allowed'||c==='service-not-allowed'){
+    __micBanner('🎤 麥克風權限被拒。請點網址列的<b>鎖頭圖示 → 允許麥克風</b>，再重新整理頁面。','err');
+  } else if(c==='audio-capture'){
+    __micBanner('🎤 找不到麥克風。請確認裝置有麥克風且未靜音，並在系統設定允許瀏覽器使用麥克風。','err');
+  }
+  /* no-speech / aborted 屬正常情況，不提示 */
+}
+
 </script>
 </body>
 </html>
