@@ -132,6 +132,18 @@
   .q.demo.played .step.n3{animation:stepOn .4s ease 1.0s forwards;}
   @keyframes stepOn{to{color:#fff;background:linear-gradient(135deg,#ffa63e,#ff6ea9);box-shadow:0 3px 8px rgba(255,110,169,.3);}}
 
+  /* 順序數字徽章 1 2 3（句中對應位置） */
+  .onum{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;
+    color:#fff;font-size:.68rem;font-weight:900;line-height:1;vertical-align:super;margin:0 1px 0 3px;
+    box-shadow:0 1px 3px rgba(0,0,0,.18);}
+  .onum.n1{background:#3aa6ff;} .onum.n2{background:#b06bff;} .onum.n3{background:#ffa63e;}
+  .step .sn,.slot .sn{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;
+    border-radius:50%;background:rgba(255,255,255,.55);color:#33414f;font-size:.66rem;font-weight:900;margin-right:5px;}
+  .q.demo.played .onum.n1{animation:numPop .42s ease .05s backwards;}
+  .q.demo.played .onum.n2{animation:numPop .42s ease .5s backwards;}
+  .q.demo.played .onum.n3{animation:numPop .42s ease 1.05s backwards;}
+  @keyframes numPop{0%{opacity:0;transform:scale(0) translateY(-4px);}70%{opacity:1;transform:scale(1.3);}100%{opacity:1;transform:scale(1);}}
+
   .morph .chip.to .neg{color:#d23b5e;text-decoration:underline;border-radius:4px;padding:0 2px;}
   .q.demo.played .morph-row.s1 .chip.to .neg{animation:negFlash 1s ease .55s;}
   .q.demo.played .morph-row.s2 .chip.to .neg{animation:negFlash 1s ease 1.05s;}
@@ -145,7 +157,8 @@
     .q.demo.played .step.n1,.q.demo.played .step.n2,.q.demo.played .step.n3,
     .q.demo.played .rewrite .ifpop,.q.demo.played .chip.to .neg,
     .q.demo.played .seg.sif,.q.demo.played .seg.smid,.q.demo.played .seg.spost,
-    .q.demo.played .seg.sa1,.q.demo.played .seg.sa2{animation:none;}
+    .q.demo.played .seg.sa1,.q.demo.played .seg.sa2,
+    .q.demo.played .onum.n1,.q.demo.played .onum.n2,.q.demo.played .onum.n3{animation:none;}
   }
 
   .bar{position:sticky;bottom:0;margin-top:20px;display:flex;gap:12px;align-items:center;
@@ -331,28 +344,28 @@ DATA.forEach(sec=>{
       // 說明卡：直接顯示完整正解 + 白話說明 + 可點擊的步驟動畫
       const note = NOTE[sec.key] ? NOTE[sec.key](firstAns(it.a1), firstAns(it.a2)) : '';
       const negWrap = s => s.replace(/\bnot\b/, '<span class="neg">not</span>');
-      const preIf = it.pre.replace(/^If\b/, '<span class="ifpop">If</span>');
+      const preIf = it.pre.replace(/^If\b/, '<span class="ifpop">If</span><sup class="onum n1">1</sup>');
       html +=
         '<div class="q demo">'+
           '<div class="qtop"><span class="qnum d">'+(i+1)+'</span>'+
             '<div class="fact"><span class="lab">'+factLab+'</span>'+it.fact+'</div></div>'+
           '<div class="rewrite show">'+
             '<span class="seg sif">'+preIf+'</span>'+
-            '<span class="seg sa1"><span class="hl">'+firstAns(it.a1)+'</span></span>'+
+            '<span class="seg sa1"><span class="hl">'+firstAns(it.a1)+'</span><sup class="onum n2">2</sup></span>'+
             '<span class="seg smid">'+it.mid+'</span>'+
-            '<span class="seg sa2"><span class="hl">'+firstAns(it.a2)+'</span></span>'+
+            '<span class="seg sa2"><span class="hl">'+firstAns(it.a2)+'</span><sup class="onum n3">3</sup></span>'+
             '<span class="seg spost">'+it.post+'</span>'+
           '</div>'+
-          '<div class="steps"><span class="hintk">👆 點卡片看步驟：</span>'+
-            '<span class="step n1">➊ 補 If</span>'+
-            '<span class="step n2">➋ 與事實相反</span>'+
-            '<span class="step n3">➌ 變時態</span></div>'+
+          '<div class="steps"><span class="hintk">👆 點卡片看順序：</span>'+
+            '<span class="step n1"><span class="sn">1</span>加 If</span>'+
+            '<span class="step n2"><span class="sn">2</span>改 if 子句動詞</span>'+
+            '<span class="step n3"><span class="sn">3</span>改主句動詞</span></div>'+
           '<div class="morph">'+
-            '<div class="morph-row s1"><span class="slot">if 子句</span>'+
+            '<div class="morph-row s1"><span class="slot"><span class="sn">2</span>if 子句</span>'+
               '<span class="chip from">'+it.h1+'</span><span class="arrow"></span>'+
               '<span class="chip to">'+negWrap(firstAns(it.a1))+'</span>'+
               '<button class="replay" type="button">🔄 重播</button></div>'+
-            '<div class="morph-row s2"><span class="slot">主句</span>'+
+            '<div class="morph-row s2"><span class="slot"><span class="sn">3</span>主句</span>'+
               '<span class="chip from">'+it.h2+'</span><span class="arrow"></span>'+
               '<span class="chip to">'+negWrap(firstAns(it.a2))+'</span></div>'+
           '</div>'+
