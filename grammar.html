@@ -144,6 +144,43 @@
   .q.demo.played .onum.n3{animation:numPop .42s ease 1.05s backwards;}
   @keyframes numPop{0%{opacity:0;transform:scale(0) translateY(-4px);}70%{opacity:1;transform:scale(1.3);}100%{opacity:1;transform:scale(1);}}
 
+  /* ── 逐步改寫：按 1/2/3 才跳出變化，原句保留 ── */
+  .q.demo{cursor:default;}
+  .build{display:none;margin-top:11px;font-size:1.05rem;line-height:2.05;color:#22303f;
+    background:#f7fbff;border:1px solid #e4eefb;border-radius:12px;padding:10px 15px;}
+  .q.demo:not(.st0) .build{display:block;}
+  .build .ifw{display:none;color:#0f7a52;font-weight:900;}
+  .q.demo:not(.st0) .build .ifw{display:inline-block;}
+  .slotw .base{color:#9aa4b2;font-weight:700;border-bottom:2px dashed #c9d4e6;padding:0 3px;}
+  .slotw .ans{display:none;color:#0f7a52;font-weight:900;background:#eafaf2;border-radius:6px;padding:1px 7px;}
+  .q.demo.st2 .s1w .base,.q.demo.st3 .s1w .base{display:none;}
+  .q.demo.st2 .s1w .ans,.q.demo.st3 .s1w .ans{display:inline-block;}
+  .q.demo.st3 .s2w .base{display:none;}
+  .q.demo.st3 .s2w .ans{display:inline-block;}
+  .q.demo.st1 .ifw{animation:changePop .5s cubic-bezier(.2,1.3,.4,1);}
+  .q.demo.st2 .s1w .ans{animation:changePop .5s cubic-bezier(.2,1.3,.4,1);}
+  .q.demo.st3 .s2w .ans{animation:changePop .5s cubic-bezier(.2,1.3,.4,1);}
+  @keyframes changePop{0%{transform:scale(.5);opacity:0;}70%{transform:scale(1.18);}100%{transform:scale(1);opacity:1;}}
+
+  .stepbtns{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px;}
+  .sbtn{border:none;cursor:pointer;font-weight:800;font-size:.82rem;padding:8px 13px;border-radius:12px;
+    background:#eef2f7;color:#5a6675;display:inline-flex;align-items:center;gap:6px;transition:.15s;}
+  .sbtn:hover{filter:brightness(.97);}
+  .sbtn .sn{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;
+    background:#c9d4e6;color:#fff;font-size:.7rem;font-weight:900;}
+  .sbtn.b1.on{background:#e3f1ff;color:#1f6fd4;} .sbtn.b1.on .sn{background:#3aa6ff;}
+  .sbtn.b2.on{background:#f3ecff;color:#7b3fd4;} .sbtn.b2.on .sn{background:#b06bff;}
+  .sbtn.b3.on{background:#fff2e2;color:#c9720f;} .sbtn.b3.on .sn{background:#ffa63e;}
+
+  .reveal{display:none;margin-top:8px;padding:10px 13px;border-radius:12px;font-size:.9rem;border-left:4px solid;}
+  .reveal s{color:#d23b5e;} .reveal b{color:inherit;}
+  .reveal.r1{border-color:#3aa6ff;background:#f0f8ff;}
+  .reveal.r2{border-color:#b06bff;background:#f7f2ff;}
+  .reveal.r3{border-color:#ffa63e;background:#fff7ee;}
+  .q.demo.st1 .r1,.q.demo.st2 .r1,.q.demo.st3 .r1{display:block;}
+  .q.demo.st2 .r2,.q.demo.st3 .r2{display:block;}
+  .q.demo.st3 .r3{display:block;}
+
   .morph .chip.to .neg{color:#d23b5e;text-decoration:underline;border-radius:4px;padding:0 2px;}
   .q.demo.played .morph-row.s1 .chip.to .neg{animation:negFlash 1s ease .55s;}
   .q.demo.played .morph-row.s2 .chip.to .neg{animation:negFlash 1s ease 1.05s;}
@@ -158,7 +195,8 @@
     .q.demo.played .rewrite .ifpop,.q.demo.played .chip.to .neg,
     .q.demo.played .seg.sif,.q.demo.played .seg.smid,.q.demo.played .seg.spost,
     .q.demo.played .seg.sa1,.q.demo.played .seg.sa2,
-    .q.demo.played .onum.n1,.q.demo.played .onum.n2,.q.demo.played .onum.n3{animation:none;}
+    .q.demo.played .onum.n1,.q.demo.played .onum.n2,.q.demo.played .onum.n3,
+    .q.demo.st1 .ifw,.q.demo.st2 .s1w .ans,.q.demo.st3 .s2w .ans{animation:none;}
   }
 
   .bar{position:sticky;bottom:0;margin-top:20px;display:flex;gap:12px;align-items:center;
@@ -341,36 +379,36 @@ DATA.forEach(sec=>{
       html += '<div class="group-h prac"><span class="tag">✏️ 換你練習</span><span class="sub">填空後按「送出批改」</span></div>';
     }
     if(i < DEMO_COUNT){
-      // 說明卡：直接顯示完整正解 + 白話說明 + 可點擊的步驟動畫
-      const note = NOTE[sec.key] ? NOTE[sec.key](firstAns(it.a1), firstAns(it.a2)) : '';
-      const negWrap = s => s.replace(/\bnot\b/, '<span class="neg">not</span>');
-      const preIf = it.pre.replace(/^If\b/, '<span class="ifpop">If</span><sup class="onum n1">1</sup>');
+      // 說明卡：原句保留，按 1/2/3 逐步跳出「這一步要改什麼」，改寫句一步步組出來
+      const RULE = {
+        present:{s2:'be 用 <b>were</b>／一般動詞改<b>過去式</b>', s3:'主句用 <b>would／could ＋ 原形</b>'},
+        past:{s2:'if 子句用 <b>had ＋ 過去分詞</b>', s3:'主句用 <b>would／could have ＋ 過去分詞</b>'},
+        future:{s2:'if 子句用 <b>should／were to ＋ 原形</b>', s3:'主句用 <b>would／could ＋ 原形</b>'},
+        mixed:{s2:'if 子句用 <b>had ＋ 過去分詞</b>', s3:'主句用 <b>would／could ＋ 原形（不加 have）</b>'}
+      };
+      const R = RULE[sec.key] || RULE.present;
+      const a1=firstAns(it.a1), a2=firstAns(it.a2);
+      const preRest = it.pre.replace(/^If\s+/i,'');   // 去掉開頭 If，剩下主詞
       html +=
-        '<div class="q demo">'+
+        '<div class="q demo st0" data-i="'+i+'">'+
           '<div class="qtop"><span class="qnum d">'+(i+1)+'</span>'+
             '<div class="fact"><span class="lab">'+factLab+'</span>'+it.fact+'</div></div>'+
-          '<div class="rewrite show">'+
-            '<span class="seg sif">'+preIf+'</span>'+
-            '<span class="seg sa1"><span class="hl">'+firstAns(it.a1)+'</span><sup class="onum n2">2</sup></span>'+
-            '<span class="seg smid">'+it.mid+'</span>'+
-            '<span class="seg sa2"><span class="hl">'+firstAns(it.a2)+'</span><sup class="onum n3">3</sup></span>'+
-            '<span class="seg spost">'+it.post+'</span>'+
+          // 逐步組出來的改寫句（原句在上面保留，這裡是「正在改」的句子）
+          '<div class="build"><span class="ifw">If </span>'+preRest+
+            '<span class="slotw s1w"><span class="base">'+it.h1+'</span><span class="ans">'+a1+'</span></span>'+it.mid+
+            '<span class="slotw s2w"><span class="base">'+it.h2+'</span><span class="ans">'+a2+'</span></span>'+it.post+
           '</div>'+
-          '<div class="steps"><span class="hintk">👆 點卡片看順序：</span>'+
-            '<span class="step n1"><span class="sn">1</span>加 If</span>'+
-            '<span class="step n2"><span class="sn">2</span>改 if 子句動詞</span>'+
-            '<span class="step n3"><span class="sn">3</span>改主句動詞</span></div>'+
-          '<div class="morph">'+
-            '<div class="morph-row s1"><span class="slot"><span class="sn">2</span>if 子句</span>'+
-              '<span class="chip from">'+it.h1+'</span><span class="arrow"></span>'+
-              '<span class="chip to">'+negWrap(firstAns(it.a1))+'</span>'+
-              '<button class="replay" type="button">🔄 重播</button></div>'+
-            '<div class="morph-row s2"><span class="slot"><span class="sn">3</span>主句</span>'+
-              '<span class="chip from">'+it.h2+'</span><span class="arrow"></span>'+
-              '<span class="chip to">'+negWrap(firstAns(it.a2))+'</span></div>'+
+          // 三個步驟按鈕
+          '<div class="stepbtns"><span class="hintk">一步一步點：</span>'+
+            '<button class="sbtn b1" type="button" data-s="1"><span class="sn">1</span>加 If</button>'+
+            '<button class="sbtn b2" type="button" data-s="2"><span class="sn">2</span>改 if 子句動詞</button>'+
+            '<button class="sbtn b3" type="button" data-s="3"><span class="sn">3</span>改主句動詞</button>'+
           '</div>'+
-          '<div class="demoexp"><div class="why">💡 '+note+'</div>'+
-            '<div class="zh">💬 '+it.zh+'</div></div>'+
+          // 三段說明（點到那一步才跳出來）
+          '<div class="reveal r1"><b>① 加 If：</b>句首加 <b>If</b>、把 so 去掉，讓句子變成「條件」。</div>'+
+          '<div class="reveal r2"><b>② 改 if 子句：</b>'+R.s2+' → <s>'+it.h1+'</s> 變成 <b>'+a1+'</b>。</div>'+
+          '<div class="reveal r3"><b>③ 改主句：</b>'+R.s3+' → <s>'+it.h2+'</s> 變成 <b>'+a2+'</b>。</div>'+
+          '<div class="demoexp"><div class="zh">💬 '+it.zh+'</div></div>'+
         '</div>';
     } else {
       // 練習卡：填空作答
@@ -393,11 +431,15 @@ DATA.forEach(sec=>{
   app.appendChild(p);
 });
 
-// ── 轉換動畫：點卡片才播放（含重播鈕）──
-function play(card){ card.classList.remove("played"); void card.offsetWidth; card.classList.add("played"); }
+// ── 逐步改寫：按 1/2/3 逐步顯示每一步的變化 ──
 document.getElementById("app").addEventListener("click",(ev)=>{
-  const card = ev.target.closest(".q.demo");
-  if(card) play(card);   // 點卡片任一處（含 🔄 重播）都重新播放步驟
+  const b = ev.target.closest(".sbtn");
+  if(!b) return;
+  const card = b.closest(".q.demo");
+  const s = +b.dataset.s;                       // 1 / 2 / 3
+  card.classList.remove("st0","st1","st2","st3");
+  card.classList.add("st"+s);
+  card.querySelectorAll(".sbtn").forEach(btn=>{ btn.classList.toggle("on", +btn.dataset.s <= s); });
 });
 
 // ── tabs ──
