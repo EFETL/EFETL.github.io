@@ -78,6 +78,39 @@
   .demoexp .why{color:#33414f;}
   .demoexp .zh{color:#4a5766;margin-top:5px;}
 
+  /* ── 轉換動畫（原形 → 假設語氣）── */
+  .morph{margin-top:12px;display:flex;flex-direction:column;gap:9px;}
+  .morph-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .morph-row .slot{font-size:.7rem;font-weight:800;color:#fff;border-radius:99px;padding:3px 10px;flex:0 0 auto;}
+  .morph-row.s1 .slot{background:#5ec6ff;}
+  .morph-row.s2 .slot{background:#b06bff;}
+  .morph .chip{border-radius:9px;padding:4px 11px;font-size:.94rem;font-weight:800;white-space:nowrap;}
+  .morph .chip.from{background:#eef1f6;color:#7a8694;}
+  .morph .chip.to{background:#eafaf2;color:#0f7a52;border:1.5px solid #7fdcb4;opacity:0;transform:translateX(-14px) scale(.9);}
+  .morph .arrow{position:relative;width:38px;height:3px;border-radius:3px;background:#ffb84d;flex:0 0 auto;
+    transform:scaleX(0);transform-origin:left center;}
+  .morph .arrow::after{content:"";position:absolute;right:-2px;top:50%;transform:translateY(-50%);
+    border:6px solid transparent;border-left-color:#ffb84d;}
+  .morph .replay{margin-left:auto;flex:0 0 auto;border:none;cursor:pointer;background:#fff0f5;color:#c2568f;
+    font-weight:800;font-size:.78rem;padding:5px 12px;border-radius:99px;box-shadow:0 2px 6px rgba(194,86,143,.14);}
+
+  /* play state (added when card scrolls into view / replay) */
+  .q.demo.played .morph-row.s1 .arrow{animation:mArrow .42s ease forwards;}
+  .q.demo.played .morph-row.s1 .chip.to{animation:mPop .45s cubic-bezier(.2,1.3,.5,1) .32s forwards;}
+  .q.demo.played .morph-row.s2 .arrow{animation:mArrow .42s ease .55s forwards;}
+  .q.demo.played .morph-row.s2 .chip.to{animation:mPop .45s cubic-bezier(.2,1.3,.5,1) .87s forwards;}
+  .q.demo.played .rewrite .hl{animation:mGlow 1.6s ease;}
+  @keyframes mArrow{to{transform:scaleX(1);}}
+  @keyframes mPop{0%{opacity:0;transform:translateX(-14px) scale(.9);}
+    70%{opacity:1;transform:translateX(0) scale(1.12);}100%{opacity:1;transform:translateX(0) scale(1);}}
+  @keyframes mGlow{0%,100%{background:#eafaf2;}35%{background:#ffe28a;}}
+
+  @media (prefers-reduced-motion: reduce){
+    .morph .chip.to{opacity:1;transform:none;}
+    .morph .arrow{transform:scaleX(1);}
+    .q.demo.played .morph-row .arrow,.q.demo.played .morph-row .chip.to,.q.demo.played .rewrite .hl{animation:none;}
+  }
+
   .bar{position:sticky;bottom:0;margin-top:20px;display:flex;gap:12px;align-items:center;
     background:rgba(255,255,255,.92);backdrop-filter:blur(6px);padding:12px 14px;border-radius:16px;
     box-shadow:0 -3px 16px rgba(43,140,255,.12);}
@@ -268,6 +301,15 @@ DATA.forEach(sec=>{
             '<span class="hl">'+firstAns(it.a1)+'</span>'+it.mid+
             '<span class="hl">'+firstAns(it.a2)+'</span>'+it.post+
           '</div>'+
+          '<div class="morph">'+
+            '<div class="morph-row s1"><span class="slot">if 子句</span>'+
+              '<span class="chip from">'+it.h1+'</span><span class="arrow"></span>'+
+              '<span class="chip to">'+firstAns(it.a1)+'</span>'+
+              '<button class="replay" type="button">🔄 重播</button></div>'+
+            '<div class="morph-row s2"><span class="slot">主句</span>'+
+              '<span class="chip from">'+it.h2+'</span><span class="arrow"></span>'+
+              '<span class="chip to">'+firstAns(it.a2)+'</span></div>'+
+          '</div>'+
           '<div class="demoexp"><div class="why">💡 '+note+'</div>'+
             '<div class="zh">💬 '+it.zh+'</div></div>'+
         '</div>';
@@ -290,6 +332,25 @@ DATA.forEach(sec=>{
   });
   p.innerHTML = html;
   app.appendChild(p);
+});
+
+// ── 轉換動畫：進入畫面自動播放 + 重播 ──
+function play(card){ card.classList.remove("played"); void card.offsetWidth; card.classList.add("played"); }
+const demoCards = document.querySelectorAll(".q.demo");
+if("IntersectionObserver" in window){
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting && !e.target.dataset.seen){ e.target.dataset.seen="1"; play(e.target); } });
+  },{threshold:0.5});
+  demoCards.forEach(c=>io.observe(c));
+} else {
+  demoCards.forEach(c=>c.classList.add("played"));  // 無 IO 時直接顯示最終狀態
+}
+// 重播按鈕（事件委派）
+document.getElementById("app").addEventListener("click",(ev)=>{
+  const b = ev.target.closest(".replay");
+  if(!b) return;
+  const card = b.closest(".q.demo");
+  if(card){ card.dataset.seen="1"; play(card); }
 });
 
 // ── tabs ──
