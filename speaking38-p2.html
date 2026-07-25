@@ -198,11 +198,19 @@ function startRec(){
     recog=new SR();
     recog.lang='en-US'; recog.continuous=true; recog.interimResults=true;
     recog.onresult=e=>{
-      let fin='',intr='';
+      let parts=[],intr='';
       for(let i=0;i<e.results.length;i++){
-        if(e.results[i].isFinal) fin+=e.results[i][0].transcript+' ';
+        if(e.results[i].isFinal) parts.push(e.results[i][0].transcript.trim());
         else intr+=e.results[i][0].transcript;
       }
+      let merged='';
+      for(let p of parts){
+        const pl=p.toLowerCase(), ml=merged.toLowerCase();
+        if(ml.length>0 && pl.startsWith(ml)){ merged=p; }
+        else if(ml.length>0 && ml.startsWith(pl)){ /* subset, ignore */ }
+        else{ merged=merged?merged+' '+p:p; }
+      }
+      const fin=merged?merged+' ':'';
       curFinal=curFinalBase+fin;
       document.getElementById('transcript').innerHTML=
         (curFinal?`<span>${curFinal}</span>`:'')+
