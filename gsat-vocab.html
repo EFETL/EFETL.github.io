@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>學測英文單字練習 | 107–115年 全收錄</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&family=Bebas+Neue&family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0d1b2a;
+    --blue: #1b4f72;
+    --accent: #f5a623;
+    --gold: #e8c84a;
+    --green: #27ae60;
+    --red: #e74c3c;
+    --white: #f9f6f0;
+    --card-bg: #162032;
+    --text-light: #c9d6e3;
+    --border: #2a4060;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Montserrat', 'Noto Sans TC', sans-serif;
+    background: var(--navy);
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background: radial-gradient(ellipse at 20% 80%, rgba(27,79,114,0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(245,166,35,0.05) 0%, transparent 50%);
+    pointer-events: none; z-index: 0;
+  }
+
+  /* ── Header ── */
+  header {
+    position: relative; z-index: 10;
+    background: linear-gradient(135deg, #0d1b2a 60%, #132540);
+    border-bottom: 3px solid var(--accent);
+    padding: 16px 20px 12px;
+    display: flex; align-items: center; gap: 14px;
+    flex-wrap: wrap;
+  }
+  .logo-block h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.9rem; letter-spacing: 4px;
+    color: var(--accent);
+    text-shadow: 0 0 30px rgba(245,166,35,0.35);
+    line-height: 1;
+  }
+  .logo-block .sub {
+    font-size: 0.68rem; color: var(--text-light);
+    letter-spacing: 2.5px; text-transform: uppercase;
+    margin-top: 3px;
+  }
+  .header-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+  .score-display {
+    background: rgba(245,166,35,0.1);
+    border: 1px solid rgba(245,166,35,0.3);
+    border-radius: 10px; padding: 6px 14px;
+    font-size: 0.72rem; color: var(--text-light);
+    text-align: center;
+  }
+  .score-display strong { display: block; font-size: 1.15rem; color: var(--accent); font-weight: 800; }
+
+  /* ── Year Tabs ── */
+  .year-tabs {
+    position: relative; z-index: 10;
+    display: flex;
+    background: #090f18;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .year-tabs::-webkit-scrollbar { display: none; }
+  .year-tab {
+    flex: 1; min-width: 68px;
+    padding: 12px 6px;
+    text-align: center;
+    cursor: pointer;
+    font-weight: 700; font-size: 0.8rem;
+    letter-spacing: 1.5px;
+    color: var(--text-light);
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    background: none; border-top: none; border-left: none; border-right: none;
+    white-space: nowrap;
+  }
+  .year-tab:hover { color: var(--accent); }
+  .year-tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    background: rgba(245,166,35,0.06);
+  }
+  .year-tab .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%; background: var(--accent);
+    display: inline-block; margin-right: 5px;
+    opacity: 0;
+  }
+  .year-tab.active .dot { opacity: 1; }
+
+  /* ── Mode Bar ── */
+  .mode-bar {
+    position: relative; z-index: 10;
+    display: flex; gap: 8px; padding: 12px 16px;
+    background: #0d1520;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .mode-btn {
+    padding: 6px 14px;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    color: var(--text-light);
+    border-radius: 30px;
+    font-weight: 600; font-size: 0.75rem;
+    cursor: pointer; transition: all 0.2s;
+    letter-spacing: 0.5px;
+  }
+  .mode-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .mode-btn.active { background: var(--accent); border-color: var(--accent); color: var(--navy); }
+
+  /* ── Main ── */
+  main {
+    position: relative; z-index: 5;
+    max-width: 700px; margin: 0 auto;
+    padding: 22px 14px 80px;
+  }
+
+  /* ── Progress ── */
+  .progress-wrap {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 18px;
+  }
+  .progress-bar {
+    flex: 1; height: 5px;
+    background: #1a2e47; border-radius: 3px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--gold));
+    border-radius: 3px; transition: width 0.4s ease;
+  }
+  .progress-text { font-size: 0.7rem; color: var(--text-light); font-weight: 700; white-space: nowrap; }
+
+  /* ── Flashcard ── */
+  .flashcard {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+    padding: 28px 24px 24px;
+    margin-bottom: 16px;
+    animation: cardIn 0.32s cubic-bezier(.22,1,.36,1);
+  }
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(16px) scale(0.97); }
+    to   { opacity: 1; transform: none; }
+  }
+  .q-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.8rem; letter-spacing: 3px;
+    color: var(--accent); opacity: 0.75; margin-bottom: 8px;
+  }
+  .q-sentence {
+    font-size: 1rem; line-height: 1.8;
+    color: var(--white); margin-bottom: 10px;
+  }
+  .blank { color: var(--gold); font-weight: 800; }
+  .q-zh {
+    font-size: 0.8rem; color: var(--text-light);
+    line-height: 1.7;
+    border-left: 3px solid #2a4060;
+    padding-left: 10px; margin-bottom: 18px;
+  }
+
+  /* ── Vocab reveal (flashcard mode) ── */
+  .answer-toggle {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: none; border: 1.5px solid var(--border);
+    color: var(--text-light);
+    padding: 7px 14px; border-radius: 8px;
+    font-size: 0.76rem; cursor: pointer; transition: all 0.2s;
+    font-weight: 600; letter-spacing: 0.5px; margin-bottom: 14px;
+  }
+  .answer-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+  .vocab-reveal {
+    display: none;
+    background: linear-gradient(135deg, #193354, #0f2540);
+    border: 1px solid var(--accent);
+    border-radius: 12px; padding: 16px 18px;
+    margin-bottom: 14px;
+  }
+  .vocab-reveal.show { display: block; animation: fadeIn 0.25s; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .vocab-word-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; flex-wrap: wrap; }
+  .vocab-word {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem; letter-spacing: 3px; color: var(--accent);
+  }
+  .speak-btn {
+    background: var(--accent); border: none;
+    color: var(--navy); padding: 6px 12px;
+    border-radius: 7px; cursor: pointer;
+    font-weight: 800; font-size: 0.72rem;
+    transition: all 0.18s;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .speak-btn:hover { transform: scale(1.07); background: var(--gold); }
+  .speak-btn:active { transform: scale(0.96); }
+  .vocab-pos {
+    display: inline-block;
+    background: rgba(245,166,35,0.13); color: var(--accent);
+    font-size: 0.65rem; font-weight: 700;
+    padding: 2px 7px; border-radius: 4px; letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .vocab-zh { font-size: 1.05rem; font-weight: 700; color: var(--white); margin: 4px 0 8px; }
+  /* ── All-options speak panel (quiz + flash + list) ── */
+  .all-opts-speak {
+    margin-top: 14px;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+  }
+  .aos-title {
+    font-size: 0.7rem; color: var(--text-light);
+    letter-spacing: 1.5px; text-transform: uppercase;
+    margin-bottom: 8px; font-weight: 700;
+  }
+  .aos-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 7px;
+  }
+  @media(max-width:420px) { .aos-grid { grid-template-columns: 1fr; } }
+  .aos-item {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.04);
+    border: 1.5px solid var(--border);
+    border-radius: 9px; padding: 9px 11px;
+    cursor: pointer; transition: all 0.18s;
+    user-select: none;
+  }
+  .aos-item:hover { border-color: var(--accent); background: rgba(245,166,35,0.08); transform: translateY(-1px); }
+  .aos-item:active { transform: scale(0.97); }
+  .aos-item.aos-correct { border-color: var(--green); background: rgba(39,174,96,0.1); }
+  .aos-item.aos-correct:hover { background: rgba(39,174,96,0.18); }
+  .aos-lbl {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem; color: var(--accent);
+    min-width: 16px;
+  }
+  .aos-item.aos-correct .aos-lbl { color: var(--green); }
+  .aos-word { font-weight: 700; font-size: 0.9rem; color: var(--white); flex: 1; }
+  .aos-zh { font-size: 0.68rem; color: var(--text-light); }
+  .aos-speaker { font-size: 0.85rem; opacity: 0.6; margin-left: auto; }
+  .aos-item:hover .aos-speaker { opacity: 1; }
+
+  /* ── Quiz mode options ── */
+  .quiz-opts {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  @media(max-width:460px) { .quiz-opts { grid-template-columns: 1fr; } }
+  .q-opt {
+    background: rgba(255,255,255,0.04);
+    border: 2px solid var(--border);
+    color: var(--white);
+    padding: 14px 12px; border-radius: 12px;
+    font-size: 0.88rem; font-weight: 600;
+    cursor: pointer; transition: all 0.18s;
+    text-align: left; border-top: none; border-left: none;
+    border: 2px solid var(--border);
+  }
+  .q-opt:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: rgba(245,166,35,0.07);
+    transform: translateY(-2px);
+  }
+  .q-opt .lbl { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; color: var(--accent); margin-right: 5px; }
+  .q-opt .zh { display: block; font-size: 0.7rem; color: var(--text-light); margin-top: 2px; }
+  .q-opt.correct { border-color: var(--green) !important; background: rgba(39,174,96,0.15) !important; }
+  .q-opt.wrong   { border-color: var(--red) !important; background: rgba(231,76,60,0.12) !important; }
+  .q-opt:disabled { cursor: default; }
+
+  .result-msg {
+    display: none; margin-top: 12px;
+    padding: 10px 14px; border-radius: 9px;
+    font-weight: 700; font-size: 0.85rem;
+  }
+  .result-msg.show { display: block; animation: fadeIn 0.2s; }
+  .result-msg.ok   { background: rgba(39,174,96,0.12); color: #2ecc71; border: 1px solid #27ae60; }
+  .result-msg.fail { background: rgba(231,76,60,0.1);  color: #e74c3c; border: 1px solid #c0392b; }
+
+  /* ── 詳解 / 延伸單字（自舊站 s1-* 合併） ── */
+  .explain {
+    display: none; margin-top: 14px;
+    background: rgba(91,141,238,0.06);
+    border: 1px solid var(--border); border-left: 3px solid var(--accent);
+    border-radius: 10px; padding: 14px 16px;
+    text-align: left;
+  }
+  .explain.show { display: block; animation: fadeIn 0.25s; }
+  .ex-title {
+    font-size: 0.82rem; font-weight: 800; color: var(--accent);
+    margin: 0 0 7px; letter-spacing: 0.03em;
+  }
+  .ex-title + .ex-title, .ex-body + .ex-title, .ex-opts + .ex-title, .ex-vocab + .ex-title { margin-top: 15px; }
+  .ex-body { font-size: 0.88rem; line-height: 1.75; color: var(--txt); white-space: pre-line; }
+  .ex-opts { list-style: none; padding: 0; margin: 0; }
+  .ex-opts li {
+    font-size: 0.82rem; line-height: 1.6; color: var(--muted);
+    padding: 3px 0; display: flex; gap: 7px;
+  }
+  .ex-opts li.is-ans { color: var(--txt); font-weight: 700; }
+  .ex-opts .eo-lbl { color: var(--acc3); font-weight: 800; min-width: 1.2em; }
+  .ex-vocab { list-style: none; padding: 0; margin: 0; }
+  .ex-vocab li {
+    font-size: 0.82rem; line-height: 1.65; color: var(--muted);
+    padding: 4px 0 4px 13px; position: relative;
+  }
+  .ex-vocab li::before {
+    content: "▸"; position: absolute; left: 0; color: var(--acc2);
+  }
+  @media (max-width: 600px) {
+    .ex-body { font-size: 0.85rem; }
+    .ex-opts li, .ex-vocab li { font-size: 0.8rem; }
+  }
+
+  /* ── Wordlist mode ── */
+  .wordlist { display: flex; flex-direction: column; gap: 10px; }
+  .wl-item {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px 16px;
+    display: flex; align-items: center; gap: 14px;
+    transition: border-color 0.2s;
+    cursor: pointer;
+  }
+  .wl-item:hover { border-color: var(--accent); }
+  .wl-num { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; color: var(--accent); min-width: 32px; text-align: center; }
+  .wl-info { flex: 1; }
+  .wl-word { font-size: 1.05rem; font-weight: 700; color: var(--white); display: flex; align-items: center; gap: 8px; }
+  .wl-zh { font-size: 0.78rem; color: var(--text-light); margin-top: 2px; }
+
+  /* ── Nav ── */
+  .nav-row {
+    display: flex; gap: 10px; margin-top: 18px;
+  }
+  .nav-btn {
+    flex: 1; padding: 13px 8px;
+    border-radius: 12px; font-weight: 700;
+    font-size: 0.85rem; cursor: pointer;
+    letter-spacing: 0.5px; transition: all 0.2s;
+    border: none;
+  }
+  .nav-prev { background: #1a2e47; color: var(--text-light); }
+  .nav-prev:hover { background: var(--border); color: var(--white); }
+  .nav-next { background: linear-gradient(135deg, var(--accent), var(--gold)); color: var(--navy); }
+  .nav-next:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(245,166,35,0.3); }
+
+  /* ── Complete Screen ── */
+  .complete-screen {
+    display: none; text-align: center; padding: 50px 20px;
+    animation: fadeIn 0.4s;
+  }
+  .complete-screen.show { display: block; }
+  .complete-icon { font-size: 4rem; margin-bottom: 16px; }
+  .complete-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem; letter-spacing: 4px; color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .complete-score { font-size: 1.1rem; color: var(--text-light); margin-bottom: 24px; }
+  .complete-score strong { color: var(--white); font-size: 1.6rem; }
+  .restart-btn {
+    background: var(--accent); border: none; color: var(--navy);
+    padding: 14px 32px; border-radius: 12px;
+    font-weight: 800; font-size: 0.9rem; cursor: pointer;
+    letter-spacing: 1px; transition: all 0.2s;
+  }
+  .restart-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(245,166,35,0.35); }
+
+  /* ── Section heading ── */
+  .section-head {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem; letter-spacing: 3px; color: var(--accent);
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 16px;
+  }
+  .section-head::after {
+    content: ''; flex: 1;
+    height: 1px; background: linear-gradient(90deg, var(--border), transparent);
+  }
+
+  /* ── Score chips ── */
+  .stats-row { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+  .stat-chip {
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+    border-radius: 9px; padding: 7px 12px;
+    font-size: 0.72rem; color: var(--text-light);
+    display: flex; flex-direction: column; align-items: center; gap: 1px;
+    min-width: 64px;
+  }
+  .stat-chip strong { color: var(--white); font-size: 1.05rem; font-weight: 800; }
+  .stat-chip.g strong { color: var(--green); }
+  .stat-chip.r strong { color: var(--red); }
+  .stat-chip.a strong { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<a href="gsat.html" style="display:inline-block;margin:14px 0 0 14px;background:#1e2538;border:1px solid #2a3352;color:#e2e8f0;padding:7px 15px;border-radius:8px;text-decoration:none;font-size:0.85rem;font-weight:700;">&larr; 學測題型選單</a>
+
+<header>
+  <div class="logo-block">
+    <h1>學測英文 詞彙練習</h1>
+    <div class="sub">107 · 108 · 109 · 110 · 111 · 112 · 113 · 114 · 115 年 · 第一大題</div>
+  </div>
+  <div class="header-right">
+    <div class="score-display">
+      <strong id="hdr-score">0/0</strong>作答成績
+    </div>
+  </div>
+</header>
+
+<div class="year-tabs" id="yearTabs"></div>
+
+<div class="mode-bar">
+  <button class="mode-btn active" onclick="setMode('quiz')" id="btn-quiz">📝 選擇題</button>
+  <button class="mode-btn" onclick="setMode('flash')" id="btn-flash">🃏 單字卡</button>
+  <button class="mode-btn" onclick="setMode('list')" id="btn-list">📋 單字表</button>
+</div>
+
+<main id="mainContent"></main>
+
+<script>
+/* ═══════════════════════════════════════════════
+   DATA  – 110 to 115 GSAT Vocabulary Questions
+═══════════════════════════════════════════════ */
+const DATA = {
+  107: [
+    { q:"Mangoes are a _____ fruit here in Taiwan; most of them reach their peak of sweetness in July.", zh:"芒果在台灣是 _____ 水果；大多數在七月的時候最甜。", opts:["mature 成熟的","usual 通常的","seasonal 季節性的","particular 特別的"], ans:2, an:"【句型結構】主詞（Mangoes）+ 連綴動詞（are）+ 補語（a _____ fruit）。分號後的子句為補充說明，提及「七月達到最甜美」為關鍵語境線索。\n\n【關鍵線索】reach their peak of sweetness in July（七月達到最甜美）→ 暗示芒果是「季節性」作物，答案為 seasonal（C）。mature（成熟的）不符合搭配，usual（普通的）語意不符。", vo:["seasonal (adj.) 季節性的；in season 當季的", "【近義詞】periodic（週期性的）、cyclical（循環的）", "【延伸搭配】seasonal fruit（當季水果）、seasonal worker（季節性工人）、out of season（非當季）"], oh:["（成熟的）", "（普通的；慣常的）", "（季節性的）✓", "（特別的；特定的）"] },
+    { q:"Writing term papers and giving oral reports are typical course _____ for college students.", zh:"寫期末報告與口頭報告對大學生來說，都是典型會有的課程 _____。", opts:["requirements 要求","techniques 技巧","situations 情況","principles 原則"], ans:0, an:"【句型結構】動名詞片語（Writing... and giving...）作主詞 + 連綴動詞（are）+ $��詞補語（typical course _____）。空格為名詞，受 course 和 typical 修飾。\n\n【關鍵線索】term papers 和 oral reports 是學生「被要求」完成的事項，選 requirements（必要條件/規定，A）。techniques 是技巧，不符語意。", vo:["requirement (n.) 要求、規定；meet requirements 符合要求", "【近義詞】obligation（義務）、prerequisite（先決條件）", "【延伸搭配】course requirements（課程要求）、graduation requirements（畢業要求）"], oh:["（要求；必要條件）✓", "（技巧；技術）", "（情況；狀況）", "（原則；原理）"] },
+    { q:"If we work hard to _____ our dreams when we are young, we will not feel that we missed out on something when we get old.", zh:"如果我們在年輕的時候努力 _____ 自己的夢想，當我們年老時，就不會覺得我們錯過了什麼。", opts:["distribute 分配","fulfill 達成","convince 說服","monitor 監控"], ans:1, an:"【句型結構】If 條件子句（If we work hard to _____ our dreams...）+ 主要子句（we will not feel...）。空格填入不定詞 to 後的動詞原形，受詞為 our dreams。\n\n【關鍵線索】missed out on something（錯過了什麼）暗示對比，努力追求後就不會遺憾，選 fulfill（實現，B）。fulfill one's dreams 是固定搭配。", vo:["fulfill (v.) 實現、履行；fulfill a dream 實現夢想；fulfill a promise 履行承諾", "【近義詞】achieve（達成）、accomplish（完成）、realize（實現）", "【延伸搭配】fulfill one's potential（發揮潛力）、self-fulfillment（自我實現）"], oh:["（分發；分配）", "（實現；完成）✓", "（說服；使信服）", "（監控；監測）"] },
+    { q:"Few people will trust you if you continue making _____ promises and never make efforts to keep them.", zh:"如果你持續說些 _____ 不實的承諾，也從不努力實現，那麼將幾乎不會有人相信你。", opts:["chilly 冷峻的","liberal 自由的","hollow 空洞的","definite 明確的"], ans:2, an:"【句型結構】條件子句（if you continue making _____ promises）+ $��要子句（Few people will trust you）。空格為形容詞修飾 promises。\n\n【關鍵線索】never make efforts to keep them（從不努力去實現）→ 表示承諾毫無誠意，選 hollow（空洞的/虛偽的，C）。hollow promises 是固定搭配。", vo:["hollow (adj.) 空洞的、不真誠的；(n.) 凹洞；hollow out 挖空", "【近義詞】empty（空的）、insincere（不真誠的）、meaningless（無意義的）", "【延伸搭配】hollow promise（空頭承諾）、hollow victory（慘勝）、feel hollow（感到空虛）"], oh:["（寒冷的；冷淡的）", "（自由的；慷慨的）", "（空洞的；虛偽的）✓", "（確定的；明確的）"] },
+    { q:"Becky _____ her ankle while she was playing tennis last week. Now it still hurts badly.", zh:"Becky 上禮拜打網球的時候 _____ 了腳踝。現在腳踝仍是非常地痛。", opts:["slipped 滑倒","dumped 丟棄","twisted 扭到","recovered 復原"], ans:2, an:"【句型結構】主詞（Becky）+ 動詞過去式（填空）+ 受詞（her ankle）。時間副詞子句（while...）指明動作發生的時機。後句 Now it still hurts badly 是結果說明。\n\n【關鍵線索】ankle（腳踝）+ hurts badly（非常痛）→ 選「扭傷」的動詞 twisted（C）。twist one's ankle 是固定搭配。", vo:["twist (v.) 扭傷、扭轉；twist one's ankle 扭傷腳踝", "【近義詞】sprain（扭傷，更正式）、wrench（猛扭）", "【延伸搭配】twisted ankle（扭傷的腳踝）、twist and turn（迂迴曲折）"], oh:["（滑倒；失足）", "（傾倒；拋棄）", "（扭傷；扭轉）✓", "（恢復；康復）"] },
+    { q:"Research shows that men and women usually think differently. For example, they have quite different _____ about what marriage means in their life.", zh:"研究指出，男生跟女生思考方式大不同。例如，他們對於婚姻的定義就有著相當不同的 _____。", opts:["decisions 決定","beliefs 信念","styles 風格","degrees 程度"], ans:1, an:"【句型結構】主要子句（they have quite different _____ about what marriage means in their life）。空格為名詞，與介詞 about 搭配，且受 quite different 修飾。\n\n【關鍵線索】about what marriage means（關於婚姻的意義）→ 需要表示「看法/信念」的名詞，選 beliefs（B）。have different beliefs about 是固定搭配。", vo:["belief (n.) 信念、看法；believe (v.)；in one's belief 依某人看法", "【近義詞】opinion（意見）、view（觀點）、perspective（觀點）", "【延伸搭配】have a belief in（相信）、religious beliefs（宗教信仰）、common belief（普遍觀念）"], oh:["（決定；決策）", "（信念；看法）✓", "（風格；方式）", "（程度；學位）"] },
+    { q:"The new manager is very _____. For instance, the employees are given much shorter deadlines for the same tasks than before.", zh:"這位新上任的經理要求非常 _____。例如，員工被給予更短的截止日期完成同樣的任務。", opts:["persuasive 有說服力的","tolerable 能容忍的","suspicious 有嫌疑的","demanding 苛刻的"], ans:3, an:"【句型結構】主詞（The new manager）+ 連綴動詞（is）+ 補語（very _____）。For instance 引出的例子是判斷空格語意的關鍵。\n\n【關鍵線索】much shorter deadlines for the same tasks（相同任務的期限更短）→ 暗示新經理「要求高/苛求」，選 demanding（D）。", vo:["demanding (adj.) 要求嚴格的、費心費力的；demand (v./n.)", "【近義詞】strict（嚴格的）、exacting（嚴格要求的）、rigorous（嚴謹的）", "【延伸搭配】a demanding job（費心的工作）、demanding standards（高要求的標準）"], oh:["（有說服力的）", "（可忍受的；還算好的）", "（可疑的；猜疑的）", "（要求嚴格的；苛求的）✓"] },
+    { q:"While the couple were looking _____ for their missing children, the kids were actually having fun in the woods nearby.", zh:"當這對夫妻 _____ 地尋找他們走失的孩子們時，這些孩子其實正在附近的森林玩得很開心。", opts:["anxiously 焦慮地","precisely 精確地","evidently 明顯地","distinctly 清楚地"], ans:0, an:"【句型結構】While 引導時間副詞子句（While the couple were looking _____ for their missing children）。空格為修飾 looking 的方式副詞。\n\n【關鍵線索】missing children（失蹤的孩子）→ 父母的心情必然是「焦慮的」，選 anxiously（A）。precisely、evidently、distinctly 語意均不符。", vo:["anxiously (adv.) 焦慮地；anxious (adj.)；anxiety (n.)", "【近義詞】nervously（緊張地）、worriedly（擔憂地）、frantically（瘋狂地）", "【延伸搭配】wait anxiously（焦急等待）、anxiously look for（焦急尋找）"], oh:["（焦慮地；擔心地）", "（精確地；準確地）", "（明顯地；顯然地）", "（清楚地；明顯地）"] },
+    { q:"After delivering a very powerful speech, the award winner was _____ by a group of fans asking for her signature.", zh:"這位獲獎者在發表完一場非常振奮人心的演講後，被他的粉絲 _____ 要他的簽名。", opts:["deposited 存款","reserved 預定","vanished 消失","surrounded 環繞"], ans:3, an:"【句型結構】被動語態（was _____ by a group of fans）。空格填入被動語態的過去分詞，施事者（by a group of fans asking for her signature）提供語境。\n\n【關鍵線索】by a group of fans（被一群粉絲）asking for her signature（要求簽名）→ 粉絲「包圍」了得獎者，選 surrounded（D）。be surrounded by 是固定搭配。", vo:["surround (v.) 包圍、環繞；surrounded by/with 被...圍繞", "【近義詞】encircle（環繞）、enclose（包圍）、besiege（圍攻）", "【延伸搭配】surrounded by fans（被粉絲包圍）、surround oneself with（讓自己被...環繞）"], oh:["（存放；沉積）", "（預訂；保留）", "（消失；不見）", "（包圍；圍繞）✓"] },
+    { q:"The interviewees were trying very hard to _____ the interviewers that they were very capable and should be given the job.", zh:"這些面試者非常努力地使他們的面試官留下 _____，認為他們是有能力勝任這份工作的。", opts:["credit 歸功","impress 使印象深刻","relieve 舒緩","acquire 獲得"], ans:1, an:"【句型結構】主詞（The interviewees）+ 動詞（were trying）+ to 不定詞（to _____ the interviewers）+ that 子句（that they were very capable...）。空格為動詞，受詞為 the interviewers。\n\n【關鍵線索】that they were very capable and should be given the job（讓面試官相信自己有能力且應獲得工作）→ 選 impress（給人留下好印象，B）。", vo:["impress sb. with sth. 以某事打動某人；impressive (adj.) 令人印象深刻的", "【近義詞】dazzle（使眼花繚亂）、wow（使驚艷）、awe（使敬畏）", "【延伸搭配】make a good impression（留下好印象）、impress the audience（打動觀眾）"], oh:["（歸功於；相信）", "（給...留下深刻印象；使欽佩）✓", "（減輕；解除）", "（獲得；習得）"] },
+    { q:"After the first snow of the year, the entire grassland disappeared under a _____ of snow.", zh:"在今年的第一場雪後，整個草地被覆蓋在這一大 _____ 的雪中消失了。", opts:["flake 片","blossom 開花","blanket 毯子","flash 閃光"], ans:2, an:"【句型結構】主要子句（the entire grassland disappeared under a _____ of snow）。空格為名詞，受 a 修飾，後接 of snow，組成片語。\n\n【關鍵線索】disappeared（消失）+ under a _____ of snow → 雪覆蓋了整片草地，像「毯子」一樣，選 blanket（C）。a blanket of snow 是常見的比喻用法。", vo:["blanket (n.) 毯子；(v.) 覆蓋（如 blanketed in snow）", "【比喻用法】a blanket of fog（一片霧）、a blanket of silence（一片寂靜）", "【延伸搭配】security blanket（安全感的依托）、blanket ban（全面禁令）"], oh:["（薄片；雪花）", "（花朵；開花）", "（毯子；比喻一層覆蓋物）✓", "（閃光；閃爍）"] },
+    { q:"Peter likes books with wide _____, which provide him with enough space to write notes.", zh:"Peter 喜歡留 _____ 很多的書，這樣可提供他足夠的空間寫筆記。", opts:["angles 角度","margins 留白","exceptions 例外","limitations 限制"], ans:1, an:"【句型結構】主要子句（Peter likes books with wide _____）+ which 非限定性關係子句（which provide him with enough space to write notes）。空格為名詞，受 wide 修飾。\n\n【關鍵線索】enough space to write notes（足夠空間寫筆記）→ 書頁上供書寫的空白區域即「頁邊距」，選 margins（B）。", vo:["margin (n.) 頁邊距、邊緣、差距；leave a margin 留白", "【近義詞】border（邊界）、edge（邊緣）", "【延伸搭配】profit margin（利潤率）、margin of error（誤差範圍）、by a narrow margin（以些微差距）"], oh:["（角度；角）", "（頁邊距；邊緣）✓", "（例外；除外）", "（限制；侷限）"] },
+    { q:"At the beginning of the semester, the teacher told the students that late assignments would receive a low grade as a _____.", zh:"在學期一開始，這位老師告訴學生們只要遲交報告就會給低分當作 _____。", opts:["hardship 困難","comment 評論","bargain 討價還價","penalty 處罰"], ans:3, an:"【句型結構】老師告知學生（that 名詞子句）：遲交作業（late assignments）→ 低分（a low grade）作為某種回應。空格為名詞，receive a low grade as a _____（以...作為低分）需要表達「懲罰」的名詞。\n\n【關鍵線索】low grade（低分）是對「遲交」的後果，選 penalty（懲罰，D）。", vo:["penalty (n.) 懲罰、代價、罰球；impose a penalty 施加懲罰", "【近義詞】punishment（懲罰）、consequence（後果）、sanction（制裁）", "【延伸搭配】penalty kick（點球）、death penalty（死刑）、pay a penalty（承擔後果）"], oh:["（艱難；困苦）", "（評論；意見）", "（討價還價；便宜貨）", "（懲罰；罰款）✓"] },
+    { q:"Various studies have been _____ in this hospital to explore the link between a high-fat diet and cancer.", zh:"這間醫院 _____ 了各樣的研究探索高脂肪飲食與癌症之間的連結。", opts:["conducted 執行","confirmed 確認","implied 暗指","improved 改善"], ans:0, an:"【句型結構】完成式被動語態（Various studies have been _____ in this hospital）。空格填入被動語態的過去分詞，與 studies（研究）搭配。\n\n【關鍵線索】studies（研究）+ in this hospital（在這家醫院）→ 研究是被「進行/實施」的，選 conducted（A）。conduct a study/research 是固定搭配。", vo:["conduct (v.) 進行、實施、指揮；conduct a study 進行研究；conduct an experiment 進行實驗", "【近義詞】carry out（執行）、undertake（承擔）、perform（執行）", "【延伸搭配】conduct research（進行研究）、conduct a survey（進行調查）"], oh:["（進行；執行）✓", "（確認；證實）", "（暗示；含有）", "（改善；提高）"] },
+    { q:"Intense, fast-moving fires raged across much of California last week. The _____ firestorm has claimed the lives of thirty people.", zh:"濃烈迅速的大火上週蔓延加州大部分地區。這場 _____ 大火已經奪走了三十條人命。", opts:["efficient 有效率的","reliable 可信賴的","massive 巨大的","adequate 合適的"], ans:2, an:"【句型結構】主詞（The _____ firestorm）+ 動詞（has claimed）+ 受詞（the lives of thirty people）。空格為形容詞修飾 firestorm，且與前句 Intense, fast-moving fires raged across much of California 形成上下文關聯。\n\n【關鍵線索】fires raged across much of California（火災橫掃加州大部分地區）+ claimed the lives of thirty people（奪走三十條生命）→ 規模「龐大」，選 massive（C）。", vo:["massive (adj.) 大規模的、巨大的；massively (adv.)", "【近義詞】enormous（巨大的）、colossal（龐大的）、immense（廣大的）", "【延伸搭配】massive fire（大規模火災）、massive earthquake（強烈地震）、massive loss（重大損失）"], oh:["（有效率的）", "（可靠的）", "（大規模的；龐大的）✓", "（足夠的；適當的）"] },
+  ],
+  108: [
+    { q:"Bobby cared a lot about his _____ at home and asked his parents not to go through his things without his permission.", zh:"Bobby 非常在意他在家裡的 _____，要求父母未經許可不要翻看他的東西。", opts:["discipline 紀律","facility 設施","privacy 隱私","representation 代表"], ans:2, an:"【句型結構】主詞（Bobby）+ 動詞（cared a lot about）+ 受詞（his _____ at home）。後接 asked his parents not to go through his things without permission 作進一步說明。\n\n【關鍵線索】not to go through his things without his permission（未經許可不得翻動他的東西）→ 強調個人「隱私」不受侵犯，選 privacy（C）。", vo:["privacy (n.) 隱私、私密性；in private 私下地；private (adj.)", "【近義詞】confidentiality（機密性）、seclusion（隔絕、隱居）", "【延伸搭配】right to privacy（隱私權）、invasion of privacy（侵犯隱私）、privacy policy（隱私政策）"], oh:["（紀律；管教）", "（設施；才能）", "（隱私；私密）✓", "（代表；描述）"] },
+    { q:"The new manager is a real gentleman. He is kind and humble, totally different from the former manager, who was _____ and bossy.", zh:"這位新任經理是個紳士。他和藹謙遜，完全不同於前任經理，後者非常 _____ 又專橫。", opts:["eager 渴望的","liberal 自由的","mean 刻薄的","inferior 低劣的"], ans:2, an:"【句型結構】關係子句（who was _____ and bossy）修飾前任經理（the former manager）。空格與 bossy（專橫的）形成對等連接，且與前句的 kind and humble 形成對比。\n\n【關鍵線索】totally different from（截然不同）+ kind（親切）and humble（謙遜）→ 前任經理應是反義詞，bossy（專橫）配對 mean（刻薄），選 mean（C）。", vo:["mean (adj.) 刻薄的、卑鄙的、吝嗇的；mean (n./v.) 平均/意思/意味", "【近義詞】unkind（不親切的）、cruel（殘忍的）、nasty（討厭的）", "【延伸搭配】mean-spirited（小氣的）、a mean trick（惡意的把戲）"], oh:["（渴望的；熱切的）", "（自由的；慷慨的）", "（刻薄的；吝嗇的）✓", "（較差的；下等的）"] },
+    { q:"The weather bureau _____ that the typhoon would bring strong winds and heavy rains, and warned everyone of the possible danger.", zh:"氣象局 _____ 颱風將帶來強風大雨，並警告所有人可能的危險。", opts:["conveyed 傳達","associated 聯繫","interpreted 解釋","predicted 預測"], ans:3, an:"【句型結構】主詞（The weather bureau）+ 動詞過去式（填空）+ that 名詞子句。後接 warned everyone of the possible danger（警告眾人）與空格動作並列。\n\n【關鍵線索】weather bureau（氣象局）+ typhoon would bring...（颱風將帶來...）→ 氣象局的功能是「預測」天氣，選 predicted（D）。", vo:["predict (v.) 預測；prediction (n.)；predictable (adj.)", "【近義詞】forecast（預報）、anticipate（預期）、foresee（預見）", "【延伸搭配】predict the weather（預測天氣）、weather prediction（天氣預報）、accurately predicted（準確預測）"], oh:["（傳達；傳遞）", "（聯繫；關聯）", "（詮釋；解釋）", "（預測；預報）✓"] },
+    { q:"Different airlines have different _____ for carry-on luggage, but many international airlines limit a carry-on piece to 7 kilograms.", zh:"不同的航空公司對於登機行李有不同的 _____，但許多國際航空都限制登機行李最多 7 公斤。", opts:["landmarks 地標","restrictions 限制","percentages 百分比","circumstances 情況"], ans:1, an:"【句型結構】主句（Different airlines have different _____ for carry-on luggage）。空格為名詞，被 different 修飾，且後句說明 limit a carry-on piece to 7 kilograms（限重 7 公斤）。\n\n【關鍵線索】limit...to 7 kilograms（限制為 7 公斤）→ 暗示空格為表示「限制/規定」的名詞，選 restrictions（B）。", vo:["restriction (n.) 限制、規定；restrict (v.)；restrictive (adj.)", "【近義詞】limitation（限制）、regulation（規定）、constraint（約束）", "【延伸搭配】baggage restrictions（行李規定）、impose restrictions（施加限制）、lift restrictions（解除限制）"], oh:["（地標；里程碑）", "（限制；規定）✓", "（百分比）", "（情況；環境）"] },
+    { q:"Many people were happy that the government had finally _____ Children's Day as a national holiday.", zh:"許多人很高興政府終於將兒童節 _____ 為國定假日。", opts:["appointed 任命","declared 宣布","performed 表演","involved 涉及"], ans:1, an:"【句型結構】過去完成式（had finally _____）表示在過去某個時間點完成的動作。受詞為 Children's Day as a national holiday，空格動詞需接 NP + as + NP 結構。\n\n【關鍵線索】Children's Day as a national holiday（兒童節為國定假日）→ 政府「宣布」某日為假日，選 declared（B）。declare...as 是固定搭配。", vo:["declare (v.) 宣布、申報；declare war 宣戰；declaration (n.)", "【近義詞】announce（宣布）、proclaim（宣告）", "【延伸搭配】declare a holiday（宣布假期）、declare independence（宣布獨立）、Customs declaration（海關申報）"], oh:["（任命；指定）", "（宣布；聲明）✓", "（表演；執行）", "（牽涉；包含）"] },
+    { q:"To reach the goal of making her company a market leader, Michelle _____ a plan to open ten new stores around the country this year.", zh:"為了達到使公司成為市場龍頭的目標，Michelle _____ 了一個今年在全國開十家新店的計畫。", opts:["advised 建議","occupied 佔據","proposed 提出","recognized 認出"], ans:2, an:"【句型結構】目的副詞（To reach the goal...）+ 主句（Michelle _____ a plan to open ten new stores...）。空格為動詞過去式，受詞為 a plan。\n\n【關鍵線索】a plan（一個計畫）→ 需要與 plan 搭配的動詞，propose a plan（提出計畫，C）是自然搭配。", vo:["propose (v.) 提議、求婚；proposal (n.) 提案、求婚", "【近義詞】suggest（建議）、put forward（提出）、present（呈現）", "【延伸搭配】propose a plan（提出計畫）、marriage proposal（求婚）、propose a toast（提議乾杯）"], oh:["（建議；忠告）", "（佔領；使忙碌）", "（提出；提議）✓", "（認可；認識）"] },
+    { q:"Silence in some way is as _____ as speech. It can be used to show, for example, disagreement or lack of interest.", zh:"沉默在某種程度上和言語一樣 _____。例如，它可以用來表達不同意或缺乏興趣。", opts:["sociable 善於交際的","expressive 有表達力的","reasonable 合理的","objective 客觀的"], ans:1, an:"【句型結構】等比較結構（as _____ as speech）。空格為形容詞，與 silence 的性質相關，且後句說明沉默能「表達」不同意或興趣缺缺。\n\n【關鍵線索】It can be used to show...disagreement or lack of interest（用來表達不同意或興趣缺缺）→ 沉默和語言一樣富有「表現力」，選 expressive（B）。", vo:["expressive (adj.) 富表現力的；express (v.) 表達；expression (n.)", "【近義詞】communicative（善於溝通的）、meaningful（富含意義的）、articulate（表達清晰的）", "【延伸搭配】expressive eyes（有神的眼睛）、facial expression（表情）、freely expressive（自由表達的）"], oh:["（善交際的；友好的）", "（富有表現力的）✓", "（合理的；理性的）", "（客觀的；目標）"] },
+    { q:"This TV program is designed for children, _____ for those under five. It contains no violence or strong language.", zh:"這部電視節目是為兒童而設計的，_____ 是那些五歲以下的兒童。節目中沒有暴力或激烈言語。", opts:["particularly 特別地","sensibly 合理地","moderately 適度地","considerably 相當地"], ans:0, an:"【句型結構】主句（This TV program is designed for children）+ 逗點後的副詞修飾語（_____ for those under five）。空格為副詞，強調「更特別」的目標受眾。\n\n【關鍵線索】designed for children...for those under five（為兒童設計，尤其是五歲以下）→ 選表示「特別/尤其」的 particularly（A）。", vo:["particularly (adv.) 尤其、特別；particular (adj.) 特別的；in particular 尤其是", "【近義詞】especially（尤其）、specifically（特別地）、notably（值得注意地）", "【延伸搭配】particularly important（尤其重要）、not particularly（並不特別）"], oh:["（尤其；特別）✓", "（明智地；合理地）", "（適度地；溫和地）", "（相當地；大量地）"] },
+    { q:"Tommy, please put away the toys in the box, or you might _____ on them and hurt yourself.", zh:"Tommy，請把玩具收進箱子裡，否則你可能會被它們 _____ 並傷到自己。", opts:["stumble 絆倒","graze 擦傷","navigate 導航","dwell 居住"], ans:0, an:"【句型結構】or 連接條件後果（or you might _____ on them and hurt yourself）。空格為動詞原形（接在 might 後），與介詞 on（在...上絆倒）搭配。\n\n【關鍵線索】toys（玩具）+ hurt yourself（傷到自己）→ 玩具散落地上，人可能「絆倒」在上面，選 stumble（A）。stumble on/over 是固定搭配。", vo:["stumble (v.) 絆倒、失足；stumble on/upon 偶然發現；stumble across 碰巧遇見", "【近義詞】trip（絆倒）、fall（跌倒）、stumble over（絆過）", "【延伸搭配】stumble over one's words（說話結巴）、stumble upon a discovery（偶然發現）"], oh:["（絆倒；失足）✓", "（放牧；擦傷）", "（導航；駕駛）", "（居住；深思）"] },
+    { q:"The _____ costume party, held every September, is one of the biggest events of the school year.", zh:"每年九月舉辦的 _____ 服裝派對是學年中最大的活動之一。", opts:["initial 初始的","annual 每年的","evident 明顯的","occasional 偶爾的"], ans:1, an:"【句型結構】名詞片語（The _____ costume party）+ 同位語（held every September）+ 動詞（is）。空格為形容詞，受後置分詞片語 held every September 修飾。\n\n【關鍵線索】held every September（每年九月舉辦）→ 每年一次，選 annual（一年一度的，B）。annual event（年度活動）是固定搭配。", vo:["annual (adj.) 年度的、一年一次的；annually (adv.) 每年地；annual report 年度報告", "【近義詞】yearly（每年的）、once-a-year（一年一次的）", "【延伸搭配】annual meeting（年度會議）、annual salary（年薪）、annual festival（年度節慶）"], oh:["（最初的；首字母）", "（一年一度的；年度的）✓", "（明顯的；顯而易見的）", "（偶爾的；特殊場合的）"] },
+    { q:"In a job interview, attitude and personality are usually important _____ that influence the decision of the interviewers.", zh:"在求職面試中，態度和個性通常是影響面試官決定的重要 _____。", opts:["factors 因素","outcomes 結果","missions 任務","identities 身份"], ans:0, an:"【句型結構】主詞（attitude and personality）+ 連綴動詞（are）+ 補語（usually important _____）+ that 關係子句修飾空格名詞。\n\n【關鍵線索】influence the decision of the interviewers（影響面試官的決定）→ 態度和個性是影響決定的「因素」，選 factors（A）。", vo:["factor (n.) 因素、要素；a contributing factor 促成因素", "【近義詞】element（要素）、component（組成部分）、variable（變數）", "【延伸搭配】key factor（關鍵因素）、risk factor（風險因子）、contributing factor（促成因素）"], oh:["（因素；要素）✓", "（結果；成果）", "（任務；使命）", "（身份；特性）"] },
+    { q:"The snow-capped mountain is described so _____ in the book that the scene seems to come alive in front of the reader's eyes.", zh:"這本書對雪峰的描述如此 _____，以至於場景彷彿在讀者眼前栩栩如生。", opts:["distantly 遠遠地","meaningfully 有意義地","cheerfully 愉快地","vividly 生動地"], ans:3, an:"【句型結構】so...that 結果副詞子句（described so _____ that the scene seems to come alive）。空格為副詞修飾 described。\n\n【關鍵線索】the scene seems to come alive in front of the reader's eyes（場景似乎栩栩如生）→ 描述「生動鮮明」，選 vividly（D）。", vo:["vividly (adv.) 生動地；vivid (adj.) 生動的、鮮明的；vividness (n.)", "【近義詞】graphically（生動地）、colorfully（豐富多彩地）、realistically（逼真地）", "【延伸搭配】vividly described（描述生動）、vivid imagination（豐富的想象力）、vivid memory（鮮明的記憶）"], oh:["（遙遠地；冷漠地）", "（有意義地）", "（愉快地；開朗地）", "（生動地；鮮明地）✓"] },
+    { q:"Surrounded by flowers blooming and birds _____ merrily, the Wangs had a good time hiking in the national park.", zh:"在百花盛開、鳥兒 _____ 歡鳴的環繞下，王家人在國家公園健行玩得很開心。", opts:["napping 打盹","scooping 舀取","flipping 翻轉","chirping 啾啾叫"], ans:3, an:"【句型結構】分詞構句（Surrounded by flowers blooming and birds _____ merrily）修飾主句（the Wangs had a good time hiking）。birds _____ merrily 是 with + N + V-ing 的結構，空格填入現在分詞。\n\n【關鍵線索】flowers blooming（花朵盛開）+ birds...merrily（鳥兒...愉快地）+ 國家公園郊遊的場景 → 鳥兒「啁啾歌唱」，選 chirping（D）。", vo:["chirp (v./n.) （鳥、蟲）啁啾、嗚叫；chirping 現在分詞或形容詞", "【相關詞】tweet（鳥鳴/推文）、sing（歌唱）、twitter（啁啾）", "【延伸搭配】birds chirping（鳥兒啁啾）、crickets chirping（蟋蟀鳴叫）"], oh:["（打盹；小睡）", "（舀取；挖出）", "（翻轉；快速翻閱）", "（鳥）啁啾；（蟲）唧唧叫 ✓"] },
+    { q:"It is essential for us to maintain constant _____ with our friends to ensure that we have someone to talk to in times of need.", zh:"我們與朋友保持經常性的 _____ 是很重要的，以確保在需要時有人可以傾訴。", opts:["benefit 好處","contact 聯繫","gesture 姿勢","favor 幫助"], ans:1, an:"【句型結構】It is essential for us + to maintain + 受詞（constant _____）+ with our friends。空格為名詞，與動詞 maintain 和介詞 with 搭配。\n\n【關鍵線索】maintain...with friends（與朋友保持...）+ in times of need（在需要時）→ 需要持續保持的是「聯繫/聯絡」，選 contact（B）。maintain contact with 是固定搭配。", vo:["contact (n.) 聯繫、接觸；keep/stay in contact with 與...保持聯繫；contact (v.) 聯繫", "【近義詞】connection（連繫）、touch（聯絡）；stay in touch（保持聯繫）", "【延伸搭配】make contact（建立聯繫）、lose contact（失去聯繫）、contact information（聯絡資訊）"], oh:["（利益；好處）", "（聯繫；接觸）✓", "（姿勢；表示）", "（好感；幫忙）"] },
+    { q:"The young generation in this country has shown less interest in factory work and other _____ labor jobs, such as house construction and fruit picking.", zh:"這個國家的年輕一代對工廠工作和其他 _____ 勞動工作，如房屋建設和採果，越來越不感興趣。", opts:["causal 因果的","durable 耐用的","manual 手工的","violent 暴力的"], ans:2, an:"【句型結構】主句（The young generation has shown less interest in factory work and other _____ labor jobs）+ such as 列舉。空格為形容詞修飾 labor jobs，且後方舉例 house construction and fruit picking（建築施工和採摘水果）為體力工作。\n\n【關鍵線索】factory work（工廠工作）、house construction（建築施工）、fruit picking（採摘水果）→ 都是需要體力的工作，選 manual（體力的，C）。manual labor 是固定搭配。", vo:["manual (adj.) 體力的、手動的；manual labor 體力勞動；manual (n.) 說明書、手冊", "【近義詞】physical（體力的）、hands-on（實際操作的）", "【延伸搭配】manual work（體力工作）、automatic vs. manual（自動對手動）、instruction manual（使用說明書）"], oh:["（因果的；原因的）", "（耐用的；持久的）", "（體力的；手動的）✓", "（暴力的；激烈的）"] },
+  ],
+  109: [
+    { q:"After hours of discussion, our class finally reached the _____ that we would go to Hualien for our graduation trip.", zh:"經過幾個小時的討論後，我們班終於達成 _____，決定去花蓮進行畢業旅行。", opts:["balance 平衡","conclusion 結論","definition 定義","harmony 和諧"], ans:1, an:"【句型結構】主詞（our class）+ 動詞（reached）+ 受詞（the _____）+ that 同位語從句，說明該名詞的具體內容。句首 After hours of discussion 為時間副詞片語。\n\n【關鍵線索】reach a conclusion 為固定搭配，意為「達成結論」；that 子句正是結論的內容（決定去花蓮）→ 答案為 conclusion（B）。reach a balance 語意偏「取得平衡」，與「討論後做出決定」不符；definition（定義）與 harmony（和諧）無法與 reach 形成此語意。", vo:["conclusion (n.) 結論；conclude (v.) 下結論／結束；conclusive (adj.) 決定性的", "【近義詞】resolution（決議）、consensus（共識）、verdict（裁決）", "【延伸搭配】reach a conclusion（達成結論）、come to the conclusion that...（得出…的結論）、in conclusion（總之）", "discussion (n.) 討論；discuss (v.) 討論（直接接受詞，不加 about）", "balance (n./v.) 平衡；strike a balance（取得平衡）；balanced (adj.) 均衡的", "harmony (n.) 和諧；in harmony with（與…一致）；harmonious (adj.) 和諧的"], oh:["（平衡）N/V", "（結論）N", "（定義）N", "（和諧）N"] },
+    { q:"Jane _____ her teacher by passing the exam with a nearly perfect score; she almost failed the course last semester.", zh:"Jane 以近乎滿分通過了考試，讓她的老師大感 _____；她上學期幾乎不及格。", opts:["bored 使厭倦","amazed 使驚訝","charmed 使著迷","informed 告知"], ans:1, an:"【句型結構】主詞（Jane）+ 動詞（_____）+ 受詞（her teacher）+ by + V-ing 表方法。分號後的子句補充說明「上學期差點不及格」。\n\n【關鍵線索】上學期幾乎不及格、這次卻接近滿分，前後形成強烈對比 → 老師的反應是「大為驚訝」，答案為 amazed（B）。bored（使厭倦）、charmed（使著迷）、informed（告知）都無法呼應這種成績落差。", vo:["amaze (v.) 使驚訝；amazed (adj.) 感到驚訝的；amazing (adj.) 令人驚訝的；amazement (n.)", "【近義詞】astonish（使震驚）、astound（使大吃一驚）、stun（使目瞪口呆）", "【延伸搭配】be amazed at/by（對…感到驚訝）、to one's amazement（令某人驚訝的是）", "score (n./v.) 分數／得分；a perfect score（滿分）", "charm (v./n.) 使著迷／魅力；charming (adj.) 迷人的", "inform (v.) 告知；inform sb. of sth.；information (n.) 資訊"], oh:["（使厭倦）V", "（使驚訝）V", "（使著迷）V", "（告知）V"] },
+    { q:"The vacuum cleaner is not working. Let's send it back to the _____ to have it inspected and repaired.", zh:"吸塵器壞了。讓我們把它送回 _____ 進行檢查和維修。", opts:["lecturer 講師","publisher 出版商","researcher 研究員","manufacturer 製造商"], ans:3, an:"【句型結構】祈使句 Let's + 原形動詞（send）+ 受詞（it）+ back to the _____，後接不定詞片語表目的。have it inspected and repaired 為「have + 受詞 + 過去分詞」的使役被動結構。\n\n【關鍵線索】吸塵器故障要送回去檢查與維修，負責的是「製造商」→ manufacturer（D）。lecturer（講師）、publisher（出版商）、researcher（研究員）都與家電維修無關。", vo:["manufacturer (n.) 製造商；manufacture (v./n.) 製造；manufacturing (n.) 製造業", "【近義詞】producer（生產者）、maker（製造者）、supplier（供應商）", "【延伸搭配】send sth. back to（把…送回）、have sth. repaired（讓…被修好）", "vacuum (n./v.) 真空／用吸塵器清理；vacuum cleaner（吸塵器）", "inspect (v.) 檢查；inspection (n.)；inspector (n.) 檢查員", "publish (v.) 出版；publisher (n.) 出版商；publication (n.) 出版物"], oh:["（講師）N", "（出版商）N", "（研究員）N", "（製造商）N"] },
+    { q:"Due to the global financial crisis, the country's exports _____ by 40 percent last month, the largest drop since 2000.", zh:"由於全球金融危機，該國上個月的出口 _____ 了 40%，是 2000 年以來最大的跌幅。", opts:["flattered 諂媚","transformed 轉變","relieved 舒緩","decreased 減少"], ans:3, an:"【句型結構】主詞（the country's exports）+ 動詞（_____）+ by + 百分比表變化幅度；句尾 the largest drop since 2000 為同位語，補充說明前面整件事。\n\n【關鍵線索】句首 Due to the global financial crisis（金融危機）點出原因，句尾 the largest drop（最大跌幅）直接指明方向是「下降」→ decreased（D）。decrease by + 百分比為表達降幅的標準用法；flattered（諂媚）、transformed（轉變）、relieved（舒緩）皆不合。", vo:["decrease (v./n.) 減少；decrease by 40 percent（減少百分之四十）", "【近義詞】decline（下滑）、drop（下跌）、diminish（逐漸減少）", "【延伸搭配】on the decrease（正在減少）、a sharp decrease（急遽下降）；反義 increase（增加）", "export (n./v.) 出口；import (n./v.) 進口", "crisis (n.) 危機（複數 crises）；financial crisis（金融危機）", "relieve (v.) 減輕、舒緩；relief (n.) 緩解；relieved (adj.) 感到寬慰的"], oh:["（諂媚）V", "（轉變）V", "（舒緩）V", "（減少）V"] },
+    { q:"The potato chips have been left uncovered on the table for such a long time that they no longer taste fresh and _____.", zh:"洋芋片在桌上裸露太久了，不再嚐起來新鮮 _____。", opts:["solid 固體的","crispy 酥脆的","original 原始的","smooth 光滑的"], ans:1, an:"【句型結構】現在完成式被動（have been left）+ 補語（uncovered）+ such ... that 結果子句。fresh and _____ 為並列的補語形容詞，共同修飾 they（洋芋片）。\n\n【關鍵線索】洋芋片沒蓋、放置過久 → 失去的是「新鮮」與「酥脆」的口感 → crispy（B）。與 fresh 並列、且用於形容食物口感是判斷關鍵；solid（固體的）、original（原始的）、smooth（光滑的）都不是洋芋片受潮後失去的特性。", vo:["crispy (adj.) 酥脆的；crisp (adj./n.) 脆的／薯片（英式）", "【近義詞】crunchy（嚼起來脆的）、brittle（易碎的）", "【延伸搭配】taste fresh（嚐起來新鮮）、leave sth. uncovered（讓…未加蓋）", "cover (v./n.) 覆蓋／蓋子；uncovered (adj.) 未覆蓋的", "solid (adj./n.) 固體的、堅實的／固體；solidify (v.) 使凝固", "smooth (adj./v.) 光滑的、順暢的／使平順；smoothly (adv.) 順利地"], oh:["（固體的）adj", "（酥脆的）adj", "（原始的）adj", "（光滑的）adj"] },
+    { q:"The townspeople built a _____ in memory of the brave teacher who sacrificed her life to save her students from a burning bus.", zh:"鎮民建立了一座 _____，以紀念那位為了救學生免於火燒巴士而犧牲生命的勇敢老師。", opts:["monument 紀念碑","refugee 難民","souvenir 紀念品","firecracker 鞭炮"], ans:0, an:"【句型結構】主詞（The townspeople）+ 動詞（built）+ 受詞（a _____）+ in memory of 片語；who sacrificed her life to save her students 為關係子句，修飾 teacher。\n\n【關鍵線索】in memory of（紀念）搭配動詞 built（建造）→ 需要一個「可被建造」的紀念物 → monument（A）紀念碑。souvenir（紀念品）是購買的小物、不能用 build；refugee（難民）、firecracker（鞭炮）語意完全不合。", vo:["monument (n.) 紀念碑、紀念性建築；monumental (adj.) 重大的、紀念碑式的", "【近義詞】memorial（紀念物）、statue（雕像）、landmark（地標）", "【延伸搭配】in memory of（紀念…）、build a monument（建造紀念碑）", "sacrifice (v./n.) 犧牲；sacrifice one's life（犧牲生命）", "souvenir (n.) 紀念品（供購買收藏，與 monument 不同）", "refugee (n.) 難民；refuge (n.) 避難所；take refuge in（在…避難）"], oh:["（紀念碑）N", "（難民）N", "（紀念品）N", "（鞭炮）N"] },
+    { q:"The students in Professor Smith's classical Chinese class are required to _____ poems by famous Chinese poets.", zh:"Smith 教授古典中文課的學生被要求 _____ 著名中國詩人的詩歌。", opts:["construct 建構","expose 暴露","recite 背誦","install 安裝"], ans:2, an:"【句型結構】主詞（The students）+ 被動語態（are required）+ 不定詞（to _____）+ 受詞（poems）。介系詞片語 in Professor Smith's classical Chinese class 修飾主詞。\n\n【關鍵線索】古典文學課、受詞是 poems（詩）→ 要求學生做的是「背誦、朗誦」→ recite（C）。construct（建構）、expose（暴露）、install（安裝）都無法與 poems 搭配。", vo:["recite (v.) 背誦、朗誦；recital (n.) 獨奏會、朗誦會；recitation (n.) 背誦", "【近義詞】memorize（記住）、declaim（朗誦）、chant（吟誦）", "【延伸搭配】recite a poem（背誦一首詩）、be required to（被要求）", "poem (n.) 詩；poet (n.) 詩人；poetry (n.) 詩歌（總稱，不可數）", "construct (v.) 建造、構築；construction (n.) 建設；constructive (adj.) 建設性的", "expose (v.) 暴露、揭發；exposure (n.) 曝露；be exposed to（接觸到）"], oh:["（建構）V", "（暴露）V", "（背誦）V", "（安裝）V"] },
+    { q:"Although Mr. Tang claims that the house belongs to him, he has not offered any proof of _____.", zh:"雖然唐先生聲稱房子是他的，但他沒有提供任何 _____ 的證明。", opts:["convention 慣例","relationship 關係","insurance 保險","ownership 所有權"], ans:3, an:"【句型結構】Although 引導讓步子句（Mr. Tang claims that the house belongs to him），主句為 he has not offered any proof of _____。proof of 之後接名詞，表「…的證據」。\n\n【關鍵線索】讓步子句主張「房子屬於他」（belongs to him）→ 需要證明的正是「所有權」→ ownership（D）。convention（慣例）、relationship（關係）、insurance（保險）都不是 belongs to 所指的概念。", vo:["ownership (n.) 所有權；own (v./adj.) 擁有／自己的；owner (n.) 擁有者", "【近義詞】possession（持有）、title（產權）、proprietorship（所有權）", "【延伸搭配】proof of ownership（所有權證明）、belong to（屬於）、take ownership of（對…負責）", "claim (v./n.) 主張、聲稱／索賠；claim that + 子句", "convention (n.) 慣例、大會；conventional (adj.) 傳統的", "insurance (n.) 保險；insure (v.) 為…投保；insurer (n.) 保險公司"], oh:["（慣例）N", "（關係）N", "（保險）N", "（所有權）N"] },
+    { q:"Ancient Athens, famous for its early development of the democratic system, is often said to be the _____ of democracy.", zh:"古雅典以早期民主制度的發展著稱，常被稱為民主的 _____。", opts:["mission 使命","target 目標","cradle 搖籃","milestone 里程碑"], ans:2, an:"【句型結構】主詞（Ancient Athens）+ 插入的形容詞片語（famous for its early development of the democratic system）+ 被動（is often said to be）+ 補語（the _____ of democracy）。\n\n【關鍵線索】雅典是民主制度「最早發展」之地 → 用比喻說法 the cradle of（…的搖籃／發源地）→ cradle（C）。milestone（里程碑）指過程中的重要階段，而非起源；mission（使命）、target（目標）語意不合。", vo:["cradle (n.) 搖籃、發源地；the cradle of civilization（文明的發源地）", "【近義詞】birthplace（發源地）、origin（起源）、hometown（故鄉）", "【延伸搭配】be said to be（據說是）、be famous for（以…聞名）", "democracy (n.) 民主；democratic (adj.) 民主的；democrat (n.) 民主主義者", "milestone (n.) 里程碑、重要階段；a milestone in history（歷史上的里程碑）", "ancient (adj.) 古代的；ancient civilization（古文明）；反義 modern（現代的）"], oh:["（使命）N", "（目標）N", "（搖籃／發源地）N", "（里程碑）N"] },
+    { q:"The candy can no longer be sold because it was found to contain artificial ingredients far beyond the _____ level.", zh:"這種糖果不能再銷售了，因為發現其中含有遠超 _____ 標準的人工成分。", opts:["abundant 豐富的","immense 巨大的","permissible 允許的","descriptive 描述的"], ans:2, an:"【句型結構】主句（The candy can no longer be sold）+ because 原因子句；子句中 was found to contain 為「被發現含有」，far beyond 表「遠遠超過」。\n\n【關鍵線索】人工成分「遠超過」某個 level 才會被禁售 → 這個 level 指法規「允許的」上限 → permissible（C）。abundant（豐富的）、immense（巨大的）、descriptive（描述的）都無法與 level 形成「法定容許值」的意思。", vo:["permissible (adj.) 允許的、可容許的；permit (v./n.) 允許／許可證；permission (n.) 許可", "【近義詞】acceptable（可接受的）、allowable（可允許的）、legitimate（合法的）", "【延伸搭配】the permissible level（容許值）、far beyond（遠超過）、no longer（不再）", "artificial (adj.) 人工的；artificial ingredients（人工成分）；反義 natural（天然的）", "ingredient (n.) 成分、原料；the key ingredient（關鍵成分）", "abundant (adj.) 豐富的；abundance (n.) 大量；in abundance（大量地）"], oh:["（豐富的）adj", "（巨大的）adj", "（允許的）adj", "（描述的）adj"] },
+    { q:"Jack's excellent performance in last week's game has _____ all the doubts about his ability to play on our school basketball team.", zh:"Jack 上週比賽中的出色表現已經 _____ 了所有對他加入學校籃球隊能力的疑慮。", opts:["erased 消除","canceled 取消","overlooked 忽視","replaced 取代"], ans:0, an:"【句型結構】主詞（Jack's excellent performance）+ 現在完成式（has _____）+ 受詞（all the doubts）+ about 片語說明疑慮的內容。\n\n【關鍵線索】優異表現對「疑慮」產生的作用是「消除、抹去」→ erased（A）。canceled（取消）用於活動或預約；overlooked（忽視）主詞須為人；replaced（取代）需有新舊兩者並存，語意不合。", vo:["erase (v.) 消除、抹去；eraser (n.) 橡皮擦；erasure (n.) 刪除", "【近義詞】eliminate（消除）、remove（去除）、wipe out（徹底消滅）", "【延伸搭配】erase doubts（消除疑慮）、cast doubt on（對…產生懷疑）", "doubt (n./v.) 懷疑；no doubt（無疑）；doubtful (adj.) 懷疑的", "performance (n.) 表現、演出；perform (v.) 表演、執行；performer (n.) 表演者", "overlook (v.) 忽視、俯瞰；oversight (n.) 疏忽、監督"], oh:["（消除）V", "（取消）V", "（忽視）V", "（取代）V"] },
+    { q:"It is bullying to _____ a foreign speaker's accent. No one deserves to be laughed at for their pronunciation.", zh:"_____ 外國人的口音是一種霸凌行為。沒有人應該因為發音而被嘲笑。", opts:["mock 嘲弄","sneak 偷偷摸摸","prompt 提示","glare 怒視"], ans:0, an:"【句型結構】It is bullying to + 原形動詞，其中 It 為虛主詞，代替後方的不定詞片語。第二句 No one deserves to be laughed at for their pronunciation 為補充說明。\n\n【關鍵線索】第二句的 be laughed at（被嘲笑）是同義改寫的關鍵線索 → 空格需填「嘲弄」→ mock（A）。sneak（偷偷行動）、prompt（提示）、glare（怒視）都不等於嘲笑他人口音。", vo:["mock (v./adj.) 嘲弄／模擬的；mockery (n.) 嘲笑；a mock exam（模擬考）", "【近義詞】ridicule（譏笑）、tease（戲弄）、make fun of（拿…開玩笑）", "【延伸搭配】laugh at（嘲笑）、make fun of（開…的玩笑）", "bully (v./n.) 霸凌／霸凌者；bullying (n.) 霸凌行為", "accent (n.) 口音、重音；a foreign accent（外國口音）", "deserve (v.) 值得、應得；deserve to be + p.p.；deserving (adj.) 值得的"], oh:["（嘲弄）V", "（偷偷摸摸）V", "（提示）V", "（怒視）V"] },
+    { q:"Mary lost ten kilograms in three months, so her _____ skin-tight jeans are now hanging off her hips.", zh:"Mary 三個月內瘦了十公斤，所以她 _____ 緊身牛仔褲現在已經掛在她的臀部了。", opts:["barely 幾乎不","evenly 均勻地","currently 目前","formerly 從前"], ans:3, an:"【句型結構】主句（Mary lost ten kilograms in three months）+ so 表結果 + her _____ skin-tight jeans（副詞修飾形容詞 skin-tight）+ 現在進行式（are hanging off her hips）。\n\n【關鍵線索】三個月瘦十公斤、牛仔褲「現在」鬆到掛在臀部 → 緊身是「從前」的狀態 → formerly（D）。currently（目前）與後方的 now 矛盾；barely（幾乎不）、evenly（均勻地）語意不合。", vo:["formerly (adv.) 從前、以前；former (adj.) 前任的、前者的；the former（前者）", "【近義詞】previously（先前）、once（曾經）、in the past（過去）", "【延伸搭配】formerly known as（舊稱）、hang off（鬆垂於）", "skin-tight (adj.) 緊身的；tight (adj./adv.) 緊的／緊緊地；tighten (v.) 使變緊", "barely (adv.) 幾乎不、勉強；bare (adj.) 赤裸的、光禿的", "evenly (adv.) 均勻地；even (adj./adv.) 平坦的、偶數的／甚至"], oh:["（幾乎不）adv", "（均勻地）adv", "（目前）adv", "（從前）adv"] },
+    { q:"The police officer showed us pictures of drunk driving accidents to highlight the importance of staying _____ on the road.", zh:"警察向我們展示了酒後駕車事故的照片，以強調在路上保持 _____ 的重要性。", opts:["sober 清醒的","majestic 雄偉的","vigorous 充滿活力的","noticeable 顯眼的"], ans:0, an:"【句型結構】主詞（The police officer）+ 動詞（showed）+ 雙受詞（us / pictures）+ 不定詞表目的（to highlight the importance of + V-ing）。staying 為連綴動詞，後接形容詞作補語。\n\n【關鍵線索】主題是 drunk driving accidents（酒駕事故）→ 強調的是上路要保持「清醒」→ sober（A），與 drunk（酒醉的）正好相反。majestic（雄偉的）、vigorous（充滿活力的）、noticeable（顯眼的）都與酒駕無關。", vo:["sober (adj./v.) 清醒的、冷靜的／使醒酒；sobriety (n.) 清醒；sober up（醒酒）", "【近義詞】clear-headed（頭腦清晰的）、abstinent（戒酒的）；反義 drunk（酒醉的）", "【延伸搭配】stay sober（保持清醒）、drunk driving（酒後駕車）、highlight the importance of（強調…的重要性）", "highlight (v./n.) 強調／精彩片段", "vigorous (adj.) 充滿活力的、強而有力的；vigor (n.) 活力", "noticeable (adj.) 顯眼的、明顯的；notice (v./n.) 注意到／通知"], oh:["（清醒的）adj", "（雄偉的）adj", "（充滿活力的）adj", "（顯眼的）adj"] },
+    { q:"The claim that eating chocolate can prevent heart disease is _____ because there is not enough scientific evidence to support it.", zh:"聲稱吃巧克力可以預防心臟病的說法是 _____，因為沒有足夠的科學證據支持。", opts:["creative 有創意的","disputable 有爭議的","circular 循環的","magnificent 壯麗的"], ans:1, an:"【句型結構】主詞（The claim）+ that 同位語從句（說明主張的內容）+ 動詞（is）+ 補語（_____）+ because 原因子句。\n\n【關鍵線索】because 之後說明「缺乏足夠科學證據支持」→ 這個主張是「有爭議、可質疑的」→ disputable（B）。creative（有創意的）、circular（循環的）、magnificent（壯麗的）都無法呼應「證據不足」的語境。", vo:["disputable (adj.) 有爭議的、可質疑的；dispute (v./n.) 爭論／爭端；indisputable (adj.) 無可爭辯的", "【近義詞】questionable（可疑的）、debatable（有待商議的）、controversial（有爭議的）", "【延伸搭配】beyond dispute（無可爭辯）、scientific evidence（科學證據）", "claim (n./v.) 主張、聲稱；make a claim（提出主張）", "evidence (n.) 證據（不可數）；evident (adj.) 明顯的；evidently (adv.)", "prevent (v.) 預防；prevent A from B（防止 A 做 B）；prevention (n.) 預防"], oh:["（有創意的）adj", "（有爭議的）adj", "（循環的）adj", "（壯麗的）adj"] },
+  ],
+  110: [
+    { q:"Tom is really a naughty boy. He likes to _____ and play jokes on his younger sister when their parents are not around.", zh:"湯姆真是個頑皮的男孩。當父母不在家時，他喜歡 _____ 妹妹，並對她開玩笑。", opts:["alert 警告","spare 騰出","tease 逗弄","oppose 反對"], ans:2, an:"【句型結構】第一句為 be 動詞句（Tom is really a naughty boy）。第二句主詞（He）+ likes to + 兩個並列的原形動詞（_____ and play jokes on）+ when 引導時間子句。\n\n【關鍵線索】與 play jokes on（開玩笑、惡作劇）並列，且主詞是 naughty boy（頑皮男孩）→ 空格需填語意相近的「逗弄」→ tease（C）。alert（警告）、spare（騰出）、oppose（反對）都與惡作劇無關。", vo:["tease (v./n.) 逗弄、戲弄；teasing (adj.) 戲弄的；teaser (n.) 預告片、難題", "【近義詞】mock（嘲弄）、taunt（譏諷）、make fun of（拿…開玩笑）", "【延伸搭配】play a joke on sb.（對某人惡作劇）、play tricks on sb.（對某人使壞）", "naughty (adj.) 頑皮的、不聽話的", "spare (v./adj.) 騰出、饒過／備用的；spare time（空閒時間）", "oppose (v.) 反對；opposition (n.) 反對；be opposed to（反對…）"], oh:["（警告）V", "（騰出）V", "（逗弄）V", "（反對）V"] },
+    { q:"Elderly shoppers in this store are advised to take the elevator rather than the _____, which may move too fast for them to keep their balance.", zh:"這家店建議年長顧客搭電梯，而不要搭 _____，因為它可能移動太快讓他們難以保持平衡。", opts:["airway 飛行航線","operator 操作員","escalator 手扶梯","instrument 樂器"], ans:2, an:"【句型結構】主詞（Elderly shoppers）+ 被動語態（are advised）+ 不定詞（to take the elevator）+ rather than 表對比 + 關係子句（which may move too fast for them to keep their balance）修飾空格所指的設施。\n\n【關鍵線索】與 elevator（電梯）對比、且會「移動太快讓人難以保持平衡」→ 指的是「手扶梯」→ escalator（C）。airway（航線）、operator（操作員）、instrument（樂器）都不是賣場中與電梯並列的設施。", vo:["escalator (n.) 手扶梯；escalate (v.) 逐步升高、擴大；escalation (n.) 升級", "【近義詞】moving staircase（自動樓梯）；對照 elevator/lift（電梯）", "【延伸搭配】take the elevator（搭電梯）、keep one's balance（保持平衡）、rather than（而不是）", "elderly (adj./n.) 年長的／年長者（the elderly）", "operator (n.) 操作員、接線生；operate (v.) 操作、運作；operation (n.) 手術、運作", "instrument (n.) 樂器、儀器；instrumental (adj.) 有幫助的、器樂的"], oh:["（飛行航線）N", "（操作員）N", "（手扶梯）N", "（樂器）N"] },
+    { q:"Upon hearing its master's call, the dog wagged its tail, and followed her out of the room _____.", zh:"一聽到主人呼喚，狗搖著尾巴，然後 _____ 地跟著她走出房間。", opts:["obediently 乖乖地","apparently 顯然地","logically 合乎邏輯地","thoroughly 完全地"], ans:0, an:"【句型結構】Upon + V-ing（一…就…）為時間片語置於句首；主句有並列動詞（wagged its tail / followed her out of the room），句尾副詞 _____ 修飾整個動作。\n\n【關鍵線索】狗一聽到主人呼喚就搖尾巴、跟著走出房間 → 表現的是「乖乖地、順從地」→ obediently（A）。apparently（顯然地）、logically（合乎邏輯地）、thoroughly（完全地）都無法形容狗的服從行為。", vo:["obediently (adv.) 順從地；obedient (adj.) 服從的；obedience (n.) 服從；obey (v.) 遵守", "【近義詞】submissively（順服地）、dutifully（盡責地）、docilely（溫順地）", "【延伸搭配】upon hearing（一聽到）、wag its tail（搖尾巴）", "master (n./v.) 主人、大師／精通", "apparently (adv.) 顯然、看來；apparent (adj.) 明顯的", "thoroughly (adv.) 徹底地；thorough (adj.) 徹底的、周密的"], oh:["（乖乖地）adv", "（顯然地）adv", "（合乎邏輯地）adv", "（完全地）adv"] },
+    { q:"Since many of our house plants are from humid jungle environments, they need _____ air to keep them green and healthy.", zh:"因為我們的許多室內植物來自潮濕的叢林環境，它們需要 _____ 的空氣來保持翠綠和健康。", opts:["moist 潮濕的","stale 不新鮮的","crisp 新鮮爽脆的","fertile 肥沃的"], ans:0, an:"【句型結構】Since 引導原因子句（many of our house plants are from humid jungle environments），主句為 they need _____ air，後接不定詞表目的（to keep them green and healthy）。\n\n【關鍵線索】原因子句中的 humid（潮濕的）是同義線索 → 這些植物需要「潮濕的」空氣 → moist（A）。stale（不新鮮的）、crisp（爽脆的）、fertile（肥沃的，多用於土壤）都不能形容植物所需的空氣濕度。", vo:["moist (adj.) 潮濕的；moisture (n.) 濕氣、水分；moisturize (v.) 保濕", "【近義詞】damp（微濕的）、humid（濕熱的）、wet（濕的）", "【延伸搭配】keep sth. moist（保持濕潤）、humid environment（潮濕環境）", "jungle (n.) 叢林；the concrete jungle（都市叢林）", "stale (adj.) 不新鮮的、陳舊的；stale bread（乾硬的麵包）；反義 fresh", "fertile (adj.) 肥沃的、多產的；fertilizer (n.) 肥料；fertility (n.) 生育力"], oh:["（潮濕的）adj", "（不新鮮的）adj", "（新鮮爽脆的）adj", "（肥沃的）adj"] },
+    { q:"The skydiver managed to land safely after jumping out of the aircraft, even though her _____ failed to open in midair.", zh:"那位跳傘者從飛機一躍而下，儘管她的 _____ 在空中沒打開，她仍然設法安全降落。", opts:["glimpse 一瞥","latitude 緯度","segment 部分","parachute 降落傘"], ans:3, an:"【句型結構】主詞（The skydiver）+ managed to + 原形動詞（land safely）+ after V-ing 片語 + even though 引導讓步子句（her _____ failed to open in midair）。\n\n【關鍵線索】跳傘者（skydiver）在空中「沒能打開」的東西 → 降落傘 → parachute（D）。glimpse（一瞥）、latitude（緯度）、segment（部分）都不是可以「打開」的跳傘裝備。", vo:["parachute (n./v.) 降落傘／跳傘；parachutist (n.) 傘兵、跳傘者", "【近義詞】chute（降落傘的口語簡稱）；相關 skydiving（高空跳傘）", "【延伸搭配】manage to V（設法做到）、fail to V（未能做到）、land safely（安全著陸）", "glimpse (n./v.) 一瞥；catch a glimpse of（瞥見）", "latitude (n.) 緯度、自由度；longitude (n.) 經度", "segment (n./v.) 部分、環節／分割；segmentation (n.) 分割"], oh:["（一瞥）N", "（緯度）N", "（部分）N", "（降落傘）N"] },
+    { q:"The invention of the steam engine brought about a _____ change in society.", zh:"蒸汽機的發明為社會帶來了 _____ 改變。", opts:["persuasive 有說服力的","harmonious 和諧的","conventional 傳統的","revolutionary 革命性的"], ans:3, an:"【句型結構】主詞（The invention of the steam engine）+ 動詞片語（brought about，意為「導致、引起」）+ 受詞（a _____ change in society）。\n\n【關鍵線索】蒸汽機的發明是工業革命（the Industrial Revolution）的核心，帶來的是根本且劇烈的社會轉變 → revolutionary（D）「革命性的」最貼切。conventional（傳統的）與「發明帶來改變」語意相反；persuasive（有說服力的）修飾論點；harmonious（和諧的）不合語境。", vo:["revolutionary (adj./n.) 革命性的／革命者；revolution (n.) 革命、旋轉；revolutionize (v.) 徹底改革", "【近義詞】groundbreaking（開創性的）、radical（激進的）、transformative（帶來變革的）", "【延伸搭配】the Industrial Revolution（工業革命）、bring about（導致 = cause / lead to）", "invention (n.) 發明；invent (v.) 發明；inventor (n.) 發明家", "conventional (adj.) 傳統的、常規的；convention (n.) 慣例、大會", "persuasive (adj.) 有說服力的；persuade (v.) 說服；persuasion (n.) 說服"], oh:["（有說服力的）adj", "（和諧的）adj", "（傳統的）adj", "（革命性的）adj"] },
+    { q:"To encourage classroom _____, the teacher divided the class into groups and asked them to solve a problem together.", zh:"為了鼓勵課堂 _____，老師把全班分組，要求他們和夥伴一起解決問題。", opts:["operation 操作","interaction 互動","adjustment 調整","explanation 解釋"], ans:1, an:"【句型結構】To encourage classroom _____ 為表目的的不定詞片語置於句首；主句為 the teacher divided the class into groups and asked them to solve a problem together。\n\n【關鍵線索】把班級分組、要求「一起」解決問題，目的是促進「互動」→ interaction（B）。operation（操作）、adjustment（調整）、explanation（解釋）都不是分組合作所要達成的目標。", vo:["interaction (n.) 互動；interact (v.) 互動；interactive (adj.) 互動式的", "【近義詞】communication（溝通）、engagement（參與）、collaboration（協作）", "【延伸搭配】divide A into B（把 A 分成 B）、interact with（與…互動）", "encourage (v.) 鼓勵；encouragement (n.)；encouraging (adj.) 令人鼓舞的", "adjustment (n.) 調整；adjust (v.) 調整；adjustable (adj.) 可調整的", "explanation (n.) 解釋；explain (v.) 解釋；explanatory (adj.) 解釋性的"], oh:["（操作）N", "（互動）N", "（調整）N", "（解釋）N"] },
+    { q:"Lisa _____ onto the ground and injured her ankle while she was playing basketball yesterday.", zh:"麗莎昨天打籃球時 _____ 在地上，弄傷了腳踝。", opts:["buried 埋葬","punched 用拳猛擊","scattered 散佈","tumbled 跌倒"], ans:3, an:"【句型結構】主詞（Lisa）+ 動詞（_____）+ onto the ground + and + injured her ankle；while 引導過去進行式子句，表兩動作同時發生。\n\n【關鍵線索】onto the ground（朝地面）搭配「傷到腳踝」→ 動作是「跌倒」→ tumbled（D）。buried（埋葬）、punched（用拳擊打）、scattered（散佈）都無法與 onto the ground 形成「跌倒受傷」的語意。", vo:["tumble (v./n.) 跌倒、翻滾／跌落；tumble down（倒塌）", "【近義詞】fall（跌落）、trip（絆倒）、stumble（踉蹫）", "【延伸搭配】injure one's ankle（弄傷腳踝）、fall onto the ground（倒在地上）", "injure (v.) 使受傷；injury (n.) 傷勢；injured (adj.) 受傷的", "bury (v.) 埋葬、埋藏；burial (n.) 埋葬", "scatter (v.) 散佈、驅散；scattered (adj.) 分散的"], oh:["（埋葬）V", "（用拳猛擊）V", "（散佈）V", "（跌倒）V"] },
+    { q:"Hundreds of residents received free testing _____ from the city government to find out if their water contained any harmful chemicals.", zh:"市政府提供免費的檢測 _____ 給數百位居民，以確認他們的水中是否含有有害化學物質。", opts:["kits 工具組","trials 試用","zones 區域","proofs 證明"], ans:0, an:"【句型結構】主詞（Hundreds of residents）+ 動詞（received）+ 受詞（free testing _____）+ from 片語 + 不定詞表目的（to find out if their water contained any harmful chemicals）。testing 為動名詞作修飾語。\n\n【關鍵線索】居民「領取」、用來自行檢測家中水質的東西 → 檢測「工具組」→ kits（A）。trials（試用）、zones（區域）、proofs（證明）都不是可以發放給居民帶回家檢測的物品。", vo:["kit (n.) 工具組、成套用品；a first-aid kit（急救箱）；a testing kit（檢測套組）", "【近義詞】set（一套）、package（組合包）、toolbox（工具箱）", "【延伸搭配】find out if（查明是否）、harmful chemicals（有害化學物質）", "resident (n./adj.) 居民／居住的；residence (n.) 住所；residential (adj.) 住宅的", "trial (n.) 試驗、審判；trial and error（反覆試驗）；on trial（受審中）", "chemical (n./adj.) 化學物質／化學的；chemistry (n.) 化學"], oh:["（工具組）N", "（試用）N", "（區域）N", "（證明）N"] },
+    { q:"The 2011 Nobel Peace Prize was awarded _____ to three women for the efforts they made in fighting for women's rights.", zh:"2011年的諾貝爾和平獎被 _____ 頒發給三位女性，表彰她們為爭取女性權益所做的努力。", opts:["actively 積極地","earnestly 認真地","jointly 共同地","naturally 自然地"], ans:2, an:"【句型結構】主詞（The 2011 Nobel Peace Prize）+ 被動語態（was awarded）+ 副詞（_____）+ to three women + for 片語說明得獎原因。\n\n【關鍵線索】獎項頒給「三位」女性 → 是「共同、聯合」獲獎 → jointly（C）。actively（積極地）、earnestly（認真地）、naturally（自然地）都無法表達多人共享同一獎項的概念。", vo:["jointly (adv.) 共同地；joint (adj./n.) 共同的、關節；join (v.) 加入、連接", "【近義詞】together（一起）、collectively（集體地）、mutually（相互地）", "【延伸搭配】be awarded to（頒給）、a joint venture（合資企業）、joint effort（共同努力）", "award (v./n.) 頒發／獎項；awardee (n.) 得獎者", "earnestly (adv.) 認真地、誠摯地；earnest (adj.) 認真的", "effort (n.) 努力；make an effort（努力）；effortless (adj.) 輕鬆的"], oh:["（積極地）adv", "（認真地）adv", "（共同地）adv", "（自然地）adv"] },
+    { q:"The company is _____ and making great profits under the wise leadership of the chief executive officer.", zh:"在執行長睿智的領導下，這家公司正 _____，並獲得巨大利潤。", opts:["applauding 鼓掌","flourishing 繁榮茁壯","circulating 循環","exceeding 超出"], ans:1, an:"【句型結構】主詞（The company）+ be 動詞 + 兩個並列的現在分詞補語（_____ and making great profits）+ under 片語表條件（in the wise leadership of the CEO）。\n\n【關鍵線索】與 making great profits（獲利豐厚）並列、又有 wise leadership（明智領導）→ 公司正「繁榮興盛」→ flourishing（B）。applauding（鼓掌）、circulating（循環）、exceeding（超出）都無法與「獲利」並列描述公司狀態。", vo:["flourish (v./n.) 繁榮、茁壯；flourishing (adj.) 興盛的", "【近義詞】thrive（興旺）、prosper（繁榮）、boom（蓬勃發展）", "【延伸搭配】make a profit（獲利）、under the leadership of（在…領導下）", "profit (n./v.) 利潤／獲利；profitable (adj.) 有利可圖的", "circulate (v.) 循環、流通；circulation (n.) 循環、發行量", "exceed (v.) 超過；excess (n.) 過量；excessive (adj.) 過度的"], oh:["（鼓掌）V", "（繁榮茁壯）V", "（循環）V", "（超出）V"] },
+    { q:"It is absolutely _____ to waste your money on an expensive car when you cannot even get a driver's license.", zh:"當你連駕照都拿不到時，把錢花在一輛昂貴的車上實在是太 _____ 了。", opts:["absurd 荒謬的","cautious 謹慎的","vigorous 充滿活力的","obstinate 固執的"], ans:0, an:"【句型結構】It is absolutely _____ to + 原形動詞，It 為虛主詞，代替後方不定詞片語；when 引導時間／條件子句（you cannot even get a driver's license）。\n\n【關鍵線索】連駕照都拿不到、卻把錢花在昂貴的車上 → 這種行為是「荒謬的」→ absurd（A）。cautious（謹慎的）、vigorous（充滿活力的）、obstinate（固執的）都不能形容這種前後矛盾的不合理。", vo:["absurd (adj.) 荒謬的、可笑的；absurdity (n.) 荒謬；absurdly (adv.)", "【近義詞】ridiculous（可笑的）、preposterous（荒唐的）、illogical（不合邏輯的）", "【延伸搭配】waste money on（把錢浪費在…）、get a driver's license（取得駕照）", "cautious (adj.) 謹慎的；caution (n.) 謹慎、警告；cautiously (adv.)", "obstinate (adj.) 固執的；stubborn (adj.) 頑固的（近義）", "absolutely (adv.) 絕對地、完全地；absolute (adj.) 絕對的"], oh:["（荒謬的）adj", "（謹慎的）adj", "（充滿活力的）adj", "（固執的）adj"] },
+    { q:"The problem of illegal drug use is very complex and cannot be traced to merely one _____ reason.", zh:"非法用藥的問題非常複雜，不能僅僅歸因於一個 _____ 的原因。", opts:["singular 單一的","countable 可數的","favorable 贊同的","defensive 防禦的"], ans:0, an:"【句型結構】主詞（The problem of illegal drug use）+ 兩個並列述部（is very complex / cannot be traced to merely one _____ reason）。merely 修飾 one，加強「僅僅一個」的語氣。\n\n【關鍵線索】前半說問題「非常複雜」，後半以 merely one 強調不能只歸因於「單一」原因 → singular（A）。countable（可數的）、favorable（贊同的）、defensive（防禦的）都與「單一原因」無關。", vo:["singular (adj./n.) 單一的、單數的／單數形；singularly (adv.) 異常地", "【近義詞】single（單一的）、sole（唯一的）、solitary（單獨的）", "【延伸搭配】be traced to（追溯到）、a singular reason（單一原因）", "complex (adj./n.) 複雜的／綜合體；complexity (n.) 複雜性", "illegal (adj.) 非法的；legal (adj.) 合法的；legalize (v.) 使合法化", "favorable (adj.) 有利的、贊同的；favor (n./v.) 恩惠、偏好"], oh:["（單一的）adj", "（可數的）adj", "（贊同的）adj", "（防禦的）adj"] },
+    { q:"The non-profit organization has _____ $1 million over five years to finance the construction of the medical center.", zh:"這間非營利組織，已經 _____ 五年內投入一百萬元，以資助醫療中心的建設。", opts:["equipped 裝備","resolved 解決","committed 承諾","associated 把~聯繫在一起"], ans:2, an:"【句型結構】主詞（The non-profit organization）+ 現在完成式（has _____）+ 受詞（$1 million）+ over five years 表期間 + 不定詞表目的（to finance the construction of the medical center）。\n\n【關鍵線索】機構針對一筆金額、為期五年、用於資助興建 → 動作是「承諾投入」→ committed（C），commit money to 為固定用法。equipped（裝備）、resolved（解決）、associated（聯繫）都不能以金額作受詞。", vo:["commit (v.) 承諾投入、犯（罪）；commitment (n.) 承諾；committed (adj.) 忠誠的、投入的", "【近義詞】pledge（保證）、dedicate（投注）、allocate（撥出）", "【延伸搭配】commit money to（撥款給）、commit a crime（犯罪）、finance the construction（資助興建）", "non-profit (adj.) 非營利的；for-profit (adj.) 營利的", "resolve (v./n.) 解決、決心；resolution (n.) 決議、解析度", "associate (v./n.) 聯繫、聯想／夥伴；association (n.) 協會、關聯"], oh:["（裝備）V", "（解決）V", "（承諾投入）V", "（把~聯繫在一起）V"] },
+    { q:"One week after the typhoon, some bridges were finally opened and bus service _____ in the country's most severely damaged areas.", zh:"颱風過後一週，一些橋樑終於重新開放，最嚴重受災地區的公車服務也 _____。", opts:["departed 啟程出發","resumed 重新開始","transported 運輸","corresponded 相符"], ans:1, an:"【句型結構】時間片語（One week after the typhoon）置於句首，主句為兩個並列子句：some bridges were finally opened / bus service _____。\n\n【關鍵線索】颱風過後一週、橋梁「終於開放」→ 公車服務也隨之「恢復、重新開始」→ resumed（B）。departed（啟程）主詞須為班次或人；transported（運輸）為及物動詞須接受詞；corresponded（相符）語意不合。", vo:["resume (v./n.) 恢復、繼續／履歷；resumption (n.) 恢復", "【近義詞】restart（重新開始）、continue（繼續）、reopen（重新開放）", "【延伸搭配】resume service（恢復服務）、severely damaged（嚴重受損）", "depart (v.) 啟程、離開；departure (n.) 出發；depart from（背離）", "transport (v./n.) 運輸；transportation (n.) 交通運輸", "correspond (v.) 相符、通信；correspondence (n.) 通信；correspondent (n.) 通訊記者"], oh:["（啟程出發）V", "（重新開始）V", "（運輸）V", "（相符）V"] },
+  ],
+  111: [
+    { q:"When Jeffery doesn't feel like cooking, he often orders pizza online and has it _____ to his house.", zh:"當 Jeffery 不想做飯時，他常常上網訂披薩，並請人把披薩 _____ 到他家。", opts:["advanced 提升","delivered 運送","offered 提供","stretched 伸展"], ans:1, an:"題意提到他在網路上點披薩，通常點完披薩的動作就是請人「外送 / 遞送」到家裡，故選 (B) delivered。", vo:["feel like + V-ing 想要...（= want to V）", "order V/N 點餐/命令/秩序（out of order 故障）", "have + O + p.p.（過去分詞）讓某物被...（has it delivered 讓披薩被運送）", "advance V/N 前進/進步；advanced adj 進階的/先進的（advanced technology 先進科技）", "deliver V 運送/遞送/發表（deliver a speech 發表演說）；delivery N 運送/外送", "offer V/N 提供（= provide）", "stretch V/N 伸展/延伸"], oh:["（進階的/前進的）adj/V", "（運送）V", "（提供）V", "（伸展）V"] },
+    { q:"Jane is the best _____ I have ever had. I cannot imagine running my office without her help.", zh:"Jane 是我遇過最好的 _____。沒有她的幫助，我無法想像辦公室如何運作。", opts:["assistant 助理","influence 影響","contribution 貢獻","politician 政治人物"], ans:0, an:"句子後半段提到「沒有她的幫忙無法管理辦公室」，代表 Jane 是在辦公室輔助他的人，因此是「助理（assistant）」。", vo:["imagine + V-ing 想像做某事（後面必須接動名詞）", "run V 跑步/經營/管理（run an office / run a business 經營事業）", "assist V 協助；assistant N 助理；assistance N 協助", "influence V/N 影響；influential adj 有影響力的", "contribute V 貢獻/促成；contribution N 貢獻（make a contribution to... 對...做出貢獻）", "politics N 政治；political adj 政治的；politician N 政治人物"], oh:["（助理）N", "（影響）N/V", "（貢獻）N", "（政治人物）N"] },
+    { q:"The temple celebrated Mazu Festival by hosting ten days of lion dances, Taiwanese operas, and traditional hand _____ shows.", zh:"這座廟宇舉辦了為期十天的舞獅、歌仔戲以及傳統的手 _____ 表演來慶祝媽祖節。", opts:["chat 閒聊","quiz 隨堂測驗","puppet 木偶","variety 多樣性"], ans:2, an:"結合前文的台灣傳統文化「舞獅（lion dances）」、「歌仔戲（Taiwanese operas）」，\"hand puppet shows\" 也就是台灣著名的傳統藝術「布袋戲」。", vo:["celebrate V 慶祝；celebration N 慶祝活動", "host V 主辦 N 主持人/主人", "opera N 歌劇（Taiwanese opera 歌仔戲）", "chat V/N 聊天（chat with sb 與某人聊天）", "quiz N 小測驗（pop quiz 突擊測驗）", "puppet N 木偶/傀儡；hand puppet show 布袋戲", "vary V 變化；various adj 各式各樣的；variety N 多樣化（variety show 綜藝節目）"], oh:["（聊天）N/V", "（小測驗）N", "（木偶/布袋戲偶）N", "（多樣化/綜藝）N"] },
+    { q:"The new vaccine was banned by the Food and Drug Administration due to its _____ fatal side effects.", zh:"由於新疫苗具有 _____ 的致命副作用，已被食品藥物管理局禁用。", opts:["potentially 潛在地","delicately 精緻地","ambiguously 模糊地","optionally 可選擇地"], ans:0, an:"疫苗被禁用是因為副作用可能會致死，這是一種潛在的危險，故選 (A) potentially（潛在地 / 有可能地）。", vo:["vaccine N 疫苗", "ban V/N 禁止（be banned by... 被...禁止）", "due to + N 由於...（= because of = owing to）", "fatal adj 致命的（= deadly / lethal）", "side effect N 副作用", "potential adj 潛在的 N 潛力；potentially adv 潛在地", "delicate adj 精緻的/脆弱的/微妙的；delicately adv 精緻地/小心地", "ambiguous adj 模稜兩可的/含糊的；ambiguity N 模糊不清", "option N 選擇；optional adj 可選擇的/非強制的（反義詞：compulsory 必修的/強制的）"], oh:["（潛在地）adv", "（精緻地/微妙地）adv", "（含糊不清地）adv", "（可選擇地）adv"] },
+    { q:"_____ the photos with dates and keywords help you sort them easily in your file.", zh:"用日期和關鍵字 _____ 照片，可以幫助你輕鬆地在檔案中分類它們。", opts:["Tagging 標記","Flocking 聚集","Rolling 滾動","Snapping 拍快照"], ans:0, an:"整理照片時加上日期和關鍵字，這個動作稱為「標記（Tagging）」，方便之後分類尋找。", vo:["sort V 分類 N 種類（sort them easily 輕鬆分類）", "tag V 標記 N 標籤（tag a friend in a post 在貼文中標記朋友）", "flock V 聚集 N 羊群/鳥群（Birds of a feather flock together 物以類聚）", "roll V 滾動/捲", "snap V 突然折斷/拍快照（snap a photo 拍快照）"], oh:["（標記）V-ing", "（聚集）V-ing", "（滾動）V-ing", "（拍快照/折斷）V-ing"] },
+    { q:"An _____ person is usually pleasant and easy to get along with, but don't expect that he or she will always say 'yes' to everything.", zh:"一個 _____ 的人通常令人愉快、容易相處，但不要期望他們對所有事情都會說「好」。", opts:["enormous 巨大的","intimate 親密的","agreeable 隨和的","ultimate 最終的"], ans:2, an:"前面提到這個人「令人愉快且容易相處（pleasant and easy to get along with）」，這正是「隨和的（agreeable）」的人的特質。", vo:["pleasant adj 令人愉快的（反義詞：unpleasant 令人不快的）", "get along with 和...相處融洽", "expect V 預期/期待；expectation N 期望（live up to one's expectations 符合某人的期望）", "enormous adj 巨大的（= huge / massive）", "intimate adj 親密的 N 密友；intimacy N 親密", "agree V 同意；agreeable adj 隨和的/令人愉快的；agreement N 同意/協定", "ultimate adj 最終的/極限的；ultimately adv 最終地（= finally）"], oh:["（巨大的）adj", "（親密的）adj", "（隨和的/令人愉快的）adj", "（最終的）adj"] },
+    { q:"Hidden deep in a small alley, the entrance of the Michelin star restaurant is barely _____ to passersby.", zh:"藏在小巷深處，這家米其林星級餐廳的入口幾乎不被路人 _____。", opts:["identical 相同的","visible 可見的","available 可取得的","remarkable 卓越的"], ans:1, an:"句子前半段強調餐廳隱藏在巷弄深處（Hidden deep in...），因此對路人來說，入口幾乎是「看不見的」。barely 有「幾乎不」的意思，搭配 visible（可見的）即為「幾乎不可見」。", vo:["Hidden deep in... 分詞構句（被動式），省略了 Because it is hidden...", "alley N 小巷/弄（blind alley 死胡同）", "various adj 各式各樣的", "entrance N 入口（反義詞：exit 出口）", "barely adv 幾乎不（= hardly / scarcely）", "passerby N 路人（複數為 passersby）", "identify V 辨識；identical adj 完全相同的", "vision N 視力/願景；visible adj 可見的（反義詞：invisible 不可見的）", "avail V 有用；available adj 可獲得的/有空的", "remark V/N 評論；remarkable adj 非凡的/顯著的（= extraordinary）"], oh:["（完全相同的）adj", "（可見的）adj", "（可獲得的/有空的）adj", "（非凡的/顯著的）adj"] },
+    { q:"The original budget for my round-island trip was NT$5,000, but the _____ cost is likely to be 50 percent higher.", zh:"我環島旅行的原本預算是 5,000 元，但 _____ 成本可能會高出 50%。", opts:["moderate 適度的","absolute 絕對的","promising 有前景的","eventual 最終的"], ans:3, an:"句子用了 \"but\" 形成對比：「最初的預算（original budget）」對應「最終的成本（eventual cost）」。一開始抓 5,000 元，但最後花費可能會更高。", vo:["original adj 最初的/原創的；origin N 起源/來源", "budget N 預算（on a tight budget 預算吃緊）", "round-island adj 環島的", "be likely to V 有可能...", "moderate adj 適度的/溫和的（moderate exercise 適度運動）", "absolute adj 絕對的；absolutely adv 絕對地/完全地", "promise V/N 承諾；promising adj 有希望的/有前途的（a promising young man 有前途的年輕人）", "event N 事件；eventual adj 最終的；eventually adv 最終地（= finally / ultimately）"], oh:["（適度的/溫和的）adj", "（絕對的）adj", "（有前途的）adj", "（最終的）adj"] },
+    { q:"After watching a TV program on natural history, Adam decided to go on a _____ for dinosaur fossils in South Dakota.", zh:"在觀看了一部自然歷史電視節目後，亞當決定前往南達科他州 _____ 恐龍化石。", opts:["trial 試用","route 路線","strike 罷工","quest 尋找探索"], ans:3, an:"尋找恐龍化石是一種帶有探險性質的尋求。英文中 \"go on a quest for...\" 是一個固定說法，意思是「展開尋找...的探索旅程」。", vo:["decide to V 決定做...；decision N 決定（make a decision 做出決定）", "dinosaur N 恐龍", "fossil N 化石", "try V 嘗試；trial N 審判/試驗（on trial 受審；trial and error 嘗試錯誤法）", "route N 路線", "strike V/N 罷工/打擊（go on strike 罷工）", "quest N 尋求/探索（a quest for truth 追求真理）"], oh:["（審判/試驗）N", "（路線）N", "（罷工/打擊）N/V", "（尋求/探索）N"] },
+    { q:"With pink cherry blossoms blooming everywhere, the valley _____ like a young bride under the bright spring sunshine.", zh:"粉紅色的櫻花遍地盛開，整個山谷像一位年輕的新娘一樣 _____ 在明媚的春日陽光下。", opts:["bounces 彈跳","blushes 泛紅","polishes 擦亮","transfers 轉移"], ans:1, an:"句子運用了擬人法的修辭。滿山遍野盛開的「粉紅色」櫻花，讓山谷看起來就像是一位「泛起紅暈、臉紅（blushes）」的年輕新娘。", vo:["With + O + V-ing/p.p./adj/介系詞片語 附帶狀況的介系詞片語（With pink cherry blossoms blooming 伴隨著粉紅櫻花盛開...）", "cherry blossom N 櫻花", "bloom V/N 盛開/開花（in full bloom 盛開中）", "valley N 山谷", "bride N 新娘；groom N 新郎", "bounce V 彈跳（bounce back 觸底反彈/恢復）", "blush V 臉紅（泛指因為害羞或激動而臉頰泛紅）", "polish V 擦亮/修改潤飾（polish one's skills 磨練技巧）", "transfer V/N 轉移/轉車/轉學"], oh:["（彈跳）V", "（臉紅）V", "（擦亮）V", "（轉移）V"] },
+  ],
+  112: [
+    { q:"The bus driver often complains about chewing gum found under passenger seats because it is _____ and very hard to remove.", zh:"公車司機常抱怨在乘客座位下發現的口香糖，因為它很 _____，而且非常難以清除。", opts:["sticky 黏的","greasy 油膩的","clumsy 笨拙的","mighty 強大的"], ans:0, an:"題意提到口香糖（chewing gum）且「很難清除（hard to remove）」，這自然是因為口香糖具有「黏性」，故選 (A) sticky。", vo:["complain V 抱怨；complain about + N 抱怨某事；complaint N 抱怨", "chew V 咀嚼；chewing gum N 口香糖", "passenger N 乘客（passenger seat 乘客座位）", "remove V 移除/清除；removal N 移除", "stick V 黏貼/刺入 N 樹枝；sticky adj 黏的；sticker N 貼紙", "grease N 油脂；greasy adj 油膩的（greasy food 油膩的食物）", "clumsy adj 笨拙的（clumsy fingers 笨手笨腳）", "might N 力量；mighty adj 強大的（Almighty 全能的）"], oh:["（黏的）adj", "（油膩的）adj", "（笨拙的）adj", "（強大的）adj"] },
+    { q:"Jesse is a talented model. He can easily adopt an elegant _____ for a camera shoot.", zh:"傑西是一位有天分的模特兒。他可以輕鬆擺出優雅的 _____ 拍照。", opts:["clap 拍手","toss 拋丟","pose 姿勢","snap 拍快照"], ans:2, an:"題幹提到 Jesse 是「模特兒（model）」以及「為了拍攝（for a camera shoot）」，模特兒為了拍照會擺出「姿勢（pose）」，故選 (C)。", vo:["talent N 天賦；talented adj 有天賦的（= gifted）", "model N 模特兒/模型/模範", "adopt V 採用/收養（adopt a pose 擺出姿勢）；adoption N 採用/收養（易混淆字：adapt V 適應/改編）", "elegant adj 優雅的（= graceful）；elegance N 優雅", "shoot V/N 拍攝/射擊；camera shoot 攝影/拍照", "clap V/N 拍手（clap one's hands 拍手）", "toss V/N 拋/擲（toss a coin 擲硬幣）", "pose N 姿勢 V 擺姿勢（strike/adopt a pose 擺姿勢）", "snap V 突然折斷/猛咬 N 快照（snap a photo 拍快照）"], oh:["（拍手）V/N", "（拋/擲）V/N", "（姿勢）N/V", "（快照/折斷）V/N"] },
+    { q:"In order to draw her family tree, Mary tried to trace her _____ back to their arrival in North America.", zh:"為了畫出家譜，瑪麗試著追溯她的 _____ 到他們到達北美洲的那一刻。", opts:["siblings 兄弟姊妹","commuters 通勤者","ancestors 祖先","instructors 指導者"], ans:2, an:"題幹提到要畫「族譜（family tree）」並「追溯（trace back）」，通常是要往上追溯家族的「祖先（ancestors）」，因此選 (C)。", vo:["in order to + V 為了...（= so as to + V）", "family tree N 族譜/家譜", "trace V 追蹤/追溯 N 痕跡；trace A back to B 將 A 追溯至 B", "arrive V 抵達；arrival N 抵達（upon one's arrival 在某人抵達時）", "sibling N 手足（兄弟姊妹的統稱）", "commute V 通勤；commuter N 通勤者", "ancestor N 祖先（= forefather）；ancestry N 祖先（總稱）/血統（反義詞：descendant 後代）", "instruct V 指導/指示；instructor N 指導者/教練；instruction N 指示/說明"], oh:["（手足）N", "（通勤者）N", "（祖先）N", "（指導者）N"] },
+    { q:"Upon the super typhoon warning, Nancy rushed to the supermarket—only to find the shelves almost _____ and the stock nearly gone.", zh:"一收到超級颱風警報，南兮衝去超市——卻發現貨架幾乎 _____，商品幾乎都沒了。", opts:["blank 空白的","bare 光禿禿的","hollow 中空的","queer 古怪的"], ans:1, an:"題意提到颱風來襲，超市「存貨幾乎沒了（stock nearly gone）」，代表貨架是被掃空、空無一物的狀態，英文常用 \"bare shelves\" 形容空蕩蕩的貨架，故選 (B)。", vo:["upon + N / V-ing 一...就...（= as soon as + S + V）", "warn V 警告；warning N 警告/警報（typhoon warning 颱風警報）", "rush V 衝/趕緊；rush to + 地方 衝向某地", "only to + V 不料卻.../結果卻...（表出乎意料或令人失望的結果）", "shelf N 貨架/架子（單數結尾為 f，複數去 f 加上 ves：shelves）", "stock N 存貨/股票 V 囤積（out of stock 缺貨；in stock 有貨）", "blank adj 空白的（blank paper 白紙 / a blank expression 茫然的表情）", "bare adj 裸露的/空的/勉強的（bare feet 赤腳；bare shelves 空貨架）；barely adv 幾乎不", "hollow adj 中空的/虛偽的（a hollow tree 中空的樹）", "queer adj 奇怪的（= strange / odd）"], oh:["（空白的）adj", "（空無一物的/裸露的）adj", "（中空的）adj", "（奇怪的）adj"] },
+    { q:"Even though Jack said 'Sorry!' to me in person, I did not feel any _____ in his apology.", zh:"儘管傑克當面對我說「對不起」，但我感覺不到他道歉中有任何 _____。", opts:["liability 責任","generosity 慷慨","integrity 正直","sincerity 誠意"], ans:3, an:"題幹提到對方雖然「說了對不起」，但作者卻沒有感覺到對方道歉時應有的態度。道歉最需要的就是「真誠（sincerity）」，故選 (D)。", vo:["even though 儘管/雖然（= although）", "in person 親自/本人（= personally）", "apologize V 道歉；apology N 道歉（make an apology to sb 向某人道歉）", "liable adj 負有法律責任的；liability N 責任/負債", "generous adj 慷慨的；generosity N 慷慨", "integrate V 整合；integrity N 正直/誠實/完整性", "sincere adj 真誠的；sincerity N 真誠/誠心"], oh:["（責任）N", "（慷慨）N", "（正直）N", "（真誠）N"] },
+    { q:"My grandfather has astonishing powers of _____. He can still vividly describe his first day at school as a child.", zh:"我的祖父有驚人的 _____。他還能生動描述他小學第一天的情形。", opts:["resolve 決心","fraction 碎片","privilege 特權","recall 記憶力"], ans:3, an:"句子後方提到祖父能「生動地描述（vividly describe）」很久以前的事情，代表他的「記憶力、回想能力（powers of recall）」非常驚人，故選 (D)。", vo:["astonish V 使驚訝；astonishing adj 令人驚訝的（= amazing / surprising）", "power N 力量/能力（powers of recall 記憶力）", "vivid adj 生動的/鮮明的；vividly adv 生動地", "describe V 描述；description N 描述", "resolve V 解決/下決心 N 決心；resolution N 決心/解析度", "fraction N 小部分/分數（a fraction of... 一小部分...）", "privilege N 特權/殊榮", "recall V/N 回想/召回/記憶力（= memory / remember）"], oh:["（決心/解決）N/V", "（小部分）N", "（特權）N", "（記憶力/回想）N/V"] },
+    { q:"Recent research has found lots of evidence to _____ the drug company's claims about its 'miracle' tablets for curing cancer.", zh:"最近的研究發現大量證據來 _____ 這家製藥公司聲稱其「神奇」抗癌藥的說法。", opts:["provoke 激起","counter 反駁","expose 暴露","convert 轉變"], ans:1, an:"藥廠宣稱有「治癌奇蹟藥（miracle tablets for curing cancer）」，這種誇大說詞通常會被科學研究的證據給「反駁（counter）」，故選 (B)。", vo:["recent adj 最近的；recently adv 最近地", "research N/V 研究（不可數名詞）", "evidence N 證據（不可數名詞）", "drug N 藥物/毒品（drug company 藥廠）", "claim V/N 宣稱/要求", "miracle N 奇蹟；miraculous adj 奇蹟般的", "tablet N 藥丸/平板電腦（= pill）", "cure V/N 治癒（cure sb of a disease 治癒某人的疾病）", "provoke V 激怒/引起；provocative adj 挑釁的", "counter V 反駁/反擊 adj 相反的（counter the claims 反駁主張）；counter-attack 反擊", "expose V 暴露/揭露（expose A to B 使 A 暴露於 B）；exposure N 暴露", "convert V 轉換/改變信仰（convert A into B 把 A 轉換成 B）；conversion N 轉換"], oh:["（激怒/引起）V", "（反擊/反駁）V", "（暴露/揭露）V", "（轉換）V"] },
+    { q:"Corrupt officials and misguided policies have _____ the country's economy and burdened its people with enormous foreign debts.", zh:"貪污的官員與錯誤的政策已經 _____ 這個國家的經濟，讓人民背負巨額外債。", opts:["crippled 嚴重損害","accelerated 加速","rendered 使成為","ventured 冒險"], ans:0, an:"句子的主詞是「貪腐官員和錯誤政策」，對國家經濟造成的影響必然是負面的。後文又提到「背負龐大外債」，代表經濟被嚴重「削弱 / 破壞（crippled）」，故選 (A)。", vo:["corrupt adj 貪腐的 V 使腐敗；corruption N 貪汙", "official N 官員 adj 官方的", "misguided adj 被誤導的/錯誤的；guide V 引導", "policy N 政策", "economy N 經濟；economic adj 經濟的", "burden N 負擔 V 使負擔（burden sb with sth 使某人負擔...）", "enormous adj 龐大的（= huge / massive）", "debt N 債務（in debt 負債）", "cripple V 使殘廢/嚴重削弱（cripple the economy 削弱經濟）；crippled adj 殘廢的", "accelerate V 加速（反義詞：decelerate 減速）；acceleration N 加速", "render V 使成為/提供（render aid 提供援助 / render sb speechless 使人啞口無言）", "venture N/V 冒險（joint venture 合資企業）"], oh:["（削弱/使殘廢）V", "（加速）V", "（使成為/提供）V", "（冒險）V"] },
+    { q:"As a record number of fans showed up for the baseball final, the highways around the stadium were _____ with traffic all day.", zh:"因為來看棒球決賽的球迷人數多到破紀錄，體育館周圍的公路整天都 _____ 車輛。", opts:["choked 堵塞塞滿","disturbed 打擾","enclosed 圍住","injected 注射"], ans:0, an:"前半句提到有「破紀錄數量的球迷」，所以高速公路上的交通一定是非常擁擠、塞車。\"choked with traffic\"（被交通阻塞 / 塞滿）為常見的生動搭配用法，故選 (A)。", vo:["a record number of... 創紀錄數量的...", "show up 出現（= turn up / appear）", "final N 決賽 adj 最終的", "highway N 高速公路", "stadium N 體育場", "choke V 窒息/阻塞（be choked with 被...塞滿/阻塞）", "disturb V 打擾；disturbance N 打擾/騷亂", "enclose V 圍住/（信件中）附上；enclosure N 附件/圍欄", "inject V 注射/注入；injection N 注射"], oh:["（阻塞/窒息）V", "（打擾）V", "（圍住/隨信附上）V", "（注射）V"] },
+    { q:"Studies show that the _____ unbiased media are in fact often deeply influenced by political ideology.", zh:"研究顯示，那些 _____ 中立的媒體，其實常深受政治意識形態的影響。", opts:["undoubtedly 毫無疑問地","roughly 粗略地","understandably 可理解地","supposedly 據稱"], ans:3, an:"句子後半段有 \"in fact（事實上）\"作為語氣轉折，表示前面的狀態與實際情況不符。那些「據稱、理應（supposedly）」公正的媒體，其實是有政治立場的，故選 (D)。", vo:["study N 研究 V 讀書", "bias N 偏見；biased adj 有偏見的；unbiased adj 公正的/無偏見的（= impartial / objective）", "media N 媒體（medium 的複數）", "in fact 事實上（= actually / as a matter of fact）", "influence V/N 影響", "political adj 政治的；politics N 政治", "ideology N 意識形態", "doubt N/V 懷疑；undoubtedly adv 毫無疑問地（= certainly）", "rough adj 粗糙的/大略的；roughly adv 大約/粗略地（= approximately）", "understand V 理解；understandably adv 可以理解地", "suppose V 假設/認為；supposedly adv 據稱/照理說"], oh:["（毫無疑問地）adv", "（大約/粗略地）adv", "（可理解地）adv", "（據稱/理應）adv"] },
+  ],
+  113: [
+    { q:"People who desire a _____ figure should exercise regularly and maintain healthy eating habits.", zh:"想要擁有 _____ 身材的人應該定期運動，並保持健康的飲食習慣。", opts:["spicy 辣的","slender 纖細的","slight 微小的","slippery 容易打滑的"], ans:1, an:"句子提到「規律運動並保持健康飲食」，這通常是為了維持「苗條的 (slender)」體態。", vo:["desire V/N 渴望（= long for / crave）；desirable adj 令人嚮往的", "figure N 體態/數字/人物（public figure 公眾人物）/圖表", "exercise V/N 運動（作「運動」時為不可數；作「練習題」時可數）", "regular adj 規律的/定期的；regularly adv 規律地", "maintain V 維持/保養；maintenance N 維護/保養", "habit N 習慣；eating habits 飲食習慣", "spice N 香料；spicy adj 辛辣的", "slender adj 苗條的（= slim，帶有正面讚美的意味）", "slight adj 輕微的/微小的；slightly adv 稍微地", "slip V 滑倒；slippery adj 濕滑的（slippery floor 濕滑的地板）"], oh:["（辛辣的）adj", "（苗條的）adj", "（輕微的）adj", "（滑的）adj"] },
+    { q:"Watching the sun _____ from a sea of clouds is a must-do activity for all visitors to Ali Mountain.", zh:"觀賞太陽從雲海中 _____ 是所有到阿里山旅客必做的活動。", opts:["emerging 浮現","flashing 閃爍","rushing 衝出","floating 漂浮"], ans:0, an:"「太陽從雲海中浮現 / 升起」的畫面，最適合用動詞 emerge（出現 / 浮現）。Watch + O. + V-ing（感官動詞用法）：看著太陽正在浮現的過程，用 emerging 最為生動。", vo:["Watch + O. + V-ing / VR（感官動詞用法：看著某人/物正在做...）", "a sea of clouds 雲海（優美意象詞）", "must-do adj 必做的（名詞可作 a must）", "visitor N 遊客/訪客；visit V 拜訪", "emerge V 出現/浮現；emerge from... 從...之中出現；emergency N 緊急情況", "flash V 閃爍 N 閃光燈；flash drive 隨身碟", "rush V 衝/匆忙 N 匆忙；rush hour 尖峰時刻", "float V 漂浮；floating adj 漂浮的"], oh:["（出現/浮現）V emerge", "（閃爍）V flash", "（衝擊/匆忙）V rush", "（漂浮）V float"] },
+    { q:"Do you know what time the next bus is _____? I've been waiting here for more than 30 minutes.", zh:"你知道下一班公車 _____ 什麼時候嗎？我已經等了超過30分鐘了。", opts:["apt 恰當的","due 預計的","bound 前往某地的","docked 靠岸的"], ans:1, an:"\"due\" 在此處作形容詞，意思是「預定應到達的 / 預期發生的」。\"The bus is due.\" 意思是公車預定要到了。注意 what time the next bus is due 為間接問句，is 移至主詞 the next bus 後。", vo:["what time the next bus is due 此為「間接問句」，將原本的 is 移到主詞 the next bus 後面", "wait for 等待...", "apt adj 有...傾向的/易於...的；be apt to V 易於做某事（= be prone to）", "due adj 預定到達的/到期的/應支付的；due to + N 由於...（= because of）", "bound adj 開往...的/必然的；be bound for + 地方 準備前往某地；be bound to V 肯定會...", "dock V 靠港/停泊 N 碼頭"], oh:["（易於...的）adj", "（預期到達的）adj", "（準備前往...的）adj", "（靠港/停泊）V dock"] },
+    { q:"The roasting heat and high _____ made me feel hot and sticky, no matter what I did to cool off.", zh:"炙熱的高溫與高 _____ 讓我無論怎麼降溫都覺得又熱又黏。", opts:["density 密度","humidity 濕度","circulation 循環","atmosphere 大氣"], ans:1, an:"關鍵字是 \"sticky（黏黏的）\" 和 \"heat（高溫）\"。夏天讓人覺得悶熱又黏，是因為「高濕度 (high humidity)」。", vo:["roasting adj 炙烤的/極熱的；roast V 烘烤", "sticky adj 黏的；stick V 黏貼 N 樹枝", "no matter what + S + V 無論...（= whatever）", "cool off V 消暑/冷靜下來", "dense adj 密集的/稠密的；density N 密度（population density 人口密度）", "humid adj 潮濕的；humidity N 濕氣/濕度", "circulate V 循環/流通；circulation N 循環（blood circulation 血液循環）", "atmosphere N 大氣層/氣氛（friendly atmosphere 友善的氣氛）"], oh:["（密度）N dense", "（濕度）N humid", "（循環/流通）N circulate", "（大氣/氣氛）N"] },
+    { q:"Artwork created by truly great artists such as Picasso and Monet will no doubt _____ the test of time.", zh:"由畢卡索與莫內等真正偉大的藝術家創作的藝術品無疑能 _____ 時間的考驗。", opts:["stay 停留","take 拿","serve 服務","stand 經得起"], ans:3, an:"\"stand the test of time\" 是一個非常經典的英文慣用語，意思是「經得起時間的考驗」。stand 在這裡作及物動詞，意思是「承受 / 忍受」。", vo:["Artwork (which is) created by... 分詞構句，省略了關係代名詞與 be 動詞", "no doubt 無疑地/肯定地（= undoubtedly）", "stand V 站立/忍受（can't stand N/V-ing 無法忍受）；stand out 突出/顯眼", "serve V 服務/提供（食物）；service N 服務"], oh:["（停留）V", "（拿/花費）V", "（服務/供應）V", "（承受/經受）V"] },
+    { q:"In some countries, military service is _____ for men only; women do not have to serve in the military.", zh:"在某些國家，男性 _____ 需要服兵役，而女性則無需服役。", opts:["forceful 強而有力的","realistic 實際的","compulsory 強制的","distinctive 獨特的"], ans:2, an:"後半句提到女性「不必 (do not have to)」服兵役，對比之下，男性的兵役規定就是「強制的、義務的 (compulsory)」。", vo:["military adj 軍事的 N 軍隊；military service 兵役", "serve V 服役/服務", "force N 力量 V 強迫；forceful adj 強而有力的（通常指講話或力道）", "real adj 真實的；realistic adj 現實的/實際的；reality N 現實", "compel V 強迫；compulsory adj 強制的/必修的（compulsory education 義務教育）", "distinct adj 明顯不同的；distinctive adj 獨特的/與眾不同的"], oh:["（強而有力的）adj", "（現實的/逼真的）adj", "（強制的/義務的）adj", "（獨特的）adj"] },
+    { q:"The team complained that its leader always took the _____ for all the hard work done by the team members.", zh:"團隊抱怨他們的領導者，總是把大夥所有辛苦工作的 _____ 都歸功於自己。", opts:["advantage 優勢","revenge 報復","remedy 補救","credit 功勞"], ans:3, an:"\"take the credit for...\" 是一個固定片語，意思是「因...而邀功 / 把...的功勞歸於自己」。", vo:["complain V 抱怨；complaint N 抱怨/投訴", "leader N 領導者；lead V 引導/領導", "done by... 過去分詞作形容詞，修飾前面的 hard work", "advantage N 優勢/好處；take advantage of sb/sth 利用某人/佔某事物的便宜", "revenge N 報仇；Take revenge on sb 對某人報仇", "remedy N 治療法/補救辦法", "credit N 功勞/學分/信用（credit card 信用卡）；Take the credit for 搶功勞"], oh:["（優勢/好處）N", "（報復）N", "（療法/補救方法）N", "（功勞/信用）N"] },
+    { q:"Located at the center of the city, the business hotel _____ not only good service but also convenient public transport.", zh:"這間位於市中心的商務旅館不僅 _____ 優質的服務，還提供便捷的大眾運輸。", opts:["proposes 提議","contains 包含","promises 承諾保證","confirms 確認"], ans:2, an:"旅館「保證會提供、承諾擁有」良好的服務與交通，promise 除了口頭答應，也可以用來指某事物「預示著 / 保證會帶來」某種好處。", vo:["Located at... 被動式分詞構句，省略了 Because it is located at...；locate V 使座落於；location N 地點", "not only A but also B 不僅 A 而且 B（A 和 B 詞性必須對稱）", "convenient adj 方便的；convenience N 方便（convenience store 便利商店）", "transport / transportation N 運輸/交通", "propose V 提議/求婚；proposal N 提案", "contain V 包含（裡面裝有...）；container N 容器", "promise V/N 承諾/保證", "confirm V 確認；confirmation N 確認信/證實"], oh:["（提議/求婚）V", "（包含/容納）V", "（承諾/保證會有）V", "（確認/證實）V"] },
+    { q:"As blood supplies have fallen to a critically low level, many hospitals are making an _____ for the public to donate blood.", zh:"由於血液供應已降到十分危急的低庫存量，許多醫院正發出 _____，希望大眾捐血。", opts:["appeal 呼籲","approach 方法","operation 運作","observation 觀察"], ans:0, an:"\"make an appeal for...\" 是一個正式用語，意思是「強烈呼籲 / 懇求大眾做某事」。", vo:["As 連接詞：因為（= because / since）", "supply N 供應量/物資 V 供給；blood supplies 血液庫存", "critical adj 危急的/關鍵的/批評的；critically adv 極度地/危急地", "make an appeal for sb to V 呼籲某人做...", "donate V 捐贈；donation N 捐款/捐贈；donor N 捐贈者（blood donor 捐血者）", "appeal N/V 呼籲/吸引力；appeal to sb 吸引某人（注意與 appear 出現 拼法不同）", "approach N 方法/途徑 V 接近", "operate V 操作/動手術；operation N 手術/運作；operator N 操作員", "observe V 觀察/遵守；observation N 觀察"], oh:["（呼籲/懇求）N", "（方法/接近）N", "（手術/運作）N", "（觀察）N"] },
+    { q:"David felt disappointed when he found out that he could not choose his study partners, but would be _____ placed in a study group.", zh:"David 發現自己不能選擇讀書夥伴，而是會被 _____ 分派到一個讀書小組時，感到失望。", opts:["eligibly 有資格地","randomly 隨機地","apparently 顯然地","consequently 結果地"], ans:1, an:"前半句提到他「無法自己選擇 (could not choose)」，代表分組方式是不挑人的、看運氣的，因此是「隨機地 (randomly)」。", vo:["disappoint V 使失望；disappointed adj 感到失望的（修飾人）；disappointing adj 令人失望的（修飾物）", "find out 發現/查明", "place V 放置/分派", "eligible adj 具備資格的；be eligible for + N / to V 有資格...", "random adj 隨機的；randomly adv 隨機地；at random 隨機地", "apparent adj 明顯的；apparently adv 顯然地（= obviously）", "consequence N 後果/結果；consequently adv 因此（= as a result / therefore）"], oh:["（合格地）adv eligible", "（隨機地）adv random", "（顯然地）adv apparent", "（因此/結果）adv consequence"] },
+  ],
+  114: [
+    { q:"If you put a _____ under a leaking faucet, you will be surprised at the amount of water collected in 24 hours.", zh:"如果你在漏水的水龍頭下放一個 _____，你會對 24 小時內所收集到的水量感到驚訝。", opts:["border 邊界","timer 計時器","container 容器","marker 標記筆"], ans:2, an:"題意提到要「收集水量 (water collected)」，因此需要在漏水的水龍頭下放一個「容器 (container)」來接水，(C) 最符合邏輯。", vo:["leak V/N 漏水；leaky adj 漏水的", "faucet N 水龍頭（英式英文常說 tap）", "surprise V 使驚訝 N 驚奇；be surprised at + N/V-ing 對...感到驚訝", "amount N 數量；the amount of + 不可數名詞（如 water, money）/ the number of + 可數名詞複數", "contain V 包含/容納；container N 容器；content N 內容物", "time N 時間 V 計時；timer N 計時器；timing N 時機"], oh:["（邊界）V 鄰接", "（計時器）", "（容器）", "（標記）N 麥克筆"] },
+    { q:"The local farmers' market is popular as it offers a variety of fresh seasonal _____ to people in the community.", zh:"當地的農夫市集很受歡迎，因為它為社區中的人們提供了各種新鮮的時令 _____。", opts:["produce 農產品","fashion 時尚","brand 品牌","trend 趨勢"], ans:0, an:"農夫市集 (farmers' market) 販售的自然是「農產品」。produce 在此為不可數名詞，專指農產品（如新鮮蔬果等），因此選 (A)。", vo:["popular adj 受歡迎的；popularity N 普及/受歡迎；be popular with/among 受...歡迎", "offer V 提供；offer sb sth = offer sth to sb 提供某物給某人", "a variety of + 複數名詞/不可數名詞 各式各樣的... = various + 複數名詞", "season N 季節；seasonal adj 季節性的", "produce V 生產 N 農產品；product N 產品（可數）；production N 生產；producer N 生產者", "fashion N 時尚；fashionable adj 流行的", "trend N 趨勢；trendy adj 時髦的"], oh:["（農產品）N 不可數", "（時尚）", "（品牌）", "（趨勢）"] },
+    { q:"As the years have passed by, many of my childhood memories are already _____; I can no longer recall clearly what happened back then.", zh:"隨著歲月的流逝，我童年的許多記憶已經變得 _____；我已無法清楚地回想當時發生的事。", opts:["blurring 模糊不清","trimming 修剪","draining 排乾","glaring 刺眼"], ans:0, an:"句子後半段解釋「再也無法清楚回想 (can no longer recall clearly)」，代表記憶已經變得不清楚了，因此選「模糊的 (blurring)」。", vo:["pass by 經過/流逝", "childhood N 童年；child N 孩子（複數為 children）", "memory N 記憶；memorize V 記住/背誦；memorable adj 難忘的", "no longer adv 不再（= not... anymore / not... any longer）", "recall V 回想/召回（= remember）", "blur V 使模糊 N 模糊不清的事物；blurry adj 模糊的", "drain V 排出/流失；drainage N 排水系統", "glare V 怒視/發出刺眼的光；glare at sb 怒視某人"], oh:["（模糊）adj 模糊不清的", "（修剪）", "（排出/消耗）", "（耀眼的）adj 顯眼的"] },
+    { q:"Racist remarks are by nature _____ and hurtful, and should be avoided on all occasions.", zh:"種族歧視言論本質上是 _____ 且令人受傷的，應該在任何情況下都避免使用。", opts:["excessive 過度的","furious 憤怒的","offensive 冒犯的","stubborn 固執的"], ans:2, an:"句子使用 \"and\" 連接兩個形容詞，代表這兩個詞的語氣和方向一致。種族歧視言論是「傷人的 (hurtful)」，同時也是具攻擊性、會冒犯他人的，因此選 (C) offensive。", vo:["race N 種族/比賽；racism N 種族主義；racist adj 種族歧視的 N 種族主義者", "remark N/V 言論/評論（= comment）", "nature N 本質/大自然；by nature 天生地/本質上", "hurt V/N 傷害；hurtful adj 令人受傷的", "avoid V 避免；avoid + V-ing 避免做某事（後面只能加動名詞）", "occasion N 場合；on all occasions 在所有場合；occasional adj 偶爾的", "excess N 過量；exceed V 超越；excessive adj 過度的", "fury N 憤怒；furious adj 狂怒的", "offend V 冒犯；offense N 冒犯/犯罪；offensive adj 冒犯的"], oh:["（過度的）", "（狂怒的）", "（冒犯的）adj 無禮的", "（固執的）"] },
+    { q:"Not satisfied with the first _____ of her essay, Mary revised it several times before turning it in to the teacher.", zh:"瑪麗對她的第一份 _____ 不滿意，因此在交給老師之前修改了好幾次。", opts:["text 文字","brush 畫筆","draft 草稿","plot 情節"], ans:2, an:"寫作時會經過多次修改 (revised)，而交出前的第一個版本稱為「初稿」。\"first draft\"（初稿）是固定的常見搭配詞。", vo:["satisfy V 使滿意；satisfaction N 滿意；be satisfied with 對...感到滿意", "Not satisfied with... 此為分詞構句，省略了 Because she was not satisfied with...", "revise V 修改/複習；revision N 修改", "several times 好幾次", "turn in 繳交（= hand in = submit）"], oh:["（文本）V 傳簡訊", "（刷子）V 刷", "（草稿）V 起草", "（情節）V 密謀"] },
+    { q:"Left _____ for years, the deserted house was filled with a thick coating of dust and a smell of old damp wood.", zh:"被 _____ 了好幾年，這棟廢棄的房子佈滿厚厚的灰塵，還有一股陳舊潮濕的木頭味。", opts:["casual 隨意的","fragile 脆弱的","remote 遙遠的","vacant 空著的"], ans:3, an:"後半句提到這是一棟「廢棄的房子 (deserted house)」，裡面佈滿灰塵，代表這棟房子已經被「空置 (vacant)」很多年了。", vo:["Left... for years, 此為分詞構句（被動），省略了 Being left...", "desert V 拋棄 N 沙漠；deserted adj 廢棄的/荒涼的（注意發音與拼法：dessert N 甜點）", "fill V 裝滿；be filled with 充滿...（= be full of）", "coat N 外套 V 塗上；coating N 塗層/覆蓋層", "dust N 灰塵；dusty adj 布滿灰塵的", "damp adj 潮濕的（= wet / moist）", "remote adj 遙遠的/偏僻的；remote control 遙控器", "vacant adj 空置的；vacancy N 職缺/空房"], oh:["（隨便的）adj 非正式的", "（脆弱的）adj 易碎的", "（遙遠的）", "（空置的）adj 空缺的"] },
+    { q:"The high school student showed _____ courage when she helped the old man escape from the fire.", zh:"那位高中生在幫助老人從火場逃生時展現出 _____ 的勇氣。", opts:["gigantic 巨型的","exclusive 獨有的","multiple 多重的","enormous 龐大的"], ans:3, an:"形容勇氣極大，英文習慣搭配 enormous 或 immense（例如：enormous courage）。gigantic 雖然也是巨大的，但通常用來形容具體事物的體積或尺寸。", vo:["courage N 勇氣；courageous adj 勇敢的；encourage V 鼓勵；discourage V 使氣餒", "escape V/N 逃離；escape from 從...逃離", "giant N 巨人 adj 巨大的；gigantic adj 巨大的（常指體積龐大的具體事物）", "exclude V 排除；exclusive adj 獨家的/專有的（對比：include 包含 → inclusive）", "multiply V 乘/繁殖；multiple adj 多個的/多種的（multiple choice questions 選擇題）"], oh:["（巨大的）常指體積", "（獨有的）adj 排外的", "（多個的）", "（巨大的）adj 極大的"] },
+    { q:"Publicly financed projects are often _____ or delayed during tough economic times due to a lack of resources.", zh:"在經濟困難時期，由於資源不足，公共資金支持的計畫常常被 _____ 或延遲。", opts:["halted 停止","hatched 孵化","possessed 擁有","reinforced 強化"], ans:0, an:"\"or delayed\"（或延遲）提示了空格處應該填入與「進度受阻」相關的詞彙。因為缺乏資源，計畫只能被「暫停 (halted)」或延遲。", vo:["public adj 公開的 N 大眾；publicly adv 公開地/由公眾地", "finance N 財務 V 提供資金；financial adj 財務的", "delay V/N 延遲（= put off = postpone）", "tough adj 艱難的/堅韌的（= difficult / hard）", "economy N 經濟；economic adj 經濟上的（注意：economical adj 節約的）", "due to + N 由於/因為（= because of = owing to）", "lack N/V 缺乏；a lack of + N 缺乏...", "possess V 擁有；possession N 財產/擁有物", "force N 力量 V 強迫；reinforce V 增援/強化"], oh:["（停止）V 暫停", "（孵出）V 策劃", "（擁有）", "（加固）V 強化"] },
+    { q:"Despite his busy schedule, the President _____ the school's graduation ceremony with his presence and a heartwarming speech.", zh:"儘管行程繁忙，總統仍然以他的出席和一篇溫暖人心的演講 _____ 了畢業典禮。", opts:["praised 讚美","graced 增輝","addressed 發表演說","credited 歸功於"], ans:1, an:"\"grace sth with one's presence\" 是一個正式且常見的片語，意思是「（某人的）光臨使（某場合）蓬蓽生輝 / 增添光彩」。", vo:["despite + N / V-ing 儘管（= in spite of）", "graduate V 畢業 N 畢業生；graduation N 畢業", "ceremony N 典禮/儀式（wedding ceremony 婚禮）", "present adj 出席的/現在的 N 禮物；presence N 出席/存在（反義：absence N 缺席）", "speech N 演講；make/give/deliver a speech 發表演講", "praise V/N 讚美；praise sb for sth 因為某事讚美某人", "address V 演說/處理/寫上地址 N 地址；address an issue 處理問題", "credit V 歸功於 N 信用；credit A to B 將 A 歸功於 B；credit card 信用卡"], oh:["（讚美）", "（增光）", "（演說）V 處理", "（歸功於）"] },
+    { q:"The manager of the company was sued for _____ abusing his colleagues, calling them 'hopeless losers.'", zh:"公司經理因為 _____ 辱罵同事、稱他們為「毫無希望的失敗者」而被起訴。", opts:["verbally 口頭上","dominantly 主導性地","legitimately 合法地","relevantly 相關地"], ans:0, an:"經理用「無可救藥的失敗者」這種話語來攻擊同事，屬於言語上的辱罵，因此選 (A) verbally（口頭上地 / 言語上地）。", vo:["manage V 管理；manager N 經理；management N 管理層", "sue V 控告；sue sb for sth 因為某事控告某人", "abuse V/N 濫用/虐待/辱罵；verbal abuse 言語暴力；child abuse 虐童", "colleague N 同事（= co-worker）", "hope V/N 希望；hopeless adj 毫無希望的/無可救藥的（字綴：-less 表示「沒有」）", "lose V 失去/輸掉；loser N 失敗者", "verbal adj 言語的/口頭的（對比：oral adj 口頭的/口腔的）", "dominate V 支配/控制；dominant adj 佔優勢的", "legal adj 合法的；legitimate adj 合法的/正當的", "relevant adj 相關的；relevance N 相關性"], oh:["（言語上地）", "（占優勢地）", "（合法地）", "（相關地）"] },
+  ],
+  115: [
+    { q:"The mayor's schedule is so _____ that it takes weeks to arrange an interview with her.", zh:"市長的行程表非常 _____，以至於要花數週才能安排與她的面談。", opts:["hasty 匆忙的","tight 緊湊的","diligent 勤奮的","routine 例行的"], ans:1, an:"【句型結構】主詞（The mayor's schedule）+ 動詞（is）+ 補語（so _____）+ that 結果子句（it takes weeks to arrange an interview with her）。\n\n【關鍵線索】要安排一場訪談得等上好幾週 → 行程「緊湊、滿檔」→ tight（B），a tight schedule 為固定搭配。hasty（匆忙的）形容動作或決定；diligent（勤奮的）形容人；routine（例行的）無法解釋「要等數週」。", vo:["tight (adj./adv.) 緊的、緊湊的／緊緊地；tighten (v.) 使變緊；tightly (adv.)", "【近義詞】packed（滿檔的）、busy（忙碌的）、demanding（吃重的）", "【延伸搭配】a tight schedule（緊湊的行程）、on a tight budget（預算拮据）", "schedule (n./v.) 行程表／安排；be scheduled to（預定要）", "hasty (adj.) 匆忙的、草率的；haste (n.) 匆忙；in haste（匆忙地）", "diligent (adj.) 勤奮的；diligence (n.) 勤勉；diligently (adv.)"], oh:["（匆忙的）adj", "（緊湊的）adj", "（勤奮的）adj", "（例行的）adj"] },
+    { q:"Jane started as an _____ art designer, but now she owns her own professional studio.", zh:"Jane 起初是一位 _____ 藝術設計師，但現在她擁有自己的專業工作室。", opts:["official 官方的","instant 立即的","amateur 業餘的","elementary 基本的"], ans:2, an:"【句型結構】主詞（Jane）+ started as + 補語（an _____ art designer）+ but 表對比 + 第二個子句（now she owns her own professional studio）。\n\n【關鍵線索】but 前後形成對比，句尾 professional（專業的）是關鍵反義線索 → 起初是「業餘的」→ amateur（C）。official（官方的）、instant（立即的）、elementary（基本的）都不是 professional 的對立面。", vo:["amateur (adj./n.) 業餘的／業餘者；amateurish (adj.) 外行的；反義 professional", "【近義詞】novice（新手）、beginner（初學者）、nonprofessional（非專業的）", "【延伸搭配】start as（以…起步）、own one's own studio（擁有自己的工作室）", "professional (adj./n.) 專業的／專業人士；profession (n.) 職業", "official (adj./n.) 官方的／官員；officially (adv.) 正式地", "elementary (adj.) 基本的、初級的；elementary school（小學）"], oh:["（官方的）adj", "（立即的）adj", "（業餘的）adj", "（基本的）adj"] },
+    { q:"The teaching _____ at the famous high school quickly attracted more than ten qualified applicants.", zh:"那所知名高中的教職 _____ 很快吸引了十多位合格的申請者。", opts:["career 職業","vacancy 空缺","expectation 期待","inspiration 靈感"], ans:1, an:"【句型結構】主詞（The teaching _____）+ 介系詞片語（at the famous high school）修飾主詞 + 動詞（attracted）+ 受詞（more than ten qualified applicants）。\n\n【關鍵線索】能吸引「十多位合格應徵者」的，是一個職位「空缺」→ vacancy（B）。career（職業生涯）不會吸引 applicants；expectation（期待）、inspiration（靈感）語意不合。", vo:["vacancy (n.) 空缺、空房；vacant (adj.) 空的、空缺的；vacate (v.) 騰空", "【近義詞】opening（職缺）、position（職位）、post（職位）", "【延伸搭配】fill a vacancy（填補空缺）、qualified applicant（合格應徵者）", "applicant (n.) 申請人；apply (v.) 申請；application (n.) 申請書、應用", "career (n.) 職業生涯；a career change（轉職）", "inspiration (n.) 靈感；inspire (v.) 激勵；inspiring (adj.) 鼓舞人心的"], oh:["（職業）N", "（空缺）N", "（期待）N", "（靈感）N"] },
+    { q:"The new product designed by young engineers created much more profit than _____ expected.", zh:"這項由年輕工程師設計的新產品創造了比 _____ 預期多得多的利潤。", opts:["initially 最初","genuinely 真誠地","alternatively 替代地","fundamentally 根本地"], ans:0, an:"【句型結構】主詞（The new product）+ 過去分詞片語（designed by young engineers）修飾主詞 + 動詞（created）+ 受詞（much more profit）+ 比較結構（than _____ expected）。\n\n【關鍵線索】than 之後省略了 it was，還原為 than it was initially expected（比最初預期的）。空格需填修飾 expected 的時間副詞，構成「當初預期」與「實際結果」的對比 → initially（A）。genuinely（真誠地）、alternatively（作為替代）、fundamentally（根本上）都無法形成時間點的對比。", vo:["initially (adv.) 最初、起初；initial (adj./n.) 最初的／姓名首字母；initiate (v.) 發起", "【近義詞】originally（原本）、at first（起初）、in the beginning（一開始）", "【延伸搭配】than initially expected（比最初預期的）、initial stage（初期階段）", "profit (n./v.) 利潤／獲利；profitable (adj.) 有利可圖的", "genuinely (adv.) 真誠地；genuine (adj.) 真正的、真誠的", "fundamentally (adv.) 根本上；fundamental (adj.) 根本的；the fundamentals（基本原理）"], oh:["（最初）adv", "（真誠地）adv", "（替代地）adv", "（根本地）adv"] },
+    { q:"It has been proven that balanced _____ of fruits and vegetables is a key element of good health.", zh:"已證實均衡的蔬果 _____ 是健康的關鍵要素。", opts:["dimension 尺寸","integration 整合","provision 供應","consumption 消耗"], ans:3, an:"【句型結構】It has been proven that + 名詞子句，It 為虛主詞；子句主詞為 balanced _____ of fruits and vegetables，動詞 is，補語為 a key element of good health。\n\n【關鍵線索】與 fruits and vegetables 搭配、又與 good health 相關 → 指的是「攝取、食用」→ consumption（D）。dimension（尺寸）、integration（整合）語意不合；provision（供應）重點在提供方，而非食用者的攝取量。", vo:["consumption (n.) 攝取、消耗；consume (v.) 食用、消耗；consumer (n.) 消費者", "【近義詞】intake（攝取量）、ingestion（食入）、use（使用量）", "【延伸搭配】food consumption（食物攝取）、energy consumption（能源消耗）、a key element of（…的關鍵要素）", "balanced (adj.) 均衡的；a balanced diet（均衡飲食）", "provision (n.) 供應、條款；provide (v.) 提供；provisions (n.) 糧食", "dimension (n.) 尺寸、面向；dimensional (adj.)；three-dimensional（三維的）"], oh:["（尺寸）N", "（整合）N", "（供應）N", "（攝取／消耗）N"] },
+    { q:"As a shy boy who is afraid of public appearances, Timmy _____ the idea of speaking in front of a large audience.", zh:"作為一個害怕公開露面的害羞男孩，Timmy _____ 在大批觀眾前演講的念頭。", opts:["dreads 懼怕","stresses 使緊張","wanders 漫遊","escapes 逃脫"], ans:0, an:"【句型結構】As 引導身分片語（As a shy boy who is afraid of public appearances），其中 who 子句修飾 boy；主句為 Timmy _____ the idea of speaking in front of a large audience。\n\n【關鍵線索】前段 afraid of public appearances（害怕公開露面）是同義線索 → 對上台演說的想法感到「懼怕」→ dreads（A）。stresses（使緊張）用法與語意不符；wanders（漫遊）、escapes（逃脫）都無法接 the idea of 作受詞。", vo:["dread (v./n.) 懼怕／恐懼；dreadful (adj.) 可怕的、糟糕的", "【近義詞】fear（害怕）、be terrified of（極度害怕）、shrink from（畏縮不前）", "【延伸搭配】be afraid of（害怕）、in front of a large audience（在眾多觀眾前）", "audience (n.) 觀眾、聽眾（集合名詞）", "appearance (n.) 露面、外表；appear (v.) 出現、顯得", "wander (v.) 漫遊、閒晃；wonder (v./n.) 想知道／驚奇（勿混淆）"], oh:["（懼怕）V", "（使緊張）V", "（漫遊）V", "（逃脫）V"] },
+    { q:"For the newly crowned piano competition champion, music is his _____, to which he devoted himself whole-heartedly.", zh:"對這位新加冕的鋼琴大賽冠軍而言，音樂是他生命的 _____，他全心全意致力於此。", opts:["resource 資源","impact 衝擊","passion 熱情","emphasis 重點"], ans:2, an:"【句型結構】For 片語置句首表對象（For the newly crowned piano competition champion）+ 主句（music is his _____）+ 關係子句（to which he devoted himself whole-heartedly），採「介系詞 + 關係代名詞」結構。\n\n【關鍵線索】devoted himself whole-heartedly（全心投入）是關鍵 → 音樂是他的「熱情所在」→ passion（C）。resource（資源）、impact（衝擊）、emphasis（重點）都無法作為「全心投入」的對象。", vo:["passion (n.) 熱情、酷愛；passionate (adj.) 熱情的；passionately (adv.)", "【近義詞】enthusiasm（熱忱）、devotion（投入）、zeal（熱情）", "【延伸搭配】devote oneself to（獻身於）、a passion for（對…的熱愛）", "champion (n./v.) 冠軍／擁護；championship (n.) 錦標賽", "emphasis (n.) 重點、強調；emphasize (v.) 強調；place emphasis on（重視）", "impact (n./v.) 衝擊、影響；have an impact on（對…產生影響）"], oh:["（資源）N", "（衝擊）N", "（熱情）N", "（重點）N"] },
+    { q:"The drunk driver who shouted at passersby and _____ them with glass bottles was quickly arrested by the police.", zh:"那位對路人叫囂並用玻璃瓶 _____ 他們的酒醉駕駛很快被警方逮捕。", opts:["shattered 粉碎","assaulted 攻擊","overturned 推翻","condemned 譴責"], ans:1, an:"【句型結構】主詞（The drunk driver）+ who 引導的關係子句（who shouted at passersby and _____ them with glass bottles）修飾主詞 + 主句動詞（was quickly arrested by the police）。\n\n【關鍵線索】對行人叫囂、還「用玻璃瓶」對他們做某事，隨即被警方逮捕 → 是「攻擊、襲擊」→ assaulted（B）。shattered（粉碎）受詞須為物品；overturned（推翻）、condemned（譴責）都與「用瓶子」的肢體動作不符。", vo:["assault (v./n.) 攻擊、襲擊；assailant (n.) 攻擊者", "【近義詞】attack（攻擊）、strike（打擊）、beat（毆打）", "【延伸搭配】shout at（對…叫囂）、be arrested by the police（被警方逮捕）", "passerby (n.) 路人（複數 passersby）", "shatter (v.) 粉碎、破滅；shattered (adj.) 破碎的、心碎的", "condemn (v.) 譴責、判刑；condemnation (n.) 譴責"], oh:["（粉碎）V", "（攻擊）V", "（推翻）V", "（譴責）V"] },
+    { q:"The bus stop was so crowded that I had to _____ my way through the crowd to get on the bus on time.", zh:"公車站人太多，我必須 _____ 穿過人群才能準時上車。", opts:["crash 碰撞","tumble 跌倒","elbow 用手肘推擠","struggle 掙扎"], ans:2, an:"【句型結構】主句（The bus stop was so crowded）+ that 結果子句（I had to _____ my way through the crowd）+ 不定詞表目的（to get on the bus on time）。\n\n【關鍵線索】此處為固定用法「動詞 + one's way through」，表「以某種方式穿越」；在擁擠人群中前進靠的是「用手肘推擠」→ elbow（C）。crash（碰撞）、tumble（跌倒）不能接 one's way；struggle 須改為 struggle through，不接受詞。", vo:["elbow (n./v.) 手肘／用肘推擠；elbow one's way through（用手肘擠過）", "【近義詞】push（推）、shove（猛推）、squeeze（擠）", "【延伸搭配】make one's way through（穿越）、get on the bus（上公車）、on time（準時）", "crowded (adj.) 擁擠的；crowd (n./v.) 人群／聚集", "struggle (v./n.) 掙扎、奮鬥；struggle to V（努力做）；struggle with（與…搏鬥）", "crash (v./n.) 碰撞、墜毀／撞擊；crash into（撞上）"], oh:["（碰撞）V", "（跌倒）V", "（用手肘推擠）V", "（掙扎）V"] },
+    { q:"Deadly shootings on U.S. campuses have raised _____ concerns about how to prevent such tragedies from happening again.", zh:"美國校園的致命槍擊案引發了關於如何防止此類悲劇再次發生的 _____ 擔憂。", opts:["swift 迅速的","brutal 殘忍的","harsh 嚴厲的","grave 嚴重的"], ans:3, an:"【句型結構】主詞（Deadly shootings on U.S. campuses）+ 現在完成式（have raised）+ 受詞（_____ concerns）+ about 片語說明關切的內容。\n\n【關鍵線索】校園致命槍擊事件引發的是「嚴重、深切的」關切 → grave（D），grave concerns 為固定搭配。swift（迅速的）形容速度；brutal（殘忍的）形容行為本身而非關切；harsh（嚴厲的）多修飾批評或環境，不修飾 concerns。", vo:["grave (adj./n.) 嚴重的、嚴肅的／墳墓；gravity (n.) 嚴重性、重力；gravely (adv.)", "【近義詞】serious（嚴重的）、severe（嚴峻的）、profound（深切的）", "【延伸搭配】grave concerns（嚴重關切）、raise concerns about（引發對…的關切）", "deadly (adj./adv.) 致命的／極度地；deadly weapon（致命武器）", "brutal (adj.) 殘忍的；brutality (n.) 暴行；brutally (adv.) 殘忍地", "harsh (adj.) 嚴厲的、刺耳的；harshly (adv.)；harsh criticism（嚴厲批評）"], oh:["（迅速的）adj", "（殘忍的）adj", "（嚴厲的）adj", "（嚴重的）adj"] },
+  ]
+};
+
+/* ═══════════════════════════════════════
+   STATE
+═══════════════════════════════════════ */
+// 支援 ?y=113 深連結（供 gsat.html 各年份鈕直接指定年份）
+let activeYear = (() => {
+  const y = new URLSearchParams(location.search).get('y');
+  return (y && Object.prototype.hasOwnProperty.call(DATA, y)) ? Number(y) : 107;
+})();
+let activeMode = 'quiz'; // quiz | flash | list
+let qIndex = 0;
+let answered = false;
+let score = 0;
+let totalAnswered = 0;
+
+/* ═══════════════════════════════════════
+   INIT
+═══════════════════════════════════════ */
+function init() {
+  buildYearTabs();
+  render();
+}
+
+function buildYearTabs() {
+  const container = document.getElementById('yearTabs');
+  container.innerHTML = '';
+  [107,108,109,110,111,112,113,114,115].forEach(yr => {
+    const btn = document.createElement('button');
+    btn.className = 'year-tab' + (yr === activeYear ? ' active' : '');
+    btn.innerHTML = `<span class="dot"></span>${yr}年`;
+    btn.onclick = () => { activeYear = yr; qIndex = 0; answered = false; resetScore(); updateYearTabs(); render(); };
+    container.appendChild(btn);
+  });
+}
+
+function updateYearTabs() {
+  document.querySelectorAll('.year-tab').forEach((btn, i) => {
+    btn.classList.toggle('active', [107,108,109,110,111,112,113,114,115][i] === activeYear);
+  });
+}
+
+function setMode(mode) {
+  activeMode = mode;
+  qIndex = 0; answered = false;
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-'+mode).classList.add('active');
+  render();
+}
+
+function resetScore() { score = 0; totalAnswered = 0; updateScoreDisplay(); }
+function updateScoreDisplay() {
+  document.getElementById('hdr-score').textContent = `${score}/${totalAnswered}`;
+}
+
+/* ═══════════════════════════════════════
+   RENDER
+═══════════════════════════════════════ */
+function render() {
+  const main = document.getElementById('mainContent');
+  if (activeMode === 'list') { renderList(main); return; }
+  if (activeMode === 'flash') { renderFlash(main); return; }
+  renderQuiz(main);
+}
+
+/* ── Quiz Mode ── */
+function renderQuiz(main) {
+  const qs = DATA[activeYear];
+  if (qIndex >= qs.length) { renderComplete(main); return; }
+  const q = qs[qIndex];
+  const filled = q.q.replace('_____', '<span class="blank">_____</span>');
+
+  main.innerHTML = `
+    <div class="stats-row">
+      <div class="stat-chip a"><strong>${qIndex+1}/${qs.length}</strong>題號</div>
+      <div class="stat-chip g"><strong>${score}</strong>答對</div>
+      <div class="stat-chip r"><strong>${totalAnswered - score}</strong>答錯</div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" style="width:${((qIndex)/qs.length*100).toFixed(1)}%"></div></div>
+      <span class="progress-text">${((qIndex)/qs.length*100).toFixed(0)}%</span>
+    </div>
+    <div class="section-head">📖 ${activeYear}年 第一大題 詞彙題</div>
+    <div class="flashcard" id="card">
+      <div class="q-label">第 ${qIndex+1} 題 · ${activeYear}年學測</div>
+      <div class="q-sentence">${filled}</div>
+      <div class="q-zh">${q.zh.replace('_____','<span class="blank">_____</span>')}</div>
+      <div class="quiz-opts" id="opts">
+        ${q.opts.map((o,i) => `
+          <button class="q-opt" id="qopt-${i}" onclick="checkAnswer(${i})">
+            <span class="lbl">${['A','B','C','D'][i]}.</span> ${o.split(' ')[0]}
+            <span class="zh">${o.split(' ').slice(1).join(' ')}</span>
+          </button>`).join('')}
+      </div>
+      <div class="result-msg" id="result"></div>
+      <div class="all-opts-speak" id="allOptsSpeak" style="display:none">
+        <div class="aos-title">🔊 點擊單字聆聽發音</div>
+        <div class="aos-grid">
+          ${q.opts.map((o,i) => {
+            const w = o.split(' ')[0];
+            const zh = o.split(' ').slice(1).join(' ');
+            return `<div class="aos-item ${i===q.ans?'aos-correct':''}" onclick="speak('${w}')">
+              <span class="aos-lbl">${['A','B','C','D'][i]}</span>
+              <span class="aos-word">${w}</span>
+              <span class="aos-zh">${zh}</span>
+              <span class="aos-speaker">🔊</span>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+      ${(q.an || q.vo || q.oh) ? `
+      <div class="explain" id="explain">
+        ${q.an ? `<div class="ex-title">💡 詳解</div>
+        <div class="ex-body">${q.an}</div>` : ''}
+        ${q.oh && q.oh.some(h => h) ? `<div class="ex-title">🔤 選項辨析</div>
+        <ul class="ex-opts">
+          ${q.opts.map((o,i) => `<li class="${i===q.ans?'is-ans':''}">
+            <span class="eo-lbl">${['A','B','C','D'][i]}</span>
+            <span>${o.split(' ')[0]} ${q.oh[i] || ''}${i===q.ans?' ✓':''}</span>
+          </li>`).join('')}
+        </ul>` : ''}
+        ${q.vo && q.vo.length ? `<div class="ex-title">📘 延伸單字（${q.vo.length}）</div>
+        <ul class="ex-vocab">${q.vo.map(v => `<li>${v}</li>`).join('')}</ul>` : ''}
+      </div>` : ''}
+    </div>
+    <div class="nav-row">
+      <button class="nav-btn nav-prev" onclick="goTo(${qIndex-1})" ${qIndex===0?'disabled style="opacity:.4"':''}>← 上一題</button>
+      <button class="nav-btn nav-next" onclick="goTo(${qIndex+1})" id="nextBtn" ${!answered?'disabled style="opacity:.5"':''}>下一題 →</button>
+    </div>`;
+}
+
+function checkAnswer(chosen) {
+  if (answered) return;
+  answered = true;
+  const q = DATA[activeYear][qIndex];
+  const correct = q.ans;
+  const btns = document.querySelectorAll('.q-opt');
+  btns.forEach((b,i) => {
+    b.disabled = true;
+    if (i === correct) b.classList.add('correct');
+    if (i === chosen && i !== correct) b.classList.add('wrong');
+  });
+  const result = document.getElementById('result');
+  result.classList.add('show');
+  totalAnswered++;
+  if (chosen === correct) {
+    score++;
+    result.classList.add('ok');
+    result.textContent = `✅ 答對了！正確答案：${['A','B','C','D'][correct]}. ${q.opts[correct]}`;
+  } else {
+    result.classList.add('fail');
+    result.textContent = `❌ 答錯了！正確答案：${['A','B','C','D'][correct]}. ${q.opts[correct]}`;
+  }
+  // Auto-speak correct answer, then show all-options panel
+  speak(q.opts[correct].split(' ')[0]);
+  const panel = document.getElementById('allOptsSpeak');
+  if (panel) { panel.style.display = 'block'; panel.style.animation = 'fadeIn .3s'; }
+  // 作答後展開詳解／選項辨析／延伸單字
+  const ex = document.getElementById('explain');
+  if (ex) ex.classList.add('show');
+  updateScoreDisplay();
+  const nextBtn = document.getElementById('nextBtn');
+  if (nextBtn) { nextBtn.disabled = false; nextBtn.style.opacity = '1'; }
+}
+
+function goTo(idx) {
+  const qs = DATA[activeYear];
+  if (idx < 0 || idx > qs.length) return;
+  qIndex = idx; answered = false;
+  render();
+}
+
+/* ── Flashcard Mode ── */
+function renderFlash(main) {
+  const qs = DATA[activeYear];
+  if (qIndex >= qs.length) { renderComplete(main); return; }
+  const q = qs[qIndex];
+  const filled = q.q.replace('_____', '<span class="blank">_____</span>');
+  const correctWord = q.opts[q.ans].split(' ')[0];
+  const correctZh = q.opts[q.ans].split(' ').slice(1).join(' ');
+
+  main.innerHTML = `
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" style="width:${((qIndex)/qs.length*100).toFixed(1)}%"></div></div>
+      <span class="progress-text">${qIndex+1}/${qs.length}</span>
+    </div>
+    <div class="section-head">🃏 ${activeYear}年 單字卡模式</div>
+    <div class="flashcard" id="card">
+      <div class="q-label">第 ${qIndex+1} 題</div>
+      <div class="q-sentence">${filled}</div>
+      <div class="q-zh">${q.zh.replace('_____','<span class="blank">_____</span>')}</div>
+      <button class="answer-toggle" id="revealBtn" onclick="revealFlash()">👁 查看答案</button>
+      <div class="vocab-reveal" id="vocabReveal">
+        <div class="vocab-word-row">
+          <span class="vocab-word">${correctWord}</span>
+          <button class="speak-btn" onclick="speak('${correctWord}')">🔊 發音</button>
+        </div>
+        <div class="vocab-zh">${correctZh}</div>
+        <div><span class="vocab-pos">正確選項</span></div>
+        <div class="aos-title" style="margin-top:8px">🔊 點擊任一單字聆聽發音</div>
+        <div class="aos-grid">
+          ${q.opts.map((o,i) => {
+            const w = o.split(' ')[0]; const zh2 = o.split(' ').slice(1).join(' ');
+            return `<div class="aos-item ${i===q.ans?'aos-correct':''}" onclick="speak('${w}')">
+              <span class="aos-lbl">${['A','B','C','D'][i]}</span>
+              <span class="aos-word">${w}</span>
+              <span class="aos-zh">${zh2}</span>
+              <span class="aos-speaker">🔊</span>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+    </div>
+    <div class="nav-row">
+      <button class="nav-btn nav-prev" onclick="goTo(${qIndex-1})" ${qIndex===0?'disabled style="opacity:.4"':''}>← 上一題</button>
+      <button class="nav-btn nav-next" onclick="goTo(${qIndex+1})">下一題 →</button>
+    </div>`;
+}
+
+function revealFlash() {
+  const r = document.getElementById('vocabReveal');
+  const b = document.getElementById('revealBtn');
+  r.classList.toggle('show');
+  b.textContent = r.classList.contains('show') ? '🙈 隱藏答案' : '👁 查看答案';
+  if (r.classList.contains('show')) {
+    const word = DATA[activeYear][qIndex].opts[DATA[activeYear][qIndex].ans].split(' ')[0];
+    speak(word);
+  }
+}
+
+/* ── List Mode ── */
+function renderList(main) {
+  const qs = DATA[activeYear];
+  main.innerHTML = `
+    <div class="section-head">📋 ${activeYear}年 全部單字 — 點擊發音</div>
+    <div class="wordlist">
+      ${qs.map((q,i) => `
+        <div class="wl-item">
+          <div class="wl-num">${i+1}</div>
+          <div class="wl-info" style="width:100%">
+            <div class="wl-q" style="font-size:0.75rem;color:var(--text-light);margin-bottom:8px;line-height:1.6">
+              ${q.zh.replace('_____','<span style="color:var(--gold);font-weight:700">_____</span>')}
+            </div>
+            <div class="aos-grid">
+              ${q.opts.map((o,j) => {
+                const w = o.split(' ')[0];
+                const zh = o.split(' ').slice(1).join(' ');
+                return `<div class="aos-item ${j===q.ans?'aos-correct':''}" onclick="speak('${w}')">
+                  <span class="aos-lbl">${['A','B','C','D'][j]}</span>
+                  <span class="aos-word">${w}</span>
+                  <span class="aos-zh">${zh}</span>
+                  <span class="aos-speaker">🔊</span>
+                </div>`;
+              }).join('')}
+            </div>
+          </div>
+        </div>`).join('')}
+    </div>`;
+}
+
+/* ── Complete Screen ── */
+function renderComplete(main) {
+  const pct = totalAnswered > 0 ? Math.round(score/totalAnswered*100) : 0;
+  const emoji = pct >= 80 ? '🎉' : pct >= 60 ? '💪' : '📚';
+  main.innerHTML = `
+    <div class="complete-screen show">
+      <div class="complete-icon">${emoji}</div>
+      <div class="complete-title">${activeYear}年完成！</div>
+      <div class="complete-score">
+        本輪成績：<strong>${score} / ${totalAnswered}</strong><br>
+        正確率 <strong style="color:var(--accent)">${pct}%</strong>
+      </div>
+      <button class="restart-btn" onclick="restartYear()">🔄 重新練習</button>
+      <div style="margin-top:16px;font-size:0.8rem;color:var(--text-light)">或選擇上方其他年份繼續挑戰</div>
+    </div>`;
+}
+
+function restartYear() {
+  qIndex = 0; answered = false; resetScore(); render();
+}
+
+/* ═══════════════════════════════════════
+   SPEECH SYNTHESIS
+═══════════════════════════════════════ */
+function speak(word) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(word);
+  u.lang = 'en-US';
+  u.rate = 0.82;
+  u.pitch = 1.15;  // 稍高音調 → 女聲
+  u.volume = 1;
+
+  // 優先選女聲：找名字含 female / woman / girl / Samantha / Zira / Karen / Victoria / Moira / Fiona / Tessa 的聲音
+  const voices = window.speechSynthesis.getVoices();
+  const femaleKeywords = ['samantha','zira','karen','victoria','moira','fiona','tessa','susan','female','woman','girl','google us english'];
+  let femaleVoice = null;
+
+  // 第一優先：en-US 女聲
+  femaleVoice = voices.find(v =>
+    v.lang.startsWith('en') &&
+    femaleKeywords.some(k => v.name.toLowerCase().includes(k))
+  );
+
+  // 第二優先：任何英文女聲
+  if (!femaleVoice) {
+    femaleVoice = voices.find(v =>
+      v.lang.startsWith('en') &&
+      (v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('woman'))
+    );
+  }
+
+  // 第三優先：Google US English（通常為女聲）
+  if (!femaleVoice) {
+    femaleVoice = voices.find(v => v.name === 'Google US English');
+  }
+
+  // 第四優先：任意英文聲音
+  if (!femaleVoice) {
+    femaleVoice = voices.find(v => v.lang.startsWith('en-US')) ||
+                  voices.find(v => v.lang.startsWith('en'));
+  }
+
+  if (femaleVoice) u.voice = femaleVoice;
+  window.speechSynthesis.speak(u);
+}
+
+// 等聲音清單載入後才能選音色（部分瀏覽器需要此事件）
+window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
+
+/* ═══════════════════════════════════════
+   BOOT
+═══════════════════════════════════════ */
+init();
+</script>
+</body>
+</html>

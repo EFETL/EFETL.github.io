@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EFE統測107-114歷屆試題</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1117;--s1:#161b27;--s2:#1e2538;--s3:#252d42;
+  --acc:#5b8dee;--acc2:#8b5cf6;--acc3:#06b6d4;
+  --green:#22c55e;--red:#ef4444;--yellow:#f59e0b;
+  --txt:#e2e8f0;--muted:#7c8da6;--border:#2a3352;--r:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:'Noto Sans TC',sans-serif;min-height:100vh;overflow-x:hidden}
+
+/* ── HEADER ── */
+header{
+  background:linear-gradient(135deg,#161b27 0%,#1a1040 100%);
+  border-bottom:1px solid var(--border);
+  padding:14px 24px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:10px;
+  position:sticky;top:0;z-index:200;backdrop-filter:blur(14px);
+}
+.logo{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;
+  background:linear-gradient(90deg,var(--acc),var(--acc2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  white-space:nowrap;
+}
+.score-badge{background:var(--s2);border:1px solid var(--border);border-radius:999px;
+  padding:4px 14px;font-size:.8rem;font-weight:700;color:var(--acc);white-space:nowrap}
+
+/* ── TABS ── */
+.tab-bar{display:flex;gap:4px;background:var(--s2);border-radius:999px;padding:3px;border:1px solid var(--border)}
+.tab{padding:5px 16px;border-radius:999px;font-size:.78rem;font-weight:700;
+  cursor:pointer;border:none;background:transparent;color:var(--muted);
+  font-family:inherit;transition:all .2s;white-space:nowrap}
+.tab.on{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff}
+
+/* ── YEAR STRIP ── */
+.year-strip{display:flex;gap:6px;padding:12px 24px 0;flex-wrap:wrap}
+.yr-btn{background:var(--s1);border:1px solid var(--border);color:var(--muted);
+  border-radius:999px;padding:5px 14px;font-size:.78rem;cursor:pointer;
+  transition:all .18s;white-space:nowrap;font-family:inherit}
+.yr-btn:hover{border-color:var(--acc);color:var(--txt)}
+.yr-btn.on{background:linear-gradient(135deg,var(--acc),var(--acc2));
+  border-color:transparent;color:#fff;font-weight:700}
+.done-dot{display:inline-block;width:6px;height:6px;border-radius:50%;
+  background:var(--green);margin-left:5px;vertical-align:middle}
+
+/* ── LAYOUT ── */
+.layout{display:grid;grid-template-columns:1fr 268px;gap:18px;
+  padding:18px 24px;max-width:1140px;margin:0 auto}
+@media(max-width:860px){
+  .layout{grid-template-columns:1fr;padding:12px}
+  .sidebar{order:-1}
+  .year-strip{padding:12px 12px 0}
+  header{padding:12px 16px}
+}
+
+/* ── QUIZ PANE ── */
+.q-list{display:flex;flex-direction:column;gap:14px}
+.sec-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:2px}
+.sec-title{font-size:.95rem;font-weight:700}
+.prog-wrap{flex:1;height:5px;background:var(--s2);border-radius:999px;overflow:hidden;max-width:150px}
+.prog-inner{height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:999px;transition:width .4s}
+
+/* question card */
+.qc{background:var(--s1);border:1.5px solid var(--border);border-radius:var(--r);
+  padding:18px 20px;animation:up .3s ease both}
+@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.qc.ok {border-color:var(--green);background:#0a1f12}
+.qc.err{border-color:var(--red);  background:#1f0a0a}
+
+.q-hd{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px}
+.q-no{font-size:.68rem;font-weight:700;color:var(--acc2);text-transform:uppercase;letter-spacing:.1em}
+.q-en{font-size:.94rem;line-height:1.85;margin-bottom:4px}
+.q-zh{font-size:.78rem;color:var(--muted);line-height:1.65;margin-bottom:12px;
+  border-left:2px solid var(--border);padding-left:9px}
+.blank{display:inline-block;min-width:68px;border-bottom:2px solid var(--acc);
+  color:var(--acc);text-align:center;font-weight:700}
+
+/* ── SPEAK BUTTON ── */
+.spk{background:none;border:1px solid var(--border);border-radius:6px;
+  padding:2px 7px;cursor:pointer;color:var(--muted);font-size:.7rem;
+  transition:all .18s;white-space:nowrap;flex-shrink:0;font-family:inherit;
+  display:inline-flex;align-items:center;gap:3px;line-height:1.5}
+.spk:hover{border-color:var(--acc);color:var(--acc)}
+.spk.on{border-color:var(--acc);color:var(--acc)}
+.wb{display:flex;align-items:center;gap:1.5px;height:10px}
+.wb span{width:2px;height:4px;background:currentColor;border-radius:1px;transform-origin:center}
+.spk.on .wb span{animation:wv .65s ease-in-out infinite}
+.wb span:nth-child(2){animation-delay:.12s!important}
+.wb span:nth-child(3){animation-delay:.24s!important}
+@keyframes wv{0%,100%{transform:scaleY(1)}50%{transform:scaleY(2.6)}}
+
+/* ── OPTIONS ── */
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:2px}
+@media(max-width:500px){.opts{grid-template-columns:1fr}}
+
+.opt{background:var(--s2);border:1.5px solid var(--border);border-radius:10px;
+  padding:10px 12px;color:var(--txt);cursor:pointer;text-align:left;
+  transition:all .14s;display:flex;align-items:flex-start;gap:9px;
+  font-family:inherit;width:100%}
+.opt:hover:not(:disabled){border-color:var(--acc);background:var(--s3)}
+.opt:disabled{cursor:default}
+.opt.ok {border-color:var(--green);background:#0a1f12;color:var(--green)}
+.opt.err{border-color:var(--red);  background:#1f0a0a;color:var(--red)}
+
+.opt-lbl{width:22px;height:22px;border-radius:50%;background:var(--bg);
+  border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;
+  font-size:.7rem;font-weight:700;flex-shrink:0;transition:all .18s;margin-top:2px}
+.opt.sel .opt-lbl{background:var(--acc);border-color:var(--acc);color:#fff}
+.opt.ok  .opt-lbl{background:var(--green);border-color:var(--green);color:#fff}
+.opt.err .opt-lbl{background:var(--red);  border-color:var(--red);  color:#fff}
+
+.opt-body{display:flex;flex-direction:column;gap:4px;flex:1;min-width:0}
+.opt-en{font-weight:600;font-size:.86rem;line-height:1.4}
+.opt-row{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.opt-zh{font-size:.71rem;color:var(--muted);line-height:1.3}
+.opt.ok  .opt-zh{color:inherit;opacity:.8}
+.opt.err .opt-zh{color:inherit;opacity:.8}
+.opt.ok  .spk{border-color:rgba(34,197,94,.35);color:var(--green)}
+.opt.err .spk{border-color:rgba(239,68,68,.35);color:var(--red)}
+
+.res-tag{display:inline-flex;align-items:center;gap:5px;margin-top:10px;
+  padding:4px 13px;border-radius:999px;font-size:.79rem;font-weight:700}
+.res-tag.ok {background:#0a1f12;color:var(--green);border:1px solid var(--green)}
+.res-tag.err{background:#1f0a0a;color:var(--red);  border:1px solid var(--red)}
+
+/* ── SIDEBAR ── */
+.sidebar{display:flex;flex-direction:column;gap:14px}
+.card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:16px}
+.card h3{font-size:.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;
+  letter-spacing:.1em;margin-bottom:12px}
+.big{font-size:2.5rem;font-weight:900;
+  background:linear-gradient(135deg,var(--acc),var(--acc2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;line-height:1;margin-bottom:3px}
+.sub{font-size:.76rem;color:var(--muted)}
+.yr-rows{display:flex;flex-direction:column;gap:6px}
+.yr-row{display:flex;align-items:center;gap:7px;font-size:.76rem}
+.yr-row .yl{color:var(--muted);width:52px;flex-shrink:0}
+.mb{flex:1;height:4px;background:var(--s2);border-radius:999px;overflow:hidden}
+.mi{height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));
+  border-radius:999px;transition:width .5s}
+.yr-row .ys{width:42px;text-align:right;color:var(--txt);font-weight:600}
+.dot-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
+.dot{aspect-ratio:1;border-radius:6px;background:var(--s2);border:1.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.66rem;font-weight:600;cursor:pointer;transition:all .18s;color:var(--muted)}
+.dot:hover{border-color:var(--acc);color:var(--txt)}
+.dot.ok {background:#0a1f12;border-color:var(--green);color:var(--green)}
+.dot.err{background:#1f0a0a;border-color:var(--red);  color:var(--red)}
+.rst-btn{width:100%;background:transparent;border:1.5px solid var(--border);
+  color:var(--muted);padding:8px;border-radius:9px;cursor:pointer;
+  font-size:.8rem;font-family:inherit;transition:all .2s}
+.rst-btn:hover{border-color:var(--red);color:var(--red)}
+
+/* ── FLASHCARD VIEW ── */
+#fc-view{display:none}
+.fc-outer{padding:18px 24px;max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+@media(max-width:600px){.fc-outer{padding:12px;gap:14px}}
+
+.fc-filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.fc-sel{background:var(--s2);border:1.5px solid var(--border);border-radius:10px;
+  padding:6px 12px;color:var(--txt);font-size:.82rem;font-family:inherit;
+  cursor:pointer;outline:none;transition:border-color .2s}
+.fc-sel:focus{border-color:var(--acc)}
+.fc-prog{display:flex;align-items:center;gap:8px;margin-left:auto;font-size:.78rem;color:var(--muted)}
+.fc-pb{width:100px;height:5px;background:var(--s2);border-radius:999px;overflow:hidden}
+.fc-pi{height:100%;background:linear-gradient(90deg,var(--yellow),#f97316);border-radius:999px;transition:width .4s}
+
+/* 3‑D card */
+.stage{perspective:1100px;width:100%;cursor:pointer;user-select:none}
+.inner{width:100%;aspect-ratio:16/9;position:relative;
+  transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,0,.2,1)}
+.inner.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;border-radius:20px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:10px;padding:24px;
+  backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.front{background:linear-gradient(135deg,#1a2040,#241847);border:1.5px solid var(--acc2)}
+.back {background:linear-gradient(135deg,#0a1f12,#0e2620);border:1.5px solid var(--green);
+  transform:rotateY(180deg)}
+.tag-row{position:absolute;top:12px;left:0;right:0;display:flex;justify-content:space-between;padding:0 16px}
+.ytag{font-size:.65rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+.ptag{font-size:.68rem;background:var(--s2);border:1px solid #8b5cf644;color:var(--acc2);
+  border-radius:5px;padding:1px 7px}
+.fc-hint{position:absolute;bottom:12px;font-size:.68rem;color:var(--muted);text-align:center}
+
+/* big word + round speak */
+.word-row{display:flex;align-items:center;gap:14px}
+.big-word{font-size:2.1rem;font-weight:900;color:var(--txt);letter-spacing:.02em;text-align:center;line-height:1.2}
+.rnd{background:rgba(91,141,238,.15);border:1.5px solid var(--acc);border-radius:50%;
+  width:44px;height:44px;min-width:44px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--acc);font-size:1rem;transition:all .2s;flex-shrink:0}
+.rnd:hover{background:rgba(91,141,238,.3)}
+.rnd.on{background:rgba(91,141,238,.3);animation:glow .9s infinite}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(91,141,238,.5)}60%{box-shadow:0 0 0 9px rgba(91,141,238,0)}}
+.back .rnd{background:rgba(34,197,94,.15);border-color:var(--green);color:var(--green)}
+.back .rnd:hover{background:rgba(34,197,94,.3)}
+.back .rnd.on{background:rgba(34,197,94,.3);animation:glow2 .9s infinite}
+@keyframes glow2{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.5)}60%{box-shadow:0 0 0 9px rgba(34,197,94,0)}}
+
+.fc-zh{font-size:1.5rem;font-weight:700;color:var(--green);text-align:center}
+.fc-en2{font-size:.95rem;color:var(--muted);text-align:center}
+.rnd-back{position:absolute;bottom:14px;right:16px}
+
+/* fc nav */
+.fc-nav{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
+.nav-btn{background:var(--s1);border:1.5px solid var(--border);border-radius:9px;
+  padding:8px 18px;color:var(--txt);font-size:.85rem;cursor:pointer;
+  font-family:inherit;transition:all .18s;display:flex;align-items:center;gap:5px}
+.nav-btn:hover:not(:disabled){border-color:var(--acc);color:var(--acc)}
+.nav-btn:disabled{opacity:.3;cursor:default}
+.nav-btn.shuf{border-color:var(--yellow);color:var(--yellow)}
+.nav-btn.shuf:hover{background:#1c1700}
+.fc-cnt{font-size:.88rem;color:var(--muted);min-width:55px;text-align:center;font-weight:600}
+
+/* word list */
+.wl-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.wl-head{padding:10px 16px;background:var(--s2);border-bottom:1px solid var(--border);
+  font-size:.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;
+  letter-spacing:.08em;display:flex;align-items:center;justify-content:space-between}
+.wl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
+.wl-item{padding:8px 13px;border-bottom:1px solid var(--border);border-right:1px solid var(--border);
+  cursor:pointer;transition:background .14s;display:flex;flex-direction:column;gap:2px}
+.wl-item:hover{background:var(--s2)}
+.wl-item.cur{background:var(--s3);border-left:2px solid var(--acc)}
+.li-en{font-size:.8rem;font-weight:600;color:var(--txt)}
+.li-zh{font-size:.68rem;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<a href="tongce.html" style="display:inline-block;margin:14px 0 0 14px;background:#1e2538;border:1px solid #2a3352;color:#e2e8f0;padding:7px 15px;border-radius:8px;text-decoration:none;font-size:0.85rem;font-weight:700;">&larr; 統測練習選單</a>
+
+<header>
+  <div class="logo">EFE統測107-114歷屆試題</div>
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+    <div class="tab-bar">
+      <button class="tab on" id="t-quiz"  onclick="setView('quiz')">✏️ 測驗</button>
+      <button class="tab"    id="t-flash" onclick="setView('flash')">🃏 單字卡</button>
+    </div>
+    <div class="score-badge" id="hdr-score">0 / 0 題</div>
+  </div>
+</header>
+
+<div class="year-strip" id="yr-strip"></div>
+
+<!-- QUIZ -->
+<div id="quiz-view">
+  <div class="layout">
+    <div>
+      <div class="sec-hd" style="margin-bottom:14px">
+        <div class="sec-title" id="sec-title"></div>
+        <div class="prog-wrap"><div class="prog-inner" id="prog" style="width:0%"></div></div>
+      </div>
+      <div class="q-list" id="q-list"></div>
+    </div>
+    <div class="sidebar">
+      <div class="card">
+        <h3>總體成績</h3>
+        <div class="big" id="tot-pct">—</div>
+        <div class="sub" id="tot-frac">尚未作答</div>
+      </div>
+      <div class="card">
+        <h3>題目導覽</h3>
+        <div class="dot-grid" id="dot-grid"></div>
+      </div>
+      <div class="card">
+        <h3>各年度成績</h3>
+        <div class="yr-rows" id="yr-rows"></div>
+      </div>
+      <button class="rst-btn" onclick="resetYear()">↺ 重設本年度</button>
+    </div>
+  </div>
+</div>
+
+<!-- FLASHCARD -->
+<div id="fc-view">
+  <div class="fc-outer">
+    <div class="fc-filters">
+      <select class="fc-sel" id="fc-yr" onchange="buildDeck()">
+        <option value="all">所有年度</option>
+        <option value="107">107學年</option>
+        <option value="108">108學年</option>
+        <option value="109">109學年</option>
+        <option value="110">110學年</option>
+        <option value="111">111學年</option>
+        <option value="112">112學年</option>
+        <option value="113">113學年</option>
+        <option value="114">114學年</option>
+      </select>
+      <select class="fc-sel" id="fc-q" onchange="buildDeck()">
+        <option value="all">所有題號</option>
+      </select>
+      <div class="fc-prog">
+        <span id="fc-lbl">0/0</span>
+        <div class="fc-pb"><div class="fc-pi" id="fc-pi" style="width:0%"></div></div>
+      </div>
+    </div>
+
+    <div class="stage" id="stage" onclick="flipCard()">
+      <div class="inner" id="inner">
+        <div class="face front">
+          <div class="tag-row">
+            <span class="ytag" id="fc-ytag"></span>
+            <span class="ptag" id="fc-ptag"></span>
+          </div>
+          <div class="word-row">
+            <button class="rnd" id="rnd-f" onclick="event.stopPropagation();fcSpeak('f')">♪</button>
+            <div class="big-word" id="fc-word"></div>
+          </div>
+          <div class="fc-hint">點擊翻面查看中文 →</div>
+        </div>
+        <div class="face back">
+          <div class="fc-zh" id="fc-zh"></div>
+          <div class="fc-en2" id="fc-en2"></div>
+          <button class="rnd rnd-back" id="rnd-b" onclick="event.stopPropagation();fcSpeak('b')">♪</button>
+          <div class="fc-hint">點擊翻回英文</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fc-nav">
+      <button class="nav-btn" id="fc-prev" onclick="fcMove(-1)">← 上一張</button>
+      <span class="fc-cnt" id="fc-cnt">1 / 1</span>
+      <button class="nav-btn" id="fc-next" onclick="fcMove(1)">下一張 →</button>
+      <button class="nav-btn shuf" onclick="fcShuffle()">🔀 隨機</button>
+    </div>
+
+    <div class="wl-card">
+      <div class="wl-head">
+        <span>本組單字</span>
+        <span id="wl-cnt" style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--txt)"></span>
+      </div>
+      <div class="wl-grid" id="wl-grid"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════════
+   SPEECH  — female, no echo
+════════════════════════════════════════ */
+let fVoice = null;
+function loadVoices(){
+  if(!window.speechSynthesis) return;
+  const en = speechSynthesis.getVoices().filter(v=>v.lang&&v.lang.startsWith('en'));
+  const names=['Samantha','Victoria','Karen','Moira','Fiona','Google US English',
+    'Microsoft Zira','Microsoft Jenny','Joanna','Ivy','Kendra','Kimberly','Salli'];
+  for(const n of names){ const v=en.find(x=>x.name.includes(n)); if(v){fVoice=v;return;} }
+  fVoice = en.find(v=>v.lang==='en-US')||en[0]||null;
+}
+if(window.speechSynthesis){ loadVoices(); speechSynthesis.onvoiceschanged=loadVoices; }
+
+const ST=[];
+function reg(t){ ST.push(t); return ST.length-1; }
+
+function speak(idx){
+  try{
+    if(!window.speechSynthesis) return;
+    speechSynthesis.cancel();
+    document.querySelectorAll('.spk.on,.rnd.on').forEach(b=>b.classList.remove('on'));
+    const btn = document.querySelector(`[data-si="${idx}"]`);
+    const u = new SpeechSynthesisUtterance(ST[idx]);
+    u.lang='en-US'; u.rate=0.85; u.pitch=1.1; u.volume=1;
+    if(fVoice) u.voice=fVoice;
+    if(btn) btn.classList.add('on');
+    u.onend=u.onerror=()=>{ if(btn) btn.classList.remove('on'); };
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+function W(){ return `<span class="wb"><span></span><span></span><span></span></span>`; }
+function mkSpk(text, cls=''){
+  const i=reg(text);
+  return `<button class="spk ${cls}" data-si="${i}" onclick="speak(${i})">${W()}</button>`;
+}
+
+/* ════════════════════════════════════════
+   DATA  107–114  (108 added from image 1)
+════════════════════════════════════════ */
+const YEARS = {
+'108':{title:'108學年統測第一大題',questions:[
+  {q:'When teaching a large class, the teacher has to _______ the class into small groups to help students to learn.',zh:'教大班時，老師必須將班級_______成小組，以幫助學生學習。',opts:['arrive','divide','hire','ignore'],ozh:['抵達','分成','僱用','忽視'],ans:1},
+  {q:'I have to _______ your idea of selling our products to Europe because shipping them out there is too expensive.',zh:'我必須_______你把產品賣到歐洲的想法，因為運費太貴了。',opts:['reject','shine','toast','visit'],ozh:['拒絕','發光','烤、乾杯','拜訪'],ans:0},
+  {q:'My parents are really _______ to me. They have always supported me in whatever I have wanted to do.',zh:'我的父母對我真的非常_______，無論我想做什麼，他們總是支持我。',opts:['changeable','doubtful','medical','precious'],ozh:['易變的','懷疑的','醫療的','寶貴的'],ans:3},
+  {q:'Emily enjoys trying different things and traveling to different places, for she believes that _______ is the spice of life.',zh:'艾蜜莉喜歡嘗試不同事物和去不同地方旅行，因為她相信_______是生活的調劑。',opts:['quarrel','variety','wagon','zipper'],ozh:['爭吵','多樣性','馬車','拉鍊'],ans:1},
+  {q:'Instead of being defeated, the tennis player finally _______ the obstacles she faced in the game.',zh:'這位網球選手沒有被擊敗，最終_______了她在比賽中面對的障礙。',opts:['awoke','hatched','overcame','tickled'],ozh:['醒來','孵化','克服','搔癢'],ans:2},
+  {q:'When it comes to job interviews, making a good first _______ is very important.',zh:'說到面試，留下好的第一_______非常重要。',opts:['confusion','depression','explosion','impression'],ozh:['混亂','沮喪','爆炸','印象'],ans:3},
+  {q:'The student has been working part time in order to earn _______ money to cover his college expenses.',zh:'這名學生一直在打工，以賺取_______的錢來支付大學費用。',opts:['sufficient','tropical','vacant','weary'],ozh:['足夠的','熱帶的','空缺的','疲倦的'],ans:0},
+  {q:'For the domestic pork industry, the government has made efforts to prevent the spread of African swine fever.',zh:'為了國內豬肉產業，政府努力_______非洲豬瘟的蔓延。',opts:['cause','melt','risk','stop'],ozh:['造成','融化','冒險','阻止'],ans:3},
+  {q:'The Taiwan Lantern Festival appealed to foreign tourists this year for its beautiful lantern shows.',zh:'台灣燈會今年以其美麗的燈光秀_______了外國遊客。',opts:['advised','attracted','edited','envied'],ozh:['建議','吸引','編輯','羨慕'],ans:1},
+  {q:'Even though Nancy is busy at work, she still goes fishing from time to time on weekends.',zh:'即使南希工作很忙，她週末仍然_______去釣魚。',opts:['always','generally','sometimes','usually'],ozh:['總是','通常','有時候','一般'],ans:2},
+  {q:'Sam is not easy to get along with. I do not know how his friends can tolerate him without any complaints.',zh:'山姆不容易相處，我不知道他的朋友如何能_______他而沒有任何抱怨。',opts:['break up with','catch up with','keep up with','put up with'],ozh:['分手','趕上','跟上','容忍'],ans:3},
+]},
+'107':{title:'107學年統測第一大題',questions:[
+  {q:"Let's make a _______ ; you cook dinner and I do the dishes.",zh:'我們來做個_______吧：你煮晚飯，我洗碗。',opts:['call','deal','guess','scene'],ozh:['呼叫','交易、協議','猜測','場景'],ans:1},
+  {q:'Since you are well prepared, you have no _______ to worry about the test.',zh:'既然你已充分準備，你沒有_______擔心這次測驗。',opts:['luck','nature','reason','taste'],ozh:['運氣','本性','理由','品味'],ans:2},
+  {q:'After the winner received the medal, her coach and her family members _______ loudly for her.',zh:'贏家領獎後，她的教練和家人為她大聲_______。',opts:['applied','cheered','feared','regretted'],ozh:['申請','歡呼','害怕','後悔'],ans:1},
+  {q:"In order to gain Linda's trust, Russell raised his hand to _______ that he didn't tell anyone her secret.",zh:"為了贏得琳達的信任，羅素舉手_______他沒有告訴任何人她的秘密。",opts:['realize','remain','swear','switch'],ozh:['意識到','保持','發誓','切換'],ans:2},
+  {q:'Helen and her sister really _______ the party when they started fighting. It upset all the party guests.',zh:'海倫和她姐姐開始打架，真的_______了派對，讓所有賓客感到不安。',opts:['cheated','clapped','spoiled','supported'],ozh:['欺騙','鼓掌','破壞','支持'],ans:2},
+  {q:"I'm sorry I didn't reply yesterday, for I was _______ busy and could not find any time at all to return your phone call.",zh:'很抱歉昨天沒有回覆，因為我_______忙碌，完全找不到時間回電話。',opts:['casually','extremely','loosely','scarcely'],ozh:['隨意地','極度地','鬆散地','幾乎不'],ans:1},
+  {q:'Many people living in the downtown are often bothered by the _______ noise of heavy traffic all day long.',zh:'許多住在市區的人整天都受到繁忙交通_______噪音的困擾。',opts:['ambitious','constant','elegant','glorious'],ozh:['有抱負的','持續的','優雅的','光榮的'],ans:1},
+  {q:'In Taiwan, Jay Chou is such a well-known singer that almost every teenager has heard about him.',zh:'在台灣，周杰倫是如此_______的歌手，幾乎每個青少年都聽說過他。',opts:['creative','famous','high','wild'],ozh:['有創意的','著名的','高的','野的'],ans:1},
+  {q:'After his mother ordered him to turn off the TV, Tom reluctantly went to bed because his favorite movie was not over yet.',zh:'在媽媽命令他關掉電視後，湯姆_______上床睡覺，因為他最喜愛的電影還沒結束。',opts:['indirectly','informally','untruthfully','unwillingly'],ozh:['間接地','非正式地','不誠實地','不情願地'],ans:3},
+  {q:"Some people don't believe in the existence of ghosts because they don't believe what they cannot see.",zh:'有些人不相信鬼魂的_______，因為他們不相信看不見的東西。',opts:['absence','conflict','presence','standard'],ozh:['缺席','衝突','存在','標準'],ans:2},
+  {q:'Leonardo da Vinci is definitely an important figure in the history of art.',zh:'達文西_______是藝術史上的重要人物。',opts:['absolutely','relatively','suspiciously','temporarily'],ozh:['絕對地','相對地','可疑地','暫時地'],ans:0},
+]},
+'109':{title:'109學年統測英文第一大題',questions:[
+  {q:'You can wear sunglasses if you think the sunlight is too _______ outside.',zh:'如果你覺得外面陽光太_______，你可以戴太陽眼鏡。',opts:['bright','gray','large','weak'],ozh:['強烈的、明亮的','灰色的','大的','弱的'],ans:0},
+  {q:'Every Saturday, the library holds talks on various _______ that include friendship, career, photography and health.',zh:'每個週六，圖書館舉辦各種_______的演講，包括友誼、職業、攝影和健康。',opts:['jobs','hobbies','products','topics'],ozh:['工作','嗜好','產品','主題'],ans:3},
+  {q:"I don't feel _______ gossiping about Michael's life because it is wrong to discuss other people's private lives.",zh:'我對談論麥可的私生活感到不_______，因為討論別人的私生活是不對的。',opts:['annoyed','comfortable','embarrassed','fearful'],ozh:['惱怒的','自在的','尷尬的','害怕的'],ans:1},
+  {q:'Computer technology _______ people to work at home effectively without having to go to the office.',zh:'電腦科技_______人們能在家有效地工作，而不必去辦公室。',opts:['attacks','confuses','enables','reduces'],ozh:['攻擊','使困惑','使能夠','減少'],ans:2},
+  {q:'The shoes usually cost a lot, but now they are _______ cheap after discount.',zh:'這雙鞋通常很貴，但現在打折後_______便宜了。',opts:['regionally','relatively','reluctantly','respectfully'],ozh:['地區性地','相對地','勉強地','恭敬地'],ans:1},
+  {q:'Mozart was a great musician who started to _______ music when he was very young.',zh:'莫札特是一位偉大的音樂家，他很小就開始_______音樂。',opts:['compose','lighten','monitor','reject'],ozh:['作曲','減輕','監視','拒絕'],ans:0},
+  {q:'An expressive face is essential to dramatic acting because it is good at showing all kinds of emotions.',zh:'_______的臉孔對戲劇表演至關重要，因為它擅長表現各種情緒。',opts:['expressive','identical','protective','reasonable'],ozh:['表情豐富的','相同的','保護性的','合理的'],ans:0},
+  {q:"Henry has been very busy looking for a new job lately, so he hasn't contacted his family for almost two weeks.",zh:'亨利_______一直很忙著找新工作，所以他將近兩週沒有聯繫家人了。',opts:['fairly','nearly','recently','shortly'],ozh:['相當地','幾乎','最近','很快'],ans:2},
+  {q:'Mary broke up with her boyfriend because she felt he had no regard for her feelings.',zh:'瑪莉和男友分手，因為她覺得他對她的感受沒有任何_______。',opts:['concern','fortune','silence','temper'],ozh:['關心','財富','沉默','脾氣'],ans:0},
+  {q:'A medical report indicates that there is an association between high levels of stress and skin problems.',zh:'一份醫學報告指出，高度壓力與皮膚問題之間存在_______。',opts:['an exchange','an obstacle','a relationship','a similarity'],ozh:['交流','障礙','關聯','相似性'],ans:2},
+  {q:'The government declared that the new city hall would be open to the public this summer.',zh:'政府_______新市政廳將在今年夏天對公眾開放。',opts:['announced','discovered','imagined','predicted'],ozh:['宣布','發現','想像','預測'],ans:0},
+]},
+'110':{title:'110學年統測第一大題',questions:[
+  {q:'The shy little boy spoke so _______ that I had a hard time hearing what he said.',zh:'這個害羞的小男孩說話聲音非常_______，我很難聽清他說的話。',opts:['bravely','clearly','openly','softly'],ozh:['勇敢地','清楚地','公開地','輕聲地'],ans:3},
+  {q:'I am terribly sorry. Please _______ my sincere apology.',zh:'我非常抱歉。請_______我真誠的道歉。',opts:['accept','ignore','propose','refuse'],ozh:['接受','忽視','提議','拒絕'],ans:0},
+  {q:'I am a _______ customer at that restaurant. I eat there at least four or five times a week.',zh:'我是那家餐廳的_______顧客，每週至少去那裡吃四、五次。',opts:['delicious','former','negative','regular'],ozh:['美味的','前任的','消極的','常客、定期的'],ans:3},
+  {q:'Eating too many potato chips makes you thirsty because chips _______ a large amount of salt.',zh:'吃太多洋芋片讓你口渴，因為洋芋片_______大量的鹽。',opts:['contain','control','contract','contact'],ozh:['含有','控制','合約','聯繫'],ans:0},
+  {q:'The weather is very hot in summer, while in winter it is really _______.',zh:'夏天天氣非常炎熱，而冬天則真的_______。',opts:['chilly','previous','tropical','visible'],ozh:['寒冷的','之前的','熱帶的','可見的'],ans:0},
+  {q:'Hand washing is one of the best ways to keep healthy and stop the spread of _______ and viruses.',zh:'洗手是保持健康、阻止_______和病毒傳播的最佳方式之一。',opts:['bacteria','fever','moisture','sweat'],ozh:['細菌','發燒','溼氣','汗水'],ans:0},
+  {q:'In the admission interview, the _______ are often asked to explain why they want to enter the university.',zh:'在入學面試中，_______通常被要求解釋為何想進入大學。',opts:['applicants','associates','receptionists','relatives'],ozh:['申請者','合夥人','接待員','親戚'],ans:0},
+  {q:"Pets, such as cats and dogs, are humans' favorite companions.",zh:'貓狗等寵物是人類最喜愛的_______。',opts:['listeners','directors','partners','strangers'],ozh:['傾聽者','導演','夥伴','陌生人'],ans:2},
+  {q:'The weather forecast said the temperature would dip from 20 degrees during the day to 12 degrees at night.',zh:'天氣預報說氣溫將從白天的20度_______到晚上的12度。',opts:['dim','drop','fail','leak'],ozh:['昏暗','下降','失敗','洩漏'],ans:1},
+  {q:'Many early American Indians preferred hunting, so they lived primarily on buffalo meat.',zh:'許多早期美洲印地安人偏好狩獵，所以他們_______以水牛肉為食。',opts:['barely','frequently','mainly','scarcely'],ozh:['幾乎不','頻繁地','主要地','勉強'],ans:2},
+  {q:'Marie Curie was a magnificent scientist who was the first woman to win the Nobel Prize.',zh:'居禮夫人是一位_______的科學家，是第一位獲諾貝爾獎的女性。',opts:['brilliant','believable','critical','commercial'],ozh:['傑出的','可信的','批評的','商業的'],ans:0},
+]},
+'111':{title:'111學年統測第一大題',questions:[
+  {q:'We had better leave early to _______ the heavy traffic to get home on time.',zh:'我們最好早點出發，以_______嚴重的交通狀況，準時到家。',opts:['avoid','drop','invite','mind'],ozh:['避免','放下','邀請','介意'],ans:0},
+  {q:"Anny's grandson is always full of _______ and wants to go to the park every day.",zh:'安妮的孫子總是充滿_______，每天都想去公園。',opts:['energy','hurry','identity','safety'],ozh:['精力','匆忙','身份','安全'],ans:0},
+  {q:"I've put on so much weight recently that these jeans are too _______ for me to wear now.",zh:'我最近體重增加了很多，這些牛仔褲對我來說太_______了。',opts:['loose','ripe','swift','tight'],ozh:['寬鬆的','成熟的','迅速的','緊的'],ans:3},
+  {q:'My boss totally accepted my suggestion and kept nodding to _______ his full agreement.',zh:'我的老闆完全接受了我的建議，並不斷點頭_______他的完全同意。',opts:['deny','excuse','forget','indicate'],ozh:['否認','藉口','忘記','表示'],ans:3},
+  {q:'To protect your head, when you ride a motorcycle, you must wear a _______.',zh:'為了保護頭部，騎摩托車時，你必須戴_______。',opts:['beard','helmet','necklace','tie'],ozh:['鬍子','安全帽','項鍊','領帶'],ans:1},
+  {q:"David's _______ hair color is brown, but he recently dyed it purple.",zh:'大衛的_______頭髮是棕色的，但他最近把它染成了紫色。',opts:['ancient','historical','natural','opposite'],ozh:['古老的','歷史的','天然的','相反的'],ans:2},
+  {q:'We got train seats for the Lunar New Year season as we planned _______ and made our reservation once tickets went on sale.',zh:'我們_______計劃，在春節期間搶到了火車座位，票一開售就訂了。',opts:['ahead','almost','either','even'],ozh:['提前','幾乎','任一','甚至'],ans:0},
+  {q:'To ease his pressure, Mr. Hung decided to listen to bedtime music for _______.',zh:'為了減輕壓力，洪先生決定聽睡前音樂來_______。',opts:['presentation','publication','relaxation','reputation'],ozh:['報告','出版','放鬆','聲譽'],ans:2},
+  {q:'The police pursued the bank robber through the streets last night.',zh:'警方昨晚在街道上_______銀行搶匪。',opts:['begged','chased','praised','treated'],ozh:['乞求','追逐','讚美','對待'],ans:1},
+  {q:"I have looked through the records extensively, but couldn't find anything about the person you mentioned.",zh:'我_______地查閱了記錄，但找不到任何關於你提到的那個人的信息。',opts:['eventually','marginally','occasionally','thoroughly'],ozh:['最終','些微地','偶爾','徹底地'],ans:3},
+]},
+'112':{title:'112學年統測第一大題',questions:[
+  {q:'It is a big _______ for people in this small town to learn that the only movie theater is going to shut down next month.',zh:'對小鎮居民而言，得知唯一電影院下月關閉是一個大_______。',opts:['cable','shock','tube','zone'],ozh:['電纜','震驚','管子','區域'],ans:1},
+  {q:'The animal rights group is going to _______ a party to raise money for street cats.',zh:'動物權益團體將要_______一個派對來為街貓籌款。',opts:['break','fight','hold','spell'],ozh:['打破','戰鬥','舉辦','拼寫'],ans:2},
+  {q:"I have _______ finished writing the novel, and I'm going to complete the last chapter tonight.",zh:'我_______完成了小說的寫作，今晚要完成最後一章。',opts:['almost','already','always','altogether'],ozh:['幾乎','已經','總是','完全地'],ans:0},
+  {q:'In some countries, looking at someone in the eye for too long is considered _______, so you should avoid doing it.',zh:'在某些國家，長時間直視他人眼睛被認為是_______的，應該避免這樣做。',opts:['basic','classical','legal','rude'],ozh:['基本的','古典的','合法的','無禮的'],ans:3},
+  {q:'If you keep blowing air into the balloon, it will _______ with a loud bang.',zh:'如果持續往氣球吹氣，它會發出巨響_______。',opts:['aim','burst','explore','shine'],ozh:['瞄準','爆裂','探索','發光'],ans:1},
+  {q:"The boss agreed to increase workers' _______, so they can make more money to improve their life.",zh:'老闆同意提高工人的_______，讓他們賺更多錢改善生活。',opts:['permits','risks','scales','wages'],ozh:['許可證','風險','規模','工資'],ans:3},
+  {q:"Since my teeth are very _______ to sweets, I don't eat candies and cookies.",zh:'由於我的牙齒對甜食非常_______，我不吃糖果和餅乾。',opts:['attractive','effective','positive','sensitive'],ozh:['有吸引力的','有效的','積極的','敏感的'],ans:3},
+  {q:"Amy's proposal to get funding from the school did not meet any _______, so she got all the money she needed.",zh:'艾美的提案沒有遇到任何_______，所以她得到了所需的全部資金。',opts:['appreciation','gratitude','resistance','sympathy'],ozh:['感激','感謝','阻力','同情'],ans:2},
+  {q:"William's mother was seriously hurt in the car accident; she will have to stay in the hospital for a while.",zh:'威廉的母親在車禍中受傷_______，將不得不在醫院住一段時間。',opts:['badly','cheaply','hardly','shortly'],ozh:['嚴重地','便宜地','幾乎不','很快地'],ans:0},
+  {q:"I'm sorry that I don't have any spare money to lend you.",zh:'很抱歉我沒有_______的錢借給你。',opts:['extra','hot','quick','soft'],ozh:['多餘的、閒置的','熱的','快的','軟的'],ans:0},
+]},
+'113':{title:'113統測第一大題',questions:[
+  {q:'Johnny is wearing a very _______ hat that looks different from those of other people.',zh:'強尼戴著一頂非常_______的帽子，看起來和其他人的不一樣。',opts:['common','general','regular','special'],ozh:['普通的','一般的','規律的','特別的'],ans:3},
+  {q:'Loud noises can make it hard for me to _______, so I always find a quiet place to study with full attention.',zh:'吵雜聲讓我很難_______，所以我總是找安靜地方全神貫注學習。',opts:['bend','focus','panic','wander'],ozh:['彎曲','專注','恐慌','漫遊'],ans:1},
+  {q:'Here is a helpful _______ for cooking chicken soup: add a little salt. It will make the soup tasty.',zh:'這裡有個煮雞湯的好_______：加一點鹽，這會讓湯更美味。',opts:['lip','gap','tip','nap'],ozh:['嘴唇','間隙','訣竅、小費','小睡'],ans:2},
+  {q:'My grandpa sleeps at _______ the same time every day. He goes to bed at about 9 pm.',zh:'我祖父每天_______在同一時間睡覺，大約晚上9點上床。',opts:['briefly','fluently','gently','roughly'],ozh:['短暫地','流利地','溫柔地','大約'],ans:3},
+  {q:'Being friendly with your roommates can help you stay away from _______ with them.',zh:'和室友友好相處可以幫助你避免與他們產生_______。',opts:['dialogues','conflicts','personality','relationship'],ozh:['對話','衝突','個性','關係'],ans:1},
+  {q:'Jack is a very _______ person. He will never change his decisions no matter how hard you try to persuade him.',zh:'傑克是非常_______的人，無論你怎麼努力說服他，他都不會改變決定。',opts:['easy-going','democratic','obedient','stubborn'],ozh:['隨和的','民主的','順從的','固執的'],ans:3},
+  {q:'Kuo Hsing-chun won a gold medal in the 2020 Tokyo Olympics. I _______ her a lot and want to be like her one day.',zh:'郭婞淳在2020年東京奧運贏得金牌。我非常_______她，希望有一天能像她一樣。',opts:['admire','frighten','impress','suspect'],ozh:['崇拜、欽佩','使害怕','給人印象','懷疑'],ans:0},
+  {q:'Though she hurt her arm last week, Amy could still play the violin as skillfully as before.',zh:'雖然上週受傷手臂，艾美仍能像以前一樣_______地拉小提琴。',opts:['casually','cruelly','smoothly','strictly'],ozh:['隨意地','殘酷地','流暢地','嚴格地'],ans:2},
+  {q:'May has to conquer her fear of flying if she wants to travel by airplane.',zh:'如果梅想搭飛機旅行，她必須_______對搭飛機的恐懼。',opts:['beat','hunt','recover','select'],ozh:['打敗、克服','狩獵','恢復','選擇'],ans:0},
+  {q:'It is against the law for drivers not to stop at the crosswalk and allow walkers to cross first.',zh:'駕駛人不在行人穿越道停車讓行人先行是_______的。',opts:['illegal','national','political','unusual'],ozh:['違法的','國家的','政治的','不尋常的'],ans:0},
+]},
+'114':{title:'114學年統測第一大題',questions:[
+  {q:'This child is using colored chalks to _______ pictures on a blank piece of paper.',zh:'這個孩子正在用彩色粉筆在空白紙上_______圖畫。',opts:['draw','heat','mail','type'],ozh:['畫、描繪','加熱','郵寄','打字'],ans:0},
+  {q:"The room was so _______ that I couldn't even find space for these new chairs.",zh:'這個房間如此_______，我甚至找不到空間放新椅子。',opts:['available','crowded','empty','positive'],ozh:['可用的','擁擠的','空的','積極的'],ans:1},
+  {q:'Many people have climbed the main _______ of Mount Jade in Taiwan, which is the highest point on the island.',zh:'許多人已爬上台灣玉山的主_______，那是島上最高點。',opts:['base','peak','shore','valley'],ozh:['底部','頂峰','海岸','山谷'],ans:1},
+  {q:"After looking at his grandfather's _______ on the wall, John was happy to discover that his grandfather and he really looked alike.",zh:'看了牆上祖父的_______後，約翰很高興發現他和祖父真的很像。',opts:['cattle','jewelry','portrait','whistle'],ozh:['牛、牲口','珠寶','肖像畫','口哨'],ans:2},
+  {q:'It is risky for people to touch plants in rainforests because some plants can be _______ to humans.',zh:'觸碰雨林植物是有風險的，因為有些植物對人類可能是_______的。',opts:['fashionable','jealous','poisonous','reasonable'],ozh:['時髦的','嫉妒的','有毒的','合理的'],ans:2},
+  {q:'Governments have the _______ to punish people who drink and drive.',zh:'政府有_______懲罰酒後駕車的人。',opts:['authority','bargain','courtesy','infection'],ozh:['權力、當局','便宜貨','禮貌','感染'],ans:0},
+  {q:'During the night, the sensor lights in the park will _______ turn on by themselves when someone is passing by.',zh:'夜晚，公園感應燈會在有人經過時_______自動開啟。',opts:['automatically','organically','productively','selfishly'],ozh:['自動地','有機地','有效率地','自私地'],ans:0},
+  {q:'Chen Chieh-hsien stood out as the WBSC Premier12 2024 MVP due to his magnificent performance.',zh:'陳傑憲因為出色表現_______世界12強2024年MVP。',opts:['was named after','made fun of','was in charge of','stood out as'],ozh:['以…命名','嘲笑','負責','以…脫穎而出'],ans:3},
+  {q:'Mary came to me and introduced herself again. Apparently, she thought that I had forgotten her name.',zh:'瑪莉走過來再次自我介紹。_______，她認為我已忘記她的名字。',opts:['actively','entirely','internally','obviously'],ozh:['積極地','完全地','內部地','顯然地'],ans:3},
+  {q:'My sister decided to abandon her old habits and start a fresh chapter in her life.',zh:'我姐姐決定_______舊習慣，在生活中開始全新的篇章。',opts:['bring about','carry on','give up','run into'],ozh:['導致、引起','繼續','放棄','偶遇'],ans:2},
+]},
+};
+
+/* ════ VOCAB: build from all opts ════ */
+const POS_ADV=new Set(['automatically','organically','productively','selfishly','actively','entirely','internally','obviously','briefly','fluently','gently','roughly','casually','cruelly','smoothly','strictly','bravely','clearly','openly','softly','regionally','relatively','reluctantly','respectfully','fairly','nearly','recently','shortly','extremely','loosely','scarcely','indirectly','informally','untruthfully','unwillingly','eventually','marginally','occasionally','thoroughly','barely','frequently','mainly','badly','cheaply','hardly']);
+const POS_PHR=new Set(['bring about','carry on','give up','run into','was named after','made fun of','was in charge of','stood out as','break up with','catch up with','keep up with','put up with','from time to time','an exchange','an obstacle','a relationship','a similarity']);
+const POS_ADJ=new Set(['common','general','regular','special','bright','gray','large','weak','annoyed','comfortable','embarrassed','fearful','expressive','identical','protective','reasonable','fashionable','jealous','poisonous','available','crowded','empty','positive','basic','classical','legal','rude','attractive','effective','sensitive','ambitious','constant','elegant','glorious','creative','famous','wild','changeable','doubtful','medical','precious','sufficient','tropical','vacant','weary','ancient','historical','natural','opposite','loose','ripe','swift','tight','delicious','former','negative','chilly','previous','visible','brilliant','believable','critical','commercial','easy-going','democratic','obedient','stubborn','illegal','national','political','unusual','high','either','almost','ahead','even','almost']);
+const POS_V  =new Set(['draw','heat','mail','type','bend','focus','panic','wander','admire','frighten','impress','suspect','beat','hunt','recover','select','avoid','drop','invite','mind','deny','excuse','forget','indicate','compose','lighten','monitor','reject','contain','control','contract','contact','arrive','divide','hire','ignore','accept','propose','refuse','aim','burst','explore','shine','break','fight','hold','spell','cheer','fear','regret','realize','remain','swear','switch','cheat','clap','spoil','support','cause','melt','risk','stop','enables','reduces','attacks','confuses','dim','fail','leak']);
+
+const VOCAB=[];
+const seenV=new Set();
+Object.entries(YEARS).forEach(([yr,data])=>{
+  data.questions.forEach((q,qi)=>{
+    q.opts.forEach((opt,oi)=>{
+      const k=opt.toLowerCase();
+      if(!seenV.has(k)){
+        seenV.add(k);
+        let pos='n.';
+        if(POS_PHR.has(k)) pos='phr.';
+        else if(POS_ADV.has(k)) pos='adv.';
+        else if(POS_ADJ.has(k)) pos='adj.';
+        else if(POS_V.has(k))   pos='v.';
+        VOCAB.push({en:opt,zh:q.ozh[oi],yr,qi:qi+1,pos});
+      }
+    });
+  });
+});
+VOCAB.sort((a,b)=>a.en.localeCompare(b.en));
+
+/* Populate fc-q filter */
+(function(){
+  const sel=document.getElementById('fc-q');
+  for(let i=1;i<=11;i++){
+    const o=document.createElement('option');
+    o.value=String(i); o.textContent='第'+i+'題';
+    sel.appendChild(o);
+  }
+})();
+
+/* ════ STATE ════ */
+let curYear='114', answers={}, curView='quiz';
+
+/* ════ VIEW SWITCH ════ */
+function setView(v){
+  curView=v;
+  document.getElementById('t-quiz').classList.toggle('on',v==='quiz');
+  document.getElementById('t-flash').classList.toggle('on',v==='flash');
+  document.getElementById('quiz-view').style.display=v==='quiz'?'':'none';
+  document.getElementById('fc-view').style.display=v==='flash'?'':'none';
+  if(v==='flash') requestAnimationFrame(()=>requestAnimationFrame(buildDeck));
+}
+
+/* ════ YEAR TABS ════ */
+function renderYrStrip(){
+  document.getElementById('yr-strip').innerHTML=Object.keys(YEARS).map(y=>{
+    const done=YEARS[y].questions.every((_,i)=>answers[y+'-'+i]!==undefined);
+    return `<button class="yr-btn ${y===curYear?'on':''}" onclick="selYear('${y}')">${y}學年${done?'<span class="done-dot"></span>':''}`;
+  }).join('');
+}
+function selYear(y){ curYear=y; renderYrStrip(); renderQuiz(); updateSidebar(); }
+
+/* ════ QUIZ ════ */
+function renderQuiz(){
+  const data=YEARS[curYear];
+  document.getElementById('sec-title').textContent=data.title;
+  const done=data.questions.filter((_,i)=>answers[curYear+'-'+i]!==undefined).length;
+  document.getElementById('prog').style.width=(done/data.questions.length*100)+'%';
+  document.getElementById('q-list').innerHTML=data.questions.map((q,i)=>buildCard(q,i)).join('');
+  updateGrid();
+}
+
+function buildCard(q,i){
+  const key=curYear+'-'+i, chosen=answers[key], answered=chosen!==undefined;
+  const isOk=answered&&chosen===q.ans;
+  const cardCls=answered?(isOk?'ok':'err'):'';
+  const LABS=['A','B','C','D'];
+  const sIdx=reg(q.q.replace('_______',q.opts[q.ans]));
+  const sBtn=`<button class="spk" data-si="${sIdx}" onclick="speak(${sIdx})">${W()} 朗讀</button>`;
+  const displayQ=q.q.replace('_______','<span class="blank">_______</span>');
+
+  const optHtml=q.opts.map((opt,oi)=>{
+    let cls='opt';
+    if(answered){ if(oi===q.ans) cls+=' ok'; else if(oi===chosen) cls+=' err'; }
+    else if(chosen===oi) cls+=' sel';
+    const oIdx=reg(opt);
+    const oSpk=`<button class="spk" data-si="${oIdx}" onclick="event.stopPropagation();speak(${oIdx})">${W()}</button>`;
+    return `<button class="${cls}" onclick="doAnswer(${i},${oi})" ${answered?'disabled':''}>
+      <span class="opt-lbl">${LABS[oi]}</span>
+      <span class="opt-body">
+        <span class="opt-en">${opt}</span>
+        <span class="opt-row">
+          <span class="opt-zh">${q.ozh[oi]}</span>
+          ${oSpk}
+        </span>
+      </span>
+    </button>`;
+  }).join('');
+
+  const tag=answered?`<div class="res-tag ${isOk?'ok':'err'}">${isOk?'✓ 正確！':'✗ 錯誤，正確答案是 ('+LABS[q.ans]+') '+q.opts[q.ans]+'　'+q.ozh[q.ans]}</div>`:'';
+
+  return `<div class="qc ${cardCls}" id="qc-${i}" style="animation-delay:${i*.04}s">
+    <div class="q-hd"><span class="q-no">第 ${i+1} 題</span>${sBtn}</div>
+    <div class="q-en">${displayQ}</div>
+    <div class="q-zh">${q.zh}</div>
+    <div class="opts">${optHtml}</div>
+    ${tag}
+  </div>`;
+}
+
+function doAnswer(qi,oi){
+  const key=curYear+'-'+qi;
+  if(answers[key]!==undefined) return;
+  answers[key]=oi;
+  const q=YEARS[curYear].questions[qi];
+  const old=document.getElementById('qc-'+qi);
+  const tmp=document.createElement('div'); tmp.innerHTML=buildCard(q,qi);
+  old.replaceWith(tmp.firstElementChild);
+  const done=YEARS[curYear].questions.filter((_,i)=>answers[curYear+'-'+i]!==undefined).length;
+  document.getElementById('prog').style.width=(done/YEARS[curYear].questions.length*100)+'%';
+  updateSidebar(); updateGrid();
+}
+
+function updateSidebar(){
+  let tot=0,cor=0;
+  Object.keys(YEARS).forEach(y=>YEARS[y].questions.forEach((q,i)=>{
+    const k=y+'-'+i; if(answers[k]!==undefined){tot++;if(answers[k]===q.ans)cor++;}
+  }));
+  if(!tot){document.getElementById('tot-pct').textContent='—';document.getElementById('tot-frac').textContent='尚未作答';}
+  else{document.getElementById('tot-pct').textContent=Math.round(cor/tot*100)+'%';document.getElementById('tot-frac').textContent='答對 '+cor+' / '+tot+' 題';}
+  document.getElementById('hdr-score').textContent=cor+' / '+tot+' 題';
+  document.getElementById('yr-rows').innerHTML=Object.keys(YEARS).map(y=>{
+    let yT=0,yC=0; YEARS[y].questions.forEach((q,i)=>{const k=y+'-'+i;if(answers[k]!==undefined){yT++;if(answers[k]===q.ans)yC++;}});
+    const pct=yT?Math.round(yC/yT*100):0;
+    return`<div class="yr-row"><span class="yl">${y}學年</span><div class="mb"><div class="mi" style="width:${pct}%"></div></div><span class="ys">${yT?yC+'/'+yT:'未作答'}</span></div>`;
+  }).join('');
+  updateGrid();
+}
+function updateGrid(){
+  document.getElementById('dot-grid').innerHTML=YEARS[curYear].questions.map((q,i)=>{
+    const k=curYear+'-'+i; let c='dot';
+    if(answers[k]!==undefined) c+=answers[k]===q.ans?' ok':' err';
+    return`<div class="${c}" onclick="document.getElementById('qc-'+${i})?.scrollIntoView({behavior:'smooth',block:'center'})">${i+1}</div>`;
+  }).join('');
+}
+function resetYear(){
+  if(!confirm('確定要重設 '+curYear+' 學年的作答記錄嗎？')) return;
+  YEARS[curYear].questions.forEach((_,i)=>delete answers[curYear+'-'+i]);
+  renderQuiz(); updateSidebar();
+}
+
+/* ════ FLASHCARD ════ */
+let fcDeck=[], fcIdx=0, fcFlip=false;
+
+function buildDeck(){
+  const y=document.getElementById('fc-yr').value;
+  const q=document.getElementById('fc-q').value;
+  fcDeck=VOCAB.filter(v=>{
+    if(y!=='all'&&v.yr!==y) return false;
+    if(q!=='all'&&v.qi!==+q) return false;
+    return true;
+  });
+  fcIdx=0; fcFlip=false;
+  showCard(); renderWordList();
+}
+
+function showCard(){
+  const n=fcDeck.length;
+  document.getElementById('fc-lbl').textContent=n?(fcIdx+1)+'/'+n:'0/0';
+  document.getElementById('fc-pi').style.width=n?((fcIdx+1)/n*100)+'%':'0%';
+  document.getElementById('fc-cnt').textContent=n?(fcIdx+1)+' / '+n:'0 / 0';
+  document.getElementById('fc-prev').disabled=fcIdx<=0;
+  document.getElementById('fc-next').disabled=fcIdx>=n-1;
+  fcFlip=false;
+  document.getElementById('inner').classList.remove('flip');
+  if(!n){
+    document.getElementById('fc-word').textContent='無單字';
+    document.getElementById('fc-zh').textContent='';
+    document.getElementById('fc-en2').textContent='';
+    document.getElementById('fc-ytag').textContent='';
+    document.getElementById('fc-ptag').textContent='';
+    return;
+  }
+  const v=fcDeck[fcIdx];
+  document.getElementById('fc-word').textContent=v.en;
+  document.getElementById('fc-zh').textContent=v.zh;
+  document.getElementById('fc-en2').textContent=v.en;
+  document.getElementById('fc-ytag').textContent=v.yr+'學年 第'+v.qi+'題';
+  document.getElementById('fc-ptag').textContent=v.pos;
+  // highlight list
+  document.querySelectorAll('.wl-item').forEach((el,i)=>el.classList.toggle('cur',i===fcIdx));
+  document.querySelector('.wl-item.cur')?.scrollIntoView({block:'nearest'});
+  // auto speak
+  try{ speechSynthesis&&speechSynthesis.cancel(); }catch(e){}
+  setTimeout(()=>{ try{ doSpeak(v.en,document.getElementById('rnd-f')); }catch(e){} },350);
+}
+
+function doSpeak(text,btn){
+  try{
+    if(!window.speechSynthesis) return;
+    speechSynthesis.cancel();
+    document.querySelectorAll('.spk.on,.rnd.on').forEach(b=>b.classList.remove('on'));
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang='en-US'; u.rate=0.85; u.pitch=1.1; u.volume=1;
+    if(fVoice) u.voice=fVoice;
+    if(btn) btn.classList.add('on');
+    u.onend=u.onerror=()=>{ if(btn) btn.classList.remove('on'); };
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+function fcSpeak(side){
+  if(!fcDeck.length) return;
+  doSpeak(fcDeck[fcIdx].en, document.getElementById(side==='f'?'rnd-f':'rnd-b'));
+}
+function flipCard(){
+  if(!fcDeck.length) return;
+  fcFlip=!fcFlip;
+  document.getElementById('inner').classList.toggle('flip',fcFlip);
+  if(fcFlip) setTimeout(()=>{ try{ doSpeak(fcDeck[fcIdx].en,document.getElementById('rnd-b')); }catch(e){} },380);
+}
+function fcMove(d){ fcIdx=Math.max(0,Math.min(fcDeck.length-1,fcIdx+d)); showCard(); }
+function fcShuffle(){
+  for(let i=fcDeck.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1));[fcDeck[i],fcDeck[j]]=[fcDeck[j],fcDeck[i]]; }
+  fcIdx=0; showCard(); renderWordList();
+}
+function fcJump(i){ fcIdx=i; showCard(); }
+function renderWordList(){
+  document.getElementById('wl-cnt').textContent=fcDeck.length+' 個單字';
+  document.getElementById('wl-grid').innerHTML=fcDeck.map((v,i)=>
+    `<div class="wl-item ${i===fcIdx?'cur':''}" onclick="fcJump(${i})">
+      <span class="li-en">${v.en}</span>
+      <span class="li-zh">${v.zh}</span>
+    </div>`).join('');
+}
+document.addEventListener('keydown',e=>{
+  if(curView!=='flash') return;
+  if(e.key==='ArrowRight') fcMove(1);
+  if(e.key==='ArrowLeft')  fcMove(-1);
+  if(e.key===' '||e.key==='Enter'){ e.preventDefault(); flipCard(); }
+});
+
+/* ════ BOOT ════ */
+renderYrStrip();
+renderQuiz();
+updateSidebar();
+</script>
+</body>
+</html>
