@@ -233,6 +233,25 @@ header{
 .wl-item.cur{background:var(--s3);border-left:2px solid var(--acc)}
 .li-en{font-size:.8rem;font-weight:600;color:var(--txt)}
 .li-zh{font-size:.68rem;color:var(--muted)}
+
+  /* 錯題交給 AI */
+  .ai-card .ai-desc{font-size:.78rem;line-height:1.7;color:var(--muted);margin-bottom:10px}
+  .ai-copy{width:100%;background:var(--acc2,#8b5cf6);color:#fff;border:none;border-radius:9px;
+    padding:10px 14px;font-size:.82rem;font-weight:800;cursor:pointer;font-family:inherit}
+  .ai-copy:hover{filter:brightness(1.1)}
+  .ai-link{display:block;text-align:center;margin-top:8px;padding:9px 14px;border-radius:9px;
+    border:1px solid var(--border);color:var(--txt,#e2e8f0);text-decoration:none;
+    font-size:.82rem;font-weight:800}
+  .ai-link:hover{border-color:var(--acc2,#8b5cf6);color:var(--acc2,#8b5cf6)}
+  .ai-ok{display:none;margin-top:9px;padding:8px 11px;border-radius:8px;
+    background:rgba(39,174,96,.12);border:1px solid #27ae60;color:#2ecc71;
+    font-size:.75rem;font-weight:700}
+  .ai-ok.show{display:block}
+  .ai-prev{margin-top:10px;font-size:.75rem}
+  .ai-prev summary{cursor:pointer;color:var(--muted);font-weight:700}
+  .ai-prev pre{margin-top:8px;padding:10px;border:1px solid var(--border);border-radius:8px;
+    font-size:.7rem;line-height:1.65;white-space:pre-wrap;word-break:break-word;
+    max-height:260px;overflow-y:auto;font-family:inherit;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -275,6 +294,14 @@ header{
       <div class="card">
         <h3>各年度成績</h3>
         <div class="yr-rows" id="yr-rows"></div>
+      </div>
+      <div class="card ai-card" id="ai-card" style="display:none">
+        <h3>🤖 錯題交給 AI</h3>
+        <div class="ai-desc" id="ai-desc"></div>
+        <button class="ai-copy" onclick="copyWrongPrompt()">📋 複製指令</button>
+        <a class="ai-link" href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer">開啟 ChatGPT ↗</a>
+        <div class="ai-ok" id="ai-ok">已複製！貼到 ChatGPT 即可</div>
+        <details class="ai-prev"><summary>預覽內容</summary><pre id="ai-prev"></pre></details>
       </div>
       <button class="rst-btn" onclick="resetYear()">↺ 重設本年度</button>
     </div>
@@ -605,7 +632,52 @@ function doAnswer(qi,oi){
   old.replaceWith(tmp.firstElementChild);
   const done=YEARS[curYear].questions.filter((_,i)=>answers[curYear+'-'+i]!==undefined).length;
   document.getElementById('prog').style.width=(done/YEARS[curYear].questions.length*100)+'%';
-  updateSidebar(); updateGrid();
+  updateSidebar(); updateGrid(); updateAICard();
+}
+
+
+/* ═══ 錯題 → AI 指令（不放 API key，走剪貼簿）═══ */
+function collectWrong(){
+  const out=[];
+  Object.keys(YEARS).forEach(y=>YEARS[y].questions.forEach((q,i)=>{
+    const k=y+'-'+i, a=answers[k];
+    if(a!==undefined && a!==q.ans)
+      out.push({y:y,n:i+1,q:q.q,mine:q.opts[a],right:q.opts[q.ans]});
+  }));
+  return out;
+}
+function buildWrongPrompt(){
+  const w=collectWrong();
+  let p='你是熟悉台灣四技二專統測英文命題方式的資深高職英文老師。'
+    +'以下是我在統測第一大題（詞彙題）練習中答錯的題目，請用繁體中文幫我檢討。\n\n'
+    +'【請依這個順序回覆】\n'
+    +'1. 逐題說明：這題考什麼、我選的字錯在哪、正解為什麼對\n'
+    +'2. 把我選錯的字與正解字整理成「易混淆字組」，各給一個例句\n'
+    +'3. 歸納我的弱點（字義混淆／搭配詞不熟／詞性判斷）\n'
+    +'4. 針對弱點仿統測第一大題格式再出 10 題新選擇題（附答案與簡短解析）\n\n'
+    +'【我答錯的題目】\n';
+  w.forEach((x,i)=>{p+='\n'+(i+1)+'. （'+x.y+'年 第'+x.n+'題）'+x.q+'\n   我選：'+x.mine+'\n   正解：'+x.right+'\n';});
+  return p;
+}
+function updateAICard(){
+  const card=document.getElementById('ai-card'); if(!card) return;
+  const w=collectWrong();
+  if(!w.length){card.style.display='none';return;}
+  card.style.display='';
+  document.getElementById('ai-desc').textContent=
+    '目前累積 '+w.length+' 題錯題。複製指令貼到 ChatGPT，它會解釋錯因並針對弱點再出 10 題。';
+  document.getElementById('ai-prev').textContent=buildWrongPrompt();
+}
+function copyWrongPrompt(){
+  const text=buildWrongPrompt();
+  const ok=()=>{const el=document.getElementById('ai-ok');
+    if(el){el.classList.add('show');setTimeout(()=>el.classList.remove('show'),6000);}};
+  const fb=()=>{const ta=document.createElement('textarea');ta.value=text;
+    ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();
+    let d=false;try{d=document.execCommand('copy');}catch(e){d=false;}
+    document.body.removeChild(ta);d?ok():alert('自動複製失敗，請展開「預覽內容」手動複製。');};
+  if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(ok).catch(fb);}
+  else{fb();}
 }
 
 function updateSidebar(){
@@ -633,7 +705,7 @@ function updateGrid(){
 function resetYear(){
   if(!confirm('確定要重設 '+curYear+' 學年的作答記錄嗎？')) return;
   YEARS[curYear].questions.forEach((_,i)=>delete answers[curYear+'-'+i]);
-  renderQuiz(); updateSidebar();
+  renderQuiz(); updateSidebar(); updateAICard();
 }
 
 /* ════ FLASHCARD ════ */
