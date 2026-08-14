@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/favicon.svg">
+<title>初級文法 · 形容詞子句 Relative Clause</title>
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;
+    color:#22303f;line-height:1.65;background:linear-gradient(180deg,#eef6ff,#fff4f7 70%);min-height:100vh;}
+  .wrap{max-width:820px;margin:0 auto;padding:18px 16px 70px;}
+  .navrow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+  .home{display:inline-block;color:#ff7aa8;font-weight:800;text-decoration:none;
+    background:#fff;padding:7px 16px;border-radius:20px;box-shadow:0 3px 10px rgba(255,122,168,.18);font-size:.9rem;}
+  .home.alt{color:#7d8bff;box-shadow:0 3px 10px rgba(125,139,255,.18);}
+
+  header.hero{background:linear-gradient(135deg,#a0e7ff,#c3b6ff 50%,#ffb6e6);color:#2c3a55;
+    border-radius:22px;padding:28px 26px;margin-bottom:22px;box-shadow:0 10px 26px rgba(125,139,255,.32);}
+  header.hero h1{margin:0 0 8px;font-size:1.7rem;text-shadow:0 1px 2px rgba(255,255,255,.4);}
+  header.hero p{margin:0;font-size:.96rem;opacity:.95;}
+
+  /* 公式區 */
+  .formula{background:#fff;border-radius:14px;padding:13px 17px;margin-bottom:14px;
+    font-size:.88rem;color:#4a5766;border-left:5px solid #ffb6e6;box-shadow:0 3px 10px rgba(43,140,255,.08);}
+  .formula b{color:#c2568f;}
+  .formula.blue{border-left-color:#7d8bff;}
+  .formula .ft{font-weight:800;color:#33414f;margin-bottom:7px;}
+  table.mini{width:100%;border-collapse:collapse;margin-top:6px;}
+  table.mini th,table.mini td{border:1px solid #e8eef7;padding:6px 9px;text-align:left;}
+  table.mini th{background:#f5f9ff;color:#4a5766;font-weight:800;}
+  table.mini td b{color:#0f7a52;}
+
+  /* 區塊標題 */
+  .group-h{display:flex;align-items:center;gap:8px;margin:24px 2px 12px;font-weight:800;font-size:1rem;flex-wrap:wrap;}
+  .group-h .tag{color:#fff;border-radius:99px;padding:4px 12px;font-size:.82rem;}
+  .group-h.demo .tag{background:linear-gradient(135deg,#5ec6ff,#7d8bff);}
+  .group-h.prac .tag{background:linear-gradient(135deg,#ff7aa8,#ff9a9e);}
+  .group-h .sub{color:#8a94a2;font-weight:600;font-size:.82rem;}
+
+  /* 卡片 */
+  .q{background:#fff;border-radius:16px;padding:16px 18px;margin-bottom:14px;
+    box-shadow:0 4px 14px rgba(43,140,255,.10);border:1px solid #eef1f8;}
+  .q.demo{background:linear-gradient(180deg,#f2f9ff,#fff);border-color:#dcecff;}
+  .qtop{display:flex;gap:10px;align-items:flex-start;margin-bottom:8px;}
+  .qnum{flex:0 0 auto;width:26px;height:26px;border-radius:50%;background:#ffe3ef;color:#c2568f;
+    font-weight:800;font-size:.82rem;display:flex;align-items:center;justify-content:center;}
+  .qnum.d{background:#dcecff;color:#3b6fd4;}
+  .kind{display:inline-block;font-size:.7rem;font-weight:800;color:#fff;
+    background:linear-gradient(135deg,#ffa63e,#ff6ea9);border-radius:99px;padding:2px 10px;margin-left:6px;vertical-align:2px;}
+  .src{font-size:.98rem;color:#33414f;}
+  .src .lab{display:inline-block;font-size:.7rem;font-weight:800;color:#8a94a2;
+    background:#f0f3f8;border-radius:8px;padding:1px 7px;margin-right:6px;vertical-align:2px;}
+  .src .dup{color:#d23b5e;font-weight:900;background:#ffe9ee;border-radius:6px;padding:0 5px;}
+
+  /* 逐步組裝 */
+  .build{display:none;margin-top:11px;font-size:1.02rem;line-height:2;color:#22303f;
+    background:#f7fbff;border:1px solid #e4eefb;border-radius:12px;padding:10px 15px;}
+  .q.demo:not(.st0) .build{display:block;}
+  .bline{display:none;}
+  .bline b{color:#0f7a52;background:#eafaf2;border-radius:6px;padding:1px 7px;font-weight:900;}
+  .bline .gone{color:#d23b5e;text-decoration:line-through;opacity:.65;}
+  .bline .ar{color:#ffa63e;font-weight:900;margin-right:5px;}
+  .q.demo.st1 .l1,.q.demo.st2 .l1,.q.demo.st3 .l1,.q.demo.st4 .l1{display:block;}
+  .q.demo.st2 .l2,.q.demo.st3 .l2,.q.demo.st4 .l2{display:block;}
+  .q.demo.st3 .l3,.q.demo.st4 .l3{display:block;}
+  .q.demo.st4 .l4{display:block;}
+  .q.demo.st1 .l1,.q.demo.st2 .l2,.q.demo.st3 .l3,.q.demo.st4 .l4{animation:changePop .45s cubic-bezier(.2,1.3,.4,1);}
+  @keyframes changePop{0%{transform:scale(.6);opacity:0;}70%{transform:scale(1.08);}100%{transform:scale(1);opacity:1;}}
+
+  /* 步驟按鈕 */
+  .stepbtns{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px;}
+  .stepbtns .hintk{font-size:.76rem;color:#8a94a2;font-weight:800;}
+  .sbtn{border:none;cursor:pointer;font-weight:800;font-size:.82rem;padding:9px 14px;border-radius:12px;
+    color:#fff;display:inline-flex;align-items:center;gap:7px;transition:.15s;box-shadow:0 3px 9px rgba(0,0,0,.14);}
+  .sbtn:hover{filter:brightness(1.06);transform:translateY(-1px);}
+  .sbtn .sn{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;
+    background:rgba(255,255,255,.34);color:#fff;font-size:.7rem;font-weight:900;}
+  .sbtn.b1{background:linear-gradient(135deg,#2ab7ff,#4fd1ff);}
+  .sbtn.b2{background:linear-gradient(135deg,#a855ff,#c98bff);}
+  .sbtn.b3{background:linear-gradient(135deg,#ff8a1e,#ffb347);}
+  .sbtn.b4{background:linear-gradient(135deg,#18b57a,#5fd6a4);}
+  .sbtn.on{box-shadow:0 0 0 3px rgba(255,255,255,.85),0 5px 14px rgba(0,0,0,.22);filter:brightness(1.08);transform:translateY(-1px);}
+
+  /* 步驟說明 */
+  .reveal{display:none;margin-top:8px;padding:10px 13px;border-radius:12px;font-size:.9rem;border-left:4px solid;}
+  .reveal s{color:#d23b5e;}
+  .reveal.r1{border-color:#3aa6ff;background:#f0f8ff;}
+  .reveal.r2{border-color:#b06bff;background:#f7f2ff;}
+  .reveal.r3{border-color:#ffa63e;background:#fff7ee;}
+  .reveal.r4{border-color:#18b57a;background:#eefbf5;}
+  .q.demo.st1 .r1,.q.demo.st2 .r1,.q.demo.st3 .r1,.q.demo.st4 .r1{display:block;}
+  .q.demo.st2 .r2,.q.demo.st3 .r2,.q.demo.st4 .r2{display:block;}
+  .q.demo.st3 .r3,.q.demo.st4 .r3{display:block;}
+  .q.demo.st4 .r4{display:block;}
+  .demoexp{margin-top:10px;padding:11px 14px;border-radius:12px;background:#fff;border-left:4px solid #5ec6ff;font-size:.9rem;}
+  .demoexp .zh{color:#4a5766;}
+
+  /* 練習填空 */
+  .rewrite{font-size:1.02rem;line-height:2.2;color:#22303f;margin-top:10px;}
+  .rewrite input{font-family:inherit;font-size:.98rem;font-weight:700;color:#2b6fff;text-align:center;
+    border:none;border-bottom:2px solid #c9d4e6;background:#f7faff;border-radius:6px 6px 0 0;
+    padding:3px 6px;margin:0 2px;min-width:90px;outline:none;transition:.15s;}
+  .rewrite input:focus{border-bottom-color:#ff7aa8;background:#fff6fa;}
+  .rewrite input.ok{border-bottom-color:#22b07a;background:#eafaf2;color:#0f7a52;}
+  .rewrite input.no{border-bottom-color:#ff5b7f;background:#fff0f3;color:#d23b5e;}
+  .hint{font-size:.72rem;color:#a0a9b6;}
+  .exp{display:none;margin-top:12px;padding:12px 14px;border-radius:12px;
+    background:#f4f9ff;border-left:4px solid #7d8bff;font-size:.9rem;}
+  .exp.show{display:block;}
+  .exp .ans{font-weight:800;color:#2b6fff;}
+  .exp .red{color:#0f7a52;margin-top:4px;}
+  .exp .zh{color:#4a5766;margin-top:4px;}
+
+  .bar{position:sticky;bottom:0;margin-top:20px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;
+    background:rgba(255,255,255,.92);backdrop-filter:blur(6px);padding:12px 14px;border-radius:16px;
+    box-shadow:0 -3px 16px rgba(43,140,255,.12);}
+  .btn{border:none;cursor:pointer;font-weight:800;font-size:.95rem;padding:12px 22px;border-radius:14px;
+    background:linear-gradient(135deg,#ff7aa8,#ff9a9e);color:#fff;box-shadow:0 5px 14px rgba(255,122,168,.35);}
+  .btn.ghost{background:#fff;color:#ff7aa8;box-shadow:0 3px 10px rgba(255,122,168,.18);}
+  .score{font-weight:800;color:#c2568f;font-size:1rem;}
+
+  .warn{background:#fffbeb;border:1.5px solid #f59e0b;border-radius:12px;padding:12px 16px;
+    margin-top:22px;font-size:.88rem;color:#78350f;line-height:1.8;}
+  .warn b{color:#b45309;}
+  footer{text-align:center;color:#9aa4b2;font-size:.8rem;margin-top:34px;}
+
+  /* ── 全站內文統一 20px ── */
+  .wrap *{font-size:20px;}
+  header.hero h1{font-size:30px;}
+  .lab,.kind,.hint{font-size:14px;}
+  .qnum,.qnum.d{width:30px;height:30px;font-size:15px;}
+  .sbtn .sn{width:22px;height:22px;font-size:14px;}
+  @media (prefers-reduced-motion: reduce){
+    .q.demo.st1 .l1,.q.demo.st2 .l2,.q.demo.st3 .l3,.q.demo.st4 .l4{animation:none;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="navrow">
+    <a class="home" href="gept-hub.html">← 回英檢初級</a>
+    <a class="home alt" href="grammar.html">🧩 假設語氣練習 ›</a>
+  </div>
+
+  <header class="hero">
+    <h1>🔗 初級文法 · 形容詞子句</h1>
+    <p>Relative / Adjective Clause　兩句合併成一句。前 10 題「示範說明」按 1→4 一步步看懂，後 10 題「填空練習」按送出批改。</p>
+  </header>
+
+  <div class="formula">
+    <div class="ft">📐 兩句合併三步驟</div>
+    ① <b>找重複</b>：第二句哪個字＝第一句的某個名詞？（It／He／him／his／there／then）<br>
+    ② <b>換關代</b>：把重複的字換成關係詞，<b>搬到子句最前面</b>。<br>
+    ③ <b>黏後面</b>：整個子句緊貼在它修飾的名詞後面。<br>
+    ④ <b>可簡化就簡化</b>（減化關係子句）。
+  </div>
+
+  <div class="formula blue">
+    <div class="ft">🧭 關係詞怎麼選</div>
+    <table class="mini">
+      <tr><th>重複的字是…</th><th>指人</th><th>指物</th><th>備註</th></tr>
+      <tr><td>主詞 He / It</td><td><b>who</b>（=that）</td><td><b>which</b>（=that）</td><td>不可省略</td></tr>
+      <tr><td>受詞 him / it</td><td><b>whom / who</b></td><td><b>which</b>（=that）</td><td>可省略</td></tr>
+      <tr><td>所有格 his / its</td><td colspan="2"><b>whose</b></td><td>後面直接接名詞</td></tr>
+      <tr><td>地方 there</td><td colspan="2"><b>where</b></td><td>＝介系詞＋which</td></tr>
+      <tr><td>時間 then</td><td colspan="2"><b>when</b></td><td>＝介系詞＋which</td></tr>
+    </table>
+  </div>
+
+  <div class="formula">
+    <div class="ft">✂️ 簡化（減化子句）四型</div>
+    關代 ＋ <b>主動動詞</b> → <b>V-ing</b>（which has → having）<br>
+    關代 ＋ <b>be ＋ p.p.</b> → <b>只留 p.p.</b>（which was written → written）<br>
+    關代 ＋ <b>be ＋ 片語</b> → <b>只留片語</b>（who is in red → in red）<br>
+    <b>受格</b>關代 → <b>整個省略</b>，但不可改成 V-ing
+  </div>
+
+  <div id="app"></div>
+
+  <div class="bar">
+    <button class="btn" id="submit">送出批改</button>
+    <button class="btn ghost" id="reset">重作</button>
+    <span class="score" id="score"></span>
+  </div>
+
+  <div class="warn">
+    ⚠️ <b>最常錯的四點</b><br>
+    1. <b>主格關代不能省略</b>：✗ I have a friend lives in Japan. → who lives／living（二選一）<br>
+    2. <b>受格關代不能變分詞</b>：✗ the book buying I → the book (which) I bought<br>
+    3. <b>whose 後面直接接名詞</b>：✗ whose the father → whose father<br>
+    4. <b>逗號後不可用 that</b>：✗ My brother, that is a firefighter, … → who
+  </div>
+
+  <footer>EFETL © 2025　‧　GEPT 初級英檢 · 文法練習</footer>
+</div>
+
+<script>
+// ── 前 10 題：示範說明 ──
+const DEMO = [
+ {kind:"物 · 主格", s1:"I'm going to visit that fine arts museum.",
+  pre:"", dup:"It", post:" has many famous paintings.",
+  why1:"<b>It</b> ＝ that fine arts museum（<b>物</b>），在第二句裡當<b>主詞</b>。",
+  rel:"which", relnote:"物＋主詞 → <b>which</b>（也可用 that），<b>主格不可省略</b>。",
+  clause:"has many famous paintings",
+  m1:"I'm going to visit that fine arts museum ", m3:" has many famous paintings.",
+  why3:"整個 which 子句黏在 <b>museum</b> 後面，變成一句。",
+  alt:"I'm going to visit that fine arts museum <b>having</b> many famous paintings.",
+  why4:"which ＋ 主動動詞 has → 直接改成 <b>having</b>（現在分詞）。",
+  zh:"我要去參觀那間有很多名畫的美術館。"},
+
+ {kind:"人 · 主格", s1:"I have a friend.",
+  pre:"", dup:"He", post:" lives in Japan.",
+  why1:"<b>He</b> ＝ a friend（<b>人</b>），在第二句裡當<b>主詞</b>。",
+  rel:"who", relnote:"人＋主詞 → <b>who</b>（也可用 that），<b>主格絕對不能省略</b>。",
+  clause:"lives in Japan",
+  m1:"I have a friend ", m3:" lives in Japan.",
+  why3:"who 子句接在 <b>a friend</b> 後面。",
+  alt:"I have a friend <b>living</b> in Japan.",
+  why4:"who ＋ 主動動詞 lives → <b>living</b>。",
+  zh:"我有一個住在日本的朋友。"},
+
+ {kind:"人 · 受格", s1:"The man is my uncle.",
+  pre:"You met ", dup:"him", post:" yesterday.",
+  why1:"<b>him</b> ＝ the man，是動詞 met 的<b>受詞</b>。",
+  rel:"whom", relnote:"人＋受詞 → <b>whom</b>（口語常用 who／that），並搬到子句最前面。",
+  clause:"you met yesterday",
+  m1:"The man ", m3:" you met yesterday is my uncle.",
+  why3:"先行詞 the man 在句中間 → 子句就夾在 <b>The man</b> 和 is 中間。",
+  alt:"The man <b>you met</b> yesterday is my uncle.",
+  why4:"<b>受格關代可以整個省略</b>；但受格<b>不能</b>改成 V-ing。",
+  zh:"你昨天遇到的那個人是我叔叔。"},
+
+ {kind:"所有格", s1:"I know a boy.",
+  pre:"", dup:"His", post:" father is a doctor.",
+  why1:"<b>His</b> ＝ the boy's（<b>所有格</b>），後面帶著名詞 father。",
+  rel:"whose", relnote:"所有格 → <b>whose</b>，人、物都可以用。",
+  clause:"father is a doctor",
+  m1:"I know a boy ", m3:" father is a doctor.",
+  why3:"whose <b>後面直接接名詞</b>，中間不加 the。",
+  alt:"（此句沒有分詞簡化形）whose 不可省略、也不能改成 V-ing。",
+  why4:"只有<b>受格</b>關代能省略；whose 是所有格，必須留著。",
+  zh:"我認識一個爸爸是醫生的男孩。"},
+
+ {kind:"物 · 受格", s1:"This is the book.",
+  pre:"I bought ", dup:"it", post:" last week.",
+  why1:"<b>it</b> ＝ the book，是動詞 bought 的<b>受詞</b>。",
+  rel:"which", relnote:"物＋受詞 → <b>which</b>（＝that），搬到子句最前面。",
+  clause:"I bought last week",
+  m1:"This is the book ", m3:" I bought last week.",
+  why3:"which 子句接在 <b>the book</b> 後面。",
+  alt:"This is the book <b>I bought</b> last week.",
+  why4:"受格 which 省略後最自然，這是英文母語者最常用的說法。",
+  zh:"這就是我上禮拜買的那本書。"},
+
+ {kind:"被動 → p.p.", s1:"The letter was on the table.",
+  pre:"", dup:"It", post:" was written by Tom.",
+  why1:"<b>It</b> ＝ the letter（物），當<b>主詞</b>，而且是<b>被動</b>（be ＋ p.p.）。",
+  rel:"which", relnote:"物＋主詞 → <b>which was written</b>…",
+  clause:"was written by Tom",
+  m1:"The letter ", m3:" was written by Tom was on the table.",
+  why3:"子句夾在 <b>The letter</b> 和 was on the table 中間。",
+  alt:"The letter <b>written</b> by Tom was on the table.",
+  why4:"「關代 ＋ be ＋ p.p.」→ 把 <s>which was</s> 一起刪掉，只留 <b>written</b>（過去分詞當形容詞）。",
+  zh:"湯姆寫的那封信在桌上。"},
+
+ {kind:"地方 where", s1:"That's the restaurant.",
+  pre:"We had dinner ", dup:"there", post:".",
+  why1:"<b>there</b> ＝ in the restaurant，是<b>地方副詞</b>，不是受詞。",
+  rel:"where", relnote:"先行詞是地方 → <b>where</b>；where 後面接<b>完整</b>句子。",
+  clause:"we had dinner",
+  m1:"That's the restaurant ", m3:" we had dinner.",
+  why3:"where 子句接在 <b>the restaurant</b> 後面。",
+  alt:"＝ That's the restaurant <b>at which</b> we had dinner.",
+  why4:"where ＝ <b>介系詞 ＋ which</b>；改成 at which 意思完全一樣。",
+  zh:"那就是我們吃晚餐的那家餐廳。"},
+
+ {kind:"時間 when", s1:"I'll never forget the day.",
+  pre:"I met her ", dup:"on that day", post:".",
+  why1:"<b>on that day</b> ＝ the day，是<b>時間副詞</b>。",
+  rel:"when", relnote:"先行詞是時間（day／year／moment）→ <b>when</b>，後面接完整句子。",
+  clause:"I met her",
+  m1:"I'll never forget the day ", m3:" I met her.",
+  why3:"when 子句接在 <b>the day</b> 後面。",
+  alt:"＝ I'll never forget the day <b>on which</b> I met her.",
+  why4:"when ＝ <b>介系詞 ＋ which</b>，這裡是 on which。",
+  zh:"我永遠不會忘記遇見她的那一天。"},
+
+ {kind:"介系詞＋關代", s1:"She is the teacher.",
+  pre:"I learned English ", dup:"from her", post:".",
+  why1:"<b>her</b> ＝ the teacher，前面還有介系詞 <b>from</b>。",
+  rel:"from whom", relnote:"介系詞可以<b>連同關代一起搬到最前面</b>：from ＋ whom。",
+  clause:"I learned English",
+  m1:"She is the teacher ", m3:" I learned English.",
+  why3:"「from whom」整組放在 <b>the teacher</b> 後面。",
+  alt:"＝ She is the teacher <b>(whom) I learned English from</b>.",
+  why4:"介系詞也可留在句尾，這時關代可省略；但<b>介系詞提前時只能用 whom／which，不可用 that、不可省略</b>。",
+  zh:"她就是教我英文的那位老師。"},
+
+ {kind:"逗號 · 非限定", s1:"My brother lives in Kaohsiung.",
+  pre:"", dup:"He", post:" is a firefighter.",
+  why1:"<b>He</b> ＝ my brother。先行詞已經很明確，第二句只是<b>補充說明</b>。",
+  rel:"who", relnote:"補充說明 → 前後<b>加逗號</b>，用 <b>who</b>；<b>逗號後不可用 that</b>，也不可省略。",
+  clause:"is a firefighter",
+  m1:"My brother, ", m3:" is a firefighter, lives in Kaohsiung.",
+  why3:"子句用逗號夾住，插在 <b>My brother</b> 後面。",
+  alt:"My brother, <b>a firefighter</b>, lives in Kaohsiung.",
+  why4:"「逗號 ＋ who ＋ be ＋ 名詞」可簡化成<b>同位語</b>（直接放名詞）。",
+  zh:"我哥哥是消防員，住在高雄。"}
+];
+
+// ── 後 10 題：填空練習（a1＝關係詞，a2＝子句動詞或介系詞）──
+const PRAC = [
+ {kind:"人 · 主格", s1:"I like the girl.", s2:"She sits next to me.",
+  pre:"I like the girl ", a1:"who|that", h1:"關係詞", mid:" ", a2:"sits", h2:"sit", post:" next to me.",
+  red:"簡化：I like the girl <b>sitting</b> next to me.", zh:"我喜歡坐我旁邊的那個女生。"},
+ {kind:"物 · 主格", s1:"This is the movie.", s2:"It won the first prize.",
+  pre:"This is the movie ", a1:"which|that", h1:"關係詞", mid:" ", a2:"won", h2:"win", post:" the first prize.",
+  red:"簡化：This is the movie <b>winning</b> the first prize.", zh:"這就是得了首獎的那部電影。"},
+ {kind:"人 · 受格", s1:"The boy is my classmate.", s2:"You saw him at the park.",
+  pre:"The boy ", a1:"whom|who|that", h1:"關係詞", mid:" you ", a2:"saw", h2:"see", post:" at the park is my classmate.",
+  red:"受格可省略：The boy <b>you saw</b> at the park is my classmate.", zh:"你在公園看到的那個男生是我同學。"},
+ {kind:"所有格", s1:"I have a friend.", s2:"Her mother is a nurse.",
+  pre:"I have a friend ", a1:"whose", h1:"關係詞", mid:" mother ", a2:"is", h2:"be", post:" a nurse.",
+  red:"whose 不可省略，也沒有分詞簡化形。", zh:"我有一個媽媽是護理師的朋友。"},
+ {kind:"物 · 受格", s1:"The cake was delicious.", s2:"My mom made it.",
+  pre:"The cake ", a1:"which|that", h1:"關係詞", mid:" my mom ", a2:"made", h2:"make", post:" was delicious.",
+  red:"受格可省略：The cake <b>my mom made</b> was delicious.", zh:"我媽做的那個蛋糕很好吃。"},
+ {kind:"被動 → p.p.", s1:"The song is very popular.", s2:"It was written by a student.",
+  pre:"The song ", a1:"which|that", h1:"關係詞", mid:" ", a2:"was written", h2:"write，被動", post:" by a student is very popular.",
+  red:"簡化：The song <b>written</b> by a student is very popular.", zh:"一位學生寫的那首歌很紅。"},
+ {kind:"地方 where", s1:"This is the school.", s2:"I studied there for six years.",
+  pre:"This is the school ", a1:"where", h1:"關係詞", mid:" I ", a2:"studied", h2:"study", post:" for six years.",
+  red:"＝ the school <b>in which</b> I studied for six years.", zh:"這就是我念了六年的那所學校。"},
+ {kind:"時間 when", s1:"I still remember the day.", s2:"We first met on that day.",
+  pre:"I still remember the day ", a1:"when", h1:"關係詞", mid:" we first ", a2:"met", h2:"meet", post:".",
+  red:"＝ the day <b>on which</b> we first met.", zh:"我還記得我們初次見面的那一天。"},
+ {kind:"介系詞＋關代", s1:"He is the doctor.", s2:"I talked about him yesterday.",
+  pre:"He is the doctor ", a1:"whom|who|that", h1:"關係詞", mid:" I talked ", a2:"about", h2:"介系詞", post:" yesterday.",
+  red:"介系詞提前：He is the doctor <b>about whom</b> I talked yesterday.（此時不可用 that）", zh:"他就是我昨天提到的那位醫生。"},
+ {kind:"逗號 · 非限定", s1:"Mr. Wang teaches us math.", s2:"He comes from Tainan.（用逗號補充）",
+  pre:"Mr. Wang, ", a1:"who", h1:"關係詞，不可用 that", mid:" ", a2:"comes", h2:"come", post:" from Tainan, teaches us math.",
+  red:"同位語簡化：Mr. Wang, <b>from Tainan</b>, teaches us math.", zh:"王老師來自台南，教我們數學。"}
+];
+
+// ── 批改 ──
+function norm(s){
+  return (s||"").toLowerCase().trim()
+    .replace(/[.,!?]/g,"")
+    .replace(/\s+/g," ").trim();
+}
+function accepts(ans, val){ return ans.split("|").map(norm).includes(norm(val)); }
+function firstAns(ans){ return ans.split("|")[0]; }
+
+const app = document.getElementById("app");
+let html = "";
+
+html += '<div class="group-h demo"><span class="tag">📖 示範說明</span><span class="sub">前 10 題：按 1→2→3→4 看句子怎麼一步步合起來</span></div>';
+
+DEMO.forEach((it,i)=>{
+  html +=
+   '<div class="q demo st0" data-i="'+i+'">'+
+     '<div class="qtop"><span class="qnum d">'+(i+1)+'</span>'+
+       '<div class="src"><span class="lab">句①</span>'+it.s1+'<span class="kind">'+it.kind+'</span><br>'+
+         '<span class="lab">句②</span>'+it.pre+'<span class="dup">'+it.dup+'</span>'+it.post+'</div></div>'+
+     '<div class="build">'+
+       '<div class="bline l1"><span class="ar">①</span>句②裡的 <b>'+it.dup+'</b> ＝ 句①的名詞</div>'+
+       '<div class="bline l2"><span class="ar">②</span><span class="gone">'+it.dup+'</span> → <b>'+it.rel+'</b>　'+it.clause+'</div>'+
+       '<div class="bline l3"><span class="ar">③</span>'+it.m1+'<b>'+it.rel+'</b>'+it.m3+'</div>'+
+       '<div class="bline l4"><span class="ar">④</span>'+it.alt+'</div>'+
+     '</div>'+
+     '<div class="stepbtns"><span class="hintk">一步一步點：</span>'+
+       '<button class="sbtn b1" type="button" data-s="1"><span class="sn">1</span>找重複</button>'+
+       '<button class="sbtn b2" type="button" data-s="2"><span class="sn">2</span>換關係詞</button>'+
+       '<button class="sbtn b3" type="button" data-s="3"><span class="sn">3</span>黏在名詞後</button>'+
+       '<button class="sbtn b4" type="button" data-s="4"><span class="sn">4</span>簡化</button>'+
+     '</div>'+
+     '<div class="reveal r1"><b>① 找重複：</b>'+it.why1+'</div>'+
+     '<div class="reveal r2"><b>② 換關係詞：</b>'+it.relnote+'</div>'+
+     '<div class="reveal r3"><b>③ 黏後面：</b>'+it.why3+'</div>'+
+     '<div class="reveal r4"><b>④ 簡化：</b>'+it.why4+'</div>'+
+     '<div class="demoexp"><div class="zh">💬 '+it.zh+'</div></div>'+
+   '</div>';
+});
+
+html += '<div class="group-h prac"><span class="tag">✏️ 換你練習</span><span class="sub">後 10 題：填空後按下面「送出批改」</span></div>';
+
+PRAC.forEach((it,i)=>{
+  html +=
+   '<div class="q practice" data-i="'+i+'">'+
+     '<div class="qtop"><span class="qnum">'+(i+1)+'</span>'+
+       '<div class="src"><span class="lab">句①</span>'+it.s1+'<span class="kind">'+it.kind+'</span><br>'+
+         '<span class="lab">句②</span>'+it.s2+'</div></div>'+
+     '<div class="rewrite">'+it.pre+
+       '<input data-b="1" size="10" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="?"> '+
+       '<span class="hint">('+it.h1+')</span>'+it.mid+
+       '<input data-b="2" size="12" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="?"> '+
+       '<span class="hint">('+it.h2+')</span>'+it.post+
+     '</div>'+
+     '<div class="exp">'+
+       '<div class="ans">✔ '+it.pre+'<u>'+firstAns(it.a1)+'</u>'+it.mid+'<u>'+firstAns(it.a2)+'</u>'+it.post+'</div>'+
+       '<div class="red">✂️ '+it.red+'</div>'+
+       '<div class="zh">💬 '+it.zh+'</div></div>'+
+   '</div>';
+});
+
+app.innerHTML = html;
+
+// 逐步顯示
+app.addEventListener("click",(ev)=>{
+  const b = ev.target.closest(".sbtn");
+  if(!b) return;
+  const card = b.closest(".q.demo");
+  const s = +b.dataset.s;
+  card.classList.remove("st0","st1","st2","st3","st4");
+  card.classList.add("st"+s);
+  card.querySelectorAll(".sbtn").forEach(btn=>{ btn.classList.toggle("on", +btn.dataset.s <= s); });
+});
+
+document.getElementById("submit").addEventListener("click",()=>{
+  let correct=0;
+  const cards = app.querySelectorAll(".q.practice");
+  cards.forEach(q=>{
+    const it = PRAC[+q.dataset.i];
+    const ins = q.querySelectorAll("input");
+    let ok=true;
+    [it.a1,it.a2].forEach((ans,idx)=>{
+      const el=ins[idx];
+      if(accepts(ans, el.value)){ el.classList.add("ok"); el.classList.remove("no"); }
+      else { el.classList.add("no"); el.classList.remove("ok"); ok=false; }
+    });
+    q.querySelector(".exp").classList.add("show");
+    if(ok) correct++;
+  });
+  document.getElementById("score").textContent = "練習答對 "+correct+" / "+cards.length+" 題";
+  window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
+});
+
+document.getElementById("reset").addEventListener("click",()=>{
+  app.querySelectorAll("input").forEach(i=>{i.value="";i.classList.remove("ok","no");});
+  app.querySelectorAll(".exp").forEach(e=>e.classList.remove("show"));
+  document.getElementById("score").textContent="";
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+</script>
+</body>
+</html>
