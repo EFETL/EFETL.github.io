@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>until / not until 互動文法練習</title>
+<style>
+  :root{
+    --blue:#2b8cff; --blue-dark:#1f6fe0;
+    --coral:#ff7a59; --amber:#ffb02e; --pink:#ff5d8f;
+    --bg:#f3f9ff; --card:#ffffff; --line:#e3edf9;
+    --green:#22b573; --green-bg:#e4f8ef;
+    --red:#ff5a5a; --red-bg:#ffecec;
+    --gray:#6b7785;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;
+    background:linear-gradient(180deg,#f0f7ff,#fff7f2 70%);color:#22303f;line-height:1.65;
+    -webkit-text-size-adjust:100%;}
+  .wrap{max-width:780px;margin:0 auto;padding:16px;}
+
+  header.top{background:linear-gradient(135deg,#5ec6ff,#7d8bff 55%,#b88bff);color:#fff;
+    border-radius:18px;padding:24px 22px;margin-bottom:16px;box-shadow:0 8px 22px rgba(93,141,255,.3);}
+  header.top h1{margin:0 0 6px;font-size:1.5rem;text-shadow:0 1px 2px rgba(0,0,0,.12);}
+  header.top p{margin:0;font-size:.92rem;opacity:.95;}
+  .meta{margin-top:14px;font-size:.86rem;background:rgba(255,255,255,.22);
+    padding:9px 13px;border-radius:10px;}
+
+  /* ── 文法講解區 ── */
+  details.lesson{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    margin:0 0 14px;box-shadow:0 4px 12px rgba(43,140,255,.08);overflow:hidden;}
+  details.lesson>summary{cursor:pointer;list-style:none;padding:14px 18px;font-weight:800;
+    font-size:1.02rem;color:#1f6fe0;background:linear-gradient(135deg,#eef6ff,#f6f0ff);}
+  details.lesson>summary::-webkit-details-marker{display:none;}
+  details.lesson>summary::after{content:"▾";float:right;transition:.2s;}
+  details.lesson[open]>summary::after{transform:rotate(180deg);}
+  .lesson-body{padding:6px 18px 18px;}
+  .rule{border-radius:13px;padding:13px 15px;margin:12px 0;border-left:5px solid;}
+  .rule h3{margin:0 0 6px;font-size:1rem;}
+  .rule p{margin:5px 0;font-size:.92rem;}
+  .r1{background:#eef8ff;border-color:#2b8cff;} .r1 h3{color:#1f6fe0;}
+  .r2{background:#fff1f4;border-color:#ff5d8f;} .r2 h3{color:#d63a68;}
+  .r3{background:#f4f0ff;border-color:#9b8bff;} .r3 h3{color:#6b52d6;}
+  .r4{background:#effaf4;border-color:#22b573;} .r4 h3{color:#1a8f5c;}
+  .r5{background:#fff8ea;border-color:#ffb02e;} .r5 h3{color:#c67c00;}
+  .eg{background:#fff;border-radius:9px;padding:7px 11px;margin:6px 0;font-size:.9rem;
+    border:1px dashed #d9e6f5;}
+  .eg b{color:#d63a68;}
+  .ok::before{content:"✅ ";}
+  .no{color:#a33;text-decoration:line-through;text-decoration-color:#ff9b9b;}
+  .no::before{content:"❌ ";text-decoration:none;display:inline-block;}
+  table.tb{border-collapse:collapse;width:100%;margin:10px 0;font-size:.88rem;}
+  table.tb th,table.tb td{border:1px solid #e3edf9;padding:7px 9px;text-align:left;vertical-align:top;}
+  table.tb th{background:#eef6ff;color:#1f6fe0;}
+  table.tb td:first-child{white-space:nowrap;font-weight:700;}
+  .vlist{font-size:.9rem;margin:4px 0;}
+  .vlist code{background:#fff;border:1px solid #e3edf9;border-radius:6px;padding:1px 6px;
+    margin:2px 3px 2px 0;display:inline-block;font-size:.86rem;}
+
+  /* ── 進度條 ── */
+  .sticky{position:sticky;top:0;z-index:20;padding:10px 0;
+    background:linear-gradient(180deg,#f0f7ff 70%,rgba(240,247,255,0));}
+  .bar{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:11px 16px;display:flex;align-items:center;gap:12px;font-size:.9rem;
+    box-shadow:0 4px 12px rgba(43,140,255,.1);}
+  .bar .track{flex:1;height:9px;background:#e9f1fb;border-radius:6px;overflow:hidden;}
+  .bar .fill{height:100%;width:0;border-radius:6px;
+    background:linear-gradient(90deg,#3ad1c6,#2b8cff);transition:width .35s;}
+  .bar #count{font-weight:700;color:var(--blue-dark);}
+
+  /* ── 題目 ── */
+  .section-title{color:#fff;font-weight:800;border-radius:12px;
+    padding:10px 16px;margin:24px 0 6px;font-size:1.03rem;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);}
+  .section-title.s0{background:linear-gradient(135deg,#ff9a6c,#ff6f91);}
+  .section-title.s1{background:linear-gradient(135deg,#4dd0e1,#2b8cff);}
+  .section-title.s2{background:linear-gradient(135deg,#9b8bff,#b06bff);}
+  .section-title.s3{background:linear-gradient(135deg,#3ad1c6,#2bb673);}
+  .section-title.s4{background:linear-gradient(135deg,#ffb02e,#ff7a59);}
+  .section-desc{font-size:.86rem;color:var(--gray);margin:0 4px 10px;}
+
+  .q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:15px 17px;margin:12px 0;box-shadow:0 3px 10px rgba(43,140,255,.07);}
+  .q .stem{font-weight:600;margin-bottom:6px;font-size:1.02rem;}
+  .q .stem .num{display:inline-block;color:#fff;background:var(--blue);font-weight:700;
+    border-radius:8px;padding:1px 9px;margin-right:8px;font-size:.92rem;}
+  .q .ask{font-size:.82rem;color:var(--gray);margin:0 0 10px 2px;}
+  .opt{display:flex;align-items:flex-start;gap:10px;border:2px solid var(--line);
+    border-radius:11px;padding:10px 13px;margin:8px 0;cursor:pointer;transition:.15s;
+    font-size:.95rem;background:#fbfdff;}
+  .opt:hover{border-color:var(--blue);background:#eef6ff;}
+  .opt input{margin-top:4px;accent-color:var(--blue);}
+  .opt .lab{font-weight:800;color:var(--blue);min-width:18px;}
+  .opt.sel{border-color:var(--blue);background:#e7f2ff;}
+  .opt.correct{border-color:var(--green);background:var(--green-bg);}
+  .opt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .opt.lock{cursor:default;}
+
+  details.self{margin-top:9px;}
+  details.self>summary{cursor:pointer;list-style:none;font-size:.85rem;color:var(--gray);
+    background:#f5f9ff;border:1px dashed #cfe1f7;border-radius:9px;padding:6px 11px;display:inline-block;}
+  details.self>summary::-webkit-details-marker{display:none;}
+  details.self textarea{width:100%;margin-top:8px;border:1px solid var(--line);border-radius:9px;
+    padding:9px 11px;font-size:.92rem;font-family:inherit;min-height:56px;resize:vertical;
+    background:#fffdf7;}
+
+  .exp{display:none;margin-top:11px;border-top:2px dashed #ffe1c2;padding-top:11px;font-size:.9rem;}
+  .exp.show{display:block;}
+  .exp .tag{display:inline-block;font-weight:800;color:#fff;background:var(--green);
+    border-radius:7px;padding:2px 10px;font-size:.8rem;margin-bottom:7px;}
+  .exp .tag.miss{background:var(--red);}
+  .exp .tag.blank{background:var(--gray);}
+  .exp .en{color:#1c4f7a;background:#eef7ff;border-radius:8px;padding:7px 11px;margin:5px 0;}
+  .exp .zh{color:#7a4a12;background:#fff7ea;border-radius:8px;padding:7px 11px;margin:5px 0;}
+  .exp .alt{color:#5b3f8f;background:#f5f0ff;border-radius:8px;padding:7px 11px;margin:5px 0;font-size:.88rem;}
+  .exp b.k{color:#d63a68;}
+
+  /* ── 結果 ── */
+  .actions{position:sticky;bottom:0;padding:14px 0 6px;margin-top:18px;
+    background:linear-gradient(transparent,#fff7f2 35%);}
+  button.submit{width:100%;color:#fff;border:0;border-radius:14px;padding:16px;
+    font-size:1.08rem;font-weight:800;cursor:pointer;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);
+    box-shadow:0 6px 16px rgba(255,93,143,.35);}
+  button.submit:active{transform:translateY(1px);}
+  .after{display:none;gap:10px;margin-top:10px;}
+  .after.show{display:flex;}
+  .after button{flex:1;background:#fff;color:var(--blue);border:2px solid var(--blue);
+    border-radius:14px;padding:13px;font-size:.95rem;font-weight:800;cursor:pointer;}
+  .after button.on{background:var(--blue);color:#fff;}
+  .result{display:none;background:var(--card);border:3px solid transparent;border-radius:16px;
+    padding:22px;margin:16px 0;text-align:center;
+    background-image:linear-gradient(#fff,#fff),linear-gradient(135deg,#3ad1c6,#2b8cff,#b06bff);
+    background-origin:border-box;background-clip:padding-box,border-box;
+    box-shadow:0 8px 22px rgba(43,140,255,.15);}
+  .result.show{display:block;}
+  .result .score{font-size:2.8rem;font-weight:900;
+    background:linear-gradient(135deg,#2b8cff,#b06bff);-webkit-background-clip:text;
+    background-clip:text;-webkit-text-fill-color:transparent;}
+  .result .sub{color:var(--gray);font-size:.95rem;}
+  .result .bd{display:flex;justify-content:center;gap:18px;margin-top:12px;flex-wrap:wrap;font-size:.95rem;}
+  .result .bd span{font-weight:800;}
+  .bysec{margin-top:16px;text-align:left;font-size:.88rem;}
+  .bysec .row{display:flex;align-items:center;gap:9px;margin:7px 0;}
+  .bysec .nm{flex:1;color:#22303f;}
+  .bysec .mini{width:76px;height:8px;background:#eef2f7;border-radius:5px;overflow:hidden;}
+  .bysec .mini i{display:block;height:100%;background:linear-gradient(90deg,#3ad1c6,#2b8cff);}
+  .bysec .sc{width:44px;text-align:right;font-weight:800;color:var(--blue-dark);}
+  .hint{text-align:center;font-size:.85rem;color:var(--gray);margin-top:9px;min-height:1.2em;}
+  .q.hide{display:none;}
+  footer{text-align:center;color:var(--gray);font-size:.8rem;margin:26px 0;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <h1>until / not until　互動文法練習</h1>
+    <p>「一直到…為止」vs.「直到…才」　&middot;　含倒裝與強調句型</p>
+    <div class="meta">5 大部分、共 35 題中譯英選擇　|　建議 30 分鐘　|　送出後顯示分數與逐題中英解析</div>
+  </header>
+
+  <details class="lesson" open>
+    <summary>📘 開始前先讀：五條規則 + 易錯點</summary>
+    <div class="lesson-body">
+
+      <div class="rule r1">
+        <h3>規則 ①　until ＝「一直到…為止」（配<u>持續性</u>動詞）</h3>
+        <p>動作從頭一路持續到那個時間點才結束，句子是<b>肯定的</b>。</p>
+        <div class="eg ok">He <b>worked until</b> midnight.（他一直工作到半夜）</div>
+        <div class="vlist">常見持續動詞：
+          <code>wait</code><code>stay</code><code>work</code><code>sleep</code><code>live</code>
+          <code>study</code><code>keep</code><code>remain</code><code>be open</code><code>talk</code>
+        </div>
+      </div>
+
+      <div class="rule r2">
+        <h3>規則 ②　not…until ＝「直到…才」（配<u>瞬間性</u>動詞）</h3>
+        <p>動作只發生「一瞬間」，不能持續，所以主句<b>必須加否定</b>。這是最常考的一條。</p>
+        <div class="eg ok">He <b>didn't go</b> to bed <b>until</b> midnight.（他到半夜才睡）</div>
+        <div class="eg"><span class="no">He went to bed until midnight.</span>（go to bed 無法持續）</div>
+        <div class="vlist">常見瞬間動詞：
+          <code>go to bed</code><code>leave</code><code>start</code><code>arrive</code><code>come</code>
+          <code>know</code><code>realize</code><code>find</code><code>stop</code><code>receive</code>
+          <code>buy</code><code>finish</code><code>get married</code>
+        </div>
+      </div>
+
+      <div class="rule r3">
+        <h3>規則 ③　Not until 放句首 → 主句<u>倒裝</u></h3>
+        <p>公式：<b>Not until</b> ＋ 子句／時間 ＋ <b>助動詞 ＋ 主詞 ＋ 原形動詞</b>。<br>
+           倒裝的只有「主句」，until 子句維持正常語序；主句<b>不再加 not</b>。</p>
+        <div class="eg ok">Not until he apologized <b>did I forgive</b> him.</div>
+        <div class="eg"><span class="no">Not until he apologized I forgave him.</span>（忘了倒裝）</div>
+        <div class="eg"><span class="no">Not until he apologized did I forgave him.</span>（did 後要用原形）</div>
+      </div>
+
+      <div class="rule r4">
+        <h3>規則 ④　It was not until… that…（強調句）</h3>
+        <p>公式：<b>It was not until</b> ＋ 被強調的時間 ＋ <b>that</b> ＋ 正常語序。<br>
+           <b>that 之後不倒裝</b>、不能換成 when、也不再加 not。</p>
+        <div class="eg ok">It was not until she spoke <b>that I recognized</b> her.</div>
+        <div class="eg"><span class="no">It was not until she spoke that did I recognize her.</span></div>
+        <div class="eg"><span class="no">It was not until she spoke when I recognized her.</span></div>
+      </div>
+
+      <div class="rule r5">
+        <h3>規則 ⑤　時間副詞子句：用<u>現在式</u>代替未來式</h3>
+        <p>until / before / when 引導時間子句時，即使講未來，也要用現在式。</p>
+        <div class="eg ok">I <b>will wait</b> until you <b>come</b> back.</div>
+        <div class="eg"><span class="no">I will wait until you will come back.</span></div>
+      </div>
+
+      <table class="tb">
+        <tr><th>常見錯誤</th><th>正確寫法</th></tr>
+        <tr><td>I knew it until yesterday.</td><td>I <b>didn't</b> know it <b>until</b> yesterday.</td></tr>
+        <tr><td>Not until he came, I left.</td><td><b>Not until he came did I leave.</b></td></tr>
+        <tr><td>It was not until then that did I know.</td><td>It was not until then <b>that I knew</b>.</td></tr>
+        <tr><td>I'll wait until he will come.</td><td>I'll wait until he <b>comes</b>.</td></tr>
+        <tr><td>We must arrive until it gets dark.</td><td>We must arrive <b>before</b> it gets dark.</td></tr>
+      </table>
+
+    </div>
+  </details>
+
+  <div class="sticky">
+    <div class="bar">
+      <span>作答進度</span>
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <span id="count">0 / 35</span>
+    </div>
+  </div>
+
+  <form id="quiz"></form>
+
+  <div class="result" id="result">
+    <div class="score" id="scoreNum">0</div>
+    <div class="sub" id="scoreTxt">分</div>
+    <div class="bd">
+      <span style="color:var(--green)">答對 <b id="rOk">0</b></span>
+      <span style="color:var(--red)">答錯 <b id="rNo">0</b></span>
+      <span style="color:var(--gray)">未作答 <b id="rBlank">0</b></span>
+    </div>
+    <div class="bysec" id="bysec"></div>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="submit" id="submitBtn">送出並查看解析</button>
+    <div class="hint" id="hint">尚未作答任何題目</div>
+    <div class="after" id="after">
+      <button type="button" id="wrongBtn">只看錯題</button>
+      <button type="button" id="resetBtn">重新作答</button>
+    </div>
+  </div>
+
+  <footer>
+    <a href="index.html" style="display:inline-block;margin-bottom:10px;color:#1f6fe0;font-weight:800;
+       text-decoration:none;background:#fff;border:2px solid #2b8cff;border-radius:12px;padding:9px 20px;">← 回首頁</a>
+    <div>until / not until 互動文法練習　&middot;　EFETL 英文文法</div>
+  </footer>
+</div>
+
+<script>
+/* ====== 分區 ====== */
+const PARTS=[
+ {t:"第一部分　基本 until（一直到…為止）", d:"持續性動詞 ＋ until，句子是肯定的。共 7 題"},
+ {t:"第二部分　not…until（直到…才）", d:"瞬間性動詞必須配否定：didn't / can't / don't … until。共 8 題"},
+ {t:"第三部分　Not until 置句首 → 主句倒裝", d:"Not until ＋ 子句 ＋ 助動詞 ＋ 主詞 ＋ 原形動詞。共 7 題"},
+ {t:"第四部分　It was not until… that…（強調句）", d:"that 之後正常語序，不倒裝、不加 not、不用 when。共 6 題"},
+ {t:"第五部分　綜合應用與時態陷阱", d:"until / before / unless 的分辨，以及時態一致。共 7 題"}
+];
+
+/* ====== 題庫 ====== */
+const Q=[
+/* ---------- 第一部分 ---------- */
+{n:1,p:0,zh:"我會在這裡等到你回來為止。",
+ o:["I will wait here until you will come back.",
+    "I will wait here until you come back.",
+    "I won't wait here until you come back.",
+    "Not until you come back I will wait here."],a:1,
+ en:"I will wait here <b class='k'>until</b> you <b class='k'>come</b> back.",
+ ex:"wait 是持續性動詞，用 until 表示「一直等到…為止」，主句<b class='k'>不加 not</b>。until 引導時間副詞子句，須用現在式 come 代替 will come。"},
+
+{n:2,p:0,zh:"請在這裡等到我打電話給你。",
+ o:["Please wait here until I call you.",
+    "Please don't wait here until I call you.",
+    "Please wait here until I will call you.",
+    "Please wait here before I call you."],a:0,
+ en:"Please wait here <b class='k'>until</b> I <b class='k'>call</b> you.",
+ ex:"wait ＋ until 表持續。C 犯了「未來式進時間子句」的錯；D 用 before 會變成「在我打電話之前等一下」，語意不同。"},
+
+{n:3,p:0,zh:"他昨天一直工作到半夜。",
+ o:["He didn't work until midnight yesterday.",
+    "He worked until midnight yesterday.",
+    "He works until midnight yesterday.",
+    "He had worked before midnight yesterday."],a:1,
+ en:"He <b class='k'>worked until</b> midnight yesterday.",
+ ex:"work 為持續動詞，「一直工作到半夜」用肯定句 ＋ until。若寫 A（didn't work until midnight），意思會變成「直到半夜<b class='k'>才開始</b>工作」，完全相反。"},
+
+{n:4,p:0,zh:"這家店營業到晚上十點。",
+ o:["This store isn't open until ten o'clock at night.",
+    "This store is open before ten o'clock at night.",
+    "This store is open until ten o'clock at night.",
+    "This store opens until ten o'clock at night."],a:2,
+ en:"This store <b class='k'>is open until</b> ten o'clock at night.",
+ ex:"be open 是持續狀態，配 until 表示營業一路到十點。A（isn't open until ten）意思是「十點才開門」；D 的 open 當「開門」是瞬間動作，不能接 until。"},
+
+{n:5,p:0,zh:"我要待在這個城市直到下個月。",
+ o:["I will stay in this city until next month.",
+    "I will stay in this city by next month.",
+    "I won't stay in this city until next month.",
+    "I will stay in this city until next month will come."],a:0,
+ en:"I will stay in this city <b class='k'>until</b> next month.",
+ ex:"stay 為持續動詞。until 後面可直接接名詞（介系詞用法），不必造子句。by next month 是「在下個月<b class='k'>之前完成</b>」，語意不同。"},
+
+{n:6,p:0,zh:"你必須留在醫院直到醫生說你可以回家。",
+ o:["You have to stay in the hospital until the doctor will say you can go home.",
+    "You have to stay in the hospital until the doctor says you can go home.",
+    "You don't have to stay in the hospital until the doctor says you can go home.",
+    "Not until the doctor says you can go home you have to stay in the hospital."],a:1,
+ en:"You have to stay in the hospital <b class='k'>until</b> the doctor <b class='k'>says</b> you can go home.",
+ ex:"stay 持續動詞 ＋ until。時間子句用現在式 says 代替 will say。"},
+
+{n:7,p:0,zh:"我明天會待在辦公室直到你來。",
+ o:["I will stay in the office until you will come tomorrow.",
+    "I will stay in the office until you came tomorrow.",
+    "I will stay in the office until you come tomorrow.",
+    "I will stay in the office before you come tomorrow."],a:2,
+ en:"I <b class='k'>will stay</b> in the office <b class='k'>until</b> you <b class='k'>come</b> tomorrow.",
+ ex:"最常見的時態陷阱：<b class='k'>主句可以用未來式</b>（will stay），但 until 引導的時間子句<b class='k'>只能用現在式</b>（come）。"},
+
+/* ---------- 第二部分 ---------- */
+{n:8,p:1,zh:"直到昨天我才知道這個消息。",
+ o:["I knew the news until yesterday.",
+    "I didn't know the news until yesterday.",
+    "I don't know the news until yesterday.",
+    "Until yesterday I knew the news."],a:1,
+ en:"I <b class='k'>didn't know</b> the news <b class='k'>until</b> yesterday.",
+ ex:"know（得知）屬於狀態改變的瞬間動詞，「直到…才」必須用 <b class='k'>not…until</b>。",
+ alt:"倒裝寫法：<b>Not until yesterday did I know the news.</b>"},
+
+{n:9,p:1,zh:"他一直到十二點才睡覺。",
+ o:["He went to bed until twelve o'clock.",
+    "He didn't go to bed until twelve o'clock.",
+    "He didn't go to bed before twelve o'clock came.",
+    "Not until twelve o'clock he went to bed."],a:1,
+ en:"He <b class='k'>didn't go</b> to bed <b class='k'>until</b> twelve o'clock.",
+ ex:"go to bed 是瞬間動作，不能持續，所以要用 didn't…until。D 把 Not until 放句首卻<b class='k'>忘了倒裝</b>。",
+ alt:"強調句：<b>It was not until twelve o'clock that he went to bed.</b>"},
+
+{n:10,p:1,zh:"我們要等到雨停才能出發。",
+ o:["We can set off until the rain stops.",
+    "We can't set off until the rain will stop.",
+    "We can't set off until the rain stops.",
+    "We can't set off before the rain will stop."],a:2,
+ en:"We <b class='k'>can't set off until</b> the rain <b class='k'>stops</b>.",
+ ex:"set off（出發）是瞬間動作，用 can't…until 表示「要等到…才能」。時間子句用現在式 stops。"},
+
+{n:11,p:1,zh:"直到失去健康，人們才懂得健康的重要。",
+ o:["People know the importance of health until they lose it.",
+    "People don't know the importance of health until they lose it.",
+    "People don't know the importance of health until they will lose it.",
+    "Not until they lose it people don't know the importance of health."],a:1,
+ en:"People <b class='k'>don't know</b> the importance of health <b class='k'>until</b> they <b class='k'>lose</b> it.",
+ ex:"「直到…才」＝ not…until。D 既沒倒裝，主句又多加一個 not（倒裝句主句<b class='k'>不再加否定</b>）。",
+ alt:"倒裝寫法：<b>Not until they lose their health do people know its importance.</b>"},
+
+{n:12,p:1,zh:"我直到上個星期才收到他的信。",
+ o:["I received his letter until last week.",
+    "I didn't receive his letter until last week.",
+    "I hadn't received his letter until last week comes.",
+    "Until last week I received his letter."],a:1,
+ en:"I <b class='k'>didn't receive</b> his letter <b class='k'>until</b> last week.",
+ ex:"receive 是瞬間動詞，必須配否定。A 的 received…until 是典型錯誤。"},
+
+{n:13,p:1,zh:"她一直到二十五歲才學會開車。",
+ o:["She learned to drive until she was twenty-five.",
+    "She didn't learn to drive until she is twenty-five.",
+    "She didn't learn to drive until she was twenty-five.",
+    "Not until she was twenty-five she learned to drive."],a:2,
+ en:"She <b class='k'>didn't learn</b> to drive <b class='k'>until</b> she <b class='k'>was</b> twenty-five.",
+ ex:"learn（學會）為瞬間完成的動作，用 didn't…until；主句是過去式，until 子句也要<b class='k'>過去式 was</b>（時態一致）。"},
+
+{n:14,p:1,zh:"我們直到會議結束才吃午餐。",
+ o:["We had lunch until the meeting was over.",
+    "We didn't have lunch until the meeting was over.",
+    "We didn't have lunch before the meeting will be over.",
+    "We don't have lunch until the meeting was over."],a:1,
+ en:"We <b class='k'>didn't have</b> lunch <b class='k'>until</b> the meeting <b class='k'>was over</b>.",
+ ex:"have lunch 在此指「開始吃午餐」的瞬間動作，用 didn't…until。"},
+
+{n:15,p:1,zh:"我直到看了那部電影才了解戰爭有多可怕。",
+ o:["I understood how terrible war was until I saw that movie.",
+    "I didn't understand how terrible war was until I will see that movie.",
+    "Not until I saw that movie I understood how terrible war was.",
+    "I didn't understand how terrible war was until I saw that movie."],a:3,
+ en:"I <b class='k'>didn't understand</b> how terrible war was <b class='k'>until</b> I saw that movie.",
+ ex:"「直到…才了解」＝ didn't understand…until。另注意間接問句 <b class='k'>how terrible war was</b> 用直述句語序，不可寫成 how terrible was war。"},
+
+/* ---------- 第三部分 ---------- */
+{n:16,p:2,zh:"直到那時我才明白她是對的。",
+ o:["Not until then I realized that she was right.",
+    "Not until then did I realize that she was right.",
+    "Not until then didn't I realize that she was right.",
+    "Not until then I didn't realize that she was right."],a:1,
+ en:"<b class='k'>Not until then did I realize</b> that she was right.",
+ ex:"Not until 置句首，主句要倒裝（助動詞 did 提到主詞前），動詞回<b class='k'>原形 realize</b>，而且主句<b class='k'>不再加 not</b>。"},
+
+{n:17,p:2,zh:"直到他道歉，我才原諒他。",
+ o:["Not until he apologized I forgave him.",
+    "Not until he apologized did I forgive him.",
+    "Not until he apologized did I forgave him.",
+    "Not until did he apologize I forgave him."],a:1,
+ en:"<b class='k'>Not until he apologized did I forgive</b> him.",
+ ex:"倒裝只發生在<b class='k'>主句</b>：until 子句 he apologized 維持正常語序，主句用 did ＋ 原形 forgive。"},
+
+{n:18,p:2,zh:"直到我到家，才發現鑰匙不見了。",
+ o:["Not until I got home did I find that my keys were missing.",
+    "Not until I got home I found that my keys were missing.",
+    "Not until did I get home did I find that my keys were missing.",
+    "Not until I got home did I found that my keys were missing."],a:0,
+ en:"<b class='k'>Not until I got home did I find</b> that my keys were missing.",
+ ex:"C 把 until 子句也倒裝了（錯）；D 的 did 後面用了過去式 found（錯），<b class='k'>did ＋ 原形</b>才對。"},
+
+{n:19,p:2,zh:"直到父母老了，我們才懂得感恩。",
+ o:["Not until our parents get old we learn to be thankful.",
+    "Not until our parents get old do we learn to be thankful.",
+    "Not until our parents get old do we learned to be thankful.",
+    "Not until our parents get old don't we learn to be thankful."],a:1,
+ en:"<b class='k'>Not until our parents get old do we learn</b> to be thankful.",
+ ex:"敘述普遍真理用現在式，主詞 we 的助動詞為 <b class='k'>do</b>；倒裝後不可再加 not（D 錯）。"},
+
+{n:20,p:2,zh:"直到下了大雨，農夫才鬆了一口氣。",
+ o:["Not until it rained heavily the farmers felt relieved.",
+    "Not until it rained heavily did the farmers feel relieved.",
+    "Not until it rained heavily did the farmers felt relieved.",
+    "Not until it rained heavily the farmers didn't feel relieved."],a:1,
+ en:"<b class='k'>Not until it rained heavily did the farmers feel</b> relieved.",
+ ex:"did ＋ 原形 feel。<b class='k'>feel relieved</b> ＝ 感到鬆一口氣。"},
+
+{n:21,p:2,zh:"直到警察來，他們才停止吵架。",
+ o:["Not until the police came they stopped arguing.",
+    "Not until the police came did they stop arguing.",
+    "Not until the police came did they stopped arguing.",
+    "Not until came the police did they stop arguing."],a:1,
+ en:"<b class='k'>Not until the police came did they stop</b> arguing.",
+ ex:"D 把 until 子句寫成 came the police（錯），<b class='k'>子句不倒裝</b>。stop ＋ V-ing 表「停止做某事」。",
+ alt:"一般語序：<b>They didn't stop arguing until the police came.</b>"},
+
+{n:22,p:2,zh:"他直到搬到台北才發現生活這麼貴。",
+ o:["Not until he moved to Taipei he realized that living was so expensive.",
+    "Not until he moved to Taipei did he realize that living was so expensive.",
+    "Not until he moved to Taipei did he realized that living was so expensive.",
+    "Not until did he move to Taipei he realized that living was so expensive."],a:1,
+ en:"<b class='k'>Not until he moved to Taipei did he realize</b> that living was so expensive.",
+ ex:"主句 did he realize（原形）；A 忘了倒裝、C 用了過去式、D 倒裝錯位置。",
+ alt:"一般語序：<b>He didn't realize that living was so expensive until he moved to Taipei.</b>"},
+
+/* ---------- 第四部分 ---------- */
+{n:23,p:3,zh:"直到十八歲我才第一次出國。",
+ o:["It was not until I was eighteen that I went abroad for the first time.",
+    "It was not until I was eighteen that did I go abroad for the first time.",
+    "It was not until I was eighteen when I went abroad for the first time.",
+    "It was until I was eighteen that I went abroad for the first time."],a:0,
+ en:"<b class='k'>It was not until</b> I was eighteen <b class='k'>that</b> I went abroad for the first time.",
+ ex:"強調句公式：It was not until ＋ 被強調的時間 ＋ that ＋ <b class='k'>正常語序</b>。that 後不倒裝（B 錯）、不能換成 when（C 錯）、not 不可省（D 錯）。"},
+
+{n:24,p:3,zh:"直到 1990 年代這項科技才變得普遍。",
+ o:["It was not until the 1990s when this technology became common.",
+    "It was not until the 1990s that this technology became common.",
+    "It was not until the 1990s that did this technology become common.",
+    "It is not until the 1990s that this technology became common."],a:1,
+ en:"<b class='k'>It was not until</b> the 1990s <b class='k'>that</b> this technology became common.",
+ ex:"即使強調的是時間，連接詞一律用 <b class='k'>that</b>，不用 when。主句是過去式，開頭也要用 It <b class='k'>was</b>。"},
+
+{n:25,p:3,zh:"直到她開口，我才認出她來。",
+ o:["It was not until she spoke that did I recognize her.",
+    "It was not until she spoke when I recognized her.",
+    "It was not until she spoke that I recognized her.",
+    "It was not until she spoke that I didn't recognize her."],a:2,
+ en:"<b class='k'>It was not until</b> she spoke <b class='k'>that</b> I recognized her.",
+ ex:"that 之後維持 I recognized her 的正常語序，而且<b class='k'>不再加 not</b>（否定已含在 not until 裡）。",
+ alt:"倒裝寫法：<b>Not until she spoke did I recognize her.</b>"},
+
+{n:26,p:3,zh:"直到考完試我才真正放鬆。",
+ o:["It was not until the exam was over that I really relaxed.",
+    "It was not until the exam was over that did I really relax.",
+    "It was not until the exam was over when I really relaxed.",
+    "It was not until the exam is over that I really relaxed."],a:0,
+ en:"<b class='k'>It was not until</b> the exam was over <b class='k'>that</b> I really relaxed.",
+ ex:"整句是過去的事，was over / relaxed / It was 三處時態一致。"},
+
+{n:27,p:3,zh:"直到最近他們才決定結婚。",
+ o:["It was not until recently when they decided to get married.",
+    "It was not until recently that they decided to get married.",
+    "It was not until recently that did they decide to get married.",
+    "It was not until recently that they didn't decide to get married."],a:1,
+ en:"<b class='k'>It was not until</b> recently <b class='k'>that</b> they decided to get married.",
+ ex:"被強調的可以只是一個副詞（recently）。get married 為瞬間動作，正合此句型。",
+ alt:"一般語序：<b>They didn't decide to get married until recently.</b>"},
+
+{n:28,p:3,zh:"這個祕密直到他死後才被公開。",
+ o:["The secret was revealed until after he died.",
+    "The secret was not revealed until after he died.",
+    "The secret didn't reveal until after he died.",
+    "It was not until after he died when the secret was revealed."],a:1,
+ en:"The secret <b class='k'>was not revealed until</b> after he died.",
+ ex:"祕密是「<b class='k'>被</b>公開」，要用被動 was revealed，否定放在 be 動詞後。C 少了被動語態。",
+ alt:"強調句：<b>It was not until after his death that the secret was revealed.</b>"},
+
+/* ---------- 第五部分 ---------- */
+{n:29,p:4,zh:"在你完成作業之前不可以看電視。",
+ o:["You can watch TV until you finish your homework.",
+    "You can't watch TV until you will finish your homework.",
+    "You can't watch TV until you finish your homework.",
+    "Not until you finish your homework you can watch TV."],a:2,
+ en:"You <b class='k'>can't watch</b> TV <b class='k'>until</b> you <b class='k'>finish</b> your homework.",
+ ex:"can't…until ＝「要等到…才可以」。時間子句用現在式 finish。",
+ alt:"倒裝寫法：<b>Not until you finish your homework can you watch TV.</b>（把 can 提到主詞前）"},
+
+{n:30,p:4,zh:"直到那時為止，我從來沒去過日本。",
+ o:["Until then, I never go to Japan.",
+    "Until then, I had never been to Japan.",
+    "Until then, I have never been to Japan.",
+    "Not until then had I never been to Japan."],a:1,
+ en:"<b class='k'>Until then</b>, I <b class='k'>had never been</b> to Japan.",
+ ex:"「到<b class='k'>過去</b>某時間點為止」的經驗，用過去完成式 had never been。C 的現在完成式是「到現在為止」。D 倒裝後又加 never，形成雙重否定。"},
+
+{n:31,p:4,zh:"天黑之前我們必須走到山頂。",
+ o:["We must reach the top of the mountain until it gets dark.",
+    "We must reach the top of the mountain before it gets dark.",
+    "We must reach the top of the mountain before it will get dark.",
+    "We mustn't reach the top of the mountain until it gets dark."],a:1,
+ en:"We must reach the top of the mountain <b class='k'>before</b> it <b class='k'>gets</b> dark.",
+ ex:"reach 是瞬間動作，肯定句不能配 until；中文「在…之前」要用 <b class='k'>before</b>。時間子句一樣用現在式 gets。"},
+
+{n:32,p:4,zh:"他一直到把整本書讀完才停下來。",
+ o:["He stopped until he finished the whole book.",
+    "He didn't stop until he had finished the whole book.",
+    "He didn't stop until he will finish the whole book.",
+    "Not until he had finished the whole book he didn't stop."],a:1,
+ en:"He <b class='k'>didn't stop until</b> he <b class='k'>had finished</b> the whole book.",
+ ex:"stop 是瞬間動作，用 didn't…until。「讀完」發生在「停下來」之前，用過去完成式 had finished 強調先後。",
+ alt:"倒裝寫法：<b>Not until he had finished the whole book did he stop.</b>"},
+
+{n:33,p:4,zh:"除非你努力，否則直到最後你都不會成功。",
+ o:["Unless you work hard, you won't succeed until the very end.",
+    "Unless you don't work hard, you won't succeed until the very end.",
+    "If you work hard, you won't succeed until the very end.",
+    "Unless you work hard, you don't succeed until the very end will come."],a:0,
+ en:"<b class='k'>Unless</b> you work hard, you <b class='k'>won't succeed until</b> the very end.",
+ ex:"unless 本身已含否定（＝ if…not），子句<b class='k'>不再加 not</b>（B 錯）。主句講未來，用 won't succeed。"},
+
+{n:34,p:4,zh:"我沒發現自己有多累，直到我坐下來。",
+ o:["I realized how tired I was until I sat down.",
+    "I didn't realize how tired I was until I sat down.",
+    "I didn't realize how tired was I until I sat down.",
+    "Not until I sat down I didn't realize how tired I was."],a:1,
+ en:"I <b class='k'>didn't realize</b> how tired I was <b class='k'>until</b> I sat down.",
+ ex:"realize 為瞬間動詞，用 didn't…until。C 錯在間接問句倒裝了（應為 <b class='k'>how tired I was</b>）。"},
+
+{n:35,p:4,zh:"直到我親眼看見，我才相信這件事。",
+ o:["I believed it until I saw it with my own eyes.",
+    "Not until I saw it with my own eyes I believed it.",
+    "I didn't believe it until I saw it with my own eyes.",
+    "I didn't believe it until I will see it with my own eyes."],a:2,
+ en:"I <b class='k'>didn't believe</b> it <b class='k'>until</b> I saw it <b class='k'>with my own eyes</b>.",
+ ex:"believe 在此指「開始相信」的狀態改變，用 didn't…until。with one's own eyes ＝ 親眼。",
+ alt:"倒裝寫法：<b>Not until I saw it with my own eyes did I believe it.</b>"}
+];
+
+/* ====== 產生畫面 ====== */
+const TOTAL=Q.length;
+const form=document.getElementById('quiz');
+let lastPart=-1;
+Q.forEach(q=>{
+  if(q.p!==lastPart){
+    const st=document.createElement('div'); st.className='section-title s'+q.p; st.textContent=PARTS[q.p].t;
+    const sd=document.createElement('div'); sd.className='section-desc'; sd.textContent=PARTS[q.p].d;
+    form.appendChild(st); form.appendChild(sd); lastPart=q.p;
+  }
+  const card=document.createElement('div'); card.className='q'; card.id='q'+q.n;
+  card.innerHTML=`<div class="stem"><span class="num">${q.n}</span>${q.zh}</div>
+                  <div class="ask">選出<b>文法完全正確</b>的英文翻譯</div>`;
+  q.o.forEach((opt,i)=>{
+    const lab=document.createElement('label'); lab.className='opt'; lab.dataset.i=i;
+    lab.innerHTML=`<input type="radio" name="q${q.n}" value="${i}"><span class="lab">${'ABCD'[i]}</span><span>${opt}</span>`;
+    lab.querySelector('input').addEventListener('change',()=>{
+      card.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
+      lab.classList.add('sel'); updateProgress();
+    });
+    card.appendChild(lab);
+  });
+
+  const self=document.createElement('details'); self.className='self';
+  self.innerHTML=`<summary>✍️ 先自己翻譯看看（不計分）</summary>
+                  <textarea placeholder="在這裡寫下你的英文翻譯，送出後再跟正解對照…"></textarea>`;
+  card.appendChild(self);
+
+  const exp=document.createElement('div'); exp.className='exp'; exp.id='exp'+q.n;
+  card.appendChild(exp);
+  form.appendChild(card);
+});
+
+const submitBtn=document.getElementById('submitBtn');
+const afterBox=document.getElementById('after');
+const wrongBtn=document.getElementById('wrongBtn');
+const resetBtn=document.getElementById('resetBtn');
+const hint=document.getElementById('hint');
+
+function answeredCount(){let c=0;Q.forEach(q=>{if(form.querySelector(`input[name="q${q.n}"]:checked`))c++;});return c;}
+function updateProgress(){
+  const c=answeredCount();
+  document.getElementById('count').textContent=`${c} / ${TOTAL}`;
+  document.getElementById('fill').style.width=(c/TOTAL*100)+'%';
+  hint.textContent = c===TOTAL ? `已完成全部 ${TOTAL} 題` :
+    (c===0 ? '尚未作答任何題目（仍可送出查看解析）' : `已作答 ${c} 題，未作答 ${TOTAL-c} 題（仍可送出）`);
+}
+
+submitBtn.addEventListener('click',()=>{
+  let ok=0,blank=0;
+  const sec=PARTS.map(()=>({ok:0,all:0}));
+  Q.forEach(q=>{
+    const sel=form.querySelector(`input[name="q${q.n}"]:checked`);
+    const pick=sel?parseInt(sel.value):null;
+    if(pick===null) blank++;
+    const card=document.getElementById('q'+q.n);
+    card.querySelectorAll('.opt').forEach(o=>{
+      o.classList.add('lock'); o.querySelector('input').disabled=true;
+      const i=parseInt(o.dataset.i);
+      if(i===q.a) o.classList.add('correct');
+      if(pick!==null && i===pick && pick!==q.a) o.classList.add('wrong');
+    });
+    const correct=(pick===q.a); if(correct) ok++;
+    sec[q.p].all++; if(correct) sec[q.p].ok++;
+    card.dataset.right = correct ? '1' : '0';
+    const tagCls = correct ? '' : (pick===null ? 'blank' : 'miss');
+    const tagTxt = correct ? '答對' : (pick===null ? '未作答' : '答錯');
+    const altHtml = q.alt ? `<div class="alt"><b>另解</b>&nbsp;${q.alt}</div>` : '';
+    document.getElementById('exp'+q.n).innerHTML=
+      `<span class="tag ${tagCls}">${tagTxt}　正解：${'ABCD'[q.a]}</span>
+       <div class="en"><b>正解句</b>&nbsp;${q.en}</div>
+       <div class="zh"><b>解析</b>&nbsp;${q.ex}</div>${altHtml}`;
+    document.getElementById('exp'+q.n).classList.add('show');
+  });
+
+  document.getElementById('scoreNum').textContent=Math.round(ok/TOTAL*100);
+  document.getElementById('scoreTxt').textContent=`分（答對 ${ok} / ${TOTAL} 題）`;
+  document.getElementById('rOk').textContent=ok;
+  document.getElementById('rNo').textContent=TOTAL-ok-blank;
+  document.getElementById('rBlank').textContent=blank;
+  document.getElementById('bysec').innerHTML=sec.map((s,i)=>{
+    const pct=Math.round(s.ok/s.all*100);
+    return `<div class="row"><span class="nm">${PARTS[i].t.split('　')[0]}　${PARTS[i].t.split('　')[1]}</span>
+            <span class="mini"><i style="width:${pct}%"></i></span>
+            <span class="sc">${s.ok}/${s.all}</span></div>`;
+  }).join('');
+  document.getElementById('result').classList.add('show');
+
+  submitBtn.style.display='none'; hint.style.display='none'; afterBox.classList.add('show');
+  document.getElementById('result').scrollIntoView({behavior:'smooth'});
+});
+
+let onlyWrong=false;
+wrongBtn.addEventListener('click',()=>{
+  onlyWrong=!onlyWrong;
+  wrongBtn.classList.toggle('on',onlyWrong);
+  wrongBtn.textContent = onlyWrong ? '顯示全部題目' : '只看錯題';
+  document.querySelectorAll('.q').forEach(c=>{
+    c.classList.toggle('hide', onlyWrong && c.dataset.right==='1');
+  });
+  document.querySelectorAll('.section-title,.section-desc').forEach(e=>{
+    e.style.display = onlyWrong ? 'none' : '';
+  });
+});
+
+resetBtn.addEventListener('click',()=>{
+  form.reset();
+  onlyWrong=false; wrongBtn.classList.remove('on'); wrongBtn.textContent='只看錯題';
+  Q.forEach(q=>{
+    const card=document.getElementById('q'+q.n);
+    card.classList.remove('hide');
+    card.querySelectorAll('.opt').forEach(o=>{
+      o.classList.remove('sel','correct','wrong','lock'); o.querySelector('input').disabled=false;
+    });
+    document.getElementById('exp'+q.n).classList.remove('show');
+  });
+  document.querySelectorAll('.section-title,.section-desc').forEach(e=>e.style.display='');
+  document.getElementById('result').classList.remove('show');
+  submitBtn.style.display='block'; hint.style.display='block'; afterBox.classList.remove('show');
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+updateProgress();
+</script>
+</body>
+</html>
