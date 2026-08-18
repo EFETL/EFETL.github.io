@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>中級閱讀模擬測驗　第三十八回　第三大題 閱讀理解（互動講義版）</title>
+<style>
+:root{
+  --ink:#1f2430; --sub:#5b6472; --line:#e7e3f0;
+  --brand:#6d28d9; --brand2:#2563eb; --accent:#f97316; --accent2:#0ea5a4;
+  --ok:#16a34a; --no:#dc2626; --wash:#f4f1fb; --paper:#fff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  color:var(--ink);line-height:1.65;
+  background:
+    radial-gradient(1100px 560px at 10% -8%, #ede9fe 0%, rgba(237,233,254,0) 60%),
+    radial-gradient(1100px 560px at 100% 0%, #cffafe 0%, rgba(207,250,254,0) 55%),
+    #eef1f7;
+  -webkit-print-color-adjust:exact;print-color-adjust:exact;
+}
+.wrap{max-width:840px;margin:0 auto;padding:14px 10px 60px}
+
+.toolbar{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+  background:rgba(255,255,255,.88);backdrop-filter:blur(8px);border:1px solid var(--line);
+  border-radius:16px;padding:10px 14px;margin:6px auto 16px;box-shadow:0 6px 22px rgba(76,29,149,.10)}
+.toolbar .t-title{font-weight:800;color:var(--brand);margin-right:auto;font-size:15px}
+.toolbar .t-title small{color:var(--sub);font-weight:600;margin-left:6px}
+.btn{border:0;cursor:pointer;font-family:inherit;font-weight:700;font-size:13px;padding:8px 13px;
+  border-radius:999px;color:#fff;background:var(--brand);transition:.15s}
+.btn:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.btn.ghost{background:#fff;color:var(--brand);border:1.5px solid var(--brand)}
+.btn.amber{background:var(--accent)}.btn.home{background:#0ea5a4}
+.btn.nav{background:#fff;color:#5b6472;border:1.5px solid var(--line);font-size:12.5px;padding:7px 11px;text-decoration:none;display:inline-block}
+.btn.nav:hover{color:var(--brand);border-color:var(--brand)}
+.btn.nav.cur{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;border-color:transparent;cursor:default;pointer-events:none}
+.pill-score{font-weight:800;color:var(--brand);background:#f3e8ff;border-radius:999px;padding:8px 14px;font-size:13px}
+
+/* 量測用暫存流：寬度=頁面內容寬(180mm) */
+#flow{width:180mm;margin:0 auto;position:absolute;left:-99999px;top:0}
+body.done #flow{display:none}
+
+.page{width:210mm;min-height:297mm;background:var(--paper);margin:0 auto 12mm;padding:15mm 15mm 24mm;
+  position:relative;box-shadow:0 10px 34px rgba(30,25,60,.14);border-radius:6px}
+.page-inner{position:static}
+.pfoot{position:absolute;left:15mm;right:15mm;bottom:10mm;display:flex;justify-content:space-between;
+  align-items:center;font-size:11px;color:var(--sub);border-top:1.5px dashed var(--line);padding-top:5px}
+.pfoot .pf-brand{font-weight:700;color:var(--brand)}
+
+.cover{border-radius:14px;overflow:hidden;border:1px solid var(--line);margin-bottom:14px;box-shadow:0 8px 20px rgba(109,40,217,.12)}
+.cover .band{background:linear-gradient(120deg,var(--brand) 0%,var(--brand2) 55%,#0ea5a4 100%);color:#fff;padding:18px 22px;position:relative}
+.cover .band::after{content:"";position:absolute;right:-30px;top:-30px;width:150px;height:150px;background:radial-gradient(circle,rgba(255,255,255,.25),transparent 70%);border-radius:50%}
+.cover .kick{font-size:12.5px;letter-spacing:3px;opacity:.92;font-weight:700}
+.cover h1{margin:4px 0 2px;font-size:25px;font-weight:900;letter-spacing:.5px}
+.cover .en{font-size:13px;opacity:.9;font-weight:600}
+.cover .meta{display:flex;gap:16px;flex-wrap:wrap;background:#faf7ff;padding:11px 22px;font-size:12.5px;color:var(--sub)}
+.cover .meta b{color:var(--brand)}
+.cef{display:inline-block;background:#fff;color:var(--brand);border:1.5px solid var(--brand);border-radius:999px;padding:2px 10px;font-weight:800;font-size:12px}
+
+.part{display:flex;align-items:center;gap:12px;margin:6px 0 12px}
+.part .no{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:#fff;font-weight:900;font-size:18px;box-shadow:0 4px 10px rgba(0,0,0,.14)}
+.p1 .no{background:linear-gradient(135deg,#8b5cf6,#6d28d9)}
+.p2 .no{background:linear-gradient(135deg,#22d3ee,#0e7490)}
+.p3 .no{background:linear-gradient(135deg,#fb923c,#ea580c)}
+.part h2{margin:0;font-size:18px;font-weight:900}
+.part .en2{font-size:12px;color:var(--sub);font-weight:600;font-style:italic}
+.part .tag{font-size:12px;color:var(--sub);font-weight:600}
+.instru{background:var(--wash);border-left:4px solid var(--brand);border-radius:0 10px 10px 0;padding:9px 14px;font-size:12.5px;color:#4b4560;margin-bottom:14px}
+
+.q{padding:11px 13px;border:1px solid var(--line);border-radius:12px;margin-bottom:11px;background:#fff}
+.q .stem{font-size:15px;font-weight:600;line-height:1.7}
+.q .stem .qn{display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 6px;background:#ede9fe;color:var(--brand);border-radius:7px;font-weight:800;font-size:13px;margin-right:7px;vertical-align:2px}
+.blank{color:var(--brand2);font-weight:800;border-bottom:2px solid var(--brand2);padding:0 22px;margin:0 3px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:7px 16px;margin-top:9px}
+.opt{display:flex;gap:8px;align-items:flex-start;padding:6px 10px;border:1.5px solid var(--line);border-radius:9px;font-size:14px;background:#fff;cursor:pointer;transition:.12s}
+.opt .ol{flex:none;font-weight:800;color:var(--sub)}
+.reading .opts{grid-template-columns:1fr}
+
+.passage{border:1px solid var(--line);border-radius:12px;padding:13px 16px;margin:6px 0 11px;background:linear-gradient(#fff,#fbfaff)}
+.passage.email{background:linear-gradient(#f8fbff,#f2f7ff);border-color:#dbe6ff}
+.passage.ad{background:linear-gradient(#fff8f1,#fff3e6);border-color:#ffe0bf}
+.passage.notice{background:linear-gradient(#f2fdfb,#eafaf7);border-color:#c6efe6}
+.passage .ptitle{font-weight:900;font-size:15.5px;margin:0 0 6px;color:#2a2450}
+.passage .ptype{display:inline-block;font-size:11px;font-weight:800;letter-spacing:1px;padding:2px 9px;border-radius:999px;background:#ede9fe;color:var(--brand);margin-bottom:7px}
+.passage p{margin:6px 0;font-size:14px;line-height:1.75}
+.passage ul{margin:6px 0;padding-left:20px;font-size:14px;line-height:1.7}
+.passage .body{font-family:"Noto Serif TC",Georgia,"Times New Roman",serif}
+.passage table{border-collapse:collapse;width:100%;font-size:13px;margin:6px 0}
+.passage th,.passage td{border:1px solid #d9d2ee;padding:6px 9px;text-align:left}
+.passage th{background:#f0eafc;color:var(--brand)}
+.qgroup-label{font-weight:800;color:var(--brand);font-size:13px;margin:12px 0 8px;border-left:4px solid var(--brand);padding-left:9px}
+
+.ana{margin-top:9px;border:1.5px dashed #d9cff5;border-radius:11px;background:#faf7ff;padding:0 14px;max-height:0;overflow:hidden;transition:max-height .28s ease,padding .2s}
+.ana.open{max-height:1800px;padding:12px 14px}
+.ana.zhblk{margin:2px 0 11px}
+.ana .ans-line{font-weight:800;color:var(--ok);font-size:13.5px;margin-bottom:6px}
+.ana .zh{font-size:13px;margin:4px 0;color:#3a3550}
+.ana .lab{display:inline-block;font-size:11px;font-weight:800;color:#fff;background:var(--brand);border-radius:6px;padding:1px 7px;margin-right:6px}
+.ana .lab.tr{background:#0ea5a4}.ana .lab.vo{background:var(--accent)}
+.ana .vocab{margin-top:6px;font-size:12.5px;color:#4b4560}
+.ana .vocab .vw{font-weight:800;color:#2a2450}
+.ana .body-zh{font-size:13px;color:#3a3550;line-height:1.7}
+.togg{margin-top:9px;display:inline-flex;align-items:center;gap:6px;border:0;cursor:pointer;background:#ede9fe;color:var(--brand);font-weight:800;font-size:12.5px;padding:6px 12px;border-radius:999px;font-family:inherit}
+.togg:hover{background:#e0d4fb}
+
+.opt.correct{border-color:var(--ok);background:#eafaf0}
+.opt.wrong{border-color:var(--no);background:#fdecec}
+.opt .mk{margin-left:auto;font-weight:900}
+.opt.correct .mk{color:var(--ok)}.opt.wrong .mk{color:var(--no)}
+
+/* 量測狀態：隱藏解析與按鈕（等同列印） */
+body.measuring .ana,body.measuring .togg{display:none !important}
+
+@media screen and (max-width:840px){
+  #flow{position:static;left:0;width:100%}
+  .page{width:100%;min-height:auto;padding:20px 16px 44px;border-radius:12px}
+  .page-inner{min-height:0}
+  .pfoot{position:static;bottom:auto;margin-top:16px}
+  .opts{grid-template-columns:1fr}.cover h1{font-size:21px}
+}
+@media print{
+  @page{size:A4;margin:0}
+  body{background:#fff}
+  .wrap{max-width:none;margin:0;padding:0}
+  .no-print{display:none !important}
+  #flow{display:none}
+  .page{width:210mm;min-height:0;height:296mm;overflow:hidden;margin:0;padding:15mm 15mm 24mm;box-shadow:none;border-radius:0;page-break-after:always;break-after:page}
+  .page:last-child{page-break-after:auto}
+  .ana,.togg{display:none !important}
+  .opt{cursor:default}
+}
+</style></head>
+<body><div class="wrap"><div class="toolbar no-print"><span class="t-title">📘 中級閱讀模擬測驗　第三十八回　第三大題 閱讀理解<small>互動講義 · 點選項即判分</small></span><span class="pill-score" id="score">作答 0／15</span><a class="btn nav" href="reading-test-38-interactive-p1.html">一·詞彙</a><a class="btn nav" href="reading-test-38-interactive-p2.html">二·段落填空</a><a class="btn nav cur" href="reading-test-38-interactive-p3.html">三·閱讀理解</a><button class="btn ghost" onclick="toggleAll(true)">展開全部解析</button><button class="btn ghost" onclick="toggleAll(false)">收合解析</button><button class="btn amber" onclick="window.print()">🖨 列印</button><button class="btn home" onclick="location.href='index.html'">🏠 目錄</button></div><div id="flow"><div class="cover"><div class="band"><div class="kick">GEPT · INTERMEDIATE READING</div><h1>中級閱讀模擬測驗　第三十八回</h1><div class="en">第三大題　閱讀理解 · Reading Comprehension</div></div><div class="meta"><span><b>題數</b>　15 題</span><span><b>建議時間</b>　23 分鐘</span><span><b>題型</b>　閱讀理解</span><span class="cef">CEFR B1–B2</span></div></div><div class="part p3" data-group="ph3"><div class="no">3</div><div><h2>閱讀理解 <span class="en2">Reading Comprehension</span></h2><div class="tag">共 15 題／閱讀文章後作答</div></div></div><div class="instru" data-group="ph3">請閱讀下列文章，並回答相關問題。</div><div class="passage email" data-group="rd0"><div class="ptype">EMAIL</div><div class="ptitle">An Email to a Tea Supplier</div><div class="body"><p>Dear Mr. Kuo,</p><p>I run Lantern Alley Tea House on Anhe Road, and we have bought leaves from your farm for two years. This month's box arrived three days late, and half of it was the wrong type — jasmine instead of oolong.</p><p>Because of the delay, I had to close early last Saturday, which is normally our busiest day. I would like the correct leaves sent by Friday, and I hope we can agree on a small discount for this order.</p><p>I also plan to open a second shop in October, so I would like to discuss a larger monthly order once this matter is settled.</p><p>Best regards,<br>Chen Yi-hua</p></div></div><div class="ana zhblk open" data-group="rd0" style="max-height:none"><div class="zh"><span class="lab tr">全文中譯</span><span class="body-zh"><p>敬愛的郭先生：</p><p>我在安和路經營「燈籠巷茶館」，向貴農場採購茶葉已有兩年。這個月的貨箱遲了三天才到，而且其中一半還送錯品項——是茉莉花茶而不是烏龍茶。</p><p>因為這次延誤，我上週六必須提早打烊，而週六通常是我們最忙的一天。我希望正確的茶葉能在週五前送達，也希望我們能就這批訂單談一點折扣。</p><p>我另外打算在十月開第二家店，因此等這件事解決後，我想和您討論加大每月的訂購量。</p><p>陳依樺 敬上</p></span></div></div><div class="qgroup-label" data-group="rd0">Questions 21–24</div><div class="q reading" data-group="rd0"><div class="stem"><span class="qn">21</span>Why does Chen Yi-hua write this email?</div><div class="opts"><div class="opt" data-q="21" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">To order new furniture</span><span class=mk></span></div><div class="opt" data-q="21" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">To apply for a job at the farm</span><span class=mk></span></div><div class="opt" data-q="21" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">To praise the delivery service</span><span class=mk></span></div><div class="opt" data-q="21" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">To report a problem with an order</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(21)">💡 看解析與中譯</button><div class="ana" id="ana-21"><div class="ans-line">✔ 正確答案：(D)　To report a problem with an order</div><div class="zh"><span class="lab tr">中譯</span>陳依樺為什麼寫這封信？</div><div class="zh"><span class="lab">解析</span>第二段指出貨箱遲到三天且品項送錯，整封信的目的是反映訂單出問題並要求處理。信中並未提到家具、應徵工作，也沒有稱讚送貨服務。</div></div></div><div class="q reading" data-group="rd0"><div class="stem"><span class="qn">22</span>What was wrong with this month's box?</div><div class="opts"><div class="opt" data-q="22" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">It was too small</span><span class=mk></span></div><div class="opt" data-q="22" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Half of it was the wrong tea</span><span class=mk></span></div><div class="opt" data-q="22" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">It was never delivered</span><span class=mk></span></div><div class="opt" data-q="22" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">It cost twice as much</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(22)">💡 看解析與中譯</button><div class="ana" id="ana-22"><div class="ans-line">✔ 正確答案：(B)　Half of it was the wrong tea</div><div class="zh"><span class="lab tr">中譯</span>這個月的貨箱出了什麼問題？</div><div class="zh"><span class="lab">解析</span>信中寫 half of it was the wrong type — jasmine instead of oolong（一半送成茉莉花茶而非烏龍茶）。貨有送到，只是遲到，故 C 錯；價格問題與尺寸文中都未提及。</div></div></div><div class="q reading" data-group="rd0"><div class="stem"><span class="qn">23</span>What happened because of the late delivery?</div><div class="opts"><div class="opt" data-q="23" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">The shop closed early one day</span><span class=mk></span></div><div class="opt" data-q="23" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">A worker quit the job</span><span class=mk></span></div><div class="opt" data-q="23" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">The price of tea went up</span><span class=mk></span></div><div class="opt" data-q="23" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">The farm lost its licence</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(23)">💡 看解析與中譯</button><div class="ana" id="ana-23"><div class="ans-line">✔ 正確答案：(A)　The shop closed early one day</div><div class="zh"><span class="lab tr">中譯</span>延遲送達造成了什麼後果？</div><div class="zh"><span class="lab">解析</span>文中說 I had to close early last Saturday（上週六必須提早打烊），是延誤造成的直接結果。其餘選項信中皆未提及。</div></div></div><div class="q reading" data-group="rd0"><div class="stem"><span class="qn">24</span>What does Chen Yi-hua plan to do in October?</div><div class="opts"><div class="opt" data-q="24" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Change to another supplier</span><span class=mk></span></div><div class="opt" data-q="24" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Visit the tea farm</span><span class=mk></span></div><div class="opt" data-q="24" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Open another shop</span><span class=mk></span></div><div class="opt" data-q="24" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Raise her drink prices</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(24)">💡 看解析與中譯</button><div class="ana" id="ana-24"><div class="ans-line">✔ 正確答案：(C)　Open another shop</div><div class="zh"><span class="lab tr">中譯</span>陳依樺十月打算做什麼？</div><div class="zh"><span class="lab">解析</span>第三段明寫 I also plan to open a second shop in October（十月要開第二家店）。她想加大訂單而非換供應商，因此 A 與文意相反。</div></div></div><div class="passage ad" data-group="rd1"><div class="ptype">AD</div><div class="ptitle">Peartree Handmade Soap</div><div class="body"><p><b>Peartree Soap — Now Open on Xinsheng Road!</b></p><p>After three years of making soap in her own kitchen, Ah-Ping has finally opened a real shop. Every bar is cut and wrapped by hand.</p><ul><li><b>Opening week (June 1–7):</b> buy two bars, get one free</li><li><b>Soap-making class:</b> Saturdays, 2–4 p.m., NT$500 per person</li><li><b>Free gift wrapping</b> for orders over NT$800</li><li><b>Bring your own box</b> and take NT$20 off</li></ul><p>We are closed on Mondays. Small orders for weddings and offices are welcome — please ask at least two weeks in advance.</p></div></div><div class="ana zhblk open" data-group="rd1" style="max-height:none"><div class="zh"><span class="lab tr">全文中譯</span><span class="body-zh"><p><b>梨樹手工皂——新生路新店開幕！</b></p><p>在自家廚房做了三年肥皂之後，阿蘋終於開了一間實體店面。每一塊皂都是手工裁切與包裝。</p><ul><li><b>開幕週（6/1–6/7）：</b>買二送一</li><li><b>手工皂課程：</b>每週六下午 2–4 點，每人 NT$500</li><li><b>免費禮品包裝</b>，消費滿 NT$800 適用</li><li><b>自備容器</b>可折抵 NT$20</li></ul><p>每週一公休。歡迎婚禮與公司行號的小量訂購——請至少提前兩週詢問。</p></span></div></div><div class="qgroup-label" data-group="rd1">Questions 25–28</div><div class="q reading" data-group="rd1"><div class="stem"><span class="qn">25</span>What did Ah-Ping do before opening the shop?</div><div class="opts"><div class="opt" data-q="25" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">She made soap at home</span><span class=mk></span></div><div class="opt" data-q="25" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">She worked at a bank</span><span class=mk></span></div><div class="opt" data-q="25" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">She studied abroad</span><span class=mk></span></div><div class="opt" data-q="25" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">She sold flowers</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(25)">💡 看解析與中譯</button><div class="ana" id="ana-25"><div class="ans-line">✔ 正確答案：(A)　She made soap at home</div><div class="zh"><span class="lab tr">中譯</span>阿蘋在開店之前做什麼？</div><div class="zh"><span class="lab">解析</span>廣告寫 After three years of making soap in her own kitchen（在自家廚房做了三年肥皂）。其餘經歷廣告中完全未提。</div></div></div><div class="q reading" data-group="rd1"><div class="stem"><span class="qn">26</span>How can a customer save NT$20?</div><div class="opts"><div class="opt" data-q="26" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">By joining the Saturday class</span><span class=mk></span></div><div class="opt" data-q="26" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">By paying in cash</span><span class=mk></span></div><div class="opt" data-q="26" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">By bringing a box</span><span class=mk></span></div><div class="opt" data-q="26" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">By shopping on Monday</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(26)">💡 看解析與中譯</button><div class="ana" id="ana-26"><div class="ans-line">✔ 正確答案：(C)　By bringing a box</div><div class="zh"><span class="lab tr">中譯</span>顧客要如何省下 NT$20？</div><div class="zh"><span class="lab">解析</span>清單最後一項 Bring your own box and take NT$20 off（自備容器折 20 元）。週一公休，故 D 不可能；現金付款與課程都與折扣無關。</div></div></div><div class="q reading" data-group="rd1"><div class="stem"><span class="qn">27</span>When is the shop closed?</div><div class="opts"><div class="opt" data-q="27" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">On Saturdays</span><span class=mk></span></div><div class="opt" data-q="27" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">From June 1 to 7</span><span class=mk></span></div><div class="opt" data-q="27" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">On Sunday afternoons</span><span class=mk></span></div><div class="opt" data-q="27" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">On Mondays</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(27)">💡 看解析與中譯</button><div class="ana" id="ana-27"><div class="ans-line">✔ 正確答案：(D)　On Mondays</div><div class="zh"><span class="lab tr">中譯</span>這家店何時公休？</div><div class="zh"><span class="lab">解析</span>文末 We are closed on Mondays（週一公休）。週六有課程、6/1–6/7 是開幕週優惠，都是營業時間。</div></div></div><div class="q reading" data-group="rd1"><div class="stem"><span class="qn">28</span>What should someone do to order soap for a wedding?</div><div class="opts"><div class="opt" data-q="28" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Pay NT$500 first</span><span class=mk></span></div><div class="opt" data-q="28" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Ask at least two weeks ahead</span><span class=mk></span></div><div class="opt" data-q="28" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Take the Saturday class</span><span class=mk></span></div><div class="opt" data-q="28" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Spend over NT$800</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(28)">💡 看解析與中譯</button><div class="ana" id="ana-28"><div class="ans-line">✔ 正確答案：(B)　Ask at least two weeks ahead</div><div class="zh"><span class="lab tr">中譯</span>想為婚禮訂購肥皂該怎麼做？</div><div class="zh"><span class="lab">解析</span>最後一句要求 please ask at least two weeks in advance（至少提前兩週詢問）。NT$500 是課程費用，NT$800 是免費包裝門檻，皆非訂購條件。</div></div></div><div class="passage article" data-group="rd2"><div class="ptype">ARTICLE</div><div class="ptitle">Lessons from a Night Market Stall</div><div class="body"><p>At nineteen, Wu Chia-hao borrowed NT$30,000 from his aunt and opened a fried-mushroom stall in a night market. He sold almost nothing for the first two evenings. Instead of giving up, he stood beside a busy stall and counted how long people were willing to wait in line.</p><p>He learned that hungry visitors will not wait more than five minutes, so he changed his fryer and simplified his packing. Sales doubled within a month. Today Wu owns three stalls and trains new sellers.</p><p>His advice is simple: your first idea is rarely your best one, and the market itself will teach you—if you are willing to watch and change.</p></div></div><div class="ana zhblk open" data-group="rd2" style="max-height:none"><div class="zh"><span class="lab tr">全文中譯</span><span class="body-zh"><p>十九歲那年，吳家豪向阿姨借了三萬元，在夜市開了一個炸香菇攤。頭兩個晚上他幾乎什麼都沒賣出去。他沒有放棄，而是站到一個生意很好的攤子旁邊，計算人們願意排隊等多久。</p><p>他發現肚子餓的遊客不會等超過五分鐘，於是換了油炸鍋、簡化包裝方式。一個月內業績就翻了一倍。如今吳家豪擁有三個攤位，還負責訓練新的攤商。</p><p>他的建議很簡單：你的第一個點子很少會是最好的，而市場本身就會教你——只要你願意觀察並改變。</p></span></div></div><div class="qgroup-label" data-group="rd2">Questions 29–32</div><div class="q reading" data-group="rd2"><div class="stem"><span class="qn">29</span>Where did Wu get the money to start his stall?</div><div class="opts"><div class="opt" data-q="29" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">From a bank</span><span class=mk></span></div><div class="opt" data-q="29" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">From his aunt</span><span class=mk></span></div><div class="opt" data-q="29" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">From a school prize</span><span class=mk></span></div><div class="opt" data-q="29" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">From the government</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(29)">💡 看解析與中譯</button><div class="ana" id="ana-29"><div class="ans-line">✔ 正確答案：(B)　From his aunt</div><div class="zh"><span class="lab tr">中譯</span>吳家豪創業的錢從哪裡來？</div><div class="zh"><span class="lab">解析</span>首句 borrowed NT$30,000 from his aunt（向阿姨借了三萬元）。文中未提及銀行、獎金或政府補助。</div></div></div><div class="q reading" data-group="rd2"><div class="stem"><span class="qn">30</span>What did Wu do after two evenings without sales?</div><div class="opts"><div class="opt" data-q="30" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">He closed the stall</span><span class=mk></span></div><div class="opt" data-q="30" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">He lowered his prices</span><span class=mk></span></div><div class="opt" data-q="30" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">He hired a helper</span><span class=mk></span></div><div class="opt" data-q="30" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">He watched a busy stall</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(30)">💡 看解析與中譯</button><div class="ana" id="ana-30"><div class="ans-line">✔ 正確答案：(D)　He watched a busy stall</div><div class="zh"><span class="lab tr">中譯</span>兩晚沒生意之後，吳家豪做了什麼？</div><div class="zh"><span class="lab">解析</span>文中 Instead of giving up, he stood beside a busy stall and counted…（他站到熱門攤子旁觀察並計算等待時間）。Instead of giving up 直接否定了 A；降價與請人手文中皆未出現。</div></div></div><div class="q reading" data-group="rd2"><div class="stem"><span class="qn">31</span>What did Wu learn about night market visitors?</div><div class="opts"><div class="opt" data-q="31" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">They prefer cheap food</span><span class=mk></span></div><div class="opt" data-q="31" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">They come mostly on weekends</span><span class=mk></span></div><div class="opt" data-q="31" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">They dislike waiting long</span><span class=mk></span></div><div class="opt" data-q="31" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">They enjoy trying new flavors</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(31)">💡 看解析與中譯</button><div class="ana" id="ana-31"><div class="ans-line">✔ 正確答案：(C)　They dislike waiting long</div><div class="zh"><span class="lab tr">中譯</span>關於夜市遊客，吳家豪學到了什麼？</div><div class="zh"><span class="lab">解析</span>第二段寫 hungry visitors will not wait more than five minutes（不會等超過五分鐘），因此他改善出餐速度。價格、週末人潮與新口味都不是文中的觀察重點。</div></div></div><div class="q reading" data-group="rd2"><div class="stem"><span class="qn">32</span>What is the main message of the article?</div><div class="opts"><div class="opt" data-q="32" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Be ready to change your first idea</span><span class=mk></span></div><div class="opt" data-q="32" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Borrow as much money as possible</span><span class=mk></span></div><div class="opt" data-q="32" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Night markets are slowly dying</span><span class=mk></span></div><div class="opt" data-q="32" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Young people should not start a business</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(32)">💡 看解析與中譯</button><div class="ana" id="ana-32"><div class="ans-line">✔ 正確答案：(A)　Be ready to change your first idea</div><div class="zh"><span class="lab tr">中譯</span>這篇文章的主旨為何？</div><div class="zh"><span class="lab">解析</span>末段 your first idea is rarely your best one…if you are willing to watch and change，強調願意觀察並修正。文章對創業持正面態度，故 D 相反；B、C 文中皆無依據。</div></div></div><div class="passage chart" data-group="rd3"><div class="ptype">CHART</div><div class="ptitle">Startup Costs of a Small Cafe</div><div class="body"><p>Ms. Tsai kept a record of what she spent before opening her twelve-seat cafe last year.</p><table><tr><th>Item</th><th>Cost (NT$)</th><th>Note</th></tr><tr><td>Rent (3 months)</td><td>120,000</td><td>Paid before opening</td></tr><tr><td>Coffee machine</td><td>85,000</td><td>Bought secondhand</td></tr><tr><td>Tables and chairs</td><td>40,000</td><td>Made by a local carpenter</td></tr><tr><td>Signboard and menus</td><td>15,000</td><td>Designed by a friend</td></tr></table><p>Ms. Tsai suggests keeping another three months of rent in the bank after opening, since few cafes earn a profit in their first season.</p></div></div><div class="ana zhblk open" data-group="rd3" style="max-height:none"><div class="zh"><span class="lab tr">全文中譯</span><span class="body-zh"><p>蔡小姐記錄了去年開設十二個座位的咖啡館之前所有的花費。</p><table><tr><th>項目</th><th>費用（新台幣）</th><th>備註</th></tr><tr><td>租金（三個月）</td><td>120,000</td><td>開幕前先付</td></tr><tr><td>咖啡機</td><td>85,000</td><td>購買二手品</td></tr><tr><td>桌椅</td><td>40,000</td><td>由在地木工製作</td></tr><tr><td>招牌與菜單</td><td>15,000</td><td>由朋友設計</td></tr></table><p>蔡小姐建議開幕後在銀行再留三個月的租金，因為很少有咖啡館在第一季就開始獲利。</p></span></div></div><div class="qgroup-label" data-group="rd3">Questions 33–35</div><div class="q reading" data-group="rd3"><div class="stem"><span class="qn">33</span>Which item cost the most?</div><div class="opts"><div class="opt" data-q="33" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">The coffee machine</span><span class=mk></span></div><div class="opt" data-q="33" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">The tables and chairs</span><span class=mk></span></div><div class="opt" data-q="33" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">The rent</span><span class=mk></span></div><div class="opt" data-q="33" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">The signboard and menus</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(33)">💡 看解析與中譯</button><div class="ana" id="ana-33"><div class="ans-line">✔ 正確答案：(C)　The rent</div><div class="zh"><span class="lab tr">中譯</span>哪一個項目花費最多？</div><div class="zh"><span class="lab">解析</span>表格中租金 120,000 元最高，高於咖啡機的 85,000 元。桌椅 40,000 與招牌菜單 15,000 更低。</div></div></div><div class="q reading" data-group="rd3"><div class="stem"><span class="qn">34</span>How did Ms. Tsai save money on the coffee machine?</div><div class="opts"><div class="opt" data-q="34" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">She bought a used one</span><span class=mk></span></div><div class="opt" data-q="34" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">She rented it monthly</span><span class=mk></span></div><div class="opt" data-q="34" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">She borrowed it from a friend</span><span class=mk></span></div><div class="opt" data-q="34" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">She won it in a contest</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(34)">💡 看解析與中譯</button><div class="ana" id="ana-34"><div class="ans-line">✔ 正確答案：(A)　She bought a used one</div><div class="zh"><span class="lab tr">中譯</span>蔡小姐在咖啡機上如何省錢？</div><div class="zh"><span class="lab">解析</span>備註欄寫 Bought secondhand（購買二手品）。朋友幫忙的是設計招牌與菜單，不是提供咖啡機。</div></div></div><div class="q reading" data-group="rd3"><div class="stem"><span class="qn">35</span>What does Ms. Tsai advise new owners to do?</div><div class="opts"><div class="opt" data-q="35" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Choose a bigger space</span><span class=mk></span></div><div class="opt" data-q="35" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Hire a famous designer</span><span class=mk></span></div><div class="opt" data-q="35" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Open the shop in summer</span><span class=mk></span></div><div class="opt" data-q="35" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Keep three months of rent in the bank</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(35)">💡 看解析與中譯</button><div class="ana" id="ana-35"><div class="ans-line">✔ 正確答案：(D)　Keep three months of rent in the bank</div><div class="zh"><span class="lab tr">中譯</span>蔡小姐建議新老闆做什麼？</div><div class="zh"><span class="lab">解析</span>文末 keeping another three months of rent in the bank after opening（開幕後再留三個月租金）。她自己反而是找朋友設計、買二手機器，故 B 與文意相反。</div></div></div></div><div id="pages"></div></div>
+<script>
+function mmToPx(mm){var d=document.createElement('div');d.style.cssText='position:absolute;height:'+mm+'mm';
+  document.body.appendChild(d);var h=d.getBoundingClientRect().height;d.remove();return h;}
+function blockH(el){var r=el.getBoundingClientRect();var s=getComputedStyle(el);
+  return r.height+parseFloat(s.marginTop||0)+parseFloat(s.marginBottom||0);}
+function paginate(){
+  document.body.classList.add('measuring');
+  var flow=document.getElementById('flow');
+  var blocks=[].slice.call(flow.children);
+  var BUD=mmToPx(256); // A4 可用內容高(安全值)
+  // 組 units（連續同 data-group 者視為一組）
+  var units=[],cur=null;
+  blocks.forEach(function(el){var g=el.getAttribute('data-group');
+    if(g&&cur&&cur.g===g){cur.els.push(el);}else{cur={g:g,els:[el]};units.push(cur);}});
+  var pages=[],page=[],used=0;
+  function uh(u){var s=0;u.els.forEach(function(e){s+=blockH(e);});return s;}
+  units.forEach(function(u){var h=uh(u);
+    if(h<=BUD){ if(used+h>BUD&&page.length){pages.push(page);page=[];used=0;}
+      u.els.forEach(function(e){page.push(e);}); used+=h; }
+    else { u.els.forEach(function(e){var eh=blockH(e);
+        if(used+eh>BUD&&page.length){pages.push(page);page=[];used=0;} page.push(e);used+=eh;}); }
+  });
+  if(page.length)pages.push(page);
+  var host=document.getElementById('pages'),TITLE="中級閱讀模擬測驗　第三十八回　第三大題 閱讀理解";
+  pages.forEach(function(els,i){
+    var sec=document.createElement('section');sec.className='page';
+    var inner=document.createElement('div');inner.className='page-inner';
+    els.forEach(function(e){inner.appendChild(e);});
+    var f=document.createElement('div');f.className='pfoot';
+    f.innerHTML='<span class="pf-brand">GEPT 中級閱讀 · '+TITLE+'</span><span>第 '+(i+1)+' 頁　／　共 '+pages.length+' 頁</span>';
+    sec.appendChild(inner);sec.appendChild(f);host.appendChild(sec);
+  });
+  document.body.classList.remove('measuring');
+  document.body.classList.add('done');
+}
+window.addEventListener('load',paginate);
+</script>
+<script>
+var ANS={"21": 3, "22": 1, "23": 0, "24": 2, "25": 0, "26": 2, "27": 3, "28": 1, "29": 1, "30": 3, "31": 2, "32": 0, "33": 2, "34": 0, "35": 3},TOTAL=15,picked={};
+function pick(el){var q=el.dataset.q,i=+el.dataset.i,box=el.closest('.opts');
+  box.querySelectorAll('.opt').forEach(function(o){o.classList.remove('correct','wrong');o.querySelector('.mk').textContent='';});
+  picked[q]=i;var c=ANS[q];
+  box.querySelectorAll('.opt').forEach(function(o){var oi=+o.dataset.i;
+    if(oi===c){o.classList.add('correct');o.querySelector('.mk').textContent='✔';}
+    if(oi===i&&i!==c){o.classList.add('wrong');o.querySelector('.mk').textContent='✘';}});
+  var a=document.getElementById('ana-'+q);if(a)a.classList.add('open');upd();}
+function upd(){var d=Object.keys(picked).length,r=0;for(var q in picked)if(picked[q]===ANS[q])r++;
+  document.getElementById('score').textContent='作答 '+d+'／'+TOTAL+'　✔ '+r;}
+function tog(q){var a=document.getElementById('ana-'+q);if(a)a.classList.toggle('open');}
+function toggleAll(o){document.querySelectorAll('.ana').forEach(function(a){
+  if(a.classList.contains('zhblk'))return;a.classList.toggle('open',o);});}
+</script></body></html>

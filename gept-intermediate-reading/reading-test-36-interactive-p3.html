@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>中級閱讀模擬測驗　第三十六回　第三大題 閱讀理解（互動講義版）</title>
+<style>
+:root{
+  --ink:#1f2430; --sub:#5b6472; --line:#e7e3f0;
+  --brand:#6d28d9; --brand2:#2563eb; --accent:#f97316; --accent2:#0ea5a4;
+  --ok:#16a34a; --no:#dc2626; --wash:#f4f1fb; --paper:#fff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  color:var(--ink);line-height:1.65;
+  background:
+    radial-gradient(1100px 560px at 10% -8%, #ede9fe 0%, rgba(237,233,254,0) 60%),
+    radial-gradient(1100px 560px at 100% 0%, #cffafe 0%, rgba(207,250,254,0) 55%),
+    #eef1f7;
+  -webkit-print-color-adjust:exact;print-color-adjust:exact;
+}
+.wrap{max-width:840px;margin:0 auto;padding:14px 10px 60px}
+
+.toolbar{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+  background:rgba(255,255,255,.88);backdrop-filter:blur(8px);border:1px solid var(--line);
+  border-radius:16px;padding:10px 14px;margin:6px auto 16px;box-shadow:0 6px 22px rgba(76,29,149,.10)}
+.toolbar .t-title{font-weight:800;color:var(--brand);margin-right:auto;font-size:15px}
+.toolbar .t-title small{color:var(--sub);font-weight:600;margin-left:6px}
+.btn{border:0;cursor:pointer;font-family:inherit;font-weight:700;font-size:13px;padding:8px 13px;
+  border-radius:999px;color:#fff;background:var(--brand);transition:.15s}
+.btn:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.btn.ghost{background:#fff;color:var(--brand);border:1.5px solid var(--brand)}
+.btn.amber{background:var(--accent)}.btn.home{background:#0ea5a4}
+.btn.nav{background:#fff;color:#5b6472;border:1.5px solid var(--line);font-size:12.5px;padding:7px 11px;text-decoration:none;display:inline-block}
+.btn.nav:hover{color:var(--brand);border-color:var(--brand)}
+.btn.nav.cur{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;border-color:transparent;cursor:default;pointer-events:none}
+.pill-score{font-weight:800;color:var(--brand);background:#f3e8ff;border-radius:999px;padding:8px 14px;font-size:13px}
+
+/* 量測用暫存流：寬度=頁面內容寬(180mm) */
+#flow{width:180mm;margin:0 auto;position:absolute;left:-99999px;top:0}
+body.done #flow{display:none}
+
+.page{width:210mm;min-height:297mm;background:var(--paper);margin:0 auto 12mm;padding:15mm 15mm 24mm;
+  position:relative;box-shadow:0 10px 34px rgba(30,25,60,.14);border-radius:6px}
+.page-inner{position:static}
+.pfoot{position:absolute;left:15mm;right:15mm;bottom:10mm;display:flex;justify-content:space-between;
+  align-items:center;font-size:11px;color:var(--sub);border-top:1.5px dashed var(--line);padding-top:5px}
+.pfoot .pf-brand{font-weight:700;color:var(--brand)}
+
+.cover{border-radius:14px;overflow:hidden;border:1px solid var(--line);margin-bottom:14px;box-shadow:0 8px 20px rgba(109,40,217,.12)}
+.cover .band{background:linear-gradient(120deg,var(--brand) 0%,var(--brand2) 55%,#0ea5a4 100%);color:#fff;padding:18px 22px;position:relative}
+.cover .band::after{content:"";position:absolute;right:-30px;top:-30px;width:150px;height:150px;background:radial-gradient(circle,rgba(255,255,255,.25),transparent 70%);border-radius:50%}
+.cover .kick{font-size:12.5px;letter-spacing:3px;opacity:.92;font-weight:700}
+.cover h1{margin:4px 0 2px;font-size:25px;font-weight:900;letter-spacing:.5px}
+.cover .en{font-size:13px;opacity:.9;font-weight:600}
+.cover .meta{display:flex;gap:16px;flex-wrap:wrap;background:#faf7ff;padding:11px 22px;font-size:12.5px;color:var(--sub)}
+.cover .meta b{color:var(--brand)}
+.cef{display:inline-block;background:#fff;color:var(--brand);border:1.5px solid var(--brand);border-radius:999px;padding:2px 10px;font-weight:800;font-size:12px}
+
+.part{display:flex;align-items:center;gap:12px;margin:6px 0 12px}
+.part .no{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:#fff;font-weight:900;font-size:18px;box-shadow:0 4px 10px rgba(0,0,0,.14)}
+.p1 .no{background:linear-gradient(135deg,#8b5cf6,#6d28d9)}
+.p2 .no{background:linear-gradient(135deg,#22d3ee,#0e7490)}
+.p3 .no{background:linear-gradient(135deg,#fb923c,#ea580c)}
+.part h2{margin:0;font-size:18px;font-weight:900}
+.part .en2{font-size:12px;color:var(--sub);font-weight:600;font-style:italic}
+.part .tag{font-size:12px;color:var(--sub);font-weight:600}
+.instru{background:var(--wash);border-left:4px solid var(--brand);border-radius:0 10px 10px 0;padding:9px 14px;font-size:12.5px;color:#4b4560;margin-bottom:14px}
+
+.q{padding:11px 13px;border:1px solid var(--line);border-radius:12px;margin-bottom:11px;background:#fff}
+.q .stem{font-size:15px;font-weight:600;line-height:1.7}
+.q .stem .qn{display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 6px;background:#ede9fe;color:var(--brand);border-radius:7px;font-weight:800;font-size:13px;margin-right:7px;vertical-align:2px}
+.blank{color:var(--brand2);font-weight:800;border-bottom:2px solid var(--brand2);padding:0 22px;margin:0 3px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:7px 16px;margin-top:9px}
+.opt{display:flex;gap:8px;align-items:flex-start;padding:6px 10px;border:1.5px solid var(--line);border-radius:9px;font-size:14px;background:#fff;cursor:pointer;transition:.12s}
+.opt .ol{flex:none;font-weight:800;color:var(--sub)}
+.reading .opts{grid-template-columns:1fr}
+
+.passage{border:1px solid var(--line);border-radius:12px;padding:13px 16px;margin:6px 0 11px;background:linear-gradient(#fff,#fbfaff)}
+.passage.email{background:linear-gradient(#f8fbff,#f2f7ff);border-color:#dbe6ff}
+.passage.ad{background:linear-gradient(#fff8f1,#fff3e6);border-color:#ffe0bf}
+.passage.notice{background:linear-gradient(#f2fdfb,#eafaf7);border-color:#c6efe6}
+.passage .ptitle{font-weight:900;font-size:15.5px;margin:0 0 6px;color:#2a2450}
+.passage .ptype{display:inline-block;font-size:11px;font-weight:800;letter-spacing:1px;padding:2px 9px;border-radius:999px;background:#ede9fe;color:var(--brand);margin-bottom:7px}
+.passage p{margin:6px 0;font-size:14px;line-height:1.75}
+.passage ul{margin:6px 0;padding-left:20px;font-size:14px;line-height:1.7}
+.passage .body{font-family:"Noto Serif TC",Georgia,"Times New Roman",serif}
+.passage table{border-collapse:collapse;width:100%;font-size:13px;margin:6px 0}
+.passage th,.passage td{border:1px solid #d9d2ee;padding:6px 9px;text-align:left}
+.passage th{background:#f0eafc;color:var(--brand)}
+.qgroup-label{font-weight:800;color:var(--brand);font-size:13px;margin:12px 0 8px;border-left:4px solid var(--brand);padding-left:9px}
+
+.ana{margin-top:9px;border:1.5px dashed #d9cff5;border-radius:11px;background:#faf7ff;padding:0 14px;max-height:0;overflow:hidden;transition:max-height .28s ease,padding .2s}
+.ana.open{max-height:1800px;padding:12px 14px}
+.ana.zhblk{margin:2px 0 11px}
+.ana .ans-line{font-weight:800;color:var(--ok);font-size:13.5px;margin-bottom:6px}
+.ana .zh{font-size:13px;margin:4px 0;color:#3a3550}
+.ana .lab{display:inline-block;font-size:11px;font-weight:800;color:#fff;background:var(--brand);border-radius:6px;padding:1px 7px;margin-right:6px}
+.ana .lab.tr{background:#0ea5a4}.ana .lab.vo{background:var(--accent)}
+.ana .vocab{margin-top:6px;font-size:12.5px;color:#4b4560}
+.ana .vocab .vw{font-weight:800;color:#2a2450}
+.ana .body-zh{font-size:13px;color:#3a3550;line-height:1.7}
+.togg{margin-top:9px;display:inline-flex;align-items:center;gap:6px;border:0;cursor:pointer;background:#ede9fe;color:var(--brand);font-weight:800;font-size:12.5px;padding:6px 12px;border-radius:999px;font-family:inherit}
+.togg:hover{background:#e0d4fb}
+
+.opt.correct{border-color:var(--ok);background:#eafaf0}
+.opt.wrong{border-color:var(--no);background:#fdecec}
+.opt .mk{margin-left:auto;font-weight:900}
+.opt.correct .mk{color:var(--ok)}.opt.wrong .mk{color:var(--no)}
+
+/* 量測狀態：隱藏解析與按鈕（等同列印） */
+body.measuring .ana,body.measuring .togg{display:none !important}
+
+@media screen and (max-width:840px){
+  #flow{position:static;left:0;width:100%}
+  .page{width:100%;min-height:auto;padding:20px 16px 44px;border-radius:12px}
+  .page-inner{min-height:0}
+  .pfoot{position:static;bottom:auto;margin-top:16px}
+  .opts{grid-template-columns:1fr}.cover h1{font-size:21px}
+}
+@media print{
+  @page{size:A4;margin:0}
+  body{background:#fff}
+  .wrap{max-width:none;margin:0;padding:0}
+  .no-print{display:none !important}
+  #flow{display:none}
+  .page{width:210mm;min-height:0;height:296mm;overflow:hidden;margin:0;padding:15mm 15mm 24mm;box-shadow:none;border-radius:0;page-break-after:always;break-after:page}
+  .page:last-child{page-break-after:auto}
+  .ana,.togg{display:none !important}
+  .opt{cursor:default}
+}
+</style></head>
+<body><div class="wrap"><div class="toolbar no-print"><span class="t-title">📘 中級閱讀模擬測驗　第三十六回　第三大題 閱讀理解<small>互動講義 · 點選項即判分</small></span><span class="pill-score" id="score">作答 0／15</span><a class="btn nav" href="reading-test-36-interactive-p1.html">一·詞彙</a><a class="btn nav" href="reading-test-36-interactive-p2.html">二·段落填空</a><a class="btn nav cur" href="reading-test-36-interactive-p3.html">三·閱讀理解</a><button class="btn ghost" onclick="toggleAll(true)">展開全部解析</button><button class="btn ghost" onclick="toggleAll(false)">收合解析</button><button class="btn amber" onclick="window.print()">🖨 列印</button><button class="btn home" onclick="location.href='index.html'">🏠 目錄</button></div><div id="flow"><div class="cover"><div class="band"><div class="kick">GEPT · INTERMEDIATE READING</div><h1>中級閱讀模擬測驗　第三十六回</h1><div class="en">第三大題　閱讀理解 · Reading Comprehension</div></div><div class="meta"><span><b>題數</b>　15 題</span><span><b>建議時間</b>　23 分鐘</span><span><b>題型</b>　閱讀理解</span><span class="cef">CEFR B1–B2</span></div></div><div class="part p3" data-group="ph3"><div class="no">3</div><div><h2>閱讀理解 <span class="en2">Reading Comprehension</span></h2><div class="tag">共 15 題／閱讀文章後作答</div></div></div><div class="instru" data-group="ph3">請閱讀下列文章，並回答相關問題。</div><div class="passage article" data-group="rd0"><div class="ptype">ARTICLE</div><div class="ptitle">The Bike a Driver Never Sees</div><div class="body"><p>Traffic researchers call it the looked-but-failed-to-see error. A driver stops at a corner, turns his head, and still pulls out right in front of a bicycle. His eyes did their job, yet his brain was hunting for the wide shape of a car and simply threw the thin bike away.</p><p>Two things help. First, a rider who moves a little toward the middle of the lane is much harder to ignore than one hugging the curb. Second, a moving light on the front wheel catches attention better than a steady lamp, because the human eye is built to notice movement.</p></div></div><div class="ana zhblk open" data-group="rd0" style="max-height:none"><div class="zh"><span class="lab tr">全文中譯</span><span class="body-zh"><p>交通研究者把這種情形稱為「看了卻沒看見」的錯誤。駕駛在路口停下、轉頭看了，卻仍然直接開到一輛單車前面。他的眼睛確實完成了工作，但他的大腦正在尋找汽車那種寬大的輪廓，於是把細細的單車直接丟掉了。</p><p>有兩個做法有幫助。第一，騎士稍微往車道中間靠，會比緊貼路邊更難被忽略。第二，裝在前輪上的移動燈光，比固定不動的車燈更能吸引注意，因為人的眼睛天生就對移動特別敏感。</p></span></div></div><div class="qgroup-label" data-group="rd0">Questions 21–24</div><div class="q reading" data-group="rd0"><div class="stem"><span class="qn">21</span>What is the looked-but-failed-to-see error?</div><div class="opts"><div class="opt" data-q="21" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">A driver falling asleep at the wheel</span><span class=mk></span></div><div class="opt" data-q="21" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">A cyclist riding much too fast</span><span class=mk></span></div><div class="opt" data-q="21" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">A traffic light that stops working</span><span class=mk></span></div><div class="opt" data-q="21" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">A driver's brain ignoring a bike</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(21)">💡 看解析與中譯</button><div class="ana" id="ana-21"><div class="ans-line">✔ 正確答案：(D)　A driver's brain ignoring a bike</div><div class="zh"><span class="lab tr">中譯</span>「看了卻沒看見」的錯誤是什麼？</div><div class="zh"><span class="lab">解析</span>文中說駕駛 eyes did their job（眼睛有看），但大腦把細瘦的單車 threw away（丟棄、忽略）。</div></div></div><div class="q reading" data-group="rd0"><div class="stem"><span class="qn">22</span>According to the article, why does the brain miss the bike?</div><div class="opts"><div class="opt" data-q="22" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">It is busy looking at a phone</span><span class=mk></span></div><div class="opt" data-q="22" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">It is searching for the shape of a car</span><span class=mk></span></div><div class="opt" data-q="22" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">It is too tired at night</span><span class=mk></span></div><div class="opt" data-q="22" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">It is confused by street noise</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(22)">💡 看解析與中譯</button><div class="ana" id="ana-22"><div class="ans-line">✔ 正確答案：(B)　It is searching for the shape of a car</div><div class="zh"><span class="lab tr">中譯</span>根據文章，大腦為什麼會漏看單車？</div><div class="zh"><span class="lab">解析</span>文中明確指出 his brain was hunting for the wide shape of a car（大腦在找汽車的寬大輪廓）。</div></div></div><div class="q reading" data-group="rd0"><div class="stem"><span class="qn">23</span>What does the writer suggest a rider do on the road?</div><div class="opts"><div class="opt" data-q="23" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Ride nearer the middle of the lane</span><span class=mk></span></div><div class="opt" data-q="23" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Ride as close to the curb as possible</span><span class=mk></span></div><div class="opt" data-q="23" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Ride on the sidewalk instead</span><span class=mk></span></div><div class="opt" data-q="23" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Ride directly behind a bus</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(23)">💡 看解析與中譯</button><div class="ana" id="ana-23"><div class="ans-line">✔ 正確答案：(A)　Ride nearer the middle of the lane</div><div class="zh"><span class="lab tr">中譯</span>作者建議騎士在路上怎麼做？</div><div class="zh"><span class="lab">解析</span>第二段說靠近車道中間的騎士 much harder to ignore（更難被忽略），優於 hugging the curb（緊貼路邊）。</div></div></div><div class="q reading" data-group="rd0"><div class="stem"><span class="qn">24</span>Why is a moving light better than a steady one?</div><div class="opts"><div class="opt" data-q="24" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">It costs much less money</span><span class=mk></span></div><div class="opt" data-q="24" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Its battery lasts longer</span><span class=mk></span></div><div class="opt" data-q="24" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">The human eye notices movement</span><span class=mk></span></div><div class="opt" data-q="24" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">It is required by traffic law</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(24)">💡 看解析與中譯</button><div class="ana" id="ana-24"><div class="ans-line">✔ 正確答案：(C)　The human eye notices movement</div><div class="zh"><span class="lab tr">中譯</span>為什麼移動的燈光比固定的燈光好？</div><div class="zh"><span class="lab">解析</span>文末解釋 the human eye is built to notice movement（人眼天生對移動敏感）。</div></div></div><div class="passage ad" data-group="rd1"><div class="ptype">AD</div><div class="ptitle">Wu-Feng Bike Workshop: Spring Safety Classes</div><div class="body"><p><b>Ride safer in just three evenings!</b></p><p>Wu-Feng Bike Workshop is opening its spring safety classes to riders aged 12 and up.</p><ul><li><b>City Riding Basics</b> &mdash; Mon, 7&ndash;9 p.m. &mdash; NT$600</li><li><b>Roadside Repairs</b> &mdash; Wed, 7&ndash;9 p.m. &mdash; NT$800</li><li><b>Night Riding Skills</b> &mdash; Fri, 7&ndash;9 p.m. &mdash; NT$900</li></ul><p>Please bring your own bike; we lend helmets and lights for free. Sign up for all three classes and pay only NT$2,000. Every student also receives a free brake check. Call 04-2761-3355 to book before March 20.</p></div></div><div class="ana zhblk open" data-group="rd1" style="max-height:none"><div class="zh"><span class="lab tr">全文中譯</span><span class="body-zh"><p><b>只要三個晚上，騎得更安全！</b></p><p>霧峰單車工作室春季安全課程開放報名，歡迎十二歲以上的騎士參加。</p><ul><li><b>城市騎乘基礎</b>——週一，晚上 7–9 點——NT$600</li><li><b>路邊維修</b>——週三，晚上 7–9 點——NT$800</li><li><b>夜騎技巧</b>——週五，晚上 7–9 點——NT$900</li></ul><p>請自備單車；安全帽與車燈由本店免費借用。三堂一起報名只要 NT$2,000。每位學員另可獲得免費煞車檢查。請於三月二十日前撥打 04-2761-3355 預約。</p></span></div></div><div class="qgroup-label" data-group="rd1">Questions 25–28</div><div class="q reading" data-group="rd1"><div class="stem"><span class="qn">25</span>Who may join these classes?</div><div class="opts"><div class="opt" data-q="25" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Riders aged 12 or older</span><span class=mk></span></div><div class="opt" data-q="25" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Only adults over 20</span><span class=mk></span></div><div class="opt" data-q="25" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Only members of the shop</span><span class=mk></span></div><div class="opt" data-q="25" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Only children under 10</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(25)">💡 看解析與中譯</button><div class="ana" id="ana-25"><div class="ans-line">✔ 正確答案：(A)　Riders aged 12 or older</div><div class="zh"><span class="lab tr">中譯</span>哪些人可以參加這些課程？</div><div class="zh"><span class="lab">解析</span>廣告寫 open to riders aged 12 and up（開放十二歲以上的騎士）。</div></div></div><div class="q reading" data-group="rd1"><div class="stem"><span class="qn">26</span>What does the workshop lend students for free?</div><div class="opts"><div class="opt" data-q="26" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Bicycles</span><span class=mk></span></div><div class="opt" data-q="26" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Raincoats</span><span class=mk></span></div><div class="opt" data-q="26" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Helmets and lights</span><span class=mk></span></div><div class="opt" data-q="26" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Repair tools</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(26)">💡 看解析與中譯</button><div class="ana" id="ana-26"><div class="ans-line">✔ 正確答案：(C)　Helmets and lights</div><div class="zh"><span class="lab tr">中譯</span>工作室免費出借學員什麼？</div><div class="zh"><span class="lab">解析</span>廣告寫 bring your own bike; we lend helmets and lights for free（單車自備，安全帽與車燈免費借用）。</div></div></div><div class="q reading" data-group="rd1"><div class="stem"><span class="qn">27</span>How much does a student save by taking all three classes?</div><div class="opts"><div class="opt" data-q="27" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">NT$100</span><span class=mk></span></div><div class="opt" data-q="27" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">NT$200</span><span class=mk></span></div><div class="opt" data-q="27" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">NT$250</span><span class=mk></span></div><div class="opt" data-q="27" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">NT$300</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(27)">💡 看解析與中譯</button><div class="ana" id="ana-27"><div class="ans-line">✔ 正確答案：(D)　NT$300</div><div class="zh"><span class="lab tr">中譯</span>三堂課一起上可以省下多少錢？</div><div class="zh"><span class="lab">解析</span>600＋800＋900＝2,300，合報只付 2,000，故省下 NT$300。</div></div></div><div class="q reading" data-group="rd1"><div class="stem"><span class="qn">28</span>What does every student receive?</div><div class="opts"><div class="opt" data-q="28" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">A free helmet to keep</span><span class=mk></span></div><div class="opt" data-q="28" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">A free brake check</span><span class=mk></span></div><div class="opt" data-q="28" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">A free ride home</span><span class=mk></span></div><div class="opt" data-q="28" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">A free T-shirt</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(28)">💡 看解析與中譯</button><div class="ana" id="ana-28"><div class="ans-line">✔ 正確答案：(B)　A free brake check</div><div class="zh"><span class="lab tr">中譯</span>每位學員都會得到什麼？</div><div class="zh"><span class="lab">解析</span>廣告寫 Every student also receives a free brake check（每位學員可獲免費煞車檢查）；安全帽只是借用，並非贈送。</div></div></div><div class="passage chart" data-group="rd2"><div class="ptype">CHART</div><div class="ptitle">Bicycle Accidents in Hoping District</div><div class="body"><p>District police recorded 480 bicycle accidents last year. The table below shows when they happened and why.</p><table><tr><th>Time of day</th><th>Number</th><th>Main cause</th></tr><tr><td>6:00&ndash;9:00</td><td>96</td><td>Running a red light</td></tr><tr><td>9:00&ndash;16:00</td><td>82</td><td>Riding on the sidewalk</td></tr><tr><td>16:00&ndash;19:00</td><td>178</td><td>Car doors opening</td></tr><tr><td>19:00&ndash;24:00</td><td>124</td><td>Riding without lights</td></tr></table><p>Police note that riders under 18 were involved in nearly half of the morning cases.</p></div></div><div class="ana zhblk open" data-group="rd2" style="max-height:none"><div class="zh"><span class="lab tr">全文中譯</span><span class="body-zh"><p>轄區警方去年共記錄了 480 件單車事故。下表顯示事故發生的時間與主因。</p><table><tr><th>時段</th><th>件數</th><th>主要原因</th></tr><tr><td>6:00–9:00</td><td>96</td><td>闖紅燈</td></tr><tr><td>9:00–16:00</td><td>82</td><td>騎上人行道</td></tr><tr><td>16:00–19:00</td><td>178</td><td>車門突然開啟</td></tr><tr><td>19:00–24:00</td><td>124</td><td>未開車燈</td></tr></table><p>警方指出，未滿十八歲的騎士涉及了將近一半的早上事故。</p></span></div></div><div class="qgroup-label" data-group="rd2">Questions 29–32</div><div class="q reading" data-group="rd2"><div class="stem"><span class="qn">29</span>During which hours did the most accidents happen?</div><div class="opts"><div class="opt" data-q="29" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">6:00-9:00</span><span class=mk></span></div><div class="opt" data-q="29" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">9:00-16:00</span><span class=mk></span></div><div class="opt" data-q="29" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">16:00-19:00</span><span class=mk></span></div><div class="opt" data-q="29" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">19:00-24:00</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(29)">💡 看解析與中譯</button><div class="ana" id="ana-29"><div class="ans-line">✔ 正確答案：(C)　16:00-19:00</div><div class="zh"><span class="lab tr">中譯</span>哪個時段發生的事故最多？</div><div class="zh"><span class="lab">解析</span>表中 16:00–19:00 有 178 件，是四個時段中最多的。</div></div></div><div class="q reading" data-group="rd2"><div class="stem"><span class="qn">30</span>What caused most accidents in the late afternoon?</div><div class="opts"><div class="opt" data-q="30" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Car doors opening</span><span class=mk></span></div><div class="opt" data-q="30" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Riding without lights</span><span class=mk></span></div><div class="opt" data-q="30" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Running a red light</span><span class=mk></span></div><div class="opt" data-q="30" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Riding on the sidewalk</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(30)">💡 看解析與中譯</button><div class="ana" id="ana-30"><div class="ans-line">✔ 正確答案：(A)　Car doors opening</div><div class="zh"><span class="lab tr">中譯</span>傍晚時段的事故主因是什麼？</div><div class="zh"><span class="lab">解析</span>16:00–19:00 那一列的主因寫的是 Car doors opening（車門突然開啟）。</div></div></div><div class="q reading" data-group="rd2"><div class="stem"><span class="qn">31</span>How many accidents happened after 7 p.m.?</div><div class="opts"><div class="opt" data-q="31" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">82</span><span class=mk></span></div><div class="opt" data-q="31" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">96</span><span class=mk></span></div><div class="opt" data-q="31" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">102</span><span class=mk></span></div><div class="opt" data-q="31" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">124</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(31)">💡 看解析與中譯</button><div class="ana" id="ana-31"><div class="ans-line">✔ 正確答案：(D)　124</div><div class="zh"><span class="lab tr">中譯</span>晚上七點以後發生了多少件事故？</div><div class="zh"><span class="lab">解析</span>晚上七點即 19:00，對應 19:00–24:00 一列的 124 件。</div></div></div><div class="q reading" data-group="rd2"><div class="stem"><span class="qn">32</span>What do the police point out about the morning accidents?</div><div class="opts"><div class="opt" data-q="32" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Most of them happened in the rain</span><span class=mk></span></div><div class="opt" data-q="32" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Many involved riders under 18</span><span class=mk></span></div><div class="opt" data-q="32" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Most of the riders wore helmets</span><span class=mk></span></div><div class="opt" data-q="32" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">They all took place on one street</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(32)">💡 看解析與中譯</button><div class="ana" id="ana-32"><div class="ans-line">✔ 正確答案：(B)　Many involved riders under 18</div><div class="zh"><span class="lab tr">中譯</span>警方對早上的事故指出什麼？</div><div class="zh"><span class="lab">解析</span>表格下方寫 riders under 18 were involved in nearly half of the morning cases（未滿十八歲者涉及近一半早上案件）。</div></div></div><div class="passage email" data-group="rd3"><div class="ptype">EMAIL</div><div class="ptitle">A Letter to the Road Office</div><div class="body"><p>Dear Sir or Madam,</p><p>I ride to work along Fuxing Street every morning, and I would like to report a danger at the corner of Fuxing Street and Ninth Avenue. A large banyan tree now hides the stop sign, so drivers turning right hardly slow down at all. Last Tuesday a student on a bicycle was almost hit there.</p><p>Could your department cut the branches and repaint the crossing lines, which have nearly disappeared? A mirror on the wall opposite would help too. I am willing to meet an officer at the corner at any time.</p><p>Yours faithfully,<br>Tsai Yu-han</p></div></div><div class="ana zhblk open" data-group="rd3" style="max-height:none"><div class="zh"><span class="lab tr">全文中譯</span><span class="body-zh"><p>敬啟者：</p><p>我每天早上沿著復興街騎車上班，想通報復興街與九街口的一處危險。一棵大榕樹如今擋住了停車再開標誌，導致右轉的駕駛幾乎完全不減速。上週二，一名騎單車的學生在那裡差點被撞。</p><p>可否請貴單位修剪樹枝，並重新粉刷幾乎已經看不見的行人穿越線？在對面牆上加裝一面反射鏡也會有幫助。我願意隨時到現場與承辦人員會合。</p><p>蔡宇涵 敬上</p></span></div></div><div class="qgroup-label" data-group="rd3">Questions 33–35</div><div class="q reading" data-group="rd3"><div class="stem"><span class="qn">33</span>What is the main problem at the corner?</div><div class="opts"><div class="opt" data-q="33" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">The road there is far too narrow</span><span class=mk></span></div><div class="opt" data-q="33" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Too many buses stop there</span><span class=mk></span></div><div class="opt" data-q="33" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">A tree hides the stop sign</span><span class=mk></span></div><div class="opt" data-q="33" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">The street lamp is broken</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(33)">💡 看解析與中譯</button><div class="ana" id="ana-33"><div class="ans-line">✔ 正確答案：(C)　A tree hides the stop sign</div><div class="zh"><span class="lab tr">中譯</span>這個路口的主要問題是什麼？</div><div class="zh"><span class="lab">解析</span>信中說 A large banyan tree now hides the stop sign（大榕樹擋住停車再開標誌），使右轉車不減速。</div></div></div><div class="q reading" data-group="rd3"><div class="stem"><span class="qn">34</span>What does Tsai Yu-han ask the department to do?</div><div class="opts"><div class="opt" data-q="34" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Cut the branches and repaint the lines</span><span class=mk></span></div><div class="opt" data-q="34" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Build a new bridge for cyclists</span><span class=mk></span></div><div class="opt" data-q="34" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Close the street to all cars</span><span class=mk></span></div><div class="opt" data-q="34" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Move the bus stop farther away</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(34)">💡 看解析與中譯</button><div class="ana" id="ana-34"><div class="ans-line">✔ 正確答案：(A)　Cut the branches and repaint the lines</div><div class="zh"><span class="lab tr">中譯</span>蔡宇涵請該單位做什麼？</div><div class="zh"><span class="lab">解析</span>第二段請求 cut the branches and repaint the crossing lines（修剪樹枝並重畫行人穿越線）。</div></div></div><div class="q reading" data-group="rd3"><div class="stem"><span class="qn">35</span>What does the writer offer to do?</div><div class="opts"><div class="opt" data-q="35" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Pay for the new mirror</span><span class=mk></span></div><div class="opt" data-q="35" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Direct the traffic himself</span><span class=mk></span></div><div class="opt" data-q="35" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Write to a newspaper</span><span class=mk></span></div><div class="opt" data-q="35" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Meet an officer at the corner</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(35)">💡 看解析與中譯</button><div class="ana" id="ana-35"><div class="ans-line">✔ 正確答案：(D)　Meet an officer at the corner</div><div class="zh"><span class="lab tr">中譯</span>寫信者主動表示願意做什麼？</div><div class="zh"><span class="lab">解析</span>信末說 I am willing to meet an officer at the corner at any time（願意隨時到現場與承辦人員會合）。</div></div></div></div><div id="pages"></div></div>
+<script>
+function mmToPx(mm){var d=document.createElement('div');d.style.cssText='position:absolute;height:'+mm+'mm';
+  document.body.appendChild(d);var h=d.getBoundingClientRect().height;d.remove();return h;}
+function blockH(el){var r=el.getBoundingClientRect();var s=getComputedStyle(el);
+  return r.height+parseFloat(s.marginTop||0)+parseFloat(s.marginBottom||0);}
+function paginate(){
+  document.body.classList.add('measuring');
+  var flow=document.getElementById('flow');
+  var blocks=[].slice.call(flow.children);
+  var BUD=mmToPx(256); // A4 可用內容高(安全值)
+  // 組 units（連續同 data-group 者視為一組）
+  var units=[],cur=null;
+  blocks.forEach(function(el){var g=el.getAttribute('data-group');
+    if(g&&cur&&cur.g===g){cur.els.push(el);}else{cur={g:g,els:[el]};units.push(cur);}});
+  var pages=[],page=[],used=0;
+  function uh(u){var s=0;u.els.forEach(function(e){s+=blockH(e);});return s;}
+  units.forEach(function(u){var h=uh(u);
+    if(h<=BUD){ if(used+h>BUD&&page.length){pages.push(page);page=[];used=0;}
+      u.els.forEach(function(e){page.push(e);}); used+=h; }
+    else { u.els.forEach(function(e){var eh=blockH(e);
+        if(used+eh>BUD&&page.length){pages.push(page);page=[];used=0;} page.push(e);used+=eh;}); }
+  });
+  if(page.length)pages.push(page);
+  var host=document.getElementById('pages'),TITLE="中級閱讀模擬測驗　第三十六回　第三大題 閱讀理解";
+  pages.forEach(function(els,i){
+    var sec=document.createElement('section');sec.className='page';
+    var inner=document.createElement('div');inner.className='page-inner';
+    els.forEach(function(e){inner.appendChild(e);});
+    var f=document.createElement('div');f.className='pfoot';
+    f.innerHTML='<span class="pf-brand">GEPT 中級閱讀 · '+TITLE+'</span><span>第 '+(i+1)+' 頁　／　共 '+pages.length+' 頁</span>';
+    sec.appendChild(inner);sec.appendChild(f);host.appendChild(sec);
+  });
+  document.body.classList.remove('measuring');
+  document.body.classList.add('done');
+}
+window.addEventListener('load',paginate);
+</script>
+<script>
+var ANS={"21": 3, "22": 1, "23": 0, "24": 2, "25": 0, "26": 2, "27": 3, "28": 1, "29": 2, "30": 0, "31": 3, "32": 1, "33": 2, "34": 0, "35": 3},TOTAL=15,picked={};
+function pick(el){var q=el.dataset.q,i=+el.dataset.i,box=el.closest('.opts');
+  box.querySelectorAll('.opt').forEach(function(o){o.classList.remove('correct','wrong');o.querySelector('.mk').textContent='';});
+  picked[q]=i;var c=ANS[q];
+  box.querySelectorAll('.opt').forEach(function(o){var oi=+o.dataset.i;
+    if(oi===c){o.classList.add('correct');o.querySelector('.mk').textContent='✔';}
+    if(oi===i&&i!==c){o.classList.add('wrong');o.querySelector('.mk').textContent='✘';}});
+  var a=document.getElementById('ana-'+q);if(a)a.classList.add('open');upd();}
+function upd(){var d=Object.keys(picked).length,r=0;for(var q in picked)if(picked[q]===ANS[q])r++;
+  document.getElementById('score').textContent='作答 '+d+'／'+TOTAL+'　✔ '+r;}
+function tog(q){var a=document.getElementById('ana-'+q);if(a)a.classList.toggle('open');}
+function toggleAll(o){document.querySelectorAll('.ana').forEach(function(a){
+  if(a.classList.contains('zhblk'))return;a.classList.toggle('open',o);});}
+</script></body></html>

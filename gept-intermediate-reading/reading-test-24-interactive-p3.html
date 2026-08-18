@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>中級閱讀模擬測驗　第二十四回　第三大題 閱讀理解（互動講義版）</title>
+<style>
+:root{
+  --ink:#1f2430; --sub:#5b6472; --line:#e7e3f0;
+  --brand:#6d28d9; --brand2:#2563eb; --accent:#f97316; --accent2:#0ea5a4;
+  --ok:#16a34a; --no:#dc2626; --wash:#f4f1fb; --paper:#fff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  color:var(--ink);line-height:1.65;
+  background:
+    radial-gradient(1100px 560px at 10% -8%, #ede9fe 0%, rgba(237,233,254,0) 60%),
+    radial-gradient(1100px 560px at 100% 0%, #cffafe 0%, rgba(207,250,254,0) 55%),
+    #eef1f7;
+  -webkit-print-color-adjust:exact;print-color-adjust:exact;
+}
+.wrap{max-width:840px;margin:0 auto;padding:14px 10px 60px}
+
+.toolbar{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+  background:rgba(255,255,255,.88);backdrop-filter:blur(8px);border:1px solid var(--line);
+  border-radius:16px;padding:10px 14px;margin:6px auto 16px;box-shadow:0 6px 22px rgba(76,29,149,.10)}
+.toolbar .t-title{font-weight:800;color:var(--brand);margin-right:auto;font-size:15px}
+.toolbar .t-title small{color:var(--sub);font-weight:600;margin-left:6px}
+.btn{border:0;cursor:pointer;font-family:inherit;font-weight:700;font-size:13px;padding:8px 13px;
+  border-radius:999px;color:#fff;background:var(--brand);transition:.15s}
+.btn:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.btn.ghost{background:#fff;color:var(--brand);border:1.5px solid var(--brand)}
+.btn.amber{background:var(--accent)}.btn.home{background:#0ea5a4}
+.btn.nav{background:#fff;color:#5b6472;border:1.5px solid var(--line);font-size:12.5px;padding:7px 11px;text-decoration:none;display:inline-block}
+.btn.nav:hover{color:var(--brand);border-color:var(--brand)}
+.btn.nav.cur{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;border-color:transparent;cursor:default;pointer-events:none}
+.pill-score{font-weight:800;color:var(--brand);background:#f3e8ff;border-radius:999px;padding:8px 14px;font-size:13px}
+
+/* 量測用暫存流：寬度=頁面內容寬(180mm) */
+#flow{width:180mm;margin:0 auto;position:absolute;left:-99999px;top:0}
+body.done #flow{display:none}
+
+.page{width:210mm;min-height:297mm;background:var(--paper);margin:0 auto 12mm;padding:15mm 15mm 24mm;
+  position:relative;box-shadow:0 10px 34px rgba(30,25,60,.14);border-radius:6px}
+.page-inner{position:static}
+.pfoot{position:absolute;left:15mm;right:15mm;bottom:10mm;display:flex;justify-content:space-between;
+  align-items:center;font-size:11px;color:var(--sub);border-top:1.5px dashed var(--line);padding-top:5px}
+.pfoot .pf-brand{font-weight:700;color:var(--brand)}
+
+.cover{border-radius:14px;overflow:hidden;border:1px solid var(--line);margin-bottom:14px;box-shadow:0 8px 20px rgba(109,40,217,.12)}
+.cover .band{background:linear-gradient(120deg,var(--brand) 0%,var(--brand2) 55%,#0ea5a4 100%);color:#fff;padding:18px 22px;position:relative}
+.cover .band::after{content:"";position:absolute;right:-30px;top:-30px;width:150px;height:150px;background:radial-gradient(circle,rgba(255,255,255,.25),transparent 70%);border-radius:50%}
+.cover .kick{font-size:12.5px;letter-spacing:3px;opacity:.92;font-weight:700}
+.cover h1{margin:4px 0 2px;font-size:25px;font-weight:900;letter-spacing:.5px}
+.cover .en{font-size:13px;opacity:.9;font-weight:600}
+.cover .meta{display:flex;gap:16px;flex-wrap:wrap;background:#faf7ff;padding:11px 22px;font-size:12.5px;color:var(--sub)}
+.cover .meta b{color:var(--brand)}
+.cef{display:inline-block;background:#fff;color:var(--brand);border:1.5px solid var(--brand);border-radius:999px;padding:2px 10px;font-weight:800;font-size:12px}
+
+.part{display:flex;align-items:center;gap:12px;margin:6px 0 12px}
+.part .no{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:#fff;font-weight:900;font-size:18px;box-shadow:0 4px 10px rgba(0,0,0,.14)}
+.p1 .no{background:linear-gradient(135deg,#8b5cf6,#6d28d9)}
+.p2 .no{background:linear-gradient(135deg,#22d3ee,#0e7490)}
+.p3 .no{background:linear-gradient(135deg,#fb923c,#ea580c)}
+.part h2{margin:0;font-size:18px;font-weight:900}
+.part .en2{font-size:12px;color:var(--sub);font-weight:600;font-style:italic}
+.part .tag{font-size:12px;color:var(--sub);font-weight:600}
+.instru{background:var(--wash);border-left:4px solid var(--brand);border-radius:0 10px 10px 0;padding:9px 14px;font-size:12.5px;color:#4b4560;margin-bottom:14px}
+
+.q{padding:11px 13px;border:1px solid var(--line);border-radius:12px;margin-bottom:11px;background:#fff}
+.q .stem{font-size:15px;font-weight:600;line-height:1.7}
+.q .stem .qn{display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 6px;background:#ede9fe;color:var(--brand);border-radius:7px;font-weight:800;font-size:13px;margin-right:7px;vertical-align:2px}
+.blank{color:var(--brand2);font-weight:800;border-bottom:2px solid var(--brand2);padding:0 22px;margin:0 3px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:7px 16px;margin-top:9px}
+.opt{display:flex;gap:8px;align-items:flex-start;padding:6px 10px;border:1.5px solid var(--line);border-radius:9px;font-size:14px;background:#fff;cursor:pointer;transition:.12s}
+.opt .ol{flex:none;font-weight:800;color:var(--sub)}
+.reading .opts{grid-template-columns:1fr}
+
+.passage{border:1px solid var(--line);border-radius:12px;padding:13px 16px;margin:6px 0 11px;background:linear-gradient(#fff,#fbfaff)}
+.passage.email{background:linear-gradient(#f8fbff,#f2f7ff);border-color:#dbe6ff}
+.passage.ad{background:linear-gradient(#fff8f1,#fff3e6);border-color:#ffe0bf}
+.passage.notice{background:linear-gradient(#f2fdfb,#eafaf7);border-color:#c6efe6}
+.passage .ptitle{font-weight:900;font-size:15.5px;margin:0 0 6px;color:#2a2450}
+.passage .ptype{display:inline-block;font-size:11px;font-weight:800;letter-spacing:1px;padding:2px 9px;border-radius:999px;background:#ede9fe;color:var(--brand);margin-bottom:7px}
+.passage p{margin:6px 0;font-size:14px;line-height:1.75}
+.passage ul{margin:6px 0;padding-left:20px;font-size:14px;line-height:1.7}
+.passage .body{font-family:"Noto Serif TC",Georgia,"Times New Roman",serif}
+.passage table{border-collapse:collapse;width:100%;font-size:13px;margin:6px 0}
+.passage th,.passage td{border:1px solid #d9d2ee;padding:6px 9px;text-align:left}
+.passage th{background:#f0eafc;color:var(--brand)}
+.qgroup-label{font-weight:800;color:var(--brand);font-size:13px;margin:12px 0 8px;border-left:4px solid var(--brand);padding-left:9px}
+
+.ana{margin-top:9px;border:1.5px dashed #d9cff5;border-radius:11px;background:#faf7ff;padding:0 14px;max-height:0;overflow:hidden;transition:max-height .28s ease,padding .2s}
+.ana.open{max-height:1800px;padding:12px 14px}
+.ana.zhblk{margin:2px 0 11px}
+.ana .ans-line{font-weight:800;color:var(--ok);font-size:13.5px;margin-bottom:6px}
+.ana .zh{font-size:13px;margin:4px 0;color:#3a3550}
+.ana .lab{display:inline-block;font-size:11px;font-weight:800;color:#fff;background:var(--brand);border-radius:6px;padding:1px 7px;margin-right:6px}
+.ana .lab.tr{background:#0ea5a4}.ana .lab.vo{background:var(--accent)}
+.ana .vocab{margin-top:6px;font-size:12.5px;color:#4b4560}
+.ana .vocab .vw{font-weight:800;color:#2a2450}
+.ana .body-zh{font-size:13px;color:#3a3550;line-height:1.7}
+.togg{margin-top:9px;display:inline-flex;align-items:center;gap:6px;border:0;cursor:pointer;background:#ede9fe;color:var(--brand);font-weight:800;font-size:12.5px;padding:6px 12px;border-radius:999px;font-family:inherit}
+.togg:hover{background:#e0d4fb}
+
+.opt.correct{border-color:var(--ok);background:#eafaf0}
+.opt.wrong{border-color:var(--no);background:#fdecec}
+.opt .mk{margin-left:auto;font-weight:900}
+.opt.correct .mk{color:var(--ok)}.opt.wrong .mk{color:var(--no)}
+
+/* 量測狀態：隱藏解析與按鈕（等同列印） */
+body.measuring .ana,body.measuring .togg{display:none !important}
+
+@media screen and (max-width:840px){
+  #flow{position:static;left:0;width:100%}
+  .page{width:100%;min-height:auto;padding:20px 16px 44px;border-radius:12px}
+  .page-inner{min-height:0}
+  .pfoot{position:static;bottom:auto;margin-top:16px}
+  .opts{grid-template-columns:1fr}.cover h1{font-size:21px}
+}
+@media print{
+  @page{size:A4;margin:0}
+  body{background:#fff}
+  .wrap{max-width:none;margin:0;padding:0}
+  .no-print{display:none !important}
+  #flow{display:none}
+  .page{width:210mm;min-height:0;height:296mm;overflow:hidden;margin:0;padding:15mm 15mm 24mm;box-shadow:none;border-radius:0;page-break-after:always;break-after:page}
+  .page:last-child{page-break-after:auto}
+  .ana,.togg{display:none !important}
+  .opt{cursor:default}
+}
+</style></head>
+<body><div class="wrap"><div class="toolbar no-print"><span class="t-title">📘 中級閱讀模擬測驗　第二十四回　第三大題 閱讀理解<small>互動講義 · 點選項即判分</small></span><span class="pill-score" id="score">作答 0／15</span><a class="btn nav" href="reading-test-24-interactive-p1.html">一·詞彙</a><a class="btn nav" href="reading-test-24-interactive-p2.html">二·段落填空</a><a class="btn nav cur" href="reading-test-24-interactive-p3.html">三·閱讀理解</a><button class="btn ghost" onclick="toggleAll(true)">展開全部解析</button><button class="btn ghost" onclick="toggleAll(false)">收合解析</button><button class="btn amber" onclick="window.print()">🖨 列印</button><button class="btn home" onclick="location.href='index.html'">🏠 目錄</button></div><div id="flow"><div class="cover"><div class="band"><div class="kick">GEPT · INTERMEDIATE READING</div><h1>中級閱讀模擬測驗　第二十四回</h1><div class="en">第三大題　閱讀理解 · Reading Comprehension</div></div><div class="meta"><span><b>題數</b>　15 題</span><span><b>建議時間</b>　23 分鐘</span><span><b>題型</b>　閱讀理解</span><span class="cef">CEFR B1–B2</span></div></div><div class="part p3" data-group="ph3"><div class="no">3</div><div><h2>閱讀理解 <span class="en2">Reading Comprehension</span></h2><div class="tag">共 15 題／閱讀文章後作答</div></div></div><div class="instru" data-group="ph3">請閱讀下列文章，並回答相關問題。</div><div class="passage notice" data-group="rd0"><div class="ptype">NOTICE</div><div class="ptitle">Lobby Renovation Notice</div><div class="body"><p>To all residents of Fuyuan Court:</p><p>Work to rebuild our lobby and front steps will begin on March 3 and finish by April 30. The new design adds a ramp for wheelchairs and baby strollers, brighter lighting, and a small covered area for parcels.</p><ul><li>Working hours: Mon–Fri, 9 a.m.–5 p.m. (no work on weekends)</li><li>During March, please enter the building through the side door on Lane 12.</li><li>Mail and parcels will be kept at the management desk on the second floor.</li></ul><p>We are sorry for the noise and dust. If you have questions, call the management office at ext. 210.</p></div></div><div class="ana zhblk open" data-group="rd0" style="max-height:none"><div class="zh"><span class="lab tr">全文中譯</span><span class="body-zh"><p>富元大廈全體住戶敬啟：</p><p>本大樓大廳與前階梯的改建工程將於三月三日開工，四月三十日前完工。新設計增加了輪椅與嬰兒推車專用的斜坡道、更明亮的照明，以及一處放置包裹的小型遮雨區。</p><ul><li>施工時間：週一至週五上午 9 點至下午 5 點（週末不施工）</li><li>三月期間，請由十二巷的側門進出大樓。</li><li>信件與包裹將暫放於二樓管理室櫃台。</li></ul><p>造成噪音與灰塵，敬請見諒。如有疑問，請撥管理室分機 210。</p></span></div></div><div class="qgroup-label" data-group="rd0">Questions 21–24</div><div class="q reading" data-group="rd0"><div class="stem"><span class="qn">21</span>What is the main purpose of this notice?</div><div class="opts"><div class="opt" data-q="21" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">To invite residents to a party</span><span class=mk></span></div><div class="opt" data-q="21" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">To inform residents about building work</span><span class=mk></span></div><div class="opt" data-q="21" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">To ask residents to move out</span><span class=mk></span></div><div class="opt" data-q="21" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">To sell apartments in the building</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(21)">💡 看解析與中譯</button><div class="ana" id="ana-21"><div class="ans-line">✔ 正確答案：(B)　To inform residents about building work</div><div class="zh"><span class="lab tr">中譯</span>這則公告的主要目的為何？</div><div class="zh"><span class="lab">解析</span>公告開頭即說明大廳改建的起訖日期與影響，是告知住戶施工事宜。文中未提及派對、搬遷或售屋。</div></div></div><div class="q reading" data-group="rd0"><div class="stem"><span class="qn">22</span>What new feature will the lobby have?</div><div class="opts"><div class="opt" data-q="22" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">A ramp for wheelchairs</span><span class=mk></span></div><div class="opt" data-q="22" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">A swimming pool</span><span class=mk></span></div><div class="opt" data-q="22" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">A coffee shop</span><span class=mk></span></div><div class="opt" data-q="22" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">A larger parking lot</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(22)">💡 看解析與中譯</button><div class="ana" id="ana-22"><div class="ans-line">✔ 正確答案：(A)　A ramp for wheelchairs</div><div class="zh"><span class="lab tr">中譯</span>新的大廳將會有什麼新設施？</div><div class="zh"><span class="lab">解析</span>文中列出 adds a ramp for wheelchairs and baby strollers，其餘選項公告皆未提到。</div></div></div><div class="q reading" data-group="rd0"><div class="stem"><span class="qn">23</span>Where should residents pick up their mail during the work?</div><div class="opts"><div class="opt" data-q="23" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">At the side door on Lane 12</span><span class=mk></span></div><div class="opt" data-q="23" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">At the local post office</span><span class=mk></span></div><div class="opt" data-q="23" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">At the management desk on the second floor</span><span class=mk></span></div><div class="opt" data-q="23" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">At the front steps of the building</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(23)">💡 看解析與中譯</button><div class="ana" id="ana-23"><div class="ans-line">✔ 正確答案：(C)　At the management desk on the second floor</div><div class="zh"><span class="lab tr">中譯</span>施工期間住戶應到哪裡領取信件？</div><div class="zh"><span class="lab">解析</span>清單第三項寫 Mail and parcels will be kept at the management desk on the second floor；側門只是出入通道。</div></div></div><div class="q reading" data-group="rd0"><div class="stem"><span class="qn">24</span>When will the workers NOT be working?</div><div class="opts"><div class="opt" data-q="24" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">In the morning</span><span class=mk></span></div><div class="opt" data-q="24" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">On Friday afternoons</span><span class=mk></span></div><div class="opt" data-q="24" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">During April</span><span class=mk></span></div><div class="opt" data-q="24" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">On weekends</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(24)">💡 看解析與中譯</button><div class="ana" id="ana-24"><div class="ans-line">✔ 正確答案：(D)　On weekends</div><div class="zh"><span class="lab tr">中譯</span>工人在什麼時候不會施工？</div><div class="zh"><span class="lab">解析</span>施工時間寫明 Mon–Fri…(no work on weekends)，週末不施工；工程要到四月三十日才結束，故四月仍有工程。</div></div></div><div class="passage article" data-group="rd1"><div class="ptype">ARTICLE</div><div class="ptitle">Old Factories, New Life</div><div class="body"><p>When a factory closes, the easiest choice is to knock it down. Yet many cities are discovering that old industrial buildings can be worth far more alive than gone. Their high ceilings, wide floors, and large windows suit art studios, bookstores, and offices surprisingly well.</p><p>Reusing a building also saves material and reduces waste. Experts estimate that keeping the main structure of an old building can cut the carbon produced by construction by about half.</p><p>There are difficulties, of course. Old walls often need strengthening against earthquakes, and rents in a renewed area tend to rise, pushing out the very neighbors who lived there for years.</p></div></div><div class="ana zhblk open" data-group="rd1" style="max-height:none"><div class="zh"><span class="lab tr">全文中譯</span><span class="body-zh"><p>當一座工廠關門，最簡單的選擇就是把它拆掉。然而許多城市正發現，老舊的工業建築活著時的價值，遠比拆掉之後高得多。它們挑高的天花板、寬闊的樓地板與大面窗戶，出乎意料地適合藝術工作室、書店與辦公室。</p><p>再利用建築也能節省材料、減少廢棄物。專家估計，保留老建築的主體結構，可將營建過程所產生的碳排放減少約一半。</p><p>當然也有困難之處。老牆往往需要補強以抵抗地震，而更新地區的租金也容易上漲，把那些住了多年的老鄰居擠了出去。</p></span></div></div><div class="qgroup-label" data-group="rd1">Questions 25–28</div><div class="q reading" data-group="rd1"><div class="stem"><span class="qn">25</span>What is the main idea of the article?</div><div class="opts"><div class="opt" data-q="25" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Old factories should be knocked down quickly</span><span class=mk></span></div><div class="opt" data-q="25" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Old factories can be given useful new lives</span><span class=mk></span></div><div class="opt" data-q="25" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Artists always need very cheap rent</span><span class=mk></span></div><div class="opt" data-q="25" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Cities produce far too much waste</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(25)">💡 看解析與中譯</button><div class="ana" id="ana-25"><div class="ans-line">✔ 正確答案：(B)　Old factories can be given useful new lives</div><div class="zh"><span class="lab tr">中譯</span>這篇文章的主旨為何？</div><div class="zh"><span class="lab">解析</span>全文說明老工廠再利用的優點與困難，主旨是舊建築可以被賦予新用途。拆除是文章一開始就要反駁的做法。</div></div></div><div class="q reading" data-group="rd1"><div class="stem"><span class="qn">26</span>Why do old factory buildings suit art studios?</div><div class="opts"><div class="opt" data-q="26" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">They stand near train stations</span><span class=mk></span></div><div class="opt" data-q="26" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">They can be used for free</span><span class=mk></span></div><div class="opt" data-q="26" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">They have high ceilings and large windows</span><span class=mk></span></div><div class="opt" data-q="26" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">They are easy to knock down</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(26)">💡 看解析與中譯</button><div class="ana" id="ana-26"><div class="ans-line">✔ 正確答案：(C)　They have high ceilings and large windows</div><div class="zh"><span class="lab tr">中譯</span>老工廠建築為何適合當藝術工作室？</div><div class="zh"><span class="lab">解析</span>依據 Their high ceilings, wide floors, and large windows suit art studios…surprisingly well。</div></div></div><div class="q reading" data-group="rd1"><div class="stem"><span class="qn">27</span>According to experts, keeping an old structure can ____.</div><div class="opts"><div class="opt" data-q="27" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">cut construction carbon by about half</span><span class=mk></span></div><div class="opt" data-q="27" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">double the rent of the area</span><span class=mk></span></div><div class="opt" data-q="27" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">make the building much taller</span><span class=mk></span></div><div class="opt" data-q="27" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">remove all future repair costs</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(27)">💡 看解析與中譯</button><div class="ana" id="ana-27"><div class="ans-line">✔ 正確答案：(A)　cut construction carbon by about half</div><div class="zh"><span class="lab tr">中譯</span>根據專家的說法，保留舊結構可以做到什麼？</div><div class="zh"><span class="lab">解析</span>文中寫 can cut the carbon produced by construction by about half。租金上漲是缺點而非專家估算的效益。</div></div></div><div class="q reading" data-group="rd1"><div class="stem"><span class="qn">28</span>What problem does the writer mention in the last paragraph?</div><div class="opts"><div class="opt" data-q="28" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Old buildings are always too small</span><span class=mk></span></div><div class="opt" data-q="28" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Artists dislike working near old walls</span><span class=mk></span></div><div class="opt" data-q="28" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Building materials are hard to buy</span><span class=mk></span></div><div class="opt" data-q="28" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Rising rents push out long-time neighbors</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(28)">💡 看解析與中譯</button><div class="ana" id="ana-28"><div class="ans-line">✔ 正確答案：(D)　Rising rents push out long-time neighbors</div><div class="zh"><span class="lab tr">中譯</span>作者在最後一段提到什麼問題？</div><div class="zh"><span class="lab">解析</span>末段寫 rents in a renewed area tend to rise, pushing out the very neighbors who lived there for years。</div></div></div><div class="passage ad" data-group="rd2"><div class="ptype">AD</div><div class="ptitle">Stone and Steel Walks</div><div class="body"><p><b>See the City from the Sidewalk!</b></p><p>Stone and Steel Walks invites you on a two-hour guided tour of the old town, led by working architects.</p><ul><li><b>Route A — Riverside Warehouses</b>: Sat 9 a.m., NT$450</li><li><b>Route B — Temples and Alleys</b>: Sun 9 a.m., NT$450</li><li><b>Route C — Night Skyline</b>: Fri 7 p.m., NT$550</li></ul><p>Each group is limited to twelve people, so please book early. Students pay half price with a valid card. Tours run in light rain; if a typhoon comes, you may choose another date or get your money back.</p></div></div><div class="ana zhblk open" data-group="rd2" style="max-height:none"><div class="zh"><span class="lab tr">全文中譯</span><span class="body-zh"><p><b>從人行道重新認識這座城市！</b></p><p>石與鋼漫步邀請您參加兩小時的老城區導覽，由執業建築師親自帶隊。</p><ul><li><b>路線 A——河岸倉庫群</b>：週六上午 9 點，NT$450</li><li><b>路線 B——廟宇與巷弄</b>：週日上午 9 點，NT$450</li><li><b>路線 C——夜間天際線</b>：週五晚上 7 點，NT$550</li></ul><p>每團限十二人，請及早報名。學生持有效學生證可享半價。小雨照常出團；若遇颱風，您可改期或全額退費。</p></span></div></div><div class="qgroup-label" data-group="rd2">Questions 29–32</div><div class="q reading" data-group="rd2"><div class="stem"><span class="qn">29</span>Who leads the tours?</div><div class="opts"><div class="opt" data-q="29" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">University students</span><span class=mk></span></div><div class="opt" data-q="29" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Working architects</span><span class=mk></span></div><div class="opt" data-q="29" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">City government officials</span><span class=mk></span></div><div class="opt" data-q="29" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Local shop owners</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(29)">💡 看解析與中譯</button><div class="ana" id="ana-29"><div class="ans-line">✔ 正確答案：(B)　Working architects</div><div class="zh"><span class="lab tr">中譯</span>誰負責帶領導覽？</div><div class="zh"><span class="lab">解析</span>廣告第一段寫 led by working architects（由執業建築師帶隊）。</div></div></div><div class="q reading" data-group="rd2"><div class="stem"><span class="qn">30</span>Which route costs the most?</div><div class="opts"><div class="opt" data-q="30" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Route A</span><span class=mk></span></div><div class="opt" data-q="30" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Route B</span><span class=mk></span></div><div class="opt" data-q="30" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Route C</span><span class=mk></span></div><div class="opt" data-q="30" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">All three cost the same</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(30)">💡 看解析與中譯</button><div class="ana" id="ana-30"><div class="ans-line">✔ 正確答案：(C)　Route C</div><div class="zh"><span class="lab tr">中譯</span>哪一條路線費用最高？</div><div class="zh"><span class="lab">解析</span>路線 C 為 NT$550，A、B 皆為 NT$450，故 C 最貴。</div></div></div><div class="q reading" data-group="rd2"><div class="stem"><span class="qn">31</span>What happens if a typhoon comes?</div><div class="opts"><div class="opt" data-q="31" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">The tour lasts longer</span><span class=mk></span></div><div class="opt" data-q="31" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Nothing changes at all</span><span class=mk></span></div><div class="opt" data-q="31" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Guests must pay extra</span><span class=mk></span></div><div class="opt" data-q="31" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Guests may change the date or get a refund</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(31)">💡 看解析與中譯</button><div class="ana" id="ana-31"><div class="ans-line">✔ 正確答案：(D)　Guests may change the date or get a refund</div><div class="zh"><span class="lab tr">中譯</span>如果遇到颱風會怎麼樣？</div><div class="zh"><span class="lab">解析</span>末句寫 if a typhoon comes, you may choose another date or get your money back。小雨才是照常出團。</div></div></div><div class="q reading" data-group="rd2"><div class="stem"><span class="qn">32</span>How can a student pay less?</div><div class="opts"><div class="opt" data-q="32" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">By showing a valid student card</span><span class=mk></span></div><div class="opt" data-q="32" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">By joining a group of twelve</span><span class=mk></span></div><div class="opt" data-q="32" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">By booking on a rainy day</span><span class=mk></span></div><div class="opt" data-q="32" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">By choosing the Friday tour</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(32)">💡 看解析與中譯</button><div class="ana" id="ana-32"><div class="ans-line">✔ 正確答案：(A)　By showing a valid student card</div><div class="zh"><span class="lab tr">中譯</span>學生要如何少付一點費用？</div><div class="zh"><span class="lab">解析</span>廣告寫 Students pay half price with a valid card，關鍵是出示有效學生證。</div></div></div><div class="passage chart" data-group="rd3"><div class="ptype">CHART</div><div class="ptitle">Four New Public Buildings</div><div class="body"><p>The city finished four public buildings this year. The table below compares them.</p><table><tr><th>Building</th><th>Floors</th><th>Green Roof</th><th>Opened</th></tr><tr><td>Beiyuan Library</td><td>4</td><td>Yes</td><td>March</td></tr><tr><td>Hexi Sports Hall</td><td>3</td><td>No</td><td>June</td></tr><tr><td>Meilun Art Center</td><td>6</td><td>Yes</td><td>September</td></tr><tr><td>Nanhu Health Station</td><td>2</td><td>Yes</td><td>November</td></tr></table><p>All four use solar panels and rainwater tanks. Only the Art Center charges an entrance fee.</p></div></div><div class="ana zhblk open" data-group="rd3" style="max-height:none"><div class="zh"><span class="lab tr">全文中譯</span><span class="body-zh"><p>本市今年完成了四棟公共建築。下表為比較。</p><table><tr><th>建築</th><th>樓層</th><th>綠屋頂</th><th>啟用月份</th></tr><tr><td>北苑圖書館</td><td>4</td><td>有</td><td>三月</td></tr><tr><td>禾溪體育館</td><td>3</td><td>無</td><td>六月</td></tr><tr><td>美崙藝術中心</td><td>6</td><td>有</td><td>九月</td></tr><tr><td>南湖衛生所</td><td>2</td><td>有</td><td>十一月</td></tr></table><p>四棟建築都使用太陽能板與雨水回收槽。只有藝術中心需要收取入場費。</p></span></div></div><div class="qgroup-label" data-group="rd3">Questions 33–35</div><div class="q reading" data-group="rd3"><div class="stem"><span class="qn">33</span>Which building has the most floors?</div><div class="opts"><div class="opt" data-q="33" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Beiyuan Library</span><span class=mk></span></div><div class="opt" data-q="33" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Hexi Sports Hall</span><span class=mk></span></div><div class="opt" data-q="33" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Meilun Art Center</span><span class=mk></span></div><div class="opt" data-q="33" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Nanhu Health Station</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(33)">💡 看解析與中譯</button><div class="ana" id="ana-33"><div class="ans-line">✔ 正確答案：(C)　Meilun Art Center</div><div class="zh"><span class="lab tr">中譯</span>哪一棟建築樓層最多？</div><div class="zh"><span class="lab">解析</span>表格中美崙藝術中心為 6 層，多於圖書館 4 層、體育館 3 層與衛生所 2 層。</div></div></div><div class="q reading" data-group="rd3"><div class="stem"><span class="qn">34</span>Which building does NOT have a green roof?</div><div class="opts"><div class="opt" data-q="34" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Hexi Sports Hall</span><span class=mk></span></div><div class="opt" data-q="34" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Beiyuan Library</span><span class=mk></span></div><div class="opt" data-q="34" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Meilun Art Center</span><span class=mk></span></div><div class="opt" data-q="34" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Nanhu Health Station</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(34)">💡 看解析與中譯</button><div class="ana" id="ana-34"><div class="ans-line">✔ 正確答案：(A)　Hexi Sports Hall</div><div class="zh"><span class="lab tr">中譯</span>哪一棟建築沒有綠屋頂？</div><div class="zh"><span class="lab">解析</span>表格 Green Roof 欄中只有禾溪體育館為 No，其餘三棟皆為 Yes。</div></div></div><div class="q reading" data-group="rd3"><div class="stem"><span class="qn">35</span>What is true about all four buildings?</div><div class="opts"><div class="opt" data-q="35" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">They all charge an entrance fee</span><span class=mk></span></div><div class="opt" data-q="35" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">They all opened in the same month</span><span class=mk></span></div><div class="opt" data-q="35" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">They all have three floors</span><span class=mk></span></div><div class="opt" data-q="35" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">They all use solar panels</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(35)">💡 看解析與中譯</button><div class="ana" id="ana-35"><div class="ans-line">✔ 正確答案：(D)　They all use solar panels</div><div class="zh"><span class="lab tr">中譯</span>關於這四棟建築，何者為真？</div><div class="zh"><span class="lab">解析</span>表格下方寫 All four use solar panels and rainwater tanks；入場費只有藝術中心收取，樓層與啟用月份也各不相同。</div></div></div></div><div id="pages"></div></div>
+<script>
+function mmToPx(mm){var d=document.createElement('div');d.style.cssText='position:absolute;height:'+mm+'mm';
+  document.body.appendChild(d);var h=d.getBoundingClientRect().height;d.remove();return h;}
+function blockH(el){var r=el.getBoundingClientRect();var s=getComputedStyle(el);
+  return r.height+parseFloat(s.marginTop||0)+parseFloat(s.marginBottom||0);}
+function paginate(){
+  document.body.classList.add('measuring');
+  var flow=document.getElementById('flow');
+  var blocks=[].slice.call(flow.children);
+  var BUD=mmToPx(256); // A4 可用內容高(安全值)
+  // 組 units（連續同 data-group 者視為一組）
+  var units=[],cur=null;
+  blocks.forEach(function(el){var g=el.getAttribute('data-group');
+    if(g&&cur&&cur.g===g){cur.els.push(el);}else{cur={g:g,els:[el]};units.push(cur);}});
+  var pages=[],page=[],used=0;
+  function uh(u){var s=0;u.els.forEach(function(e){s+=blockH(e);});return s;}
+  units.forEach(function(u){var h=uh(u);
+    if(h<=BUD){ if(used+h>BUD&&page.length){pages.push(page);page=[];used=0;}
+      u.els.forEach(function(e){page.push(e);}); used+=h; }
+    else { u.els.forEach(function(e){var eh=blockH(e);
+        if(used+eh>BUD&&page.length){pages.push(page);page=[];used=0;} page.push(e);used+=eh;}); }
+  });
+  if(page.length)pages.push(page);
+  var host=document.getElementById('pages'),TITLE="中級閱讀模擬測驗　第二十四回　第三大題 閱讀理解";
+  pages.forEach(function(els,i){
+    var sec=document.createElement('section');sec.className='page';
+    var inner=document.createElement('div');inner.className='page-inner';
+    els.forEach(function(e){inner.appendChild(e);});
+    var f=document.createElement('div');f.className='pfoot';
+    f.innerHTML='<span class="pf-brand">GEPT 中級閱讀 · '+TITLE+'</span><span>第 '+(i+1)+' 頁　／　共 '+pages.length+' 頁</span>';
+    sec.appendChild(inner);sec.appendChild(f);host.appendChild(sec);
+  });
+  document.body.classList.remove('measuring');
+  document.body.classList.add('done');
+}
+window.addEventListener('load',paginate);
+</script>
+<script>
+var ANS={"21": 1, "22": 0, "23": 2, "24": 3, "25": 1, "26": 2, "27": 0, "28": 3, "29": 1, "30": 2, "31": 3, "32": 0, "33": 2, "34": 0, "35": 3},TOTAL=15,picked={};
+function pick(el){var q=el.dataset.q,i=+el.dataset.i,box=el.closest('.opts');
+  box.querySelectorAll('.opt').forEach(function(o){o.classList.remove('correct','wrong');o.querySelector('.mk').textContent='';});
+  picked[q]=i;var c=ANS[q];
+  box.querySelectorAll('.opt').forEach(function(o){var oi=+o.dataset.i;
+    if(oi===c){o.classList.add('correct');o.querySelector('.mk').textContent='✔';}
+    if(oi===i&&i!==c){o.classList.add('wrong');o.querySelector('.mk').textContent='✘';}});
+  var a=document.getElementById('ana-'+q);if(a)a.classList.add('open');upd();}
+function upd(){var d=Object.keys(picked).length,r=0;for(var q in picked)if(picked[q]===ANS[q])r++;
+  document.getElementById('score').textContent='作答 '+d+'／'+TOTAL+'　✔ '+r;}
+function tog(q){var a=document.getElementById('ana-'+q);if(a)a.classList.toggle('open');}
+function toggleAll(o){document.querySelectorAll('.ana').forEach(function(a){
+  if(a.classList.contains('zhblk'))return;a.classList.toggle('open',o);});}
+</script></body></html>

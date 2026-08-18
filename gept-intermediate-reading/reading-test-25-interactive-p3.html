@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>中級閱讀模擬測驗　第二十五回　第三大題 閱讀理解（互動講義版）</title>
+<style>
+:root{
+  --ink:#1f2430; --sub:#5b6472; --line:#e7e3f0;
+  --brand:#6d28d9; --brand2:#2563eb; --accent:#f97316; --accent2:#0ea5a4;
+  --ok:#16a34a; --no:#dc2626; --wash:#f4f1fb; --paper:#fff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  color:var(--ink);line-height:1.65;
+  background:
+    radial-gradient(1100px 560px at 10% -8%, #ede9fe 0%, rgba(237,233,254,0) 60%),
+    radial-gradient(1100px 560px at 100% 0%, #cffafe 0%, rgba(207,250,254,0) 55%),
+    #eef1f7;
+  -webkit-print-color-adjust:exact;print-color-adjust:exact;
+}
+.wrap{max-width:840px;margin:0 auto;padding:14px 10px 60px}
+
+.toolbar{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+  background:rgba(255,255,255,.88);backdrop-filter:blur(8px);border:1px solid var(--line);
+  border-radius:16px;padding:10px 14px;margin:6px auto 16px;box-shadow:0 6px 22px rgba(76,29,149,.10)}
+.toolbar .t-title{font-weight:800;color:var(--brand);margin-right:auto;font-size:15px}
+.toolbar .t-title small{color:var(--sub);font-weight:600;margin-left:6px}
+.btn{border:0;cursor:pointer;font-family:inherit;font-weight:700;font-size:13px;padding:8px 13px;
+  border-radius:999px;color:#fff;background:var(--brand);transition:.15s}
+.btn:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.btn.ghost{background:#fff;color:var(--brand);border:1.5px solid var(--brand)}
+.btn.amber{background:var(--accent)}.btn.home{background:#0ea5a4}
+.btn.nav{background:#fff;color:#5b6472;border:1.5px solid var(--line);font-size:12.5px;padding:7px 11px;text-decoration:none;display:inline-block}
+.btn.nav:hover{color:var(--brand);border-color:var(--brand)}
+.btn.nav.cur{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;border-color:transparent;cursor:default;pointer-events:none}
+.pill-score{font-weight:800;color:var(--brand);background:#f3e8ff;border-radius:999px;padding:8px 14px;font-size:13px}
+
+/* 量測用暫存流：寬度=頁面內容寬(180mm) */
+#flow{width:180mm;margin:0 auto;position:absolute;left:-99999px;top:0}
+body.done #flow{display:none}
+
+.page{width:210mm;min-height:297mm;background:var(--paper);margin:0 auto 12mm;padding:15mm 15mm 24mm;
+  position:relative;box-shadow:0 10px 34px rgba(30,25,60,.14);border-radius:6px}
+.page-inner{position:static}
+.pfoot{position:absolute;left:15mm;right:15mm;bottom:10mm;display:flex;justify-content:space-between;
+  align-items:center;font-size:11px;color:var(--sub);border-top:1.5px dashed var(--line);padding-top:5px}
+.pfoot .pf-brand{font-weight:700;color:var(--brand)}
+
+.cover{border-radius:14px;overflow:hidden;border:1px solid var(--line);margin-bottom:14px;box-shadow:0 8px 20px rgba(109,40,217,.12)}
+.cover .band{background:linear-gradient(120deg,var(--brand) 0%,var(--brand2) 55%,#0ea5a4 100%);color:#fff;padding:18px 22px;position:relative}
+.cover .band::after{content:"";position:absolute;right:-30px;top:-30px;width:150px;height:150px;background:radial-gradient(circle,rgba(255,255,255,.25),transparent 70%);border-radius:50%}
+.cover .kick{font-size:12.5px;letter-spacing:3px;opacity:.92;font-weight:700}
+.cover h1{margin:4px 0 2px;font-size:25px;font-weight:900;letter-spacing:.5px}
+.cover .en{font-size:13px;opacity:.9;font-weight:600}
+.cover .meta{display:flex;gap:16px;flex-wrap:wrap;background:#faf7ff;padding:11px 22px;font-size:12.5px;color:var(--sub)}
+.cover .meta b{color:var(--brand)}
+.cef{display:inline-block;background:#fff;color:var(--brand);border:1.5px solid var(--brand);border-radius:999px;padding:2px 10px;font-weight:800;font-size:12px}
+
+.part{display:flex;align-items:center;gap:12px;margin:6px 0 12px}
+.part .no{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:#fff;font-weight:900;font-size:18px;box-shadow:0 4px 10px rgba(0,0,0,.14)}
+.p1 .no{background:linear-gradient(135deg,#8b5cf6,#6d28d9)}
+.p2 .no{background:linear-gradient(135deg,#22d3ee,#0e7490)}
+.p3 .no{background:linear-gradient(135deg,#fb923c,#ea580c)}
+.part h2{margin:0;font-size:18px;font-weight:900}
+.part .en2{font-size:12px;color:var(--sub);font-weight:600;font-style:italic}
+.part .tag{font-size:12px;color:var(--sub);font-weight:600}
+.instru{background:var(--wash);border-left:4px solid var(--brand);border-radius:0 10px 10px 0;padding:9px 14px;font-size:12.5px;color:#4b4560;margin-bottom:14px}
+
+.q{padding:11px 13px;border:1px solid var(--line);border-radius:12px;margin-bottom:11px;background:#fff}
+.q .stem{font-size:15px;font-weight:600;line-height:1.7}
+.q .stem .qn{display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 6px;background:#ede9fe;color:var(--brand);border-radius:7px;font-weight:800;font-size:13px;margin-right:7px;vertical-align:2px}
+.blank{color:var(--brand2);font-weight:800;border-bottom:2px solid var(--brand2);padding:0 22px;margin:0 3px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:7px 16px;margin-top:9px}
+.opt{display:flex;gap:8px;align-items:flex-start;padding:6px 10px;border:1.5px solid var(--line);border-radius:9px;font-size:14px;background:#fff;cursor:pointer;transition:.12s}
+.opt .ol{flex:none;font-weight:800;color:var(--sub)}
+.reading .opts{grid-template-columns:1fr}
+
+.passage{border:1px solid var(--line);border-radius:12px;padding:13px 16px;margin:6px 0 11px;background:linear-gradient(#fff,#fbfaff)}
+.passage.email{background:linear-gradient(#f8fbff,#f2f7ff);border-color:#dbe6ff}
+.passage.ad{background:linear-gradient(#fff8f1,#fff3e6);border-color:#ffe0bf}
+.passage.notice{background:linear-gradient(#f2fdfb,#eafaf7);border-color:#c6efe6}
+.passage .ptitle{font-weight:900;font-size:15.5px;margin:0 0 6px;color:#2a2450}
+.passage .ptype{display:inline-block;font-size:11px;font-weight:800;letter-spacing:1px;padding:2px 9px;border-radius:999px;background:#ede9fe;color:var(--brand);margin-bottom:7px}
+.passage p{margin:6px 0;font-size:14px;line-height:1.75}
+.passage ul{margin:6px 0;padding-left:20px;font-size:14px;line-height:1.7}
+.passage .body{font-family:"Noto Serif TC",Georgia,"Times New Roman",serif}
+.passage table{border-collapse:collapse;width:100%;font-size:13px;margin:6px 0}
+.passage th,.passage td{border:1px solid #d9d2ee;padding:6px 9px;text-align:left}
+.passage th{background:#f0eafc;color:var(--brand)}
+.qgroup-label{font-weight:800;color:var(--brand);font-size:13px;margin:12px 0 8px;border-left:4px solid var(--brand);padding-left:9px}
+
+.ana{margin-top:9px;border:1.5px dashed #d9cff5;border-radius:11px;background:#faf7ff;padding:0 14px;max-height:0;overflow:hidden;transition:max-height .28s ease,padding .2s}
+.ana.open{max-height:1800px;padding:12px 14px}
+.ana.zhblk{margin:2px 0 11px}
+.ana .ans-line{font-weight:800;color:var(--ok);font-size:13.5px;margin-bottom:6px}
+.ana .zh{font-size:13px;margin:4px 0;color:#3a3550}
+.ana .lab{display:inline-block;font-size:11px;font-weight:800;color:#fff;background:var(--brand);border-radius:6px;padding:1px 7px;margin-right:6px}
+.ana .lab.tr{background:#0ea5a4}.ana .lab.vo{background:var(--accent)}
+.ana .vocab{margin-top:6px;font-size:12.5px;color:#4b4560}
+.ana .vocab .vw{font-weight:800;color:#2a2450}
+.ana .body-zh{font-size:13px;color:#3a3550;line-height:1.7}
+.togg{margin-top:9px;display:inline-flex;align-items:center;gap:6px;border:0;cursor:pointer;background:#ede9fe;color:var(--brand);font-weight:800;font-size:12.5px;padding:6px 12px;border-radius:999px;font-family:inherit}
+.togg:hover{background:#e0d4fb}
+
+.opt.correct{border-color:var(--ok);background:#eafaf0}
+.opt.wrong{border-color:var(--no);background:#fdecec}
+.opt .mk{margin-left:auto;font-weight:900}
+.opt.correct .mk{color:var(--ok)}.opt.wrong .mk{color:var(--no)}
+
+/* 量測狀態：隱藏解析與按鈕（等同列印） */
+body.measuring .ana,body.measuring .togg{display:none !important}
+
+@media screen and (max-width:840px){
+  #flow{position:static;left:0;width:100%}
+  .page{width:100%;min-height:auto;padding:20px 16px 44px;border-radius:12px}
+  .page-inner{min-height:0}
+  .pfoot{position:static;bottom:auto;margin-top:16px}
+  .opts{grid-template-columns:1fr}.cover h1{font-size:21px}
+}
+@media print{
+  @page{size:A4;margin:0}
+  body{background:#fff}
+  .wrap{max-width:none;margin:0;padding:0}
+  .no-print{display:none !important}
+  #flow{display:none}
+  .page{width:210mm;min-height:0;height:296mm;overflow:hidden;margin:0;padding:15mm 15mm 24mm;box-shadow:none;border-radius:0;page-break-after:always;break-after:page}
+  .page:last-child{page-break-after:auto}
+  .ana,.togg{display:none !important}
+  .opt{cursor:default}
+}
+</style></head>
+<body><div class="wrap"><div class="toolbar no-print"><span class="t-title">📘 中級閱讀模擬測驗　第二十五回　第三大題 閱讀理解<small>互動講義 · 點選項即判分</small></span><span class="pill-score" id="score">作答 0／15</span><a class="btn nav" href="reading-test-25-interactive-p1.html">一·詞彙</a><a class="btn nav" href="reading-test-25-interactive-p2.html">二·段落填空</a><a class="btn nav cur" href="reading-test-25-interactive-p3.html">三·閱讀理解</a><button class="btn ghost" onclick="toggleAll(true)">展開全部解析</button><button class="btn ghost" onclick="toggleAll(false)">收合解析</button><button class="btn amber" onclick="window.print()">🖨 列印</button><button class="btn home" onclick="location.href='index.html'">🏠 目錄</button></div><div id="flow"><div class="cover"><div class="band"><div class="kick">GEPT · INTERMEDIATE READING</div><h1>中級閱讀模擬測驗　第二十五回</h1><div class="en">第三大題　閱讀理解 · Reading Comprehension</div></div><div class="meta"><span><b>題數</b>　15 題</span><span><b>建議時間</b>　23 分鐘</span><span><b>題型</b>　閱讀理解</span><span class="cef">CEFR B1–B2</span></div></div><div class="part p3" data-group="ph3"><div class="no">3</div><div><h2>閱讀理解 <span class="en2">Reading Comprehension</span></h2><div class="tag">共 15 題／閱讀文章後作答</div></div></div><div class="instru" data-group="ph3">請閱讀下列文章，並回答相關問題。</div><div class="passage notice" data-group="rd0"><div class="ptype">NOTICE</div><div class="ptitle">Wenchang Farmers' Market Rules</div><div class="body"><p>Welcome to the Wenchang Farmers' Market, open every Saturday from 7 a.m. to noon.</p><ul><li>All sellers must grow or make what they sell. Reselling goods from wholesalers is not allowed.</li><li>Stalls must be ready before 6:40 a.m., and all vehicles must leave the square by 6:50 a.m.</li><li>Please bring your own bags. We no longer hand out plastic ones.</li><li>Free tasting is welcome, but samples must be kept covered.</li></ul><p>Lost items are held at the information tent near the north gate. If it rains heavily, the market moves to the covered walkway beside the station.</p></div></div><div class="ana zhblk open" data-group="rd0" style="max-height:none"><div class="zh"><span class="lab tr">全文中譯</span><span class="body-zh"><p>歡迎光臨文昌農夫市集，每週六上午 7 點至中午 12 點營業。</p><ul><li>所有攤商必須販售自己種植或製作的產品，不得轉售批發商的貨品。</li><li>攤位須於上午 6 點 40 分前備妥，所有車輛須於 6 點 50 分前駛離廣場。</li><li>請自備購物袋，我們不再發放塑膠袋。</li><li>歡迎免費試吃，但試吃樣品必須加蓋。</li></ul><p>失物統一保管於北門旁的服務帳篷。若遇大雨，市集將移至車站旁的有頂走廊。</p></span></div></div><div class="qgroup-label" data-group="rd0">Questions 21–24</div><div class="q reading" data-group="rd0"><div class="stem"><span class="qn">21</span>Who is allowed to sell at this market?</div><div class="opts"><div class="opt" data-q="21" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Anyone who arrives with a truck</span><span class=mk></span></div><div class="opt" data-q="21" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Only people who grow or make their own goods</span><span class=mk></span></div><div class="opt" data-q="21" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Only shops from the nearby streets</span><span class=mk></span></div><div class="opt" data-q="21" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Only sellers who buy from wholesalers</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(21)">💡 看解析與中譯</button><div class="ana" id="ana-21"><div class="ans-line">✔ 正確答案：(B)　Only people who grow or make their own goods</div><div class="zh"><span class="lab tr">中譯</span>誰可以在這個市集擺攤？</div><div class="zh"><span class="lab">解析</span>第一條規則寫 All sellers must grow or make what they sell，且明確禁止轉售批發商品。</div></div></div><div class="q reading" data-group="rd0"><div class="stem"><span class="qn">22</span>By what time must all vehicles leave the square?</div><div class="opts"><div class="opt" data-q="22" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">6:40 a.m.</span><span class=mk></span></div><div class="opt" data-q="22" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">7:00 a.m.</span><span class=mk></span></div><div class="opt" data-q="22" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">6:50 a.m.</span><span class=mk></span></div><div class="opt" data-q="22" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">12:00 noon</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(22)">💡 看解析與中譯</button><div class="ana" id="ana-22"><div class="ans-line">✔ 正確答案：(C)　6:50 a.m.</div><div class="zh"><span class="lab tr">中譯</span>所有車輛必須在幾點以前駛離廣場？</div><div class="zh"><span class="lab">解析</span>第二條寫 all vehicles must leave the square by 6:50 a.m.；6:40 是攤位備妥的時間，7 點才開始營業。</div></div></div><div class="q reading" data-group="rd0"><div class="stem"><span class="qn">23</span>What are shoppers asked to bring?</div><div class="opts"><div class="opt" data-q="23" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Their own shopping bags</span><span class=mk></span></div><div class="opt" data-q="23" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">A plastic box for samples</span><span class=mk></span></div><div class="opt" data-q="23" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">A market member card</span><span class=mk></span></div><div class="opt" data-q="23" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Small change only</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(23)">💡 看解析與中譯</button><div class="ana" id="ana-23"><div class="ans-line">✔ 正確答案：(A)　Their own shopping bags</div><div class="zh"><span class="lab tr">中譯</span>市集希望顧客自備什麼？</div><div class="zh"><span class="lab">解析</span>第三條寫 Please bring your own bags. We no longer hand out plastic ones。</div></div></div><div class="q reading" data-group="rd0"><div class="stem"><span class="qn">24</span>What happens when it rains heavily?</div><div class="opts"><div class="opt" data-q="24" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">The market is closed for the day</span><span class=mk></span></div><div class="opt" data-q="24" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Sellers must lower their prices</span><span class=mk></span></div><div class="opt" data-q="24" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Free tasting is not allowed</span><span class=mk></span></div><div class="opt" data-q="24" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">The market moves beside the station</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(24)">💡 看解析與中譯</button><div class="ana" id="ana-24"><div class="ans-line">✔ 正確答案：(D)　The market moves beside the station</div><div class="zh"><span class="lab tr">中譯</span>下大雨時會怎麼樣？</div><div class="zh"><span class="lab">解析</span>末句寫 the market moves to the covered walkway beside the station，是改地點而非取消。</div></div></div><div class="passage email" data-group="rd1"><div class="ptype">EMAIL</div><div class="ptitle">This Week's Vegetable Box</div><div class="body"><p>Dear Box Members,</p><p>Here is what is going into your box this Thursday: sweet potato leaves, long beans, two kinds of eggplant, and the first pineapples of the year.</p><p>Sadly, there will be no tomatoes. Two nights of heavy rain split most of the fruit, and split tomatoes go bad within a day. To make up for this, we have added extra ginger and a small jar of our own chili sauce.</p><p>Please remember to leave your empty basket outside your door on Wednesday evening. Our driver picks them up before sunrise.</p><p>Warm regards,<br>Ho Chia-wei, Two Hills Farm</p></div></div><div class="ana zhblk open" data-group="rd1" style="max-height:none"><div class="zh"><span class="lab tr">全文中譯</span><span class="body-zh"><p>親愛的菜箱會員：</p><p>本週四您的箱子裡會有：地瓜葉、長豆、兩種茄子，以及今年第一批鳳梨。</p><p>可惜這週沒有番茄。連續兩晚的大雨讓大部分果實裂開，而裂開的番茄一天內就會壞掉。為了彌補，我們多加了一些薑，以及一小罐自製辣椒醬。</p><p>請記得在週三傍晚把空籃子放在門外。我們的司機會在日出前來收。</p><p>兩山農場　何佳薇　敬上</p></span></div></div><div class="qgroup-label" data-group="rd1">Questions 25–28</div><div class="q reading" data-group="rd1"><div class="stem"><span class="qn">25</span>Why are there no tomatoes this week?</div><div class="opts"><div class="opt" data-q="25" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">They were all sold in the market</span><span class=mk></span></div><div class="opt" data-q="25" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Heavy rain split the fruit</span><span class=mk></span></div><div class="opt" data-q="25" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">The driver forgot to load them</span><span class=mk></span></div><div class="opt" data-q="25" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Tomatoes are out of season</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(25)">💡 看解析與中譯</button><div class="ana" id="ana-25"><div class="ans-line">✔ 正確答案：(B)　Heavy rain split the fruit</div><div class="zh"><span class="lab tr">中譯</span>這週為什麼沒有番茄？</div><div class="zh"><span class="lab">解析</span>信中寫 Two nights of heavy rain split most of the fruit，且裂果一天內就壞掉。</div></div></div><div class="q reading" data-group="rd1"><div class="stem"><span class="qn">26</span>What did the farm add instead?</div><div class="opts"><div class="opt" data-q="26" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Extra ginger and chili sauce</span><span class=mk></span></div><div class="opt" data-q="26" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">More pineapples</span><span class=mk></span></div><div class="opt" data-q="26" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">A brand-new basket</span><span class=mk></span></div><div class="opt" data-q="26" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">A discount coupon</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(26)">💡 看解析與中譯</button><div class="ana" id="ana-26"><div class="ans-line">✔ 正確答案：(A)　Extra ginger and chili sauce</div><div class="zh"><span class="lab tr">中譯</span>農場改放了什麼進去？</div><div class="zh"><span class="lab">解析</span>信中寫 we have added extra ginger and a small jar of our own chili sauce。鳳梨是本週原本就有的品項。</div></div></div><div class="q reading" data-group="rd1"><div class="stem"><span class="qn">27</span>What must members do on Wednesday evening?</div><div class="opts"><div class="opt" data-q="27" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Pay for next month's boxes</span><span class=mk></span></div><div class="opt" data-q="27" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Call the farm to confirm</span><span class=mk></span></div><div class="opt" data-q="27" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Put the empty basket outside the door</span><span class=mk></span></div><div class="opt" data-q="27" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Choose the vegetables they want</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(27)">💡 看解析與中譯</button><div class="ana" id="ana-27"><div class="ans-line">✔ 正確答案：(C)　Put the empty basket outside the door</div><div class="zh"><span class="lab tr">中譯</span>會員必須在週三傍晚做什麼？</div><div class="zh"><span class="lab">解析</span>信中寫 leave your empty basket outside your door on Wednesday evening。</div></div></div><div class="q reading" data-group="rd1"><div class="stem"><span class="qn">28</span>When does the driver collect the baskets?</div><div class="opts"><div class="opt" data-q="28" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">At noon on Thursday</span><span class=mk></span></div><div class="opt" data-q="28" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">On Wednesday afternoon</span><span class=mk></span></div><div class="opt" data-q="28" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">On Saturday morning</span><span class=mk></span></div><div class="opt" data-q="28" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Before sunrise</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(28)">💡 看解析與中譯</button><div class="ana" id="ana-28"><div class="ans-line">✔ 正確答案：(D)　Before sunrise</div><div class="zh"><span class="lab tr">中譯</span>司機何時來收籃子？</div><div class="zh"><span class="lab">解析</span>信中寫 Our driver picks them up before sunrise；週三傍晚是放籃子的時間，週四是送菜的日子。</div></div></div><div class="passage article" data-group="rd2"><div class="ptype">ARTICLE</div><div class="ptitle">Who Will Farm Tomorrow?</div><div class="body"><p>In many countries the average farmer is now over sixty, and fewer young people are willing to take over the land. The work is hard, the income is uncertain, and a single typhoon can wipe out a whole year of effort.</p><p>Yet the picture is not entirely dark. Some young returnees are finding new ways to survive: selling directly through social media, opening their fields to city visitors for farm stays, or growing crops that machines cannot easily replace.</p><p>Governments can help by making farmland easier to rent and by teaching business skills, not only farming skills. Without such support, tomorrow's fields may be quiet indeed.</p></div></div><div class="ana zhblk open" data-group="rd2" style="max-height:none"><div class="zh"><span class="lab tr">全文中譯</span><span class="body-zh"><p>在許多國家，農民的平均年齡如今已超過六十歲，而願意接手土地的年輕人愈來愈少。工作辛苦、收入不穩定，而一個颱風就可能毀掉整整一年的努力。</p><p>然而情況並非全然黯淡。一些返鄉的年輕人正找到新的生存方式：透過社群媒體直接銷售、開放田地讓城市旅客體驗農村住宿，或種植機器不易取代的作物。</p><p>政府可以提供協助，讓農地更容易租用，並教導經營管理的技能，而不只是耕作技術。若缺少這樣的支持，明日的田野恐怕真的會一片寂靜。</p></span></div></div><div class="qgroup-label" data-group="rd2">Questions 29–32</div><div class="q reading" data-group="rd2"><div class="stem"><span class="qn">29</span>What problem does the article describe?</div><div class="opts"><div class="opt" data-q="29" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Farmers are growing far too much food</span><span class=mk></span></div><div class="opt" data-q="29" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Too few young people want to farm</span><span class=mk></span></div><div class="opt" data-q="29" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Farm machines have become too expensive</span><span class=mk></span></div><div class="opt" data-q="29" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Cities are becoming smaller every year</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(29)">💡 看解析與中譯</button><div class="ana" id="ana-29"><div class="ans-line">✔ 正確答案：(B)　Too few young people want to farm</div><div class="zh"><span class="lab tr">中譯</span>這篇文章描述什麼問題？</div><div class="zh"><span class="lab">解析</span>首段指出農民平均年齡超過六十歲、fewer young people are willing to take over the land，即接班人不足。</div></div></div><div class="q reading" data-group="rd2"><div class="stem"><span class="qn">30</span>Which way of surviving is NOT mentioned in the article?</div><div class="opts"><div class="opt" data-q="30" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Selling through social media</span><span class=mk></span></div><div class="opt" data-q="30" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Offering farm stays to visitors</span><span class=mk></span></div><div class="opt" data-q="30" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Growing crops machines cannot replace</span><span class=mk></span></div><div class="opt" data-q="30" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Opening a restaurant in the city</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(30)">💡 看解析與中譯</button><div class="ana" id="ana-30"><div class="ans-line">✔ 正確答案：(D)　Opening a restaurant in the city</div><div class="zh"><span class="lab tr">中譯</span>文中沒有提到哪一種生存方式？</div><div class="zh"><span class="lab">解析</span>第二段列出三種做法：社群直銷、農村住宿、種植機器難以取代的作物，並未提到在城市開餐廳。</div></div></div><div class="q reading" data-group="rd2"><div class="stem"><span class="qn">31</span>What help does the writer ask governments to give?</div><div class="opts"><div class="opt" data-q="31" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Free farm machines for everyone</span><span class=mk></span></div><div class="opt" data-q="31" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Much higher food prices</span><span class=mk></span></div><div class="opt" data-q="31" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Easier land rent and business training</span><span class=mk></span></div><div class="opt" data-q="31" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">More typhoon warnings each year</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(31)">💡 看解析與中譯</button><div class="ana" id="ana-31"><div class="ans-line">✔ 正確答案：(C)　Easier land rent and business training</div><div class="zh"><span class="lab tr">中譯</span>作者希望政府提供什麼協助？</div><div class="zh"><span class="lab">解析</span>末段寫 making farmland easier to rent and by teaching business skills（讓農地好租、教經營技能）。</div></div></div><div class="q reading" data-group="rd2"><div class="stem"><span class="qn">32</span>What does the last sentence suggest?</div><div class="opts"><div class="opt" data-q="32" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Farming may die out without support</span><span class=mk></span></div><div class="opt" data-q="32" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Quiet fields are what farmers want</span><span class=mk></span></div><div class="opt" data-q="32" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Young people dislike the countryside</span><span class=mk></span></div><div class="opt" data-q="32" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Governments have already done enough</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(32)">💡 看解析與中譯</button><div class="ana" id="ana-32"><div class="ans-line">✔ 正確答案：(A)　Farming may die out without support</div><div class="zh"><span class="lab tr">中譯</span>最後一句話暗示了什麼？</div><div class="zh"><span class="lab">解析</span>Without such support, tomorrow's fields may be quiet indeed，以「寂靜的田野」暗示無人耕作的後果。</div></div></div><div class="passage chart" data-group="rd3"><div class="ptype">CHART</div><div class="ptitle">What Is in Season at Two Hills Farm?</div><div class="body"><p>Two Hills Farm sells different crops through the year. The table shows the main months and the usual price.</p><table><tr><th>Crop</th><th>Main Season</th><th>Price per kg</th></tr><tr><td>Bamboo shoots</td><td>April–June</td><td>NT$120</td></tr><tr><td>Pineapples</td><td>May–July</td><td>NT$60</td></tr><tr><td>Sweet potatoes</td><td>October–January</td><td>NT$45</td></tr><tr><td>Strawberries</td><td>December–March</td><td>NT$320</td></tr></table><p>Prices drop by about a fifth in the middle of each season. Box members pay ten percent less all year round.</p></div></div><div class="ana zhblk open" data-group="rd3" style="max-height:none"><div class="zh"><span class="lab tr">全文中譯</span><span class="body-zh"><p>兩山農場全年販售不同作物。下表列出主要產季與一般價格。</p><table><tr><th>作物</th><th>主要產季</th><th>每公斤價格</th></tr><tr><td>竹筍</td><td>四月至六月</td><td>NT$120</td></tr><tr><td>鳳梨</td><td>五月至七月</td><td>NT$60</td></tr><tr><td>地瓜</td><td>十月至隔年一月</td><td>NT$45</td></tr><tr><td>草莓</td><td>十二月至隔年三月</td><td>NT$320</td></tr></table><p>每個產季的中期，價格約下降五分之一。菜箱會員全年皆可少付一成。</p></span></div></div><div class="qgroup-label" data-group="rd3">Questions 33–35</div><div class="q reading" data-group="rd3"><div class="stem"><span class="qn">33</span>Which crop costs the most per kilogram?</div><div class="opts"><div class="opt" data-q="33" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Bamboo shoots</span><span class=mk></span></div><div class="opt" data-q="33" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Pineapples</span><span class=mk></span></div><div class="opt" data-q="33" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Sweet potatoes</span><span class=mk></span></div><div class="opt" data-q="33" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Strawberries</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(33)">💡 看解析與中譯</button><div class="ana" id="ana-33"><div class="ans-line">✔ 正確答案：(D)　Strawberries</div><div class="zh"><span class="lab tr">中譯</span>哪一種作物每公斤最貴？</div><div class="zh"><span class="lab">解析</span>表格中草莓每公斤 NT$320，高於竹筍 120、鳳梨 60 與地瓜 45。</div></div></div><div class="q reading" data-group="rd3"><div class="stem"><span class="qn">34</span>Which two crops can a customer buy in June?</div><div class="opts"><div class="opt" data-q="34" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Bamboo shoots and pineapples</span><span class=mk></span></div><div class="opt" data-q="34" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Pineapples and strawberries</span><span class=mk></span></div><div class="opt" data-q="34" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Sweet potatoes and strawberries</span><span class=mk></span></div><div class="opt" data-q="34" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Bamboo shoots and sweet potatoes</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(34)">💡 看解析與中譯</button><div class="ana" id="ana-34"><div class="ans-line">✔ 正確答案：(A)　Bamboo shoots and pineapples</div><div class="zh"><span class="lab tr">中譯</span>顧客在六月可以買到哪兩種作物？</div><div class="zh"><span class="lab">解析</span>竹筍產季為四至六月、鳳梨為五至七月，兩者六月都在產季；地瓜與草莓的產季都在冬季。</div></div></div><div class="q reading" data-group="rd3"><div class="stem"><span class="qn">35</span>What benefit do box members receive?</div><div class="opts"><div class="opt" data-q="35" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Free delivery to their homes</span><span class=mk></span></div><div class="opt" data-q="35" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Twice the usual amount of fruit</span><span class=mk></span></div><div class="opt" data-q="35" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">A free gift every month</span><span class=mk></span></div><div class="opt" data-q="35" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Ten percent off all year round</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(35)">💡 看解析與中譯</button><div class="ana" id="ana-35"><div class="ans-line">✔ 正確答案：(D)　Ten percent off all year round</div><div class="zh"><span class="lab tr">中譯</span>菜箱會員享有什麼好處？</div><div class="zh"><span class="lab">解析</span>表格下方寫 Box members pay ten percent less all year round，是全年九折而非免運或贈品。</div></div></div></div><div id="pages"></div></div>
+<script>
+function mmToPx(mm){var d=document.createElement('div');d.style.cssText='position:absolute;height:'+mm+'mm';
+  document.body.appendChild(d);var h=d.getBoundingClientRect().height;d.remove();return h;}
+function blockH(el){var r=el.getBoundingClientRect();var s=getComputedStyle(el);
+  return r.height+parseFloat(s.marginTop||0)+parseFloat(s.marginBottom||0);}
+function paginate(){
+  document.body.classList.add('measuring');
+  var flow=document.getElementById('flow');
+  var blocks=[].slice.call(flow.children);
+  var BUD=mmToPx(256); // A4 可用內容高(安全值)
+  // 組 units（連續同 data-group 者視為一組）
+  var units=[],cur=null;
+  blocks.forEach(function(el){var g=el.getAttribute('data-group');
+    if(g&&cur&&cur.g===g){cur.els.push(el);}else{cur={g:g,els:[el]};units.push(cur);}});
+  var pages=[],page=[],used=0;
+  function uh(u){var s=0;u.els.forEach(function(e){s+=blockH(e);});return s;}
+  units.forEach(function(u){var h=uh(u);
+    if(h<=BUD){ if(used+h>BUD&&page.length){pages.push(page);page=[];used=0;}
+      u.els.forEach(function(e){page.push(e);}); used+=h; }
+    else { u.els.forEach(function(e){var eh=blockH(e);
+        if(used+eh>BUD&&page.length){pages.push(page);page=[];used=0;} page.push(e);used+=eh;}); }
+  });
+  if(page.length)pages.push(page);
+  var host=document.getElementById('pages'),TITLE="中級閱讀模擬測驗　第二十五回　第三大題 閱讀理解";
+  pages.forEach(function(els,i){
+    var sec=document.createElement('section');sec.className='page';
+    var inner=document.createElement('div');inner.className='page-inner';
+    els.forEach(function(e){inner.appendChild(e);});
+    var f=document.createElement('div');f.className='pfoot';
+    f.innerHTML='<span class="pf-brand">GEPT 中級閱讀 · '+TITLE+'</span><span>第 '+(i+1)+' 頁　／　共 '+pages.length+' 頁</span>';
+    sec.appendChild(inner);sec.appendChild(f);host.appendChild(sec);
+  });
+  document.body.classList.remove('measuring');
+  document.body.classList.add('done');
+}
+window.addEventListener('load',paginate);
+</script>
+<script>
+var ANS={"21": 1, "22": 2, "23": 0, "24": 3, "25": 1, "26": 0, "27": 2, "28": 3, "29": 1, "30": 3, "31": 2, "32": 0, "33": 3, "34": 0, "35": 3},TOTAL=15,picked={};
+function pick(el){var q=el.dataset.q,i=+el.dataset.i,box=el.closest('.opts');
+  box.querySelectorAll('.opt').forEach(function(o){o.classList.remove('correct','wrong');o.querySelector('.mk').textContent='';});
+  picked[q]=i;var c=ANS[q];
+  box.querySelectorAll('.opt').forEach(function(o){var oi=+o.dataset.i;
+    if(oi===c){o.classList.add('correct');o.querySelector('.mk').textContent='✔';}
+    if(oi===i&&i!==c){o.classList.add('wrong');o.querySelector('.mk').textContent='✘';}});
+  var a=document.getElementById('ana-'+q);if(a)a.classList.add('open');upd();}
+function upd(){var d=Object.keys(picked).length,r=0;for(var q in picked)if(picked[q]===ANS[q])r++;
+  document.getElementById('score').textContent='作答 '+d+'／'+TOTAL+'　✔ '+r;}
+function tog(q){var a=document.getElementById('ana-'+q);if(a)a.classList.toggle('open');}
+function toggleAll(o){document.querySelectorAll('.ana').forEach(function(a){
+  if(a.classList.contains('zhblk'))return;a.classList.toggle('open',o);});}
+</script></body></html>

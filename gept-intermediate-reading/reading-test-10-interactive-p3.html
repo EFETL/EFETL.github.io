@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>中級閱讀模擬測驗　第十回　第三大題 閱讀理解（互動講義版）</title>
+<style>
+:root{
+  --ink:#1f2430; --sub:#5b6472; --line:#e7e3f0;
+  --brand:#6d28d9; --brand2:#2563eb; --accent:#f97316; --accent2:#0ea5a4;
+  --ok:#16a34a; --no:#dc2626; --wash:#f4f1fb; --paper:#fff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  color:var(--ink);line-height:1.65;
+  background:
+    radial-gradient(1100px 560px at 10% -8%, #ede9fe 0%, rgba(237,233,254,0) 60%),
+    radial-gradient(1100px 560px at 100% 0%, #cffafe 0%, rgba(207,250,254,0) 55%),
+    #eef1f7;
+  -webkit-print-color-adjust:exact;print-color-adjust:exact;
+}
+.wrap{max-width:840px;margin:0 auto;padding:14px 10px 60px}
+
+.toolbar{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+  background:rgba(255,255,255,.88);backdrop-filter:blur(8px);border:1px solid var(--line);
+  border-radius:16px;padding:10px 14px;margin:6px auto 16px;box-shadow:0 6px 22px rgba(76,29,149,.10)}
+.toolbar .t-title{font-weight:800;color:var(--brand);margin-right:auto;font-size:15px}
+.toolbar .t-title small{color:var(--sub);font-weight:600;margin-left:6px}
+.btn{border:0;cursor:pointer;font-family:inherit;font-weight:700;font-size:13px;padding:8px 13px;
+  border-radius:999px;color:#fff;background:var(--brand);transition:.15s}
+.btn:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.btn.ghost{background:#fff;color:var(--brand);border:1.5px solid var(--brand)}
+.btn.amber{background:var(--accent)}.btn.home{background:#0ea5a4}
+.btn.nav{background:#fff;color:#5b6472;border:1.5px solid var(--line);font-size:12.5px;padding:7px 11px;text-decoration:none;display:inline-block}
+.btn.nav:hover{color:var(--brand);border-color:var(--brand)}
+.btn.nav.cur{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;border-color:transparent;cursor:default;pointer-events:none}
+.pill-score{font-weight:800;color:var(--brand);background:#f3e8ff;border-radius:999px;padding:8px 14px;font-size:13px}
+
+/* 量測用暫存流：寬度=頁面內容寬(180mm) */
+#flow{width:180mm;margin:0 auto;position:absolute;left:-99999px;top:0}
+body.done #flow{display:none}
+
+.page{width:210mm;min-height:297mm;background:var(--paper);margin:0 auto 12mm;padding:15mm 15mm 24mm;
+  position:relative;box-shadow:0 10px 34px rgba(30,25,60,.14);border-radius:6px}
+.page-inner{position:static}
+.pfoot{position:absolute;left:15mm;right:15mm;bottom:10mm;display:flex;justify-content:space-between;
+  align-items:center;font-size:11px;color:var(--sub);border-top:1.5px dashed var(--line);padding-top:5px}
+.pfoot .pf-brand{font-weight:700;color:var(--brand)}
+
+.cover{border-radius:14px;overflow:hidden;border:1px solid var(--line);margin-bottom:14px;box-shadow:0 8px 20px rgba(109,40,217,.12)}
+.cover .band{background:linear-gradient(120deg,var(--brand) 0%,var(--brand2) 55%,#0ea5a4 100%);color:#fff;padding:18px 22px;position:relative}
+.cover .band::after{content:"";position:absolute;right:-30px;top:-30px;width:150px;height:150px;background:radial-gradient(circle,rgba(255,255,255,.25),transparent 70%);border-radius:50%}
+.cover .kick{font-size:12.5px;letter-spacing:3px;opacity:.92;font-weight:700}
+.cover h1{margin:4px 0 2px;font-size:25px;font-weight:900;letter-spacing:.5px}
+.cover .en{font-size:13px;opacity:.9;font-weight:600}
+.cover .meta{display:flex;gap:16px;flex-wrap:wrap;background:#faf7ff;padding:11px 22px;font-size:12.5px;color:var(--sub)}
+.cover .meta b{color:var(--brand)}
+.cef{display:inline-block;background:#fff;color:var(--brand);border:1.5px solid var(--brand);border-radius:999px;padding:2px 10px;font-weight:800;font-size:12px}
+
+.part{display:flex;align-items:center;gap:12px;margin:6px 0 12px}
+.part .no{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:#fff;font-weight:900;font-size:18px;box-shadow:0 4px 10px rgba(0,0,0,.14)}
+.p1 .no{background:linear-gradient(135deg,#8b5cf6,#6d28d9)}
+.p2 .no{background:linear-gradient(135deg,#22d3ee,#0e7490)}
+.p3 .no{background:linear-gradient(135deg,#fb923c,#ea580c)}
+.part h2{margin:0;font-size:18px;font-weight:900}
+.part .en2{font-size:12px;color:var(--sub);font-weight:600;font-style:italic}
+.part .tag{font-size:12px;color:var(--sub);font-weight:600}
+.instru{background:var(--wash);border-left:4px solid var(--brand);border-radius:0 10px 10px 0;padding:9px 14px;font-size:12.5px;color:#4b4560;margin-bottom:14px}
+
+.q{padding:11px 13px;border:1px solid var(--line);border-radius:12px;margin-bottom:11px;background:#fff}
+.q .stem{font-size:15px;font-weight:600;line-height:1.7}
+.q .stem .qn{display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 6px;background:#ede9fe;color:var(--brand);border-radius:7px;font-weight:800;font-size:13px;margin-right:7px;vertical-align:2px}
+.blank{color:var(--brand2);font-weight:800;border-bottom:2px solid var(--brand2);padding:0 22px;margin:0 3px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:7px 16px;margin-top:9px}
+.opt{display:flex;gap:8px;align-items:flex-start;padding:6px 10px;border:1.5px solid var(--line);border-radius:9px;font-size:14px;background:#fff;cursor:pointer;transition:.12s}
+.opt .ol{flex:none;font-weight:800;color:var(--sub)}
+.reading .opts{grid-template-columns:1fr}
+
+.passage{border:1px solid var(--line);border-radius:12px;padding:13px 16px;margin:6px 0 11px;background:linear-gradient(#fff,#fbfaff)}
+.passage.email{background:linear-gradient(#f8fbff,#f2f7ff);border-color:#dbe6ff}
+.passage.ad{background:linear-gradient(#fff8f1,#fff3e6);border-color:#ffe0bf}
+.passage.notice{background:linear-gradient(#f2fdfb,#eafaf7);border-color:#c6efe6}
+.passage .ptitle{font-weight:900;font-size:15.5px;margin:0 0 6px;color:#2a2450}
+.passage .ptype{display:inline-block;font-size:11px;font-weight:800;letter-spacing:1px;padding:2px 9px;border-radius:999px;background:#ede9fe;color:var(--brand);margin-bottom:7px}
+.passage p{margin:6px 0;font-size:14px;line-height:1.75}
+.passage ul{margin:6px 0;padding-left:20px;font-size:14px;line-height:1.7}
+.passage .body{font-family:"Noto Serif TC",Georgia,"Times New Roman",serif}
+.passage table{border-collapse:collapse;width:100%;font-size:13px;margin:6px 0}
+.passage th,.passage td{border:1px solid #d9d2ee;padding:6px 9px;text-align:left}
+.passage th{background:#f0eafc;color:var(--brand)}
+.qgroup-label{font-weight:800;color:var(--brand);font-size:13px;margin:12px 0 8px;border-left:4px solid var(--brand);padding-left:9px}
+
+.ana{margin-top:9px;border:1.5px dashed #d9cff5;border-radius:11px;background:#faf7ff;padding:0 14px;max-height:0;overflow:hidden;transition:max-height .28s ease,padding .2s}
+.ana.open{max-height:1800px;padding:12px 14px}
+.ana.zhblk{margin:2px 0 11px}
+.ana .ans-line{font-weight:800;color:var(--ok);font-size:13.5px;margin-bottom:6px}
+.ana .zh{font-size:13px;margin:4px 0;color:#3a3550}
+.ana .lab{display:inline-block;font-size:11px;font-weight:800;color:#fff;background:var(--brand);border-radius:6px;padding:1px 7px;margin-right:6px}
+.ana .lab.tr{background:#0ea5a4}.ana .lab.vo{background:var(--accent)}
+.ana .vocab{margin-top:6px;font-size:12.5px;color:#4b4560}
+.ana .vocab .vw{font-weight:800;color:#2a2450}
+.ana .body-zh{font-size:13px;color:#3a3550;line-height:1.7}
+.togg{margin-top:9px;display:inline-flex;align-items:center;gap:6px;border:0;cursor:pointer;background:#ede9fe;color:var(--brand);font-weight:800;font-size:12.5px;padding:6px 12px;border-radius:999px;font-family:inherit}
+.togg:hover{background:#e0d4fb}
+
+.opt.correct{border-color:var(--ok);background:#eafaf0}
+.opt.wrong{border-color:var(--no);background:#fdecec}
+.opt .mk{margin-left:auto;font-weight:900}
+.opt.correct .mk{color:var(--ok)}.opt.wrong .mk{color:var(--no)}
+
+/* 量測狀態：隱藏解析與按鈕（等同列印） */
+body.measuring .ana,body.measuring .togg{display:none !important}
+
+@media screen and (max-width:840px){
+  #flow{position:static;left:0;width:100%}
+  .page{width:100%;min-height:auto;padding:20px 16px 44px;border-radius:12px}
+  .page-inner{min-height:0}
+  .pfoot{position:static;bottom:auto;margin-top:16px}
+  .opts{grid-template-columns:1fr}.cover h1{font-size:21px}
+}
+@media print{
+  @page{size:A4;margin:0}
+  body{background:#fff}
+  .wrap{max-width:none;margin:0;padding:0}
+  .no-print{display:none !important}
+  #flow{display:none}
+  .page{width:210mm;min-height:0;height:296mm;overflow:hidden;margin:0;padding:15mm 15mm 24mm;box-shadow:none;border-radius:0;page-break-after:always;break-after:page}
+  .page:last-child{page-break-after:auto}
+  .ana,.togg{display:none !important}
+  .opt{cursor:default}
+}
+</style></head>
+<body><div class="wrap"><div class="toolbar no-print"><span class="t-title">📘 中級閱讀模擬測驗　第十回　第三大題 閱讀理解<small>互動講義 · 點選項即判分</small></span><span class="pill-score" id="score">作答 0／15</span><a class="btn nav" href="reading-test-10-interactive-p1.html">一·詞彙</a><a class="btn nav" href="reading-test-10-interactive-p2.html">二·段落填空</a><a class="btn nav cur" href="reading-test-10-interactive-p3.html">三·閱讀理解</a><button class="btn ghost" onclick="toggleAll(true)">展開全部解析</button><button class="btn ghost" onclick="toggleAll(false)">收合解析</button><button class="btn amber" onclick="window.print()">🖨 列印</button><button class="btn home" onclick="location.href='index.html'">🏠 目錄</button></div><div id="flow"><div class="cover"><div class="band"><div class="kick">GEPT · INTERMEDIATE READING</div><h1>中級閱讀模擬測驗　第十回</h1><div class="en">第三大題　閱讀理解 · Reading Comprehension</div></div><div class="meta"><span><b>題數</b>　15 題</span><span><b>建議時間</b>　23 分鐘</span><span><b>題型</b>　閱讀理解</span><span class="cef">CEFR B1–B2</span></div></div><div class="part p3" data-group="ph3"><div class="no">3</div><div><h2>閱讀理解 <span class="en2">Reading Comprehension</span></h2><div class="tag">共 15 題／閱讀文章後作答</div></div></div><div class="instru" data-group="ph3">請閱讀下列文章，並回答相關問題。</div><div class="passage email" data-group="rd0"><div class="ptype">EMAIL</div><div class="ptitle">An Invitation to a Science Fair</div><div class="body"><p>Dear Ms. Chen,</p><p>On behalf of Greenfield Junior High, I would like to invite you to be a guest judge at our annual Science Fair on Saturday, October 18, from 9 a.m. to 3 p.m. in the school gym.</p><p>This year, more than sixty students will present projects on space, robots, and clean energy. As a well-known engineer, your comments would greatly encourage our young scientists. Judges will score the projects and choose three winners. Lunch and a small gift will be provided.</p><p>Please reply by October 5 so that we can prepare your name badge. We truly hope you can join us.</p><p>Best regards,<br>David Wu, Science Teacher</p></div></div><div class="ana zhblk open" data-group="rd0" style="max-height:none"><div class="zh"><span class="lab tr">全文中譯</span><span class="body-zh"><p>親愛的陳女士：</p><p>謹代表綠田國中，我想邀請您擔任我們一年一度科學展的客座評審，時間是十月十八日星期六上午九點至下午三點，地點在學校體育館。</p><p>今年將有超過六十位學生展示關於太空、機器人與潔淨能源的專題。身為知名工程師，您的評語將大大鼓勵我們年輕的科學家。評審將為專題評分並選出三位優勝者。我們會提供午餐與一份小禮物。</p><p>請於十月五日前回覆，以便我們為您準備名牌。我們由衷希望您能參加。</p><p>David Wu 敬上，自然科教師</p></span></div></div><div class="qgroup-label" data-group="rd0">Questions 21–24</div><div class="q reading" data-group="rd0"><div class="stem"><span class="qn">21</span>Why is David Wu writing to Ms. Chen?</div><div class="opts"><div class="opt" data-q="21" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">To ask for a donation</span><span class=mk></span></div><div class="opt" data-q="21" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">To sell her science books</span><span class=mk></span></div><div class="opt" data-q="21" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">To invite her to be a judge</span><span class=mk></span></div><div class="opt" data-q="21" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">To apply for a job</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(21)">💡 看解析與中譯</button><div class="ana" id="ana-21"><div class="ans-line">✔ 正確答案：(C)　To invite her to be a judge</div><div class="zh"><span class="lab tr">中譯</span>David Wu 為何寫信給陳女士？</div><div class="zh"><span class="lab">解析</span>信中明確 invite you to be a guest judge（邀請擔任客座評審），故為邀請當評審。</div></div></div><div class="q reading" data-group="rd0"><div class="stem"><span class="qn">22</span>What will the students' projects be about?</div><div class="opts"><div class="opt" data-q="22" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Space, robots, and clean energy</span><span class=mk></span></div><div class="opt" data-q="22" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Cooking and sports</span><span class=mk></span></div><div class="opt" data-q="22" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">History and art</span><span class=mk></span></div><div class="opt" data-q="22" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Music and dance</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(22)">💡 看解析與中譯</button><div class="ana" id="ana-22"><div class="ans-line">✔ 正確答案：(A)　Space, robots, and clean energy</div><div class="zh"><span class="lab tr">中譯</span>學生的專題將和什麼有關？</div><div class="zh"><span class="lab">解析</span>信中列出 projects on space, robots, and clean energy（太空、機器人與潔淨能源）。</div></div></div><div class="q reading" data-group="rd0"><div class="stem"><span class="qn">23</span>What will the judges do at the fair?</div><div class="opts"><div class="opt" data-q="23" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Score projects and pick winners</span><span class=mk></span></div><div class="opt" data-q="23" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Teach a class</span><span class=mk></span></div><div class="opt" data-q="23" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Sell tickets</span><span class=mk></span></div><div class="opt" data-q="23" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Clean the gym</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(23)">💡 看解析與中譯</button><div class="ana" id="ana-23"><div class="ans-line">✔ 正確答案：(A)　Score projects and pick winners</div><div class="zh"><span class="lab tr">中譯</span>評審在科展中要做什麼？</div><div class="zh"><span class="lab">解析</span>信中提到 Judges will score the projects and choose three winners（評分並選出三位優勝）。</div></div></div><div class="q reading" data-group="rd0"><div class="stem"><span class="qn">24</span>What should Ms. Chen do before October 5?</div><div class="opts"><div class="opt" data-q="24" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Reply to the invitation</span><span class=mk></span></div><div class="opt" data-q="24" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Pay a fee</span><span class=mk></span></div><div class="opt" data-q="24" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Bring her own lunch</span><span class=mk></span></div><div class="opt" data-q="24" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Prepare a project</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(24)">💡 看解析與中譯</button><div class="ana" id="ana-24"><div class="ans-line">✔ 正確答案：(A)　Reply to the invitation</div><div class="zh"><span class="lab tr">中譯</span>陳女士應在十月五日前做什麼？</div><div class="zh"><span class="lab">解析</span>信末 Please reply by October 5（請於十月五日前回覆）以便準備名牌。</div></div></div><div class="passage article" data-group="rd1"><div class="ptype">ARTICLE</div><div class="ptitle">The Deepest Place on Earth</div><div class="body"><p>Far beneath the Pacific Ocean lies the Mariana Trench, the deepest known point on our planet. At almost 11,000 meters down, it is deeper than Mount Everest is tall. The water there is freezing cold, and the pressure is strong enough to crush most machines.</p><p>For a long time, people thought nothing could live in such a dark, harsh place. Yet modern cameras have shown strange fish and tiny creatures moving along the sea floor. These discoveries remind us that life can survive in surprising conditions, and that much of the ocean is still waiting to be explored.</p></div></div><div class="ana zhblk open" data-group="rd1" style="max-height:none"><div class="zh"><span class="lab tr">全文中譯</span><span class="body-zh"><p>在太平洋深處，坐落著馬里亞納海溝，這是我們星球上已知最深的地點。它深達將近一萬一千公尺，比聖母峰的高度還深。那裡的海水冰冷刺骨，水壓強大到足以壓垮大多數機器。</p><p>長久以來，人們認為在如此黑暗、嚴酷的地方不可能有生物存活。然而現代攝影機卻拍到奇特的魚類與微小生物在海床上移動。這些發現提醒我們，生命能在令人意想不到的環境中存活，而海洋大部分地方仍等待著被探索。</p></span></div></div><div class="qgroup-label" data-group="rd1">Questions 25–28</div><div class="q reading" data-group="rd1"><div class="stem"><span class="qn">25</span>What is special about the Mariana Trench?</div><div class="opts"><div class="opt" data-q="25" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">It is a new island</span><span class=mk></span></div><div class="opt" data-q="25" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">It is the tallest mountain</span><span class=mk></span></div><div class="opt" data-q="25" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">It is the warmest sea</span><span class=mk></span></div><div class="opt" data-q="25" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">It is the deepest known point on Earth</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(25)">💡 看解析與中譯</button><div class="ana" id="ana-25"><div class="ans-line">✔ 正確答案：(D)　It is the deepest known point on Earth</div><div class="zh"><span class="lab tr">中譯</span>馬里亞納海溝有何特別之處？</div><div class="zh"><span class="lab">解析</span>文章開頭指出它是 the deepest known point on our planet（地球上已知最深處）。</div></div></div><div class="q reading" data-group="rd1"><div class="stem"><span class="qn">26</span>Why is it hard for machines to go there?</div><div class="opts"><div class="opt" data-q="26" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">The water is too shallow</span><span class=mk></span></div><div class="opt" data-q="26" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">There are too many fish</span><span class=mk></span></div><div class="opt" data-q="26" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">The pressure can crush them</span><span class=mk></span></div><div class="opt" data-q="26" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">The light is too bright</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(26)">💡 看解析與中譯</button><div class="ana" id="ana-26"><div class="ans-line">✔ 正確答案：(C)　The pressure can crush them</div><div class="zh"><span class="lab tr">中譯</span>為什麼機器很難到那裡？</div><div class="zh"><span class="lab">解析</span>文中說 pressure is strong enough to crush most machines（水壓強到能壓垮多數機器）。</div></div></div><div class="q reading" data-group="rd1"><div class="stem"><span class="qn">27</span>What did modern cameras show?</div><div class="opts"><div class="opt" data-q="27" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">An empty sea floor</span><span class=mk></span></div><div class="opt" data-q="27" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Floating plastic</span><span class=mk></span></div><div class="opt" data-q="27" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">A sunken city</span><span class=mk></span></div><div class="opt" data-q="27" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Strange fish and tiny creatures</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(27)">💡 看解析與中譯</button><div class="ana" id="ana-27"><div class="ans-line">✔ 正確答案：(D)　Strange fish and tiny creatures</div><div class="zh"><span class="lab tr">中譯</span>現代攝影機拍到了什麼？</div><div class="zh"><span class="lab">解析</span>文中提到 cameras have shown strange fish and tiny creatures（拍到奇特魚類與微小生物）。</div></div></div><div class="q reading" data-group="rd1"><div class="stem"><span class="qn">28</span>What lesson does the article suggest?</div><div class="opts"><div class="opt" data-q="28" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Deep water is warm</span><span class=mk></span></div><div class="opt" data-q="28" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">The ocean is fully explored</span><span class=mk></span></div><div class="opt" data-q="28" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Life can survive in surprising places</span><span class=mk></span></div><div class="opt" data-q="28" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Machines are useless</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(28)">💡 看解析與中譯</button><div class="ana" id="ana-28"><div class="ans-line">✔ 正確答案：(C)　Life can survive in surprising places</div><div class="zh"><span class="lab tr">中譯</span>文章暗示了什麼道理？</div><div class="zh"><span class="lab">解析</span>文末指 life can survive in surprising conditions（生命能在意想不到的環境存活）。</div></div></div><div class="passage ad" data-group="rd2"><div class="ptype">AD</div><div class="ptitle">City Space Museum</div><div class="body"><p><b>Explore the Universe at the City Space Museum!</b></p><p>Come and discover the wonders of space this summer. Our new hall features real rockets, moon rocks, and a giant screen showing the birth of stars.</p><ul><li><b>Planet Show</b> — daily, 11 a.m. &amp; 3 p.m. — 40 minutes</li><li><b>Rocket Workshop</b> — weekends only — build your own model</li><li><b>Night Sky Tour</b> — Fridays, 8 p.m. — watch real stars</li></ul><p>Tickets are NT$250 for adults and NT$150 for students. Children under six enter free. Book online and save 10%. The museum is closed on Mondays.</p></div></div><div class="ana zhblk open" data-group="rd2" style="max-height:none"><div class="zh"><span class="lab tr">全文中譯</span><span class="body-zh"><p><b>在城市太空博物館探索宇宙！</b></p><p>今夏快來發現太空的奇妙。我們的新展廳有真實的火箭、月球岩石，以及一面播放恆星誕生的巨大螢幕。</p><ul><li><b>行星秀</b>——每日上午 11 點與下午 3 點——40 分鐘</li><li><b>火箭工作坊</b>——僅限週末——打造你自己的模型</li><li><b>夜空導覽</b>——週五晚上 8 點——觀賞真實星空</li></ul><p>門票成人 NT$250、學生 NT$150，六歲以下兒童免費入場。線上訂票可省 10%。博物館週一休館。</p></span></div></div><div class="qgroup-label" data-group="rd2">Questions 29–32</div><div class="q reading" data-group="rd2"><div class="stem"><span class="qn">29</span>When can visitors join the Rocket Workshop?</div><div class="opts"><div class="opt" data-q="29" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">On weekends only</span><span class=mk></span></div><div class="opt" data-q="29" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Every day</span><span class=mk></span></div><div class="opt" data-q="29" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">On Mondays</span><span class=mk></span></div><div class="opt" data-q="29" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">At midnight</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(29)">💡 看解析與中譯</button><div class="ana" id="ana-29"><div class="ans-line">✔ 正確答案：(A)　On weekends only</div><div class="zh"><span class="lab tr">中譯</span>遊客何時能參加火箭工作坊？</div><div class="zh"><span class="lab">解析</span>廣告寫 Rocket Workshop — weekends only（僅限週末）。</div></div></div><div class="q reading" data-group="rd2"><div class="stem"><span class="qn">30</span>How much does a student ticket cost?</div><div class="opts"><div class="opt" data-q="30" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">NT$40</span><span class=mk></span></div><div class="opt" data-q="30" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">NT$150</span><span class=mk></span></div><div class="opt" data-q="30" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">NT$250</span><span class=mk></span></div><div class="opt" data-q="30" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Free</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(30)">💡 看解析與中譯</button><div class="ana" id="ana-30"><div class="ans-line">✔ 正確答案：(B)　NT$150</div><div class="zh"><span class="lab tr">中譯</span>學生票要多少錢？</div><div class="zh"><span class="lab">解析</span>廣告寫 NT$150 for students（學生 NT$150）。</div></div></div><div class="q reading" data-group="rd2"><div class="stem"><span class="qn">31</span>How can visitors save money on tickets?</div><div class="opts"><div class="opt" data-q="31" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">By coming on Monday</span><span class=mk></span></div><div class="opt" data-q="31" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">By booking online</span><span class=mk></span></div><div class="opt" data-q="31" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">By arriving at night</span><span class=mk></span></div><div class="opt" data-q="31" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">By joining a tour</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(31)">💡 看解析與中譯</button><div class="ana" id="ana-31"><div class="ans-line">✔ 正確答案：(B)　By booking online</div><div class="zh"><span class="lab tr">中譯</span>遊客如何在門票上省錢？</div><div class="zh"><span class="lab">解析</span>廣告寫 Book online and save 10%（線上訂票省 10%）。</div></div></div><div class="q reading" data-group="rd2"><div class="stem"><span class="qn">32</span>Which day is the museum closed?</div><div class="opts"><div class="opt" data-q="32" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Friday</span><span class=mk></span></div><div class="opt" data-q="32" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Sunday</span><span class=mk></span></div><div class="opt" data-q="32" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Saturday</span><span class=mk></span></div><div class="opt" data-q="32" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Monday</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(32)">💡 看解析與中譯</button><div class="ana" id="ana-32"><div class="ans-line">✔ 正確答案：(D)　Monday</div><div class="zh"><span class="lab tr">中譯</span>博物館哪一天休館？</div><div class="zh"><span class="lab">解析</span>廣告最後 The museum is closed on Mondays（週一休館）。</div></div></div><div class="passage chart" data-group="rd3"><div class="ptype">CHART</div><div class="ptitle">Planet Facts</div><div class="body"><p>Students in the astronomy club made a simple chart to compare four planets in our solar system. Study the numbers below.</p><table><tr><th>Planet</th><th>Moons</th><th>Day Length</th></tr><tr><td>Earth</td><td>1</td><td>24 hours</td></tr><tr><td>Mars</td><td>2</td><td>25 hours</td></tr><tr><td>Jupiter</td><td>95</td><td>10 hours</td></tr><tr><td>Venus</td><td>0</td><td>5,832 hours</td></tr></table><p>As the chart shows, a “day” is very different from planet to planet. Jupiter spins the fastest, while Venus turns so slowly that one day there lasts months.</p></div></div><div class="ana zhblk open" data-group="rd3" style="max-height:none"><div class="zh"><span class="lab tr">全文中譯</span><span class="body-zh"><p>天文社的學生製作了一張簡單的表格，比較我們太陽系中的四顆行星。請研究下方的數字。</p><table><tr><th>行星</th><th>衛星數</th><th>一天長度</th></tr><tr><td>地球</td><td>1</td><td>24 小時</td></tr><tr><td>火星</td><td>2</td><td>25 小時</td></tr><tr><td>木星</td><td>95</td><td>10 小時</td></tr><tr><td>金星</td><td>0</td><td>5,832 小時</td></tr></table><p>如表所示，各行星的「一天」差異很大。木星自轉最快，而金星轉得極慢，那裡的一天長達數個月。</p></span></div></div><div class="qgroup-label" data-group="rd3">Questions 33–35</div><div class="q reading" data-group="rd3"><div class="stem"><span class="qn">33</span>Which planet has the most moons?</div><div class="opts"><div class="opt" data-q="33" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Earth</span><span class=mk></span></div><div class="opt" data-q="33" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Mars</span><span class=mk></span></div><div class="opt" data-q="33" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Jupiter</span><span class=mk></span></div><div class="opt" data-q="33" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Venus</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(33)">💡 看解析與中譯</button><div class="ana" id="ana-33"><div class="ans-line">✔ 正確答案：(C)　Jupiter</div><div class="zh"><span class="lab tr">中譯</span>哪顆行星擁有最多衛星？</div><div class="zh"><span class="lab">解析</span>表格中木星 Jupiter 有 95 顆衛星，數量最多。</div></div></div><div class="q reading" data-group="rd3"><div class="stem"><span class="qn">34</span>Which planet has the shortest day?</div><div class="opts"><div class="opt" data-q="34" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Earth</span><span class=mk></span></div><div class="opt" data-q="34" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Jupiter</span><span class=mk></span></div><div class="opt" data-q="34" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Mars</span><span class=mk></span></div><div class="opt" data-q="34" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Venus</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(34)">💡 看解析與中譯</button><div class="ana" id="ana-34"><div class="ans-line">✔ 正確答案：(B)　Jupiter</div><div class="zh"><span class="lab tr">中譯</span>哪顆行星的一天最短？</div><div class="zh"><span class="lab">解析</span>表格中木星一天僅 10 小時，是四者中最短的。</div></div></div><div class="q reading" data-group="rd3"><div class="stem"><span class="qn">35</span>What does the chart mainly compare?</div><div class="opts"><div class="opt" data-q="35" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">The size of planets</span><span class=mk></span></div><div class="opt" data-q="35" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">The distance to the sun</span><span class=mk></span></div><div class="opt" data-q="35" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">The color of planets</span><span class=mk></span></div><div class="opt" data-q="35" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Moons and day length</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(35)">💡 看解析與中譯</button><div class="ana" id="ana-35"><div class="ans-line">✔ 正確答案：(D)　Moons and day length</div><div class="zh"><span class="lab tr">中譯</span>這張表格主要比較什麼？</div><div class="zh"><span class="lab">解析</span>表格欄位為 Moons（衛星數）與 Day Length（一天長度），故比較這兩者。</div></div></div></div><div id="pages"></div></div>
+<script>
+function mmToPx(mm){var d=document.createElement('div');d.style.cssText='position:absolute;height:'+mm+'mm';
+  document.body.appendChild(d);var h=d.getBoundingClientRect().height;d.remove();return h;}
+function blockH(el){var r=el.getBoundingClientRect();var s=getComputedStyle(el);
+  return r.height+parseFloat(s.marginTop||0)+parseFloat(s.marginBottom||0);}
+function paginate(){
+  document.body.classList.add('measuring');
+  var flow=document.getElementById('flow');
+  var blocks=[].slice.call(flow.children);
+  var BUD=mmToPx(256); // A4 可用內容高(安全值)
+  // 組 units（連續同 data-group 者視為一組）
+  var units=[],cur=null;
+  blocks.forEach(function(el){var g=el.getAttribute('data-group');
+    if(g&&cur&&cur.g===g){cur.els.push(el);}else{cur={g:g,els:[el]};units.push(cur);}});
+  var pages=[],page=[],used=0;
+  function uh(u){var s=0;u.els.forEach(function(e){s+=blockH(e);});return s;}
+  units.forEach(function(u){var h=uh(u);
+    if(h<=BUD){ if(used+h>BUD&&page.length){pages.push(page);page=[];used=0;}
+      u.els.forEach(function(e){page.push(e);}); used+=h; }
+    else { u.els.forEach(function(e){var eh=blockH(e);
+        if(used+eh>BUD&&page.length){pages.push(page);page=[];used=0;} page.push(e);used+=eh;}); }
+  });
+  if(page.length)pages.push(page);
+  var host=document.getElementById('pages'),TITLE="中級閱讀模擬測驗　第十回　第三大題 閱讀理解";
+  pages.forEach(function(els,i){
+    var sec=document.createElement('section');sec.className='page';
+    var inner=document.createElement('div');inner.className='page-inner';
+    els.forEach(function(e){inner.appendChild(e);});
+    var f=document.createElement('div');f.className='pfoot';
+    f.innerHTML='<span class="pf-brand">GEPT 中級閱讀 · '+TITLE+'</span><span>第 '+(i+1)+' 頁　／　共 '+pages.length+' 頁</span>';
+    sec.appendChild(inner);sec.appendChild(f);host.appendChild(sec);
+  });
+  document.body.classList.remove('measuring');
+  document.body.classList.add('done');
+}
+window.addEventListener('load',paginate);
+</script>
+<script>
+var ANS={"21": 2, "22": 0, "23": 0, "24": 0, "25": 3, "26": 2, "27": 3, "28": 2, "29": 0, "30": 1, "31": 1, "32": 3, "33": 2, "34": 1, "35": 3},TOTAL=15,picked={};
+function pick(el){var q=el.dataset.q,i=+el.dataset.i,box=el.closest('.opts');
+  box.querySelectorAll('.opt').forEach(function(o){o.classList.remove('correct','wrong');o.querySelector('.mk').textContent='';});
+  picked[q]=i;var c=ANS[q];
+  box.querySelectorAll('.opt').forEach(function(o){var oi=+o.dataset.i;
+    if(oi===c){o.classList.add('correct');o.querySelector('.mk').textContent='✔';}
+    if(oi===i&&i!==c){o.classList.add('wrong');o.querySelector('.mk').textContent='✘';}});
+  var a=document.getElementById('ana-'+q);if(a)a.classList.add('open');upd();}
+function upd(){var d=Object.keys(picked).length,r=0;for(var q in picked)if(picked[q]===ANS[q])r++;
+  document.getElementById('score').textContent='作答 '+d+'／'+TOTAL+'　✔ '+r;}
+function tog(q){var a=document.getElementById('ana-'+q);if(a)a.classList.toggle('open');}
+function toggleAll(o){document.querySelectorAll('.ana').forEach(function(a){
+  if(a.classList.contains('zhblk'))return;a.classList.toggle('open',o);});}
+</script></body></html>

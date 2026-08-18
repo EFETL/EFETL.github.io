@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>中級閱讀模擬測驗　第三十回　第三大題 閱讀理解（互動講義版）</title>
+<style>
+:root{
+  --ink:#1f2430; --sub:#5b6472; --line:#e7e3f0;
+  --brand:#6d28d9; --brand2:#2563eb; --accent:#f97316; --accent2:#0ea5a4;
+  --ok:#16a34a; --no:#dc2626; --wash:#f4f1fb; --paper:#fff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  color:var(--ink);line-height:1.65;
+  background:
+    radial-gradient(1100px 560px at 10% -8%, #ede9fe 0%, rgba(237,233,254,0) 60%),
+    radial-gradient(1100px 560px at 100% 0%, #cffafe 0%, rgba(207,250,254,0) 55%),
+    #eef1f7;
+  -webkit-print-color-adjust:exact;print-color-adjust:exact;
+}
+.wrap{max-width:840px;margin:0 auto;padding:14px 10px 60px}
+
+.toolbar{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+  background:rgba(255,255,255,.88);backdrop-filter:blur(8px);border:1px solid var(--line);
+  border-radius:16px;padding:10px 14px;margin:6px auto 16px;box-shadow:0 6px 22px rgba(76,29,149,.10)}
+.toolbar .t-title{font-weight:800;color:var(--brand);margin-right:auto;font-size:15px}
+.toolbar .t-title small{color:var(--sub);font-weight:600;margin-left:6px}
+.btn{border:0;cursor:pointer;font-family:inherit;font-weight:700;font-size:13px;padding:8px 13px;
+  border-radius:999px;color:#fff;background:var(--brand);transition:.15s}
+.btn:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.btn.ghost{background:#fff;color:var(--brand);border:1.5px solid var(--brand)}
+.btn.amber{background:var(--accent)}.btn.home{background:#0ea5a4}
+.btn.nav{background:#fff;color:#5b6472;border:1.5px solid var(--line);font-size:12.5px;padding:7px 11px;text-decoration:none;display:inline-block}
+.btn.nav:hover{color:var(--brand);border-color:var(--brand)}
+.btn.nav.cur{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;border-color:transparent;cursor:default;pointer-events:none}
+.pill-score{font-weight:800;color:var(--brand);background:#f3e8ff;border-radius:999px;padding:8px 14px;font-size:13px}
+
+/* 量測用暫存流：寬度=頁面內容寬(180mm) */
+#flow{width:180mm;margin:0 auto;position:absolute;left:-99999px;top:0}
+body.done #flow{display:none}
+
+.page{width:210mm;min-height:297mm;background:var(--paper);margin:0 auto 12mm;padding:15mm 15mm 24mm;
+  position:relative;box-shadow:0 10px 34px rgba(30,25,60,.14);border-radius:6px}
+.page-inner{position:static}
+.pfoot{position:absolute;left:15mm;right:15mm;bottom:10mm;display:flex;justify-content:space-between;
+  align-items:center;font-size:11px;color:var(--sub);border-top:1.5px dashed var(--line);padding-top:5px}
+.pfoot .pf-brand{font-weight:700;color:var(--brand)}
+
+.cover{border-radius:14px;overflow:hidden;border:1px solid var(--line);margin-bottom:14px;box-shadow:0 8px 20px rgba(109,40,217,.12)}
+.cover .band{background:linear-gradient(120deg,var(--brand) 0%,var(--brand2) 55%,#0ea5a4 100%);color:#fff;padding:18px 22px;position:relative}
+.cover .band::after{content:"";position:absolute;right:-30px;top:-30px;width:150px;height:150px;background:radial-gradient(circle,rgba(255,255,255,.25),transparent 70%);border-radius:50%}
+.cover .kick{font-size:12.5px;letter-spacing:3px;opacity:.92;font-weight:700}
+.cover h1{margin:4px 0 2px;font-size:25px;font-weight:900;letter-spacing:.5px}
+.cover .en{font-size:13px;opacity:.9;font-weight:600}
+.cover .meta{display:flex;gap:16px;flex-wrap:wrap;background:#faf7ff;padding:11px 22px;font-size:12.5px;color:var(--sub)}
+.cover .meta b{color:var(--brand)}
+.cef{display:inline-block;background:#fff;color:var(--brand);border:1.5px solid var(--brand);border-radius:999px;padding:2px 10px;font-weight:800;font-size:12px}
+
+.part{display:flex;align-items:center;gap:12px;margin:6px 0 12px}
+.part .no{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:#fff;font-weight:900;font-size:18px;box-shadow:0 4px 10px rgba(0,0,0,.14)}
+.p1 .no{background:linear-gradient(135deg,#8b5cf6,#6d28d9)}
+.p2 .no{background:linear-gradient(135deg,#22d3ee,#0e7490)}
+.p3 .no{background:linear-gradient(135deg,#fb923c,#ea580c)}
+.part h2{margin:0;font-size:18px;font-weight:900}
+.part .en2{font-size:12px;color:var(--sub);font-weight:600;font-style:italic}
+.part .tag{font-size:12px;color:var(--sub);font-weight:600}
+.instru{background:var(--wash);border-left:4px solid var(--brand);border-radius:0 10px 10px 0;padding:9px 14px;font-size:12.5px;color:#4b4560;margin-bottom:14px}
+
+.q{padding:11px 13px;border:1px solid var(--line);border-radius:12px;margin-bottom:11px;background:#fff}
+.q .stem{font-size:15px;font-weight:600;line-height:1.7}
+.q .stem .qn{display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 6px;background:#ede9fe;color:var(--brand);border-radius:7px;font-weight:800;font-size:13px;margin-right:7px;vertical-align:2px}
+.blank{color:var(--brand2);font-weight:800;border-bottom:2px solid var(--brand2);padding:0 22px;margin:0 3px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:7px 16px;margin-top:9px}
+.opt{display:flex;gap:8px;align-items:flex-start;padding:6px 10px;border:1.5px solid var(--line);border-radius:9px;font-size:14px;background:#fff;cursor:pointer;transition:.12s}
+.opt .ol{flex:none;font-weight:800;color:var(--sub)}
+.reading .opts{grid-template-columns:1fr}
+
+.passage{border:1px solid var(--line);border-radius:12px;padding:13px 16px;margin:6px 0 11px;background:linear-gradient(#fff,#fbfaff)}
+.passage.email{background:linear-gradient(#f8fbff,#f2f7ff);border-color:#dbe6ff}
+.passage.ad{background:linear-gradient(#fff8f1,#fff3e6);border-color:#ffe0bf}
+.passage.notice{background:linear-gradient(#f2fdfb,#eafaf7);border-color:#c6efe6}
+.passage .ptitle{font-weight:900;font-size:15.5px;margin:0 0 6px;color:#2a2450}
+.passage .ptype{display:inline-block;font-size:11px;font-weight:800;letter-spacing:1px;padding:2px 9px;border-radius:999px;background:#ede9fe;color:var(--brand);margin-bottom:7px}
+.passage p{margin:6px 0;font-size:14px;line-height:1.75}
+.passage ul{margin:6px 0;padding-left:20px;font-size:14px;line-height:1.7}
+.passage .body{font-family:"Noto Serif TC",Georgia,"Times New Roman",serif}
+.passage table{border-collapse:collapse;width:100%;font-size:13px;margin:6px 0}
+.passage th,.passage td{border:1px solid #d9d2ee;padding:6px 9px;text-align:left}
+.passage th{background:#f0eafc;color:var(--brand)}
+.qgroup-label{font-weight:800;color:var(--brand);font-size:13px;margin:12px 0 8px;border-left:4px solid var(--brand);padding-left:9px}
+
+.ana{margin-top:9px;border:1.5px dashed #d9cff5;border-radius:11px;background:#faf7ff;padding:0 14px;max-height:0;overflow:hidden;transition:max-height .28s ease,padding .2s}
+.ana.open{max-height:1800px;padding:12px 14px}
+.ana.zhblk{margin:2px 0 11px}
+.ana .ans-line{font-weight:800;color:var(--ok);font-size:13.5px;margin-bottom:6px}
+.ana .zh{font-size:13px;margin:4px 0;color:#3a3550}
+.ana .lab{display:inline-block;font-size:11px;font-weight:800;color:#fff;background:var(--brand);border-radius:6px;padding:1px 7px;margin-right:6px}
+.ana .lab.tr{background:#0ea5a4}.ana .lab.vo{background:var(--accent)}
+.ana .vocab{margin-top:6px;font-size:12.5px;color:#4b4560}
+.ana .vocab .vw{font-weight:800;color:#2a2450}
+.ana .body-zh{font-size:13px;color:#3a3550;line-height:1.7}
+.togg{margin-top:9px;display:inline-flex;align-items:center;gap:6px;border:0;cursor:pointer;background:#ede9fe;color:var(--brand);font-weight:800;font-size:12.5px;padding:6px 12px;border-radius:999px;font-family:inherit}
+.togg:hover{background:#e0d4fb}
+
+.opt.correct{border-color:var(--ok);background:#eafaf0}
+.opt.wrong{border-color:var(--no);background:#fdecec}
+.opt .mk{margin-left:auto;font-weight:900}
+.opt.correct .mk{color:var(--ok)}.opt.wrong .mk{color:var(--no)}
+
+/* 量測狀態：隱藏解析與按鈕（等同列印） */
+body.measuring .ana,body.measuring .togg{display:none !important}
+
+@media screen and (max-width:840px){
+  #flow{position:static;left:0;width:100%}
+  .page{width:100%;min-height:auto;padding:20px 16px 44px;border-radius:12px}
+  .page-inner{min-height:0}
+  .pfoot{position:static;bottom:auto;margin-top:16px}
+  .opts{grid-template-columns:1fr}.cover h1{font-size:21px}
+}
+@media print{
+  @page{size:A4;margin:0}
+  body{background:#fff}
+  .wrap{max-width:none;margin:0;padding:0}
+  .no-print{display:none !important}
+  #flow{display:none}
+  .page{width:210mm;min-height:0;height:296mm;overflow:hidden;margin:0;padding:15mm 15mm 24mm;box-shadow:none;border-radius:0;page-break-after:always;break-after:page}
+  .page:last-child{page-break-after:auto}
+  .ana,.togg{display:none !important}
+  .opt{cursor:default}
+}
+</style></head>
+<body><div class="wrap"><div class="toolbar no-print"><span class="t-title">📘 中級閱讀模擬測驗　第三十回　第三大題 閱讀理解<small>互動講義 · 點選項即判分</small></span><span class="pill-score" id="score">作答 0／15</span><a class="btn nav" href="reading-test-30-interactive-p1.html">一·詞彙</a><a class="btn nav" href="reading-test-30-interactive-p2.html">二·段落填空</a><a class="btn nav cur" href="reading-test-30-interactive-p3.html">三·閱讀理解</a><button class="btn ghost" onclick="toggleAll(true)">展開全部解析</button><button class="btn ghost" onclick="toggleAll(false)">收合解析</button><button class="btn amber" onclick="window.print()">🖨 列印</button><button class="btn home" onclick="location.href='index.html'">🏠 目錄</button></div><div id="flow"><div class="cover"><div class="band"><div class="kick">GEPT · INTERMEDIATE READING</div><h1>中級閱讀模擬測驗　第三十回</h1><div class="en">第三大題　閱讀理解 · Reading Comprehension</div></div><div class="meta"><span><b>題數</b>　15 題</span><span><b>建議時間</b>　23 分鐘</span><span><b>題型</b>　閱讀理解</span><span class="cef">CEFR B1–B2</span></div></div><div class="part p3" data-group="ph3"><div class="no">3</div><div><h2>閱讀理解 <span class="en2">Reading Comprehension</span></h2><div class="tag">共 15 題／閱讀文章後作答</div></div></div><div class="instru" data-group="ph3">請閱讀下列文章，並回答相關問題。</div><div class="passage ad" data-group="rd0"><div class="ptype">AD</div><div class="ptitle">Hantao Craft Studio Winter Classes</div><div class="body"><p><b>Make Something with Your Own Hands This Winter!</b></p><p>Hantao Craft Studio in Beitou opens three new classes in January. No experience is needed, and all materials are included in the price.</p><ul><li><b>Wheel Pottery</b> — Sat, 2–5 p.m., 6 lessons, NT$4,800</li><li><b>Leather Wallet</b> — Wed, 7–9 p.m., 4 lessons, NT$3,200</li><li><b>Bamboo Weaving</b> — Sun, 10 a.m.–noon, 8 lessons, NT$5,600</li></ul><p>Each class is limited to eight students. Sign up together with a friend and you each pay NT$300 less. Members of the Beitou Library may borrow our hand tools free of charge. Call 02-2891-4470 today.</p></div></div><div class="ana zhblk open" data-group="rd0" style="max-height:none"><div class="zh"><span class="lab tr">全文中譯</span><span class="body-zh"><p><b>今年冬天，親手做點東西吧！</b></p><p>位於北投的漢陶工藝工作室一月份新開三門課。無需經驗，所有材料皆已包含在費用中。</p><ul><li><b>轆轤陶藝</b>——週六，下午 2–5 點，6 堂，NT$4,800</li><li><b>皮革錢包</b>——週三，晚上 7–9 點，4 堂，NT$3,200</li><li><b>竹編</b>——週日，上午 10 點至中午，8 堂，NT$5,600</li></ul><p>每班限額八人。與朋友一起報名，兩人各少付 NT$300。北投圖書館的會員可免費借用本工作室的手工具。今天就撥打 02-2891-4470。</p></span></div></div><div class="qgroup-label" data-group="rd0">Questions 21–24</div><div class="q reading" data-group="rd0"><div class="stem"><span class="qn">21</span>What is true about all three classes?</div><div class="opts"><div class="opt" data-q="21" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Students must bring their own tools</span><span class=mk></span></div><div class="opt" data-q="21" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">No experience is needed</span><span class=mk></span></div><div class="opt" data-q="21" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">They are all held on weekends</span><span class=mk></span></div><div class="opt" data-q="21" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">They all have six lessons</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(21)">💡 看解析與中譯</button><div class="ana" id="ana-21"><div class="ans-line">✔ 正確答案：(B)　No experience is needed</div><div class="zh"><span class="lab tr">中譯</span>關於這三門課，何者正確？</div><div class="zh"><span class="lab">解析</span>廣告寫 No experience is needed（無需經驗），且材料已含在費用中。皮革錢包是週三，堂數也各不相同，工具則可向工作室借。</div></div></div><div class="q reading" data-group="rd0"><div class="stem"><span class="qn">22</span>Which class meets on a weekday evening?</div><div class="opts"><div class="opt" data-q="22" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Wheel Pottery</span><span class=mk></span></div><div class="opt" data-q="22" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Bamboo Weaving</span><span class=mk></span></div><div class="opt" data-q="22" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">None of them</span><span class=mk></span></div><div class="opt" data-q="22" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Leather Wallet</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(22)">💡 看解析與中譯</button><div class="ana" id="ana-22"><div class="ans-line">✔ 正確答案：(D)　Leather Wallet</div><div class="zh"><span class="lab tr">中譯</span>哪一門課在平日晚上上課？</div><div class="zh"><span class="lab">解析</span>皮革錢包為 Wed, 7–9 p.m.，是唯一在平日晚上的課。陶藝在週六下午，竹編在週日上午。</div></div></div><div class="q reading" data-group="rd0"><div class="stem"><span class="qn">23</span>How can a student pay less?</div><div class="opts"><div class="opt" data-q="23" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">By signing up with a friend</span><span class=mk></span></div><div class="opt" data-q="23" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">By paying in cash</span><span class=mk></span></div><div class="opt" data-q="23" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">By joining two classes</span><span class=mk></span></div><div class="opt" data-q="23" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">By arriving early</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(23)">💡 看解析與中譯</button><div class="ana" id="ana-23"><div class="ans-line">✔ 正確答案：(A)　By signing up with a friend</div><div class="zh"><span class="lab tr">中譯</span>學員要怎麼做才能少付錢？</div><div class="zh"><span class="lab">解析</span>廣告寫 Sign up together with a friend and you each pay NT$300 less，是唯一提到的折扣方式。</div></div></div><div class="q reading" data-group="rd0"><div class="stem"><span class="qn">24</span>What can Beitou Library members do?</div><div class="opts"><div class="opt" data-q="24" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Take one extra lesson</span><span class=mk></span></div><div class="opt" data-q="24" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Get a free leather wallet</span><span class=mk></span></div><div class="opt" data-q="24" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Borrow hand tools at no cost</span><span class=mk></span></div><div class="opt" data-q="24" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Bring eight friends</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(24)">💡 看解析與中譯</button><div class="ana" id="ana-24"><div class="ans-line">✔ 正確答案：(C)　Borrow hand tools at no cost</div><div class="zh"><span class="lab tr">中譯</span>北投圖書館的會員可以做什麼？</div><div class="zh"><span class="lab">解析</span>廣告最後寫 Members of the Beitou Library may borrow our hand tools free of charge（免費借用手工具）。其餘三項廣告都沒有提供。</div></div></div><div class="passage article" data-group="rd1"><div class="ptype">ARTICLE</div><div class="ptitle">Learning a Craft from a Screen</div><div class="body"><p>Ten years ago, anyone who wanted to learn woodworking had to find a teacher. Today a beginner can watch a free video and cut a first board the same afternoon. Craft teachers admit that this has brought many new people into the workshop.</p><p>Still, they warn that a screen cannot correct your hands. A video never notices that you are holding the chisel at a dangerous angle, and it never smells the glue burning. One studio owner in Hsinchu now asks her students to watch the videos at home and come to class only to practice. Her students, she says, learn twice as fast — but only because someone is standing beside them.</p></div></div><div class="ana zhblk open" data-group="rd1" style="max-height:none"><div class="zh"><span class="lab tr">全文中譯</span><span class="body-zh"><p>十年前，想學木工的人都得找個老師。今天，初學者看一支免費影片，當天下午就能鋸下第一塊木板。工藝老師們承認，這確實把許多新人帶進了工作坊。</p><p>不過他們也提醒，螢幕沒辦法糾正你的雙手。影片不會注意到你握鑿刀的角度很危險，也聞不到膠燒焦的味道。新竹一位工作室主人現在要求學生在家先看完影片，來上課只做實作練習。她說，她的學生學得快上一倍——但那只是因為有人就站在他們旁邊。</p></span></div></div><div class="qgroup-label" data-group="rd1">Questions 25–28</div><div class="q reading" data-group="rd1"><div class="stem"><span class="qn">25</span>According to the article, what has the rise of free craft videos done?</div><div class="opts"><div class="opt" data-q="25" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Brought many new people into workshops</span><span class=mk></span></div><div class="opt" data-q="25" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Closed most craft studios</span><span class=mk></span></div><div class="opt" data-q="25" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Made hand tools much cheaper</span><span class=mk></span></div><div class="opt" data-q="25" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Ended all beginner classes</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(25)">💡 看解析與中譯</button><div class="ana" id="ana-25"><div class="ans-line">✔ 正確答案：(A)　Brought many new people into workshops</div><div class="zh"><span class="lab tr">中譯</span>根據本文，免費工藝影片的興起帶來了什麼？</div><div class="zh"><span class="lab">解析</span>第一段末句寫 this has brought many new people into the workshop（把許多新人帶進工作坊）。工作室倒閉、工具變便宜、課程停辦文中都沒有提到。</div></div></div><div class="q reading" data-group="rd1"><div class="stem"><span class="qn">26</span>What is one thing a video cannot do?</div><div class="opts"><div class="opt" data-q="26" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Show a finished table</span><span class=mk></span></div><div class="opt" data-q="26" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Point out a dangerous grip</span><span class=mk></span></div><div class="opt" data-q="26" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Be watched at home</span><span class=mk></span></div><div class="opt" data-q="26" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Be played more than once</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(26)">💡 看解析與中譯</button><div class="ana" id="ana-26"><div class="ans-line">✔ 正確答案：(B)　Point out a dangerous grip</div><div class="zh"><span class="lab tr">中譯</span>影片做不到的一件事是什麼？</div><div class="zh"><span class="lab">解析</span>第二段寫 A video never notices that you are holding the chisel at a dangerous angle（不會發現你握刀角度危險），正是「指出危險握法」。其餘三項都是影片本來就做得到的事。</div></div></div><div class="q reading" data-group="rd1"><div class="stem"><span class="qn">27</span>What does the studio owner in Hsinchu ask her students to do?</div><div class="opts"><div class="opt" data-q="27" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Film their own lessons</span><span class=mk></span></div><div class="opt" data-q="27" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Buy her tools before class</span><span class=mk></span></div><div class="opt" data-q="27" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Watch the videos before coming</span><span class=mk></span></div><div class="opt" data-q="27" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Practice only at home</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(27)">💡 看解析與中譯</button><div class="ana" id="ana-27"><div class="ans-line">✔ 正確答案：(C)　Watch the videos before coming</div><div class="zh"><span class="lab tr">中譯</span>新竹那位工作室主人要求學生做什麼？</div><div class="zh"><span class="lab">解析</span>文中寫 asks her students to watch the videos at home and come to class only to practice（在家先看影片，上課只做練習），所以是「來上課前先看影片」。最後一項剛好說反了。</div></div></div><div class="q reading" data-group="rd1"><div class="stem"><span class="qn">28</span>Why does she believe her students learn faster?</div><div class="opts"><div class="opt" data-q="28" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">The videos are longer</span><span class=mk></span></div><div class="opt" data-q="28" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">The classes cost less</span><span class=mk></span></div><div class="opt" data-q="28" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">They use better wood</span><span class=mk></span></div><div class="opt" data-q="28" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">A teacher stands beside them</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(28)">💡 看解析與中譯</button><div class="ana" id="ana-28"><div class="ans-line">✔ 正確答案：(D)　A teacher stands beside them</div><div class="zh"><span class="lab tr">中譯</span>她認為學生學得比較快的原因是什麼？</div><div class="zh"><span class="lab">解析</span>最後一句 but only because someone is standing beside them（只因為有人就站在旁邊）點出關鍵是現場有老師。影片長度、學費、木料好壞文中皆未提及。</div></div></div><div class="passage chart" data-group="rd2"><div class="ptype">CHART</div><div class="ptitle">Which Craft Should a Beginner Try?</div><div class="body"><p>Fengyuan Community College asked 200 new students how they felt after their first month of class. The table below shows the results.</p><table><tr><th>Craft</th><th>Starting cost</th><th>Found it easy</th></tr><tr><td>Candle making</td><td>NT$600</td><td>82%</td></tr><tr><td>Wood carving</td><td>NT$1,500</td><td>41%</td></tr><tr><td>Silver rings</td><td>NT$2,400</td><td>35%</td></tr></table><p>Cost is not everything. Teachers noticed that the students who chose the cheapest craft were also the most likely to keep making things after the course ended.</p></div></div><div class="ana zhblk open" data-group="rd2" style="max-height:none"><div class="zh"><span class="lab tr">全文中譯</span><span class="body-zh"><p>豐原社區大學詢問了兩百位新學員上課滿一個月後的感受，下表為結果。</p><table><tr><th>工藝</th><th>入門花費</th><th>覺得容易</th></tr><tr><td>手工蠟燭</td><td>NT$600</td><td>82%</td></tr><tr><td>木雕</td><td>NT$1,500</td><td>41%</td></tr><tr><td>銀戒</td><td>NT$2,400</td><td>35%</td></tr></table><p>花費並不是一切。老師們注意到，選擇最便宜工藝的學員，也最可能在課程結束後繼續做東西。</p></span></div></div><div class="qgroup-label" data-group="rd2">Questions 29–32</div><div class="q reading" data-group="rd2"><div class="stem"><span class="qn">29</span>Which craft costs the least to start?</div><div class="opts"><div class="opt" data-q="29" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Wood carving</span><span class=mk></span></div><div class="opt" data-q="29" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Silver rings</span><span class=mk></span></div><div class="opt" data-q="29" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">They all cost the same</span><span class=mk></span></div><div class="opt" data-q="29" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Candle making</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(29)">💡 看解析與中譯</button><div class="ana" id="ana-29"><div class="ans-line">✔ 正確答案：(D)　Candle making</div><div class="zh"><span class="lab tr">中譯</span>哪一項工藝的入門花費最低？</div><div class="zh"><span class="lab">解析</span>表中手工蠟燭為 NT$600，低於木雕 1,500 元與銀戒 2,400 元。</div></div></div><div class="q reading" data-group="rd2"><div class="stem"><span class="qn">30</span>Which craft did the fewest students find easy?</div><div class="opts"><div class="opt" data-q="30" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Silver rings</span><span class=mk></span></div><div class="opt" data-q="30" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Candle making</span><span class=mk></span></div><div class="opt" data-q="30" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Wood carving</span><span class=mk></span></div><div class="opt" data-q="30" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Two of them were equal</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(30)">💡 看解析與中譯</button><div class="ana" id="ana-30"><div class="ans-line">✔ 正確答案：(A)　Silver rings</div><div class="zh"><span class="lab tr">中譯</span>哪一項工藝覺得容易的學員最少？</div><div class="zh"><span class="lab">解析</span>銀戒的「覺得容易」比例是 35%，低於木雕的 41% 與蠟燭的 82%。</div></div></div><div class="q reading" data-group="rd2"><div class="stem"><span class="qn">31</span>How much does it cost to start wood carving?</div><div class="opts"><div class="opt" data-q="31" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">NT$600</span><span class=mk></span></div><div class="opt" data-q="31" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">NT$2,400</span><span class=mk></span></div><div class="opt" data-q="31" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">NT$1,500</span><span class=mk></span></div><div class="opt" data-q="31" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">NT$200</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(31)">💡 看解析與中譯</button><div class="ana" id="ana-31"><div class="ans-line">✔ 正確答案：(C)　NT$1,500</div><div class="zh"><span class="lab tr">中譯</span>開始學木雕要花多少錢？</div><div class="zh"><span class="lab">解析</span>表格中 Wood carving 一列的 Starting cost 為 NT$1,500。600 元是蠟燭、2,400 元是銀戒。</div></div></div><div class="q reading" data-group="rd2"><div class="stem"><span class="qn">32</span>What did the teachers notice?</div><div class="opts"><div class="opt" data-q="32" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">Expensive crafts are easier to learn</span><span class=mk></span></div><div class="opt" data-q="32" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Students of the cheapest craft often kept going</span><span class=mk></span></div><div class="opt" data-q="32" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">Nobody finished the course</span><span class=mk></span></div><div class="opt" data-q="32" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">Silver rings were the most popular</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(32)">💡 看解析與中譯</button><div class="ana" id="ana-32"><div class="ans-line">✔ 正確答案：(B)　Students of the cheapest craft often kept going</div><div class="zh"><span class="lab tr">中譯</span>老師們注意到什麼？</div><div class="zh"><span class="lab">解析</span>表格下方寫選最便宜工藝的學員 most likely to keep making things after the course ended（最可能課後繼續做）。文中並未說貴的比較好學。</div></div></div><div class="passage email" data-group="rd3"><div class="ptype">EMAIL</div><div class="ptitle">A Special Order</div><div class="body"><p>Dear Mr. Kuo,</p><p>I saw your walnut cutting boards at the Dadaocheng market last Sunday, and I would like to order one as a wedding gift for my brother. Could you carve the date and the couple's two names on the back?</p><p>The wedding is on October 25, so I would need the board by the 18th at the latest. Please tell me whether that is possible and how much extra the carving costs. If walnut is sold out, cherry wood would be fine too.</p><p>Best wishes,<br>Lin Chia-hao</p></div></div><div class="ana zhblk open" data-group="rd3" style="max-height:none"><div class="zh"><span class="lab tr">全文中譯</span><span class="body-zh"><p>郭先生您好：</p><p>上週日我在大稻埕市集看到您的胡桃木砧板，想訂購一塊當作送給我哥哥的結婚禮物。可以請您在背面刻上日期和新人兩人的名字嗎？</p><p>婚禮在十月二十五日，所以我最晚需要在十八日拿到砧板。請告訴我這樣是否可行，以及刻字要額外收多少費用。如果胡桃木賣完了，櫻桃木也可以。</p><p>祝好，<br>林家豪</p></span></div></div><div class="qgroup-label" data-group="rd3">Questions 33–35</div><div class="q reading" data-group="rd3"><div class="stem"><span class="qn">33</span>Why does Lin Chia-hao want the cutting board?</div><div class="opts"><div class="opt" data-q="33" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">As a wedding gift</span><span class=mk></span></div><div class="opt" data-q="33" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">For his own kitchen</span><span class=mk></span></div><div class="opt" data-q="33" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">To sell at the market</span><span class=mk></span></div><div class="opt" data-q="33" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">To learn carving</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(33)">💡 看解析與中譯</button><div class="ana" id="ana-33"><div class="ans-line">✔ 正確答案：(A)　As a wedding gift</div><div class="zh"><span class="lab tr">中譯</span>林家豪為什麼想要這塊砧板？</div><div class="zh"><span class="lab">解析</span>信中寫 order one as a wedding gift for my brother（當作送哥哥的結婚禮物）。</div></div></div><div class="q reading" data-group="rd3"><div class="stem"><span class="qn">34</span>By what date must the board be ready?</div><div class="opts"><div class="opt" data-q="34" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">October 25</span><span class=mk></span></div><div class="opt" data-q="34" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">October 10</span><span class=mk></span></div><div class="opt" data-q="34" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">October 18</span><span class=mk></span></div><div class="opt" data-q="34" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">November 1</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(34)">💡 看解析與中譯</button><div class="ana" id="ana-34"><div class="ans-line">✔ 正確答案：(C)　October 18</div><div class="zh"><span class="lab tr">中譯</span>砧板最晚要在哪一天完成？</div><div class="zh"><span class="lab">解析</span>信中寫 I would need the board by the 18th at the latest。十月二十五日是婚禮當天，不是取貨日。</div></div></div><div class="q reading" data-group="rd3"><div class="stem"><span class="qn">35</span>What does he say about the wood?</div><div class="opts"><div class="opt" data-q="35" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">It has to be walnut</span><span class=mk></span></div><div class="opt" data-q="35" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">Cherry wood is acceptable</span><span class=mk></span></div><div class="opt" data-q="35" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">He will supply the wood himself</span><span class=mk></span></div><div class="opt" data-q="35" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">He dislikes dark wood</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(35)">💡 看解析與中譯</button><div class="ana" id="ana-35"><div class="ans-line">✔ 正確答案：(B)　Cherry wood is acceptable</div><div class="zh"><span class="lab tr">中譯</span>關於木材他怎麼說？</div><div class="zh"><span class="lab">解析</span>信末寫 If walnut is sold out, cherry wood would be fine too（櫻桃木也可以），可見不限胡桃木。</div></div></div></div><div id="pages"></div></div>
+<script>
+function mmToPx(mm){var d=document.createElement('div');d.style.cssText='position:absolute;height:'+mm+'mm';
+  document.body.appendChild(d);var h=d.getBoundingClientRect().height;d.remove();return h;}
+function blockH(el){var r=el.getBoundingClientRect();var s=getComputedStyle(el);
+  return r.height+parseFloat(s.marginTop||0)+parseFloat(s.marginBottom||0);}
+function paginate(){
+  document.body.classList.add('measuring');
+  var flow=document.getElementById('flow');
+  var blocks=[].slice.call(flow.children);
+  var BUD=mmToPx(256); // A4 可用內容高(安全值)
+  // 組 units（連續同 data-group 者視為一組）
+  var units=[],cur=null;
+  blocks.forEach(function(el){var g=el.getAttribute('data-group');
+    if(g&&cur&&cur.g===g){cur.els.push(el);}else{cur={g:g,els:[el]};units.push(cur);}});
+  var pages=[],page=[],used=0;
+  function uh(u){var s=0;u.els.forEach(function(e){s+=blockH(e);});return s;}
+  units.forEach(function(u){var h=uh(u);
+    if(h<=BUD){ if(used+h>BUD&&page.length){pages.push(page);page=[];used=0;}
+      u.els.forEach(function(e){page.push(e);}); used+=h; }
+    else { u.els.forEach(function(e){var eh=blockH(e);
+        if(used+eh>BUD&&page.length){pages.push(page);page=[];used=0;} page.push(e);used+=eh;}); }
+  });
+  if(page.length)pages.push(page);
+  var host=document.getElementById('pages'),TITLE="中級閱讀模擬測驗　第三十回　第三大題 閱讀理解";
+  pages.forEach(function(els,i){
+    var sec=document.createElement('section');sec.className='page';
+    var inner=document.createElement('div');inner.className='page-inner';
+    els.forEach(function(e){inner.appendChild(e);});
+    var f=document.createElement('div');f.className='pfoot';
+    f.innerHTML='<span class="pf-brand">GEPT 中級閱讀 · '+TITLE+'</span><span>第 '+(i+1)+' 頁　／　共 '+pages.length+' 頁</span>';
+    sec.appendChild(inner);sec.appendChild(f);host.appendChild(sec);
+  });
+  document.body.classList.remove('measuring');
+  document.body.classList.add('done');
+}
+window.addEventListener('load',paginate);
+</script>
+<script>
+var ANS={"21": 1, "22": 3, "23": 0, "24": 2, "25": 0, "26": 1, "27": 2, "28": 3, "29": 3, "30": 0, "31": 2, "32": 1, "33": 0, "34": 2, "35": 1},TOTAL=15,picked={};
+function pick(el){var q=el.dataset.q,i=+el.dataset.i,box=el.closest('.opts');
+  box.querySelectorAll('.opt').forEach(function(o){o.classList.remove('correct','wrong');o.querySelector('.mk').textContent='';});
+  picked[q]=i;var c=ANS[q];
+  box.querySelectorAll('.opt').forEach(function(o){var oi=+o.dataset.i;
+    if(oi===c){o.classList.add('correct');o.querySelector('.mk').textContent='✔';}
+    if(oi===i&&i!==c){o.classList.add('wrong');o.querySelector('.mk').textContent='✘';}});
+  var a=document.getElementById('ana-'+q);if(a)a.classList.add('open');upd();}
+function upd(){var d=Object.keys(picked).length,r=0;for(var q in picked)if(picked[q]===ANS[q])r++;
+  document.getElementById('score').textContent='作答 '+d+'／'+TOTAL+'　✔ '+r;}
+function tog(q){var a=document.getElementById('ana-'+q);if(a)a.classList.toggle('open');}
+function toggleAll(o){document.querySelectorAll('.ana').forEach(function(a){
+  if(a.classList.contains('zhblk'))return;a.classList.toggle('open',o);});}
+</script></body></html>

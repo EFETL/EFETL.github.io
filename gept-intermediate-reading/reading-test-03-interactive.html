@@ -31,6 +31,9 @@ body{
 .btn:hover{filter:brightness(1.06);transform:translateY(-1px)}
 .btn.ghost{background:#fff;color:var(--brand);border:1.5px solid var(--brand)}
 .btn.amber{background:var(--accent)}.btn.home{background:#0ea5a4}
+.btn.nav{background:#fff;color:#5b6472;border:1.5px solid var(--line);font-size:12.5px;padding:7px 11px;text-decoration:none;display:inline-block}
+.btn.nav:hover{color:var(--brand);border-color:var(--brand)}
+.btn.nav.cur{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;border-color:transparent;cursor:default;pointer-events:none}
 .pill-score{font-weight:800;color:var(--brand);background:#f3e8ff;border-radius:999px;padding:8px 14px;font-size:13px}
 
 /* 量測用暫存流：寬度=頁面內容寬(180mm) */
@@ -166,7 +169,7 @@ function paginate(){
 window.addEventListener('load',paginate);
 </script>
 <script>
-var ANS={"1": 2, "2": 1, "3": 3, "4": 2, "5": 2, "6": 0, "7": 3, "8": 1, "9": 1, "10": 2, "11": 3, "12": 0, "13": 0, "14": 3, "15": 3, "16": 1, "17": 0, "18": 1, "19": 1, "20": 1, "21": 0, "22": 0, "23": 3, "24": 2, "25": 2, "26": 2, "27": 0, "28": 0, "29": 2, "30": 1, "31": 0, "32": 1, "33": 2, "34": 3, "35": 3},picked={};
+var ANS={"1": 2, "2": 1, "3": 3, "4": 2, "5": 2, "6": 0, "7": 3, "8": 1, "9": 1, "10": 2, "11": 3, "12": 0, "13": 0, "14": 3, "15": 3, "16": 1, "17": 0, "18": 1, "19": 1, "20": 1, "21": 0, "22": 0, "23": 3, "24": 2, "25": 2, "26": 2, "27": 0, "28": 0, "29": 2, "30": 1, "31": 0, "32": 1, "33": 2, "34": 3, "35": 3},TOTAL=35,picked={};
 function pick(el){var q=el.dataset.q,i=+el.dataset.i,box=el.closest('.opts');
   box.querySelectorAll('.opt').forEach(function(o){o.classList.remove('correct','wrong');o.querySelector('.mk').textContent='';});
   picked[q]=i;var c=ANS[q];
@@ -175,7 +178,7 @@ function pick(el){var q=el.dataset.q,i=+el.dataset.i,box=el.closest('.opts');
     if(oi===i&&i!==c){o.classList.add('wrong');o.querySelector('.mk').textContent='✘';}});
   var a=document.getElementById('ana-'+q);if(a)a.classList.add('open');upd();}
 function upd(){var d=Object.keys(picked).length,r=0;for(var q in picked)if(picked[q]===ANS[q])r++;
-  document.getElementById('score').textContent='作答 '+d+'／35　✔ '+r;}
+  document.getElementById('score').textContent='作答 '+d+'／'+TOTAL+'　✔ '+r;}
 function tog(q){var a=document.getElementById('ana-'+q);if(a)a.classList.toggle('open');}
 function toggleAll(o){document.querySelectorAll('.ana').forEach(function(a){
   if(a.classList.contains('zhblk'))return;a.classList.toggle('open',o);});}
