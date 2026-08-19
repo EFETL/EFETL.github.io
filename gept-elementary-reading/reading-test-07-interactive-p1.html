@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>初級閱讀模擬測驗　第七回　第一大題 詞彙（互動講義版）</title>
+<style>
+:root{
+  --ink:#1f2430; --sub:#5b6472; --line:#e7e3f0;
+  --brand:#6d28d9; --brand2:#2563eb; --accent:#f97316; --accent2:#0ea5a4;
+  --ok:#16a34a; --no:#dc2626; --wash:#f4f1fb; --paper:#fff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  color:var(--ink);line-height:1.65;
+  background:
+    radial-gradient(1100px 560px at 10% -8%, #ede9fe 0%, rgba(237,233,254,0) 60%),
+    radial-gradient(1100px 560px at 100% 0%, #cffafe 0%, rgba(207,250,254,0) 55%),
+    #eef1f7;
+  -webkit-print-color-adjust:exact;print-color-adjust:exact;
+}
+.wrap{max-width:840px;margin:0 auto;padding:14px 10px 60px}
+
+.toolbar{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+  background:rgba(255,255,255,.88);backdrop-filter:blur(8px);border:1px solid var(--line);
+  border-radius:16px;padding:10px 14px;margin:6px auto 16px;box-shadow:0 6px 22px rgba(76,29,149,.10)}
+.toolbar .t-title{font-weight:800;color:var(--brand);margin-right:auto;font-size:15px}
+.toolbar .t-title small{color:var(--sub);font-weight:600;margin-left:6px}
+.btn{border:0;cursor:pointer;font-family:inherit;font-weight:700;font-size:13px;padding:8px 13px;
+  border-radius:999px;color:#fff;background:var(--brand);transition:.15s}
+.btn:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.btn.ghost{background:#fff;color:var(--brand);border:1.5px solid var(--brand)}
+.btn.amber{background:var(--accent)}.btn.home{background:#0ea5a4}
+.btn.nav{background:#fff;color:#5b6472;border:1.5px solid var(--line);font-size:12.5px;padding:7px 11px;text-decoration:none;display:inline-block}
+.btn.nav:hover{color:var(--brand);border-color:var(--brand)}
+.btn.nav.cur{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;border-color:transparent;cursor:default;pointer-events:none}
+.pill-score{font-weight:800;color:var(--brand);background:#f3e8ff;border-radius:999px;padding:8px 14px;font-size:13px}
+
+/* 量測用暫存流：寬度=頁面內容寬(180mm) */
+#flow{width:180mm;margin:0 auto;position:absolute;left:-99999px;top:0}
+body.done #flow{display:none}
+
+.page{width:210mm;min-height:297mm;background:var(--paper);margin:0 auto 12mm;padding:15mm 15mm 24mm;
+  position:relative;box-shadow:0 10px 34px rgba(30,25,60,.14);border-radius:6px}
+.page-inner{position:static}
+.pfoot{position:absolute;left:15mm;right:15mm;bottom:10mm;display:flex;justify-content:space-between;
+  align-items:center;font-size:11px;color:var(--sub);border-top:1.5px dashed var(--line);padding-top:5px}
+.pfoot .pf-brand{font-weight:700;color:var(--brand)}
+
+.cover{border-radius:14px;overflow:hidden;border:1px solid var(--line);margin-bottom:14px;box-shadow:0 8px 20px rgba(109,40,217,.12)}
+.cover .band{background:linear-gradient(120deg,var(--brand) 0%,var(--brand2) 55%,#0ea5a4 100%);color:#fff;padding:18px 22px;position:relative}
+.cover .band::after{content:"";position:absolute;right:-30px;top:-30px;width:150px;height:150px;background:radial-gradient(circle,rgba(255,255,255,.25),transparent 70%);border-radius:50%}
+.cover .kick{font-size:12.5px;letter-spacing:3px;opacity:.92;font-weight:700}
+.cover h1{margin:4px 0 2px;font-size:25px;font-weight:900;letter-spacing:.5px}
+.cover .en{font-size:13px;opacity:.9;font-weight:600}
+.cover .meta{display:flex;gap:16px;flex-wrap:wrap;background:#faf7ff;padding:11px 22px;font-size:12.5px;color:var(--sub)}
+.cover .meta b{color:var(--brand)}
+.cef{display:inline-block;background:#fff;color:var(--brand);border:1.5px solid var(--brand);border-radius:999px;padding:2px 10px;font-weight:800;font-size:12px}
+
+.part{display:flex;align-items:center;gap:12px;margin:6px 0 12px}
+.part .no{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:#fff;font-weight:900;font-size:18px;box-shadow:0 4px 10px rgba(0,0,0,.14)}
+.p1 .no{background:linear-gradient(135deg,#8b5cf6,#6d28d9)}
+.p2 .no{background:linear-gradient(135deg,#22d3ee,#0e7490)}
+.p3 .no{background:linear-gradient(135deg,#fb923c,#ea580c)}
+.part h2{margin:0;font-size:18px;font-weight:900}
+.part .en2{font-size:12px;color:var(--sub);font-weight:600;font-style:italic}
+.part .tag{font-size:12px;color:var(--sub);font-weight:600}
+.instru{background:var(--wash);border-left:4px solid var(--brand);border-radius:0 10px 10px 0;padding:9px 14px;font-size:12.5px;color:#4b4560;margin-bottom:14px}
+
+.q{padding:11px 13px;border:1px solid var(--line);border-radius:12px;margin-bottom:11px;background:#fff}
+.q .stem{font-size:15px;font-weight:600;line-height:1.7}
+.q .stem .qn{display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 6px;background:#ede9fe;color:var(--brand);border-radius:7px;font-weight:800;font-size:13px;margin-right:7px;vertical-align:2px}
+.blank{color:var(--brand2);font-weight:800;border-bottom:2px solid var(--brand2);padding:0 22px;margin:0 3px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:7px 16px;margin-top:9px}
+.opt{display:flex;gap:8px;align-items:flex-start;padding:6px 10px;border:1.5px solid var(--line);border-radius:9px;font-size:14px;background:#fff;cursor:pointer;transition:.12s}
+.opt .ol{flex:none;font-weight:800;color:var(--sub)}
+.reading .opts{grid-template-columns:1fr}
+
+.passage{border:1px solid var(--line);border-radius:12px;padding:13px 16px;margin:6px 0 11px;background:linear-gradient(#fff,#fbfaff)}
+.passage.email{background:linear-gradient(#f8fbff,#f2f7ff);border-color:#dbe6ff}
+.passage.ad{background:linear-gradient(#fff8f1,#fff3e6);border-color:#ffe0bf}
+.passage.notice{background:linear-gradient(#f2fdfb,#eafaf7);border-color:#c6efe6}
+.passage .ptitle{font-weight:900;font-size:15.5px;margin:0 0 6px;color:#2a2450}
+.passage .ptype{display:inline-block;font-size:11px;font-weight:800;letter-spacing:1px;padding:2px 9px;border-radius:999px;background:#ede9fe;color:var(--brand);margin-bottom:7px}
+.passage p{margin:6px 0;font-size:14px;line-height:1.75}
+.passage ul{margin:6px 0;padding-left:20px;font-size:14px;line-height:1.7}
+.passage .body{font-family:"Noto Serif TC",Georgia,"Times New Roman",serif}
+.passage table{border-collapse:collapse;width:100%;font-size:13px;margin:6px 0}
+.passage th,.passage td{border:1px solid #d9d2ee;padding:6px 9px;text-align:left}
+.passage th{background:#f0eafc;color:var(--brand)}
+.qgroup-label{font-weight:800;color:var(--brand);font-size:13px;margin:12px 0 8px;border-left:4px solid var(--brand);padding-left:9px}
+
+.ana{margin-top:9px;border:1.5px dashed #d9cff5;border-radius:11px;background:#faf7ff;padding:0 14px;max-height:0;overflow:hidden;transition:max-height .28s ease,padding .2s}
+.ana.open{max-height:1800px;padding:12px 14px}
+.ana.zhblk{margin:2px 0 11px}
+.ana .ans-line{font-weight:800;color:var(--ok);font-size:13.5px;margin-bottom:6px}
+.ana .zh{font-size:13px;margin:4px 0;color:#3a3550}
+.ana .lab{display:inline-block;font-size:11px;font-weight:800;color:#fff;background:var(--brand);border-radius:6px;padding:1px 7px;margin-right:6px}
+.ana .lab.tr{background:#0ea5a4}.ana .lab.vo{background:var(--accent)}
+.ana .vocab{margin-top:6px;font-size:12.5px;color:#4b4560}
+.ana .vocab .vw{font-weight:800;color:#2a2450}
+.ana .body-zh{font-size:13px;color:#3a3550;line-height:1.7}
+.togg{margin-top:9px;display:inline-flex;align-items:center;gap:6px;border:0;cursor:pointer;background:#ede9fe;color:var(--brand);font-weight:800;font-size:12.5px;padding:6px 12px;border-radius:999px;font-family:inherit}
+.togg:hover{background:#e0d4fb}
+
+.opt.correct{border-color:var(--ok);background:#eafaf0}
+.opt.wrong{border-color:var(--no);background:#fdecec}
+.opt .mk{margin-left:auto;font-weight:900}
+.opt.correct .mk{color:var(--ok)}.opt.wrong .mk{color:var(--no)}
+
+/* 量測狀態：隱藏解析與按鈕（等同列印） */
+body.measuring .ana,body.measuring .togg{display:none !important}
+
+@media screen and (max-width:840px){
+  #flow{position:static;left:0;width:100%}
+  .page{width:100%;min-height:auto;padding:20px 16px 44px;border-radius:12px}
+  .page-inner{min-height:0}
+  .pfoot{position:static;bottom:auto;margin-top:16px}
+  .opts{grid-template-columns:1fr}.cover h1{font-size:21px}
+}
+@media print{
+  @page{size:A4;margin:0}
+  body{background:#fff}
+  .wrap{max-width:none;margin:0;padding:0}
+  .no-print{display:none !important}
+  #flow{display:none}
+  .page{width:210mm;min-height:0;height:296mm;overflow:hidden;margin:0;padding:15mm 15mm 24mm;box-shadow:none;border-radius:0;page-break-after:always;break-after:page}
+  .page:last-child{page-break-after:auto}
+  .ana,.togg{display:none !important}
+  .opt{cursor:default}
+}
+</style></head>
+<body><div class="wrap"><div class="toolbar no-print"><span class="t-title">📘 初級閱讀模擬測驗　第七回　第一大題 詞彙<small>互動講義 · 點選項即判分</small></span><span class="pill-score" id="score">作答 0／10</span><a class="btn nav cur" href="reading-test-07-interactive-p1.html">一·詞彙</a><a class="btn nav" href="reading-test-07-interactive-p2.html">二·段落填空</a><a class="btn nav" href="reading-test-07-interactive-p3.html">三·閱讀理解</a><button class="btn ghost" onclick="toggleAll(true)">展開全部解析</button><button class="btn ghost" onclick="toggleAll(false)">收合解析</button><button class="btn amber" onclick="window.print()">🖨 列印</button><button class="btn home" onclick="location.href='index.html'">🏠 目錄</button></div><div id="flow"><div class="cover"><div class="band"><div class="kick">GEPT · ELEMENTARY READING</div><h1>初級閱讀模擬測驗　第七回</h1><div class="en">第一大題　詞彙 · Vocabulary</div></div><div class="meta"><span><b>題數</b>　10 題</span><span><b>建議時間</b>　10 分鐘</span><span><b>題型</b>　詞彙</span><span class="cef">CEFR A2</span></div></div><div class="part p1" data-group="ph1"><div class="no">1</div><div><h2>詞彙 <span class="en2">Vocabulary</span></h2><div class="tag">共 10 題／每題選出最適合題意的字詞</div></div></div><div class="instru" data-group="ph1">請由四個選項中，選出一個最適合句意的字或詞。</div><div class="q"><div class="stem"><span class="qn">1</span>My older sister can play three <span class="blank"></span> very well.</div><div class="opts"><div class="opt" data-q="1" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">purses</span><span class=mk></span></div><div class="opt" data-q="1" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">snacks</span><span class=mk></span></div><div class="opt" data-q="1" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">lamps</span><span class=mk></span></div><div class="opt" data-q="1" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">instruments</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(1)">💡 看解析與中譯</button><div class="ana" id="ana-1"><div class="ans-line">✔ 正確答案：(D)　instruments</div><div class="zh"><span class="lab tr">中譯</span>我姊姊三種樂器都彈得很好。</div><div class="zh"><span class="lab">解析</span>play 後面接可以演奏的東西，也就是「樂器 instrument」。purse 錢包、lamp 燈、snack 點心都不能演奏。</div><div class="vocab"><span class="lab vo">單字</span><span class="vw">instrument</span> 樂器、<span class="vw">purse</span> 錢包、<span class="vw">snack</span> 點心</div></div></div><div class="q"><div class="stem"><span class="qn">2</span>The <span class="blank"></span> drew a picture of a red fox.</div><div class="opts"><div class="opt" data-q="2" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">doll</span><span class=mk></span></div><div class="opt" data-q="2" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">tooth</span><span class=mk></span></div><div class="opt" data-q="2" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">painter</span><span class=mk></span></div><div class="opt" data-q="2" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">lamp</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(2)">💡 看解析與中譯</button><div class="ana" id="ana-2"><div class="ans-line">✔ 正確答案：(C)　painter</div><div class="zh"><span class="lab tr">中譯</span>那位畫家畫了一幅紅狐狸的圖。</div><div class="zh"><span class="lab">解析</span>會畫圖（drew a picture）的人是「畫家 painter」。doll 玩偶、tooth 牙齒、lamp 燈都不是人，不會畫圖。</div><div class="vocab"><span class="lab vo">單字</span><span class="vw">painter</span> 畫家、<span class="vw">doll</span> 玩偶、<span class="vw">tooth</span> 牙齒</div></div></div><div class="q"><div class="stem"><span class="qn">3</span>My brother likes to <span class="blank"></span> a song in the shower.</div><div class="opts"><div class="opt" data-q="3" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">send</span><span class=mk></span></div><div class="opt" data-q="3" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">sing</span><span class=mk></span></div><div class="opt" data-q="3" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">push</span><span class=mk></span></div><div class="opt" data-q="3" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">climb</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(3)">💡 看解析與中譯</button><div class="ana" id="ana-3"><div class="ans-line">✔ 正確答案：(B)　sing</div><div class="zh"><span class="lab tr">中譯</span>我弟弟喜歡在淋浴時唱歌。</div><div class="zh"><span class="lab">解析</span>song（歌）要搭配動詞「唱 sing」。send 是寄、push 是推、climb 是爬，都不能接 a song。</div><div class="vocab"><span class="lab vo">單字</span><span class="vw">sing</span> 唱歌、<span class="vw">push</span> 推、<span class="vw">climb</span> 爬、攀登</div></div></div><div class="q"><div class="stem"><span class="qn">4</span>Please <span class="blank"></span> the important words in this short story.</div><div class="opts"><div class="opt" data-q="4" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">underline</span><span class=mk></span></div><div class="opt" data-q="4" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">rain</span><span class=mk></span></div><div class="opt" data-q="4" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">climb</span><span class=mk></span></div><div class="opt" data-q="4" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">blow</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(4)">💡 看解析與中譯</button><div class="ana" id="ana-4"><div class="ans-line">✔ 正確答案：(A)　underline</div><div class="zh"><span class="lab tr">中譯</span>請把這篇短篇故事裡重要的字畫底線。</div><div class="zh"><span class="lab">解析</span>要標示重要的字，就在字下面「畫底線 underline」。blow 是吹、rain 是下雨、climb 是爬，都不能接 words。</div><div class="vocab"><span class="lab vo">單字</span><span class="vw">underline</span> 在…下面畫線、<span class="vw">blow</span> 吹、<span class="vw">rain</span> 下雨</div></div></div><div class="q"><div class="stem"><span class="qn">5</span>The strong wind will <span class="blank"></span> my new hat away.</div><div class="opts"><div class="opt" data-q="5" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">blow</span><span class=mk></span></div><div class="opt" data-q="5" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">climb</span><span class=mk></span></div><div class="opt" data-q="5" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">push</span><span class=mk></span></div><div class="opt" data-q="5" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">cross</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(5)">💡 看解析與中譯</button><div class="ana" id="ana-5"><div class="ans-line">✔ 正確答案：(A)　blow</div><div class="zh"><span class="lab tr">中譯</span>強風會把我的新帽子吹走。</div><div class="zh"><span class="lab">解析</span>風把東西吹走用 blow away，主詞是 wind 時最自然。climb 爬、cross 穿越都不合；push 是用手推，不用於風。</div><div class="vocab"><span class="lab vo">單字</span><span class="vw">blow</span> 吹、<span class="vw">cross</span> 穿越、<span class="vw">push</span> 推</div></div></div><div class="q"><div class="stem"><span class="qn">6</span>I put all my old photos in this <span class="blank"></span>.</div><div class="opts"><div class="opt" data-q="6" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">album</span><span class=mk></span></div><div class="opt" data-q="6" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">entrance</span><span class=mk></span></div><div class="opt" data-q="6" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">buffet</span><span class=mk></span></div><div class="opt" data-q="6" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">snack</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(6)">💡 看解析與中譯</button><div class="ana" id="ana-6"><div class="ans-line">✔ 正確答案：(A)　album</div><div class="zh"><span class="lab tr">中譯</span>我把所有舊照片都放進這本相簿裡。</div><div class="zh"><span class="lab">解析</span>放照片的本子是「相簿 album」。buffet 自助餐、entrance 入口、snack 點心都不能放照片。</div><div class="vocab"><span class="lab vo">單字</span><span class="vw">album</span> 相簿；專輯、<span class="vw">buffet</span> 自助餐、<span class="vw">entrance</span> 入口</div></div></div><div class="q"><div class="stem"><span class="qn">7</span>My little brother reads <span class="blank"></span> books every night.</div><div class="opts"><div class="opt" data-q="7" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">sneaky</span><span class=mk></span></div><div class="opt" data-q="7" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">rapid</span><span class=mk></span></div><div class="opt" data-q="7" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">wrong</span><span class=mk></span></div><div class="opt" data-q="7" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">comic</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(7)">💡 看解析與中譯</button><div class="ana" id="ana-7"><div class="ans-line">✔ 正確答案：(D)　comic</div><div class="zh"><span class="lab tr">中譯</span>我弟弟每天晚上都看漫畫書。</div><div class="zh"><span class="lab">解析</span>comic book 是「漫畫書」，是固定說法。sneaky 偷偷摸摸的、wrong 錯誤的、rapid 快速的都不能修飾 books。</div><div class="vocab"><span class="lab vo">單字</span><span class="vw">comic</span> 漫畫；好笑的、<span class="vw">sneaky</span> 偷偷摸摸的、<span class="vw">rapid</span> 快速的</div></div></div><div class="q"><div class="stem"><span class="qn">8</span>The teacher asked us to draw a big <span class="blank"></span> on the paper.</div><div class="opts"><div class="opt" data-q="8" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">tooth</span><span class=mk></span></div><div class="opt" data-q="8" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">knee</span><span class=mk></span></div><div class="opt" data-q="8" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">circle</span><span class=mk></span></div><div class="opt" data-q="8" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">purse</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(8)">💡 看解析與中譯</button><div class="ana" id="ana-8"><div class="ans-line">✔ 正確答案：(C)　circle</div><div class="zh"><span class="lab tr">中譯</span>老師要我們在紙上畫一個大圓圈。</div><div class="zh"><span class="lab">解析</span>draw a circle 是「畫一個圓圈」，最合乎在紙上作畫的情境。tooth 牙齒、knee 膝蓋、purse 錢包都不是圖形。</div><div class="vocab"><span class="lab vo">單字</span><span class="vw">circle</span> 圓圈、<span class="vw">knee</span> 膝蓋、<span class="vw">tooth</span> 牙齒</div></div></div><div class="q"><div class="stem"><span class="qn">9</span>That young <span class="blank"></span> has a very beautiful voice.</div><div class="opts"><div class="opt" data-q="9" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">doll</span><span class=mk></span></div><div class="opt" data-q="9" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">singer</span><span class=mk></span></div><div class="opt" data-q="9" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">lamp</span><span class=mk></span></div><div class="opt" data-q="9" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">fox</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(9)">💡 看解析與中譯</button><div class="ana" id="ana-9"><div class="ans-line">✔ 正確答案：(B)　singer</div><div class="zh"><span class="lab tr">中譯</span>那位年輕的歌手有非常美的嗓音。</div><div class="zh"><span class="lab">解析</span>有 beautiful voice（好嗓音）的人是「歌手 singer」。doll 玩偶、lamp 燈、fox 狐狸都不會唱歌。</div><div class="vocab"><span class="lab vo">單字</span><span class="vw">singer</span> 歌手、<span class="vw">doll</span> 玩偶、<span class="vw">lamp</span> 燈</div></div></div><div class="q"><div class="stem"><span class="qn">10</span>After the art class I washed my paint <span class="blank"></span> with hot water.</div><div class="opts"><div class="opt" data-q="10" data-i="0" onclick=pick(this)><span class="ol">A</span><span class="ot">powder</span><span class=mk></span></div><div class="opt" data-q="10" data-i="1" onclick=pick(this)><span class="ol">B</span><span class="ot">brush</span><span class=mk></span></div><div class="opt" data-q="10" data-i="2" onclick=pick(this)><span class="ol">C</span><span class="ot">link</span><span class=mk></span></div><div class="opt" data-q="10" data-i="3" onclick=pick(this)><span class="ol">D</span><span class="ot">snack</span><span class=mk></span></div></div><button class="togg no-print" onclick="tog(10)">💡 看解析與中譯</button><div class="ana" id="ana-10"><div class="ans-line">✔ 正確答案：(B)　brush</div><div class="zh"><span class="lab tr">中譯</span>美術課後我用熱水洗我的畫筆。</div><div class="zh"><span class="lab">解析</span>畫圖用的工具是「畫筆 brush」，用完要清洗。powder 粉末、snack 點心、link 連結都不是畫具。</div><div class="vocab"><span class="lab vo">單字</span><span class="vw">brush</span> 刷子、畫筆、<span class="vw">powder</span> 粉末、<span class="vw">link</span> 連結</div></div></div></div><div id="pages"></div></div>
+<script>
+function mmToPx(mm){var d=document.createElement('div');d.style.cssText='position:absolute;height:'+mm+'mm';
+  document.body.appendChild(d);var h=d.getBoundingClientRect().height;d.remove();return h;}
+function blockH(el){var r=el.getBoundingClientRect();var s=getComputedStyle(el);
+  return r.height+parseFloat(s.marginTop||0)+parseFloat(s.marginBottom||0);}
+function paginate(){
+  document.body.classList.add('measuring');
+  var flow=document.getElementById('flow');
+  var blocks=[].slice.call(flow.children);
+  var BUD=mmToPx(256); // A4 可用內容高(安全值)
+  // 組 units（連續同 data-group 者視為一組）
+  var units=[],cur=null;
+  blocks.forEach(function(el){var g=el.getAttribute('data-group');
+    if(g&&cur&&cur.g===g){cur.els.push(el);}else{cur={g:g,els:[el]};units.push(cur);}});
+  var pages=[],page=[],used=0;
+  function uh(u){var s=0;u.els.forEach(function(e){s+=blockH(e);});return s;}
+  units.forEach(function(u){var h=uh(u);
+    if(h<=BUD){ if(used+h>BUD&&page.length){pages.push(page);page=[];used=0;}
+      u.els.forEach(function(e){page.push(e);}); used+=h; }
+    else { u.els.forEach(function(e){var eh=blockH(e);
+        if(used+eh>BUD&&page.length){pages.push(page);page=[];used=0;} page.push(e);used+=eh;}); }
+  });
+  if(page.length)pages.push(page);
+  var host=document.getElementById('pages'),TITLE="初級閱讀模擬測驗　第七回　第一大題 詞彙";
+  pages.forEach(function(els,i){
+    var sec=document.createElement('section');sec.className='page';
+    var inner=document.createElement('div');inner.className='page-inner';
+    els.forEach(function(e){inner.appendChild(e);});
+    var f=document.createElement('div');f.className='pfoot';
+    f.innerHTML='<span class="pf-brand">GEPT 初級閱讀 · '+TITLE+'</span><span>第 '+(i+1)+' 頁　／　共 '+pages.length+' 頁</span>';
+    sec.appendChild(inner);sec.appendChild(f);host.appendChild(sec);
+  });
+  document.body.classList.remove('measuring');
+  document.body.classList.add('done');
+}
+window.addEventListener('load',paginate);
+</script>
+<script>
+var ANS={"1": 3, "2": 2, "3": 1, "4": 0, "5": 0, "6": 0, "7": 3, "8": 2, "9": 1, "10": 1},TOTAL=10,picked={};
+function pick(el){var q=el.dataset.q,i=+el.dataset.i,box=el.closest('.opts');
+  box.querySelectorAll('.opt').forEach(function(o){o.classList.remove('correct','wrong');o.querySelector('.mk').textContent='';});
+  picked[q]=i;var c=ANS[q];
+  box.querySelectorAll('.opt').forEach(function(o){var oi=+o.dataset.i;
+    if(oi===c){o.classList.add('correct');o.querySelector('.mk').textContent='✔';}
+    if(oi===i&&i!==c){o.classList.add('wrong');o.querySelector('.mk').textContent='✘';}});
+  var a=document.getElementById('ana-'+q);if(a)a.classList.add('open');upd();}
+function upd(){var d=Object.keys(picked).length,r=0;for(var q in picked)if(picked[q]===ANS[q])r++;
+  document.getElementById('score').textContent='作答 '+d+'／'+TOTAL+'　✔ '+r;}
+function tog(q){var a=document.getElementById('ana-'+q);if(a)a.classList.toggle('open');}
+function toggleAll(o){document.querySelectorAll('.ana').forEach(function(a){
+  if(a.classList.contains('zhblk'))return;a.classList.toggle('open',o);});}
+</script></body></html>
