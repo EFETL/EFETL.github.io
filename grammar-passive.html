@@ -28,47 +28,65 @@
   .formula ol{margin:6px 0 0;padding-left:1.4em;}
   .formula ol li{margin-bottom:3px;}
 
+  .note{background:#fff3e8;border:1px solid #ffd8b8;border-radius:14px;padding:12px 16px;margin-bottom:16px;
+    font-size:.86rem;color:#8a5a25;}
+  .note b{color:#c9611a;}
+
   .q{background:#fff;border-radius:16px;padding:16px 18px;margin-bottom:14px;
     box-shadow:0 4px 14px rgba(43,140,255,.10);border:1px solid #eef1f8;}
-  .qtop{display:flex;gap:10px;align-items:flex-start;margin-bottom:6px;}
+  .qtop{display:flex;gap:10px;align-items:center;margin-bottom:10px;}
   .qnum{flex:0 0 auto;width:26px;height:26px;border-radius:50%;background:#d9f5ee;color:#12806a;
     font-weight:800;font-size:.82rem;display:flex;align-items:center;justify-content:center;}
   .qnum.d{background:#ffe9d6;color:#c9611a;}
-  .fact{font-size:.98rem;color:#33414f;}
-  .fact .lab{display:inline-block;font-size:.7rem;font-weight:800;color:#8a94a2;
-    background:#f0f3f8;border-radius:8px;padding:1px 7px;margin-right:6px;vertical-align:2px;}
   .tagk{display:inline-block;font-size:.72rem;font-weight:800;color:#fff;border-radius:99px;
     padding:2px 10px;background:linear-gradient(135deg,#ff9a4d,#ff6ea9);margin-left:auto;flex:0 0 auto;}
 
-  /* 說明卡 */
+  .lineLab{font-size:.7rem;font-weight:800;color:#8a94a2;background:#f0f3f8;border-radius:8px;
+    padding:1px 8px;margin:0 0 5px;display:inline-block;}
+
+  /* 說明卡：主動／被動兩行 + 移動動畫 */
   .q.demo{background:linear-gradient(180deg,#fff8f0,#fff);border-color:#ffe9d6;}
-  .build{display:none;margin-top:11px;font-size:1.05rem;line-height:2.05;color:#22303f;
-    background:#fffaf3;border:1px solid #ffe9d6;border-radius:12px;padding:10px 15px;}
-  .q.demo:not(.st0) .build{display:block;}
-  .build .ifw{display:none;color:#0f7a52;font-weight:900;}
-  .q.demo:not(.st0) .build .ifw{display:inline-block;}
-  .slotw .base{color:#9aa4b2;font-weight:700;border-bottom:2px dashed #c9d4e6;padding:0 3px;}
-  .slotw .ans{display:none;color:#0f7a52;font-weight:900;background:#eafaf2;border-radius:6px;padding:1px 7px;}
-  .q.demo.st2 .s1w .base,.q.demo.st3 .s1w .base{display:none;}
-  .q.demo.st2 .s1w .ans,.q.demo.st3 .s1w .ans{display:inline-block;}
-  .q.demo.st3 .s2w .base{display:none;}
-  .q.demo.st3 .s2w .ans{display:inline-block;}
-  .q.demo.st1 .ifw{animation:changePop .5s cubic-bezier(.2,1.3,.4,1);}
-  .q.demo.st2 .s1w .ans{animation:changePop .5s cubic-bezier(.2,1.3,.4,1);}
-  .q.demo.st3 .s2w .ans{animation:changePop .5s cubic-bezier(.2,1.3,.4,1);}
-  @keyframes changePop{0%{transform:scale(.5);opacity:0;}70%{transform:scale(1.18);}100%{transform:scale(1);opacity:1;}}
+  .activeLine{font-size:1.05rem;padding:12px 15px;background:#fffaf3;border:1.5px dashed #ffcfa0;
+    border-radius:12px;margin-bottom:10px;line-height:1.9;}
+  .buildLine{font-size:1.05rem;padding:12px 15px;background:#f7fbff;border:1.5px solid #dcecff;
+    border-radius:12px;line-height:1.9;min-height:1.9em;}
+
+  .wSubj,.wObj{cursor:default;border-radius:6px;padding:1px 5px;font-weight:800;transition:opacity .35s .1s,text-decoration-color .35s;}
+  .wSubj{background:#fff0e0;color:#c9611a;}
+  .wObj{background:#e8f4ff;color:#1a6fc9;}
+  .wSubj.used,.wObj.used{opacity:.3;text-decoration:line-through;}
+  .verbOld{font-weight:700;color:#5a6472;transition:opacity .3s;}
+  .verbOld.used{opacity:.25;text-decoration:line-through;}
+
+  .slotNewSubj,.slotVerb,.slotAgent{font-weight:900;border-radius:6px;padding:1px 7px;opacity:0;transition:opacity .25s;}
+  .slotNewSubj.show,.slotVerb.show,.slotAgent.show{opacity:1;}
+  .slotNewSubj{background:#e8f4ff;color:#1a6fc9;}
+  .slotVerb{background:#eafaf2;color:#0f7a52;}
+  .slotAgent{background:#fff0e0;color:#c9611a;}
+
+  .flyClone{position:fixed;font-weight:900;padding:1px 7px;border-radius:6px;white-space:nowrap;
+    z-index:999;pointer-events:none;will-change:left,top;}
+
+  #pathSvg{position:absolute;top:0;left:0;width:1px;height:1px;overflow:visible;pointer-events:none;z-index:997;}
+  .pathLine{fill:none;stroke-width:2.5;stroke-dasharray:7,6;opacity:0;transition:opacity .25s;}
+  .pathLine.show{opacity:.8;}
+  .pathLine.obj{stroke:#1a6fc9;}
+  .pathLine.subj{stroke:#c9611a;}
 
   .stepbtns{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px;}
   .hintk{font-size:.76rem;color:#8a94a2;font-weight:800;}
   .sbtn{border:none;cursor:pointer;font-weight:800;font-size:.82rem;padding:9px 15px;border-radius:12px;
     color:#fff;display:inline-flex;align-items:center;gap:7px;transition:.15s;box-shadow:0 3px 9px rgba(0,0,0,.14);}
   .sbtn:hover{filter:brightness(1.06);transform:translateY(-1px);}
+  .sbtn:disabled{opacity:.35;cursor:not-allowed;transform:none;}
   .sbtn .sn{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;
     background:rgba(255,255,255,.34);color:#fff;font-size:.7rem;font-weight:900;}
   .sbtn.b1{background:linear-gradient(135deg,#2ab7ff,#4fd1ff);}
   .sbtn.b2{background:linear-gradient(135deg,#a855ff,#c98bff);}
   .sbtn.b3{background:linear-gradient(135deg,#ff8a1e,#ffb347);}
   .sbtn.on{box-shadow:0 0 0 3px rgba(255,255,255,.85),0 5px 14px rgba(0,0,0,.22);filter:brightness(1.08);transform:translateY(-1px);}
+  .replay{border:none;cursor:pointer;font-weight:800;font-size:.76rem;padding:8px 13px;border-radius:12px;
+    color:#c9611a;background:#fff3e8;margin-left:auto;}
 
   .reveal{display:none;margin-top:8px;padding:10px 13px;border-radius:12px;font-size:.9rem;border-left:4px solid;}
   .reveal s{color:#d23b5e;} .reveal b{color:inherit;}
@@ -147,14 +165,10 @@
 
   footer{text-align:center;color:#9aa4b2;font-size:.8rem;margin-top:34px;}
 
-  @media (prefers-reduced-motion: reduce){
-    .q.demo.st1 .ifw,.q.demo.st2 .s1w .ans,.q.demo.st3 .s2w .ans{animation:none;}
-  }
-
   /* ── 全站內文統一字級 ── */
   .wrap *{font-size:20px;}
   header.hero h1{font-size:30px;}
-  .lab,.tagk{font-size:14px;}
+  .lineLab,.tagk,.lab{font-size:14px;}
   .qmark{font-size:19px;}
   .qnum,.qnum.d{width:30px;height:30px;font-size:15px;}
   .sbtn .sn{width:22px;height:22px;font-size:14px;}
@@ -166,7 +180,7 @@
 
   <header class="hero">
     <h1>🔄 初級文法 · 被動式</h1>
-    <p>Passive Voice　主動變被動三步驟：① 受詞搬到句首當新主詞 ② 動詞改成 be + 過去分詞 ③ 原主詞改成 by + 受格（可省略）。10 種時態／情境示範說明（按 1／2／3 逐步變，每型再附 5 句同型例句），後 10 題看主動句寫被動句，點 ❓ 直接看答案與解析。</p>
+    <p>Passive Voice　主動變被動三步驟：① 受詞飛到句首當新主詞 ② 動詞原地變成 be + 過去分詞 ③ 主詞飛到句尾變 by + 受格（可省略）。10 種時態／情境示範說明，電腦／平板寬螢幕會看到文字真的飛動位置＋虛線路徑，每型再附 5 句同型例句，後 10 題看主動句寫被動句，點 ❓ 直接看答案與解析。</p>
   </header>
 
   <div class="formula">
@@ -187,6 +201,8 @@
       <li><b>原主詞</b>放到句尾，前面加 <b>by</b>，代名詞要改成受格（I→me, he→him, we→us…）；不知道或不需要說出是誰做的，<b>by 常可省略</b>。</li>
     </ol>
   </div>
+
+  <div class="note">👆 點下面的「1／2／3」按鈕：電腦／平板寬螢幕會看到<b>藍色的受詞</b>真的飛到句首變新主詞、<b>橘色的主詞</b>真的飛到句尾變 by+受格，並留下虛線路徑；手機窄螢幕直接顯示結果。</div>
 
   <div id="app"></div>
 
@@ -210,10 +226,24 @@
   <footer>EFETL © 2025　‧　GEPT 初級英檢 · 文法練習</footer>
 </div>
 
+<svg id="pathSvg" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrObj" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1a6fc9"/>
+    </marker>
+    <marker id="arrSubj" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#c9611a"/>
+    </marker>
+  </defs>
+</svg>
+
 <script>
+const WIDE = window.matchMedia('(min-width:900px)').matches;
+
 /* ── 示範說明 10 句 ── */
 const DEMO = [
- {tag:"現在簡單式", active:"Tom cleans the room every day.",
+ {tag:"現在簡單式",
+  subj:"Tom", verb:"cleans", obj:"the room", activeTail:" every day.",
   subjNew:"The room", verbpp:"is cleaned", agent:"by Tom", tail:" every day.",
   n1:"找出受詞 <b>the room</b>，搬到句首當新主詞。",
   n2:"動詞 cleans → 新主詞是單數 → be 動詞用 <b>is</b>；clean 的過去分詞是 cleaned → <b>is cleaned</b>。",
@@ -221,7 +251,8 @@ const DEMO = [
   alt:"不需要說出是誰打掃時可省略 by Tom → The room is cleaned every day.",
   zh:"房間每天都被湯姆打掃。"},
 
- {tag:"過去簡單式", active:"She wrote this letter.",
+ {tag:"過去簡單式",
+  subj:"She", verb:"wrote", obj:"this letter", activeTail:".",
   subjNew:"This letter", verbpp:"was written", agent:"by her", tail:".",
   n1:"找出受詞 <b>this letter</b>，搬到句首當新主詞。",
   n2:"過去式動詞 wrote → 過去分詞是 <b>written</b>；新主詞單數，過去式 be 動詞用 was → <b>was written</b>。",
@@ -229,7 +260,8 @@ const DEMO = [
   alt:"也可以加時間更完整：This letter was written by her last year.",
   zh:"這封信是她寫的。"},
 
- {tag:"未來式", active:"The workers will build a new bridge.",
+ {tag:"未來式",
+  subj:"The workers", verb:"will build", obj:"a new bridge", activeTail:".",
   subjNew:"A new bridge", verbpp:"will be built", agent:"by the workers", tail:".",
   n1:"找出受詞 <b>a new bridge</b>，搬到句首當新主詞。",
   n2:"未來式 will + 動詞 → <b>will be</b> + 過去分詞：build 的過去分詞是 built → <b>will be built</b>（will 後面一律用原形 be，不隨主詞變化）。",
@@ -237,7 +269,8 @@ const DEMO = [
   alt:"也可省略：A new bridge will be built.",
   zh:"一座新橋將會被工人們建造。"},
 
- {tag:"現在進行式", active:"Mom is washing the car.",
+ {tag:"現在進行式",
+  subj:"Mom", verb:"is washing", obj:"the car", activeTail:".",
   subjNew:"The car", verbpp:"is being washed", agent:"by Mom", tail:" now.",
   n1:"找出受詞 <b>the car</b>，搬到句首當新主詞。",
   n2:"現在進行式 is washing → be 動詞(is) + <b>being</b> + 過去分詞(washed) → <b>is being washed</b>（多一個 being）。",
@@ -245,7 +278,8 @@ const DEMO = [
   alt:"強調事實而非正在進行時，也可簡化成 The car is washed by Mom.",
   zh:"車子現在正被媽媽清洗。"},
 
- {tag:"現在完成式", active:"My father has fixed the computer.",
+ {tag:"現在完成式",
+  subj:"My father", verb:"has fixed", obj:"the computer", activeTail:".",
   subjNew:"The computer", verbpp:"has been fixed", agent:"by my father", tail:".",
   n1:"找出受詞 <b>the computer</b>，搬到句首當新主詞。",
   n2:"現在完成式 has fixed → have/has + <b>been</b> + 過去分詞 → <b>has been fixed</b>（多一個 been）。",
@@ -253,7 +287,8 @@ const DEMO = [
   alt:"也可省略：The computer has been fixed.",
   zh:"電腦已經被我爸爸修好了。"},
 
- {tag:"情態助動詞 must", active:"The manager must sign this form.",
+ {tag:"情態助動詞 must",
+  subj:"The manager", verb:"must sign", obj:"this form", activeTail:".",
   subjNew:"This form", verbpp:"must be signed", agent:"by the manager", tail:".",
   n1:"找出受詞 <b>this form</b>，搬到句首當新主詞。",
   n2:"情態助動詞 must 後面一律加原形 <b>be</b> + 過去分詞：sign 的過去分詞是 signed → <b>must be signed</b>。",
@@ -261,7 +296,8 @@ const DEMO = [
   alt:"規定類句子常省略 by：This form must be signed.",
   zh:"這份表格必須由經理簽名。"},
 
- {tag:"情態助動詞 can", active:"Anyone can join this club.",
+ {tag:"情態助動詞 can",
+  subj:"Anyone", verb:"can join", obj:"this club", activeTail:".",
   subjNew:"This club", verbpp:"can be joined", agent:"by anyone", tail:".",
   n1:"找出受詞 <b>this club</b>，搬到句首當新主詞。",
   n2:"can 後面加原形 be + 過去分詞：join 的過去分詞是 joined → <b>can be joined</b>。",
@@ -269,7 +305,8 @@ const DEMO = [
   alt:"「任何人都可以」的句子常直接省略 by anyone：This club can be joined.",
   zh:"這個社團任何人都可以加入。"},
 
- {tag:"by 省略（不知道是誰做的）", active:"Someone stole my bike.",
+ {tag:"by 省略（不知道是誰做的）",
+  subj:"Someone", verb:"stole", obj:"my bike", activeTail:".", noAgentFly:true,
   subjNew:"My bike", verbpp:"was stolen", agent:"（不知道是誰、也不重要，通常省略 by someone）", tail:".",
   n1:"找出受詞 <b>my bike</b>，搬到句首當新主詞。",
   n2:"過去式 stole → 過去分詞是 <b>stolen</b>；新主詞單數 → <b>was stolen</b>。",
@@ -277,7 +314,8 @@ const DEMO = [
   alt:"想強調「有人做的」也可以寫 by someone，但通常省略更自然。",
   zh:"我的腳踏車被偷了。"},
 
- {tag:"過去進行式", active:"The workers were painting the fence.",
+ {tag:"過去進行式",
+  subj:"The workers", verb:"were painting", obj:"the fence", activeTail:".",
   subjNew:"The fence", verbpp:"was being painted", agent:"by the workers", tail:" yesterday afternoon.",
   n1:"找出受詞 <b>the fence</b>，搬到句首當新主詞。",
   n2:"過去進行式 were painting → be 動詞(was，配合單數新主詞) + <b>being</b> + 過去分詞(painted) → <b>was being painted</b>。",
@@ -285,7 +323,8 @@ const DEMO = [
   alt:"也可簡化成過去簡單式：The fence was painted by the workers yesterday afternoon.",
   zh:"昨天下午圍籬正被工人們粉刷。"},
 
- {tag:"代名詞受格→主格", active:"The teacher will invite him to the ceremony.",
+ {tag:"代名詞受格→主格",
+  subj:"The teacher", verb:"will invite", obj:"him", activeTail:" to the ceremony.",
   subjNew:"He", verbpp:"will be invited", agent:"by the teacher", tail:" to the ceremony.",
   n1:"找出受詞 <b>him</b>，搬到句首當新主詞——代名詞受格 him 要改成主格 → <b>He</b>。",
   n2:"未來式 will invite → <b>will be</b> + 過去分詞(invited) → <b>will be invited</b>。",
@@ -409,19 +448,25 @@ let html = '';
 html += '<div class="group-h demo"><span class="tag">📖 示範說明</span><span class="sub">先看懂前 10 句怎麼變（按 1／2／3）</span></div>';
 DEMO.forEach((d,i)=>{
   html +=
-  '<div class="q demo st0">'+
-    '<div class="qtop"><span class="qnum d">'+(i+1)+'</span>'+
-      '<div class="fact"><span class="lab">主動</span>'+d.active+'</div>'+
-      '<span class="tagk">'+d.tag+'</span></div>'+
-    '<div class="build">'+
-      '<span class="ifw">'+d.subjNew+'</span> '+
-      '<span class="slotw s1w"><span class="base">be+p.p.</span><span class="ans">'+d.verbpp+'</span></span> '+
-      '<span class="slotw s2w"><span class="base">by+原主詞</span><span class="ans">'+d.agent+'</span></span>'+d.tail+
+  '<div class="q demo st0" data-i="'+i+'">'+
+    '<div class="qtop"><span class="qnum d">'+(i+1)+'</span><span class="tagk">'+d.tag+'</span></div>'+
+    '<div class="lineLab">主動</div>'+
+    '<div class="activeLine">'+
+      '<span class="wSubj" data-role="subj">'+d.subj+'</span> '+
+      '<span class="verbOld" data-role="verb">'+d.verb+'</span> '+
+      '<span class="wObj" data-role="obj">'+d.obj+'</span>'+d.activeTail+
+    '</div>'+
+    '<div class="lineLab">被動</div>'+
+    '<div class="buildLine">'+
+      '<span class="slotNewSubj" data-slot="subj">'+d.subjNew+'</span> '+
+      '<span class="slotVerb" data-slot="verb">'+d.verbpp+'</span> '+
+      '<span class="slotAgent" data-slot="agent">'+d.agent+'</span>'+d.tail+
     '</div>'+
     '<div class="stepbtns"><span class="hintk">一步一步點：</span>'+
-      '<button class="sbtn b1" type="button" data-s="1"><span class="sn">1</span>受詞→新主詞</button>'+
-      '<button class="sbtn b2" type="button" data-s="2"><span class="sn">2</span>改 be+p.p.</button>'+
-      '<button class="sbtn b3" type="button" data-s="3"><span class="sn">3</span>加 by+原主詞</button>'+
+      '<button class="sbtn b1" type="button" data-s="1"><span class="sn">1</span>受詞飛到句首</button>'+
+      '<button class="sbtn b2" type="button" data-s="2" disabled><span class="sn">2</span>改 be+p.p.</button>'+
+      '<button class="sbtn b3" type="button" data-s="3" disabled><span class="sn">3</span>主詞飛到句尾</button>'+
+      '<button class="replay" type="button" data-replay="'+i+'">↺ 重播</button>'+
     '</div>'+
     '<div class="reveal r1"><b>① </b>'+d.n1+'</div>'+
     '<div class="reveal r2"><b>② </b>'+d.n2+'</div>'+
@@ -456,7 +501,62 @@ PRAC.forEach((p,i)=>{
 });
 app.innerHTML = html;
 
-/* 逐步顯示 */
+/* ── 飛行動畫（電腦/平板寬螢幕）── */
+const pathSvg = document.getElementById('pathSvg');
+
+function drawPath(x1,y1,x2,y2,kind,cardIdx){
+  const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+  path.setAttribute('d', 'M'+x1+','+y1+' L'+x2+','+y2);
+  path.setAttribute('class', 'pathLine '+kind);
+  path.setAttribute('marker-end', kind==='obj' ? 'url(#arrObj)' : 'url(#arrSubj)');
+  path.dataset.card = cardIdx;
+  pathSvg.appendChild(path);
+  requestAnimationFrame(()=> requestAnimationFrame(()=> path.classList.add('show')));
+  return path;
+}
+
+function flyText(sourceEl, destEl, colorClass, kind, cardIdx){
+  const startRect = sourceEl.getBoundingClientRect();
+  const endRect = destEl.getBoundingClientRect();
+  const sx = startRect.left + startRect.width/2 + window.scrollX, sy = startRect.top + startRect.height/2 + window.scrollY;
+  const ex = endRect.left + endRect.width/2 + window.scrollX, ey = endRect.top + endRect.height/2 + window.scrollY;
+  const path = drawPath(sx, sy, ex, ey, kind, cardIdx);
+
+  const clone = document.createElement('span');
+  clone.className = 'flyClone ' + colorClass;
+  clone.dataset.card = cardIdx;
+  clone.textContent = destEl.textContent;
+  clone.style.left = startRect.left + 'px';
+  clone.style.top = startRect.top + 'px';
+  clone.style.fontSize = getComputedStyle(sourceEl).fontSize;
+  document.body.appendChild(clone);
+  requestAnimationFrame(()=>{
+    clone.style.transition = 'left .65s cubic-bezier(.22,.85,.3,1), top .65s cubic-bezier(.22,.85,.3,1)';
+    clone.style.left = endRect.left + 'px';
+    clone.style.top = endRect.top + 'px';
+  });
+  const done = ()=>{
+    clone.remove();
+    destEl.classList.add('show');
+    // 虛線保留不淡出，讓學生可以回頭看整個移動路徑（按重播才清除）
+  };
+  clone.addEventListener('transitionend', done, {once:true});
+  setTimeout(done, 800);
+}
+
+function resetDemoCard(card){
+  card.classList.remove('st1','st2','st3');
+  card.classList.add('st0');
+  card.dataset.step = '0';
+  card.querySelectorAll('.sbtn').forEach(b=>{
+    b.classList.remove('on');
+    b.disabled = (b.dataset.s !== '1');
+  });
+  card.querySelectorAll('.slotNewSubj,.slotVerb,.slotAgent').forEach(s=>s.classList.remove('show'));
+  card.querySelectorAll('.wSubj,.wObj,.verbOld').forEach(s=>s.classList.remove('used'));
+}
+
+/* 逐步顯示 + 動畫 */
 app.addEventListener("click",(ev)=>{
   const mb = ev.target.closest(".morebtn");
   if(mb){
@@ -478,13 +578,55 @@ app.addEventListener("click",(ev)=>{
     }
     return;
   }
+  const rp = ev.target.closest('.replay');
+  if(rp){
+    const card = rp.closest('.q.demo');
+    const cardIdx = card.dataset.i;
+    // 重播：只清掉「這張卡片」自己的虛線／飛行殘留，不影響其他卡片已完成的動畫
+    pathSvg.querySelectorAll('.pathLine[data-card="'+cardIdx+'"]').forEach(p=>p.remove());
+    document.querySelectorAll('.flyClone[data-card="'+cardIdx+'"]').forEach(c=>c.remove());
+    resetDemoCard(card);
+    return;
+  }
   const b = ev.target.closest(".sbtn");
-  if(!b) return;
+  if(!b || b.disabled) return;
   const card = b.closest(".q.demo");
   const s = +b.dataset.s;
+  const cur = +(card.dataset.step || 0);
+  if(s !== cur+1) return; // 強制照順序 1→2→3
+  card.dataset.step = s;
   card.classList.remove("st0","st1","st2","st3");
   card.classList.add("st"+s);
-  card.querySelectorAll(".sbtn").forEach(btn=>{ btn.classList.toggle("on", +btn.dataset.s <= s); });
+  b.classList.add("on");
+  b.disabled = true;
+  const nextBtn = card.querySelector('.sbtn[data-s="'+(s+1)+'"]');
+  if(nextBtn) nextBtn.disabled = false;
+
+  const cardIdx = +card.dataset.i;
+  const d = DEMO[cardIdx];
+  if(s===1){
+    const obj = card.querySelector('[data-role="obj"]');
+    const slot = card.querySelector('[data-slot="subj"]');
+    if(WIDE){ flyText(obj, slot, 'wObj', 'obj', cardIdx); }
+    else { slot.classList.add('show'); }
+    obj.classList.add('used');
+  } else if(s===2){
+    const verb = card.querySelector('[data-role="verb"]');
+    const slot = card.querySelector('[data-slot="verb"]');
+    verb.classList.add('used');
+    slot.classList.add('show');
+  } else if(s===3){
+    const subj = card.querySelector('[data-role="subj"]');
+    const slot = card.querySelector('[data-slot="agent"]');
+    if(d.noAgentFly){
+      slot.classList.add('show');
+    } else if(WIDE){
+      flyText(subj, slot, 'wSubj', 'subj', cardIdx);
+    } else {
+      slot.classList.add('show');
+    }
+    subj.classList.add('used');
+  }
 });
 
 /* 批改 */
@@ -508,8 +650,8 @@ document.getElementById("submit").addEventListener("click",()=>{
 });
 
 document.getElementById("reset").addEventListener("click",()=>{
-  app.querySelectorAll("input").forEach(i=>{i.value="";i.classList.remove("ok","no");});
-  app.querySelectorAll(".exp").forEach(e=>e.classList.remove("show"));
+  app.querySelectorAll(".q.practice input").forEach(i=>{i.value="";i.classList.remove("ok","no");});
+  app.querySelectorAll(".q.practice .exp").forEach(e=>e.classList.remove("show"));
   document.getElementById("score").textContent="";
   window.scrollTo({top:0,behavior:"smooth"});
 });
