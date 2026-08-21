@@ -54,6 +54,12 @@
   .flyClone{position:fixed;font-weight:900;padding:1px 7px;border-radius:6px;white-space:nowrap;
     z-index:999;pointer-events:none;will-change:left,top;}
 
+  #pathSvg{position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:997;}
+  .pathLine{fill:none;stroke-width:2.5;stroke-dasharray:7,6;opacity:0;transition:opacity .25s;}
+  .pathLine.show{opacity:.8;}
+  .pathLine.obj{stroke:#1a6fc9;}
+  .pathLine.subj{stroke:#c9611a;}
+
   .stepbtns{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:14px;}
   .hintk{font-size:.78rem;color:#8a94a2;font-weight:800;}
   .sbtn{border:none;cursor:pointer;font-weight:800;font-size:.84rem;padding:10px 16px;border-radius:12px;
@@ -87,6 +93,17 @@
 
   <footer>EFETL © 2025　‧　實驗版，僅供評估，尚未正式上線</footer>
 </div>
+
+<svg id="pathSvg" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrObj" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1a6fc9"/>
+    </marker>
+    <marker id="arrSubj" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#c9611a"/>
+    </marker>
+  </defs>
+</svg>
 
 <script>
 const WIDE = window.matchMedia('(min-width:900px)').matches;
@@ -132,9 +149,25 @@ DEMO.forEach((d,i)=>{
 });
 app.innerHTML = html;
 
-function flyText(sourceEl, destEl, colorClass){
+const pathSvg = document.getElementById('pathSvg');
+
+function drawPath(x1,y1,x2,y2,kind){
+  const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+  path.setAttribute('d', 'M'+x1+','+y1+' L'+x2+','+y2);
+  path.setAttribute('class', 'pathLine '+kind);
+  path.setAttribute('marker-end', kind==='obj' ? 'url(#arrObj)' : 'url(#arrSubj)');
+  pathSvg.appendChild(path);
+  requestAnimationFrame(()=> requestAnimationFrame(()=> path.classList.add('show')));
+  return path;
+}
+
+function flyText(sourceEl, destEl, colorClass, kind){
   const startRect = sourceEl.getBoundingClientRect();
   const endRect = destEl.getBoundingClientRect();
+  const sx = startRect.left + startRect.width/2, sy = startRect.top + startRect.height/2;
+  const ex = endRect.left + endRect.width/2, ey = endRect.top + endRect.height/2;
+  const path = drawPath(sx, sy, ex, ey, kind);
+
   const clone = document.createElement('span');
   clone.className = 'flyClone ' + colorClass;
   clone.textContent = destEl.textContent;
@@ -147,7 +180,12 @@ function flyText(sourceEl, destEl, colorClass){
     clone.style.left = endRect.left + 'px';
     clone.style.top = endRect.top + 'px';
   });
-  const done = ()=>{ clone.remove(); destEl.classList.add('show'); };
+  const done = ()=>{
+    clone.remove();
+    destEl.classList.add('show');
+    path.classList.remove('show');
+    setTimeout(()=>path.remove(), 300);
+  };
   clone.addEventListener('transitionend', done, {once:true});
   setTimeout(done, 800); // safety fallback
 }
@@ -157,6 +195,8 @@ function resetCard(card){
   card.querySelectorAll('.slotNewSubj,.slotVerb,.slotAgent').forEach(s=>s.classList.remove('show'));
   card.querySelectorAll('.wSubj,.wObj,.verbOld').forEach(s=>s.classList.remove('used'));
   card.dataset.step = '0';
+  document.querySelectorAll('.flyClone').forEach(c=>c.remove());
+  pathSvg.querySelectorAll('.pathLine').forEach(p=>p.remove());
 }
 
 app.addEventListener('click',(ev)=>{
@@ -176,7 +216,7 @@ app.addEventListener('click',(ev)=>{
   if(s===1){
     const obj = card.querySelector('[data-role="obj"]');
     const slot = card.querySelector('[data-slot="subj"]');
-    if(WIDE){ flyText(obj, slot, 'wObj'); }
+    if(WIDE){ flyText(obj, slot, 'wObj', 'obj'); }
     else { slot.classList.add('show'); }
     obj.classList.add('used');
   } else if(s===2){
@@ -187,7 +227,7 @@ app.addEventListener('click',(ev)=>{
   } else if(s===3){
     const subj = card.querySelector('[data-role="subj"]');
     const slot = card.querySelector('[data-slot="agent"]');
-    if(WIDE){ flyText(subj, slot, 'wSubj'); }
+    if(WIDE){ flyText(subj, slot, 'wSubj', 'subj'); }
     else { slot.classList.add('show'); }
     subj.classList.add('used');
   }
