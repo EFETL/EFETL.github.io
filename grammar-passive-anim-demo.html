@@ -54,7 +54,7 @@
   .flyClone{position:fixed;font-weight:900;padding:1px 7px;border-radius:6px;white-space:nowrap;
     z-index:999;pointer-events:none;will-change:left,top;}
 
-  #pathSvg{position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:997;}
+  #pathSvg{position:absolute;top:0;left:0;width:1px;height:1px;overflow:visible;pointer-events:none;z-index:997;}
   .pathLine{fill:none;stroke-width:2.5;stroke-dasharray:7,6;opacity:0;transition:opacity .25s;}
   .pathLine.show{opacity:.8;}
   .pathLine.obj{stroke:#1a6fc9;}
@@ -164,8 +164,9 @@ function drawPath(x1,y1,x2,y2,kind){
 function flyText(sourceEl, destEl, colorClass, kind){
   const startRect = sourceEl.getBoundingClientRect();
   const endRect = destEl.getBoundingClientRect();
-  const sx = startRect.left + startRect.width/2, sy = startRect.top + startRect.height/2;
-  const ex = endRect.left + endRect.width/2, ey = endRect.top + endRect.height/2;
+  // 虛線用「文件座標」（含捲動位移）畫，這樣線才會跟著內容一起捲動，不會在使用者滑動頁面後跟文字錯開
+  const sx = startRect.left + startRect.width/2 + window.scrollX, sy = startRect.top + startRect.height/2 + window.scrollY;
+  const ex = endRect.left + endRect.width/2 + window.scrollX, ey = endRect.top + endRect.height/2 + window.scrollY;
   const path = drawPath(sx, sy, ex, ey, kind);
 
   const clone = document.createElement('span');
