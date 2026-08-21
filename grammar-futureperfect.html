@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/favicon.svg">
+<title>初級文法 · 未來完成式 Future Perfect</title>
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;
+    color:#22303f;line-height:1.65;background:linear-gradient(180deg,#eef6ff,#fff4f7 70%);min-height:100vh;}
+  .wrap{max-width:820px;margin:0 auto;padding:18px 16px 70px;}
+  .home{display:inline-block;margin-bottom:14px;color:#0e8f5e;font-weight:800;text-decoration:none;
+    background:#fff;padding:7px 16px;border-radius:20px;box-shadow:0 3px 10px rgba(67,233,123,.28);font-size:.9rem;}
+
+  header.hero{background:linear-gradient(135deg,#43e97b,#38f9d7 55%,#5be9c9);color:#0b4d3a;
+    border-radius:22px;padding:28px 26px;margin-bottom:22px;box-shadow:0 10px 26px rgba(67,233,123,.4);}
+  header.hero h1{margin:0 0 8px;font-size:1.7rem;text-shadow:0 1px 2px rgba(255,255,255,.35);}
+  header.hero p{margin:0;font-size:.96rem;opacity:.95;}
+
+  .formula{background:#fff;border-radius:14px;padding:14px 18px;margin-bottom:16px;
+    font-size:.86rem;color:#4a5766;border-left:5px solid #38f9d7;box-shadow:0 3px 10px rgba(43,140,255,.08);}
+  .formula b{color:#0e8f5e;}
+  .formula .ft{width:100%;border-collapse:collapse;margin:8px 0 4px;}
+  .formula .ft th,.formula .ft td{border:1px solid #dffaf0;padding:7px 9px;text-align:left;}
+  .formula .ft th{background:#effffa;color:#0e8f5e;}
+  .formula ol{margin:6px 0 0;padding-left:1.4em;}
+  .formula ol li{margin-bottom:3px;}
+
+  .tlbox{background:#fff;border-radius:14px;padding:14px 18px 6px;margin-bottom:16px;
+    box-shadow:0 3px 10px rgba(43,140,255,.08);border-left:5px solid #38f9d7;}
+  .tlbox .tltitle{font-weight:800;color:#0e8f5e;display:block;margin-bottom:2px;}
+  .tlbox svg{width:100%;height:auto;display:block;margin-top:2px;}
+  .tlbox .tl-axis{font-size:13px;}
+  .tlbox .tl-label{font-size:13px;}
+  .tlbox .tl-title{font-size:16px;}
+
+  .q{background:#fff;border-radius:16px;padding:16px 18px;margin-bottom:14px;
+    box-shadow:0 4px 14px rgba(43,140,255,.10);border:1px solid #eef1f8;}
+  .qtop{display:flex;gap:10px;align-items:flex-start;margin-bottom:6px;}
+  .qnum{flex:0 0 auto;width:26px;height:26px;border-radius:50%;background:#d9f5ee;color:#12806a;
+    font-weight:800;font-size:.82rem;display:flex;align-items:center;justify-content:center;}
+  .qnum.d{background:#d7fbef;color:#0e8f5e;}
+  .fact{font-size:.98rem;color:#33414f;}
+  .fact .lab{display:inline-block;font-size:.7rem;font-weight:800;color:#8a94a2;
+    background:#f0f3f8;border-radius:8px;padding:1px 7px;margin-right:6px;vertical-align:2px;}
+  .tagk{display:inline-block;font-size:.72rem;font-weight:800;color:#fff;border-radius:99px;
+    padding:2px 10px;background:linear-gradient(135deg,#22c1c3,#43e97b);margin-left:auto;flex:0 0 auto;}
+
+  /* 說明卡 */
+  .q.demo{background:linear-gradient(180deg,#f0fffa,#fff);border-color:#dffaf0;}
+  .build{display:none;margin-top:11px;font-size:1.05rem;line-height:2.05;color:#22303f;
+    background:#f5fffb;border:1px solid #dffaf0;border-radius:12px;padding:10px 15px;}
+  .q.demo:not(.st0) .build{display:block;}
+  .build .ifw{display:none;color:#0f7a52;font-weight:900;}
+  .q.demo:not(.st0) .build .ifw{display:inline-block;}
+  .slotw .base{color:#9aa4b2;font-weight:700;border-bottom:2px dashed #c9d4e6;padding:0 3px;}
+  .slotw .ans{display:none;color:#0f7a52;font-weight:900;background:#eafaf2;border-radius:6px;padding:1px 7px;}
+  .q.demo.st2 .s1w .base,.q.demo.st3 .s1w .base{display:none;}
+  .q.demo.st2 .s1w .ans,.q.demo.st3 .s1w .ans{display:inline-block;}
+  .q.demo.st3 .s2w .base{display:none;}
+  .q.demo.st3 .s2w .ans{display:inline-block;}
+  .q.demo.st1 .ifw{animation:changePop .5s cubic-bezier(.2,1.3,.4,1);}
+  .q.demo.st2 .s1w .ans{animation:changePop .5s cubic-bezier(.2,1.3,.4,1);}
+  .q.demo.st3 .s2w .ans{animation:changePop .5s cubic-bezier(.2,1.3,.4,1);}
+  @keyframes changePop{0%{transform:scale(.5);opacity:0;}70%{transform:scale(1.18);}100%{transform:scale(1);opacity:1;}}
+
+  .stepbtns{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px;}
+  .hintk{font-size:.76rem;color:#8a94a2;font-weight:800;}
+  .sbtn{border:none;cursor:pointer;font-weight:800;font-size:.82rem;padding:9px 15px;border-radius:12px;
+    color:#fff;display:inline-flex;align-items:center;gap:7px;transition:.15s;box-shadow:0 3px 9px rgba(0,0,0,.14);}
+  .sbtn:hover{filter:brightness(1.06);transform:translateY(-1px);}
+  .sbtn .sn{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;
+    background:rgba(255,255,255,.34);color:#fff;font-size:.7rem;font-weight:900;}
+  .sbtn.b1{background:linear-gradient(135deg,#2ab7ff,#4fd1ff);}
+  .sbtn.b2{background:linear-gradient(135deg,#a855ff,#c98bff);}
+  .sbtn.b3{background:linear-gradient(135deg,#ff8a1e,#ffb347);}
+  .sbtn.on{box-shadow:0 0 0 3px rgba(255,255,255,.85),0 5px 14px rgba(0,0,0,.22);filter:brightness(1.08);transform:translateY(-1px);}
+
+  .reveal{display:none;margin-top:8px;padding:10px 13px;border-radius:12px;font-size:.9rem;border-left:4px solid;}
+  .reveal s{color:#d23b5e;} .reveal b{color:inherit;}
+  .reveal.r1{border-color:#3aa6ff;background:#f0f8ff;}
+  .reveal.r2{border-color:#b06bff;background:#f7f2ff;}
+  .reveal.r3{border-color:#ffa63e;background:#fff7ee;}
+  .q.demo.st1 .r1,.q.demo.st2 .r1,.q.demo.st3 .r1{display:block;}
+  .q.demo.st2 .r2,.q.demo.st3 .r2{display:block;}
+  .q.demo.st3 .r3{display:block;}
+
+  .demoexp{margin-top:10px;padding:11px 14px;border-radius:12px;background:#fff;border-left:4px solid #38f9d7;font-size:.9rem;}
+  .demoexp .alt{color:#33414f;}
+  .demoexp .alt b{color:#0e8f5e;}
+  .demoexp .zh{color:#4a5766;margin-top:5px;}
+
+  /* 同類型延伸例句 */
+  .morebtn{margin-top:10px;border:none;cursor:pointer;font-weight:800;font-size:.82rem;
+    padding:8px 14px;border-radius:12px;color:#0e8f5e;background:#e8fff6;
+    box-shadow:0 2px 8px rgba(67,233,123,.2);}
+  .morebtn:hover{filter:brightness(.98);}
+  .morelist{display:none;margin-top:10px;border-top:1px dashed #dbe7f2;padding-top:8px;}
+  .morelist.show{display:block;}
+  .mrow{padding:8px 0;border-bottom:1px dashed #eef2f7;}
+  .mrow:last-child{border-bottom:none;}
+  .mrow .mn{display:inline-block;width:22px;color:#a0a9b6;font-weight:800;font-size:.8rem;}
+  .mrow .ms{color:#22303f;font-size:.96rem;}
+  .mrow .mz{color:#8a94a2;font-size:.82rem;margin-left:22px;}
+
+  /* 練習卡：中文題意 + 問號鈕 */
+  .cnq{color:#33414f;font-size:.98rem;}
+  .cnq .lab{display:inline-block;font-size:.7rem;font-weight:800;color:#8a94a2;
+    background:#f0f3f8;border-radius:8px;padding:1px 7px;margin-right:6px;vertical-align:2px;}
+  .qmark{flex:0 0 auto;border:none;cursor:pointer;width:34px;height:34px;border-radius:50%;
+    background:linear-gradient(135deg,#ffa63e,#ff6ea9);color:#fff;font-weight:900;font-size:1rem;
+    box-shadow:0 3px 9px rgba(255,110,169,.32);margin-left:auto;}
+  .qmark:hover{filter:brightness(1.07);transform:translateY(-1px);}
+  .exp .why{color:#33414f;margin-top:6px;}
+  .exp .why b{color:#0f7a52;}
+
+  /* 練習卡 */
+  .rewrite{font-size:1.02rem;line-height:2.2;color:#22303f;}
+  .rewrite input{font-family:inherit;font-size:.98rem;font-weight:700;color:#0e8f5e;text-align:center;
+    border:none;border-bottom:2px solid #c9d4e6;background:#f5fffb;border-radius:6px 6px 0 0;
+    padding:3px 6px;margin:0 2px;min-width:150px;outline:none;transition:.15s;}
+  .rewrite input:focus{border-bottom-color:#38f9d7;background:#e8fff6;}
+  .rewrite input.ok{border-bottom-color:#22b07a;background:#eafaf2;color:#0f7a52;}
+  .rewrite input.no{border-bottom-color:#ff5b7f;background:#fff0f3;color:#d23b5e;}
+  .hint{font-size:.72rem;color:#a0a9b6;}
+  .exp{display:none;margin-top:12px;padding:12px 14px;border-radius:12px;
+    background:#effffa;border-left:4px solid #38f9d7;font-size:.9rem;}
+  .exp.show{display:block;}
+  .exp .ans{font-weight:800;color:#0e8f5e;}
+  .exp .zh{color:#4a5766;margin-top:4px;}
+
+  .group-h{display:flex;align-items:center;gap:8px;margin:22px 2px 12px;font-weight:800;font-size:1rem;flex-wrap:wrap;}
+  .group-h .tag{color:#fff;border-radius:99px;padding:4px 12px;font-size:.82rem;}
+  .group-h.demo .tag{background:linear-gradient(135deg,#5ec6ff,#7d8bff);}
+  .group-h.prac .tag{background:linear-gradient(135deg,#22c1c3,#43e97b);}
+  .group-h .sub{color:#8a94a2;font-weight:600;font-size:.82rem;}
+
+  .bar{position:sticky;bottom:0;margin-top:20px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;
+    background:rgba(255,255,255,.92);backdrop-filter:blur(6px);padding:12px 14px;border-radius:16px;
+    box-shadow:0 -3px 16px rgba(43,140,255,.12);}
+  .btn{border:none;cursor:pointer;font-weight:800;font-size:.95rem;padding:12px 22px;border-radius:14px;
+    background:linear-gradient(135deg,#22c1c3,#43e97b);color:#fff;box-shadow:0 5px 14px rgba(67,233,123,.4);}
+  .btn.ghost{background:#fff;color:#0e8f5e;box-shadow:0 3px 10px rgba(67,233,123,.25);}
+  .score{font-weight:800;color:#0e8f5e;font-size:1rem;}
+
+  .wrong{background:#fff;border-radius:16px;padding:16px 20px;margin-top:26px;
+    box-shadow:0 4px 14px rgba(255,91,127,.12);border:1px solid #ffe0e7;border-left:5px solid #ff7aa8;}
+  .wrong h2{margin:0 0 8px;font-size:1.05rem;color:#c2568f;}
+  .wrong ol{margin:0;padding-left:1.4em;}
+  .wrong li{margin-bottom:6px;font-size:.92rem;color:#4a5766;}
+  .wrong s{color:#d23b5e;}
+  .wrong b{color:#0f7a52;}
+
+  footer{text-align:center;color:#9aa4b2;font-size:.8rem;margin-top:34px;}
+
+  @media (prefers-reduced-motion: reduce){
+    .q.demo.st1 .ifw,.q.demo.st2 .s1w .ans,.q.demo.st3 .s2w .ans{animation:none;}
+  }
+
+  /* ── 全站內文統一字級 ── */
+  .wrap *{font-size:20px;}
+  header.hero h1{font-size:30px;}
+  .lab,.tagk{font-size:14px;}
+  .qmark{font-size:19px;}
+  .qnum,.qnum.d{width:30px;height:30px;font-size:15px;}
+  .sbtn .sn{width:22px;height:22px;font-size:14px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="home" href="grammar.html">← 回初級文法</a>
+
+  <header class="hero">
+    <h1>⏭️ 初級文法 · 未來完成式</h1>
+    <p>Future Perfect　will have + 過去分詞三步驟：① 主詞+will have（+already） ② 動詞改成過去分詞 ③ 加上受詞或時間片語，表示「到某個未來時間點就會已經完成」。10 種常考用法示範說明（按 1／2／3 逐步顯示），每型再附 5 句同型例句，後 10 題看中文寫英文，點 ❓ 直接看答案與解析。</p>
+  </header>
+
+  <div class="formula">
+    📐 <b>未來完成式公式：will have + 過去分詞 (p.p.)</b>　（不分人稱，一律用 will have）
+    <table class="ft">
+      <tbody><tr><th>句型</th><th>寫法</th></tr>
+      <tr><td>肯定句</td><td>主詞 + <b>will have</b> + p.p.</td></tr>
+      <tr><td>否定句</td><td>主詞 + <b>won't have</b> + p.p.</td></tr>
+      <tr><td>疑問句</td><td><b>Will</b> + 主詞 + <b>have</b> + p.p. ...?</td></tr>
+    </tbody></table>
+    <b>核心概念：</b>
+    <ol>
+      <li>常搭配 <b>by + 未來時間點</b>（by next year, by 2030…）或 <b>by the time</b>，表示「到那時候就會已經完成」。</li>
+      <li><b>by the time／before</b> 的子句要用<b>現在簡單式</b>，主句才用未來完成式（不能用 will）。</li>
+      <li>already 常放在 have 和過去分詞中間，強調「到那時已經」。</li>
+    </ol>
+  </div>
+
+  <div class="tlbox">
+    <span class="tltitle">🕐 時間軸圖解</span>
+    <svg viewBox="0 0 700 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="未來完成式時間軸">
+      <line x1="30" y1="120" x2="650" y2="120" stroke="#b9c4d6" stroke-width="3"/>
+      <polygon points="650,120 636,113 636,127" fill="#b9c4d6"/>
+      <text x="30" y="150" class="tl-axis" fill="#8a94a2">現在 Now</text>
+      <text x="555" y="150" class="tl-axis" fill="#8a94a2">未來 Future</text>
+
+      <circle cx="60" cy="120" r="8" fill="#0e8f5e"/>
+      <text x="60" y="30" text-anchor="middle" class="tl-label" fill="#0e8f5e" font-weight="800">NOW</text>
+
+      <circle cx="520" cy="120" r="7" fill="#fff" stroke="#0e8f5e" stroke-width="4"/>
+      <text x="520" y="145" text-anchor="middle" class="tl-label" fill="#0e8f5e" font-weight="800">未來時間點</text>
+
+      <path d="M60,113 L60,70 L520,70 L520,113" fill="none" stroke="#0e8f5e" stroke-width="3" stroke-linecap="round"/>
+      <text x="290" y="58" text-anchor="middle" class="tl-title" fill="#0e8f5e" font-weight="800">will have + 過去分詞</text>
+      <text x="290" y="98" text-anchor="middle" class="tl-label" fill="#4a5766">到那個未來時間點就已經完成</text>
+    </svg>
+  </div>
+
+  <div id="app"></div>
+
+  <div class="bar">
+    <button class="btn" id="submit">送出批改</button>
+    <button class="btn ghost" id="reset">重作</button>
+    <span class="score" id="score"></span>
+  </div>
+
+  <div class="wrong">
+    <h2>⚠️ 學生最常錯的五點</h2>
+    <ol>
+      <li><b>過去分詞用錯</b>：<s>I will have finish it.</s> → I will have <b>finished</b> it。</li>
+      <li><b>by the time／before 子句誤用未來式</b>：<s>By the time you will arrive, I will have left.</s> → By the time you <b>arrive</b>, I will have left。</li>
+      <li><b>否定句忘記加 not</b>：<s>By Friday, we will have finished.</s>（想表達還沒完成時）→ By Friday, we <b>won't have</b> finished。</li>
+      <li><b>疑問句 Will 沒放到主詞前面</b>：<s>You will have finished by then?</s> → <b>Will</b> you have finished by then?</li>
+      <li><b>忘記加 have，只用 will + 過去分詞</b>：<s>I will finished it by then.</s> → I will <b>have</b> finished it by then。</li>
+    </ol>
+  </div>
+
+  <footer>EFETL © 2025　‧　GEPT 初級英檢 · 文法練習</footer>
+</div>
+
+<script>
+/* ── 示範說明 10 句 ── */
+const DEMO = [
+ {tag:"by + 未來時間點", context:"到明年，我將會完成這個計畫。",
+  lead:"By next year, I will have", pp:"finished", rest:"this project", tail:".",
+  n1:"by + 未來時間點，主句用未來完成式 <b>will have</b> + p.p.；不分人稱，一律用 will have。",
+  n2:"finish 的過去分詞是 <b>finished</b>。",
+  n3:"後面接受詞 <b>this project</b>。",
+  alt:"by 也可換成 before：Before next year, I will have finished this project.",
+  zh:"到明年，我將會完成這個計畫。"},
+
+ {tag:"by the time（現在式子句）", context:"你到的時候，我已經動身去機場了。",
+  lead:"By the time you arrive, I will have already", pp:"left", rest:"for the airport", tail:".",
+  n1:"by the time 子句用<b>現在簡單式</b>(arrive)；主句用未來完成式 will have already。",
+  n2:"leave 的過去分詞是 <b>left</b>。",
+  n3:"後面接 <b>for the airport</b>。",
+  alt:"by the time 子句一定用現在式，不能用未來式：✗ by the time you will arrive。",
+  zh:"你到的時候，我已經動身去機場了。"},
+
+ {tag:"經驗次數", context:"到今年年底，我將會去過日本三次。",
+  lead:"By the end of this year, I will have", pp:"visited", rest:"Japan three times", tail:".",
+  n1:"by the end of + 時間，主句用未來完成式；主詞 I + <b>will have</b>。",
+  n2:"visit 是規則動詞，過去分詞是 <b>visited</b>。",
+  n3:"後面加上 <b>three times</b>，表示到那時候為止的次數。",
+  alt:"也可以用 by then 代替：By then, I will have visited Japan three times.",
+  zh:"到今年年底，我將會去過日本三次。"},
+
+ {tag:"already（到未來時間點已完成）", context:"到晚上六點，他應該已經把工作做完了。",
+  lead:"By six o'clock, he will have already", pp:"finished", rest:"his work", tail:".",
+  n1:"主詞 he 不影響 will have（不加 s）；already 放在 have 和過去分詞中間。",
+  n2:"finish 的過去分詞是 <b>finished</b>。",
+  n3:"後面接受詞 <b>his work</b>。",
+  alt:"already 也可以放句尾：By six o'clock, he will have finished his work already.",
+  zh:"到晚上六點，他應該已經把工作做完了。"},
+
+ {tag:"否定句 won't have", context:"到星期五，我們應該還沒把報告寫完。",
+  lead:"By Friday, we won't have", pp:"finished", rest:"the report", tail:".",
+  n1:"否定用 <b>will not have</b>（＝won't have）。",
+  n2:"finish 的過去分詞是 <b>finished</b>。",
+  n3:"後面接受詞 <b>the report</b>。",
+  alt:"也可以說 We will not have finished the report by Friday.",
+  zh:"到星期五，我們應該還沒把報告寫完。"},
+
+ {tag:"疑問句 Will…have…?", context:"想問朋友「到那時候你會不會已經做完了」，怎麼問？",
+  lead:"Will you have", pp:"finished", rest:"it by then", tail:"?",
+  n1:"疑問句 <b>Will</b> 放在主詞前面：Will + 主詞 + have + p.p.？",
+  n2:"finish 的過去分詞是 <b>finished</b>。",
+  n3:"後面加上 <b>it by then</b>。",
+  alt:"回答可以說 Yes, I will. / No, I won't.",
+  zh:"到那時候你會已經做完了嗎？"},
+
+ {tag:"持續時間到未來", context:"到下個月，我將會已經在這裡住十年了。",
+  lead:"By next month, I will have", pp:"lived", rest:"here for ten years", tail:".",
+  n1:"主詞 I + <b>will have</b>（未來完成式不隨人稱變化）。",
+  n2:"live 的過去分詞是 <b>lived</b>。",
+  n3:"<b>for</b> + 時間長度，表示「持續到那個未來時間點」。",
+  alt:"也可以說 Next month, I will have been here for ten years.（用 be 動詞的完成式）",
+  zh:"到下個月，我將會已經在這裡住十年了。"},
+
+ {tag:"before（現在式子句）", context:"你離開學校之前，你會已經考過很多次試了。",
+  lead:"Before you leave school, you will have", pp:"taken", rest:"many tests", tail:".",
+  n1:"before 子句用<b>現在簡單式</b>(leave)，主句用未來完成式(will have taken)。",
+  n2:"take 的過去分詞是 <b>taken</b>。",
+  n3:"後面接受詞 <b>many tests</b>。",
+  alt:"也可以說 You will have taken many tests before you leave school.",
+  zh:"你離開學校之前，你會已經考過很多次試了。"},
+
+ {tag:"未來預測", context:"到2030年，科學家應該已經發現新的藥物了。",
+  lead:"By 2030, scientists will have", pp:"found", rest:"a new medicine", tail:".",
+  n1:"by + 未來時間點，主句用未來完成式；主詞 scientists 複數，will have 不變。",
+  n2:"find 的過去分詞是 <b>found</b>。",
+  n3:"後面接受詞 <b>a new medicine</b>。",
+  alt:"這種對未來的預測、猜測也常用未來完成式表達。",
+  zh:"到2030年，科學家應該已經發現新的藥物了。"},
+
+ {tag:"How long…will…have…?", context:"想問「到明年，你將會在這間公司工作多久了」，怎麼問？",
+  lead:"How long will you have", pp:"worked", rest:"here by next year", tail:"?",
+  n1:"How long 問句，will 放在主詞前面：How long will + 主詞 + have + p.p.？",
+  n2:"work 是規則動詞，過去分詞是 <b>worked</b>。",
+  n3:"後面接 <b>here by next year</b>。",
+  alt:"回答：I will have worked here for five years by next year.",
+  zh:"到明年，你將會在這間公司工作多久了？"}
+];
+
+/* ── 每一類型再多 5 句（同型延伸例句）── */
+const MORE = [
+ /* 1 by+未來時間點 */[
+  {en:"By next month, she will have finished the book.", zh:"到下個月，她將會看完這本書。"},
+  {en:"By tomorrow, we will have painted the whole fence.", zh:"到明天，我們將會把整個圍籬粉刷完。"},
+  {en:"By next week, they will have moved into the new house.", zh:"到下週，他們將會搬進新家。"},
+  {en:"By this evening, I will have called all my customers.", zh:"到今晚，我將會打電話給所有客戶。"},
+  {en:"By the end of the month, the workers will have built the new bridge.", zh:"到月底，工人們將會建好這座新橋。"}],
+ /* 2 by the time */[
+  {en:"By the time you get here, I will have already cooked dinner.", zh:"你到這裡的時候，我已經煮好晚餐了。"},
+  {en:"By the time the bus arrives, we will have already bought the tickets.", zh:"公車到的時候，我們已經買好票了。"},
+  {en:"By the time she wakes up, I will have already left for work.", zh:"她醒來的時候，我已經去上班了。"},
+  {en:"By the time the movie starts, we will have already found our seats.", zh:"電影開始的時候，我們已經找到座位了。"},
+  {en:"By the time the guests arrive, we will have already cleaned the house.", zh:"客人到的時候，我們已經把房子打掃乾淨了。"}],
+ /* 3 經驗次數 */[
+  {en:"By the end of this trip, we will have visited five countries.", zh:"到這趟旅行結束時，我們將會去過五個國家。"},
+  {en:"By next year, he will have changed jobs three times.", zh:"到明年，他將會換過三次工作。"},
+  {en:"By the end of the semester, I will have read ten books.", zh:"到這學期結束，我將會讀過十本書。"},
+  {en:"By 2030, they will have moved four times.", zh:"到2030年，他們將會搬過四次家。"},
+  {en:"By next summer, she will have won two prizes.", zh:"到明年夏天，她將會得過兩次獎。"}],
+ /* 4 already */[
+  {en:"By noon, they will have already finished the meeting.", zh:"到中午，他們應該已經開完會了。"},
+  {en:"By the time you call, I will have already left home.", zh:"你打來的時候，我應該已經離開家了。"},
+  {en:"By next week, we will have already signed the contract.", zh:"到下週，我們應該已經簽好合約了。"},
+  {en:"By eight o'clock, the store will have already closed.", zh:"到八點，店應該已經關門了。"},
+  {en:"By then, she will have already sold her car.", zh:"到那時候，她應該已經把車賣掉了。"}],
+ /* 5 won't have */[
+  {en:"By tomorrow, he won't have finished the painting.", zh:"到明天，他應該還沒把畫畫完。"},
+  {en:"By next month, we won't have saved enough money.", zh:"到下個月，我們應該還沒存夠錢。"},
+  {en:"By that day, they won't have completed the plan.", zh:"到那天，他們應該還沒完成這個計畫。"},
+  {en:"By six, I won't have arrived home yet.", zh:"到六點，我應該還沒到家。"},
+  {en:"By next year, she won't have finished college.", zh:"到明年，她應該還沒大學畢業。"}],
+ /* 6 Will have */[
+  {en:"Will she have finished the report by Monday?", zh:"到星期一，她會做完報告嗎？"},
+  {en:"Will they have arrived by the time we get there?", zh:"我們到的時候，他們會已經到了嗎？"},
+  {en:"Will you have packed your bags by tonight?", zh:"到今晚，你會打包好行李嗎？"},
+  {en:"Will he have called back by five o'clock?", zh:"到五點，他會回電嗎？"},
+  {en:"Will the workers have fixed the road by next week?", zh:"到下週，工人們會把路修好嗎？"}],
+ /* 7 持續時間 */[
+  {en:"By next year, they will have lived in Taipei for twenty years.", zh:"到明年，他們將會在台北住二十年了。"},
+  {en:"By 2025, I will have worked at this company for eight years.", zh:"到2025年，我將會在這間公司工作八年了。"},
+  {en:"By next month, she will have studied English for six years.", zh:"到下個月，她將會學英文學六年了。"},
+  {en:"By the summer, we will have known each other for ten years.", zh:"到夏天，我們將會認識十年了。"},
+  {en:"By next year, he will have played the piano for fifteen years.", zh:"到明年，他將會彈鋼琴彈十五年了。"}],
+ /* 8 before */[
+  {en:"Before you finish high school, you will have taken this test many times.", zh:"你高中畢業前，你會考這個考試很多次。"},
+  {en:"Before the store closes, we will have sold all the bread.", zh:"店關門前，我們會把麵包全部賣完。"},
+  {en:"Before winter comes, the birds will have flown south.", zh:"冬天來之前，鳥兒會飛到南方。"},
+  {en:"Before the meeting, the team will have finished the project.", zh:"開會之前，團隊會完成這個計畫。"},
+  {en:"Before you turn eighteen, you will have learned to drive.", zh:"你滿十八歲之前，你會學會開車。"}],
+ /* 9 未來預測 */[
+  {en:"By 2050, people will have built cities on the moon.", zh:"到2050年，人類將會在月球上建造城市。"},
+  {en:"By next century, scientists will have discovered many new planets.", zh:"到下個世紀，科學家將會發現很多新行星。"},
+  {en:"By 2040, most cars will have become electric.", zh:"到2040年，大部分車輛將會變成電動車。"},
+  {en:"By then, doctors will have found a way to help more patients.", zh:"到那時候，醫生將會找到幫助更多病人的方法。"},
+  {en:"By the end of this century, this city will have changed a lot.", zh:"到這個世紀末，這座城市將會改變很多。"}],
+ /* 10 How long will have */[
+  {en:"How long will she have taught here by next year?", zh:"到明年，她將會在這裡教書多久了？"},
+  {en:"How long will they have known each other by next month?", zh:"到下個月，他們將會認識多久了？"},
+  {en:"How long will you have studied Chinese by the end of this year?", zh:"到今年年底，你將會學中文學多久了？"},
+  {en:"How long will he have worked at this hospital by 2025?", zh:"到2025年，他將會在這間醫院工作多久了？"},
+  {en:"How long will we have waited by the time the bus comes?", zh:"公車來的時候，我們將會等多久了？"}]
+];
+
+/* ── 換你練習 10 題（看中文寫英文）── */
+const PRAC = [
+ {cn:"到明年，我將會完成這個計畫。",
+  pre:"By next year, ", a1:"I will have", h1:"主詞＋will have", mid:" ", a2:"finished this project", h2:"過去分詞＋受詞", post:".",
+  exp:"未來完成式不分人稱一律用 will have；finish 的過去分詞是 finished。"},
+ {cn:"你到的時候，我已經動身去機場了。",
+  pre:"By the time you arrive, ", a1:"I will have already", h1:"主詞＋will have＋already", mid:" ", a2:"left for the airport", h2:"過去分詞＋片語", post:".",
+  exp:"by the time 子句用現在簡單式(arrive)，不能用未來式；leave 的過去分詞是 left。"},
+ {cn:"到今年年底，我將會去過日本三次。",
+  pre:"By the end of this year, ", a1:"I will have", h1:"主詞＋will have", mid:" ", a2:"visited Japan three times", h2:"過去分詞＋受詞＋次數", post:".",
+  exp:"visit 是規則動詞，過去分詞是 visited；three times 放句尾表示次數。"},
+ {cn:"到晚上六點，他應該已經把工作做完了。",
+  pre:"By six o'clock, ", a1:"he will have already", h1:"主詞＋will have＋already", mid:" ", a2:"finished his work", h2:"過去分詞＋受詞", post:".",
+  exp:"already 放在 have 和過去分詞中間；finish 的過去分詞是 finished。"},
+ {cn:"到星期五，我們應該還沒把報告寫完。",
+  pre:"By Friday, ", a1:"we won't have", h1:"主詞＋won't have", mid:" ", a2:"finished the report", h2:"過去分詞＋受詞", post:".",
+  exp:"否定用 will not have（＝won't have）；finish 的過去分詞是 finished。"},
+ {cn:"到那時候你會已經做完了嗎？",
+  pre:"", a1:"Will you have", h1:"Will＋主詞＋have", mid:" ", a2:"finished it by then", h2:"過去分詞＋片語", post:"?",
+  exp:"疑問句 Will 放在主詞前面；finish 的過去分詞是 finished。"},
+ {cn:"到下個月，我將會已經在這裡住十年了。",
+  pre:"By next month, ", a1:"I will have", h1:"主詞＋will have", mid:" ", a2:"lived here for ten years", h2:"過去分詞＋地點＋for+時間長度", post:".",
+  exp:"live 的過去分詞是 lived；for + 時間長度表示持續到未來時間點。"},
+ {cn:"你離開學校之前，你會已經考過很多次試了。",
+  pre:"Before you leave school, ", a1:"you will have", h1:"主詞＋will have", mid:" ", a2:"taken many tests", h2:"過去分詞＋受詞", post:".",
+  exp:"before 子句用現在簡單式(leave)；take 的過去分詞是 taken。"},
+ {cn:"到2030年，科學家應該已經發現新的藥物了。",
+  pre:"By 2030, ", a1:"scientists will have", h1:"主詞＋will have", mid:" ", a2:"found a new medicine", h2:"過去分詞＋受詞", post:".",
+  exp:"find 的過去分詞是 found；未來的預測、猜測也常用未來完成式。"},
+ {cn:"到明年，你將會在這間公司工作多久了？",
+  pre:"", a1:"How long will you have", h1:"How long＋will＋主詞＋have", mid:" ", a2:"worked here by next year", h2:"過去分詞＋片語", post:"?",
+  exp:"How long 問句，will 放在主詞前面；work 的過去分詞是 worked。"}
+];
+
+/* ── 批改用 ── */
+function norm(s){
+  return (s||"").toLowerCase().trim()
+    .replace(/[.,!?]/g,"")
+    .replace(/won't/g,"will not")
+    .replace(/n't/g," not")
+    .replace(/\s+/g," ").trim();
+}
+function accepts(ans, val){
+  return ans.split("|").map(norm).includes(norm(val));
+}
+function firstAns(a){ return a.split("|")[0]; }
+
+const app = document.getElementById("app");
+let html = '';
+
+html += '<div class="group-h demo"><span class="tag">📖 示範說明</span><span class="sub">先看懂前 10 句怎麼變（按 1／2／3）</span></div>';
+DEMO.forEach((d,i)=>{
+  html +=
+  '<div class="q demo st0">'+
+    '<div class="qtop"><span class="qnum d">'+(i+1)+'</span>'+
+      '<div class="fact"><span class="lab">情境</span>'+d.context+'</div>'+
+      '<span class="tagk">'+d.tag+'</span></div>'+
+    '<div class="build">'+
+      '<span class="ifw">'+d.lead+'</span> '+
+      '<span class="slotw s1w"><span class="base">過去分詞</span><span class="ans">'+d.pp+'</span></span> '+
+      '<span class="slotw s2w"><span class="base">受詞／時間詞</span><span class="ans">'+d.rest+'</span></span>'+d.tail+
+    '</div>'+
+    '<div class="stepbtns"><span class="hintk">一步一步點：</span>'+
+      '<button class="sbtn b1" type="button" data-s="1"><span class="sn">1</span>主詞+will have</button>'+
+      '<button class="sbtn b2" type="button" data-s="2"><span class="sn">2</span>改過去分詞</button>'+
+      '<button class="sbtn b3" type="button" data-s="3"><span class="sn">3</span>加受詞/時間詞</button>'+
+    '</div>'+
+    '<div class="reveal r1"><b>① </b>'+d.n1+'</div>'+
+    '<div class="reveal r2"><b>② </b>'+d.n2+'</div>'+
+    '<div class="reveal r3"><b>③ </b>'+d.n3+'</div>'+
+    '<div class="demoexp"><div class="alt">🔁 另一種說法：'+d.alt+'</div>'+
+      '<div class="zh">💬 '+d.zh+'</div></div>'+
+    '<button class="morebtn" type="button" data-more="'+i+'">➕ 再看 5 句同類型例句</button>'+
+    '<div class="morelist" data-more="'+i+'">'+
+      (MORE[i]||[]).map((m,k)=>'<div class="mrow"><span class="mn">'+(k+1)+'.</span>'+
+        '<span class="ms">'+m.en+'</span>'+
+        '<div class="mz">'+m.zh+'</div></div>').join('')+
+    '</div>'+
+  '</div>';
+});
+
+html += '<div class="group-h prac"><span class="tag">✏️ 換你練習</span><span class="sub">看中文寫英文：兩格都填 → 按「送出批改」；卡關就點右上角 ❓ 看答案與解析</span></div>';
+PRAC.forEach((p,i)=>{
+  html +=
+  '<div class="q practice" data-i="'+i+'">'+
+    '<div class="qtop"><span class="qnum">'+(i+1)+'</span>'+
+      '<div class="cnq"><span class="lab">中文</span>'+p.cn+'</div>'+
+      '<button class="qmark" type="button" title="看答案與解析">？</button></div>'+
+    '<div class="rewrite">'+p.pre+
+      '<input data-b="1" size="20" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="?"> '+
+      '<span class="hint">('+p.h1+')</span>'+p.mid+
+      '<input data-b="2" size="26" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="?"> '+
+      '<span class="hint">('+p.h2+')</span>'+p.post+
+    '</div>'+
+    '<div class="exp"><div class="ans">✔ '+p.pre+'<u>'+firstAns(p.a1)+'</u>'+p.mid+'<u>'+firstAns(p.a2)+'</u>'+p.post+'</div>'+
+      '<div class="zh">💬 '+p.cn+'</div>'+
+      '<div class="why">📝 '+p.exp+'</div></div>'+
+  '</div>';
+});
+app.innerHTML = html;
+
+/* 逐步顯示 */
+app.addEventListener("click",(ev)=>{
+  const mb = ev.target.closest(".morebtn");
+  if(mb){
+    const list = mb.parentElement.querySelector('.morelist[data-more="'+mb.dataset.more+'"]');
+    const on = list.classList.toggle("show");
+    mb.textContent = on ? "➖ 收合這 5 句" : "➕ 再看 5 句同類型例句";
+    return;
+  }
+  const qm = ev.target.closest(".qmark");
+  if(qm){
+    const card = qm.closest(".q.practice");
+    const exp = card.querySelector(".exp");
+    const on = exp.classList.toggle("show");
+    if(on){
+      const p = PRAC[+card.dataset.i];
+      const ins = card.querySelectorAll("input");
+      ins[0].value = ins[0].value || firstAns(p.a1);
+      ins[1].value = ins[1].value || firstAns(p.a2);
+    }
+    return;
+  }
+  const b = ev.target.closest(".sbtn");
+  if(!b) return;
+  const card = b.closest(".q.demo");
+  const s = +b.dataset.s;
+  card.classList.remove("st0","st1","st2","st3");
+  card.classList.add("st"+s);
+  card.querySelectorAll(".sbtn").forEach(btn=>{ btn.classList.toggle("on", +btn.dataset.s <= s); });
+});
+
+/* 批改 */
+document.getElementById("submit").addEventListener("click",()=>{
+  let correct=0;
+  const cards = app.querySelectorAll(".q.practice");
+  cards.forEach(q=>{
+    const p = PRAC[+q.dataset.i];
+    const ins = q.querySelectorAll("input");
+    let ok=true;
+    [p.a1,p.a2].forEach((ans,idx)=>{
+      const el=ins[idx];
+      if(accepts(ans, el.value)){ el.classList.add("ok"); el.classList.remove("no"); }
+      else { el.classList.add("no"); el.classList.remove("ok"); ok=false; }
+    });
+    q.querySelector(".exp").classList.add("show");
+    if(ok) correct++;
+  });
+  document.getElementById("score").textContent = "練習答對 "+correct+" / "+cards.length+" 題";
+  window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
+});
+
+document.getElementById("reset").addEventListener("click",()=>{
+  app.querySelectorAll("input").forEach(i=>{i.value="";i.classList.remove("ok","no");});
+  app.querySelectorAll(".exp").forEach(e=>e.classList.remove("show"));
+  document.getElementById("score").textContent="";
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+</script>
+</body>
+</html>
