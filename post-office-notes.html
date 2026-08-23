@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/favicon.svg">
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>郵局手寫筆記 分類整理｜EFETL 互動題庫</title>
+<style>
+:root{
+  --green:#00824a; --green-d:#005c33; --green-l:#e7f4ec;
+  --gold:#c8902a; --ink:#222; --muted:#5f6b63; --line:#d9e4dc;
+  --bg:#f6faf7; --card:#fff; --red:#c0392b; --red-l:#fdecea;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  font-size:17px; line-height:1.85; -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:920px;margin:0 auto;padding:0 18px 80px}
+header.top{
+  background:linear-gradient(135deg,var(--green),var(--green-d));
+  color:#fff;padding:30px 18px;text-align:center;
+}
+header.top .wrap{padding-bottom:0}
+header.top h1{margin:0 0 6px;font-size:1.7em;letter-spacing:1px}
+header.top p{margin:4px 0;opacity:.92;font-size:.95em}
+.backlink{display:inline-block;margin-top:12px;color:#fff;
+  border:1px solid rgba(255,255,255,.6);border-radius:20px;
+  padding:5px 16px;text-decoration:none;font-size:.9em;margin-right:8px}
+.backlink:hover{background:rgba(255,255,255,.15)}
+nav.tabs{position:sticky;top:0;z-index:20;background:var(--card);
+  border-bottom:1px solid var(--line);display:flex;gap:6px;
+  padding:8px 18px;box-shadow:0 2px 6px rgba(0,0,0,.05);overflow-x:auto}
+nav.tabs button{flex:1;border:0;background:transparent;font-size:1em;
+  font-family:inherit;padding:10px;border-radius:8px;cursor:pointer;
+  color:var(--muted);font-weight:700;white-space:nowrap}
+nav.tabs button.on{background:var(--green-l);color:var(--green-d)}
+section.pane{display:none;padding-top:22px}
+section.pane.on{display:block}
+h2.sec{font-size:1.35em;color:var(--green-d);border-left:6px solid var(--green);
+  padding-left:12px;margin:30px 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:18px 20px;margin:14px 0;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.card h3{margin:0 0 10px;font-size:1.12em;color:var(--green-d)}
+.card h3 .art{font-size:.72em;color:var(--gold);font-weight:700;margin-left:8px}
+.card h4{margin:16px 0 6px;font-size:1em;color:var(--green-d)}
+.card ul{margin:8px 0;padding-left:1.3em}
+.card li{margin:6px 0}
+.tag{display:inline-block;background:var(--green-l);color:var(--green-d);
+  border-radius:6px;padding:1px 8px;font-size:.8em;font-weight:700;margin-right:6px}
+.tag.g{background:#fdf3e0;color:var(--gold)}
+.tag.r{background:var(--red-l);color:var(--red)}
+.hl{background:#fff5d6;padding:0 3px;border-radius:3px;font-weight:700}
+.warn{color:var(--red);font-weight:700}
+.tblwrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.96em;
+  background:#fff;border-radius:10px;overflow:hidden}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+th{background:var(--green);color:#fff;font-weight:700}
+tbody tr:nth-child(even){background:var(--green-l)}
+.mnem{background:var(--green-l);border:1px dashed var(--green);border-radius:10px;
+  padding:12px 16px;margin:12px 0;font-size:.98em}
+.mnem b{color:var(--green-d)}
+.src{font-size:.86em;color:var(--muted);margin-top:10px;border-top:1px dashed var(--line);padding-top:8px}
+.src b{color:var(--green-d)}
+
+/* quiz */
+.quizbar{position:sticky;top:54px;z-index:15;background:#fff;border:1px solid var(--line);
+  border-radius:12px;padding:10px 16px;margin:6px 0 16px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.quizbar .score{font-weight:800;color:var(--green-d);font-size:1.05em}
+.quizbar .prog{flex:1;min-width:120px;height:10px;background:var(--green-l);
+  border-radius:8px;overflow:hidden}
+.quizbar .prog>i{display:block;height:100%;width:0;background:var(--green);transition:.3s}
+.quizbar button{border:1px solid var(--green);background:#fff;color:var(--green-d);
+  font-family:inherit;font-size:.9em;padding:6px 12px;border-radius:8px;cursor:pointer;font-weight:700}
+.quizbar button:hover{background:var(--green-l)}
+.q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:16px 18px;margin:14px 0;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.q .stem{font-weight:700;margin-bottom:12px}
+.q .stem .no{display:inline-block;background:var(--green);color:#fff;border-radius:50%;
+  width:1.7em;height:1.7em;line-height:1.7em;text-align:center;margin-right:8px;font-size:.92em}
+.opt{display:block;width:100%;text-align:left;border:1.5px solid var(--line);
+  background:#fbfdfb;border-radius:10px;padding:11px 14px;margin:7px 0;cursor:pointer;
+  font-family:inherit;font-size:1em;line-height:1.6;transition:.15s}
+.opt:hover{border-color:var(--green)}
+.opt .lab{font-weight:800;color:var(--green-d);margin-right:6px}
+.opt.correct{background:var(--green-l);border-color:var(--green);color:var(--green-d)}
+.opt.wrong{background:var(--red-l);border-color:var(--red);color:var(--red)}
+.opt.lock{cursor:default}
+.exp{margin-top:10px;padding:11px 14px;border-radius:10px;background:#f3f8f4;
+  border-left:4px solid var(--green);font-size:.97em;display:none}
+.exp.show{display:block}
+.exp b{color:var(--green-d)}
+footer{text-align:center;color:var(--muted);font-size:.85em;margin-top:40px}
+@media(max-width:520px){body{font-size:16.5px}.wrap{padding:0 12px 60px}
+  nav.tabs button{flex:0 0 auto;font-size:.92em;padding:9px 12px}}
+@media print{nav.tabs,.quizbar,.backlink{display:none}section.pane{display:block!important}
+  .exp{display:block!important}.q,.card{break-inside:avoid}}
+</style>
+</head><body>
+<header class="top"><div class="wrap">
+  <h1>🗂️ 郵局手寫筆記 分類整理</h1>
+  <p>把散在筆記裡的條文、口訣、錯題，重新歸成 6 大類</p>
+  <p>時效期間 ｜ 郵件補償 ｜ 郵件處理 ｜ 儲金匯兌 ｜ 簡易壽險 ｜ 罰則與主管機關</p>
+  <div style="margin-top:12px">
+    <a class="backlink" href="post-office.html">&#8592; 回郵局複習中心</a>
+    <a class="backlink" href="/">回首頁</a>
+  </div>
+</div></header>
+
+<nav class="tabs">
+  <button class="on" data-t="index">📂 分類索引</button>
+  <button data-t="notes">📖 六大分類重點</button>
+  <button data-t="quiz">📝 筆記錯題（14）</button>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 分類索引 ============ -->
+<section class="pane on" id="index">
+  <h2 class="sec">這份筆記怎麼分類的</h2>
+  <div class="card">
+    <p>原始資料夾裡共 <b>9 個筆記檔 + 3 個附件</b>（2 份課本掃描 PDF、1 張表格照片）。內容全部屬於<b>郵局國考「郵政三法」</b>範圍，但寫的時候是隨手記的，同一個主題散在好幾個檔案裡。以下是把每個檔案的內容拆開後，重新歸類的對照表。</p>
+  </div>
+
+  <h2 class="sec">① 檔案 → 分類 對照</h2>
+  <div class="card">
+    <div class="tblwrap">
+    <table><thead><tr><th>原始檔案</th><th>實際寫了什麼</th><th>歸入分類</th></tr></thead><tbody>
+      <tr><td><b>補償請求權-自郵件交寄之日起，逾6個月.md</b><br><span class="tag">主檔</span></td>
+          <td>補償三時效、匯票兌領 3 年、壽險解除權/復效、安定基金罰鍰、儲匯法 §26 罰鍰、郵票發行與廢止、專營文字保護、匯兌種類、核心資通系統定義</td>
+          <td><span class="tag">時效</span><span class="tag">儲匯</span><span class="tag">壽險</span><span class="tag">罰則</span></td></tr>
+      <tr><td><b>郵件處理規則.md</b></td>
+          <td>包裹/快捷補償金額級距、無法投遞處理、無著郵件、國際函件退回、匯票掛失、改寄vs改投、行政罰鍰 6 條、壽險催告寬限、郵政法 §31 免責、§35-1 資通系統刑罰</td>
+          <td><span class="tag">郵件補償</span><span class="tag">郵件處理</span><span class="tag">罰則</span><span class="tag">壽險</span></td></tr>
+      <tr><td><b>求償/求償.md</b></td>
+          <td>可請求補償的郵件種類、6 大免責事由、補償三時效完整版、查詢期限 §60、刑罰彙整、不按址投遞 5 情形、包裹通知領取 5 情形、不得退回 3 種郵件</td>
+          <td><span class="tag">郵件補償</span><span class="tag">郵件處理</span><span class="tag">罰則</span></td></tr>
+      <tr><td><b>監管人分別.md</b></td>
+          <td>交通部／金管會／中央銀行的分工，含自製對照表與口訣</td>
+          <td><span class="tag">主管機關</span></td></tr>
+      <tr><td><b>立法目的.md</b></td>
+          <td>郵政三法立法目的、國內匯兌 4 大業務、存簿儲金免稅、視為有行為能力人</td>
+          <td><span class="tag">儲匯</span><span class="tag">主管機關</span></td></tr>
+      <tr><td><b>B/B.md</b></td>
+          <td>兩題錯題：儲匯法 §18 運用範圍、§19 最高存款限額（誰會同誰）</td>
+          <td><span class="tag">儲匯</span><span class="tag">錯題</span></td></tr>
+      <tr><td><b>D.md</b></td>
+          <td>一題錯題：壽險 §22 受益人故意致死，牽出 §16、§18、§20、§21</td>
+          <td><span class="tag">壽險</span><span class="tag">錯題</span></td></tr>
+      <tr><td><b>第四章 郵件補償/</b><br><span class="tag g">掃描 PDF 13 頁</span></td>
+          <td>課本第四章郵件補償、第五章罰則；第二單元儲匯法總則、郵政儲金、郵政匯兌、罰則</td>
+          <td><span class="tag">郵件補償</span><span class="tag">儲匯</span><span class="tag">罰則</span></td></tr>
+      <tr><td><b>。第三單元 簡易人壽保險法/</b><br><span class="tag g">掃描 PDF 8 頁</span></td>
+          <td>課本第三單元簡易人壽保險法本章重點整理（立法目的 → 罰則，共 15 節）</td>
+          <td><span class="tag">壽險</span></td></tr>
+      <tr><td><b>Attachments/…png</b><br><span class="tag g">照片</span></td>
+          <td>【各種程序比較】郵資、郵票、明信片、特製郵簡的擬定者與核定者</td>
+          <td><span class="tag">郵件處理</span></td></tr>
+    </tbody></table>
+    </div>
+  </div>
+
+  <h2 class="sec">② 六大分類</h2>
+  <div class="card">
+    <div class="tblwrap">
+    <table><thead><tr><th>#</th><th>分類</th><th>核心內容</th><th>對應法規</th></tr></thead><tbody>
+      <tr><td>1</td><td><b>時效與期間</b></td><td>6 個月／5 年／3 個月／3 年／1 個月／2 年 全部集中比對</td><td>郵政法、處理規則、儲匯法、壽險法</td></tr>
+      <tr><td>2</td><td><b>郵件補償</b></td><td>誰能請求、什麼郵件能賠、6 大免責、賠多少錢</td><td>郵政法 §29、§31、§34、§35；處理規則 §65</td></tr>
+      <tr><td>3</td><td><b>郵件處理與投遞</b></td><td>無法投遞、無著郵件、招領、不按址投遞、改寄改投、郵資核定程序</td><td>郵件處理規則</td></tr>
+      <tr><td>4</td><td><b>郵政儲金匯兌法</b></td><td>儲金三種類、運用範圍七款、匯兌種類、匯票時效、免稅</td><td>儲匯法</td></tr>
+      <tr><td>5</td><td><b>簡易人壽保險法</b></td><td>停效復效、解除權、受益人、保單價值準備金、資金運用</td><td>簡易人壽保險法</td></tr>
+      <tr><td>6</td><td><b>罰則與主管機關</b></td><td>刑罰 vs 行政罰鍰級距、交通部／金管會／央行分工</td><td>三法共通</td></tr>
+    </tbody></table>
+    </div>
+    <div class="mnem"><b>為什麼這樣分：</b>筆記裡最常重複、也最常寫錯的就是<b>「數字」</b>和<b>「哪個機關」</b>——所以把時效獨立成第 1 類、主管機關獨立成第 6 類，其餘按三法本身的章節走。</div>
+  </div>
+</section>
+
+<!-- ============ 六大分類重點 ============ -->
+<section class="pane" id="notes">
+
+  <h2 class="sec">分類 1｜時效與期間（筆記裡出現最多次）</h2>
+  <div class="card">
+    <h3>① 郵件補償的「三個時效」<span class="art">郵政法 §33～§35</span></h3>
+    <div class="tblwrap">
+    <table><thead><tr><th>權利</th><th>期間</th><th>起算點</th></tr></thead><tbody>
+      <tr><td><b>補償請求權</b></td><td class="hl">6 個月</td><td>自郵件「<b>交寄之日</b>」起</td></tr>
+      <tr><td><b>補償金請求權</b></td><td class="hl">5 年</td><td>自受領補償人「<b>收到通知之日</b>」起</td></tr>
+      <tr><td><b>補償後找到原郵件，退還補償金</b></td><td class="hl">3 個月</td><td>自受領補償者「<b>收到通知之日</b>」起</td></tr>
+    </tbody></table>
+    </div>
+    <ul>
+      <li>遺失或被竊後，<b>6 個月內曾向中華郵政「查詢」</b>該郵件者 → <b>以已經請求補償論</b>。</li>
+      <li>查詢期限（處理規則 §60）：國內、國際郵件均自<b>交寄之次日</b>起算 6 個月；逾期郵局得不予查詢，並不負補償責任。</li>
+      <li>應補償者，至遲<b>自查詢次日起 3 個月內</b>支付。</li>
+    </ul>
+    <div class="mnem"><b>注意起算點的陷阱：</b>補償請求權從「交寄<b>之日</b>」起算；查詢期限從「交寄<b>之次日</b>」起算。考題最愛在這一個字上動手腳。</div>
+  </div>
+
+  <div class="card">
+    <h3>② 全部期間一次比對</h3>
+    <div class="tblwrap">
+    <table><thead><tr><th>事項</th><th>期間</th><th>依據</th></tr></thead><tbody>
+      <tr><td>郵件補償請求權</td><td><b>6 個月</b>（交寄之日）</td><td>郵政法</td></tr>
+      <tr><td>掛號郵件查詢期限</td><td><b>6 個月</b>（交寄次日）</td><td>處理規則 §60</td></tr>
+      <tr><td>廢止之郵票換新票</td><td><b>6 個月</b>（自廢止日）；且應<b>1 個月前公告</b></td><td>郵政法</td></tr>
+      <tr><td>支付補償金（至遲）</td><td><b>3 個月</b>（查詢次日）</td><td>處理規則</td></tr>
+      <tr><td>退還補償金、請求交付原郵件</td><td><b>3 個月</b>（收到通知日）</td><td>郵政法</td></tr>
+      <tr><td>補償金請求權</td><td><b>5 年</b>（收到通知日）</td><td>郵政法</td></tr>
+      <tr><td>郵政匯票兌領請求權</td><td class="hl"><b>3 年</b>（自發票日）</td><td>儲匯法 §22</td></tr>
+      <tr><td>非掛號新聞紙、雜誌退回後補付郵資領回</td><td><b>15 日</b>（通知之次日）</td><td>處理規則</td></tr>
+      <tr><td>無法投遞郵件招領揭示</td><td><b>1 個月</b>，屆期為無著郵件</td><td>處理規則</td></tr>
+      <tr><td>壽險：續期保費未交 → 催告</td><td>逾 <b>1 個月</b>未交，保險人應於 <b>10 日內</b>催告</td><td>壽險法 §13</td></tr>
+      <tr><td>壽險：寬限期間</td><td><b>3 個月</b>（自當期繳費日起算）</td><td>壽險法 §13</td></tr>
+      <tr><td>壽險：停效後申請復效</td><td><b>2 年</b>內</td><td>壽險法 §14</td></tr>
+      <tr><td>壽險：解除權</td><td>知有原因後 <b>1 個月</b>不行使而消滅</td><td>壽險法 §16</td></tr>
+      <tr><td>壽險：訂約／復效至事故發生滿 2 年</td><td><b>2 年</b>，即有原因亦不得解除</td><td>壽險法 §16</td></tr>
+      <tr><td>壽險：契約所生權利</td><td><b>5 年</b>（自得請求之日）</td><td>壽險法</td></tr>
+      <tr><td>儲匯業務免稅</td><td>公司成立之日起 <b>5 年</b>內免納一切稅捐</td><td>儲匯法</td></tr>
+    </tbody></table>
+    </div>
+    <div class="mnem"><b>兩個「5 年」別搞混：</b>郵件<b>補償金</b>請求權 5 年（收到通知起）；壽險契約所生權利也是 5 年（得請求之日起）。而<b>匯票</b>是唯一的 <b>3 年</b>。</div>
+  </div>
+
+  <h2 class="sec">分類 2｜郵件補償</h2>
+  <div class="card">
+    <h3>① 誰、什麼郵件可以請求<span class="art">郵政法 §29</span></h3>
+    <h4>寄件人得請求補償</h4>
+    <ul>
+      <li><b>包裹、快捷、報值、保價</b>郵件——全部或一部<b>遺失、被竊、毀損</b>。</li>
+      <li>其他各類<b>掛號</b>郵件——<b>全部遺失或被竊</b>（注意：掛號只賠「全部」且不含毀損）。</li>
+      <li>限時、快捷郵件遞送延誤，經查明為中華郵政公司過失所致。</li>
+      <li>掛號郵件未依中華郵政公告之處理規定遞送。</li>
+    </ul>
+    <h4>收件人得請求補償</h4>
+    <ul>
+      <li>提出證據，證明已由寄件人<b>授與求償權</b>。</li>
+      <li>郵件一部毀損或被竊，收件人收受其餘部分並<b>聲明保留求償權</b>。</li>
+    </ul>
+    <div class="mnem"><b>記法：</b>「包、快、報、保」全都賠（遺失／被竊／毀損、全部或一部）；「掛號」只賠<b>全部遺失或被竊</b>。</div>
+  </div>
+
+  <div class="card">
+    <h3>② 不得請求補償的 6 大免責事由<span class="art">郵政法 §31</span></h3>
+    <ul>
+      <li>一、因郵件之<b>性質或瑕疵</b>致損失。</li>
+      <li>二、因<b>天災事變或其他不可抗力</b>致損失。<span class="warn">但保價郵件，以因「戰事」致有損失為限。</span></li>
+      <li>三、在<b>外國境內</b>損失，依該國法規不負補償責任。</li>
+      <li>四、郵件係<b>禁寄物品</b>或依法規不得遞送之物品。</li>
+      <li>五、郵件<b>未妥為封裝，經告知仍未改善</b>致損失。</li>
+      <li>六、收件人<b>無異議接受</b>郵件。</li>
+    </ul>
+    <div class="mnem"><b>筆記裡自己標的兩個反面重點：</b><br>
+      1. 「保價郵件」因天災事變或不可抗力致損失 → <b>仍得請求補償</b>（保價的免責只限「戰事」，其他都要賠）。<br>
+      2. 郵件未妥為封裝，但郵局<b>並未告知</b>寄件人改善 → <b>仍得請求補償</b>（「經告知仍未改善」是要件）。</div>
+  </div>
+
+  <div class="card">
+    <h3>③ 不以毀損或損失論</h3>
+    <ul>
+      <li>郵件遞交收件人或退還寄件人時，<b>封面無破裂痕跡、重量亦未減少</b>者，不得以毀損論。重量雖減少，但原因出於<b>該物件之性質</b>者，亦同。</li>
+      <li>因<b>時間關係或市價變動</b>而減損其全部或一部價值者，<b>不得以損失論</b>。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>④ 補償金額（國內包裹及國內快捷）<span class="art">郵件處理規則 §65</span></h3>
+    <div class="tblwrap">
+    <table><thead><tr><th>單件以重量計費</th><th>補償上限</th></tr></thead><tbody>
+      <tr><td>5 公斤以下</td><td>不逾 <b>575</b> 元</td></tr>
+      <tr><td>超過 5 公斤至 10 公斤以下</td><td>不逾 <b>865</b> 元</td></tr>
+      <tr><td>超過 10 公斤</td><td>不逾 <b>1,155</b> 元</td></tr>
+    </tbody></table>
+    </div>
+    <div class="mnem"><b>數字記法：</b>575 → 865 → 1155，差額分別是 <b>290</b> 與 <b>290</b>，等距好記。</div>
+  </div>
+
+  <h2 class="sec">分類 3｜郵件處理與投遞</h2>
+  <div class="card">
+    <h3>① 無法投遞怎麼辦</h3>
+    <ul>
+      <li>國內<b>非掛號</b>新聞紙、雜誌 → 退回原寄郵局，並<b>發單</b>通知寄件人，自<b>通知之次日</b>起 <b>15 日</b>內至指定郵局<b>補付郵資</b>領回；屆期未領，依無著郵件處理。</li>
+      <li>無法投遞或依規定不予寄遞而不能退還寄件人者 → 由原寄郵局<b>招領揭示 1 個月</b>，屆期無人領取即為<b>無著郵件</b>。</li>
+      <li>無法投遞之<b>國際函件</b> → 無論封面有無寄件人姓名地址，<b>一律退回原寄國</b>。<br>
+          例外（不退回，逕依無著郵件處理）：<b>未書寄件人姓名地址之明信片</b>；未以寄達國通曉文字註明應行退回之<b>非掛號印刷物</b>。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>② 得不按址投遞之地區</h3>
+    <ul>
+      <li>一、深山。二、孤島。</li>
+      <li>三、羊腸小道在 <b>2 公里</b>以上，非郵路所必經之地區。</li>
+      <li>四、偏遠地區住戶或村落，平均一個月郵件<b>不足 40 件</b>者。</li>
+      <li>五、其他交通不便、投遞顯有困難，經中華郵政訂定之特殊區域。</li>
+      <li>另：收件人於收件地址<b>飼養之動物有攻擊之虞</b>，經通知改善而未改善者，該地址郵件得不按址投遞並公告之。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>③ 包裹得通知收件人至郵局領取之情形</h3>
+    <ul>
+      <li>一、<b>破損須當面開驗</b>。</li>
+      <li>二、報值、保價或代收貨款金額達一定數額以上。</li>
+      <li>三、應由收件人自辦驗關手續，或應納稅捐在規定數額以上。</li>
+      <li>四、<b>應交付其他費用</b>。</li>
+      <li>五、<b>重量在 3 公斤以上</b>，其收件人地址車輛通行不便。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>④ 已遞交後「不得」交由郵局退回之郵件</h3>
+    <ul>
+      <li>一、<b>有拆過痕跡之函件</b>。</li>
+      <li>二、<b>報值或保價郵件</b>。</li>
+      <li>三、<b>包裹</b>。</li>
+    </ul>
+    <div class="mnem"><b>改寄 vs 改投：</b>「<b>改寄</b>」＝寄到<b>非原投遞局</b>；「<b>改投</b>」＝仍在<b>原投遞局</b>轄區內換地址。</div>
+  </div>
+
+  <div class="card">
+    <h3>⑤ 郵資與郵資證明的核定程序<span class="art">附件照片：各種程序比較</span></h3>
+    <div class="tblwrap">
+    <table><thead><tr><th>類型</th><th>擬定／設計者</th><th>報請交通部層轉</th><th>核定者</th></tr></thead><tbody>
+      <tr><td>郵政專營權郵件（郵資）</td><td>中華郵政公司</td><td>✕</td><td><b>交通部</b></td></tr>
+      <tr><td>非專營權郵件與其他費用</td><td>中華郵政公司</td><td>✕</td><td>✕（公司自訂）</td></tr>
+      <tr><td><b>郵票</b></td><td>中華郵政公司</td><td>✓</td><td class="hl"><b>行政院</b></td></tr>
+      <tr><td><b>含有郵票符誌之明信片</b></td><td>中華郵政公司</td><td>✓</td><td class="hl"><b>行政院</b></td></tr>
+      <tr><td><b>特製郵簡</b></td><td>中華郵政公司</td><td>✓</td><td class="hl"><b>行政院</b></td></tr>
+      <tr><td>郵票之廢止</td><td>中華郵政公司</td><td>✕</td><td><b>交通部</b></td></tr>
+    </tbody></table>
+    </div>
+    <ul>
+      <li>郵費之交付，以<b>郵票或其他表示郵資已付符誌</b>證明之。</li>
+      <li>持有<b>廢止之郵票</b>者，自廢止之日起 <b>6 個月</b>內得向中華郵政<b>換取新票</b>；並應於<b>1 個月前公告</b>。</li>
+      <li>除中華郵政或經其同意者外，任何人不得使用與「郵政」、「郵局」（含中文及外文）<b>相同之文字</b>、圖形、記號或其聯合式，表彰其營業名稱、服務或產品。</li>
+    </ul>
+    <div class="mnem"><b>記法：</b>會「印出來當錢用」的（郵票、含符誌明信片、特製郵簡）→ <b>行政院</b>核定；其餘（郵資、廢止郵票）→ <b>交通部</b>。</div>
+  </div>
+
+  <div class="card">
+    <h3>⑥ 郵政匯票的處理</h3>
+    <ul>
+      <li><b>未兌領</b>：逾 3 年未經兌款者，通知「<b>匯款人</b>」領回，匯款人<b>不得</b>要求退還匯費。<span class="art">儲匯法 §23</span></li>
+      <li><b>遺失或毀損</b>：<b>匯款人或受款人</b>得申請<b>掛失或繳回</b>，並領回匯款，原匯票即予作廢。</li>
+      <li>匯票<b>業經兌領</b>時，中華郵政應<b>拒絕受理</b>掛失申請。</li>
+    </ul>
+  </div>
+
+  <h2 class="sec">分類 4｜郵政儲金匯兌法</h2>
+  <div class="card">
+    <h3>① 立法目的（5 項）</h3>
+    <ul><li>鼓勵國民<b>儲</b>蓄 → 促進<b>資</b>本形成 → 配合國家<b>政</b>策 → 增進民眾<b>便</b>利 → 保障郵政儲金匯兌<b>安</b>全。</li></ul>
+    <div class="mnem"><b>口訣：</b>儲、資、政、便、安。（郵政法：普、公、合＋公共利益；壽險法：制度、經濟、投保、福祉）</div>
+  </div>
+
+  <div class="card">
+    <h3>② 儲金三種類</h3>
+    <ul>
+      <li><b>存簿儲金</b>：憑郵政儲金簿或依約定方式，<b>隨時</b>存入或提取。</li>
+      <li><b>定期儲金</b>：有<b>一定時期</b>之限制，憑存單或依約定方式提取。</li>
+      <li><b>劃撥儲金</b>：得以帳戶辦理存款、提款、匯款、撥款、轉帳、申請領用<b>劃撥支票</b>、接受他人存款。</li>
+    </ul>
+    <ul>
+      <li>初次存入時，由存入之郵局按種類分別發給<b>郵政儲金簿</b>或單據作為憑證。</li>
+      <li>憑證或印鑑遺失應辦<b>掛失止付</b>；<b>掛失止付前</b>，中華郵政依規定程序並已盡善良管理人注意義務所為之給付，縱係冒領亦<b>不負責任</b>。</li>
+      <li>劃撥儲金之<b>劃撥支票</b>業務，<b>準用票據法</b>有關支票之規定。<span class="art">§16</span></li>
+      <li>存簿儲金<b>每一人或每一團體僅得為一戶</b>；超過最高存款限額之數<b>不給利息</b>；<b>利息免一切稅捐</b>。政府機關、自治團體或公益法人不受限額限制。</li>
+    </ul>
+    <div class="mnem"><b>免稅範圍別擴大：</b>只有<b>存簿儲金（活存）</b>利息免一切稅捐；<b>定期儲金</b>等其他存款利息<b>仍要依所得稅法</b>課稅。</div>
+  </div>
+
+  <div class="card">
+    <h3>③ 郵政儲金之運用範圍（7 款）<span class="art">§18</span></h3>
+    <ul>
+      <li>一、轉存<b>中央銀行</b>。</li>
+      <li>二、轉存中央銀行以外之其他金融機構。</li>
+      <li>三、投資<b>公債、公司債、金融債券及短期票券</b>。</li>
+      <li>四、投資<b>受益憑證及上市（櫃）股票</b>。</li>
+      <li>五、參與金融同業拆款市場。</li>
+      <li>六、提供（中長期）資金轉存金融機構，辦理政府核准之重大建設及民間投資計畫。</li>
+      <li>七、其他經交通部、金管會及中央銀行核准者。</li>
+    </ul>
+    <div class="tblwrap">
+    <table><thead><tr><th>訂定辦法之機關</th><th>適用事項</th></tr></thead><tbody>
+      <tr><td><b>交通部會同金管會＋中央銀行</b></td><td>§18 第 <b>3</b> 款（公債、公司債、金融債券、短期票券）之投資限額與運用管理辦法<br>§19 存簿儲金<b>計息之最高存款限額</b></td></tr>
+      <tr><td><b>交通部會同金管會</b></td><td>§18 第 <b>4</b> 款（受益憑證、上市櫃股票）之限制及運用管理辦法<br>內部控制及稽核制度實施辦法、儲金匯兌業務<b>監督管理辦法</b></td></tr>
+    </tbody></table>
+    </div>
+    <div class="mnem"><b>這是最愛考的陷阱：</b>「存簿儲金最高存款限額」是<b>三個機關</b>（交通部＋<b>中央銀行</b>＋金管會），不是只有交通部會同金管會。</div>
+  </div>
+
+  <div class="card">
+    <h3>④ 匯兌業務</h3>
+    <ul>
+      <li><b>國內匯兌</b>：公眾以一定金額委託中華郵政「<b>支付</b>」與國內受款人。</li>
+      <li><b>國際匯兌</b>：委託「<b>轉付</b>」與國外受款人，及接受通匯國匯入轉付與國內受款人。</li>
+      <li>國內匯兌及國際匯兌，均分為<b>票匯</b>及<b>電匯</b>二種。</li>
+      <li>郵政匯兌<b>除電匯外</b>，應以<b>郵政匯票或郵政禮券</b>為憑；應記載事項由中華郵政擬訂，報<b>交通部</b>核定。</li>
+      <li><b>郵政禮券</b>：中華郵政發行、依面額對持有人<b>無條件付款</b>之<b>無記名有價證券</b>。</li>
+    </ul>
+    <h4>國內匯兌 4 大業務（實務）</h4>
+    <ul>
+      <li><b>入戶匯款</b>：直接匯入受款人郵局存簿或劃撥帳戶，每筆匯費 30 元。</li>
+      <li><b>郵政跨行通匯</b>：匯入其他銀行帳戶，基本匯費 30 元起，依金額級距調整。</li>
+      <li><b>郵政匯票</b>：無記名有價證券，匯款人自行掛號寄給受款人，每張最高 <b>50 萬元</b>，匯費 30 元。</li>
+      <li><b>電傳送現</b>：受款人無帳戶時，郵局傳真通知指定郵局，受款人臨櫃領現，每筆最高 <b>8 萬元</b>。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>⑤ 其他總則重點</h3>
+    <ul>
+      <li><b>行為能力之擬制</b>：無行為能力人或限制行為能力人，關於<b>郵政儲金及匯兌事務</b>對中華郵政所為之行為，視為有行為能力人之行為。（郵政法 §12 則是「<b>郵政事務</b>」；<b>簡易人壽保險法無此規定</b>）</li>
+      <li><b>會計獨立</b>：儲金匯兌業務之會計帳務應獨立處理。</li>
+      <li><b>免稅</b>：儲匯業務及所用郵政公用物、業務單據，於公司成立之日起 <b>5 年</b>內免納一切稅捐。</li>
+      <li><b>利率</b>：應以「<b>年率</b>」為準，並於<b>營業場所揭示</b>。</li>
+      <li><b>保密義務</b>：非依<b>法院裁判</b>、<b>檢察機關書面通知</b>或<b>其他法律規定</b>，不得依第三人請求停止帳戶交易活動或給付匯款；顧客資料應保守秘密。</li>
+      <li><b>接受檢查義務</b>：金管會得隨時派員或委託適當機構，攜帶證明文件檢查業務、財務，或令限期據實提報財務報告、財產目錄。<span class="art">§13</span></li>
+      <li><b>郵政核心資通系統</b>：指中華郵政支持<b>儲金及匯兌業務</b>持續運作必要、或防護需求等級為<b>高</b>之儲金及匯兌業務資通系統。</li>
+    </ul>
+  </div>
+
+  <h2 class="sec">分類 5｜簡易人壽保險法</h2>
+  <div class="card">
+    <h3>① 立法目的與主管機關</h3>
+    <ul>
+      <li>立法目的：健全簡易人壽保險<b>制度</b>、提供國民基本<b>經濟</b>保障、便利全民<b>投保</b>、增進社會<b>福祉</b>。</li>
+      <li>中華郵政經營者 → <b>交通部</b>主管，並受<b>金管會</b>監督；其他保險業者經營 → <b>金管會</b>主管。</li>
+      <li>保險種類：<b>生存保險、死亡保險、生死合險</b>；得以<b>附約</b>方式經營健康保險及傷害保險。</li>
+      <li>最高、最低保險金額及同一被保險人保險金額總數 → <b>交通部會同金管會</b>定之。超過限額部分之<b>契約無效</b>，超過部分所繳保費<b>無息退還</b>。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>② 契約的停效與復效<span class="art">§13、§14</span></h3>
+    <ul>
+      <li>續期保險費自繳費日起<b>逾 1 個月</b>未交付 → 保險人應於 <b>10 日內催告</b>。</li>
+      <li>自當期繳費日起算 <b>3 個月</b>為<b>寬限期間</b>；寬限期屆滿仍未交付 → 契約<b>效力停止</b>。</li>
+      <li>停效後被保險人發生保險事故，保險人<b>不負保險責任</b>。</li>
+      <li>停效後，要保人得於 <b>2 年</b>以內申請恢復契約效力。</li>
+      <li>經同意恢復效力者，<b>溯自繳清應繳保險費「及其利息」之日</b>起恢復效力。</li>
+    </ul>
+    <div class="mnem"><b>復效題的標準陷阱：</b>不是「同意之日」，也不是只有「繳清保費之日」，而是「繳清保費<b>及其利息</b>之日」。</div>
+  </div>
+
+  <div class="card">
+    <h3>③ 解除權與終止權</h3>
+    <ul>
+      <li><b>解除權（§16）</b>：自保險人<b>知有解除之原因</b>後，經過 <b>1 個月</b>不行使而消滅；或自<b>契約訂立或復效</b>至保險事故發生日<b>滿 2 年</b>，即有可解除之原因，亦不得解除。</li>
+      <li>依 §16 解除契約時，要保人除得依 §21 申請應得之保單價值準備金外，<b>不得為其他請求</b>。</li>
+      <li><b>終止權（§18）</b>：<b>要保人</b>得隨時向保險人聲明終止保險契約；其終止效力，<b>不溯及既往</b>。</li>
+      <li><b>被保險人</b>之撤銷同意（§9）：被保險人得隨時以<b>書面通知保險人及要保人</b>撤銷其同意，視為要保人<b>終止</b>保險契約。</li>
+      <li>以他人為被保險人時，須<b>要保人與被保險人有保險利益</b>。</li>
+    </ul>
+    <div class="mnem"><b>要保人 vs 被保險人：</b>考「終止、解約、拿回解約金」→ 認明<b>要保人</b>；考「撤銷投保同意、能不能改受益人」→ 認明<b>被保險人</b>。<br><b>口訣：</b>「撤同意 → 通知雙方（保＋要）→ 視同要保人終止。」</div>
+  </div>
+
+  <div class="card">
+    <h3>④ 受益人與保險人免責<span class="art">§20、§22</span></h3>
+    <h4>受益人故意行為（§22）</h4>
+    <ul>
+      <li>受益人<b>故意致被保險人於死或雖未致死</b>者，<b>無</b>請求死亡人壽保險金額之權。</li>
+      <li>受益人<b>故意傷害</b>被保險人者，無請求傷害保險金額之權。</li>
+      <li>前二項情形，<b>有其他受益人</b> → 由其他受益人<b>平均領受全部</b>保險金額；<b>無其他受益人</b> → 保險金額作為<b>被保險人遺產</b>。</li>
+    </ul>
+    <h4>保險人免責事由（§20）</h4>
+    <ul>
+      <li>一、被保險人在契約生效或復效後<b>1 年以內故意自殺</b>。</li>
+      <li>二、<b>要保人</b>故意致被保險人於死。</li>
+      <li>三、被保險人因<b>犯罪處死、拒捕或越獄</b>致死。</li>
+      <li>四、被保險人因<b>戰爭或其他變亂</b>致死。</li>
+    </ul>
+    <div class="mnem"><b>§21 保單價值準備金的分流（考試重災區）：</b><br>
+      • §16、§18 或 §20 第 <b>1、3、4</b> 款 → 保費付足 1 年以上，<b>要保人</b>得申請<b>返還</b>保單價值準備金。<br>
+      • §20 第 <b>2</b> 款（<b>要保人</b>故意致被保險人於死）→ 保險人應將保單價值準備金<b>給付與應得之人</b>。<br>
+      • <b>§22 受益人故意致死不在 §21 之列</b>——所以「保險人應將其保單價值準備金給付與應得之人」放在 §22 的題目中就是<b>錯的</b>。</div>
+  </div>
+
+  <div class="card">
+    <h3>⑤ 保單借款與資金運用</h3>
+    <ul>
+      <li>保費付足 <b>1 年</b>以上者，要保人得以保單為質，在<b>保單價值準備金額內</b>向保險人申請借款。</li>
+      <li>借款未清償前，因契約<b>效力停止、終止、滿期或發生保險事故</b>時，所欠本息應於給付金額內<b>扣抵</b>之。（四種情形<b>全部</b>都要扣抵）</li>
+      <li>資金運用除<b>存款</b>外，依<b>保險法</b>相關規定辦理。</li>
+      <li>得經<b>交通部核可</b>，提供重大公共建設計畫融資，總額不得超過資金總額 <b>30%</b>；所稱資金包括<b>業主權益及各種責任準備金</b>。</li>
+      <li>資本由<b>交通部報請行政院核定</b>，並按實收資本總額 <b>15%</b> 繳存<b>保證金於國庫</b>。</li>
+      <li>保險人<b>不得代位行使</b>要保人或受益人因保險事故對第三人所生之請求權。</li>
+      <li>保險人對於<b>保險費不得以訴訟請求交付</b>。</li>
+      <li>非<b>中華民國國民</b>不得為被保險人；對被保險人<b>免施以健康檢查</b>。</li>
+      <li>以未滿 <b>15 歲</b>之未成年人為被保險人者，除健康保險外，死亡給付於被保險人<b>滿 15 歲之日</b>起發生效力；滿 15 歲前死亡者，<b>加計利息退還所繳保險費</b>。</li>
+    </ul>
+  </div>
+
+  <h2 class="sec">分類 6｜罰則與主管機關</h2>
+  <div class="card">
+    <h3>① 主管機關怎麼分</h3>
+    <div class="tblwrap">
+    <table><thead><tr><th>題目看到什麼</th><th>答案</th></tr></thead><tbody>
+      <tr><td>保險（壽險業務相關辦法）</td><td>交通部會同<b>金管會</b></td></tr>
+      <tr><td>新增業務許可、監理、財報揭露、內控稽核</td><td>交通部會同<b>金管會</b></td></tr>
+      <tr><td>利率、計息、最高存款限額</td><td>交通部會同<b>中央銀行＋金管會</b></td></tr>
+      <tr><td>外匯業務之許可</td><td><b>中央銀行</b></td></tr>
+      <tr><td>郵票、含符誌明信片、特製郵簡之核定</td><td><b>行政院</b></td></tr>
+      <tr><td>郵資、郵票廢止、郵件處理規則、匯票應記載事項</td><td><b>交通部</b></td></tr>
+    </tbody></table>
+    </div>
+    <div class="mnem"><b>自己整理的口訣：</b>「管銀行的是金管會，管鈔票的是中央銀行。」<br>
+      • 只是管理郵局<b>怎麼經營</b>金融業務 → 金管會。<br>
+      • 只要牽涉到<b>錢會變多變少</b>（利率、計息、存款限額） → <b>中央銀行也要點頭</b>。</div>
+  </div>
+
+  <div class="card">
+    <h3>② 郵政法：刑事罰</h3>
+    <ul>
+      <li><b>偽造、變造</b>郵政認知證、國際回信郵票券或郵資已付符誌：<b>6 月以上 5 年以下</b>有期徒刑，得併科 <b>3 萬元</b>以下罰金。</li>
+      <li><b>行使、收集、交付</b>偽造變造之郵政用品：<b>3 年以下</b>有期徒刑，得併科 <b>3 萬元</b>以下罰金。</li>
+      <li><b>郵票及郵資符誌塗抹罪</b>（意圖供重複行使，於郵票、明信片、特製郵簡塗用膠類、油類、漿類或其他化合物）：<b>1 年以下</b>有期徒刑、拘役或 <b>9,000 元</b>以下罰金；行使之者亦同。</li>
+      <li><b>妨害郵件秘密罪</b>（無故開拆、隱匿或以其他方法窺視）：<b>拘役或 9 萬元</b>以下罰金。</li>
+      <li><b>郵政服務人員</b>犯上開之罪或刑法 §202、§204 關於郵票之罪 → <b>加重其刑至 1/2</b>；負輔助載運責任者之服務人員<b>準用</b>。</li>
+    </ul>
+    <div class="card" style="margin:12px 0 0;background:var(--green-l);border-style:dashed">
+      <h4 style="margin-top:0">郵政法 §35-1：危害郵政核心資通系統</h4>
+      <ul>
+        <li>以<b>竊取、毀壞</b>或其他非法方法危害其功能正常運作：<b>1 年以上 7 年以下</b>有期徒刑，得併科 <b>1,000 萬元</b>以下罰金。</li>
+        <li>意圖<b>危害國家安全或社會安定</b>而犯之：<b>3 年以上 10 年以下</b>有期徒刑，得併科 <b>5,000 萬元</b>以下罰金。</li>
+        <li>致<b>損及金融市場穩定</b>者，<b>加重其刑至 1/2</b>；<b>未遂犯罰之</b>。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>③ 郵政法：行政罰鍰（6 種，只有兩個級距）</h3>
+    <div class="tblwrap">
+    <table><thead><tr><th>違規行為</th><th>罰鍰</th><th>附帶效果</th></tr></thead><tbody>
+      <tr><td>誤收他人郵件，<b>故意不返還</b></td><td class="hl"><b>2,000 元～1 萬元</b></td><td>—</td></tr>
+      <tr><td>違反<b>專營權</b>（私行遞送郵件）</td><td class="hl"><b>20 萬～100 萬元</b></td><td>通知<b>立即停止</b>，未停止得<b>按次</b>處罰</td></tr>
+      <tr><td>違規使用郵政專用<b>文字、圖形、記號</b></td><td><b>2 萬～10 萬元</b></td><td>令<b>限期改善</b>，屆期不改<b>按次連續</b></td></tr>
+      <tr><td>違規<b>發行類似郵票</b>票證</td><td><b>2 萬～10 萬元</b></td><td>按次連續</td></tr>
+      <tr><td><b>規避、妨礙或拒絕</b>行政檢查</td><td><b>2 萬～10 萬元</b></td><td>按次連續</td></tr>
+      <tr><td>負輔助載運責任者<b>無故拒運或故意延誤</b></td><td><b>2 萬～10 萬元</b></td><td>—</td></tr>
+    </tbody></table>
+    </div>
+    <div class="mnem"><b>記法：</b>郵政法的罰鍰只有三種數字——<b>2 千～1 萬</b>（誤收不還，最輕）、<b>2 萬～10 萬</b>（大宗，四種）、<b>20 萬～100 萬</b>（違反專營，最重）。其餘都是刑罰。</div>
+  </div>
+
+  <div class="card">
+    <h3>④ 儲匯法與壽險法：罰鍰</h3>
+    <div class="tblwrap">
+    <table><thead><tr><th>法規</th><th>情事</th><th>罰鍰</th></tr></thead><tbody>
+      <tr><td rowspan="2">儲匯法 §26</td>
+          <td>利率未以年率為準／未揭示；未建立內控稽核；逕依第三人請求停止帳戶或洩漏客戶資料；儲金運用未依 §18 辦法；業務未依 §30 監督管理辦法；<b>未經中央銀行許可辦外匯</b></td>
+          <td class="hl"><b>30 萬～150 萬元</b></td></tr>
+      <tr><td>規避妨礙拒絕檢查；隱匿毀損帳冊；詢問不為答復或故意答復不實；逾期提報財報或提報不實</td>
+          <td><b>50 萬～250 萬元</b></td></tr>
+      <tr><td rowspan="3">簡易人壽保險法</td>
+          <td>經營業務違反保險法相關規定、違反本法特定條文、責任準備金提存或計算違規等</td>
+          <td><b>30 萬～150 萬元</b>，並得撤換核保或精算人員</td></tr>
+      <tr><td>妨礙檢查、隱匿帳冊、答復不實、逾期提報等</td><td><b>50 萬～250 萬元</b></td></tr>
+      <tr><td>對<b>安定基金</b>之提撥未依限或拒絕繳付</td><td class="hl"><b>24 萬～120 萬元</b></td></tr>
+    </tbody></table>
+    </div>
+    <ul>
+      <li>儲匯法罰鍰由<b>金管會</b>處罰；但未經許可辦外匯之處罰由<b>中央銀行</b>為之，均應通知<b>交通部</b>。逾期不繳納者移送<b>強制執行</b>。</li>
+      <li>中華郵政受罰時，得對<b>應負責之人求償</b>（內部求償權）。</li>
+      <li>壽險法所定行政處罰由<b>金管會</b>為之，並通知交通部。</li>
+      <li>壽險法 §35：郵局負責人或職員，或以他人名義直接、間接控制之人，意圖為自己或第三人不法利益、或損害公司利益而<b>違背職務</b>致生損害：<b>1 年以上 7 年以下</b>有期徒刑，得併科 <b>3,000 萬元</b>以下罰金；<b>2 人以上共同</b>實施者得加重其刑至 1/2，<b>未遂犯罰之</b>。</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 錯題 ============ -->
+<section class="pane" id="quiz">
+  <h2 class="sec">筆記裡記下來的錯題（14 題）</h2>
+  <div class="card" style="margin-bottom:6px">
+    <p>這 14 題全部出自筆記中自己抄下來、標了答案或畫了重點的題目。點選項即顯示解析。</p>
+  </div>
+  <div class="quizbar">
+    <span class="score" id="mscore">答對 0 / 作答 0 （共 14 題）</span>
+    <span class="prog"><i id="mbar"></i></span>
+    <button id="mshowAll">顯示全部解析</button>
+    <button id="mreset">重新作答</button>
+  </div>
+  <div id="mbox"></div>
+</section>
+
+  <footer>EFETL · 郵局國考法規複習 ｜ 由手寫筆記整理歸類，正式以法規原文為準。</footer>
+</div>
+
+<script>
+const QUESTIONS=[
+{"q":"依郵政儲金匯兌法規定，中華郵政公司辦理郵政儲金匯兌業務，其新增業務之許可、財務報表之揭露等事項之監督管理辦法，由何機關定之？","o":["交通部","金融監督管理委員會","交通部會同金融監督管理委員會","交通部會同中央銀行及金融監督管理委員會"],"a":2,"e":"儲匯法 §30：監督管理辦法由「交通部會同金管會」定之。只要是「監理、內控、財報、新增業務許可」→ 交通部＋金管會，不必找中央銀行。"},
+{"q":"依郵政儲金匯兌法規定，有關存簿儲金，下列敘述何者錯誤？","o":["指存款人憑郵政儲金簿或依約定方式，隨時存入或提取之儲金","儲戶計息之最高存款限額，由中華郵政公司擬訂，報由交通部會同金融監督管理委員會定之","每一人或每一團體僅得為一戶","利息應免一切稅捐"],"a":1,"e":"§19：最高存款限額由中華郵政擬訂，報由「交通部會同<b>中央銀行</b>及金融監督管理委員會」定之——少了中央銀行就是錯的。這是本法最常設的陷阱。"},
+{"q":"依郵政儲金匯兌法規定，下列何者「非」屬交通部須會同中央銀行及金融監督管理委員會定之？","o":["投資短期票券之管理辦法","投資受益憑證之管理辦法","投資金融債券之管理辦法","存簿儲金計息之最高存款限額"],"a":1,"e":"§18 第 3 款（公債、公司債、金融債券、短期票券）與 §19（最高存款限額）→ 交通部＋中央銀行＋金管會。<br>§18 第 <b>4</b> 款（受益憑證、上市櫃股票）→ 只要「交通部會同金管會」，不含中央銀行。"},
+{"q":"依郵政儲金匯兌法規定，下列敘述何者錯誤？","o":["郵政儲金匯兌業務內部控制及稽核制度實施辦法，由交通部會同金融監督管理委員會定之","郵政儲金匯兌業務監督管理辦法，由交通部會同金融監督管理委員會定之","存簿儲金，儲戶計息之最高存款限額，由中華郵政公司擬訂，報由交通部會同金融監督管理委員會定之","郵政儲金投資受益憑證及上市（櫃）股票之限制及運用管理辦法，由交通部會同金融監督管理委員會定之"],"a":2,"e":"同樣是 §19 的陷阱：最高存款限額必須「交通部會同<b>中央銀行</b>及金管會」。(A)(B)(D) 都正確。"},
+{"q":"郵政儲金利率未依規定以年率為準或未於營業場所揭示，應由何機關處罰之？","o":["交通部","金融監督管理委員會","中央銀行","交通部會同金融監督管理委員會"],"a":1,"e":"儲匯法所定罰鍰（30 萬～150 萬元）由「金管會」處罰之，並通知交通部。唯一例外：未經許可辦理外匯業務，由「中央銀行」處罰。"},
+{"q":"依郵政法規定，有關行政院之權限，下列何者「不」包括？","o":["核定郵件處理規則","核定郵票之圖案","核定含有郵票符誌之特製郵簡式樣","核定明信片之資費"],"a":3,"e":"郵票、含郵票符誌之明信片、特製郵簡的式樣圖案價格 → 報請交通部層轉「行政院」核定。<br>「郵件處理規則」與「資費」→ <b>交通部</b>核定。題目問「不包括」，(D) 資費屬交通部。"},
+{"q":"無行為能力人或限制行為能力人，辦理何項事務，對中華郵政公司所為之行為，「不」得視為有行為能力人之行為？","o":["郵政儲金事務","郵政匯兌事務","郵政事務","郵政壽險事務"],"a":3,"e":"郵政法 §12（郵政事務）與儲匯法 §5（儲金及匯兌事務）都有「視為有行為能力人」之擬制；<b>簡易人壽保險法沒有這一條</b>，改以 §7、§7-1、§8 規範未成年人與第三人訂約。"},
+{"q":"依郵政法規定，下列何者得請求補償？","o":["收件人聲稱已獲授與求償權，但無法提出證據證明","包裹遞交收件人時封面完好，但因內件性質減少重量","保價郵件因地震毀損","快捷郵件因颱風毀損"],"a":2,"e":"§31 第 2 款：因天災事變或不可抗力致損失不得請求補償，<b>但「保價郵件」以因戰事致損失為限</b>——換言之保價郵件遇地震（天災）<b>仍得請求</b>。<br>(A) 收件人須「提出證據」證明授與求償權；(B) 封面無破裂、重量減少係物件性質所致，不以毀損論；(D) 快捷遇颱風屬不可抗力，不得請求。"},
+{"q":"依簡易人壽保險法規定，續期保險費自繳費日起多久未交付者，保險人應於十日內催告？","o":["十日","一個月","三個月","六個月"],"a":1,"e":"§13：續期保險費自繳費日起「1 個月」未交付者，保險人應於「10 日內」催告，並自當期繳費日起算「3 個月」為寬限期間；寬限期屆滿仍未交付，契約效力停止。"},
+{"q":"依簡易人壽保險法規定，經保險人同意恢復效力之保險契約，自何時起恢復效力？","o":["自保險人同意恢復效力之日起","自保險人同意恢復效力之次月 1 日起","溯自繳清應繳保險費之日起","溯自繳清應繳保險費及其利息之日起"],"a":3,"e":"§14：停效後 2 年內得申請復效；經同意者「溯自繳清應繳保險費<b>及其利息</b>之日」起恢復效力。少了「及其利息」就是錯誤選項。"},
+{"q":"依簡易人壽保險法規定，有關終止保險契約及其終止效力，下列敘述何者正確？","o":["被保險人得隨時聲明終止保險契約；其終止效力，不溯及既往","被保險人得隨時聲明終止保險契約；其終止效力，溯及既往","要保人得隨時聲明終止保險契約；其終止效力，不溯及既往","要保人得隨時聲明終止保險契約；其終止效力，溯及既往"],"a":2,"e":"§18：<b>要保人</b>得隨時向保險人聲明終止保險契約；其終止效力<b>不溯及既往</b>。考「終止、解約」認明要保人；考「撤銷投保同意」才是被保險人。"},
+{"q":"依簡易人壽保險法規定，有關受益人故意致被保險人於死或雖未致死者，下列敘述何者「錯誤」？","o":["無請求死亡人壽保險金額之權","有其他受益人，由其他受益人平均領受全部保險金額","無其他受益人時，其保險金額作為被保險人遺產","保險人應將其保單價值準備金給付與應得之人"],"a":3,"e":"(A)(B)(C) 均為 §22 明文。<br>(D) 出自 §21 第 2 項，適用對象是「§20 第 2 款——<b>要保人</b>故意致被保險人於死」的情形，<b>不適用於 §22 受益人故意致死</b>，故為錯誤。"},
+{"q":"依簡易人壽保險法規定，保險單借款發生下列哪些事項時，其所欠之本息，應於給付之金額內扣抵之？ A.契約效力停止 B.契約終止 C.契約滿期 D.發生保險事故","o":["僅 ABC","僅 ABD","僅 BCD","ABCD"],"a":3,"e":"借款未清償前，因保險契約「效力停止、終止、滿期或發生保險事故」時，所欠本息應於給付金額內扣抵之——四種情形<b>全部</b>都要扣抵。"},
+{"q":"依郵政儲金匯兌法規定，有關郵政匯兌，下列敘述何者「錯誤」？","o":["郵政匯兌除電匯外，應以郵政匯票或郵政禮券為憑","郵政匯票逾期間未經兌款者，中華郵政公司應通知匯款人領回，匯款人得要求退還匯費","郵政匯票遺失或毀損，匯款人或受款人得申請掛失或繳回，並領回匯款，原匯票即予作廢","郵政匯票業經兌領時，中華郵政公司應拒絕受理匯款人掛失申請"],"a":1,"e":"§23：逾期未經兌款者，應通知匯款人領回，匯款人「<b>不得</b>要求退還匯費」。（匯票兌領請求權為自發票日起 3 年）"}
+];
+
+function renderQuiz(data, ns){
+  const box=document.getElementById(ns+'box');
+  data.forEach((it,i)=>{
+    const q=document.createElement('div');q.className='q';
+    const opts=it.o.map((t,j)=>`<button class="opt" data-i="${i}" data-j="${j}">`+
+      `<span class="lab">(${'ABCDE'[j]})</span>${t}</button>`).join('');
+    q.innerHTML=`<div class="stem"><span class="no">${i+1}</span>${it.q}</div>`+
+      `<div class="opts">${opts}</div>`+
+      `<div class="exp" id="${ns}exp${i}"><b>✅ 答案：(${'ABCDE'[it.a]})</b><br>${it.e}</div>`;
+    box.appendChild(q);
+  });
+  const answered=new Array(data.length).fill(false);let correct=0;
+  box.addEventListener('click',e=>{
+    const b=e.target.closest('.opt');if(!b)return;
+    const i=+b.dataset.i,j=+b.dataset.j;if(answered[i])return;
+    answered[i]=true;
+    const card=box.children[i];const btns=card.querySelectorAll('.opt');
+    btns.forEach((bt,k)=>{bt.classList.add('lock');if(k===data[i].a)bt.classList.add('correct');});
+    if(j!==data[i].a)btns[j].classList.add('wrong');else correct++;
+    document.getElementById(ns+'exp'+i).classList.add('show');
+    upd();
+  });
+  function upd(){
+    const done=answered.filter(Boolean).length;
+    document.getElementById(ns+'score').textContent=`答對 ${correct} / 作答 ${done} （共 ${data.length} 題）`;
+    document.getElementById(ns+'bar').style.width=(done/data.length*100)+'%';
+  }
+  document.getElementById(ns+'showAll').onclick=()=>{
+    box.querySelectorAll('.exp').forEach(x=>x.classList.add('show'));
+    box.querySelectorAll('.q').forEach((card,i)=>{card.querySelectorAll('.opt').forEach((bt,k)=>{
+      bt.classList.add('lock');if(k===data[i].a)bt.classList.add('correct');});});
+  };
+  document.getElementById(ns+'reset').onclick=()=>{location.reload();};
+  upd();
+}
+
+document.querySelectorAll('nav.tabs button').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.remove('on'));
+    document.querySelectorAll('section.pane').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    document.getElementById(b.dataset.t).classList.add('on');
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+});
+
+renderQuiz(QUESTIONS,'m');
+</script>
+</body></html>
