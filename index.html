@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EFETL 英文練習</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="apple-touch-icon" href="/favicon.svg">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
@@ -92,8 +91,21 @@ letter-spacing: 1px;
 @media (max-width: 460px) {
 .btn-grid { max-width: 320px; }
 .btn-card { flex: 0 0 100%; padding: 36px 40px; }
+h1 { font-size: 1.6rem; letter-spacing: 1px; }
+.subtitle { font-size: 0.9rem; margin-bottom: 1.8rem; }
+body { padding-bottom: 96px; }
 }
 </style>
+<!-- EFETL-PWA -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0f2357">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="EFETL">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}</script>
+<!-- /EFETL-PWA -->
 </head>
 <body>
 <h1>&#128218; EFETL 英文練習</h1>
@@ -292,5 +304,71 @@ letter-spacing: 1px;
 </a>
 </div>
 <footer>EFETL &copy; 2025</footer>
+<!-- EFETL-INSTALL -->
+<div id="a2hs" hidden>
+  <span id="a2hs-text"></span>
+  <button id="a2hs-go" type="button" hidden>安裝</button>
+  <button id="a2hs-x" type="button" aria-label="關閉">&times;</button>
+</div>
+<style>
+#a2hs{
+  position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
+  display:flex; align-items:center; gap:12px;
+  max-width:min(92vw,560px); padding:12px 14px 12px 18px;
+  background:rgba(15,35,87,0.92); border:1px solid rgba(255,255,255,0.28);
+  border-radius:16px; backdrop-filter:blur(14px);
+  box-shadow:0 10px 30px rgba(0,0,0,0.35);
+  color:#fff; font-size:0.95rem; line-height:1.5; z-index:9999;
+}
+#a2hs[hidden]{display:none;}
+#a2hs button{
+  font:inherit; color:#fff; cursor:pointer;
+  background:rgba(255,255,255,0.14); border:1px solid rgba(255,255,255,0.35);
+  border-radius:10px; padding:8px 16px; white-space:nowrap;
+}
+#a2hs button:hover{background:rgba(255,255,255,0.28);}
+#a2hs #a2hs-x{padding:6px 11px; font-size:1.1rem; line-height:1; background:none; border-color:transparent; opacity:0.6;}
+@media (max-width:520px){ #a2hs{font-size:0.88rem; padding:10px 10px 10px 14px; gap:8px;} }
+</style>
+<script>
+(function(){
+  var bar=document.getElementById('a2hs'), txt=document.getElementById('a2hs-text'),
+      go=document.getElementById('a2hs-go'), x=document.getElementById('a2hs-x');
+  var standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  if(standalone) return;
+  try { if(localStorage.getItem('a2hs-dismissed')==='1') return; } catch(e){}
+
+  x.addEventListener('click', function(){
+    bar.hidden = true;
+    try { localStorage.setItem('a2hs-dismissed','1'); } catch(e){}
+  });
+
+  var prompt=null;
+  window.addEventListener('beforeinstallprompt', function(e){
+    e.preventDefault(); prompt=e;
+    txt.textContent='將 EFETL 安裝成 App，離線也能練習';
+    go.hidden=false; bar.hidden=false;
+  });
+  go.addEventListener('click', function(){
+    if(!prompt) return;
+    bar.hidden=true; prompt.prompt(); prompt=null;
+    try { localStorage.setItem('a2hs-dismissed','1'); } catch(e){}
+  });
+  window.addEventListener('appinstalled', function(){
+    bar.hidden=true;
+    try { localStorage.setItem('a2hs-dismissed','1'); } catch(e){}
+  });
+
+  // iOS Safari 沒有 beforeinstallprompt，改給手動步驟
+  var ua=navigator.userAgent;
+  var notApple=/Android|CriOS|FxiOS|EdgiOS|OPiOS/.test(ua);
+  var iOS=!notApple && (/iPad|iPhone|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints>1));
+  if(iOS && /Safari/.test(ua) && !/Chrome/.test(ua)){
+    txt.innerHTML='安裝成 App：點下方 <strong>分享</strong> ↑ → <strong>加到主畫面</strong>';
+    bar.hidden=false;
+  }
+})();
+</script>
+<!-- /EFETL-INSTALL -->
 </body>
 </html>
