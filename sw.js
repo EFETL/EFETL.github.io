@@ -3,7 +3,7 @@
    靜態資源走 stale-while-revalidate（先給快取、背景更新）。
    音檔的 Range 請求一律直送網路，不進快取。
    VERSION 只有在要「強制清空所有舊快取」時才需要往上加。 */
-const VERSION = 'v1';
+const VERSION = 'v2';
 const SHELL = 'efetl-shell-' + VERSION;
 const RUNTIME = 'efetl-runtime-' + VERSION;
 

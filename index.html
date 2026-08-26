@@ -6,99 +6,153 @@
 <title>EFETL 英文練習</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-font-family: 'Noto Sans TC', '微軟正黑體', sans-serif;
-min-height: 100vh;
-background: linear-gradient(135deg, #0f2357 0%, #1a3a7a 50%, #0e5a45 100%);
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-padding: 20px;
+:root{
+  --ink:#2b2350; --ink-soft:#6f6894;
 }
-h1 {
-color: #fff;
-font-size: 2.2rem;
-margin-bottom: 0.4em;
-letter-spacing: 3px;
-text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+*{ margin:0; padding:0; box-sizing:border-box; }
+body{
+  font-family:'Noto Sans TC','微軟正黑體',sans-serif;
+  min-height:100vh;
+  background:#A06BFF;
+  color:var(--ink);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:46px 20px 44px;
+  position:relative; overflow-x:hidden;
 }
-.subtitle {
-color: rgba(255,255,255,0.65);
-font-size: 1rem;
-margin-bottom: 2.5rem;
-letter-spacing: 2px;
+/* 固定的鮮豔漸層底 + 中央柔光 */
+body::before{
+  content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(62vmax 48vmax at 50% 28%, rgba(255,255,255,.30), transparent 68%),
+    linear-gradient(145deg,#FFC46B 0%,#FF7EA9 26%,#A06BFF 56%,#4FB8FF 82%,#3ED9C4 100%);
 }
-.btn-grid {
-display: flex;
-flex-wrap: wrap;
-justify-content: center;
-gap: 18px 20px;
-max-width: 712px;
-width: 100%;
+
+/* ---------- 背景的愛學習塗鴉 ---------- */
+.doodles{
+  position:fixed; inset:0; width:100%; height:100%;
+  pointer-events:none; z-index:0; opacity:1;
 }
-.btn-card {
-flex: 0 0 calc(33.333% - 14px);
-background: rgba(255,255,255,0.1);
-border: 2px solid rgba(255,255,255,0.25);
-border-radius: 20px;
-padding: 44px 36px;
-text-decoration: none;
-color: #fff;
-text-align: center;
-transition: all 0.28s cubic-bezier(.4,0,.2,1);
-backdrop-filter: blur(12px);
-min-width: 0;
-position: relative;
-overflow: hidden;
+
+/* ---------- 標題區 ---------- */
+.hero{ position:relative; z-index:1; text-align:center; margin-bottom:2.4rem; }
+.hero-mark{ width:132px; height:auto; display:block; margin:0 auto 10px;
+  filter:drop-shadow(0 8px 18px rgba(60,20,90,.28)); }
+.hm-heart{ animation:hmFloat 2.8s ease-in-out infinite; transform-origin:70px 30px; }
+.hm-spark{ animation:hmTwinkle 2.2s ease-in-out infinite; }
+.hm-spark2{ animation:hmTwinkle 2.2s ease-in-out .9s infinite; }
+@keyframes hmFloat{ 0%,100%{ transform:translateY(0) } 50%{ transform:translateY(-5px) } }
+@keyframes hmTwinkle{ 0%,100%{ opacity:.35; transform:scale(.8) } 50%{ opacity:1; transform:scale(1.15) } }
+h1{
+  font-size:clamp(1.85rem,5.4vw,2.8rem);
+  font-weight:900; letter-spacing:2px; line-height:1.25;
+  color:#fff; text-shadow:0 3px 16px rgba(60,20,90,.28);
+  margin-bottom:.35em;
 }
-.btn-card:hover {
-background: rgba(255,255,255,0.22);
-border-color: rgba(255,255,255,0.6);
-transform: translateY(-6px);
-box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+.subtitle{
+  color:rgba(255,255,255,.94); font-size:1rem; letter-spacing:1.5px; line-height:1.7;
+  text-shadow:0 2px 10px rgba(60,20,90,.22);
 }
-.btn-card .icon { font-size: 3rem; margin-bottom: 14px; display: block; }
-.btn-card .label { font-size: 1.6rem; font-weight: 700; letter-spacing: 3px; display: block; }
-.btn-card .desc { font-size: 0.82rem; color: rgba(255,255,255,0.55); margin-top: 8px; display: block; letter-spacing: 1px; }
-.btn-card.disabled {
-opacity: 0.45;
-cursor: default;
-pointer-events: none;
+.subtitle b{ color:#FFE86B; font-weight:800; }
+
+/* ---------- 卡片 ---------- */
+.btn-grid{
+  position:relative; z-index:1;
+  display:flex; flex-wrap:wrap; justify-content:center;
+  gap:18px 20px; max-width:760px; width:100%;
 }
-.coming-badge {
-position: absolute;
-top: 14px; right: 14px;
-background: rgba(255,200,0,0.85);
-color: #333;
-font-size: 0.65rem;
-font-weight: 700;
-padding: 3px 8px;
-border-radius: 20px;
-letter-spacing: 0.5px;
+.btn-card{
+  --accent:#2E86FF; --accent2:#7C4DFF; --tint:#CFE2FF; --glow:rgba(46,134,255,.42);
+  flex:0 0 calc(33.333% - 14px);
+  background:#fff;
+  border:2px solid rgba(43,35,80,.06);
+  border-radius:24px;
+  padding:26px 18px 22px;
+  text-decoration:none; color:var(--ink); text-align:center;
+  position:relative; overflow:hidden; min-width:0;
+  box-shadow:0 8px 22px rgba(60,20,90,.16);
+  transition:transform .26s cubic-bezier(.4,0,.2,1), box-shadow .26s, border-color .26s;
 }
-footer {
-margin-top: 4.5rem;
-color: rgba(255,255,255,0.3);
-font-size: 0.78rem;
-letter-spacing: 1px;
+.btn-card::before{
+  content:''; position:absolute; top:0; left:0; right:0; height:7px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
 }
-@media (max-width: 760px) {
-.btn-grid { max-width: 480px; }
-.btn-card { flex: 0 0 calc(50% - 10px); }
+.btn-card:hover{
+  transform:translateY(-7px);
+  border-color:var(--accent);
+  box-shadow:0 20px 38px -10px var(--glow), 0 8px 18px rgba(60,20,90,.18);
 }
-@media (max-width: 460px) {
-.btn-grid { max-width: 320px; }
-.btn-card { flex: 0 0 100%; padding: 36px 40px; }
-h1 { font-size: 1.6rem; letter-spacing: 1px; }
-.subtitle { font-size: 0.9rem; margin-bottom: 1.8rem; }
-body { padding-bottom: 96px; }
+.btn-card .icon{
+  display:flex; align-items:center; justify-content:center;
+  width:86px; height:86px; margin:8px auto 12px;
+  border-radius:28px; font-size:2.7rem; line-height:1;
+  background:linear-gradient(150deg,var(--tint) 0%,#fff 92%);
+  box-shadow:inset 0 0 0 1px rgba(43,35,80,.05);
+  transition:transform .26s cubic-bezier(.4,0,.2,1);
 }
+.btn-card:hover .icon{ transform:scale(1.07) rotate(-4deg); }
+.btn-card .icon svg{ width:auto; height:auto; max-width:66px; max-height:66px; }
+.btn-card .label{
+  font-size:1.3rem; font-weight:800; letter-spacing:2px; display:block;
+  color:var(--accent);
+}
+.btn-card .desc{
+  font-size:.78rem; color:var(--ink-soft); margin-top:7px; display:block;
+  letter-spacing:.5px; line-height:1.6;
+}
+.btn-card.disabled{ opacity:.45; cursor:default; pointer-events:none; }
+.coming-badge{
+  position:absolute; top:14px; right:14px;
+  background:#FFC542; color:#5a4300;
+  font-size:.65rem; font-weight:800; padding:3px 9px; border-radius:20px;
+  letter-spacing:.5px;
+}
+
+footer{
+  position:relative; z-index:1;
+  margin-top:3.2rem; color:rgba(255,255,255,.9);
+  text-shadow:0 2px 8px rgba(60,20,90,.25);
+  font-size:.78rem; letter-spacing:1px; text-align:center; line-height:1.9;
+}
+
+@media (max-width:760px){
+  .btn-grid{ max-width:480px; }
+  .btn-card{ flex:0 0 calc(50% - 10px); }
+}
+@media (max-width:460px){
+  .btn-grid{ max-width:340px; }
+  .btn-card{ flex:0 0 100%; padding:24px 26px 20px; }
+  .hero{ margin-bottom:1.8rem; }
+  .hero-mark{ width:108px; }
+  .subtitle{ font-size:.9rem; }
+  body{ padding:34px 18px 104px; }
+}
+@media (prefers-reduced-motion:reduce){
+  .hm-heart,.hm-spark,.hm-spark2{ animation:none; }
+  .btn-card:hover .icon{ transform:none; }
+  .btn-card{ transition:none; }
+}
+
+/* 每張卡片的專屬色 */
+.c1{--accent:#2E86FF;--accent2:#7C4DFF;--tint:#CFE2FF;--glow:rgba(46,134,255,0.42);}
+.c2{--accent:#7C4DFF;--accent2:#FF3F8E;--tint:#E0D5FF;--glow:rgba(124,77,255,0.42);}
+.c3{--accent:#FF3F8E;--accent2:#FF6B35;--tint:#FFD3E4;--glow:rgba(255,63,142,0.42);}
+.c4{--accent:#00B8A9;--accent2:#3DD16C;--tint:#C6F1EC;--glow:rgba(0,184,169,0.42);}
+.c5{--accent:#FF6B35;--accent2:#F0A800;--tint:#FFDCC8;--glow:rgba(255,107,53,0.42);}
+.c6{--accent:#3DD16C;--accent2:#00B8A9;--tint:#CDF2DA;--glow:rgba(61,209,108,0.42);}
+.c7{--accent:#5B5BF0;--accent2:#2BA6FF;--tint:#D6D6FB;--glow:rgba(91,91,240,0.42);}
+.c8{--accent:#12A35A;--accent2:#3DD16C;--tint:#C8ECD8;--glow:rgba(18,163,90,0.42);}
+.c9{--accent:#3454B4;--accent2:#2E86FF;--tint:#D2DBF5;--glow:rgba(52,84,180,0.42);}
+.c10{--accent:#FF8A3D;--accent2:#FF3F8E;--tint:#FFE0CA;--glow:rgba(255,138,61,0.42);}
+.c11{--accent:#00BFA6;--accent2:#2BA6FF;--tint:#C6F3ED;--glow:rgba(0,191,166,0.42);}
+.c12{--accent:#FF5252;--accent2:#FF8A3D;--tint:#FFD6D6;--glow:rgba(255,82,82,0.42);}
+.c13{--accent:#F0A800;--accent2:#3DD16C;--tint:#FFEBBF;--glow:rgba(240,168,0,0.42);}
+.c14{--accent:#7C5CFF;--accent2:#2BA6FF;--tint:#DED5FF;--glow:rgba(124,92,255,0.42);}
+.c15{--accent:#FF6FA5;--accent2:#7C4DFF;--tint:#FFD9E7;--glow:rgba(255,111,165,0.42);}
+.c16{--accent:#2BA6FF;--accent2:#00B8A9;--tint:#CFE8FF;--glow:rgba(43,166,255,0.42);}
 </style>
 <!-- EFETL-PWA -->
 <link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#0f2357">
+<meta name="theme-color" content="#7C4DFF">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -108,30 +162,111 @@ body { padding-bottom: 96px; }
 <!-- /EFETL-PWA -->
 </head>
 <body>
-<h1>&#128218; EFETL 英文練習</h1>
-<p class="subtitle">選擇你想練習的題型</p>
+<svg class="doodles" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+<defs>
+<g id="dk-book" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+<path d="M16 8C11 4.6 5.6 3.8 0 5v20c5.6-1.2 11-.4 16 3 5-3.4 10.4-4.2 16-3V5c-5.6-1.2-11-.4-16 3z"/><path d="M16 8v20"/>
+</g>
+<g id="dk-pencil" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+<path d="M2 30l2.2-7.4L22 5l5.4 5.4L9.4 27.8z"/><path d="M18.6 8.4l5.4 5.4"/><path d="M2 30l7.4-2.2"/>
+</g>
+<g id="dk-bulb" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+<path d="M16 3a9.6 9.6 0 0 0-5.6 17.4V24h11.2v-3.6A9.6 9.6 0 0 0 16 3z"/><path d="M11.6 27.6h8.8"/><path d="M13.4 31h5.2"/>
+</g>
+<g id="dk-cap" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+<path d="M1 12L16 5.5 31 12 16 18.5z"/><path d="M7 15.2V22c0 2.6 18 2.6 18 0v-6.8"/><path d="M31 12v8"/>
+</g>
+<g id="dk-star" fill="none" stroke-width="2.4" stroke-linejoin="round">
+<path d="M16 2.5l4.2 8.8 9.6 1.2-7.1 6.6 1.8 9.6-8.5-4.7-8.5 4.7 1.8-9.6L2.2 12.5l9.6-1.2z"/>
+</g>
+<g id="dk-heart" fill="none" stroke-width="2.4" stroke-linejoin="round">
+<path d="M16 28.5S2.6 20.4 2.6 11.8A7.4 7.4 0 0 1 16 7.2a7.4 7.4 0 0 1 13.4 4.6c0 8.6-13.4 16.7-13.4 16.7z"/>
+</g>
+<g id="dk-plane" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+<path d="M30 2.5L1.5 13.8l11 4.2 4.2 11z"/><path d="M30 2.5L12.5 18"/>
+</g>
+<g id="dk-atom" fill="none" stroke-width="2.4">
+<circle cx="16" cy="16" r="3.2"/><ellipse cx="16" cy="16" rx="14" ry="5.6"/>
+<ellipse cx="16" cy="16" rx="14" ry="5.6" transform="rotate(60 16 16)"/>
+<ellipse cx="16" cy="16" rx="14" ry="5.6" transform="rotate(120 16 16)"/>
+</g>
+<g id="dk-abc" stroke="none" font-family="'Poppins','Arial Rounded MT Bold',Arial,sans-serif" font-size="16" font-weight="800">
+<text x="0" y="22">ABC</text>
+</g>
+<g id="dk-lens" fill="none" stroke-width="2.4" stroke-linecap="round">
+<circle cx="13.5" cy="13.5" r="10.5"/><path d="M21 21l9 9"/><path d="M9 13.5h9M13.5 9v9"/>
+</g>
+</defs>
+<use href="#dk-book" x="0" y="0" fill="#ffffff" stroke="#ffffff" opacity=".38" transform="translate(70,90) rotate(-12) scale(1.9)"/>
+<use href="#dk-bulb" x="0" y="0" fill="#ffffff" stroke="#ffffff" opacity=".38" transform="translate(250,44) rotate(10) scale(1.5)"/>
+<use href="#dk-star" x="0" y="0" fill="#ffffff" stroke="#ffffff" opacity=".38" transform="translate(470,110) rotate(0) scale(1.1)"/>
+<use href="#dk-pencil" x="0" y="0" fill="#ffffff" stroke="#ffffff" opacity=".38" transform="translate(700,52) rotate(18) scale(1.6)"/>
+<use href="#dk-cap" x="0" y="0" fill="#ffffff" stroke="#ffffff" opacity=".38" transform="translate(1010,74) rotate(-8) scale(1.8)"/>
+<use href="#dk-heart" x="0" y="0" fill="#ffffff" stroke="#ffffff" opacity=".38" transform="translate(1250,46) rotate(12) scale(1.3)"/>
+<use href="#dk-atom" x="0" y="0" fill="#ffffff" stroke="#ffffff" opacity=".38" transform="translate(1360,190) rotate(0) scale(1.7)"/>
+<use href="#dk-abc" x="0" y="0" fill="#ffffff" stroke="#ffffff" opacity=".38" transform="translate(118,300) rotate(-8) scale(1.5)"/>
+<use href="#dk-plane" x="0" y="0" fill="#ffffff" stroke="#ffffff" opacity=".38" transform="translate(1300,330) rotate(0) scale(1.6)"/>
+<use href="#dk-lens" x="0" y="0" fill="#ffffff" stroke="#ffffff" opacity=".38" transform="translate(36,500) rotate(10) scale(1.6)"/>
+<use href="#dk-star" x="0" y="0" fill="#ffffff" stroke="#ffffff" opacity=".38" transform="translate(1390,520) rotate(0) scale(1.2)"/>
+<use href="#dk-pencil" x="0" y="0" fill="#ffffff" stroke="#ffffff" opacity=".38" transform="translate(96,700) rotate(-22) scale(1.5)"/>
+<use href="#dk-heart" x="0" y="0" fill="#ffffff" stroke="#ffffff" opacity=".38" transform="translate(1330,690) rotate(-10) scale(1.5)"/>
+<use href="#dk-cap" x="0" y="0" fill="#ffffff" stroke="#ffffff" opacity=".38" transform="translate(200,812) rotate(8) scale(1.6)"/>
+<use href="#dk-book" x="0" y="0" fill="#ffffff" stroke="#ffffff" opacity=".38" transform="translate(1160,830) rotate(10) scale(1.8)"/>
+<use href="#dk-bulb" x="0" y="0" fill="#ffffff" stroke="#ffffff" opacity=".38" transform="translate(560,838) rotate(-6) scale(1.4)"/>
+<use href="#dk-atom" x="0" y="0" fill="#ffffff" stroke="#ffffff" opacity=".38" transform="translate(860,806) rotate(0) scale(1.4)"/>
+<use href="#dk-abc" x="0" y="0" fill="#ffffff" stroke="#ffffff" opacity=".38" transform="translate(1010,560) rotate(8) scale(1.2)"/>
+<use href="#dk-star" x="0" y="0" fill="#ffffff" stroke="#ffffff" opacity=".38" transform="translate(330,560) rotate(0) scale(1.0)"/>
+<use href="#dk-plane" x="0" y="0" fill="#ffffff" stroke="#ffffff" opacity=".38" transform="translate(430,300) rotate(-14) scale(1.3)"/>
+<use href="#dk-heart" x="0" y="0" fill="#ffffff" stroke="#ffffff" opacity=".38" transform="translate(545,236) rotate(-12) scale(1.4)"/>
+<use href="#dk-star" x="0" y="0" fill="#ffffff" stroke="#ffffff" opacity=".38" transform="translate(890,300) rotate(0) scale(1.2)"/>
+<use href="#dk-abc" x="0" y="0" fill="#ffffff" stroke="#ffffff" opacity=".38" transform="translate(536,468) rotate(-6) scale(1.3)"/>
+<use href="#dk-lens" x="0" y="0" fill="#ffffff" stroke="#ffffff" opacity=".38" transform="translate(880,606) rotate(8) scale(1.4)"/>
+<use href="#dk-cap" x="0" y="0" fill="#ffffff" stroke="#ffffff" opacity=".38" transform="translate(616,690) rotate(-10) scale(1.4)"/>
+<use href="#dk-plane" x="0" y="0" fill="#ffffff" stroke="#ffffff" opacity=".38" transform="translate(898,214) rotate(8) scale(1.3)"/>
+</svg>
+<header class="hero">
+<svg class="hero-mark" viewBox="0 0 140 112" aria-hidden="true" focusable="false">
+<defs>
+<linearGradient id="hbL" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7C4DFF"/><stop offset="1" stop-color="#2E86FF"/></linearGradient>
+<linearGradient id="hbR" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF6B35"/><stop offset="1" stop-color="#FF3F8E"/></linearGradient>
+<linearGradient id="hbH" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF5FA2"/><stop offset="1" stop-color="#FF2D6F"/></linearGradient>
+</defs>
+<ellipse cx="70" cy="104" rx="40" ry="5" fill="#2b2350" opacity=".08"/>
+<path d="M70 60C61 53 49 51 38 54c-2.1.5-3.5 2.4-3.5 4.5V96c0 2.9 2.7 5 5.5 4.4 9.2-2 19.1-1 27 3.5z" fill="url(#hbL)"/>
+<path d="M70 60c9-7 21-9 32-6 2.1.5 3.5 2.4 3.5 4.5V96c0 2.9-2.7 5-5.5 4.4-9.2-2-19.1-1-27 3.5z" fill="url(#hbR)"/>
+<path d="M44 67h16M44 76h16M44 85h11" stroke="#fff" stroke-width="3.2" stroke-linecap="round" opacity=".9"/>
+<path d="M80 67h16M80 76h16M80 85h11" stroke="#fff" stroke-width="3.2" stroke-linecap="round" opacity=".9"/>
+<g class="hm-heart"><path d="M70 47s-16.4-9.9-16.4-20.6A9.2 9.2 0 0 1 70 19.4a9.2 9.2 0 0 1 16.4 7c0 10.7-16.4 20.6-16.4 20.6z" fill="url(#hbH)"/></g>
+<g class="hm-spark" fill="#FFC542"><path d="M32 22l1.9 5.1 5.1 1.9-5.1 1.9L32 36l-1.9-5.1L25 29l5.1-1.9z"/></g>
+<g class="hm-spark2" fill="#FFC542"><path d="M110 30l1.5 4 4 1.5-4 1.5-1.5 4-1.5-4-4-1.5 4-1.5z"/></g>
+<g class="hm-spark2" fill="#3DD16C"><path d="M120 12l1.2 3.2 3.2 1.2-3.2 1.2-1.2 3.2-1.2-3.2-3.2-1.2 3.2-1.2z"/></g>
+</svg>
+<h1>EFETL &#33521;&#25991;&#32244;&#32722;</h1>
+<p class="subtitle">&#36984;&#25182;&#20320;&#24819;&#32244;&#32722;&#30340;&#38988;&#22411; &#183; <b>&#23416;&#24471;&#38283;&#24515;&#65292;&#32771;&#24471;&#23433;&#24515;</b></p>
+</header>
+
 <div class="btn-grid">
-<a href="gsat.html" class="btn-card">
+<a href="gsat.html" class="btn-card c1">
 <span class="icon">&#127891;</span>
 <span class="label">學測</span>
 <span class="desc">大學學科能力測驗</span>
 </a>
-<a href="longteng.html" class="btn-card">
+<a href="longteng.html" class="btn-card c2">
 <span class="icon">&#128214;</span>
 <span class="label">龍騰</span>
 <span class="desc">龍騰各冊互動測驗</span>
 </a>
-<a href="longteng-hs.html" class="btn-card">
+<a href="longteng-hs.html" class="btn-card c3">
 <span class="icon">&#128218;</span>
 <span class="label">龍騰高職</span>
 <span class="desc">龍騰高職各冊互動測驗</span>
 </a>
-<a href="tongce.html" class="btn-card">
+<a href="tongce.html" class="btn-card c4">
 <span class="icon">&#128221;</span>
 <span class="label">統測</span>
 <span class="desc">技術學院聯合入學測驗</span>
 </a>
-<a href="food/index.html" class="btn-card" style="background:linear-gradient(155deg,rgba(217,122,52,0.20),rgba(47,143,138,0.16));border-color:rgba(217,140,80,0.55)">
+<a href="food/index.html" class="btn-card c5">
 <span class="icon"><svg viewBox="0 0 80 80" width="62" height="62" role="img" aria-label="食品群" style="vertical-align:middle;overflow:visible">
 <defs><radialGradient id="fdGlow" cx="50%" cy="45%" r="55%"><stop offset="0%" stop-color="#ffd9a8" stop-opacity="0.55"/><stop offset="100%" stop-color="#ffd9a8" stop-opacity="0"/></radialGradient></defs>
 <circle cx="40" cy="40" r="40" fill="url(#fdGlow)"/>
@@ -147,27 +282,27 @@ body { padding-bottom: 96px; }
 <span class="label">食品群</span>
 <span class="desc">統測+技藝競賽 歷屆題庫·白話解析</span>
 </a>
-<a href="gept-hub.html" class="btn-card">
+<a href="gept-hub.html" class="btn-card c6">
 <span class="icon">&#127758;</span>
 <span class="label">英檢初級</span>
 <span class="desc">GEPT 初級英檢</span>
 </a>
-<a href="gept-intermediate-reading/index.html" class="btn-card" style="background:linear-gradient(155deg,rgba(109,40,217,0.16),rgba(37,99,235,0.14));border-color:rgba(124,92,246,0.55)">
+<a href="gept-intermediate-reading/index.html" class="btn-card c7">
 <span class="icon">&#128215;</span>
 <span class="label">英檢中級</span>
 <span class="desc">GEPT 中級閱讀 · 40 回模擬</span>
 </a>
-<a href="post-office.html" class="btn-card">
+<a href="post-office.html" class="btn-card c8">
 <span class="icon"><svg viewBox="0 0 80 80" width="58" height="58" role="img" aria-label="郵局" style="vertical-align:middle"><circle cx="40" cy="40" r="37" fill="#12a35a"/><circle cx="40" cy="40" r="29" fill="#f6efdc"/><circle cx="40" cy="40" r="29" fill="none" stroke="#0c7e44" stroke-width="1.5" stroke-dasharray="2 4"/><text x="40" y="53" text-anchor="middle" font-family="'Noto Sans TC','微軟正黑體',sans-serif" font-size="34" font-weight="700" fill="#0c7e44">郵</text><circle cx="8.5" cy="40" r="2" fill="#ffffff"/><circle cx="71.5" cy="40" r="2" fill="#ffffff"/></svg></span>
 <span class="label">郵局</span>
 <span class="desc">郵局國考五法互動題庫</span>
 </a>
-<a href="civil-law.html" class="btn-card">
+<a href="civil-law.html" class="btn-card c9">
 <span class="icon"><svg viewBox="0 0 80 80" width="58" height="58" role="img" aria-label="民法" style="vertical-align:middle"><circle cx="40" cy="40" r="37" fill="#3454b4"/><circle cx="40" cy="40" r="29" fill="#f2f4fb"/><circle cx="40" cy="40" r="29" fill="none" stroke="#27408f" stroke-width="1.5" stroke-dasharray="2 4"/><text x="40" y="53" text-anchor="middle" font-family="'Noto Sans TC','微軟正黑體',sans-serif" font-size="34" font-weight="700" fill="#27408f">民</text><circle cx="8.5" cy="40" r="2" fill="#ffffff"/><circle cx="71.5" cy="40" r="2" fill="#ffffff"/></svg></span>
 <span class="label">民法</span>
 <span class="desc">國考378條＋互動考古題</span>
 </a>
-<a href="junior-2000.html" class="btn-card" style="background:linear-gradient(155deg,rgba(255,159,102,0.20),rgba(74,196,178,0.15));border-color:rgba(255,192,120,0.55)">
+<a href="junior-2000.html" class="btn-card c10">
 <span class="icon"><svg viewBox="0 0 80 80" width="64" height="64" role="img" aria-label="國中單字" style="vertical-align:middle;overflow:visible">
 <defs><radialGradient id="jvGlow" cx="50%" cy="45%" r="55%"><stop offset="0%" stop-color="#ffd9a8" stop-opacity="0.55"/><stop offset="100%" stop-color="#ffd9a8" stop-opacity="0"/></radialGradient></defs>
 <circle cx="40" cy="40" r="40" fill="url(#jvGlow)"/>
@@ -189,7 +324,7 @@ body { padding-bottom: 96px; }
 <span class="label">國中單字</span>
 <span class="desc">2000 單字記憶闖關</span>
 </a>
-<a href="g9-vocab-unit1.html" class="btn-card" style="background:linear-gradient(155deg,rgba(74,196,178,0.20),rgba(224,128,58,0.14));border-color:rgba(74,196,178,0.55)">
+<a href="g9-vocab-unit1.html" class="btn-card c11">
 <span class="icon"><svg viewBox="0 0 80 80" width="64" height="64" role="img" aria-label="國三總複習單元1" style="vertical-align:middle;overflow:visible">
 <defs><radialGradient id="g9Glow" cx="50%" cy="45%" r="55%"><stop offset="0%" stop-color="#bff0e6" stop-opacity="0.6"/><stop offset="100%" stop-color="#bff0e6" stop-opacity="0"/></radialGradient></defs>
 <circle cx="40" cy="40" r="40" fill="url(#g9Glow)"/>
@@ -208,7 +343,7 @@ body { padding-bottom: 96px; }
 <span class="label">國三總複習</span>
 <span class="desc">單元1 字彙片語 · 記憶闖關</span>
 </a>
-<a href="senior-7000.html" class="btn-card" style="background:linear-gradient(155deg,rgba(255,159,102,0.20),rgba(74,196,178,0.15));border-color:rgba(255,192,120,0.55)">
+<a href="senior-7000.html" class="btn-card c12">
 <span class="icon"><svg viewBox="0 0 80 80" width="64" height="64" role="img" aria-label="高中7000單字" style="vertical-align:middle;overflow:visible">
 <defs><radialGradient id="jvGlow" cx="50%" cy="45%" r="55%"><stop offset="0%" stop-color="#ffd9a8" stop-opacity="0.55"/><stop offset="100%" stop-color="#ffd9a8" stop-opacity="0"/></radialGradient></defs>
 <circle cx="40" cy="40" r="40" fill="url(#jvGlow)"/>
@@ -227,7 +362,7 @@ body { padding-bottom: 96px; }
 <span class="label">高中7000單字</span>
 <span class="desc">6020 大考必背單字 · 100 天衝刺記憶闖關</span>
 </a>
-<a href="elementary-1200.html" class="btn-card" style="background:linear-gradient(155deg,rgba(255,159,102,0.20),rgba(74,196,178,0.15));border-color:rgba(255,192,120,0.55)">
+<a href="elementary-1200.html" class="btn-card c13">
 <span class="icon"><svg viewBox="0 0 80 80" width="64" height="64" role="img" aria-label="國小1200單字" style="vertical-align:middle;overflow:visible">
 <defs><radialGradient id="jvGlow" cx="50%" cy="45%" r="55%"><stop offset="0%" stop-color="#ffd9a8" stop-opacity="0.55"/><stop offset="100%" stop-color="#ffd9a8" stop-opacity="0"/></radialGradient></defs>
 <circle cx="40" cy="40" r="40" fill="url(#jvGlow)"/>
@@ -246,7 +381,7 @@ body { padding-bottom: 96px; }
 <span class="label">國小1200單字</span>
 <span class="desc">20字一回 · 記憶法闖關</span>
 </a>
-<a href="grammar-until-not-until.html" class="btn-card" style="background:linear-gradient(155deg,rgba(124,92,246,0.20),rgba(43,140,255,0.15));border-color:rgba(124,92,246,0.55)">
+<a href="grammar-until-not-until.html" class="btn-card c14">
 <span class="icon"><svg viewBox="0 0 80 80" width="64" height="64" role="img" aria-label="until 文法練習" style="vertical-align:middle;overflow:visible">
 <defs><radialGradient id="grGlow" cx="50%" cy="45%" r="55%"><stop offset="0%" stop-color="#c9b8ff" stop-opacity="0.6"/><stop offset="100%" stop-color="#c9b8ff" stop-opacity="0"/></radialGradient></defs>
 <circle cx="40" cy="40" r="40" fill="url(#grGlow)"/>
@@ -264,7 +399,7 @@ body { padding-bottom: 96px; }
 <span class="label">until 文法</span>
 <span class="desc">until / not until 倒裝強調 · 2回共70題互動</span>
 </a>
-<a href="gept-elementary-vocab.html" class="btn-card" style="background:linear-gradient(155deg,rgba(255,159,102,0.20),rgba(74,196,178,0.15));border-color:rgba(255,192,120,0.55)">
+<a href="gept-elementary-vocab.html" class="btn-card c15">
 <span class="icon"><svg viewBox="0 0 80 80" width="64" height="64" role="img" aria-label="英檢初級單字" style="vertical-align:middle;overflow:visible">
 <defs><radialGradient id="jvGlow" cx="50%" cy="45%" r="55%"><stop offset="0%" stop-color="#ffd9a8" stop-opacity="0.55"/><stop offset="100%" stop-color="#ffd9a8" stop-opacity="0"/></radialGradient></defs>
 <circle cx="40" cy="40" r="40" fill="url(#jvGlow)"/>
@@ -283,7 +418,7 @@ body { padding-bottom: 96px; }
 <span class="label">英檢初級單字</span>
 <span class="desc">2218 單字記憶闖關</span>
 </a>
-<a href="gept-intermediate-vocab.html" class="btn-card" style="background:linear-gradient(155deg,rgba(255,159,102,0.20),rgba(74,196,178,0.15));border-color:rgba(255,192,120,0.55)">
+<a href="gept-intermediate-vocab.html" class="btn-card c16">
 <span class="icon"><svg viewBox="0 0 80 80" width="64" height="64" role="img" aria-label="英檢中級單字" style="vertical-align:middle;overflow:visible">
 <defs><radialGradient id="jvGlow" cx="50%" cy="45%" r="55%"><stop offset="0%" stop-color="#ffd9a8" stop-opacity="0.55"/><stop offset="100%" stop-color="#ffd9a8" stop-opacity="0"/></radialGradient></defs>
 <circle cx="40" cy="40" r="40" fill="url(#jvGlow)"/>
@@ -315,20 +450,23 @@ body { padding-bottom: 96px; }
   position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
   display:flex; align-items:center; gap:12px;
   max-width:min(92vw,560px); padding:12px 14px 12px 18px;
-  background:rgba(15,35,87,0.92); border:1px solid rgba(255,255,255,0.28);
-  border-radius:16px; backdrop-filter:blur(14px);
-  box-shadow:0 10px 30px rgba(0,0,0,0.35);
-  color:#fff; font-size:0.95rem; line-height:1.5; z-index:9999;
+  background:#fff; border:none; border-radius:18px;
+  box-shadow:0 14px 34px rgba(60,20,90,.30);
+  color:#2b2350; font-size:.95rem; line-height:1.5; z-index:9999;
 }
-#a2hs[hidden]{display:none;}
+#a2hs[hidden]{ display:none; }
 #a2hs button{
-  font:inherit; color:#fff; cursor:pointer;
-  background:rgba(255,255,255,0.14); border:1px solid rgba(255,255,255,0.35);
-  border-radius:10px; padding:8px 16px; white-space:nowrap;
+  font:inherit; font-weight:700; cursor:pointer;
+  background:linear-gradient(100deg,#7C4DFF,#2E86FF); color:#fff; border:none;
+  border-radius:12px; padding:8px 18px; white-space:nowrap;
+  transition:transform .2s;
 }
-#a2hs button:hover{background:rgba(255,255,255,0.28);}
-#a2hs #a2hs-x{padding:6px 11px; font-size:1.1rem; line-height:1; background:none; border-color:transparent; opacity:0.6;}
-@media (max-width:520px){ #a2hs{font-size:0.88rem; padding:10px 10px 10px 14px; gap:8px;} }
+#a2hs button:hover{ transform:scale(1.05); }
+#a2hs #a2hs-x{
+  padding:6px 10px; font-size:1.15rem; line-height:1; font-weight:400;
+  background:rgba(43,35,80,.08); color:#6f6894;
+}
+@media (max-width:520px){ #a2hs{ font-size:.88rem; padding:10px 10px 10px 14px; gap:8px; } }
 </style>
 <script>
 (function(){
