@@ -151,7 +151,7 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;padding:13px 18px;display
         <textarea class="ans-box" id="ans-box" oninput="answers[qi]=this.value"></textarea>
         <div class="ans-hint">💡 辨識可能有錯字，送批改前可以直接在上面修正成你真正說的內容。</div>
         <div class="model-box">
-          <div class="model-lbl">✦ 參考答案 Model Answer</div>
+          <div class="model-lbl">✦ 參考答案 Model Answer<button type="button" id="model-play" onclick="playModel()" style="margin-left:8px;border:1px solid #86efac;background:#fff;color:#166534;border-radius:999px;padding:2px 10px;font-size:11px;cursor:pointer;font-family:inherit;font-weight:700">🔊 朗讀</button></div>
           <div class="model-text" id="model-text"></div>
         </div>
         <div class="btn-row">
@@ -229,7 +229,47 @@ function initVoice(){
 if(speechSynthesis.onvoiceschanged!==undefined) speechSynthesis.onvoiceschanged=initVoice;
 initVoice();
 
+/* ── 預先產生的高音質音檔（edge-tts）。找不到檔案時自動退回瀏覽器語音。 ── */
+const AUDIO_MAP = {"What do you enjoy doing on your phone in your free time?": "speaking-audio/p3-31-1.mp3", "Do you think cellphones are good or bad for students? Why?": "speaking-audio/p3-31-2.mp3", "How do you find information when you need to do your homework?": "speaking-audio/p3-31-3.mp3", "What would you do if you lost your phone?": "speaking-audio/p3-31-4.mp3", "Do you prefer talking on the phone or sending messages? Why?": "speaking-audio/p3-31-5.mp3", "How many hours a day do you spend looking at a screen?": "speaking-audio/p3-31-6.mp3", "How do you think phones will change in the future?": "speaking-audio/p3-31-7.mp3"};
+let __auEl = null;
 function speakWithFallback(text, rate, tries, onDone){
+  const src = AUDIO_MAP[text];
+  if(!src){ speakWithSynth(text, rate, tries, onDone); return; }
+  try{
+    if(__auEl){ __auEl.pause(); __auEl.onended = __auEl.onerror = null; }
+    __auEl = new Audio(src);
+    let done = false;
+    const fin = ()=>{ if(done) return; done = true; if(onDone) onDone(); };
+    __auEl.onended = fin;
+    __auEl.onerror = ()=>{ if(done) return; done = true; speakWithSynth(text, rate, 0, onDone); };
+    const p = __auEl.play();
+    if(p && p.catch) p.catch(()=>{ if(done) return; done = true; speakWithSynth(text, rate, 0, onDone); });
+  }catch(e){ speakWithSynth(text, rate, 0, onDone); }
+}
+
+/* ── 參考答案朗讀（edge-tts 音檔；失敗時退回瀏覽器語音）── */
+const MODEL_MAP = {"In my free time, I enjoy watching videos and playing games on my phone.": "speaking-audio/p3m-31-1.mp3", "I think cellphones are good because they help students find information quickly.": "speaking-audio/p3m-31-2.mp3", "I usually find information on the internet with my computer when I do my homework.": "speaking-audio/p3m-31-3.mp3", "If I lost my phone, I would tell my parents and try to find it right away.": "speaking-audio/p3m-31-4.mp3", "I prefer sending messages because it is fast and I can reply anytime.": "speaking-audio/p3m-31-5.mp3", "I spend about two hours a day looking at a screen on my phone.": "speaking-audio/p3m-31-6.mp3", "I think phones will become faster and more useful in the future.": "speaking-audio/p3m-31-7.mp3"};
+let __mdEl = null;
+function playModel(){
+  const q = QS[qi]; if(!q || !q.model) return;
+  const btn = document.getElementById('model-play');
+  const reset = ()=>{ if(btn) btn.textContent = '🔊 朗讀'; };
+  if(btn) btn.textContent = '🔊 播放中…';
+  const src = MODEL_MAP[q.model];
+  if(!src){ speakWithSynth(q.model, 0.9, 0, reset); return; }
+  try{
+    if(__mdEl){ __mdEl.pause(); __mdEl.onended = __mdEl.onerror = null; }
+    __mdEl = new Audio(src);
+    let done = false;
+    const fin = ()=>{ if(done) return; done = true; reset(); };
+    __mdEl.onended = fin;
+    __mdEl.onerror = ()=>{ if(done) return; done = true; speakWithSynth(q.model, 0.9, 0, reset); };
+    const p = __mdEl.play();
+    if(p && p.catch) p.catch(()=>{ if(done) return; done = true; speakWithSynth(q.model, 0.9, 0, reset); });
+  }catch(e){ speakWithSynth(q.model, 0.9, 0, reset); }
+}
+
+function speakWithSynth(text, rate, tries, onDone){
   tries = tries||0;
   if(tries>=voiceCandidates.length || tries>6){
     if(typeof __micBanner==='function') __micBanner('🔇 語音播放失敗，可能是網路限制或裝置問題。請確認網路連線，或改用電腦版 Chrome／其他裝置。','err');

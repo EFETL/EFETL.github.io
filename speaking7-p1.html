@@ -187,7 +187,25 @@ function loadVoices(){
 window.speechSynthesis.onvoiceschanged=loadVoices;
 loadVoices();
 
+/* ── 預先產生的高音質音檔（edge-tts）。找不到檔案時自動退回瀏覽器語音。 ── */
+const AUDIO_MAP = {"She goes to the bakery every morning to buy fresh bread.": "speaking-audio/p1-07-1.mp3", "My father works at the bank near our apartment.": "speaking-audio/p1-07-2.mp3", "The students are playing basketball in the school gym.": "speaking-audio/p1-07-3.mp3", "Please turn off the lights before you go to bed.": "speaking-audio/p1-07-4.mp3", "We are having a birthday party for my younger brother.": "speaking-audio/p1-07-5.mp3"};
+let __auEl = null;
 function speakWithFallback(text, rate, tries, onDone){
+  const src = AUDIO_MAP[text];
+  if(!src){ speakWithSynth(text, rate, tries, onDone); return; }
+  try{
+    if(__auEl){ __auEl.pause(); __auEl.onended = __auEl.onerror = null; }
+    __auEl = new Audio(src);
+    let done = false;
+    const fin = ()=>{ if(done) return; done = true; if(onDone) onDone(); };
+    __auEl.onended = fin;
+    __auEl.onerror = ()=>{ if(done) return; done = true; speakWithSynth(text, rate, 0, onDone); };
+    const p = __auEl.play();
+    if(p && p.catch) p.catch(()=>{ if(done) return; done = true; speakWithSynth(text, rate, 0, onDone); });
+  }catch(e){ speakWithSynth(text, rate, 0, onDone); }
+}
+
+function speakWithSynth(text, rate, tries, onDone){
   tries = tries||0;
   if(tries>=voiceCandidates.length || tries>6){
     if(typeof __micBanner==='function') __micBanner('🔇 語音播放失敗，可能是網路限制或裝置問題。請確認網路連線，或改用電腦版 Chrome／其他裝置。','err');
