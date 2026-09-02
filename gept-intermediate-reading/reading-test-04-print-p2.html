@@ -36,6 +36,29 @@ body{
 .btn.nav.cur{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;border-color:transparent;cursor:default;pointer-events:none}
 .pill-score{font-weight:800;color:var(--brand);background:#f3e8ff;border-radius:999px;padding:8px 14px;font-size:13px}
 
+/* 合輯目錄 */
+.toc{border:1px solid var(--line);border-radius:14px;background:#fff;padding:16px 20px;margin-bottom:14px;box-shadow:0 6px 16px rgba(30,25,60,.06)}
+.toc-h{font-weight:900;color:var(--brand);font-size:17px;margin-bottom:4px;letter-spacing:1px}
+.toc-h small{font-weight:600;color:var(--sub);font-size:12px;margin-left:8px;letter-spacing:0}
+.toc-row{display:flex;align-items:baseline;gap:8px;font-size:13.5px;padding:6px 0;border-bottom:1px dotted #f0ecf9}
+.toc-row:last-child{border-bottom:0}
+.tr-n{font-weight:800;color:var(--ink);flex:none;width:74px}
+.tr-t{color:var(--sub);font-weight:600;flex:none}
+.tr-d{flex:1;border-bottom:1px dotted #d9cff5;transform:translateY(-4px)}
+.tr-p{font-weight:800;color:var(--brand);flex:none}
+
+/* 合輯企鵝封面 */
+.bookcover{height:250mm;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;padding-top:14mm}
+.bookcover .abc{font-size:58px;font-weight:900;letter-spacing:.30em;padding-left:.30em;color:#1f2430;line-height:1.1}
+.bookcover .abc span{color:var(--brand)}
+.bookcover .peng{width:108mm;height:auto;border-radius:12px;margin:6mm 0 9mm}
+.bookcover h1{font-size:33px;font-weight:900;color:var(--brand);margin:0;letter-spacing:3px;line-height:1.35}
+.bookcover .vol{font-size:23px;font-weight:900;color:var(--brand2);margin-top:3mm;letter-spacing:2px}
+.bookcover .rule{width:70mm;border-bottom:2.5px solid var(--accent);margin:6mm 0 5mm}
+.bookcover .sub{font-size:14px;color:var(--sub);font-weight:600;letter-spacing:1.5px}
+.bookcover .maker{margin-top:auto;font-size:17px;font-weight:900;color:#1f2430;letter-spacing:6px}
+.page:first-child .pfoot{display:none}
+
 /* 量測用暫存流：寬度=頁面內容寬(180mm) */
 #flow{width:180mm;margin:0 auto;position:absolute;left:-99999px;top:0}
 body.done #flow{display:none}
@@ -158,6 +181,7 @@ function paginate(){
   var pages=[],page=[],used=0;
   function uh(u){var s=0;u.els.forEach(function(e){s+=blockH(e);});return s;}
   units.forEach(function(u){var h=uh(u);
+    if(u.els[0].classList.contains('breakbefore')&&page.length){pages.push(page);page=[];used=0;}
     if(h<=BUD){ if(used+h>BUD&&page.length){pages.push(page);page=[];used=0;}
       u.els.forEach(function(e){page.push(e);}); used+=h; }
     else { u.els.forEach(function(e){var eh=blockH(e);
