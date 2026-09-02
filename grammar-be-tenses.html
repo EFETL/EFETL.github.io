@@ -76,6 +76,22 @@
     animation:changePop .5s cubic-bezier(.2,1.3,.4,1);}
   @keyframes changePop{0%{transform:scale(.5);opacity:0;}70%{transform:scale(1.22);}100%{transform:scale(1);opacity:1;}}
 
+  .spk{border:none;cursor:pointer;background:linear-gradient(135deg,#22c1c3,#43e97b);color:#fff;
+    width:34px;height:34px;border-radius:50%;line-height:1;padding:0;flex:0 0 auto;
+    box-shadow:0 2px 7px rgba(34,192,128,.35);vertical-align:middle;margin-left:8px;transition:.15s;}
+  .spk:hover{filter:brightness(1.08);transform:translateY(-1px);}
+  .spk.big{width:46px;height:46px;margin-left:12px;}
+  .spk.playing{animation:spkPulse .7s ease-in-out infinite;
+    box-shadow:0 0 0 4px rgba(67,233,123,.35),0 2px 7px rgba(34,192,128,.35);}
+  @keyframes spkPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.14);}}
+
+  .audiobar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border-radius:14px;
+    padding:11px 16px;margin-bottom:16px;box-shadow:0 3px 10px rgba(34,193,195,.1);
+    border-left:5px solid #22c1c3;font-weight:800;color:#0e8f5e;}
+  .audiobar label{display:flex;align-items:center;gap:7px;cursor:pointer;}
+  .audiobar input{width:20px;height:20px;accent-color:#22c1c3;cursor:pointer;}
+  .audiobar .tip{color:#8a94a2;font-weight:600;}
+
   .stepbtns{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px;}
   .hintk{font-size:.76rem;color:#8a94a2;font-weight:800;}
   .sbtn{border:none;cursor:pointer;font-weight:800;font-size:.82rem;padding:9px 15px;border-radius:12px;
@@ -176,6 +192,8 @@
     .q{padding:14px 12px;}
     .qtop{flex-wrap:wrap;}
     .qtop .tagk{order:3;flex:0 0 auto;margin-left:40px;margin-top:4px;}
+    .spk{width:30px;height:30px;margin-left:6px;}
+    .spk.big{width:40px;height:40px;margin-left:8px;}
   }
 
   /* ── 全站內文統一字級（國小三年級加大） ── */
@@ -188,6 +206,8 @@
   .qmark{font-size:19px;}
   .qnum,.qnum.d{width:30px;height:30px;font-size:15px;}
   .sbtn .sn{width:22px;height:22px;font-size:14px;}
+  .spk{font-size:17px;}
+  .spk.big{font-size:23px;}
 </style>
 <!-- EFETL-PWA -->
 <link rel="manifest" href="/manifest.json">
@@ -206,13 +226,19 @@
 
   <header class="hero">
     <h1>⏰ be 動詞三態變身</h1>
-    <p>同一句話，換一個時間就好！按 ①今天 ②昨天 ③明天，看綠色的 <b>be 動詞</b> 和橘色的 <b>時間詞</b> 跳起來變身。20 句動畫示範（肯定 10 句、否定 5 句、疑問 5 句），每句再附 3 句同型例句，後面 10 題填填看。</p>
+    <p>同一句話，換一個時間就好！按 ①今天 ②昨天 ③明天，看綠色的 <b>be 動詞</b> 和橘色的 <b>時間詞</b> 跳起來變身，同時<b>聽外師念一次</b>。20 句動畫示範（肯定 10 句、否定 5 句、疑問 5 句），每句再附 3 句同型例句，後面 10 題填填看。</p>
   </header>
 
   <div class="legend">
     <span class="l1">① 現在式　today　am / is / are</span>
     <span class="l2">② 過去式　yesterday　was / were</span>
     <span class="l3">③ 未來式　tomorrow　will be</span>
+  </div>
+
+  <div class="audiobar">
+    <span>🔊 發音</span>
+    <label><input type="checkbox" id="autoplay" checked>按 ①②③ 時自動念出來</label>
+    <span class="tip">每一句旁邊的 🔊 都可以重聽</span>
   </div>
 
   <div class="tlbox">
@@ -457,6 +483,37 @@ function slot(cls,arr){
     '<i class="v v'+(i+1)+(w?'':' emp')+'">'+w+'</i>').join('')+'</span>';
 }
 
+/* ── 發音：優先播 mp3，失敗時退回瀏覽器內建朗讀 ── */
+const AUDIO_DIR="grammar-be-audio/";
+let curAudio=null,curBtn=null;
+function stopSpk(){
+  if(curAudio){curAudio.pause();curAudio=null;}
+  if(curBtn){curBtn.classList.remove("playing");curBtn=null;}
+  if(window.speechSynthesis) speechSynthesis.cancel();
+}
+function fallbackSpeak(text){
+  if(!text||!window.speechSynthesis) return;
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang="en-US"; u.rate=.8;
+  u.onend=()=>{if(curBtn){curBtn.classList.remove("playing");curBtn=null;}};
+  speechSynthesis.speak(u);
+}
+function playId(id,btn,text){
+  stopSpk();
+  if(!id){ if(btn){btn.classList.add("playing");curBtn=btn;} fallbackSpeak(text); return; }
+  curBtn=btn||null;
+  if(curBtn) curBtn.classList.add("playing");
+  const a=new Audio(AUDIO_DIR+id+".mp3");
+  curAudio=a;
+  a.onended=()=>{if(curBtn){curBtn.classList.remove("playing");curBtn=null;}curAudio=null;};
+  a.onerror=()=>{curAudio=null;fallbackSpeak(text);};
+  a.play().catch(()=>{curAudio=null;fallbackSpeak(text);});
+}
+function spk(id,text,cls){
+  return '<button class="spk'+(cls?' '+cls:'')+'" type="button" title="聽發音" aria-label="聽發音"'+
+    (id?' data-a="'+id+'"':'')+' data-t="'+text.replace(/"/g,'&quot;')+'">🔊</button>';
+}
+
 const app=document.getElementById("app");
 let html='';
 
@@ -470,7 +527,7 @@ DEMO.forEach((d,i)=>{
       '</span><span class="sub">'+HEADS[i][2]+'　→ 按 ①②③ 看變身</span></div>';
   }
   html+=
-  '<div class="q demo st0">'+
+  '<div class="q demo st0" data-i="'+i+'">'+
     '<div class="qtop"><span class="qnum d">'+(i+1)+'</span>'+
       '<div class="fact"><span class="lab">中文</span>'+d.zh+'</div>'+
       '<span class="tagk">'+d.tag+'</span></div>'+
@@ -478,20 +535,22 @@ DEMO.forEach((d,i)=>{
       (d.p1?d.p1+' ':'')+slot('be',d.be)+' '+
       (d.p2?d.p2+' ':'')+(d.be2?slot('be',d.be2)+' ':'')+
       d.p3+' '+slot('tm',T)+d.tail+
+      spk('','','big cur')+
     '</div>'+
     '<div class="stepbtns"><span class="hintk">一步一步點：</span>'+
       '<button class="sbtn b1" type="button" data-s="1"><span class="sn">1</span>今天 現在式</button>'+
       '<button class="sbtn b2" type="button" data-s="2"><span class="sn">2</span>昨天 過去式</button>'+
       '<button class="sbtn b3" type="button" data-s="3"><span class="sn">3</span>明天 未來式</button>'+
     '</div>'+
-    '<div class="reveal r1"><b>① 現在式　</b><span class="sen">'+sentence(d,0)+'</span><div class="nt">'+d.n1+'</div></div>'+
-    '<div class="reveal r2"><b>② 過去式　</b><span class="sen">'+sentence(d,1)+'</span><div class="nt">'+d.n2+'</div></div>'+
-    '<div class="reveal r3"><b>③ 未來式　</b><span class="sen">'+sentence(d,2)+'</span><div class="nt">'+d.n3+'</div></div>'+
+    '<div class="reveal r1"><b>① 現在式　</b><span class="sen">'+sentence(d,0)+'</span>'+spk('d'+(i+1)+'-1',sentence(d,0))+'<div class="nt">'+d.n1+'</div></div>'+
+    '<div class="reveal r2"><b>② 過去式　</b><span class="sen">'+sentence(d,1)+'</span>'+spk('d'+(i+1)+'-2',sentence(d,1))+'<div class="nt">'+d.n2+'</div></div>'+
+    '<div class="reveal r3"><b>③ 未來式　</b><span class="sen">'+sentence(d,2)+'</span>'+spk('d'+(i+1)+'-3',sentence(d,2))+'<div class="nt">'+d.n3+'</div></div>'+
     '<div class="demoexp"><div class="zh">💬 '+d.zh+'</div></div>'+
     '<button class="morebtn" type="button" data-more="'+i+'">➕ 再看 3 句同類型例句</button>'+
     '<div class="morelist" data-more="'+i+'">'+
       d.more.map((m,k)=>'<div class="mrow"><span class="mn">'+(k+1)+'.</span>'+
-        '<span class="ms">'+m[0]+'</span><div class="mz">'+m[1]+'</div></div>').join('')+
+        '<span class="ms">'+m[0]+'</span>'+spk('m'+(i+1)+'-'+(k+1),m[0])+
+        '<div class="mz">'+m[1]+'</div></div>').join('')+
     '</div>'+
   '</div>';
 });
@@ -509,7 +568,8 @@ PRAC.forEach((p,i)=>{
       '<input data-b="2" size="10" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="?"> '+
       '<span class="hint">('+p.h2+')</span>'+p.post+
     '</div>'+
-    '<div class="exp"><div class="ans">✔ '+p.pre+'<u>'+firstAns(p.a1)+'</u>'+p.mid+'<u>'+firstAns(p.a2)+'</u>'+p.post+'</div>'+
+    '<div class="exp"><div class="ans">✔ '+p.pre+'<u>'+firstAns(p.a1)+'</u>'+p.mid+'<u>'+firstAns(p.a2)+'</u>'+p.post+
+      spk('p'+(i+1),(p.pre+firstAns(p.a1)+p.mid+firstAns(p.a2)+p.post).replace(/\s+/g,' ').trim())+'</div>'+
       '<div class="zh">💬 '+p.cn+'</div>'+
       '<div class="why">📝 '+p.exp+'</div></div>'+
   '</div>';
@@ -518,6 +578,18 @@ app.innerHTML=html;
 
 /* 逐步顯示 */
 app.addEventListener("click",(ev)=>{
+  const sp=ev.target.closest(".spk");
+  if(sp){
+    if(sp.classList.contains("cur")){
+      const card=sp.closest(".q.demo"), i=+card.dataset.i;
+      const st=[...card.classList].find(c=>/^st[0-3]$/.test(c))||"st0";
+      const k=Math.max(1,+st.slice(2));
+      playId("d"+(i+1)+"-"+k,sp,sentence(DEMO[i],k-1));
+    } else {
+      playId(sp.dataset.a,sp,sp.dataset.t);
+    }
+    return;
+  }
   const mb=ev.target.closest(".morebtn");
   if(mb){
     const list=mb.parentElement.querySelector('.morelist[data-more="'+mb.dataset.more+'"]');
@@ -545,6 +617,18 @@ app.addEventListener("click",(ev)=>{
   card.classList.remove("st0","st1","st2","st3");
   card.classList.add("st"+s);
   card.querySelectorAll(".sbtn").forEach(btn=>{btn.classList.toggle("on",+btn.dataset.s<=s);});
+  if(AUTO.checked){
+    const i=+card.dataset.i;
+    playId("d"+(i+1)+"-"+s,card.querySelector(".build .spk.cur"),sentence(DEMO[i],s-1));
+  }
+});
+
+/* 自動朗讀開關（記住上次選擇） */
+const AUTO=document.getElementById("autoplay");
+try{ if(localStorage.getItem("beAutoplay")==="0") AUTO.checked=false; }catch(e){}
+AUTO.addEventListener("change",()=>{
+  try{ localStorage.setItem("beAutoplay",AUTO.checked?"1":"0"); }catch(e){}
+  if(!AUTO.checked) stopSpk();
 });
 
 /* 批改 */
