@@ -92,6 +92,31 @@
   .audiobar input{width:20px;height:20px;accent-color:#22c1c3;cursor:pointer;}
   .audiobar .tip{color:#8a94a2;font-weight:600;}
 
+  /* ── Yes-No 問句卡 ── */
+  .q.qa{background:linear-gradient(180deg,#faf5ff,#fff);border-color:#ecdcff;}
+  .q.qa .qnum{background:#f0e3ff;color:#7a2fd6;}
+  .q.qa .tagk{background:linear-gradient(135deg,#a855ff,#ff6ea9);}
+  .qbuild{margin-top:11px;font-size:1.15rem;line-height:2.2;color:#22303f;font-weight:700;
+    background:#fdfaff;border:1px solid #f0e5fb;border-radius:12px;padding:12px 15px;text-align:center;}
+  .qbuild .ql{display:none;}
+  .qbuild .ql b{border-radius:8px;padding:2px 9px;font-weight:900;}
+  .qbuild .ql b.hot{color:#0f7a52;background:#e6faf0;}
+  .qbuild .ql b.mk{color:#7a2fd6;background:#f3e8ff;}
+  .qbuild .ql b.sw{color:#c25a00;background:#fff2e0;}
+  .qbuild .sep{color:#b9c4d6;font-weight:900;margin:0 6px;}
+  .q.qa.st0 .ql.q1,.q.qa.st1 .ql.q1{display:block;}
+  .q.qa.st2 .ql.q2{display:block;}
+  .q.qa.st3 .ql.q3{display:block;}
+  .q.qa.st0 .ql.q1 b{background:#f0f3f8;color:#6b7686;}
+  .q.qa.st1 .ql.q1 b,.q.qa.st2 .ql.q2 b,.q.qa.st3 .ql.q3 b{
+    animation:changePop .5s cubic-bezier(.2,1.3,.4,1);}
+  .q.qa.st1 .r1,.q.qa.st2 .r1,.q.qa.st3 .r1{display:block;}
+  .q.qa.st2 .r2,.q.qa.st3 .r2{display:block;}
+  .q.qa.st3 .r3{display:block;}
+  .reveal.r2.pu{border-color:#a855ff;background:#f7f2ff;}
+  .reveal.r3.pk{border-color:#ff6ea9;background:#fff2f7;}
+  .reveal .ans2{display:block;margin-top:3px;}
+
   .stepbtns{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px;}
   .hintk{font-size:.76rem;color:#8a94a2;font-weight:800;}
   .sbtn{border:none;cursor:pointer;font-weight:800;font-size:.82rem;padding:9px 15px;border-radius:12px;
@@ -187,7 +212,7 @@
   /* ── 手機版：表格與句子縮一點，避免橫向捲動 ── */
   @media (max-width:430px){
     .formula .ft th,.formula .ft td{font-size:16px;padding:6px 6px;}
-    .build{font-size:22px;}
+    .build,.qbuild{font-size:22px;}
     .wrap{padding:14px 10px 70px;}
     .q{padding:14px 12px;}
     .qtop{flex-wrap:wrap;}
@@ -199,7 +224,7 @@
   /* ── 全站內文統一字級（國小三年級加大） ── */
   .wrap *{font-size:20px;}
   header.hero h1{font-size:30px;}
-  .build{font-size:26px;}
+  .build,.qbuild{font-size:26px;}
   .reveal .sen{font-size:22px;}
   .mrow .ms{font-size:21px;}
   .lab,.tagk,.hint{font-size:15px;}
@@ -226,7 +251,7 @@
 
   <header class="hero">
     <h1>⏰ be 動詞三態變身</h1>
-    <p>同一句話，換一個時間就好！按 ①今天 ②昨天 ③明天，看綠色的 <b>be 動詞</b> 和橘色的 <b>時間詞</b> 跳起來變身，同時<b>聽外師念一次</b>。20 句動畫示範（肯定 10 句、否定 5 句、疑問 5 句），每句再附 3 句同型例句，後面 10 題填填看。</p>
+    <p>同一句話，換一個時間就好！按 ①今天 ②昨天 ③明天，看綠色的 <b>be 動詞</b> 和橘色的 <b>時間詞</b> 跳起來變身，同時<b>聽外師念一次</b>。35 句動畫示範：肯定 10 句、否定 5 句、疑問 5 句，再加 15 句「直述句 → Yes-No 問句 → 簡答」，後面 15 題填填看。</p>
   </header>
 
   <div class="legend">
@@ -285,6 +310,7 @@
     <ol>
       <li><b>否定句</b>：be 動詞後面加 not → am not／isn't／aren't → <b>wasn't／weren't</b> → <b>won't be</b>。</li>
       <li><b>疑問句</b>：be 動詞搬到主詞前面 → Am／Is／Are → <b>Was／Were</b> → <b>Will + 主詞 + be</b>。</li>
+      <li><b>簡答</b>：Yes, 主詞 + be動詞. ／ No, 主詞 + be動詞 + n't. —— <b>只講到 be 動詞就停</b>，後面的字不用再說一次。<b>Yes 不能縮寫</b>（✗ Yes, he's.），未來簡答<b>不加 be</b>（✓ Yes, it will.）。</li>
     </ol>
   </div>
 
@@ -297,12 +323,14 @@
   </div>
 
   <div class="wrong">
-    <h2>⚠️ 小朋友最常錯的五點</h2>
+    <h2>⚠️ 小朋友最常錯的七點</h2>
     <ol>
       <li><b>was 和 were 用反</b>：<s>They was in the park.</s> → They <b>were</b> in the park.（很多人用 were）</li>
       <li><b>未來式忘記 be</b>：<s>I will happy tomorrow.</s> → I <b>will be</b> happy tomorrow.</li>
       <li><b>will 後面又放 am／is／are</b>：<s>She will is at home.</s> → She <b>will be</b> at home.</li>
       <li><b>未來疑問句漏掉 be</b>：<s>Will you busy tomorrow?</s> → <b>Will you be</b> busy tomorrow?（Will 在前，be 在主詞後面）</li>
+      <li><b>Yes 的簡答亂縮寫</b>：<s>Yes, he's.</s> → <b>Yes, he is.</b>（Yes 後面一定講完整；只有 No 才縮寫：No, he isn't.）</li>
+      <li><b>未來簡答多講一個 be</b>：<s>Yes, it will be.</s> → <b>Yes, it will.</b></li>
       <li><b>am not 亂縮寫</b>：<s>I amn't hungry.</s> → I <b>am not</b> hungry.（或寫 I'm not hungry.）</li>
     </ol>
   </div>
@@ -439,6 +467,116 @@ const DEMO = [
   more:[["Are we late today?","我們今天遲到了嗎？"],["Were we late yesterday?","我們昨天遲到了嗎？"],["Will we be late tomorrow?","我們明天會遲到嗎？"]]}
 ];
 
+
+/* ── 15 句 Yes-No 問句與簡答 ──
+   *綠色*＝be 動詞　~紫色~＝Yes／No／問號　_橘色_＝主詞換人 */
+const QA = [
+ {tag:"am → Are you…?", tense:"現在式", zh:"我今天肚子餓。（問你餓不餓）",
+  s1:"I *am* hungry today.", s2:"*Are* _you_ hungry today~?~",
+  a1:"~Yes,~ *I am.*", a2:"~No,~ *I'm not.*",
+  n1:"直述句：主詞 I 配 <b>am</b>。",
+  n2:"問句：am 換成 <b>Are</b> 搬到最前面；問「別人」要把 I 換成 <b>you</b>，句號換問號。",
+  n3:"回答的是自己 → 換回 <b>I</b>。<b>Yes, I am.</b>（不能說 Yes, I'm.）／<b>No, I'm not.</b>（沒有 amn't）"},
+
+ {tag:"were → Were…?", tense:"過去式", zh:"你昨天很開心。",
+  s1:"You *were* happy yesterday.", s2:"*Were* you happy yesterday~?~",
+  a1:"~Yes,~ *I was.*", a2:"~No,~ *I wasn't.*",
+  n1:"直述句：You 的過去用 <b>were</b>。",
+  n2:"問句：把 <b>Were</b> 搬到最前面，其他字都不用動，句號換問號。",
+  n3:"問 you，回答換成 <b>I</b>；I 的過去用 <b>was</b> → Yes, I was. ／ No, I wasn't."},
+
+ {tag:"is → Is…?", tense:"現在式", zh:"他今天在學校。",
+  s1:"He *is* at school today.", s2:"*Is* he at school today~?~",
+  a1:"~Yes,~ *he is.*", a2:"~No,~ *he isn't.*",
+  n1:"直述句：He 是一個人 → <b>is</b>。",
+  n2:"問句：把 <b>Is</b> 搬到最前面就好，主詞 he 不用換。",
+  n3:"⭐ <b>Yes 不能縮寫</b>：Yes, he is.（✗ Yes, he's.）；只有 No 才縮寫 → No, he isn't."},
+
+ {tag:"was → Was…?", tense:"過去式", zh:"她昨天很累。",
+  s1:"She *was* tired yesterday.", s2:"*Was* she tired yesterday~?~",
+  a1:"~Yes,~ *she was.*", a2:"~No,~ *she wasn't.*",
+  n1:"直述句：is 的過去是 <b>was</b>。",
+  n2:"問句：把 <b>Was</b> 搬到最前面。",
+  n3:"簡答用同一個 be 動詞：<b>Yes, she was.</b> ／ <b>No, she wasn't.</b>（tired 不用再說一次）"},
+
+ {tag:"will be → Will…be?", tense:"未來式", zh:"明天會很熱。",
+  s1:"It *will be* hot tomorrow.", s2:"*Will* it *be* hot tomorrow~?~",
+  a1:"~Yes,~ *it will.*", a2:"~No,~ *it won't.*",
+  n1:"直述句：未來用 <b>will be</b>。",
+  n2:"問句：<b>Will 搬到最前面，be 留在主詞後面</b> → Will it be…？兩個字都不能少。",
+  n3:"⭐ 未來式的簡答<b>不用 be</b>：Yes, it will.（✗ Yes, it will be.）／ No, it won't."},
+
+ {tag:"are → Are you…?", tense:"現在式", zh:"我們今天在動物園。",
+  s1:"We *are* at the zoo today.", s2:"*Are* _you_ at the zoo today~?~",
+  a1:"~Yes,~ *we are.*", a2:"~No,~ *we aren't.*",
+  n1:"直述句：We 是很多人 → <b>are</b>。",
+  n2:"問句：<b>Are</b> 搬到最前面；問「你們」一樣用 <b>you</b>。",
+  n3:"回答的是「我們」→ 換回 <b>we</b>：Yes, we are. ／ No, we aren't."},
+
+ {tag:"were → Were…?", tense:"過去式", zh:"他們昨天在公園。",
+  s1:"They *were* in the park yesterday.", s2:"*Were* they in the park yesterday~?~",
+  a1:"~Yes,~ *they were.*", a2:"~No,~ *they weren't.*",
+  n1:"直述句：They 很多人 → <b>were</b>。",
+  n2:"問句：把 <b>Were</b> 搬到最前面。",
+  n3:"簡答：Yes, they were. ／ No, they weren't.（後面 in the park 不用再說一次）"},
+
+ {tag:"the dog → it", tense:"現在式", zh:"那隻狗今天在車上。",
+  s1:"The dog *is* in the car today.", s2:"*Is* the dog in the car today~?~",
+  a1:"~Yes,~ *it is.*", a2:"~No,~ *it isn't.*",
+  n1:"直述句：一隻狗是一個 → <b>is</b>。",
+  n2:"問句：把 <b>Is</b> 搬到最前面。",
+  n3:"簡答時 <b>the dog 要換成 it</b>（一隻動物用 it）：Yes, it is. ／ No, it isn't."},
+
+ {tag:"my → your", tense:"未來式", zh:"我媽媽明天會很忙。",
+  s1:"My mom *will be* busy tomorrow.", s2:"*Will* _your mom_ *be* busy tomorrow~?~",
+  a1:"~Yes,~ *she will.*", a2:"~No,~ *she won't.*",
+  n1:"直述句：未來用 <b>will be</b>。",
+  n2:"問句：Will 最前面、be 留在後面；問「別人的媽媽」要把 my 換成 <b>your</b>。",
+  n3:"簡答時 my mom ＝ <b>she</b>，而且未來簡答不加 be：Yes, she will. ／ No, she won't."},
+
+ {tag:"my → your", tense:"現在式", zh:"我的朋友今天在這裡。",
+  s1:"My friends *are* here today.", s2:"*Are* _your friends_ here today~?~",
+  a1:"~Yes,~ *they are.*", a2:"~No,~ *they aren't.*",
+  n1:"直述句：friend<b>s</b> 有 s ＝很多個 → <b>are</b>。",
+  n2:"問句：<b>Are</b> 搬到最前面；my 換成 <b>your</b>。",
+  n3:"簡答時 my friends ＝ <b>they</b>：Yes, they are. ／ No, they aren't."},
+
+ {tag:"未來否定 → No, I won't.", tense:"未來式", zh:"我明天不會難過。",
+  s1:"I *won't be* sad tomorrow.", s2:"*Will* _you_ *be* sad tomorrow~?~",
+  a1:"~No,~ *I won't.*", a2:"~Yes,~ *I will.*",
+  n1:"直述句：未來的否定是 <b>won't be</b>。",
+  n2:"問句要用<b>肯定的樣子</b>問：Will you be…？（不會問 Won't you be…？）",
+  n3:"本來就不會難過 → 答 <b>No, I won't.</b>；如果會難過才答 Yes, I will."},
+
+ {tag:"過去否定 → No, she wasn't.", tense:"過去式", zh:"她昨天沒有生氣。",
+  s1:"She *wasn't* angry yesterday.", s2:"*Was* she angry yesterday~?~",
+  a1:"~No,~ *she wasn't.*", a2:"~Yes,~ *she was.*",
+  n1:"直述句：isn't 的過去是 <b>wasn't</b>。",
+  n2:"問句用肯定的樣子問：<b>Was</b> she angry…？（問句裡不放 not）",
+  n3:"她本來就沒生氣 → <b>No, she wasn't.</b>；有生氣才答 Yes, she was."},
+
+ {tag:"天氣否定 → No, it isn't.", tense:"現在式", zh:"今天不冷。",
+  s1:"It *isn't* cold today.", s2:"*Is* it cold today~?~",
+  a1:"~No,~ *it isn't.*", a2:"~Yes,~ *it is.*",
+  n1:"直述句：天氣的否定用 <b>It isn't</b>。",
+  n2:"問句：<b>Is</b> it cold today?（把 isn't 的 not 拿掉，Is 搬最前面）",
+  n3:"今天不冷 → <b>No, it isn't.</b>；冷的話才答 Yes, it is."},
+
+ {tag:"we 的否定簡答", tense:"過去式", zh:"我們昨天不渴。",
+  s1:"We *weren't* thirsty yesterday.", s2:"*Were* _you_ thirsty yesterday~?~",
+  a1:"~No,~ *we weren't.*", a2:"~Yes,~ *we were.*",
+  n1:"直述句：aren't 的過去是 <b>weren't</b>。",
+  n2:"問句：<b>Were</b> 搬最前面；問「你們」用 <b>you</b>。",
+  n3:"回答換回 <b>we</b>：No, we weren't. ／ Yes, we were."},
+
+ {tag:"未來否定 → No, they won't.", tense:"未來式", zh:"他們明天不會在房間裡。",
+  s1:"They *won't be* in the room tomorrow.", s2:"*Will* they *be* in the room tomorrow~?~",
+  a1:"~No,~ *they won't.*", a2:"~Yes,~ *they will.*",
+  n1:"直述句：未來的否定是 <b>won't be</b>。",
+  n2:"問句：Will 最前面、be 留在主詞後面 → Will they be…？",
+  n3:"未來簡答不加 be：<b>No, they won't.</b> ／ Yes, they will."}
+];
+
 /* ── 換你練習 10 題（填 be 動詞 ＋ 時間詞）── */
 const PRAC = [
  {cn:"我明天會很開心。", pre:"I ", a1:"will be", h1:"be動詞", mid:" happy ", a2:"tomorrow", h2:"時間詞", post:".",
@@ -460,7 +598,17 @@ const PRAC = [
  {cn:"他昨天在公車上嗎？", pre:"", a1:"Was", h1:"be動詞放句首", mid:" he on the bus ", a2:"yesterday", h2:"時間詞", post:"?",
   exp:"is 的過去是 was，問句時 <b>Was</b> 放在句首。"},
  {cn:"明天會下雨嗎？", pre:"", a1:"Will", h1:"放句首的字", mid:" it be rainy ", a2:"tomorrow", h2:"時間詞", post:"?",
-  exp:"未來問句：<b>Will</b> 放最前面，<b>be</b> 留在主詞 it 的後面 → Will it be rainy tomorrow?"}
+  exp:"未來問句：<b>Will</b> 放最前面，<b>be</b> 留在主詞 it 的後面 → Will it be rainy tomorrow?"},
+ {cn:"他今天在學校嗎？", pre:"", a1:"Is", h1:"be動詞放句首", mid:" he at school ", a2:"today", h2:"時間詞", post:"?",
+  exp:"直述句 He is at school today. 把 <b>is</b> 搬到最前面就變問句。"},
+ {cn:"你昨天開心嗎？", pre:"", a1:"Were", h1:"be動詞放句首", mid:" you happy ", a2:"yesterday", h2:"時間詞", post:"?",
+  exp:"are 的過去是 were；問句把 <b>Were</b> 搬到最前面。"},
+ {cn:"他們明天會在公園嗎？", pre:"", a1:"Will", h1:"放句首的字", mid:" they ", a2:"be", h2:"主詞後面那個字", post:" in the park tomorrow?",
+  exp:"未來問句：<b>Will</b> 最前面、<b>be</b> 留在主詞 they 的後面，兩個都不能少。"},
+ {cn:"Are you hungry today?　用 Yes 回答", pre:"Yes, ", a1:"I", h1:"主詞", mid:" ", a2:"am", h2:"be動詞", post:".",
+  exp:"問句用 you，回答要換成 <b>I</b>；簡答只講到 be 動詞就停 → Yes, I am.（不能說 Yes, I'm.）"},
+ {cn:"Will she be busy tomorrow?　用 No 回答", pre:"No, ", a1:"she", h1:"主詞", mid:" ", a2:"won't", h2:"be動詞(否定)", post:".",
+  exp:"未來的簡答<b>不加 be</b> → No, she won't.（✗ No, she won't be.）"}
 ];
 
 /* ── 批改用 ── */
@@ -478,6 +626,12 @@ function sentence(d,k){
   const parts=[d.p1,d.be[k],d.p2,(d.be2?d.be2[k]:""),d.p3,T[k]];
   return parts.filter(x=>x&&x.length).join(" ")+d.tail;
 }
+/* *綠* ~紫~ _橘_ 標記轉 HTML；strip 取純文字給 TTS 用 */
+function mk(t){return t.replace(/\*([^*]+)\*/g,'<b class="hot">$1</b>')
+  .replace(/~([^~]+)~/g,'<b class="mk">$1</b>')
+  .replace(/_([^_]+)_/g,'<b class="sw">$1</b>');}
+function strip(t){return t.replace(/[*~_]/g,'').replace(/\s+/g,' ').trim();}
+
 function slot(cls,arr){
   return '<span class="slot '+cls+'">'+arr.map((w,i)=>
     '<i class="v v'+(i+1)+(w?'':' emp')+'">'+w+'</i>').join('')+'</span>';
@@ -527,7 +681,7 @@ DEMO.forEach((d,i)=>{
       '</span><span class="sub">'+HEADS[i][2]+'　→ 按 ①②③ 看變身</span></div>';
   }
   html+=
-  '<div class="q demo st0" data-i="'+i+'">'+
+  '<div class="q demo st0" data-i="'+i+'" data-k="d">'+
     '<div class="qtop"><span class="qnum d">'+(i+1)+'</span>'+
       '<div class="fact"><span class="lab">中文</span>'+d.zh+'</div>'+
       '<span class="tagk">'+d.tag+'</span></div>'+
@@ -552,6 +706,35 @@ DEMO.forEach((d,i)=>{
         '<span class="ms">'+m[0]+'</span>'+spk('m'+(i+1)+'-'+(k+1),m[0])+
         '<div class="mz">'+m[1]+'</div></div>').join('')+
     '</div>'+
+  '</div>';
+});
+
+html+='<div class="group-h g3"><span class="tag">🙋 Yes-No 問句與簡答（21–35）</span>'+
+  '<span class="sub">直述句 → 問句 → 簡答　→ 按 ①②③ 看變身</span></div>';
+QA.forEach((d,i)=>{
+  const n=i+1;
+  html+=
+  '<div class="q qa st0" data-i="'+i+'" data-k="q">'+
+    '<div class="qtop"><span class="qnum">'+(i+21)+'</span>'+
+      '<div class="fact"><span class="lab">'+d.tense+'</span>'+d.zh+'</div>'+
+      '<span class="tagk">'+d.tag+'</span></div>'+
+    '<div class="qbuild">'+
+      '<div class="ql q1">'+mk(d.s1)+'</div>'+
+      '<div class="ql q2">'+mk(d.s2)+'</div>'+
+      '<div class="ql q3">'+mk(d.a1)+'<span class="sep">／</span>'+mk(d.a2)+'</div>'+
+      spk('','','big cur')+
+    '</div>'+
+    '<div class="stepbtns"><span class="hintk">一步一步點：</span>'+
+      '<button class="sbtn b1" type="button" data-s="1"><span class="sn">1</span>直述句</button>'+
+      '<button class="sbtn b2" type="button" data-s="2"><span class="sn">2</span>改問句</button>'+
+      '<button class="sbtn b3" type="button" data-s="3"><span class="sn">3</span>簡答</button>'+
+    '</div>'+
+    '<div class="reveal r1"><b>① 直述句　</b><span class="sen">'+strip(d.s1)+'</span>'+spk('q'+n+'-1',strip(d.s1))+'<div class="nt">'+d.n1+'</div></div>'+
+    '<div class="reveal r2 pu"><b>② Yes-No 問句　</b><span class="sen">'+strip(d.s2)+'</span>'+spk('q'+n+'-2',strip(d.s2))+'<div class="nt">'+d.n2+'</div></div>'+
+    '<div class="reveal r3 pk"><b>③ 簡答　</b><span class="sen">'+strip(d.a1)+'</span>'+spk('q'+n+'-3a',strip(d.a1))+
+      '<span class="ans2"><b>　　　　</b><span class="sen">'+strip(d.a2)+'</span>'+spk('q'+n+'-3b',strip(d.a2))+'</span>'+
+      '<div class="nt">'+d.n3+'</div></div>'+
+    '<div class="demoexp"><div class="zh">💬 '+d.zh+'</div></div>'+
   '</div>';
 });
 
@@ -581,10 +764,15 @@ app.addEventListener("click",(ev)=>{
   const sp=ev.target.closest(".spk");
   if(sp){
     if(sp.classList.contains("cur")){
-      const card=sp.closest(".q.demo"), i=+card.dataset.i;
+      const card=sp.closest(".q.demo,.q.qa"), i=+card.dataset.i;
       const st=[...card.classList].find(c=>/^st[0-3]$/.test(c))||"st0";
       const k=Math.max(1,+st.slice(2));
-      playId("d"+(i+1)+"-"+k,sp,sentence(DEMO[i],k-1));
+      if(card.dataset.k==="q"){
+        const d=QA[i], txt=[d.s1,d.s2,d.a1][k-1];
+        playId("q"+(i+1)+"-"+(k===3?"3a":k),sp,strip(txt));
+      } else {
+        playId("d"+(i+1)+"-"+k,sp,sentence(DEMO[i],k-1));
+      }
     } else {
       playId(sp.dataset.a,sp,sp.dataset.t);
     }
@@ -612,14 +800,19 @@ app.addEventListener("click",(ev)=>{
   }
   const b=ev.target.closest(".sbtn");
   if(!b) return;
-  const card=b.closest(".q.demo");
+  const card=b.closest(".q.demo,.q.qa");
   const s=+b.dataset.s;
   card.classList.remove("st0","st1","st2","st3");
   card.classList.add("st"+s);
   card.querySelectorAll(".sbtn").forEach(btn=>{btn.classList.toggle("on",+btn.dataset.s<=s);});
   if(AUTO.checked){
-    const i=+card.dataset.i;
-    playId("d"+(i+1)+"-"+s,card.querySelector(".build .spk.cur"),sentence(DEMO[i],s-1));
+    const i=+card.dataset.i, cur=card.querySelector(".spk.cur");
+    if(card.dataset.k==="q"){
+      const d=QA[i], txt=[d.s1,d.s2,d.a1][s-1];
+      playId("q"+(i+1)+"-"+(s===3?"3a":s),cur,strip(txt));
+    } else {
+      playId("d"+(i+1)+"-"+s,cur,sentence(DEMO[i],s-1));
+    }
   }
 });
 
