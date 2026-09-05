@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/favicon.svg">
+<title>初級文法 · Never 句首倒裝</title>
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;
+    color:#22303f;line-height:1.65;background:linear-gradient(180deg,#f3eeff,#eef6ff 70%);min-height:100vh;}
+  .wrap{max-width:820px;margin:0 auto;padding:18px 16px 70px;}
+  .home{display:inline-block;margin-bottom:14px;color:#6b3fd4;font-weight:800;text-decoration:none;
+    background:#fff;padding:7px 16px;border-radius:20px;box-shadow:0 3px 10px rgba(138,77,255,.28);font-size:.9rem;}
+
+  header.hero{background:linear-gradient(135deg,#a18cd1,#8a4dff 55%,#6ea8ff);color:#fff;
+    border-radius:22px;padding:28px 26px;margin-bottom:22px;box-shadow:0 10px 26px rgba(138,77,255,.4);}
+  header.hero h1{margin:0 0 8px;font-size:1.7rem;text-shadow:0 1px 2px rgba(0,0,0,.18);}
+  header.hero p{margin:0;font-size:.96rem;opacity:.96;}
+
+  .formula{background:#fff;border-radius:14px;padding:14px 18px;margin-bottom:16px;
+    font-size:.86rem;color:#4a5766;border-left:5px solid #8a4dff;box-shadow:0 3px 10px rgba(43,140,255,.08);}
+  .formula b{color:#6b3fd4;}
+  .formula .ft{width:100%;border-collapse:collapse;margin:8px 0 4px;}
+  .formula .ft th,.formula .ft td{border:1px solid #ece4ff;padding:7px 9px;text-align:left;}
+  .formula .ft th{background:#f6f1ff;color:#6b3fd4;}
+  .formula ol{margin:6px 0 0;padding-left:1.4em;}
+  .formula ol li{margin-bottom:3px;}
+
+  .note{background:#f6f1ff;border:1px solid #ddd0ff;border-radius:14px;padding:12px 16px;margin-bottom:16px;
+    font-size:.86rem;color:#5b47a0;}
+  .note b{color:#6b3fd4;}
+
+  .q{background:#fff;border-radius:16px;padding:16px 18px;margin-bottom:14px;
+    box-shadow:0 4px 14px rgba(43,140,255,.10);border:1px solid #eef1f8;}
+  .qtop{display:flex;gap:10px;align-items:center;margin-bottom:10px;}
+  .qnum{flex:0 0 auto;width:26px;height:26px;border-radius:50%;background:#d9f5ee;color:#12806a;
+    font-weight:800;font-size:.82rem;display:flex;align-items:center;justify-content:center;}
+  .qnum.d{background:#ede2ff;color:#6b3fd4;}
+  .tagk{display:inline-block;font-size:.72rem;font-weight:800;color:#fff;border-radius:99px;
+    padding:2px 10px;background:linear-gradient(135deg,#8a4dff,#ff6ea9);margin-left:auto;flex:0 0 auto;}
+
+  .lineLab{font-size:.7rem;font-weight:800;color:#8a94a2;background:#f0f3f8;border-radius:8px;
+    padding:1px 8px;margin:0 0 5px;display:inline-block;}
+
+  /* 說明卡：原句／倒裝兩行 + 移動動畫 */
+  .q.demo{background:linear-gradient(180deg,#faf7ff,#fff);border-color:#ece4ff;}
+  .activeLine{font-size:1.05rem;padding:12px 15px;background:#fdfbff;border:1.5px dashed #d9c8ff;
+    border-radius:12px;margin-bottom:10px;line-height:1.9;}
+  .buildLine{font-size:1.05rem;padding:12px 15px;background:#f7fbff;border:1.5px solid #dcecff;
+    border-radius:12px;line-height:1.9;min-height:1.9em;}
+
+  .wNever,.wAux,.wSubj{cursor:default;border-radius:6px;padding:1px 5px;font-weight:800;
+    transition:opacity .35s .1s,text-decoration-color .35s;}
+  .wNever{background:#f0e5ff;color:#6b3fd4;}
+  .wAux{background:#e6f8f0;color:#0f7a52;}
+  .wSubj{background:#fff0e0;color:#c9611a;}
+  .wNever.used,.wAux.used,.wSubj.used{opacity:.3;text-decoration:line-through;}
+  .restOld{font-weight:700;color:#5a6472;transition:opacity .3s;}
+  .restOld.used{opacity:.28;text-decoration:line-through;}
+  .restOld .vb{border-bottom:2px solid #0f7a52;}
+
+  .slotNever,.slotAux,.slotSubj,.slotRest{font-weight:900;border-radius:6px;padding:1px 7px;
+    opacity:0;transition:opacity .25s;}
+  .slotNever.show,.slotAux.show,.slotSubj.show,.slotRest.show{opacity:1;}
+  .slotNever{background:#f0e5ff;color:#6b3fd4;}
+  .slotAux{background:#e6f8f0;color:#0f7a52;}
+  .slotSubj{background:#fff0e0;color:#c9611a;}
+  .slotRest{background:transparent;color:#33414f;font-weight:700;}
+
+  /* 發音鈕 */
+  .spk{border:none;cursor:pointer;background:linear-gradient(135deg,#22c1c3,#43e97b);color:#fff;
+    width:34px;height:34px;border-radius:50%;line-height:1;padding:0;flex:0 0 auto;
+    box-shadow:0 2px 7px rgba(34,192,128,.35);vertical-align:middle;margin-left:8px;transition:.15s;}
+  .spk:hover{filter:brightness(1.08);transform:translateY(-1px);}
+  .spk.playing{animation:spkPulse .7s ease-in-out infinite;
+    box-shadow:0 0 0 4px rgba(67,233,123,.35),0 2px 7px rgba(34,192,128,.35);}
+  @keyframes spkPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.14);}}
+  .audiobar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border-radius:14px;
+    padding:11px 16px;margin-bottom:16px;box-shadow:0 3px 10px rgba(34,193,195,.1);
+    border-left:5px solid #22c1c3;font-weight:800;color:#0e8f5e;}
+  .audiobar label{display:flex;align-items:center;gap:7px;cursor:pointer;}
+  .audiobar input{width:20px;height:20px;accent-color:#22c1c3;cursor:pointer;}
+  .audiobar .tip{color:#8a94a2;font-weight:600;}
+
+  .flyClone{position:fixed;font-weight:900;padding:1px 7px;border-radius:6px;white-space:nowrap;
+    z-index:999;pointer-events:none;will-change:left,top;}
+
+  #pathSvg{position:absolute;top:0;left:0;width:1px;height:1px;overflow:visible;pointer-events:none;z-index:997;}
+  .pathLine{fill:none;stroke-width:2.5;stroke-dasharray:7,6;opacity:0;transition:opacity .25s;}
+  .pathLine.show{opacity:.8;}
+  .pathLine.never{stroke:#8a4dff;}
+  .pathLine.aux{stroke:#0f7a52;}
+  .pathLine.subj{stroke:#c9611a;}
+
+  .stepbtns{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px;}
+  .hintk{font-size:.76rem;color:#8a94a2;font-weight:800;}
+  .sbtn{border:none;cursor:pointer;font-weight:800;font-size:.82rem;padding:9px 15px;border-radius:12px;
+    color:#fff;display:inline-flex;align-items:center;gap:7px;transition:.15s;box-shadow:0 3px 9px rgba(0,0,0,.14);}
+  .sbtn:hover{filter:brightness(1.06);transform:translateY(-1px);}
+  .sbtn:disabled{opacity:.35;cursor:not-allowed;transform:none;}
+  .sbtn .sn{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;
+    background:rgba(255,255,255,.34);color:#fff;font-size:.7rem;font-weight:900;}
+  .sbtn.b1{background:linear-gradient(135deg,#a855ff,#c98bff);}
+  .sbtn.b2{background:linear-gradient(135deg,#12a97a,#43e97b);}
+  .sbtn.b3{background:linear-gradient(135deg,#ff8a1e,#ffb347);}
+  .sbtn.on{box-shadow:0 0 0 3px rgba(255,255,255,.85),0 5px 14px rgba(0,0,0,.22);filter:brightness(1.08);transform:translateY(-1px);}
+  .replay{border:none;cursor:pointer;font-weight:800;font-size:.76rem;padding:8px 13px;border-radius:12px;
+    color:#6b3fd4;background:#f3edff;margin-left:auto;}
+
+  .reveal{display:none;margin-top:8px;padding:10px 13px;border-radius:12px;font-size:.9rem;border-left:4px solid;}
+  .reveal s{color:#d23b5e;} .reveal b{color:inherit;}
+  .reveal.r1{border-color:#b06bff;background:#f7f2ff;}
+  .reveal.r2{border-color:#22b07a;background:#effaf5;}
+  .reveal.r3{border-color:#ffa63e;background:#fff7ee;}
+  .q.demo.st1 .r1,.q.demo.st2 .r1,.q.demo.st3 .r1{display:block;}
+  .q.demo.st2 .r2,.q.demo.st3 .r2{display:block;}
+  .q.demo.st3 .r3{display:block;}
+
+  .demoexp{margin-top:10px;padding:11px 14px;border-radius:12px;background:#fff;border-left:4px solid #8a4dff;font-size:.9rem;}
+  .demoexp .alt{color:#33414f;}
+  .demoexp .alt b{color:#6b3fd4;}
+  .demoexp .zh{color:#4a5766;margin-top:5px;}
+
+  /* 練習卡 */
+  .cnq{color:#33414f;font-size:.98rem;}
+  .cnq .lab{display:inline-block;font-size:.7rem;font-weight:800;color:#8a94a2;
+    background:#f0f3f8;border-radius:8px;padding:1px 7px;margin-right:6px;vertical-align:2px;}
+  .qmark{flex:0 0 auto;border:none;cursor:pointer;width:34px;height:34px;border-radius:50%;
+    background:linear-gradient(135deg,#8a4dff,#ff6ea9);color:#fff;font-weight:900;font-size:1rem;
+    box-shadow:0 3px 9px rgba(138,77,255,.32);margin-left:auto;}
+  .qmark:hover{filter:brightness(1.07);transform:translateY(-1px);}
+  .exp .why{color:#33414f;margin-top:6px;}
+  .exp .why b{color:#0f7a52;}
+
+  .rewrite{font-size:1.02rem;line-height:2.2;color:#22303f;}
+  .rewrite input{font-family:inherit;font-size:.98rem;font-weight:700;color:#6b3fd4;text-align:center;
+    border:none;border-bottom:2px solid #c9d4e6;background:#fbf9ff;border-radius:6px 6px 0 0;
+    padding:3px 6px;margin:0 2px;min-width:120px;outline:none;transition:.15s;}
+  .rewrite input:focus{border-bottom-color:#8a4dff;background:#f3edff;}
+  .rewrite input.ok{border-bottom-color:#22b07a;background:#eafaf2;color:#0f7a52;}
+  .rewrite input.no{border-bottom-color:#ff5b7f;background:#fff0f3;color:#d23b5e;}
+  .hint{font-size:.72rem;color:#a0a9b6;}
+  .exp{display:none;margin-top:12px;padding:12px 14px;border-radius:12px;
+    background:#f6f1ff;border-left:4px solid #8a4dff;font-size:.9rem;}
+  .exp.show{display:block;}
+  .exp .ans{font-weight:800;color:#6b3fd4;}
+  .exp .zh{color:#4a5766;margin-top:4px;}
+
+  .group-h{display:flex;align-items:center;gap:8px;margin:22px 2px 12px;font-weight:800;font-size:1rem;flex-wrap:wrap;}
+  .group-h .tag{color:#fff;border-radius:99px;padding:4px 12px;font-size:.82rem;}
+  .group-h.demo .tag{background:linear-gradient(135deg,#a18cd1,#8a4dff);}
+  .group-h.prac .tag{background:linear-gradient(135deg,#22c1c3,#43e97b);}
+  .group-h .sub{color:#8a94a2;font-weight:600;font-size:.82rem;}
+
+  .bar{position:sticky;bottom:0;margin-top:20px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;
+    background:rgba(255,255,255,.92);backdrop-filter:blur(6px);padding:12px 14px;border-radius:16px;
+    box-shadow:0 -3px 16px rgba(43,140,255,.12);}
+  .btn{border:none;cursor:pointer;font-weight:800;font-size:.95rem;padding:12px 22px;border-radius:14px;
+    background:linear-gradient(135deg,#8a4dff,#ff6ea9);color:#fff;box-shadow:0 5px 14px rgba(138,77,255,.4);}
+  .btn.ghost{background:#fff;color:#6b3fd4;box-shadow:0 3px 10px rgba(138,77,255,.25);}
+  .score{font-weight:800;color:#6b3fd4;font-size:1rem;}
+
+  .wrong{background:#fff;border-radius:16px;padding:16px 20px;margin-top:26px;
+    box-shadow:0 4px 14px rgba(255,91,127,.12);border:1px solid #ffe0e7;border-left:5px solid #ff7aa8;}
+  .wrong h2{margin:0 0 8px;font-size:1.05rem;color:#c2568f;}
+  .wrong ol{margin:0;padding-left:1.4em;}
+  .wrong li{margin-bottom:6px;font-size:.92rem;color:#4a5766;}
+  .wrong s{color:#d23b5e;}
+  .wrong b{color:#0f7a52;}
+
+  footer{text-align:center;color:#9aa4b2;font-size:.8rem;margin-top:34px;}
+
+  /* ── 全站內文統一字級 ── */
+  .wrap *{font-size:20px;}
+  header.hero h1{font-size:30px;}
+  .lineLab,.tagk,.lab{font-size:14px;}
+  .qmark{font-size:19px;}
+  .qnum,.qnum.d{width:30px;height:30px;font-size:15px;}
+  .sbtn .sn{width:22px;height:22px;font-size:14px;}
+  .spk{font-size:17px;}
+</style>
+<!-- EFETL-PWA -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#7C4DFF">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="EFETL">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}</script>
+<!-- /EFETL-PWA -->
+</head>
+<body>
+<div class="wrap">
+  <a class="home" href="grammar.html">← 回初級文法</a>
+
+  <header class="hero">
+    <h1>🚫 初級文法 · Never 句首倒裝</h1>
+    <p>Never + 助動詞 + 主詞 + 動詞　三步驟：① Never 飛到句首 ② 助動詞飛到主詞前面（沒有助動詞就借 do／does／did） ③ 主詞和動詞接上去。20 句示範動畫，電腦／平板寬螢幕會看到文字真的飛動位置＋虛線路徑；每一句原句與倒裝句都附 🔊 真人發音（微軟 Neural），後 10 題換你把句子改成倒裝，點 ❓ 直接看答案與解析。</p>
+  </header>
+
+  <div class="formula">
+    📐 <b>倒裝公式：Never + 助動詞 + 主詞 + 動詞…</b>
+    <table class="ft">
+      <tbody><tr><th>原句類型</th><th>一般語序</th><th>Never 放句首（倒裝）</th></tr>
+      <tr><td>有 be 動詞</td><td>He <b>is</b> never late.</td><td>Never <b>is he</b> late.</td></tr>
+      <tr><td>有助動詞 have/has/had</td><td>I <b>have</b> never seen it.</td><td>Never <b>have I</b> seen it.</td></tr>
+      <tr><td>有情態助動詞 will/can/should…</td><td>He <b>will</b> never forget it.</td><td>Never <b>will he</b> forget it.</td></tr>
+      <tr><td>現在簡單式（沒有助動詞）</td><td>He never <b>tells</b> a lie.</td><td>Never <b>does he tell</b> a lie.</td></tr>
+      <tr><td>過去簡單式（沒有助動詞）</td><td>I never <b>thought</b> about it.</td><td>Never <b>did I think</b> about it.</td></tr>
+    </tbody></table>
+    <b>倒裝三步驟：</b>
+    <ol>
+      <li><b>Never 搬到句首</b>並大寫，用來強調「從來沒有」，語氣比放句中更強、更正式。</li>
+      <li><b>助動詞排到主詞前面</b>：be 動詞、have/has/had、will/would/can/could/should/shall 都直接搬過去。</li>
+      <li><b>沒有助動詞就借 do／does／did</b>：借完之後主要動詞一定要變回<b>原形</b>（tells → tell、thought → think）。</li>
+    </ol>
+  </div>
+
+  <div class="note">👆 點下面的「1／2／3」按鈕：電腦／平板寬螢幕會看到<b>紫色的 never</b> 真的飛到句首、<b>綠色的助動詞</b>飛到主詞前面、<b>橘色的主詞</b>退到助動詞後面，並留下虛線路徑；手機窄螢幕直接顯示結果。</div>
+
+  <div class="audiobar">
+    <span>🔊 發音</span>
+    <label><input type="checkbox" id="autoplay" checked>按 ①③ 時自動念出來</label>
+    <span class="tip">每一句旁邊的 🔊 都可以重聽（微軟 Neural 真人發音）</span>
+  </div>
+
+  <div id="app"></div>
+
+  <div class="bar">
+    <button class="btn" id="submit">送出批改</button>
+    <button class="btn ghost" id="reset">重作</button>
+    <span class="score" id="score"></span>
+  </div>
+
+  <div class="wrong">
+    <h2>⚠️ 學生最常錯的五點</h2>
+    <ol>
+      <li><b>忘記倒裝</b>：<s>Never I have seen such a big dog.</s> → Never <b>have I</b> seen such a big dog。</li>
+      <li><b>沒有助動詞卻不借 do／does／did</b>：<s>Never he tells a lie.</s> → Never <b>does he tell</b> a lie。</li>
+      <li><b>借了 does／did 卻沒把動詞變原形</b>：<s>Never does he tells a lie.</s> / <s>Never did I thought so.</s> → Never does he <b>tell</b> a lie. / Never did I <b>think</b> so。</li>
+      <li><b>又倒裝又加 not（雙重否定）</b>：<s>Never don't I go there.</s> → Never <b>do I</b> go there。（never 本身就是否定）</li>
+      <li><b>倒裝只用在「否定副詞放句首」時</b>：句中的 never 不倒裝 —— <s>He never is late.</s>（be 動詞要放 never 前面）→ He <b>is never</b> late. / Never <b>is he</b> late。</li>
+    </ol>
+  </div>
+
+  <footer>EFETL © 2025　‧　GEPT 初級英檢 · 文法練習</footer>
+</div>
+
+<svg id="pathSvg" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrNever" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a4dff"/>
+    </marker>
+    <marker id="arrAux" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#0f7a52"/>
+    </marker>
+    <marker id="arrSubj" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#c9611a"/>
+    </marker>
+  </defs>
+</svg>
+
+<script>
+const WIDE = window.matchMedia('(min-width:900px)').matches;
+
+/* ── 示範說明 20 句 ──
+   subj 主詞／aux 原句中的助動詞（沒有就寫 ""）／rest never 後面的部分
+   auxNew 倒裝後排在主詞前的助動詞／restNew 倒裝後主詞後面的部分（預設同 rest） */
+const DEMO = [
+ {tag:"現在完成式 have", subj:"I", aux:"have", rest:"seen such a beautiful sunset.",
+  auxNew:"have", subjNew:"I",
+  n1:"never 是否定副詞，把它搬到句首並大寫成 <b>Never</b>，語氣變成強調「我從來沒有」。",
+  n2:"句子裡本來就有助動詞 <b>have</b>，直接把它排到主詞 I 的<b>前面</b>。",
+  n3:"主詞 I 接在 have 後面，其餘 seen such a beautiful sunset. 原封不動照抄。",
+  alt:"一般語序：I have never seen such a beautiful sunset.（意思相同，倒裝語氣更強）",
+  zh:"我從來沒看過這麼美的夕陽。"},
+
+ {tag:"現在完成式 has", subj:"She", aux:"has", rest:"told a lie.",
+  auxNew:"has", subjNew:"she",
+  n1:"Never 搬到句首並大寫。",
+  n2:"助動詞 <b>has</b> 排到主詞前面。",
+  n3:"原本的主詞 She 移到 has 後面，因為不再是句首，<b>s 要改小寫 she</b>。",
+  alt:"一般語序：She has never told a lie.",
+  zh:"她從來沒說過謊。"},
+
+ {tag:"過去完成式 had", subj:"We", aux:"had", rest:"met before that day.",
+  auxNew:"had", subjNew:"we",
+  n1:"Never 搬到句首。",
+  n2:"助動詞 <b>had</b> 排到主詞前面。",
+  n3:"主詞 we 接在 had 後面，met before that day. 照抄。",
+  alt:"一般語序：We had never met before that day.",
+  zh:"在那天以前我們從來沒見過面。"},
+
+ {tag:"be 動詞 is", subj:"He", aux:"is", rest:"late for class.",
+  auxNew:"is", subjNew:"he",
+  n1:"Never 搬到句首。",
+  n2:"<b>be 動詞本身就當助動詞用</b>，不必借 do，直接把 is 排到主詞前面。",
+  n3:"主詞 he 接在 is 後面，late for class. 照抄。",
+  alt:"一般語序：He is never late for class.",
+  zh:"他上課從來不遲到。"},
+
+ {tag:"be 動詞 was", subj:"I", aux:"was", rest:"so nervous in my life.",
+  auxNew:"was", subjNew:"I",
+  n1:"Never 搬到句首。",
+  n2:"be 動詞 <b>was</b> 直接排到主詞前面。",
+  n3:"主詞 I 接在 was 後面，so nervous in my life. 照抄。",
+  alt:"也常寫成：Never in my life was I so nervous.（把 in my life 一起提到前面）",
+  zh:"我這輩子從來沒有這麼緊張過。"},
+
+ {tag:"be 動詞 are", subj:"They", aux:"are", rest:"absent from work.",
+  auxNew:"are", subjNew:"they",
+  n1:"Never 搬到句首。",
+  n2:"be 動詞 <b>are</b> 直接排到主詞前面。",
+  n3:"主詞 they 接在 are 後面，absent from work. 照抄。",
+  alt:"一般語序：They are never absent from work.",
+  zh:"他們上班從來不缺席。"},
+
+ {tag:"助動詞 will", subj:"He", aux:"will", rest:"forget your kindness.",
+  auxNew:"will", subjNew:"he",
+  n1:"Never 搬到句首。",
+  n2:"助動詞 <b>will</b> 排到主詞前面。",
+  n3:"主詞 he 接在 will 後面，<b>動詞維持原形</b> forget。",
+  alt:"一般語序：He will never forget your kindness.",
+  zh:"他永遠不會忘記你的好意。"},
+
+ {tag:"助動詞 would", subj:"She", aux:"would", rest:"lie to her friends.",
+  auxNew:"would", subjNew:"she",
+  n1:"Never 搬到句首。",
+  n2:"助動詞 <b>would</b> 排到主詞前面。",
+  n3:"主詞 she 接在 would 後面，動詞用原形 lie。",
+  alt:"一般語序：She would never lie to her friends.",
+  zh:"她絕不會對朋友說謊。"},
+
+ {tag:"情態助動詞 can", subj:"I", aux:"can", rest:"thank you enough.",
+  auxNew:"can", subjNew:"I",
+  n1:"Never 搬到句首。",
+  n2:"情態助動詞 <b>can</b> 排到主詞前面。",
+  n3:"主詞 I 接在 can 後面，動詞用原形 thank。",
+  alt:"一般語序：I can never thank you enough.（＝感激不盡）",
+  zh:"我對你感激不盡。"},
+
+ {tag:"情態助動詞 should", subj:"You", aux:"should", rest:"give up your dream.",
+  auxNew:"should", subjNew:"you",
+  n1:"Never 搬到句首，勸告的語氣更強。",
+  n2:"情態助動詞 <b>should</b> 排到主詞前面。",
+  n3:"主詞 you 接在 should 後面，動詞用原形 give up。",
+  alt:"一般語序：You should never give up your dream.",
+  zh:"你絕對不該放棄你的夢想。"},
+
+ {tag:"現在簡單式 → 借 does", subj:"He", aux:"", rest:"tells a lie.", restNew:"tell a lie.",
+  auxNew:"does", subjNew:"he", addDo:true,
+  n1:"Never 搬到句首。",
+  n2:"句子裡<b>沒有助動詞</b>，只有動詞 tells。tells 的「現在式、第三人稱單數」藏在字尾 -s 裡，把它抽出來變成助動詞 <b>does</b> 排在主詞前面。",
+  n3:"主詞 he 接在 does 後面，動詞<b>變回原形 tell</b>（時態已經由 does 表示，不可以再寫 tells）。",
+  alt:"一般語序：He never tells a lie.",
+  zh:"他從來不說謊。"},
+
+ {tag:"現在簡單式 → 借 do", subj:"They", aux:"", rest:"complain about the food.", restNew:"complain about the food.",
+  auxNew:"do", subjNew:"they", addDo:true,
+  n1:"Never 搬到句首。",
+  n2:"沒有助動詞，主詞 they 是複數 → 借 <b>do</b>（不是 does）排在主詞前面。",
+  n3:"主詞 they 接在 do 後面，動詞原本就是原形 complain，維持不變。",
+  alt:"一般語序：They never complain about the food.",
+  zh:"他們從來不抱怨食物。"},
+
+ {tag:"過去簡單式 → 借 did", subj:"I", aux:"", rest:"thought about it that way.", restNew:"think about it that way.",
+  auxNew:"did", subjNew:"I", addDo:true,
+  n1:"Never 搬到句首。",
+  n2:"沒有助動詞，動詞 thought 是<b>過去式</b> → 把過去式抽出來變成 <b>did</b> 排在主詞前面。",
+  n3:"主詞 I 接在 did 後面，動詞變回原形 <b>think</b>（過去已由 did 表示）。",
+  alt:"一般語序：I never thought about it that way.",
+  zh:"我從來沒這樣想過這件事。"},
+
+ {tag:"過去簡單式 → 借 did", subj:"She", aux:"", rest:"said a word about the accident.", restNew:"say a word about the accident.",
+  auxNew:"did", subjNew:"she", addDo:true,
+  n1:"Never 搬到句首。",
+  n2:"沒有助動詞，said 是過去式 → 借 <b>did</b> 排在主詞前面。",
+  n3:"主詞 she 接在 did 後面，動詞變回原形 <b>say</b>。",
+  alt:"一般語序：She never said a word about the accident.",
+  zh:"關於那場意外，她從來沒說過一個字。"},
+
+ {tag:"現在完成式 + been", subj:"She", aux:"has", rest:"been to Japan.",
+  auxNew:"has", subjNew:"she",
+  n1:"Never 搬到句首。",
+  n2:"助動詞 <b>has</b> 排到主詞前面（been 是過去分詞，留在後面不動）。",
+  n3:"主詞 she 接在 has 後面，been to Japan. 照抄。",
+  alt:"一般語序：She has never been to Japan.",
+  zh:"她從來沒去過日本。"},
+
+ {tag:"情態助動詞 could", subj:"I", aux:"could", rest:"understand his jokes.",
+  auxNew:"could", subjNew:"I",
+  n1:"Never 搬到句首。",
+  n2:"情態助動詞 <b>could</b> 排到主詞前面。",
+  n3:"主詞 I 接在 could 後面，動詞用原形 understand。",
+  alt:"一般語序：I could never understand his jokes.",
+  zh:"我從來都聽不懂他的笑話。"},
+
+ {tag:"助動詞 shall（正式語氣）", subj:"I", aux:"shall", rest:"forget that day.",
+  auxNew:"shall", subjNew:"I",
+  n1:"Never 搬到句首，是演講、書信裡很常見的強調寫法。",
+  n2:"助動詞 <b>shall</b> 排到主詞前面。",
+  n3:"主詞 I 接在 shall 後面，動詞用原形 forget。",
+  alt:"口語一點也可以說：I will never forget that day. → Never will I forget that day.",
+  zh:"我永遠不會忘記那一天。"},
+
+ {tag:"have been able to", subj:"We", aux:"have", rest:"been able to solve this problem.",
+  auxNew:"have", subjNew:"we",
+  n1:"Never 搬到句首。",
+  n2:"助動詞 <b>have</b> 排到主詞前面（been able to 一整串留在後面）。",
+  n3:"主詞 we 接在 have 後面，been able to solve this problem. 照抄。",
+  alt:"一般語序：We have never been able to solve this problem.",
+  zh:"我們一直都沒能解決這個問題。"},
+
+ {tag:"主詞是名詞片語 → 借 did", subj:"The team", aux:"", rest:"gave up hope.", restNew:"give up hope.",
+  auxNew:"did", subjNew:"the team", addDo:true,
+  n1:"Never 搬到句首。",
+  n2:"沒有助動詞，gave 是過去式 → 借 <b>did</b> 排在主詞前面。",
+  n3:"主詞不是代名詞也一樣要退到助動詞後面：<b>did the team</b>，動詞變回原形 <b>give up</b>。",
+  alt:"一般語序：The team never gave up hope.",
+  zh:"這支隊伍從來沒有放棄希望。"},
+
+ {tag:"主詞是名詞 → 借 does", subj:"This machine", aux:"", rest:"breaks down.", restNew:"break down.",
+  auxNew:"does", subjNew:"this machine", addDo:true,
+  n1:"Never 搬到句首。",
+  n2:"沒有助動詞，主詞 this machine 是<b>單數</b>、現在式 → 借 <b>does</b> 排在主詞前面。",
+  n3:"主詞 this machine 接在 does 後面，動詞變回原形 <b>break down</b>。",
+  alt:"一般語序：This machine never breaks down.",
+  zh:"這台機器從來不會故障。"}
+];
+
+/* ── 換你練習 10 題（改成 Never 開頭的倒裝句）── */
+const PRAC = [
+ {src:"He never tells a lie.",
+  pre:"倒裝：Never ", a1:"does", h1:"助動詞", mid:" ", a2:"he tell", h2:"主詞＋原形動詞", post:" a lie.",
+  exp:"沒有助動詞就借 does（主詞 he 單數、現在式）；借了 does，動詞 tells 一定要變回原形 tell。"},
+ {src:"I have never seen such a big dog.",
+  pre:"倒裝：Never ", a1:"have", h1:"助動詞", mid:" ", a2:"I", h2:"主詞", post:" seen such a big dog.",
+  exp:"句中已有助動詞 have，直接排到主詞 I 前面，後面的 seen 照抄。"},
+ {src:"She was never late for school.",
+  pre:"倒裝：Never ", a1:"was", h1:"be 動詞", mid:" ", a2:"she", h2:"主詞", post:" late for school.",
+  exp:"be 動詞本身就當助動詞，直接排到主詞前面；She 不在句首了，改小寫 she。"},
+ {src:"They will never forget this trip.",
+  pre:"倒裝：Never ", a1:"will", h1:"助動詞", mid:" ", a2:"they", h2:"主詞", post:" forget this trip.",
+  exp:"助動詞 will 排到主詞前面，動詞維持原形 forget。"},
+ {src:"I never thought about it that way.",
+  pre:"倒裝：Never ", a1:"did", h1:"助動詞", mid:" ", a2:"I think", h2:"主詞＋原形動詞", post:" about it that way.",
+  exp:"thought 是過去式，把過去式抽出來變成 did，動詞就要變回原形 think。"},
+ {src:"We had never met before.",
+  pre:"倒裝：Never ", a1:"had", h1:"助動詞", mid:" ", a2:"we", h2:"主詞", post:" met before.",
+  exp:"過去完成式的 had 就是助動詞，直接排到主詞 we 前面。"},
+ {src:"You should never tell a lie.",
+  pre:"倒裝：Never ", a1:"should", h1:"助動詞", mid:" ", a2:"you", h2:"主詞", post:" tell a lie.",
+  exp:"情態助動詞 should 排到主詞前面，動詞維持原形 tell。"},
+ {src:"This machine never breaks down.",
+  pre:"倒裝：Never ", a1:"does", h1:"助動詞", mid:" ", a2:"this machine break", h2:"主詞＋原形動詞", post:" down.",
+  exp:"主詞 this machine 是單數現在式 → 借 does；breaks 要變回原形 break。"},
+ {src:"She can never remember my name.",
+  pre:"倒裝：Never ", a1:"can", h1:"助動詞", mid:" ", a2:"she", h2:"主詞", post:" remember my name.",
+  exp:"情態助動詞 can 排到主詞前面，動詞維持原形 remember。"},
+ {src:"The team never gave up hope.",
+  pre:"倒裝：Never ", a1:"did", h1:"助動詞", mid:" ", a2:"the team give", h2:"主詞＋原形動詞", post:" up hope.",
+  exp:"gave 是過去式 → 借 did；動詞變回原形 give。主詞是名詞片語一樣要放在 did 後面。"}
+];
+
+/* ── 批改用 ── */
+function norm(s){
+  return (s||"").toLowerCase().trim()
+    .replace(/[.,!?]/g,"")
+    .replace(/\s+/g," ").trim();
+}
+function accepts(ans, val){
+  return ans.split("|").map(norm).includes(norm(val));
+}
+function firstAns(a){ return a.split("|")[0]; }
+
+/* ── 發音：優先播 mp3（微軟 edge-tts Neural），失敗時退回瀏覽器內建朗讀 ── */
+const AUDIO_DIR = "grammar-never-audio/";
+let curAudio=null, curBtn=null;
+function stopSpk(){
+  if(curAudio){curAudio.pause();curAudio=null;}
+  if(curBtn){curBtn.classList.remove("playing");curBtn=null;}
+  if(window.speechSynthesis) speechSynthesis.cancel();
+}
+function fallbackSpeak(text){
+  if(!text||!window.speechSynthesis) return;
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang="en-US"; u.rate=.85;
+  u.onend=()=>{if(curBtn){curBtn.classList.remove("playing");curBtn=null;}};
+  speechSynthesis.speak(u);
+}
+function playId(id,btn,text){
+  const same = (curBtn && curBtn===btn);
+  stopSpk();
+  if(same) return;               // 再按一次＝停止
+  curBtn = btn||null;
+  if(curBtn) curBtn.classList.add("playing");
+  if(!id){ fallbackSpeak(text); return; }
+  const a=new Audio(AUDIO_DIR+id+".mp3");
+  curAudio=a;
+  a.onended=()=>{if(curBtn){curBtn.classList.remove("playing");curBtn=null;}curAudio=null;};
+  a.onerror=()=>{curAudio=null;fallbackSpeak(text);};
+  a.play().catch(()=>{curAudio=null;fallbackSpeak(text);});
+}
+function spk(id,text,cls){
+  return '<button class="spk'+(cls?' '+cls:'')+'" type="button" title="聽發音" aria-label="聽發音"'+
+    ' data-a="'+id+'" data-t="'+text.replace(/"/g,'&quot;')+'">🔊</button>';
+}
+/* 每張示範卡的原句／倒裝句純文字（給發音與 fallback 用） */
+function origText(d){ return d.subj+' '+(d.aux?d.aux+' ':'')+'never '+d.rest; }
+function invText(d){ return 'Never '+d.auxNew+' '+d.subjNew+' '+(d.restNew||d.rest); }
+function pracText(p){ return 'Never '+firstAns(p.a1)+p.mid+firstAns(p.a2)+p.post; }
+
+const app = document.getElementById("app");
+let html = '';
+
+html += '<div class="group-h demo"><span class="tag">📖 示範說明 20 句</span><span class="sub">先看懂每句怎麼倒裝（按 1／2／3）</span></div>';
+DEMO.forEach((d,i)=>{
+  const restNew = d.restNew || d.rest;
+  html +=
+  '<div class="q demo st0" data-i="'+i+'">'+
+    '<div class="qtop"><span class="qnum d">'+(i+1)+'</span><span class="tagk">'+d.tag+'</span></div>'+
+    '<div class="lineLab">原句</div>'+
+    '<div class="activeLine">'+
+      '<span class="wSubj" data-role="subj">'+d.subj+'</span> '+
+      (d.aux ? '<span class="wAux" data-role="aux">'+d.aux+'</span> ' : '')+
+      '<span class="wNever" data-role="never">never</span> '+
+      '<span class="restOld" data-role="rest">'+d.rest+'</span>'+
+      spk('d'+(i+1)+'-1', origText(d))+
+    '</div>'+
+    '<div class="lineLab">倒裝（Never 放句首）</div>'+
+    '<div class="buildLine">'+
+      '<span class="slotNever" data-slot="never">Never</span> '+
+      '<span class="slotAux" data-slot="aux">'+d.auxNew+'</span> '+
+      '<span class="slotSubj" data-slot="subj">'+d.subjNew+'</span> '+
+      '<span class="slotRest" data-slot="rest">'+restNew+'</span>'+
+      spk('d'+(i+1)+'-2', invText(d))+
+    '</div>'+
+    '<div class="stepbtns"><span class="hintk">一步一步點：</span>'+
+      '<button class="sbtn b1" type="button" data-s="1"><span class="sn">1</span>never 飛到句首</button>'+
+      '<button class="sbtn b2" type="button" data-s="2" disabled><span class="sn">2</span>'+(d.addDo?'借 '+d.auxNew+' 當助動詞':'助動詞飛到主詞前')+'</button>'+
+      '<button class="sbtn b3" type="button" data-s="3" disabled><span class="sn">3</span>主詞＋動詞接上</button>'+
+      '<button class="replay" type="button" data-replay="'+i+'">↺ 重播</button>'+
+    '</div>'+
+    '<div class="reveal r1"><b>① </b>'+d.n1+'</div>'+
+    '<div class="reveal r2"><b>② </b>'+d.n2+'</div>'+
+    '<div class="reveal r3"><b>③ </b>'+d.n3+'</div>'+
+    '<div class="demoexp"><div class="alt">🔁 '+d.alt+'</div>'+
+      '<div class="zh">💬 '+d.zh+'</div></div>'+
+  '</div>';
+});
+
+html += '<div class="group-h prac"><span class="tag">✏️ 換你練習</span><span class="sub">把句子改成 Never 開頭的倒裝句：兩格都填 → 按「送出批改」；卡關就點右上角 ❓ 看答案與解析</span></div>';
+PRAC.forEach((p,i)=>{
+  html +=
+  '<div class="q practice" data-i="'+i+'">'+
+    '<div class="qtop"><span class="qnum">'+(i+1)+'</span>'+
+      '<div class="cnq"><span class="lab">原句</span>'+p.src+'</div>'+
+      '<button class="qmark" type="button" title="看答案與解析">？</button></div>'+
+    '<div class="rewrite">'+p.pre+
+      '<input data-b="1" size="10" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="?"> '+
+      '<span class="hint">('+p.h1+')</span>'+p.mid+
+      '<input data-b="2" size="18" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="?"> '+
+      '<span class="hint">('+p.h2+')</span>'+p.post+
+    '</div>'+
+    '<div class="exp"><div class="ans">✔ '+p.pre+'<u>'+firstAns(p.a1)+'</u>'+p.mid+'<u>'+firstAns(p.a2)+'</u>'+p.post+spk('p'+(i+1), pracText(p))+'</div>'+
+      '<div class="why">📝 '+p.exp+'</div></div>'+
+  '</div>';
+});
+app.innerHTML = html;
+
+/* ── 飛行動畫（電腦/平板寬螢幕）── */
+const pathSvg = document.getElementById('pathSvg');
+const MARKER = {never:'url(#arrNever)', aux:'url(#arrAux)', subj:'url(#arrSubj)'};
+
+function drawPath(x1,y1,x2,y2,kind,cardIdx){
+  const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+  path.setAttribute('d', 'M'+x1+','+y1+' L'+x2+','+y2);
+  path.setAttribute('class', 'pathLine '+kind);
+  path.setAttribute('marker-end', MARKER[kind]);
+  path.dataset.card = cardIdx;
+  pathSvg.appendChild(path);
+  requestAnimationFrame(()=> requestAnimationFrame(()=> path.classList.add('show')));
+  return path;
+}
+
+function flyText(sourceEl, destEl, colorClass, kind, cardIdx){
+  const startRect = sourceEl.getBoundingClientRect();
+  const endRect = destEl.getBoundingClientRect();
+  const sx = startRect.left + startRect.width/2 + window.scrollX, sy = startRect.top + startRect.height/2 + window.scrollY;
+  const ex = endRect.left + endRect.width/2 + window.scrollX, ey = endRect.top + endRect.height/2 + window.scrollY;
+  drawPath(sx, sy, ex, ey, kind, cardIdx);
+
+  const clone = document.createElement('span');
+  clone.className = 'flyClone ' + colorClass;
+  clone.dataset.card = cardIdx;
+  clone.textContent = destEl.textContent;
+  clone.style.left = startRect.left + 'px';
+  clone.style.top = startRect.top + 'px';
+  clone.style.fontSize = getComputedStyle(sourceEl).fontSize;
+  document.body.appendChild(clone);
+  requestAnimationFrame(()=>{
+    clone.style.transition = 'left .65s cubic-bezier(.22,.85,.3,1), top .65s cubic-bezier(.22,.85,.3,1)';
+    clone.style.left = endRect.left + 'px';
+    clone.style.top = endRect.top + 'px';
+  });
+  const done = ()=>{
+    clone.remove();
+    destEl.classList.add('show');
+    // 虛線保留不淡出，讓學生可以回頭看整個移動路徑（按重播才清除）
+  };
+  clone.addEventListener('transitionend', done, {once:true});
+  setTimeout(done, 800);
+}
+
+function resetDemoCard(card){
+  card.classList.remove('st1','st2','st3');
+  card.classList.add('st0');
+  card.dataset.step = '0';
+  card.querySelectorAll('.sbtn').forEach(b=>{
+    b.classList.remove('on');
+    b.disabled = (b.dataset.s !== '1');
+  });
+  card.querySelectorAll('.slotNever,.slotAux,.slotSubj,.slotRest').forEach(s=>s.classList.remove('show'));
+  card.querySelectorAll('.wSubj,.wAux,.wNever,.restOld').forEach(s=>s.classList.remove('used'));
+}
+
+function autoSpeak(card, id, text, delay){
+  const cb = document.getElementById('autoplay');
+  if(!cb || !cb.checked) return;
+  setTimeout(()=>{
+    const btn = card.querySelector('.spk[data-a="'+id+'"]');
+    playId(id, btn, text);
+  }, delay);
+}
+
+/* 逐步顯示 + 動畫 */
+app.addEventListener("click",(ev)=>{
+  const sp = ev.target.closest(".spk");
+  if(sp){ playId(sp.dataset.a, sp, sp.dataset.t); return; }
+  const qm = ev.target.closest(".qmark");
+  if(qm){
+    const card = qm.closest(".q.practice");
+    const exp = card.querySelector(".exp");
+    const on = exp.classList.toggle("show");
+    if(on){
+      const p = PRAC[+card.dataset.i];
+      const ins = card.querySelectorAll("input");
+      ins[0].value = ins[0].value || firstAns(p.a1);
+      ins[1].value = ins[1].value || firstAns(p.a2);
+    }
+    return;
+  }
+  const rp = ev.target.closest('.replay');
+  if(rp){
+    const card = rp.closest('.q.demo');
+    const cardIdx = card.dataset.i;
+    // 重播：只清掉「這張卡片」自己的虛線／飛行殘留，不影響其他卡片已完成的動畫
+    pathSvg.querySelectorAll('.pathLine[data-card="'+cardIdx+'"]').forEach(p=>p.remove());
+    document.querySelectorAll('.flyClone[data-card="'+cardIdx+'"]').forEach(c=>c.remove());
+    resetDemoCard(card);
+    return;
+  }
+  const b = ev.target.closest(".sbtn");
+  if(!b || b.disabled) return;
+  const card = b.closest(".q.demo");
+  const s = +b.dataset.s;
+  const cur = +(card.dataset.step || 0);
+  if(s !== cur+1) return; // 強制照順序 1→2→3
+  card.dataset.step = s;
+  card.classList.remove("st0","st1","st2","st3");
+  card.classList.add("st"+s);
+  b.classList.add("on");
+  b.disabled = true;
+  const nextBtn = card.querySelector('.sbtn[data-s="'+(s+1)+'"]');
+  if(nextBtn) nextBtn.disabled = false;
+
+  const cardIdx = +card.dataset.i;
+  const d = DEMO[cardIdx];
+  if(s===1){
+    const nv = card.querySelector('[data-role="never"]');
+    const slot = card.querySelector('[data-slot="never"]');
+    if(WIDE){ flyText(nv, slot, 'wNever', 'never', cardIdx); }
+    else { slot.classList.add('show'); }
+    nv.classList.add('used');
+    autoSpeak(card, 'd'+(cardIdx+1)+'-1', origText(d), 0);
+  } else if(s===2){
+    const slot = card.querySelector('[data-slot="aux"]');
+    // 有助動詞 → 助動詞飛過去；沒有助動詞 → 從動詞把時態「抽」出來變 do/does/did
+    const src = d.aux ? card.querySelector('[data-role="aux"]') : card.querySelector('[data-role="rest"]');
+    if(WIDE){ flyText(src, slot, 'wAux', 'aux', cardIdx); }
+    else { slot.classList.add('show'); }
+    if(d.aux) src.classList.add('used');
+  } else if(s===3){
+    const subj = card.querySelector('[data-role="subj"]');
+    const slotS = card.querySelector('[data-slot="subj"]');
+    const slotR = card.querySelector('[data-slot="rest"]');
+    if(WIDE){ flyText(subj, slotS, 'wSubj', 'subj', cardIdx); }
+    else { slotS.classList.add('show'); }
+    subj.classList.add('used');
+    card.querySelector('[data-role="rest"]').classList.add('used');
+    setTimeout(()=> slotR.classList.add('show'), WIDE ? 350 : 0);
+    autoSpeak(card, 'd'+(cardIdx+1)+'-2', invText(d), WIDE ? 900 : 200);
+  }
+});
+
+/* 批改 */
+document.getElementById("submit").addEventListener("click",()=>{
+  let correct=0;
+  const cards = app.querySelectorAll(".q.practice");
+  cards.forEach(q=>{
+    const p = PRAC[+q.dataset.i];
+    const ins = q.querySelectorAll("input");
+    let ok=true;
+    [p.a1,p.a2].forEach((ans,idx)=>{
+      const el=ins[idx];
+      if(accepts(ans, el.value)){ el.classList.add("ok"); el.classList.remove("no"); }
+      else { el.classList.add("no"); el.classList.remove("ok"); ok=false; }
+    });
+    q.querySelector(".exp").classList.add("show");
+    if(ok) correct++;
+  });
+  document.getElementById("score").textContent = "練習答對 "+correct+" / "+cards.length+" 題";
+  window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
+});
+
+document.getElementById("reset").addEventListener("click",()=>{
+  app.querySelectorAll(".q.practice input").forEach(i=>{i.value="";i.classList.remove("ok","no");});
+  app.querySelectorAll(".q.practice .exp").forEach(e=>e.classList.remove("show"));
+  document.getElementById("score").textContent="";
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+</script>
+</body>
+</html>
