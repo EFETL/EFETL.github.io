@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<title>初級文法 · suggest that + (should) + 原形動詞</title>
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;
+    color:#22303f;line-height:1.65;background:linear-gradient(180deg,#e9fbf6,#eef6ff 70%);min-height:100vh;}
+  .wrap{max-width:820px;margin:0 auto;padding:18px 16px 70px;}
+  .home{display:inline-block;margin-bottom:14px;color:#0f7a6a;font-weight:800;text-decoration:none;
+    background:#fff;padding:7px 16px;border-radius:20px;box-shadow:0 3px 10px rgba(20,160,140,.28);font-size:.9rem;}
+
+  header.hero{background:linear-gradient(135deg,#43e0c0,#12a99a 55%,#2b8cff);color:#fff;
+    border-radius:22px;padding:28px 26px;margin-bottom:22px;box-shadow:0 10px 26px rgba(18,169,154,.4);}
+  header.hero h1{margin:0 0 8px;font-size:1.7rem;text-shadow:0 1px 2px rgba(0,0,0,.18);}
+  header.hero p{margin:0;font-size:.96rem;opacity:.96;}
+
+  .formula{background:#fff;border-radius:14px;padding:14px 18px;margin-bottom:16px;
+    font-size:.86rem;color:#4a5766;border-left:5px solid #12a99a;box-shadow:0 3px 10px rgba(43,140,255,.08);}
+  .formula b{color:#0f7a6a;}
+  .formula .big{font-size:1.02rem;font-weight:800;color:#22303f;background:#effaf7;border:1.5px dashed #9fe3d5;
+    border-radius:12px;padding:10px 14px;margin:8px 0 10px;line-height:1.9;}
+  .formula .big .m{background:#f0e5ff;color:#6b3fd4;border-radius:6px;padding:1px 6px;}
+  .formula .big .t{background:#e6f8f0;color:#0f7a52;border-radius:6px;padding:1px 6px;}
+  .formula .big .s{background:#fff0e0;color:#c9611a;border-radius:6px;padding:1px 6px;}
+  .formula .big .v{background:#ffe9f1;color:#c2185b;border-radius:6px;padding:1px 6px;}
+  .formula .ft{width:100%;border-collapse:collapse;margin:8px 0 4px;}
+  .formula .ft th,.formula .ft td{border:1px solid #dff2ee;padding:7px 9px;text-align:left;vertical-align:top;}
+  .formula .ft th{background:#effaf7;color:#0f7a6a;}
+  .formula ol{margin:6px 0 0;padding-left:1.4em;}
+  .formula ol li{margin-bottom:3px;}
+
+  .note{background:#effaf7;border:1px solid #bfeade;border-radius:14px;padding:12px 16px;margin-bottom:16px;
+    font-size:.86rem;color:#3f6b60;}
+  .note b{color:#0f7a6a;}
+  .note.warn{background:#fff6ee;border-color:#ffd9b8;color:#8a5a2b;}
+  .note.warn b{color:#c9611a;}
+
+  .q{background:#fff;border-radius:16px;padding:16px 18px;margin-bottom:14px;
+    box-shadow:0 4px 14px rgba(43,140,255,.10);border:1px solid #eef1f8;}
+  .qtop{display:flex;gap:10px;align-items:center;margin-bottom:10px;}
+  .qnum{flex:0 0 auto;width:26px;height:26px;border-radius:50%;background:#d9f5ee;color:#12806a;
+    font-weight:800;font-size:.82rem;display:flex;align-items:center;justify-content:center;}
+  .qnum.d{background:#e2f4ff;color:#1a6ea8;}
+  .tagk{display:inline-block;font-size:.72rem;font-weight:800;color:#fff;border-radius:99px;
+    padding:2px 10px;background:linear-gradient(135deg,#12a99a,#2b8cff);margin-left:auto;flex:0 0 auto;}
+
+  .lineLab{font-size:.7rem;font-weight:800;color:#8a94a2;background:#f0f3f8;border-radius:8px;
+    padding:1px 8px;margin:0 0 5px;display:inline-block;}
+
+  /* 說明卡：句① 句② 兩行 + 合併行 */
+  .q.demo{background:linear-gradient(180deg,#f7fffd,#fff);border-color:#dff2ee;}
+  .activeLine{font-size:1.05rem;padding:12px 15px;background:#fbfffe;border:1.5px dashed #b9e6dc;
+    border-radius:12px;margin-bottom:10px;line-height:1.9;}
+  .buildLine{font-size:1.05rem;padding:12px 15px;background:#f7fbff;border:1.5px solid #dcecff;
+    border-radius:12px;line-height:1.9;min-height:1.9em;}
+
+  .wMain,.wSubj,.wVerb,.wModal{cursor:default;border-radius:6px;padding:1px 5px;font-weight:800;
+    transition:opacity .35s .1s,text-decoration-color .35s;}
+  .wMain{background:#f0e5ff;color:#6b3fd4;}
+  .wSubj{background:#fff0e0;color:#c9611a;}
+  .wVerb{background:#ffe9f1;color:#c2185b;}
+  .wModal{background:#eef2f7;color:#5a6472;}
+  .wMain.used,.wSubj.used,.wVerb.used,.wModal.used{opacity:.3;text-decoration:line-through;}
+  .wObj{font-weight:800;color:#8a94a2;transition:opacity .3s;}
+  .wObj.used{opacity:.3;text-decoration:line-through;color:#d23b5e;}
+  .restOld{font-weight:700;color:#5a6472;transition:opacity .3s;}
+  .restOld.used{opacity:.28;text-decoration:line-through;}
+
+  .slotMain,.slotThat,.slotSubj,.slotVerb,.slotRest{font-weight:900;border-radius:6px;padding:1px 7px;
+    opacity:0;transition:opacity .25s;}
+  .slotMain.show,.slotThat.show,.slotSubj.show,.slotVerb.show,.slotRest.show{opacity:1;}
+  .slotMain{background:#f0e5ff;color:#6b3fd4;}
+  .slotThat{background:#e6f8f0;color:#0f7a52;}
+  .slotSubj{background:#fff0e0;color:#c9611a;}
+  .slotVerb{background:#ffe9f1;color:#c2185b;}
+  .slotRest{background:transparent;color:#33414f;font-weight:700;}
+  .slotVerb .opt{color:#9aa4b2;font-weight:700;}
+  .slotThat.pop{animation:pop .5s ease;}
+  @keyframes pop{0%{transform:scale(.4);opacity:0;}60%{transform:scale(1.18);}100%{transform:scale(1);opacity:1;}}
+
+  .flyClone{position:fixed;font-weight:900;padding:1px 7px;border-radius:6px;white-space:nowrap;
+    z-index:999;pointer-events:none;will-change:left,top;}
+
+  #pathSvg{position:absolute;top:0;left:0;width:1px;height:1px;overflow:visible;pointer-events:none;z-index:997;}
+  .pathLine{fill:none;stroke-width:2.5;stroke-dasharray:7,6;opacity:0;transition:opacity .25s;}
+  .pathLine.show{opacity:.8;}
+  .pathLine.main{stroke:#8a4dff;}
+  .pathLine.subj{stroke:#c9611a;}
+  .pathLine.verb{stroke:#e0468a;}
+
+  .stepbtns{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px;}
+  .hintk{font-size:.76rem;color:#8a94a2;font-weight:800;}
+  .sbtn{border:none;cursor:pointer;font-weight:800;font-size:.82rem;padding:9px 15px;border-radius:12px;
+    color:#fff;display:inline-flex;align-items:center;gap:7px;transition:.15s;box-shadow:0 3px 9px rgba(0,0,0,.14);}
+  .sbtn:hover{filter:brightness(1.06);transform:translateY(-1px);}
+  .sbtn:disabled{opacity:.35;cursor:not-allowed;transform:none;}
+  .sbtn .sn{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;
+    background:rgba(255,255,255,.34);color:#fff;font-size:.7rem;font-weight:900;}
+  .sbtn.b1{background:linear-gradient(135deg,#a855ff,#c98bff);}
+  .sbtn.b2{background:linear-gradient(135deg,#ff8a1e,#ffb347);}
+  .sbtn.b3{background:linear-gradient(135deg,#e0468a,#ff85b3);}
+  .sbtn.on{box-shadow:0 0 0 3px rgba(255,255,255,.85),0 5px 14px rgba(0,0,0,.22);filter:brightness(1.08);transform:translateY(-1px);}
+  .replay{border:none;cursor:pointer;font-weight:800;font-size:.76rem;padding:8px 13px;border-radius:12px;
+    color:#0f7a6a;background:#e6f8f3;margin-left:auto;}
+
+  .reveal{display:none;margin-top:8px;padding:10px 13px;border-radius:12px;font-size:.9rem;border-left:4px solid;}
+  .reveal s{color:#d23b5e;} .reveal b{color:inherit;}
+  .reveal.r1{border-color:#b06bff;background:#f7f2ff;}
+  .reveal.r2{border-color:#ffa63e;background:#fff7ee;}
+  .reveal.r3{border-color:#e0468a;background:#fff2f7;}
+  .q.demo.st1 .r1,.q.demo.st2 .r1,.q.demo.st3 .r1{display:block;}
+  .q.demo.st2 .r2,.q.demo.st3 .r2{display:block;}
+  .q.demo.st3 .r3{display:block;}
+
+  .demoexp{margin-top:10px;padding:11px 14px;border-radius:12px;background:#fff;border-left:4px solid #12a99a;font-size:.9rem;}
+  .demoexp .alt{color:#33414f;}
+  .demoexp .alt b{color:#0f7a6a;}
+  .demoexp .alt s{color:#d23b5e;}
+  .demoexp .zh{color:#4a5766;margin-top:5px;}
+
+  /* 練習卡 */
+  .cnq{color:#33414f;font-size:.98rem;}
+  .cnq .lab{display:inline-block;font-size:.7rem;font-weight:800;color:#8a94a2;
+    background:#f0f3f8;border-radius:8px;padding:1px 7px;margin-right:6px;vertical-align:2px;}
+  .cnq .l2{display:block;margin-top:4px;}
+  .qmark{flex:0 0 auto;border:none;cursor:pointer;width:34px;height:34px;border-radius:50%;
+    background:linear-gradient(135deg,#12a99a,#2b8cff);color:#fff;font-weight:900;font-size:1rem;
+    box-shadow:0 3px 9px rgba(18,169,154,.32);margin-left:auto;}
+  .qmark:hover{filter:brightness(1.07);transform:translateY(-1px);}
+  .exp .why{color:#33414f;margin-top:6px;}
+  .exp .why b{color:#0f7a52;}
+
+  .rewrite{font-size:1.02rem;line-height:2.2;color:#22303f;margin-top:8px;}
+  .rewrite input{font-family:inherit;font-size:.98rem;font-weight:700;color:#0f7a6a;text-align:center;
+    border:none;border-bottom:2px solid #c9d4e6;background:#f7fffd;border-radius:6px 6px 0 0;
+    padding:3px 6px;margin:0 2px;min-width:120px;outline:none;transition:.15s;}
+  .rewrite input:focus{border-bottom-color:#12a99a;background:#e9fbf6;}
+  .rewrite input.ok{border-bottom-color:#22b07a;background:#eafaf2;color:#0f7a52;}
+  .rewrite input.no{border-bottom-color:#ff5b7f;background:#fff0f3;color:#d23b5e;}
+  .hint{font-size:.72rem;color:#a0a9b6;}
+  .exp{display:none;margin-top:12px;padding:12px 14px;border-radius:12px;
+    background:#effaf7;border-left:4px solid #12a99a;font-size:.9rem;}
+  .exp.show{display:block;}
+  .exp .ans{font-weight:800;color:#0f7a6a;}
+  .exp .zh{color:#4a5766;margin-top:4px;}
+
+  .group-h{display:flex;align-items:center;gap:8px;margin:22px 2px 12px;font-weight:800;font-size:1rem;flex-wrap:wrap;}
+  .group-h .tag{color:#fff;border-radius:99px;padding:4px 12px;font-size:.82rem;}
+  .group-h.demo .tag{background:linear-gradient(135deg,#43e0c0,#12a99a);}
+  .group-h.prac .tag{background:linear-gradient(135deg,#22c1c3,#43e97b);}
+  .group-h .sub{color:#8a94a2;font-weight:600;font-size:.82rem;}
+
+  .verbs{background:#fff;border-radius:16px;padding:16px 20px;margin-top:26px;
+    box-shadow:0 4px 14px rgba(18,169,154,.12);border:1px solid #dff2ee;border-left:5px solid #12a99a;}
+  .verbs h2{margin:0 0 8px;font-size:1.05rem;color:#0f7a6a;}
+  .verbs table{width:100%;border-collapse:collapse;margin:8px 0 6px;}
+  .verbs th,.verbs td{border:1px solid #dff2ee;padding:8px 10px;text-align:left;vertical-align:top;font-size:.92rem;}
+  .verbs th{background:#effaf7;color:#0f7a6a;}
+  .verbs td b{color:#0f7a52;}
+  .verbs .en{color:#22303f;font-weight:800;}
+  .verbs .zh2{color:#8a94a2;font-weight:600;}
+  .verbs .kou{background:#fff6ee;border:1px solid #ffd9b8;border-radius:12px;padding:10px 14px;
+    margin-top:10px;color:#8a5a2b;font-size:.9rem;}
+  .verbs .kou b{color:#c9611a;}
+
+  .bar{position:sticky;bottom:0;margin-top:20px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;
+    background:rgba(255,255,255,.92);backdrop-filter:blur(6px);padding:12px 14px;border-radius:16px;
+    box-shadow:0 -3px 16px rgba(43,140,255,.12);}
+  .btn{border:none;cursor:pointer;font-weight:800;font-size:.95rem;padding:12px 22px;border-radius:14px;
+    background:linear-gradient(135deg,#12a99a,#2b8cff);color:#fff;box-shadow:0 5px 14px rgba(18,169,154,.4);}
+  .btn.ghost{background:#fff;color:#0f7a6a;box-shadow:0 3px 10px rgba(18,169,154,.25);}
+  .score{font-weight:800;color:#0f7a6a;font-size:1rem;}
+
+  .wrong{background:#fff;border-radius:16px;padding:16px 20px;margin-top:26px;
+    box-shadow:0 4px 14px rgba(255,91,127,.12);border:1px solid #ffe0e7;border-left:5px solid #ff7aa8;}
+  .wrong h2{margin:0 0 8px;font-size:1.05rem;color:#c2568f;}
+  .wrong ol{margin:0;padding-left:1.4em;}
+  .wrong li{margin-bottom:6px;font-size:.92rem;color:#4a5766;}
+  .wrong s{color:#d23b5e;}
+  .wrong b{color:#0f7a52;}
+
+  footer{text-align:center;color:#9aa4b2;font-size:.8rem;margin-top:34px;}
+
+  /* ── 全站內文統一字級 ── */
+  .wrap *{font-size:20px;}
+  header.hero h1{font-size:30px;}
+  .lineLab,.tagk,.lab,.hint{font-size:14px;}
+  .qmark{font-size:19px;}
+  .qnum,.qnum.d{width:30px;height:30px;font-size:15px;}
+  .sbtn .sn{width:22px;height:22px;font-size:14px;}
+</style>
+<!-- EFETL-PWA -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#7C4DFF">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="EFETL">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}</script>
+<!-- /EFETL-PWA -->
+</head>
+<body>
+<div class="wrap">
+  <a class="home" href="grammar.html">← 回初級文法</a>
+
+  <header class="hero">
+    <h1>💡 初級文法 · suggest that + (should) + 原形動詞</h1>
+    <p>兩句話怎麼合併成一句？三步驟：① 主句照抄＋補連接詞 that ② 第二句的主詞搬過來 ③ 動詞一律用<b>原形</b>（should 可省略）。10 組合併動畫，電腦／平板寬螢幕會看到文字真的飛去定位＋虛線路徑；後面 10 題換你合併，點 ❓ 直接看答案與解析。最後附上和 suggest 同寫法的動詞總表。</p>
+  </header>
+
+  <div class="formula">
+    📐 <b>合併公式</b>
+    <div class="big">
+      <span class="m">Nicole suggested</span> <span class="t">that</span> <span class="s">Alan</span> <span class="v">(should) see</span> a doctor right away.
+    </div>
+    <table class="ft">
+      <tbody>
+      <tr><th>步驟</th><th>做什麼</th><th>例子</th></tr>
+      <tr><td>①</td><td>主句照抄，後面補上連接詞 <b>that</b></td><td>Nicole suggested <b>that</b>…</td></tr>
+      <tr><td>②</td><td>第二句的<b>主詞</b>搬到 that 後面（不在句首了，第一個字母改小寫）</td><td>…that <b>Alan</b>…</td></tr>
+      <tr><td>③</td><td>動詞用 <b>(should) + 原形</b>；should 可省略，省略後動詞<b>仍是原形</b></td><td>…that Alan <b>(should) see</b> a doctor.</td></tr>
+      </tbody>
+    </table>
+    <b>三個一定要記住的重點：</b>
+    <ol>
+      <li><b>不看主句時態</b>：suggest / suggested / will suggest，that 子句一律 <b>(should) + 原形</b>。</li>
+      <li><b>不看子句主詞單複數</b>：that he <b>see</b>（× sees）、that she <b>be</b>（× is）。</li>
+      <li><b>否定把 not 放在原形動詞前面</b>：that he <b>(should) not go</b>（× that he doesn't go）。</li>
+    </ol>
+  </div>
+
+  <div class="note">👆 點下面的「1／2／3」按鈕：電腦／平板寬螢幕會看到<b>紫色的主句</b>飛到合併句、<b>橘色的主詞</b>搬進 that 子句、<b>粉紅色的動詞變回原形</b>飛過去，並留下虛線路徑；手機窄螢幕直接顯示結果。</div>
+
+  <div id="app"></div>
+
+  <div class="bar">
+    <button class="btn" id="submit">送出批改</button>
+    <button class="btn ghost" id="reset">重作</button>
+    <span class="score" id="score"></span>
+  </div>
+
+  <div class="verbs">
+    <h2>📚 和 suggest 同一種寫法的動詞（that + S + (should) + 原形動詞）</h2>
+    <table>
+      <tbody>
+      <tr><th>類別</th><th>動詞</th><th>例句</th></tr>
+      <tr><td><b>建議</b></td>
+          <td><span class="en">suggest</span> <span class="zh2">建議</span>、<span class="en">recommend</span> <span class="zh2">推薦、建議</span>、<span class="en">propose</span> <span class="zh2">提議</span>、<span class="en">advise</span> <span class="zh2">勸告</span>、<span class="en">urge</span> <span class="zh2">力勸</span>、<span class="en">move</span> <span class="zh2">動議（會議用語）</span></td>
+          <td>He <b>recommended</b> that she <b>(should) take</b> the early bus.</td></tr>
+      <tr><td><b>要求</b></td>
+          <td><span class="en">demand</span> <span class="zh2">要求</span>、<span class="en">require</span> <span class="zh2">規定、要求</span>、<span class="en">request</span> <span class="zh2">請求</span>、<span class="en">ask</span> <span class="zh2">要求</span>、<span class="en">desire</span> <span class="zh2">期望</span>、<span class="en">insist</span> <span class="zh2">堅持要</span></td>
+          <td>They <b>demanded</b> that the price <b>(should) be</b> lowered.</td></tr>
+      <tr><td><b>命令</b></td>
+          <td><span class="en">order</span> <span class="zh2">命令</span>、<span class="en">command</span> <span class="zh2">下令</span>、<span class="en">direct</span> <span class="zh2">指示</span>、<span class="en">instruct</span> <span class="zh2">指示</span></td>
+          <td>The captain <b>ordered</b> that everyone <b>(should) stay</b> inside.</td></tr>
+      <tr><td><b>名詞</b></td>
+          <td><span class="en">suggestion / recommendation / proposal / demand / request / order / insistence</span></td>
+          <td>It was his <b>suggestion</b> that we <b>(should) leave</b> early.</td></tr>
+      <tr><td><b>形容詞</b></td>
+          <td><span class="en">It is necessary / important / essential / urgent / imperative / vital / advisable / desirable + that…</span></td>
+          <td>It is <b>necessary</b> that everyone <b>(should) know</b> the truth.</td></tr>
+      </tbody>
+    </table>
+    <div class="kou">🧠 口訣：<b>「建議、要求、命令、堅持」</b>這四類動詞（以及它們的名詞、形容詞寫法），後面的 that 子句都是<b>「假設語氣」</b>——<b>(should) + 原形動詞</b>，should 可以省略，但動詞永遠維持原形。</div>
+  </div>
+
+  <div class="wrong">
+    <h2>⚠️ 學生最常錯的五點</h2>
+    <ol>
+      <li><b>suggest 不能接「人 + to V」</b>：<s>Nicole suggested Alan to see a doctor.</s> → Nicole suggested <b>that Alan (should) see</b> a doctor.（要接 O + to V 的是 advise / ask / order / urge：The coach <b>advised Jason to take</b> a rest. ✔）</li>
+      <li><b>省略 should 之後動詞卻加了 -s 或變過去式</b>：<s>He suggested that she sees a doctor.</s> / <s>…that she saw a doctor.</s> → …that she <b>see</b> a doctor.</li>
+      <li><b>主句時態影響子句</b>：主句是 suggested（過去式），子句<b>不跟著變過去</b> —— <s>He suggested that we went there.</s> → He suggested that we <b>go</b> there.</li>
+      <li><b>否定用了 don't / doesn't</b>：<s>I suggested that he doesn't tell anyone.</s> → I suggested that he <b>(should) not tell</b> anyone.（not 直接放原形動詞前）</li>
+      <li><b>suggest / insist 表示「顯示、堅稱事實」時不用原形</b>：His smile <b>suggested</b> that he <b>was</b> happy.（暗示）／ He <b>insisted</b> that he <b>was</b> innocent.（堅稱）—— 只有「建議／堅持要別人做某事」時才用 (should) + 原形。</li>
+    </ol>
+  </div>
+
+  <footer>EFETL © 2025　‧　GEPT 初級英檢 · 文法練習</footer>
+</div>
+
+<svg id="pathSvg" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrMain" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a4dff"/>
+    </marker>
+    <marker id="arrSubj" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#c9611a"/>
+    </marker>
+    <marker id="arrVerb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#e0468a"/>
+    </marker>
+  </defs>
+</svg>
+
+<script>
+const WIDE = window.matchMedia('(min-width:900px)').matches;
+
+/* ── 示範說明 10 組（兩句合併）──
+   main 主句／obj 主句被取代的受詞／subj 第二句主詞／modal 第二句的助動詞（沒有就 ""）
+   verb 第二句的動詞（片語）／verbNew 合併後的 (should)+原形／rest 其餘照抄的部分 */
+const DEMO = [
+ {tag:"suggest 建議", main:"Nicole suggested", obj:"something.",
+  subj:"Alan", subjNew:"Alan", modal:"should", verb:"see", verbNew:"see", rest:"a doctor right away.",
+  n1:"第①句的主詞＋動詞 <b>Nicole suggested</b> 照抄；原本的 something 要被「整個第②句」取代，所以先補上連接詞 <b>that</b>，把第②句變成名詞子句當受詞。（口語中 that 可以省略，但考試建議寫出來）",
+  n2:"把第②句的主詞 <b>Alan</b> 搬到 that 後面，當名詞子句的主詞。",
+  n3:"suggest 是「建議」，that 子句要用假設語氣：<b>(should) + 原形動詞</b>。should 可以省略，<b>省略後動詞仍然是原形 see</b>。",
+  alt:"也可以說：Nicole suggested <b>seeing</b> a doctor right away.（suggest + V-ing）　✘ <s>Nicole suggested Alan to see a doctor.</s>（suggest 不能接 人 + to V）",
+  zh:"妮可建議亞倫馬上去看醫生。"},
+
+ {tag:"recommend 建議、推薦", main:"The doctor recommended", obj:"something.",
+  subj:"Kevin", subjNew:"Kevin", modal:"", verb:"drinks", verbNew:"drink", rest:"more water every day.",
+  n1:"主句 <b>The doctor recommended</b> 照抄，後面補連接詞 <b>that</b>。",
+  n2:"第②句的主詞 <b>Kevin</b> 搬到 that 後面。",
+  n3:"recommend 和 suggest 同一類。第②句的動詞是 <b>drinks</b>（第三人稱單數加 -s），搬進 that 子句要<b>拿掉 -s 變回原形 drink</b>：that Kevin (should) drink。",
+  alt:"也可以說：The doctor recommended <b>drinking</b> more water.（recommend + V-ing）",
+  zh:"醫生建議凱文每天多喝點水。"},
+
+ {tag:"insist 堅持（要求）", main:"Mom insisted", obj:"something.",
+  subj:"We", subjNew:"we", modal:"must", verb:"be", verbNew:"be", rest:"home before ten.",
+  n1:"主句 <b>Mom insisted</b> 照抄，補上連接詞 <b>that</b>。",
+  n2:"第②句主詞 <b>We</b> 搬過來；它已經不在句首，<b>W 要改成小寫 we</b>。",
+  n3:"insist 表示「堅持要求別人做某事」，that 子句用 <b>(should) + 原形</b>：原本的 must 換成可省略的 (should)，動詞維持原形 <b>be</b>（× is / × are）。",
+  alt:"⚠️ insist 若表示「堅稱某個事實」，就用一般時態：He insisted that he <b>was</b> innocent.（他堅稱自己是清白的）",
+  zh:"媽媽堅持我們十點以前要到家。"},
+
+ {tag:"demand 要求", main:"The customers demanded", obj:"something.",
+  subj:"The store", subjNew:"the store", modal:"", verb:"gives", verbNew:"give", rest:"them a refund.",
+  n1:"主句 <b>The customers demanded</b> 照抄，補上 <b>that</b>。",
+  n2:"第②句主詞 <b>The store</b> 搬過來，改小寫 the store。",
+  n3:"demand 是「要求」類動詞，that 子句用 <b>(should) + 原形</b>：<b>gives → give</b>。",
+  alt:"名詞也一樣：Their <b>demand</b> was that the store <b>(should) give</b> them a refund.",
+  zh:"顧客要求店家退錢給他們。"},
+
+ {tag:"require 規定、要求", main:"The law requires", obj:"something.",
+  subj:"Every driver", subjNew:"every driver", modal:"must", verb:"wear", verbNew:"wear", rest:"a seat belt.",
+  n1:"主句 <b>The law requires</b>（現在式）照抄，補上 <b>that</b>。",
+  n2:"第②句主詞 <b>Every driver</b> 搬過來，改小寫 every driver。",
+  n3:"注意：主句是現在式 requires，但 that 子句<b>不受主句時態影響</b>，一律 <b>(should) + 原形 wear</b>（× wears）。",
+  alt:"也可以說：The law requires <b>every driver to wear</b> a seat belt.（require + O + to V 也通）",
+  zh:"法律規定每位駕駛都必須繫安全帶。"},
+
+ {tag:"request 請求（否定句）", main:"The teacher requested", obj:"something.",
+  subj:"The students", subjNew:"the students", modal:"should", verb:"not use", verbNew:"not use", rest:"their phones in class.",
+  n1:"主句 <b>The teacher requested</b> 照抄，補上 <b>that</b>。",
+  n2:"第②句主詞 <b>The students</b> 搬過來，改小寫 the students。",
+  n3:"否定的寫法：把 <b>not 直接放在原形動詞前面</b> → that the students <b>(should) not use</b>…（× that the students don't use / doesn't use）",
+  alt:"也可以說：The teacher requested <b>the students not to use</b> their phones in class.",
+  zh:"老師要求學生上課不要使用手機。"},
+
+ {tag:"advise 勸告", main:"The coach advised", obj:"something.",
+  subj:"Jason", subjNew:"Jason", modal:"", verb:"takes", verbNew:"take", rest:"a rest for two weeks.",
+  n1:"主句 <b>The coach advised</b> 照抄，補上 <b>that</b>。",
+  n2:"第②句主詞 <b>Jason</b> 搬到 that 後面。",
+  n3:"advise 也是建議類：<b>takes → (should) take</b>，動詞回原形。",
+  alt:"advise 和 suggest 不同：advise <b>可以</b>接人＋to V —— The coach advised <b>Jason to take</b> a rest. ✔（但 <s>suggested Jason to take</s> ✘）",
+  zh:"教練建議傑森休息兩個星期。"},
+
+ {tag:"propose 提議（被動）", main:"The manager proposed", obj:"something.",
+  subj:"The meeting", subjNew:"the meeting", modal:"", verb:"is put off", verbNew:"be put off", rest:"until Monday.",
+  n1:"主句 <b>The manager proposed</b> 照抄，補上 <b>that</b>。",
+  n2:"第②句主詞 <b>The meeting</b> 搬過來，改小寫 the meeting。",
+  n3:"第②句是被動語態 is put off。搬進 that 子句時，be 動詞也要變回<b>原形 be</b> → that the meeting <b>(should) be put off</b>。被動的公式是 <b>(should) + be + p.p.</b>。",
+  alt:"名詞寫法：His <b>proposal</b> was that the meeting <b>(should) be put off</b> until Monday.",
+  zh:"經理提議把會議延到星期一。"},
+
+ {tag:"order 命令", main:"The judge ordered", obj:"something.",
+  subj:"The man", subjNew:"the man", modal:"", verb:"pays", verbNew:"pay", rest:"the fine within ten days.",
+  n1:"主句 <b>The judge ordered</b> 照抄，補上 <b>that</b>。",
+  n2:"第②句主詞 <b>The man</b> 搬過來，改小寫 the man。",
+  n3:"order 是命令類動詞，that 子句一樣用 <b>(should) + 原形</b>：<b>pays → pay</b>。",
+  alt:"也可以說：The judge ordered <b>the man to pay</b> the fine within ten days.",
+  zh:"法官命令那名男子在十天內繳清罰款。"},
+
+ {tag:"urge 力勸", main:"Our teacher urged", obj:"something.",
+  subj:"We", subjNew:"we", modal:"should", verb:"sign up", verbNew:"sign up", rest:"for the speech contest.",
+  n1:"主句 <b>Our teacher urged</b> 照抄，補上 <b>that</b>。",
+  n2:"第②句主詞 <b>We</b> 搬過來，改小寫 we。",
+  n3:"urge 是「力勸」，that 子句用 <b>(should) + 原形</b>：should 可省略，動詞片語維持原形 <b>sign up</b>。",
+  alt:"也可以說：Our teacher urged <b>us to sign up</b> for the speech contest.",
+  zh:"老師力勸我們報名演講比賽。"}
+];
+
+/* ── 換你練習 10 題（把兩句合併成一句）── */
+const PRAC = [
+ {s1:"The doctor suggested something.", s2:"Jenny should stay in bed for three days.",
+  pre:"合併：The doctor suggested ", a1:"that", h1:"連接詞", mid:" Jenny ", a2:"stay|should stay", h2:"(should)＋原形動詞", post:" in bed for three days.",
+  exp:"suggest 後面接 that 名詞子句，子句用 (should) + 原形：that Jenny (should) stay…（should 可省略，動詞仍是原形 stay）"},
+ {s1:"The teacher recommends something.", s2:"Amy reads this book.",
+  pre:"合併：The teacher recommends ", a1:"that", h1:"連接詞", mid:" Amy ", a2:"read|should read", h2:"(should)＋原形動詞", post:" this book.",
+  exp:"recommend 和 suggest 同一類。reads 的第三人稱單數 -s 要拿掉，變回原形 read。"},
+ {s1:"The boss demanded something.", s2:"Everyone comes to the office on time.",
+  pre:"合併：The boss demanded ", a1:"that", h1:"連接詞", mid:" everyone ", a2:"come|should come", h2:"(should)＋原形動詞", post:" to the office on time.",
+  exp:"demand 是要求類動詞：comes → (should) come，動詞回原形。"},
+ {s1:"Mr. Wang insisted something.", s2:"His son does the dishes after dinner.",
+  pre:"合併：Mr. Wang insisted ", a1:"that", h1:"連接詞", mid:" his son ", a2:"do|should do", h2:"(should)＋原形動詞", post:" the dishes after dinner.",
+  exp:"insist 表示「堅持要求某人做某事」→ (should) + 原形：does → do。（若是「堅稱事實」則用一般時態：He insisted that he was right.）"},
+ {s1:"The rules require something.", s2:"Every student wears a helmet when riding.",
+  pre:"合併：The rules require ", a1:"that", h1:"連接詞", mid:" every student ", a2:"wear|should wear", h2:"(should)＋原形動詞", post:" a helmet when riding.",
+  exp:"主句是現在式 require，但 that 子句不受影響，一律用原形：wears → wear。"},
+ {s1:"I suggested something.", s2:"Peter doesn't tell anyone about it.",
+  pre:"合併：I suggested ", a1:"that", h1:"連接詞", mid:" Peter ", a2:"not tell|should not tell|shouldn't tell", h2:"(should)＋not＋原形", post:" anyone about it.",
+  exp:"否定要把 not 直接放在原形動詞前面：that Peter (should) not tell…（× that Peter doesn't tell）"},
+ {s1:"The doctor advised something.", s2:"My father gives up smoking.",
+  pre:"合併：The doctor advised ", a1:"that", h1:"連接詞", mid:" my father ", a2:"give up|should give up", h2:"(should)＋原形動詞", post:" smoking.",
+  exp:"advise 是建議類：gives up → (should) give up。advise 也可以說 The doctor advised my father to give up smoking."},
+ {s1:"The committee proposed something.", s2:"The old library is turned into a café.",
+  pre:"合併：The committee proposed ", a1:"that", h1:"連接詞", mid:" the old library ", a2:"be turned|should be turned", h2:"(should)＋be＋p.p.", post:" into a café.",
+  exp:"被動語態進到 that 子句：is turned → (should) be turned，be 動詞要變回原形 be。"},
+ {s1:"The captain ordered something.", s2:"All the players are on the field by five.",
+  pre:"合併：The captain ordered ", a1:"that", h1:"連接詞", mid:" all the players ", a2:"be|should be", h2:"(should)＋原形動詞", post:" on the field by five.",
+  exp:"order 是命令類動詞：are → (should) be，不管主詞是單數或複數，一律用原形 be。"},
+ {s1:"It is necessary.（形容詞寫法）", s2:"Everyone knows the truth.",
+  pre:"合併：It is necessary ", a1:"that", h1:"連接詞", mid:" everyone ", a2:"know|should know", h2:"(should)＋原形動詞", post:" the truth.",
+  exp:"necessary / important / essential / urgent / imperative 這類形容詞，後面的 that 子句也用 (should) + 原形：knows → know。"}
+];
+
+/* ── 答案比對 ── */
+function norm(s){
+  return (s||"").toLowerCase()
+    .replace(/[.,!?;:]/g,"")
+    .replace(/\s+/g," ").trim();
+}
+function accepts(ans, val){
+  return ans.split("|").map(norm).includes(norm(val));
+}
+function firstAns(a){ return a.split("|")[0]; }
+
+const app = document.getElementById("app");
+let html = '';
+
+html += '<div class="group-h demo"><span class="tag">📖 合併動畫 10 組</span><span class="sub">先看懂兩句怎麼變一句（按 1／2／3）</span></div>';
+DEMO.forEach((d,i)=>{
+  html +=
+  '<div class="q demo st0" data-i="'+i+'">'+
+    '<div class="qtop"><span class="qnum d">'+(i+1)+'</span><span class="tagk">'+d.tag+'</span></div>'+
+    '<div class="lineLab">句① 主句</div>'+
+    '<div class="activeLine">'+
+      '<span class="wMain" data-role="main">'+d.main+'</span> '+
+      '<span class="wObj" data-role="obj">'+d.obj+'</span>'+
+    '</div>'+
+    '<div class="lineLab">句② 要合併進去的內容</div>'+
+    '<div class="activeLine">'+
+      '<span class="wSubj" data-role="subj">'+d.subj+'</span> '+
+      (d.modal ? '<span class="wModal" data-role="modal">'+d.modal+'</span> ' : '')+
+      '<span class="wVerb" data-role="verb">'+d.verb+'</span> '+
+      '<span class="restOld" data-role="rest">'+d.rest+'</span>'+
+    '</div>'+
+    '<div class="lineLab">合併後</div>'+
+    '<div class="buildLine">'+
+      '<span class="slotMain" data-slot="main">'+d.main+'</span> '+
+      '<span class="slotThat" data-slot="that">that</span> '+
+      '<span class="slotSubj" data-slot="subj">'+d.subjNew+'</span> '+
+      '<span class="slotVerb" data-slot="verb"><span class="opt">(should)</span> '+d.verbNew+'</span> '+
+      '<span class="slotRest" data-slot="rest">'+d.rest+'</span>'+
+    '</div>'+
+    '<div class="stepbtns"><span class="hintk">一步一步點：</span>'+
+      '<button class="sbtn b1" type="button" data-s="1"><span class="sn">1</span>主句照抄＋補 that</button>'+
+      '<button class="sbtn b2" type="button" data-s="2" disabled><span class="sn">2</span>主詞搬進子句</button>'+
+      '<button class="sbtn b3" type="button" data-s="3" disabled><span class="sn">3</span>動詞變 (should)＋原形</button>'+
+      '<button class="replay" type="button" data-replay="'+i+'">↺ 重播</button>'+
+    '</div>'+
+    '<div class="reveal r1"><b>① </b>'+d.n1+'</div>'+
+    '<div class="reveal r2"><b>② </b>'+d.n2+'</div>'+
+    '<div class="reveal r3"><b>③ </b>'+d.n3+'</div>'+
+    '<div class="demoexp"><div class="alt">🔁 '+d.alt+'</div>'+
+      '<div class="zh">💬 '+d.zh+'</div></div>'+
+  '</div>';
+});
+
+html += '<div class="group-h prac"><span class="tag">✏️ 換你練習</span><span class="sub">把句①句②合併成一句：兩格都填 → 按「送出批改」；卡關就點右上角 ❓ 看答案與解析</span></div>';
+PRAC.forEach((p,i)=>{
+  html +=
+  '<div class="q practice" data-i="'+i+'">'+
+    '<div class="qtop"><span class="qnum">'+(i+1)+'</span>'+
+      '<div class="cnq"><span class="lab">句①</span>'+p.s1+
+        '<span class="l2"><span class="lab">句②</span>'+p.s2+'</span></div>'+
+      '<button class="qmark" type="button" title="看答案與解析">？</button></div>'+
+    '<div class="rewrite">'+p.pre+
+      '<input data-b="1" size="8" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="?"> '+
+      '<span class="hint">('+p.h1+')</span>'+p.mid+
+      '<input data-b="2" size="18" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="?"> '+
+      '<span class="hint">('+p.h2+')</span>'+p.post+
+    '</div>'+
+    '<div class="exp"><div class="ans">✔ '+p.pre+'<u>'+firstAns(p.a1)+'</u>'+p.mid+'<u>'+firstAns(p.a2)+'</u>'+p.post+'</div>'+
+      '<div class="why">📝 '+p.exp+'</div></div>'+
+  '</div>';
+});
+app.innerHTML = html;
+
+/* ── 飛行動畫（電腦/平板寬螢幕）── */
+const pathSvg = document.getElementById('pathSvg');
+const MARKER = {main:'url(#arrMain)', subj:'url(#arrSubj)', verb:'url(#arrVerb)'};
+
+function drawPath(x1,y1,x2,y2,kind,cardIdx){
+  const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+  path.setAttribute('d', 'M'+x1+','+y1+' L'+x2+','+y2);
+  path.setAttribute('class', 'pathLine '+kind);
+  path.setAttribute('marker-end', MARKER[kind]);
+  path.dataset.card = cardIdx;
+  pathSvg.appendChild(path);
+  requestAnimationFrame(()=> requestAnimationFrame(()=> path.classList.add('show')));
+  return path;
+}
+
+function flyText(sourceEl, destEl, colorClass, kind, cardIdx){
+  const startRect = sourceEl.getBoundingClientRect();
+  const endRect = destEl.getBoundingClientRect();
+  const sx = startRect.left + startRect.width/2 + window.scrollX, sy = startRect.top + startRect.height/2 + window.scrollY;
+  const ex = endRect.left + endRect.width/2 + window.scrollX, ey = endRect.top + endRect.height/2 + window.scrollY;
+  drawPath(sx, sy, ex, ey, kind, cardIdx);
+
+  const clone = document.createElement('span');
+  clone.className = 'flyClone ' + colorClass;
+  clone.dataset.card = cardIdx;
+  clone.textContent = destEl.textContent;
+  clone.style.left = startRect.left + 'px';
+  clone.style.top = startRect.top + 'px';
+  clone.style.fontSize = getComputedStyle(sourceEl).fontSize;
+  document.body.appendChild(clone);
+  requestAnimationFrame(()=>{
+    clone.style.transition = 'left .65s cubic-bezier(.22,.85,.3,1), top .65s cubic-bezier(.22,.85,.3,1)';
+    clone.style.left = endRect.left + 'px';
+    clone.style.top = endRect.top + 'px';
+  });
+  const done = ()=>{
+    clone.remove();
+    destEl.classList.add('show');
+    // 虛線保留不淡出，讓學生可以回頭看整個搬移路徑（按重播才清除）
+  };
+  clone.addEventListener('transitionend', done, {once:true});
+  setTimeout(done, 800);
+}
+
+function resetDemoCard(card){
+  card.classList.remove('st1','st2','st3');
+  card.classList.add('st0');
+  card.dataset.step = '0';
+  card.querySelectorAll('.sbtn').forEach(b=>{
+    b.classList.remove('on');
+    b.disabled = (b.dataset.s !== '1');
+  });
+  card.querySelectorAll('.slotMain,.slotThat,.slotSubj,.slotVerb,.slotRest').forEach(s=>{
+    s.classList.remove('show','pop');
+  });
+  card.querySelectorAll('.wMain,.wObj,.wSubj,.wVerb,.wModal,.restOld').forEach(s=>s.classList.remove('used'));
+}
+
+/* 逐步顯示 + 動畫 */
+app.addEventListener("click",(ev)=>{
+  const qm = ev.target.closest(".qmark");
+  if(qm){
+    const card = qm.closest(".q.practice");
+    const exp = card.querySelector(".exp");
+    const on = exp.classList.toggle("show");
+    if(on){
+      const p = PRAC[+card.dataset.i];
+      const ins = card.querySelectorAll("input");
+      ins[0].value = ins[0].value || firstAns(p.a1);
+      ins[1].value = ins[1].value || firstAns(p.a2);
+    }
+    return;
+  }
+  const rp = ev.target.closest('.replay');
+  if(rp){
+    const card = rp.closest('.q.demo');
+    const cardIdx = card.dataset.i;
+    // 重播：只清掉「這張卡片」自己的虛線／飛行殘留，不影響其他卡片已完成的動畫
+    pathSvg.querySelectorAll('.pathLine[data-card="'+cardIdx+'"]').forEach(p=>p.remove());
+    document.querySelectorAll('.flyClone[data-card="'+cardIdx+'"]').forEach(c=>c.remove());
+    resetDemoCard(card);
+    return;
+  }
+  const b = ev.target.closest(".sbtn");
+  if(!b || b.disabled) return;
+  const card = b.closest(".q.demo");
+  const s = +b.dataset.s;
+  const cur = +(card.dataset.step || 0);
+  if(s !== cur+1) return; // 強制照順序 1→2→3
+  card.dataset.step = s;
+  card.classList.remove("st0","st1","st2","st3");
+  card.classList.add("st"+s);
+  b.classList.add("on");
+  b.disabled = true;
+  const nextBtn = card.querySelector('.sbtn[data-s="'+(s+1)+'"]');
+  if(nextBtn) nextBtn.disabled = false;
+
+  const cardIdx = +card.dataset.i;
+  if(s===1){
+    // 主句照抄搬下來，原本的受詞 something 被 that 子句取代 → 補上連接詞 that
+    const mainEl = card.querySelector('[data-role="main"]');
+    const slotM = card.querySelector('[data-slot="main"]');
+    const slotT = card.querySelector('[data-slot="that"]');
+    if(WIDE){ flyText(mainEl, slotM, 'wMain', 'main', cardIdx); }
+    else { slotM.classList.add('show'); }
+    card.querySelector('[data-role="obj"]').classList.add('used');
+    setTimeout(()=>{ slotT.classList.add('show','pop'); }, WIDE ? 700 : 0);
+  } else if(s===2){
+    const subj = card.querySelector('[data-role="subj"]');
+    const slotS = card.querySelector('[data-slot="subj"]');
+    if(WIDE){ flyText(subj, slotS, 'wSubj', 'subj', cardIdx); }
+    else { slotS.classList.add('show'); }
+    subj.classList.add('used');
+  } else if(s===3){
+    const verb = card.querySelector('[data-role="verb"]');
+    const modal = card.querySelector('[data-role="modal"]');
+    const slotV = card.querySelector('[data-slot="verb"]');
+    const slotR = card.querySelector('[data-slot="rest"]');
+    if(WIDE){ flyText(verb, slotV, 'wVerb', 'verb', cardIdx); }
+    else { slotV.classList.add('show'); }
+    verb.classList.add('used');
+    if(modal) modal.classList.add('used');
+    card.querySelector('[data-role="rest"]').classList.add('used');
+    setTimeout(()=> slotR.classList.add('show'), WIDE ? 350 : 0);
+  }
+});
+
+/* 批改 */
+document.getElementById("submit").addEventListener("click",()=>{
+  let correct=0;
+  const cards = app.querySelectorAll(".q.practice");
+  cards.forEach(q=>{
+    const p = PRAC[+q.dataset.i];
+    const ins = q.querySelectorAll("input");
+    let ok=true;
+    [p.a1,p.a2].forEach((ans,idx)=>{
+      const el=ins[idx];
+      if(accepts(ans, el.value)){ el.classList.add("ok"); el.classList.remove("no"); }
+      else { el.classList.add("no"); el.classList.remove("ok"); ok=false; }
+    });
+    q.querySelector(".exp").classList.add("show");
+    if(ok) correct++;
+  });
+  document.getElementById("score").textContent = "練習答對 "+correct+" / "+cards.length+" 題";
+  window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
+});
+
+document.getElementById("reset").addEventListener("click",()=>{
+  app.querySelectorAll(".q.practice input").forEach(i=>{i.value="";i.classList.remove("ok","no");});
+  app.querySelectorAll(".q.practice .exp").forEach(e=>e.classList.remove("show"));
+  document.getElementById("score").textContent="";
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+</script>
+</body>
+</html>
