@@ -97,6 +97,7 @@ body.done #flow{display:none}
 .ana{margin-top:9px;border:1.5px dashed #d9cff5;border-radius:11px;background:#faf7ff;padding:0 14px;max-height:0;overflow:hidden;transition:max-height .28s ease,padding .2s}
 .ana.open{max-height:1800px;padding:12px 14px}
 .ana.zhblk{margin:2px 0 11px}
+.ana.zhblk.open{max-height:3000px}
 .ana .ans-line{font-weight:800;color:var(--ok);font-size:13.5px;margin-bottom:6px}
 .ana .zh{font-size:13px;margin:4px 0;color:#3a3550}
 .ana .lab{display:inline-block;font-size:11px;font-weight:800;color:#fff;background:var(--brand);border-radius:6px;padding:1px 7px;margin-right:6px}
@@ -194,6 +195,10 @@ function pick(el){var q=el.dataset.q,i=+el.dataset.i,box=el.closest('.opts');
 function upd(){var d=Object.keys(picked).length,r=0;for(var q in picked)if(picked[q]===ANS[q])r++;
   document.getElementById('score').textContent='作答 '+d+'／'+TOTAL+'　✔ '+r;}
 function tog(q){var a=document.getElementById('ana-'+q);if(a)a.classList.toggle('open');}
-function toggleAll(o){document.querySelectorAll('.ana').forEach(function(a){
-  if(a.classList.contains('zhblk'))return;a.classList.toggle('open',o);});}
+function togzh(g){var a=document.getElementById('zh-'+g);if(!a)return;a.classList.toggle('open');
+  var b=document.querySelector('.zhtogg[data-group="'+g+'"]');
+  if(b)b.textContent=a.classList.contains('open')?'📖 收合全文中譯':'📖 看全文中譯';}
+function toggleAll(o){document.querySelectorAll('.ana').forEach(function(a){a.classList.toggle('open',o);});
+  document.querySelectorAll('.zhtogg').forEach(function(b){
+    b.textContent=o?'📖 收合全文中譯':'📖 看全文中譯';});}
 </script></body></html>
