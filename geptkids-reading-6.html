@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小學英檢 閱讀測驗　第6回</title>
+<style>
+  :root{
+    --blue:#2ba6ff; --blue-dark:#1b7fd0;
+    --coral:#ff8a5b; --amber:#ffb02e; --pink:#ff5d8f;
+    --grape:#8b6bff; --mint:#22c9a0;
+    --bg:#f3fbff; --card:#ffffff; --line:#e2effa;
+    --green:#22b573; --green-bg:#e4f8ef;
+    --red:#ff5a5a; --red-bg:#ffecec;
+    --gray:#6b7785;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;
+    background:linear-gradient(180deg,#eafaff,#fff6ef 70%);color:#22303f;line-height:1.65;
+    -webkit-text-size-adjust:100%;}
+  .wrap{max-width:780px;margin:0 auto;padding:16px;}
+  header.top{background:linear-gradient(135deg,#5fd6f5,#5b9bff 50%,#a97bff);color:#fff;
+    border-radius:20px;padding:26px 22px;margin-bottom:16px;box-shadow:0 10px 24px rgba(91,155,255,.32);}
+  header.top h1{margin:0 0 6px;font-size:1.55rem;text-shadow:0 1px 2px rgba(0,0,0,.12);}
+  header.top p{margin:0;font-size:.94rem;opacity:.96;}
+  .meta{margin-top:14px;font-size:.86rem;background:rgba(255,255,255,.22);
+    padding:9px 13px;border-radius:10px;}
+  .sticky{position:sticky;top:0;z-index:20;padding:10px 0;
+    background:linear-gradient(180deg,#eafaff 70%,rgba(234,250,255,0));}
+  .bar{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:11px 16px;display:flex;align-items:center;gap:12px;font-size:.9rem;
+    box-shadow:0 4px 12px rgba(43,166,255,.12);}
+  .bar .track{flex:1;height:10px;background:#e7f4fd;border-radius:6px;overflow:hidden;}
+  .bar .fill{height:100%;width:0;border-radius:6px;
+    background:linear-gradient(90deg,#3ad1c6,#2ba6ff,#a97bff);transition:width .35s;}
+  .bar #count{font-weight:800;color:var(--blue-dark);}
+  .section-title{color:#fff;font-weight:800;border-radius:14px;
+    padding:11px 16px;margin:26px 0 6px;font-size:1.05rem;
+    box-shadow:0 5px 14px rgba(0,0,0,.09);}
+  .section-title.s0{background:linear-gradient(135deg,#ffb36b,#ff6f91);}
+  .section-title.s1{background:linear-gradient(135deg,#4dd0e1,#2ba6ff);}
+  .section-title.s2{background:linear-gradient(135deg,#9b8bff,#c46bff);}
+  .section-desc{font-size:.86rem;color:var(--gray);margin:0 4px 10px;}
+
+  /* ── 圖片場景卡（第一部分） ── */
+  .scene{background:linear-gradient(160deg,#ffffff,#f2fbff);border:2px solid #cfeafd;
+    border-radius:18px;padding:14px 16px 16px;margin:18px 0 10px;
+    box-shadow:0 6px 18px rgba(43,166,255,.13);}
+  .scene h3{margin:0 0 4px;color:#1b7fd0;font-size:1rem;display:flex;align-items:center;gap:8px;}
+  .scene h3 .pic{background:var(--blue);color:#fff;border-radius:9px;padding:2px 10px;font-size:.82rem;}
+  .scene .sub{margin:0 0 10px;font-size:.83rem;color:var(--gray);}
+  .zones{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;}
+  .zone{background:#fff;border:1.5px dashed #b9e2fb;border-radius:14px;padding:10px 10px 12px;text-align:center;}
+  .zone .zt{font-size:.78rem;color:#1b7fd0;font-weight:800;margin-bottom:6px;line-height:1.35;}
+  .zone .items{font-size:2.05rem;line-height:1.25;letter-spacing:2px;word-break:break-word;}
+  .zone .cap{font-size:.75rem;color:var(--gray);margin-top:4px;}
+
+  /* ── 短文卡（第二、三部分） ── */
+  .passage{background:#fffdf4;border:1px solid #ffe9c9;border-left:6px solid var(--amber);
+    border-radius:14px;padding:15px 17px;margin:14px 0;font-size:.97rem;
+    box-shadow:0 4px 12px rgba(255,176,46,.1);}
+  .passage h3{margin:0 0 8px;color:#e0820a;font-size:1rem;}
+  .passage p{margin:8px 0;}
+  .passage table{border-collapse:collapse;width:100%;margin:9px 0;font-size:.9rem;}
+  .passage th,.passage td{border:1px solid #ffe0b0;padding:6px 9px;text-align:left;}
+  .passage th{background:#fff2dc;}
+  .passage .note-h{font-size:.85rem;color:var(--gray);border-bottom:1px dashed #ffd9a8;
+    padding-bottom:6px;margin-bottom:8px;}
+  .passage .big{font-size:1.15rem;font-weight:800;color:#d2691e;}
+  .blank{display:inline-block;min-width:62px;border-bottom:2.5px solid var(--blue);
+    text-align:center;color:var(--blue-dark);font-weight:800;}
+
+  .q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:14px 16px;margin:11px 0;box-shadow:0 3px 10px rgba(43,166,255,.08);}
+  .q .stem{font-weight:600;margin-bottom:10px;}
+  .q .stem .num{display:inline-block;color:#fff;background:var(--blue);font-weight:800;
+    border-radius:9px;padding:1px 10px;margin-right:8px;font-size:.92rem;}
+  .opt{display:flex;align-items:flex-start;gap:10px;border:2px solid var(--line);
+    border-radius:12px;padding:10px 13px;margin:8px 0;cursor:pointer;transition:.15s;
+    font-size:.97rem;background:#fbfdff;}
+  .opt:hover{border-color:var(--blue);background:#eaf7ff;}
+  .opt input{margin-top:4px;accent-color:var(--blue);}
+  .opt .lab{font-weight:900;color:var(--blue);min-width:20px;}
+  .opt.sel{border-color:var(--blue);background:#e2f3ff;}
+  .opt.correct{border-color:var(--green);background:var(--green-bg);}
+  .opt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .opt.lock{cursor:default;}
+  /* Y/N 兩顆並排 */
+  .yn{display:flex;gap:10px;}
+  .yn .opt{flex:1;justify-content:center;align-items:center;font-weight:800;padding:12px 8px;}
+  .yn .opt .lab{min-width:0;font-size:1.15rem;}
+
+  .exp{display:none;margin-top:11px;border-top:2px dashed #ffe1c2;padding-top:11px;font-size:.9rem;}
+  .exp.show{display:block;}
+  .exp .tag{display:inline-block;font-weight:800;color:#fff;background:var(--green);
+    border-radius:8px;padding:2px 11px;font-size:.8rem;margin-bottom:7px;}
+  .exp .tag.miss{background:var(--red);}
+  .exp .en{color:#1c4f7a;background:#eef7ff;border-radius:9px;padding:6px 11px;margin:5px 0;}
+  .exp .zh{color:#7a4a12;background:#fff7ea;border-radius:9px;padding:6px 11px;margin:5px 0;}
+  .actions{position:sticky;bottom:0;padding:14px 0 6px;margin-top:18px;
+    background:linear-gradient(transparent,#fff6ef 35%);}
+  button.submit{width:100%;color:#fff;border:0;border-radius:15px;padding:16px;
+    font-size:1.08rem;font-weight:800;cursor:pointer;
+    background:linear-gradient(135deg,#ffa15b,#ff5d8f);
+    box-shadow:0 7px 18px rgba(255,93,143,.35);}
+  button.submit:active{transform:translateY(1px);}
+  button.reset{width:100%;background:#fff;color:var(--blue);border:2px solid var(--blue);
+    border-radius:15px;padding:14px;font-size:1rem;font-weight:800;cursor:pointer;margin-top:10px;display:none;}
+  .result{display:none;background:var(--card);border:3px solid transparent;border-radius:18px;
+    padding:22px;margin:16px 0;text-align:center;
+    background-image:linear-gradient(#fff,#fff),linear-gradient(135deg,#3ad1c6,#2ba6ff,#c46bff);
+    background-origin:border-box;background-clip:padding-box,border-box;
+    box-shadow:0 8px 22px rgba(43,166,255,.16);}
+  .result.show{display:block;}
+  .result .suns{font-size:2rem;letter-spacing:4px;margin-bottom:4px;}
+  .result .score{font-size:2.8rem;font-weight:900;
+    background:linear-gradient(135deg,#2ba6ff,#c46bff);-webkit-background-clip:text;
+    background-clip:text;-webkit-text-fill-color:transparent;}
+  .result .sub{color:var(--gray);font-size:.95rem;}
+  .result .lvl{margin-top:8px;font-weight:800;color:#1b7fd0;}
+  .result .bd{display:flex;justify-content:center;gap:18px;margin-top:12px;flex-wrap:wrap;font-size:.95rem;}
+  .result .bd span{font-weight:800;}
+  .result .part{margin-top:12px;font-size:.88rem;color:var(--gray);}
+  .hint{text-align:center;font-size:.85rem;color:var(--gray);margin-top:9px;min-height:1.2em;}
+  footer{text-align:center;color:var(--gray);font-size:.8rem;margin:24px 0;}
+  @media(max-width:420px){ .zone .items{font-size:1.8rem;} }
+</style>
+<!-- EFETL-PWA -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#2BA6FF">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="EFETL">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}</script>
+<!-- /EFETL-PWA -->
+</head>
+<body>
+<a href="geptkids-hub.html" style="position:fixed;top:12px;left:12px;background:rgba(255,255,255,.94);color:#2ba6ff;padding:7px 15px;border-radius:20px;text-decoration:none;font-size:.85rem;font-weight:800;z-index:999;box-shadow:0 3px 10px rgba(0,0,0,.15);">&#8592; 回題庫</a>
+<div class="wrap">
+  <header class="top">
+    <h1>小學英檢　閱讀測驗　<span style="opacity:.9">第6回</span></h1>
+    <p>GEPT Kids Reading　&middot;　第6回　節慶・工作・地點方位</p>
+    <div class="meta">共 3 部分、30 題　|　建議作答時間 25 分鐘　|　送出後顯示中英文解析、分數與太陽數</div>
+  </header>
+
+  <div class="sticky">
+    <div class="bar">
+      <span>作答進度</span>
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <span id="count">0 / 30</span>
+    </div>
+  </div>
+
+  <form id="quiz"></form>
+
+  <div class="result" id="result">
+    <div class="suns" id="rSuns">☀️</div>
+    <div class="score" id="scoreNum">0</div>
+    <div class="sub" id="scoreTxt">分</div>
+    <div class="lvl" id="rLvl"></div>
+    <div class="bd">
+      <span style="color:var(--green)">答對 <b id="rOk">0</b></span>
+      <span style="color:var(--red)">答錯 <b id="rNo">0</b></span>
+      <span style="color:var(--gray)">未作答 <b id="rBlank">0</b></span>
+    </div>
+    <div class="part" id="rPart"></div>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="submit" id="submitBtn">送出並查看解析</button>
+    <div class="hint" id="hint">尚未作答任何題目</div>
+    <button type="button" class="reset" id="resetBtn">重新作答</button>
+  </div>
+
+  <footer>小學英檢 GEPT Kids　閱讀仿真練習　&middot;　全民補習班</footer>
+</div>
+
+<script>
+/* ====== 題庫資料 ====== */
+const PARTS = [{"title": "第一部分　看圖是非題（20 題）", "desc": "請看圖片，再讀句子。句子和圖片相同選 Y（Yes），不同選 N（No）。"}, {"title": "第二部分　短文填空（5 題）", "desc": "請閱讀短文，從三個選項中選出最適合填入空格的答案。"}, {"title": "第三部分　閱讀理解（5 題）", "desc": "請閱讀廣告、便條、訊息等短文，選出最適合的答案。"}];
+
+const SCENES = {"1": {"p": "圖片 1", "t": "Chinese New Year　過年", "z": [{"l": "on the table　桌上", "e": ["🥟", "🥟", "🥟", "🐟"]}, {"l": "Grandma　奶奶", "e": ["👵", "🧧"]}, {"l": "the children　小朋友", "e": ["👦", "👧"], "cap": "in new clothes"}, {"l": "outside　外面", "e": ["🧨", "🌙"]}]}, "5": {"p": "圖片 2", "t": "What Do They Do?　他們的工作", "z": [{"l": "Mr. Lin　林先生", "e": ["👨‍🍳"], "cap": "a cook"}, {"l": "Miss Chen　陳小姐", "e": ["👩‍🎤"], "cap": "a singer"}, {"l": "Mr. Wang　王先生", "e": ["👨‍🌾"], "cap": "a farmer"}, {"l": "Mrs. Lee　李太太", "e": ["👩‍✈️"], "cap": "a driver"}]}, "9": {"p": "圖片 3", "t": "Green Street　綠街", "z": [{"l": "on the left　左邊", "e": ["🏦"], "cap": "the bank"}, {"l": "in the middle　中間", "e": ["🏥"], "cap": "the hospital"}, {"l": "on the right　右邊", "e": ["📮"], "cap": "the post office"}, {"l": "behind the bank　銀行後面", "e": ["📚"], "cap": "the library"}]}, "13": {"p": "圖片 4", "t": "Moon Festival　中秋節", "z": [{"l": "in the sky　天空中", "e": ["🌕"]}, {"l": "on the table　桌上", "e": ["🥮", "🥮", "🍵"]}, {"l": "the family　全家人", "e": ["👨", "👩", "👦", "👧", "👵"]}]}, "16": {"p": "圖片 5", "t": "At the Night Market　在夜市", "z": [{"l": "the food　食物", "e": ["🍢"], "cap": "NT$45"}, {"l": "the drink　飲料", "e": ["🧋"], "cap": "NT$55"}, {"l": "Anna &amp; her father　安娜和爸爸", "e": ["👧", "👨"]}, {"l": "the time　時間", "e": ["🕗"], "cap": "8:00 p.m."}]}, "19": {"p": "圖片 6", "t": "The School Map　學校地圖", "z": [{"l": "in front of the school　學校前面", "e": ["🌳", "🌳"]}, {"l": "between the trees　兩棵樹中間", "e": ["🚲"]}]}};
+
+const PASSAGES = {"21": "<div class=\"passage\"><h3>My Uncle's Work　叔叔的工作</h3><p>My uncle is a farmer. He <span class=\"blank\">(21)</span> in the country with my aunt. He gets up at five o'clock, earlier <span class=\"blank\">(22)</span> anyone in my family. He grows rice and many kinds of fruit.</p><p>Last summer I stayed at his house for two weeks. Every morning we fed the cows and the ducks. In the afternoon it was too <span class=\"blank\">(23)</span> to work outside, so we sat under a big tree and drank cold tea. My uncle told me many funny stories. He said, “Farm work is hard, <span class=\"blank\">(24)</span> I love it.” I want to visit him <span class=\"blank\">(25)</span> this summer.</p></div>", "26": "<div class=\"passage\"><h3>🏮 SCHOOL MOON FESTIVAL PARTY　學校中秋晚會</h3><table><tr><th>When 時間</th><td>Friday, September 26　6:00 p.m. – 8:30 p.m.</td></tr><tr><th>Where 地點</th><td>The playground　（If it rains, we move to the music room.）</td></tr><tr><th>Bring 請帶</th><td>One moon cake for your friends　·　A cup for your drink</td></tr></table><p class=\"big\">🎤 Song time: 7:00 p.m.　·　🌕 Moon watching: 8:00 p.m.</p><p>Fathers and mothers are welcome! Please do not bring your dog.</p></div>", "29": "<div class=\"passage\"><h3>📩 Ask the Way　問路</h3><div class=\"note-h\">To: Emma　|　From: Kevin</div><p>Hi Emma,</p><p>Here is the way to my house. Take Bus No. 5 and get off at the Green Park stop. Walk to the corner and turn left. My house is the blue one between the bookstore and the flower shop. Don't turn right — that street goes to the train station!</p><p>See you at four o'clock!<br>Kevin</p></div>"};
+
+const Q = [{"n": 1, "p": 0, "stem": "There are three dumplings on the table.", "o": ["Yes　相同", "No　不同"], "a": 0, "en": "Count: three dumplings and one fish.", "zh": "桌上有三顆水餃 (dumplings) 和一條魚，選 Y。"}, {"n": 2, "p": 0, "stem": "There is a chicken on the table.", "o": ["Yes　相同", "No　不同"], "a": 1, "en": "There is a fish, not a chicken.", "zh": "桌上是「魚」(fish)，不是雞肉 (chicken)，選 N。"}, {"n": 3, "p": 0, "stem": "The children are wearing new clothes.", "o": ["Yes　相同", "No　不同"], "a": 0, "en": "The two children have new clothes on.", "zh": "兩個小朋友穿著新衣服 (new clothes)，選 Y。"}, {"n": 4, "p": 0, "stem": "It is morning.", "o": ["Yes　相同", "No　不同"], "a": 1, "en": "The moon is outside — it is night.", "zh": "外面有月亮，是晚上 (night)，不是早上，選 N。"}, {"n": 5, "p": 0, "stem": "Mr. Lin is a cook.", "o": ["Yes　相同", "No　不同"], "a": 0, "en": "Mr. Lin wears a cook's hat.", "zh": "林先生是廚師 (cook)，選 Y。"}, {"n": 6, "p": 0, "stem": "Miss Chen is a teacher.", "o": ["Yes　相同", "No　不同"], "a": 1, "en": "Miss Chen is a singer.", "zh": "陳小姐是歌手 (singer)，不是老師 (teacher)，選 N。"}, {"n": 7, "p": 0, "stem": "Mr. Wang is a farmer.", "o": ["Yes　相同", "No　不同"], "a": 0, "en": "Mr. Wang wears a farmer's hat and works with plants.", "zh": "王先生是農夫 (farmer)，選 Y。"}, {"n": 8, "p": 0, "stem": "Mrs. Lee is a nurse.", "o": ["Yes　相同", "No　不同"], "a": 1, "en": "Mrs. Lee is a driver.", "zh": "李太太是司機 (driver)，不是護士 (nurse)，選 N。"}, {"n": 9, "p": 0, "stem": "The bank is on the left.", "o": ["Yes　相同", "No　不同"], "a": 0, "en": "The bank is on the left of the street.", "zh": "銀行 (bank) 在左邊 (on the left)，選 Y。"}, {"n": 10, "p": 0, "stem": "The post office is on the left.", "o": ["Yes　相同", "No　不同"], "a": 1, "en": "The post office is on the right; the bank is on the left.", "zh": "郵局 (post office) 在右邊 (on the right)，左邊的是銀行，選 N。"}, {"n": 11, "p": 0, "stem": "The library is behind the bank.", "o": ["Yes　相同", "No　不同"], "a": 0, "en": "The library is behind the bank.", "zh": "圖書館 (library) 在銀行後面 (behind)，選 Y。"}, {"n": 12, "p": 0, "stem": "There is a school on Green Street.", "o": ["Yes　相同", "No　不同"], "a": 1, "en": "There is a bank, a hospital, a post office and a library — no school.", "zh": "綠街上有銀行、醫院、郵局和圖書館，沒有學校，選 N。"}, {"n": 13, "p": 0, "stem": "There is a moon in the sky.", "o": ["Yes　相同", "No　不同"], "a": 0, "en": "The full moon is in the sky for the Moon Festival.", "zh": "中秋節的天空上有一輪滿月 (moon)，選 Y。"}, {"n": 14, "p": 0, "stem": "There are two moon cakes on the table.", "o": ["Yes　相同", "No　不同"], "a": 0, "en": "Two moon cakes and one cup of tea.", "zh": "桌上有兩個月餅和一杯茶，選 Y。"}, {"n": 15, "p": 0, "stem": "Six people are in the family.", "o": ["Yes　相同", "No　不同"], "a": 1, "en": "Father, mother, a boy, a girl and grandmother — five people.", "zh": "爸爸、媽媽、男孩、女孩和奶奶，共五個人，不是六個，選 N。"}, {"n": 16, "p": 0, "stem": "The food is forty-five dollars.", "o": ["Yes　相同", "No　不同"], "a": 0, "en": "The sign says NT$45.", "zh": "食物標價 NT$45（forty-five 四十五），選 Y。"}, {"n": 17, "p": 0, "stem": "The drink is fifty-five dollars.", "o": ["Yes　相同", "No　不同"], "a": 0, "en": "The sign says NT$55.", "zh": "飲料標價 NT$55（fifty-five 五十五），選 Y。"}, {"n": 18, "p": 0, "stem": "It is eight o'clock in the morning.", "o": ["Yes　相同", "No　不同"], "a": 1, "en": "It is 8:00 p.m. — eight o'clock at night.", "zh": "時間是 8:00 p.m.，是晚上八點，不是早上，選 N。"}, {"n": 19, "p": 0, "stem": "There are two trees in front of the school.", "o": ["Yes　相同", "No　不同"], "a": 0, "en": "Two trees stand in front of the school.", "zh": "學校前面有兩棵樹，選 Y。"}, {"n": 20, "p": 0, "stem": "The bike is behind the trees.", "o": ["Yes　相同", "No　不同"], "a": 1, "en": "The bike is BETWEEN the two trees.", "zh": "腳踏車在兩棵樹「中間」(between)，不是在樹後面 (behind)，選 N。"}, {"n": 21, "p": 1, "stem": "第 21 格", "o": ["live", "lives", "living"], "a": 1, "en": "He is one person (he/she/it), so the verb takes -s: lives.", "zh": "主詞 He 是第三人稱單數，現在簡單式動詞要加 s：lives。"}, {"n": 22, "p": 1, "stem": "第 22 格", "o": ["than", "then", "that"], "a": 0, "en": "earlier than = compare two things.", "zh": "比較級 earlier 後面要接 than（比…）；then 是「然後」，that 是「那個」。"}, {"n": 23, "p": 1, "stem": "第 23 格", "o": ["cold", "hot", "late"], "a": 1, "en": "They drank cold tea in the shade — the afternoon was too hot.", "zh": "下午太「熱」不能在外面工作，所以躲到樹下喝冷茶；too cold 或 too late 都和喝冷茶的情境不合。"}, {"n": 24, "p": 1, "stem": "第 24 格", "o": ["so", "because", "but"], "a": 2, "en": "“Hard” and “I love it” are opposite ideas, so use but.", "zh": "「辛苦」和「我很愛」是相反的意思，中間用 but（但是）；so 是所以，because 是因為。"}, {"n": 25, "p": 1, "stem": "第 25 格", "o": ["again", "never", "yesterday"], "a": 0, "en": "He went last summer and wants to go again this summer.", "zh": "去年夏天去過，今年想「再去一次」again；never 是從不，yesterday 是昨天，和 this summer 矛盾。"}, {"n": 26, "p": 2, "stem": "Where is the party if it rains?　如果下雨，晚會在哪裡舉行？", "o": ["In the music room.", "On the playground.", "At the school gate."], "a": 0, "en": "\"If it rains, we move to the music room.\"", "zh": "括號裡寫下雨就改到音樂教室 (music room)；操場是不下雨時的地點。"}, {"n": 27, "p": 2, "stem": "What time can you watch the moon?　幾點可以賞月？", "o": ["At 6:00 p.m.", "At 8:00 p.m.", "At 7:00 p.m."], "a": 1, "en": "\"Moon watching: 8:00 p.m.\"", "zh": "賞月是 8:00 p.m.；6:00 是晚會開始，7:00 是唱歌時間。"}, {"n": 28, "p": 2, "stem": "Which one can you NOT bring to the party?　哪一樣東西不可以帶去？", "o": ["A moon cake.", "A cup.", "A dog."], "a": 2, "en": "\"Please do not bring your dog.\"", "zh": "最後一句寫請不要帶狗來；月餅和杯子都是要帶的東西。"}, {"n": 29, "p": 2, "stem": "What should Emma do after she gets off the bus?　艾瑪下公車後要做什麼？", "o": ["Turn right at the corner.", "Walk to the corner and turn left.", "Take Bus No. 5 again."], "a": 1, "en": "\"Walk to the corner and turn left.\"", "zh": "信上說走到轉角後左轉 (turn left)；右轉是去火車站的路。"}, {"n": 30, "p": 2, "stem": "Which house is Kevin's?　哪一間是凱文家？", "o": ["The blue house between the bookstore and the flower shop.", "The house next to the train station.", "The house behind the bookstore."], "a": 0, "en": "\"My house is the blue one between the bookstore and the flower shop.\"", "zh": "凱文家是書店和花店「中間」那間藍色的房子。"}];
+/* ====== 產生畫面 ====== */
+const form = document.getElementById('quiz');
+const TOTAL = Q.length;
+let lastPart = -1;
+
+function sceneHtml(s){
+  const zones = s.z.map(z=>{
+    const cap = z.cap ? `<div class="cap">${z.cap}</div>` : '';
+    return `<div class="zone"><div class="zt">${z.l}</div><div class="items">${z.e.join('')}</div>${cap}</div>`;
+  }).join('');
+  const sub = s.sub ? `<p class="sub">${s.sub}</p>` : '';
+  return `<div class="scene"><h3><span class="pic">${s.p||'圖片'}</span>${s.t}</h3>${sub}<div class="zones">${zones}</div></div>`;
+}
+
+Q.forEach(q=>{
+  if(q.p!==lastPart){
+    const st=document.createElement('div'); st.className='section-title s'+q.p; st.textContent=PARTS[q.p].title;
+    const sd=document.createElement('div'); sd.className='section-desc'; sd.textContent=PARTS[q.p].desc;
+    form.appendChild(st); form.appendChild(sd); lastPart=q.p;
+  }
+  if(SCENES[q.n]){ const d=document.createElement('div'); d.innerHTML=sceneHtml(SCENES[q.n]); form.appendChild(d.firstChild); }
+  if(PASSAGES[q.n]){ const d=document.createElement('div'); d.innerHTML=PASSAGES[q.n]; form.appendChild(d.firstChild); }
+  const card=document.createElement('div'); card.className='q'; card.id='q'+q.n;
+  card.innerHTML=`<div class="stem"><span class="num">${q.n}</span>${q.stem}</div>`;
+  const isYN = q.p===0;
+  const box=document.createElement('div'); if(isYN) box.className='yn';
+  q.o.forEach((opt,i)=>{
+    const lab=document.createElement('label'); lab.className='opt'; lab.dataset.i=i;
+    const letter = isYN ? 'YN'[i] : 'ABC'[i];
+    lab.innerHTML=`<input type="radio" name="q${q.n}" value="${i}"><span class="lab">${letter}</span><span>${opt}</span>`;
+    lab.querySelector('input').addEventListener('change',()=>{
+      card.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
+      lab.classList.add('sel'); updateProgress();
+    });
+    box.appendChild(lab);
+  });
+  card.appendChild(box);
+  const exp=document.createElement('div'); exp.className='exp'; exp.id='exp'+q.n;
+  card.appendChild(exp);
+  form.appendChild(card);
+});
+
+const submitBtn=document.getElementById('submitBtn');
+const resetBtn=document.getElementById('resetBtn');
+const hint=document.getElementById('hint');
+
+function answeredCount(){ let c=0; Q.forEach(q=>{ if(form.querySelector(`input[name="q${q.n}"]:checked`)) c++; }); return c; }
+function updateProgress(){
+  const c=answeredCount();
+  document.getElementById('count').textContent=`${c} / ${TOTAL}`;
+  document.getElementById('fill').style.width=(c/TOTAL*100)+'%';
+  hint.textContent = c===TOTAL ? `已完成全部 ${TOTAL} 題` : (c===0 ? '尚未作答任何題目（仍可送出查看解析）' : `已作答 ${c} 題，未作答 ${TOTAL-c} 題（仍可送出）`);
+}
+
+/* 官方太陽數對照（依答對百分比） */
+function suns(pct){
+  if(pct>=95) return 5.0; if(pct>=90) return 4.5; if(pct>=80) return 4.0;
+  if(pct>=70) return 3.5; if(pct>=60) return 3.0; if(pct>=50) return 2.5;
+  if(pct>=40) return 2.0; if(pct>=30) return 1.5; return 1.0;
+}
+function sunStr(n){
+  return '☀️'.repeat(Math.floor(n)) + (n%1 ? '🌤️' : '');
+}
+function levelTxt(n){
+  if(n>=4) return '表現優異　Excellent!';
+  if(n>=3) return '表現良好　Good job!';
+  return '加油，下次表現會更好！　Keep going!';
+}
+
+submitBtn.addEventListener('click',()=>{
+  let ok=0, blank=0;
+  const byPart={0:[0,0],1:[0,0],2:[0,0]};
+  Q.forEach(q=>{
+    const sel=form.querySelector(`input[name="q${q.n}"]:checked`);
+    const pick = sel ? parseInt(sel.value) : null;
+    if(pick===null) blank++;
+    const card=document.getElementById('q'+q.n);
+    card.querySelectorAll('.opt').forEach(o=>{
+      o.classList.add('lock');
+      o.querySelector('input').disabled=true;
+      const i=parseInt(o.dataset.i);
+      if(i===q.a) o.classList.add('correct');
+      if(pick!==null && i===pick && pick!==q.a) o.classList.add('wrong');
+    });
+    const correct = pick===q.a; if(correct) ok++;
+    byPart[q.p][1]++; if(correct) byPart[q.p][0]++;
+    const exp=document.getElementById('exp'+q.n);
+    const letters = q.p===0 ? 'YN' : 'ABC';
+    const tag = correct ? '答對' : (pick===null ? '未作答' : '答錯');
+    exp.innerHTML=`<span class="tag ${correct?'':'miss'}">${tag}　正解：${letters[q.a]}</span>
+      <div class="en"><b>EN</b>&nbsp;${q.en}</div><div class="zh"><b>中</b>&nbsp;${q.zh}</div>`;
+    exp.classList.add('show');
+  });
+  const pct=Math.round(ok/TOTAL*100);
+  const s=suns(pct);
+  document.getElementById('rSuns').textContent=sunStr(s);
+  document.getElementById('scoreNum').textContent=pct;
+  document.getElementById('scoreTxt').textContent=`分（答對 ${ok} / ${TOTAL} 題）`;
+  document.getElementById('rLvl').textContent=`${s} 個太陽　${levelTxt(s)}`;
+  document.getElementById('rOk').textContent=ok;
+  document.getElementById('rNo').textContent=TOTAL-ok-blank;
+  document.getElementById('rBlank').textContent=blank;
+  document.getElementById('rPart').textContent=
+    `第一部分 是非題 ${byPart[0][0]}/${byPart[0][1]}　·　第二部分 短文填空 ${byPart[1][0]}/${byPart[1][1]}　·　第三部分 閱讀理解 ${byPart[2][0]}/${byPart[2][1]}`;
+  document.getElementById('result').classList.add('show');
+  submitBtn.style.display='none'; hint.style.display='none'; resetBtn.style.display='block';
+  document.getElementById('result').scrollIntoView({behavior:'smooth'});
+});
+
+resetBtn.addEventListener('click',()=>{
+  form.reset();
+  Q.forEach(q=>{
+    const card=document.getElementById('q'+q.n);
+    card.querySelectorAll('.opt').forEach(o=>{o.classList.remove('sel','correct','wrong','lock');o.querySelector('input').disabled=false;});
+    document.getElementById('exp'+q.n).classList.remove('show');
+  });
+  document.getElementById('result').classList.remove('show');
+  submitBtn.style.display='block'; hint.style.display='block'; resetBtn.style.display='none';
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+updateProgress();
+</script>
+</body>
+</html>
