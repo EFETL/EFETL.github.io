@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/favicon.svg">
+<title>初級文法 · A is different from B ＝ A is not the same as B</title>
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;
+    color:#22303f;line-height:1.7;background:linear-gradient(180deg,#eef3ff,#fff2f8 70%);min-height:100vh;}
+  .wrap{max-width:820px;margin:0 auto;padding:18px 16px 70px;}
+  .home{display:inline-block;margin-bottom:14px;color:#4a5cff;font-weight:800;text-decoration:none;
+    background:#fff;padding:7px 16px;border-radius:20px;box-shadow:0 3px 10px rgba(74,92,255,.25);font-size:.9rem;}
+
+  header.hero{background:linear-gradient(135deg,#6a8dff,#a78bfa 55%,#f0a6ff);color:#20204d;
+    border-radius:22px;padding:28px 26px;margin-bottom:22px;box-shadow:0 10px 26px rgba(122,120,255,.35);}
+  header.hero h1{margin:0 0 8px;font-size:1.6rem;text-shadow:0 1px 2px rgba(255,255,255,.4);}
+  header.hero p{margin:0;font-size:.96rem;opacity:.95;}
+
+  .legend{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+  .legend span{flex:1 1 auto;min-width:150px;text-align:center;padding:10px 12px;border-radius:14px;
+    font-weight:800;font-size:.85rem;color:#fff;box-shadow:0 3px 9px rgba(0,0,0,.1);}
+  .legend .l1{background:linear-gradient(135deg,#2ab7ff,#4fd1ff);}
+  .legend .l2{background:linear-gradient(135deg,#a855ff,#c98bff);}
+  .legend .l3{background:linear-gradient(135deg,#ff8a1e,#ffb347);}
+
+  .formula{background:#fff;border-radius:14px;padding:14px 18px;margin-bottom:16px;
+    font-size:.88rem;color:#4a5766;border-left:5px solid #6a8dff;box-shadow:0 3px 10px rgba(106,141,255,.12);}
+  .formula b{color:#4a5cff;}
+  .formula .ftwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:8px 0 4px;}
+  .formula .ft{width:100%;min-width:340px;border-collapse:collapse;}
+  .formula .ft th,.formula .ft td{border:1px solid #e6ecff;padding:8px 9px;text-align:left;}
+  .formula .ft th{background:#eef3ff;color:#3a49d6;}
+  .formula .ft td b{color:#3a49d6;}
+  .formula ol{margin:6px 0 0;padding-left:1.4em;}
+  .formula ol li{margin-bottom:4px;}
+  .goldbox{background:#fff8ea;border:2px dashed #ffc46b;border-radius:14px;padding:12px 16px;margin:10px 0 0;}
+  .goldbox b{color:#c25a00;}
+
+  .tlbox{background:#fff;border-radius:14px;padding:14px 18px 8px;margin-bottom:16px;
+    box-shadow:0 3px 10px rgba(106,141,255,.12);border-left:5px solid #6a8dff;}
+  .tlbox .tltitle{font-weight:800;color:#3a49d6;display:block;margin-bottom:2px;}
+  .tlbox svg{width:100%;height:auto;display:block;margin-top:2px;}
+
+  .audiobar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border-radius:14px;
+    padding:11px 16px;margin-bottom:16px;box-shadow:0 3px 10px rgba(106,141,255,.12);
+    border-left:5px solid #6a8dff;font-weight:800;color:#3a49d6;}
+  .audiobar label{display:flex;align-items:center;gap:7px;cursor:pointer;}
+  .audiobar input{width:20px;height:20px;accent-color:#6a8dff;cursor:pointer;}
+  .audiobar .tip{color:#8a94a2;font-weight:600;font-size:.85rem;}
+
+  .group-h{border-radius:14px;padding:10px 16px;margin:22px 0 12px;color:#fff;
+    box-shadow:0 4px 12px rgba(0,0,0,.12);}
+  .group-h .tag{font-weight:900;font-size:1rem;display:block;}
+  .group-h .sub{font-size:.82rem;opacity:.95;}
+  .group-h.g1{background:linear-gradient(135deg,#2ab7ff,#6a8dff);}
+  .group-h.g2{background:linear-gradient(135deg,#a855ff,#ff6ea9);}
+  .group-h.g3{background:linear-gradient(135deg,#ff8a1e,#ffb347);}
+
+  .q{background:#fff;border-radius:16px;padding:16px 18px;margin-bottom:14px;
+    box-shadow:0 4px 14px rgba(106,141,255,.14);border:1px solid #eef1fb;}
+  .qtop{display:flex;gap:10px;align-items:flex-start;margin-bottom:6px;}
+  .qnum{flex:0 0 auto;width:26px;height:26px;border-radius:50%;background:#e4ecff;color:#3a49d6;
+    font-weight:800;font-size:.82rem;display:flex;align-items:center;justify-content:center;}
+  .fact{font-size:.98rem;color:#33414f;}
+  .fact .lab{display:inline-block;font-size:.7rem;font-weight:800;color:#8a94a2;
+    background:#f0f3f8;border-radius:8px;padding:1px 7px;margin-right:6px;vertical-align:2px;}
+  .tagk{display:inline-block;font-size:.72rem;font-weight:800;color:#fff;border-radius:99px;
+    padding:2px 10px;background:linear-gradient(135deg,#6a8dff,#a78bfa);margin-left:auto;flex:0 0 auto;
+    white-space:nowrap;}
+
+  .qbuild{margin-top:11px;font-size:1.08rem;line-height:2.1;color:#22303f;font-weight:700;
+    background:#f8faff;border:1px solid #e8edfb;border-radius:12px;padding:12px 15px;text-align:center;}
+  .qbuild .ql{display:none;}
+  .qbuild .ql b{border-radius:8px;padding:2px 9px;font-weight:900;}
+  .qbuild .ql b.hot{color:#0b76a6;background:#e6f6ff;}
+  .qbuild .ql b.mk{color:#7a2fd6;background:#f3e8ff;}
+  .qbuild .ql b.sw{color:#c25a00;background:#fff2e0;}
+  .q.st0 .ql.q1,.q.st1 .ql.q1{display:block;}
+  .q.st2 .ql.q2{display:block;}
+  .q.st3 .ql.q3{display:block;}
+  .q.st0 .ql.q1 b{background:#f0f3f8;color:#6b7686;}
+  .q.st1 .ql.q1 b,.q.st2 .ql.q2 b,.q.st3 .ql.q3 b{
+    animation:changePop .5s cubic-bezier(.2,1.3,.4,1);}
+  @keyframes changePop{0%{transform:scale(.5);opacity:0;}70%{transform:scale(1.2);}100%{transform:scale(1);opacity:1;}}
+
+  .spk{border:none;cursor:pointer;background:linear-gradient(135deg,#6a8dff,#a78bfa);color:#fff;
+    width:34px;height:34px;border-radius:50%;line-height:1;padding:0;flex:0 0 auto;
+    box-shadow:0 2px 7px rgba(106,141,255,.4);vertical-align:middle;margin-left:8px;transition:.15s;}
+  .spk:hover{filter:brightness(1.08);transform:translateY(-1px);}
+  .spk.playing{animation:spkPulse .7s ease-in-out infinite;
+    box-shadow:0 0 0 4px rgba(167,139,250,.35),0 2px 7px rgba(106,141,255,.4);}
+  @keyframes spkPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.14);}}
+
+  .stepbtns{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px;}
+  .hintk{font-size:.76rem;color:#8a94a2;font-weight:800;}
+  .sbtn{border:none;cursor:pointer;font-weight:800;font-size:.82rem;padding:9px 15px;border-radius:12px;
+    color:#fff;display:inline-flex;align-items:center;gap:7px;transition:.15s;box-shadow:0 3px 9px rgba(0,0,0,.14);}
+  .sbtn:hover{filter:brightness(1.06);transform:translateY(-1px);}
+  .sbtn .sn{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;
+    background:rgba(255,255,255,.34);color:#fff;font-size:.7rem;font-weight:900;}
+  .sbtn.b1{background:linear-gradient(135deg,#2ab7ff,#4fd1ff);}
+  .sbtn.b2{background:linear-gradient(135deg,#a855ff,#c98bff);}
+  .sbtn.b3{background:linear-gradient(135deg,#ff8a1e,#ffb347);}
+  .sbtn.on{box-shadow:0 0 0 3px rgba(255,255,255,.85),0 5px 14px rgba(0,0,0,.22);filter:brightness(1.08);transform:translateY(-1px);}
+
+  .reveal{display:none;margin-top:8px;padding:10px 13px;border-radius:12px;font-size:.9rem;border-left:4px solid;}
+  .reveal .sen{font-weight:900;color:#22303f;}
+  .reveal .nt{color:#4a5766;margin-top:3px;}
+  .reveal.r1{border-color:#3aa6ff;background:#f0f8ff;}
+  .reveal.r2{border-color:#b06bff;background:#f7f2ff;}
+  .reveal.r3{border-color:#ffa63e;background:#fff7ee;}
+  .q.st1 .r1,.q.st2 .r1,.q.st3 .r1{display:block;}
+  .q.st2 .r2,.q.st3 .r2{display:block;}
+  .q.st3 .r3{display:block;}
+
+  .demoexp{margin-top:10px;padding:11px 14px;border-radius:12px;background:#f8faff;border-left:4px solid #6a8dff;font-size:.9rem;}
+  .demoexp .zh{color:#4a5766;}
+
+  .morebtn{margin-top:10px;border:none;cursor:pointer;font-weight:800;font-size:.82rem;
+    padding:8px 14px;border-radius:12px;color:#3a49d6;background:#eef3ff;
+    box-shadow:0 2px 8px rgba(106,141,255,.22);}
+  .morebtn:hover{filter:brightness(.98);}
+  .morelist{display:none;margin-top:8px;}
+  .morelist.on{display:block;}
+  .mrow{display:flex;align-items:center;flex-wrap:wrap;gap:4px;padding:8px 10px;border-radius:10px;
+    background:#f8faff;margin-bottom:6px;font-size:.92rem;}
+  .mrow .mn{font-weight:900;color:#a0aec0;margin-right:4px;}
+  .mrow .ms{font-weight:800;}
+  .mrow .mz{flex:1 1 100%;color:#7a8694;font-size:.84rem;}
+
+  /* 練習 */
+  .prac{background:#fff;border-radius:16px;padding:16px 18px;margin-bottom:12px;
+    box-shadow:0 4px 14px rgba(106,141,255,.14);border:1px solid #eef1fb;}
+  .prac .pcn{font-weight:800;color:#33414f;margin-bottom:8px;}
+  .prac .pcn .pn{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;
+    border-radius:50%;background:#ffe8f2;color:#d63a7a;font-size:.8rem;font-weight:900;margin-right:8px;}
+  .psent{font-size:1.02rem;line-height:2.3;font-weight:700;}
+  .psent input{font-size:1rem;font-weight:800;padding:5px 8px;border-radius:9px;border:2px solid #d7e0f5;
+    min-width:130px;text-align:center;font-family:inherit;}
+  .psent input:focus{outline:none;border-color:#6a8dff;box-shadow:0 0 0 3px rgba(106,141,255,.18);}
+  .psent input.ok{border-color:#22c07f;background:#effbf5;}
+  .psent input.no{border-color:#ff6b6b;background:#fff0f0;}
+  .phint{font-size:.72rem;color:#8a94a2;font-weight:800;}
+  .pexp{display:none;margin-top:8px;padding:9px 12px;border-radius:11px;background:#f4f8ff;
+    border-left:4px solid #6a8dff;font-size:.86rem;color:#4a5766;}
+  .pexp.on{display:block;}
+  .pexp b{color:#3a49d6;}
+
+  .bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:18px 0 26px;}
+  .btn{border:none;cursor:pointer;font-weight:800;font-size:.92rem;padding:11px 22px;border-radius:14px;
+    color:#fff;background:linear-gradient(135deg,#6a8dff,#a78bfa);box-shadow:0 4px 12px rgba(106,141,255,.35);}
+  .btn.ghost{background:#fff;color:#3a49d6;box-shadow:0 3px 10px rgba(106,141,255,.18);}
+  .score{font-weight:900;color:#3a49d6;}
+
+  .wrong{background:#fff;border-radius:16px;padding:16px 20px;box-shadow:0 4px 14px rgba(106,141,255,.14);
+    border-left:5px solid #ff6b6b;margin-bottom:20px;}
+  .wrong h2{margin:0 0 8px;font-size:1.05rem;color:#d63a3a;}
+  .wrong ol{margin:0;padding-left:1.3em;font-size:.9rem;}
+  .wrong li{margin-bottom:6px;}
+  .wrong s{color:#c05252;}
+  .wrong b{color:#0e8f5e;}
+
+  footer{text-align:center;color:#8a94a2;font-size:.82rem;margin-top:30px;}
+</style>
+<!-- EFETL-PWA -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#7C4DFF">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="EFETL">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}</script>
+<!-- /EFETL-PWA -->
+</head>
+<body>
+<div class="wrap">
+  <a class="home" href="grammar.html">← 回文法總覽</a>
+
+  <header class="hero">
+    <h1>🔀 A is different from B ＝ A is not the same as B</h1>
+    <p>同一件事的三種說法：<b>different from</b>／<b>not the same as</b>／<b>A and B are different</b>。按 ①②③ 看句子怎麼變身。</p>
+  </header>
+
+  <div class="legend">
+    <span class="l1">① different <u>from</u>　和…不一樣</span>
+    <span class="l2">② not the same <u>as</u>　和…不相同</span>
+    <span class="l3">③ A and B are different　兩個不一樣</span>
+  </div>
+
+  <div class="audiobar">
+    <span>🔊 發音</span>
+    <label><input type="checkbox" id="autoplay" checked>按 ①②③ 時自動念出來</label>
+    <span class="tip">Microsoft 真人語音 · 每一句旁邊的 🔊 都可以重聽</span>
+  </div>
+
+  <div class="tlbox">
+    <span class="tltitle">🧲 一張圖記住兩個介系詞</span>
+    <svg viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="different from 與 the same as 的介系詞對照圖">
+      <rect x="30" y="30" width="300" height="180" rx="18" fill="#eaf6ff" stroke="#2ab7ff" stroke-width="3"/>
+      <text x="180" y="66" text-anchor="middle" font-family="Helvetica,Arial,'PingFang TC',sans-serif" font-size="19" font-weight="900" fill="#0b76a6">不一樣 ✂️</text>
+      <circle cx="110" cy="130" r="34" fill="#fff" stroke="#0b76a6" stroke-width="4"/>
+      <text x="110" y="137" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="20" font-weight="900" fill="#0b76a6">A</text>
+      <circle cx="250" cy="130" r="34" fill="#fff" stroke="#0b76a6" stroke-width="4" stroke-dasharray="7,6"/>
+      <text x="250" y="137" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="20" font-weight="900" fill="#0b76a6">B</text>
+      <line x1="150" y1="130" x2="210" y2="130" stroke="#ff6b6b" stroke-width="4"/>
+      <line x1="165" y1="112" x2="195" y2="148" stroke="#ff6b6b" stroke-width="4"/>
+      <text x="180" y="192" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="18" font-weight="900" fill="#0b76a6">different FROM</text>
+
+      <rect x="370" y="30" width="300" height="180" rx="18" fill="#f6f0ff" stroke="#a855ff" stroke-width="3"/>
+      <text x="520" y="66" text-anchor="middle" font-family="Helvetica,Arial,'PingFang TC',sans-serif" font-size="19" font-weight="900" fill="#7a2fd6">一樣 🤝</text>
+      <circle cx="450" cy="130" r="34" fill="#fff" stroke="#7a2fd6" stroke-width="4"/>
+      <text x="450" y="137" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="20" font-weight="900" fill="#7a2fd6">A</text>
+      <circle cx="590" cy="130" r="34" fill="#fff" stroke="#7a2fd6" stroke-width="4"/>
+      <text x="590" y="137" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="20" font-weight="900" fill="#7a2fd6">B</text>
+      <line x1="486" y1="122" x2="554" y2="122" stroke="#7a2fd6" stroke-width="4"/>
+      <line x1="486" y1="140" x2="554" y2="140" stroke="#7a2fd6" stroke-width="4"/>
+      <text x="520" y="192" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="18" font-weight="900" fill="#7a2fd6">the same AS</text>
+
+      <text x="350" y="238" text-anchor="middle" font-family="Helvetica,Arial,'PingFang TC',sans-serif" font-size="15" font-weight="800" fill="#8a94a2">「不一樣」配 from　‧　「一樣」配 as　‧　same 前面一定有 the</text>
+    </svg>
+  </div>
+
+  <div class="formula">
+    📐 <b>三種說法互換公式（背這張就夠了）</b>
+    <div class="ftwrap"><table class="ft">
+      <tbody>
+        <tr><th>說法</th><th>公式</th><th>例句</th></tr>
+        <tr><td>① 最常用</td><td>A ＋ be ＋ <b>different from</b> ＋ B</td><td>English is different from Chinese.</td></tr>
+        <tr><td>② 換句話說</td><td>A ＋ be ＋ <b>not the same as</b> ＋ B</td><td>English is not the same as Chinese.</td></tr>
+        <tr><td>③ 兩個一起當主詞</td><td><b>A and B</b> ＋ <b>are different</b></td><td>English and Chinese are different.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="goldbox">
+      🌟 <b>三條黃金規則</b><br>
+      1. <b>different 配 from</b>（不是 with／of／than）；<b>the same 配 as</b>（不是 with／like）。<br>
+      2. ② 的否定字 <b>not</b> 一定放在 be 動詞後面，而且 <b>same 前面一定要 the</b>。<br>
+      3. 改成 ③ 時，主詞變成「A and B」兩個人事物 → be 動詞要用<b>複數 are／were</b>，而且 different 後面<b>不再接 from</b>。
+    </div>
+    <ol>
+      <li><b>比較對象要對等</b>：My bike is different from <b>yours</b>.（✗ from you）；The weather in Taipei is different from <b>that</b> in Tokyo.（✗ from Tokyo）。</li>
+      <li><b>時態跟著 be 動詞走</b>：is／are → was／were → will be。Today's test <b>was</b> different from last week's.</li>
+      <li><b>不只 be 動詞</b>：look／sound／taste／smell／feel ＋ <b>different from</b> 也很常考 → Tea <b>tastes different from</b> coffee.</li>
+      <li><b>名詞與動詞</b>：the <b>difference between</b> A <b>and</b> B（差別用 between…and）／A <b>differs from</b> B（正式用法）。</li>
+    </ol>
+  </div>
+
+  <div id="app"></div>
+
+  <div class="group-h g3" style="margin-top:26px;">
+    <span class="tag">✍️ 換你練習（10 題）</span>
+    <span class="sub">填入正確的介系詞或片語，寫完按「送出批改」</span>
+  </div>
+  <div id="prac"></div>
+
+  <div class="bar">
+    <button class="btn" id="submit">送出批改</button>
+    <button class="btn ghost" id="reset">重作</button>
+    <span class="score" id="score"></span>
+  </div>
+
+  <div class="wrong">
+    <h2>⚠️ 最常錯的七點</h2>
+    <ol>
+      <li><s>different with / different of my brother</s> → different <b>from</b> my brother.</li>
+      <li><s>the same with mine</s> ／ <s>the same like mine</s> → the same <b>as</b> mine.</li>
+      <li><s>It is not same as mine.</s> → It is not <b>the</b> same as mine.（same 前面一定有 the）</li>
+      <li><s>My bag is different from you.</s> → different from <b>yours</b>（＝your bag，要拿包包比包包）。</li>
+      <li><s>A and B are different from.</s> → A and B <b>are different</b>.（③ 的句尾不再放 from）</li>
+      <li><s>English and Chinese is different.</s> → English and Chinese <b>are</b> different.（兩個東西用 are）</li>
+      <li><s>the difference from A and B</s> → the <b>difference between</b> A <b>and</b> B.</li>
+    </ol>
+  </div>
+
+  <footer>EFETL © 2025　‧　初級文法 · different from ／ not the same as 動畫練習</footer>
+</div>
+
+<script>
+/* ── 10 句動畫示範 ──
+   *藍*＝關鍵片語　~紫~＝not／the　_橘_＝語序或主詞改變的地方 */
+const DEMO = [
+ {tag:"最基本款", zh:"英文和中文不一樣。",
+  s1:"English *is different from* Chinese.",
+  s2:"English *is* ~not the same as~ Chinese.",
+  s3:"_English and Chinese_ *are different*.",
+  n1:"最常用的說法：<b>be different from</b>。different 後面一定配 <b>from</b>。",
+  n2:"換句話說：把 different from 換成 <b>not the same as</b>。<b>not</b> 放 is 後面，<b>same 前面一定有 the</b>。",
+  n3:"把兩個一起當主詞 → 主詞變複數，be 動詞用 <b>are</b>，而且 different 後面<b>不再接 from</b>。",
+  more:[["Math is different from science.","數學和自然不一樣。"],
+        ["Math is not the same as science.","數學和自然不相同。"],
+        ["Math and science are different.","數學和自然兩科不一樣。"]]},
+
+ {tag:"所有格代名詞 yours", zh:"我的腳踏車和你的不一樣。",
+  s1:"My bike *is different from* _yours_.",
+  s2:"My bike *is* ~not the same as~ _yours_.",
+  s3:"_My bike and yours_ *are different*.",
+  n1:"比較的是「我的車」和「<b>你的車</b>」，所以用 <b>yours</b>（＝your bike），不能寫 from you。",
+  n2:"同樣意思換成 <b>not the same as yours</b>。",
+  n3:"兩台車一起當主詞 → <b>are different</b>。",
+  more:[["My phone is different from hers.","我的手機和她的不一樣。"],
+        ["My phone is not the same as hers.","我的手機和她的不相同。"],
+        ["My phone and hers are different.","我的手機和她的不一樣。"]]},
+
+ {tag:"用 that one 代替名詞", zh:"這首歌和那首不一樣。",
+  z2:"", 
+  s1:"This song *is different from* _that one_.",
+  s2:"This song *is* ~not the same as~ _that one_.",
+  s3:"_This song and that one_ *are different*.",
+  n1:"不想再說一次 song，就用 <b>that one</b>（那一首）代替。",
+  n2:"改成 <b>not the same as that one</b>，意思完全一樣。",
+  n3:"兩首歌一起當主詞 → <b>are different</b>。",
+  more:[["This book is different from that one.","這本書和那本不一樣。"],
+        ["This shirt is not the same as that one.","這件襯衫和那件不一樣。"],
+        ["This box and that one are different.","這個箱子和那個不一樣。"]]},
+
+ {tag:"用 that 代替不可數名詞", zh:"台灣的天氣和日本的不一樣。",
+  s1:"The weather in Taiwan *is different from* _that in Japan_.",
+  s2:"The weather in Taiwan *is* ~not the same as~ _that in Japan_.",
+  s3:"_The weather in Taiwan and that in Japan_ *are different*.",
+  n1:"要拿「天氣」比「天氣」，所以用 <b>that</b> 代替 the weather（✗ different from Japan）。",
+  n2:"換成 <b>not the same as that in Japan</b>。",
+  n3:"兩個天氣一起當主詞 → 複數 <b>are different</b>。",
+  more:[["The food in Taipei is different from that in Tainan.","台北的食物和台南的不一樣。"],
+        ["The air here is not the same as that in the city.","這裡的空氣和城市裡的不一樣。"],
+        ["The price here and that online are different.","這裡的價格和網路上的不一樣。"]]},
+
+ {tag:"mine 我的", zh:"她的答案和我的不一樣。",
+  s1:"Her answer *is different from* _mine_.",
+  s2:"Her answer *is* ~not the same as~ _mine_.",
+  s3:"_Her answer and mine_ *are different*.",
+  n1:"「我的答案」＝ <b>mine</b>（＝my answer），不能寫 from me。",
+  n2:"改成 <b>not the same as mine</b>。",
+  n3:"兩個答案一起當主詞 → <b>are different</b>。",
+  more:[["His idea is different from mine.","他的想法和我的不一樣。"],
+        ["Her bag is not the same as mine.","她的包包和我的不一樣。"],
+        ["Her answer and mine are different.","她的答案和我的不一樣。"]]},
+
+ {tag:"the old one 舊的那個", zh:"新規定和舊規定不一樣。",
+  s1:"The new rule *is different from* _the old one_.",
+  s2:"The new rule *is* ~not the same as~ _the old one_.",
+  s3:"_The new rule and the old one_ *are different*.",
+  n1:"「舊的那條」用 <b>the old one</b> 代替 the old rule。",
+  n2:"換成 <b>not the same as the old one</b>。",
+  n3:"新舊兩條一起當主詞 → <b>are different</b>。",
+  more:[["The new teacher is different from the old one.","新老師和舊老師不一樣。"],
+        ["The new plan is not the same as the old one.","新計畫和舊計畫不一樣。"],
+        ["The new rule and the old one are different.","新規定和舊規定不一樣。"]]},
+
+ {tag:"動名詞當主詞（單數）", zh:"住在城市和住在鄉下不一樣。",
+  s1:"Living in the city *is different from* _living in the country_.",
+  s2:"Living in the city *is* ~not the same as~ _living in the country_.",
+  s3:"_Living in the city and living in the country_ *are different*.",
+  n1:"from 是介系詞，後面要放<b>動名詞 V-ing</b> → living（✗ from live）。單一個動名詞當主詞用 <b>is</b>。",
+  n2:"換成 <b>not the same as living in the country</b>，一樣要 V-ing。",
+  n3:"兩個動名詞一起當主詞 → 變複數 <b>are different</b>。",
+  more:[["Reading is different from listening.","閱讀和聽力不一樣。"],
+        ["Learning English is not the same as memorizing words.","學英文和背單字不一樣。"],
+        ["Talking and doing are different.","說和做是兩回事。"]]},
+
+ {tag:"ours 我們的", zh:"他的想法和我們的不一樣。",
+  s1:"His idea *is different from* _ours_.",
+  s2:"His idea *is* ~not the same as~ _ours_.",
+  s3:"_His idea and ours_ *are different*.",
+  n1:"「我們的想法」＝ <b>ours</b>（＝our idea）。",
+  n2:"換成 <b>not the same as ours</b>。",
+  n3:"兩個想法一起當主詞 → <b>are different</b>。",
+  more:[["Their plan is different from ours.","他們的計畫和我們的不一樣。"],
+        ["Their uniform is not the same as ours.","他們的制服和我們的不一樣。"],
+        ["His idea and ours are different.","他的想法和我們的不一樣。"]]},
+
+ {tag:"感官動詞 tastes different", zh:"茶喝起來和咖啡不一樣。",
+  s1:"Tea _tastes_ *different from* coffee.",
+  s2:"Tea _doesn't taste_ ~the same as~ coffee.",
+  s3:"_Tea and coffee_ _taste_ *different*.",
+  n1:"不是只有 be 動詞！<b>taste／look／sound／smell／feel</b> 後面也可以直接接 <b>different from</b>。",
+  n2:"一般動詞的否定要用 <b>doesn't ＋ 原形 taste</b>，後面接 <b>the same as</b>。",
+  n3:"兩個一起當主詞是複數 → 動詞不加 s，用 <b>taste different</b>。",
+  more:[["You look different from your brother.","你看起來和你哥哥不一樣。"],
+        ["This song doesn't sound the same as the old version.","這首歌聽起來和舊版不一樣。"],
+        ["Tea and coffee taste different.","茶和咖啡喝起來不一樣。"]]},
+
+ {tag:"過去式 was different", zh:"今天的考試和上禮拜的不一樣。",
+  s1:"Today's test _was_ *different from* _last week's_.",
+  s2:"Today's test _wasn't_ ~the same as~ _last week's_.",
+  s3:"_Today's test and last week's_ _were_ *different*.",
+  n1:"講過去的事，be 動詞要用 <b>was</b>；「上禮拜的（考試）」用 <b>last week's</b> 就好。",
+  n2:"過去式的否定：is not → <b>wasn't</b>，後面接 <b>the same as</b>。",
+  n3:"兩個考試一起當主詞、又是過去 → be 動詞用複數過去 <b>were</b>。",
+  more:[["Her hair was different from mine.","她的頭髮和我的不一樣。"],
+        ["The movie wasn't the same as the book.","電影和書不一樣。"],
+        ["Today's test and last week's were different.","今天的考試和上禮拜的不一樣。"]]}
+];
+
+/* ── 換你練習 10 題 ── */
+const PRAC = [
+ {cn:"我的手機和你的不一樣。", pre:"My phone is different ", a:"from", h:"介系詞", post:" yours.",
+  exp:"different 後面固定配 <b>from</b>（✗ with／of）。"},
+ {cn:"這件外套和那件不一樣。", pre:"This coat is not the same ", a:"as", h:"介系詞", post:" that one.",
+  exp:"the same 後面固定配 <b>as</b>（✗ with／like）。"},
+ {cn:"英文和中文不一樣。（用 different）", pre:"English is ", a:"different from", h:"兩個字", post:" Chinese.",
+  exp:"最常用的說法：be ＋ <b>different from</b> ＋ 比較對象。"},
+ {cn:"他的答案和我的不一樣。（用 same）", pre:"His answer is not ", a:"the same as", h:"三個字", post:" mine.",
+  exp:"<b>not the same as</b>＝different from。注意 same 前面一定要有 <b>the</b>。"},
+ {cn:"新老師和舊老師不一樣。", pre:"The new teacher is different from ", a:"the old one|the old teacher", h:"舊的那位", post:".",
+  exp:"不想重複 teacher，就用 <b>the old one</b> 代替。"},
+ {cn:"台北的天氣和高雄的不一樣。", pre:"The weather in Taipei is different from ", a:"that", h:"代替 the weather", post:" in Kaohsiung.",
+  exp:"要拿天氣比天氣 → 用 <b>that</b> 代替 the weather（✗ from Kaohsiung）。"},
+ {cn:"住在城市和住在鄉下不一樣。", pre:"Living in the city is different from ", a:"living", h:"動詞變化", post:" in the country.",
+  exp:"from 是介系詞，後面要接<b>動名詞 living</b>（✗ live／to live）。"},
+ {cn:"茶喝起來和咖啡不一樣。", pre:"Tea ", a:"tastes", h:"動詞變化", post:" different from coffee.",
+  exp:"Tea 是單數主詞 → 動詞加 s：<b>tastes different from</b>。"},
+ {cn:"今天的考試和上禮拜的不一樣。", pre:"Today's test ", a:"was", h:"be動詞", post:" different from last week's.",
+  exp:"講過去用 <b>was</b>；主詞是單數的 test。"},
+ {cn:"我的鞋子和她的不一樣。（改成 A and B 開頭）", pre:"My shoes and hers ", a:"are", h:"be動詞", post:" different.",
+  exp:"兩樣東西一起當主詞 → 複數 <b>are</b>，而且 different 後面<b>不接 from</b>。"}
+];
+
+/* ── 工具 ── */
+function norm(s){
+  return (s||"").toLowerCase().trim()
+    .replace(/[.,!?]/g,"")
+    .replace(/n't/g," not")
+    .replace(/\s+/g," ").trim();
+}
+function accepts(ans,val){ return ans.split("|").map(norm).includes(norm(val)); }
+function firstAns(a){ return a.split("|")[0]; }
+function mk(t){return t.replace(/\*([^*]+)\*/g,'<b class="hot">$1</b>')
+  .replace(/~([^~]+)~/g,'<b class="mk">$1</b>')
+  .replace(/_([^_]+)_/g,'<b class="sw">$1</b>');}
+function strip(t){return t.replace(/[*~_]/g,'').replace(/\s+/g,' ').trim();}
+function esc(t){return t.replace(/"/g,'&quot;');}
+
+/* ── 發音：優先播 Microsoft 語音 mp3，失敗時退回瀏覽器內建朗讀 ── */
+const AUDIO_DIR="grammar-different-audio/";
+let curAudio=null,curBtn=null;
+function stopSpk(){
+  if(curAudio){curAudio.pause();curAudio=null;}
+  if(curBtn){curBtn.classList.remove("playing");curBtn=null;}
+  if(window.speechSynthesis) speechSynthesis.cancel();
+}
+function fallbackSpeak(text){
+  if(!text||!window.speechSynthesis) return;
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang="en-US"; u.rate=.82;
+  u.onend=()=>{if(curBtn){curBtn.classList.remove("playing");curBtn=null;}};
+  speechSynthesis.speak(u);
+}
+function playId(id,btn,text){
+  stopSpk();
+  curBtn=btn||null;
+  if(curBtn) curBtn.classList.add("playing");
+  if(!id){ fallbackSpeak(text); return; }
+  const a=new Audio(AUDIO_DIR+id+".mp3");
+  curAudio=a;
+  a.onended=()=>{if(curBtn){curBtn.classList.remove("playing");curBtn=null;}curAudio=null;};
+  a.onerror=()=>{curAudio=null;fallbackSpeak(text);};
+  a.play().catch(()=>{curAudio=null;fallbackSpeak(text);});
+}
+function spk(id,text){
+  return '<button class="spk" type="button" title="聽發音" aria-label="聽發音" data-a="'+id+'" data-t="'+esc(text)+'">🔊</button>';
+}
+
+/* ── 產生動畫卡 ── */
+const app=document.getElementById("app");
+let html='<div class="group-h g1"><span class="tag">🎬 動畫示範（1–10）</span>'+
+  '<span class="sub">按 ①②③ 看同一句話的三種說法　→ 意思完全一樣</span></div>';
+
+DEMO.forEach((d,i)=>{
+  const t1=strip(d.s1),t2=strip(d.s2),t3=strip(d.s3);
+  html+=
+  '<div class="q st0" data-i="'+i+'">'+
+    '<div class="qtop"><span class="qnum">'+(i+1)+'</span>'+
+      '<div class="fact"><span class="lab">中文</span>'+d.zh+'</div>'+
+      '<span class="tagk">'+d.tag+'</span></div>'+
+    '<div class="qbuild">'+
+      '<div class="ql q1">'+mk(d.s1)+'</div>'+
+      '<div class="ql q2">'+mk(d.s2)+'</div>'+
+      '<div class="ql q3">'+mk(d.s3)+'</div>'+
+    '</div>'+
+    '<div class="stepbtns"><span class="hintk">一步一步點：</span>'+
+      '<button class="sbtn b1" type="button" data-s="1"><span class="sn">1</span>different from</button>'+
+      '<button class="sbtn b2" type="button" data-s="2"><span class="sn">2</span>not the same as</button>'+
+      '<button class="sbtn b3" type="button" data-s="3"><span class="sn">3</span>A and B are different</button>'+
+    '</div>'+
+    '<div class="reveal r1"><b>①　</b><span class="sen">'+t1+'</span>'+spk('d'+(i+1)+'-1',t1)+'<div class="nt">'+d.n1+'</div></div>'+
+    '<div class="reveal r2"><b>②　</b><span class="sen">'+t2+'</span>'+spk('d'+(i+1)+'-2',t2)+'<div class="nt">'+d.n2+'</div></div>'+
+    '<div class="reveal r3"><b>③　</b><span class="sen">'+t3+'</span>'+spk('d'+(i+1)+'-3',t3)+'<div class="nt">'+d.n3+'</div></div>'+
+    '<div class="demoexp"><div class="zh">💬 '+d.zh+'　三句意思完全相同，考試改寫題常在這三種之間互換。</div></div>'+
+    '<button class="morebtn" type="button" data-more="'+i+'">➕ 再看 3 句同類型例句</button>'+
+    '<div class="morelist" data-more="'+i+'">'+
+      d.more.map((m,k)=>'<div class="mrow"><span class="mn">'+(k+1)+'.</span>'+
+        '<span class="ms">'+m[0]+'</span>'+spk('m'+(i+1)+'-'+(k+1),m[0])+
+        '<div class="mz">'+m[1]+'</div></div>').join('')+
+    '</div>'+
+  '</div>';
+});
+app.innerHTML=html;
+
+/* ── 產生練習題 ── */
+const pracBox=document.getElementById("prac");
+pracBox.innerHTML=PRAC.map((p,i)=>
+  '<div class="prac" data-p="'+i+'">'+
+    '<div class="pcn"><span class="pn">'+(i+1)+'</span>'+p.cn+'</div>'+
+    '<div class="psent">'+p.pre+
+      '<input type="text" data-a="'+esc(p.a)+'" placeholder="?" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">'+
+      ' <span class="phint">('+p.h+')</span>'+p.post+'</div>'+
+    '<div class="pexp">✅ 正解：<b>'+firstAns(p.a)+'</b>　—　'+p.exp+'</div>'+
+  '</div>').join('');
+
+/* ── 互動 ── */
+document.addEventListener("click",e=>{
+  const sp=e.target.closest(".spk");
+  if(sp){ playId(sp.dataset.a,sp,sp.dataset.t); return; }
+
+  const sb=e.target.closest(".sbtn");
+  if(sb){
+    const card=sb.closest(".q"), s=sb.dataset.s;
+    card.className="q st"+s;
+    card.querySelectorAll(".sbtn").forEach(b=>b.classList.remove("on"));
+    sb.classList.add("on");
+    if(document.getElementById("autoplay").checked){
+      const sen=card.querySelector(".reveal.r"+s+" .sen");
+      const btn=card.querySelector(".reveal.r"+s+" .spk");
+      if(btn) playId(btn.dataset.a,btn,btn.dataset.t);
+      else if(sen) fallbackSpeak(sen.textContent);
+    }
+    return;
+  }
+
+  const mb=e.target.closest(".morebtn");
+  if(mb){
+    const list=mb.parentElement.querySelector('.morelist[data-more="'+mb.dataset.more+'"]');
+    list.classList.toggle("on");
+    mb.textContent=list.classList.contains("on")?"➖ 收起例句":"➕ 再看 3 句同類型例句";
+    return;
+  }
+});
+
+document.getElementById("submit").addEventListener("click",()=>{
+  let ok=0;
+  document.querySelectorAll("#prac .prac").forEach(box=>{
+    const inp=box.querySelector("input");
+    const good=accepts(inp.dataset.a,inp.value);
+    inp.classList.remove("ok","no");
+    inp.classList.add(good?"ok":"no");
+    box.querySelector(".pexp").classList.add("on");
+    if(good) ok++;
+  });
+  document.getElementById("score").textContent="答對 "+ok+" / "+PRAC.length+"　("+Math.round(ok/PRAC.length*100)+" 分)";
+  document.getElementById("score").scrollIntoView({behavior:"smooth",block:"center"});
+});
+
+document.getElementById("reset").addEventListener("click",()=>{
+  document.querySelectorAll("#prac input").forEach(i=>{i.value="";i.classList.remove("ok","no");});
+  document.querySelectorAll("#prac .pexp").forEach(x=>x.classList.remove("on"));
+  document.getElementById("score").textContent="";
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+
+window.addEventListener("beforeunload",stopSpk);
+</script>
+</body>
+</html>
