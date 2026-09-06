@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小學英檢 口說測驗　第8回</title>
+<style>
+  :root{
+    --blue:#2ba6ff; --blue-dark:#1b7fd0;
+    --coral:#ff8a5b; --amber:#ffb02e; --pink:#ff5d8f;
+    --grape:#8b6bff; --mint:#22c9a0;
+    --bg:#f3fbff; --card:#ffffff; --line:#e2effa;
+    --green:#22b573; --green-bg:#e4f8ef;
+    --red:#ff5a5a; --red-bg:#ffecec;
+    --gray:#6b7785;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;
+    background:linear-gradient(180deg,#eafaff,#fff6ef 70%);color:#22303f;line-height:1.65;
+    -webkit-text-size-adjust:100%;}
+  .wrap{max-width:780px;margin:0 auto;padding:16px;}
+  header.top{background:linear-gradient(135deg,#5fd6f5,#5b9bff 50%,#a97bff);color:#fff;
+    border-radius:20px;padding:26px 22px;margin-bottom:16px;box-shadow:0 10px 24px rgba(91,155,255,.32);}
+  header.top h1{margin:0 0 6px;font-size:1.55rem;text-shadow:0 1px 2px rgba(0,0,0,.12);}
+  header.top p{margin:0;font-size:.94rem;opacity:.96;}
+  .meta{margin-top:14px;font-size:.86rem;background:rgba(255,255,255,.22);
+    padding:9px 13px;border-radius:10px;}
+  .sticky{position:sticky;top:0;z-index:20;padding:10px 0;
+    background:linear-gradient(180deg,#eafaff 70%,rgba(234,250,255,0));}
+  .bar{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:11px 16px;display:flex;align-items:center;gap:12px;font-size:.9rem;
+    box-shadow:0 4px 12px rgba(43,166,255,.12);}
+  .bar .track{flex:1;height:10px;background:#e7f4fd;border-radius:6px;overflow:hidden;}
+  .bar .fill{height:100%;width:0;border-radius:6px;
+    background:linear-gradient(90deg,#3ad1c6,#2ba6ff,#a97bff);transition:width .35s;}
+  .bar #count{font-weight:800;color:var(--blue-dark);}
+  .section-title{color:#fff;font-weight:800;border-radius:14px;
+    padding:11px 16px;margin:26px 0 6px;font-size:1.05rem;
+    box-shadow:0 5px 14px rgba(0,0,0,.09);}
+  .section-title.s0{background:linear-gradient(135deg,#ffb36b,#ff6f91);}
+  .section-title.s1{background:linear-gradient(135deg,#4dd0e1,#2ba6ff);}
+  .section-title.s2{background:linear-gradient(135deg,#9b8bff,#c46bff);}
+  .section-desc{font-size:.86rem;color:var(--gray);margin:0 4px 10px;}
+
+  /* ── 圖片場景卡（第一部分） ── */
+  .scene{background:linear-gradient(160deg,#ffffff,#f2fbff);border:2px solid #cfeafd;
+    border-radius:18px;padding:14px 16px 16px;margin:18px 0 10px;
+    box-shadow:0 6px 18px rgba(43,166,255,.13);}
+  .scene h3{margin:0 0 4px;color:#1b7fd0;font-size:1rem;display:flex;align-items:center;gap:8px;}
+  .scene h3 .pic{background:var(--blue);color:#fff;border-radius:9px;padding:2px 10px;font-size:.82rem;}
+  .scene .sub{margin:0 0 10px;font-size:.83rem;color:var(--gray);}
+  .zones{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;}
+  .zone{background:#fff;border:1.5px dashed #b9e2fb;border-radius:14px;padding:10px 10px 12px;text-align:center;}
+  .zone .zt{font-size:.78rem;color:#1b7fd0;font-weight:800;margin-bottom:6px;line-height:1.35;}
+  .zone .items{font-size:2.05rem;line-height:1.25;letter-spacing:2px;word-break:break-word;}
+  .zone .cap{font-size:.75rem;color:var(--gray);margin-top:4px;}
+
+  /* ── 短文卡（第二、三部分） ── */
+  .passage{background:#fffdf4;border:1px solid #ffe9c9;border-left:6px solid var(--amber);
+    border-radius:14px;padding:15px 17px;margin:14px 0;font-size:.97rem;
+    box-shadow:0 4px 12px rgba(255,176,46,.1);}
+  .passage h3{margin:0 0 8px;color:#e0820a;font-size:1rem;}
+  .passage p{margin:8px 0;}
+  .passage table{border-collapse:collapse;width:100%;margin:9px 0;font-size:.9rem;}
+  .passage th,.passage td{border:1px solid #ffe0b0;padding:6px 9px;text-align:left;}
+  .passage th{background:#fff2dc;}
+  .passage .note-h{font-size:.85rem;color:var(--gray);border-bottom:1px dashed #ffd9a8;
+    padding-bottom:6px;margin-bottom:8px;}
+  .passage .big{font-size:1.15rem;font-weight:800;color:#d2691e;}
+  .blank{display:inline-block;min-width:62px;border-bottom:2.5px solid var(--blue);
+    text-align:center;color:var(--blue-dark);font-weight:800;}
+
+  .q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:14px 16px;margin:11px 0;box-shadow:0 3px 10px rgba(43,166,255,.08);}
+  .q .stem{font-weight:600;margin-bottom:10px;}
+  .q .stem .num{display:inline-block;color:#fff;background:var(--blue);font-weight:800;
+    border-radius:9px;padding:1px 10px;margin-right:8px;font-size:.92rem;}
+  .opt{display:flex;align-items:flex-start;gap:10px;border:2px solid var(--line);
+    border-radius:12px;padding:10px 13px;margin:8px 0;cursor:pointer;transition:.15s;
+    font-size:.97rem;background:#fbfdff;}
+  .opt:hover{border-color:var(--blue);background:#eaf7ff;}
+  .opt input{margin-top:4px;accent-color:var(--blue);}
+  .opt .lab{font-weight:900;color:var(--blue);min-width:20px;}
+  .opt.sel{border-color:var(--blue);background:#e2f3ff;}
+  .opt.correct{border-color:var(--green);background:var(--green-bg);}
+  .opt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .opt.lock{cursor:default;}
+  /* Y/N 兩顆並排 */
+  .yn{display:flex;gap:10px;}
+  .yn .opt{flex:1;justify-content:center;align-items:center;font-weight:800;padding:12px 8px;}
+  .yn .opt .lab{min-width:0;font-size:1.15rem;}
+
+  .exp{display:none;margin-top:11px;border-top:2px dashed #ffe1c2;padding-top:11px;font-size:.9rem;}
+  .exp.show{display:block;}
+  .exp .tag{display:inline-block;font-weight:800;color:#fff;background:var(--green);
+    border-radius:8px;padding:2px 11px;font-size:.8rem;margin-bottom:7px;}
+  .exp .tag.miss{background:var(--red);}
+  .exp .en{color:#1c4f7a;background:#eef7ff;border-radius:9px;padding:6px 11px;margin:5px 0;}
+  .exp .zh{color:#7a4a12;background:#fff7ea;border-radius:9px;padding:6px 11px;margin:5px 0;}
+  .actions{position:sticky;bottom:0;padding:14px 0 6px;margin-top:18px;
+    background:linear-gradient(transparent,#fff6ef 35%);}
+  button.submit{width:100%;color:#fff;border:0;border-radius:15px;padding:16px;
+    font-size:1.08rem;font-weight:800;cursor:pointer;
+    background:linear-gradient(135deg,#ffa15b,#ff5d8f);
+    box-shadow:0 7px 18px rgba(255,93,143,.35);}
+  button.submit:active{transform:translateY(1px);}
+  button.reset{width:100%;background:#fff;color:var(--blue);border:2px solid var(--blue);
+    border-radius:15px;padding:14px;font-size:1rem;font-weight:800;cursor:pointer;margin-top:10px;display:none;}
+  .result{display:none;background:var(--card);border:3px solid transparent;border-radius:18px;
+    padding:22px;margin:16px 0;text-align:center;
+    background-image:linear-gradient(#fff,#fff),linear-gradient(135deg,#3ad1c6,#2ba6ff,#c46bff);
+    background-origin:border-box;background-clip:padding-box,border-box;
+    box-shadow:0 8px 22px rgba(43,166,255,.16);}
+  .result.show{display:block;}
+  .result .suns{font-size:2rem;letter-spacing:4px;margin-bottom:4px;}
+  .result .score{font-size:2.8rem;font-weight:900;
+    background:linear-gradient(135deg,#2ba6ff,#c46bff);-webkit-background-clip:text;
+    background-clip:text;-webkit-text-fill-color:transparent;}
+  .result .sub{color:var(--gray);font-size:.95rem;}
+  .result .lvl{margin-top:8px;font-weight:800;color:#1b7fd0;}
+  .result .bd{display:flex;justify-content:center;gap:18px;margin-top:12px;flex-wrap:wrap;font-size:.95rem;}
+  .result .bd span{font-weight:800;}
+  .result .part{margin-top:12px;font-size:.88rem;color:var(--gray);}
+  .hint{text-align:center;font-size:.85rem;color:var(--gray);margin-top:9px;min-height:1.2em;}
+  footer{text-align:center;color:var(--gray);font-size:.8rem;margin:24px 0;}
+
+  .section-title.s3{background:linear-gradient(135deg,#22c9a0,#2ba6ff);}
+  .audio{display:flex;align-items:center;gap:10px;margin:4px 0 12px;flex-wrap:wrap;}
+  button.play{border:0;border-radius:999px;padding:10px 20px;font-size:.95rem;font-weight:800;
+    color:#fff;cursor:pointer;background:linear-gradient(135deg,#2ba6ff,#8b6bff);
+    box-shadow:0 4px 12px rgba(43,166,255,.32);display:flex;align-items:center;gap:7px;}
+  button.play.playing{background:linear-gradient(135deg,#ffb02e,#ff7a59);}
+  button.play.model{background:linear-gradient(135deg,#22c9a0,#2ba6ff);}
+  button.rec{border:0;border-radius:999px;padding:10px 20px;font-size:.95rem;font-weight:800;
+    color:#fff;cursor:pointer;background:linear-gradient(135deg,#ff7a59,#ff5d8f);
+    box-shadow:0 4px 12px rgba(255,93,143,.32);display:flex;align-items:center;gap:7px;}
+  button.rec.on{background:linear-gradient(135deg,#ff5a5a,#c0392b);animation:pulse 1.1s infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.65}}
+  .say{background:#f3faff;border:1.5px solid #cfe3f7;border-radius:12px;padding:11px 14px;
+    margin:8px 0;font-size:1.15rem;line-height:1.9;color:#12507f;font-weight:700;}
+  .say small{display:block;font-size:.8rem;color:var(--gray);font-weight:400;margin-top:3px;}
+  textarea.said{width:100%;min-height:56px;border:2px solid var(--line);border-radius:12px;
+    padding:10px 13px;font-size:.98rem;font-family:inherit;line-height:1.7;background:#fbfdff;resize:vertical;}
+  textarea.said:focus{outline:none;border-color:var(--blue);background:#f3faff;}
+  .said-lab{font-size:.83rem;color:var(--gray);margin:8px 0 4px;}
+  .ref{color:#14532d;background:#eafaf1;border-radius:9px;padding:8px 12px;margin:8px 0;font-size:.93rem;}
+  .ref b{color:#12876a;}
+  .panels{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:12px 0;}
+  .panel{background:#fff;border:1.5px dashed #b9e2fb;border-radius:14px;padding:10px 6px;text-align:center;}
+  .panel .n{display:inline-block;color:#fff;background:var(--blue);font-weight:800;border-radius:7px;
+    padding:0 8px;font-size:.72rem;}
+  .panel .e{font-size:1.85rem;line-height:1.35;}
+  .panel .cap{font-size:.72rem;color:var(--gray);line-height:1.4;}
+  .acc{font-size:.86rem;font-weight:800;border-radius:9px;padding:5px 11px;display:inline-block;margin-top:6px;}
+  .acc.good{background:var(--green-bg);color:#12876a;}
+  .acc.mid{background:#fff7ea;color:#a06000;}
+  .acc.bad{background:var(--red-bg);color:#c0392b;}
+  .notsupport{background:#fffbeb;border:1.5px solid #f59e0b;border-radius:11px;padding:9px 13px;
+    font-size:.84rem;color:#78350f;margin:8px 0;}
+  .rubric{background:#fff;border:1px solid var(--line);border-radius:14px;padding:13px 16px;
+    margin:14px 0;font-size:.87rem;color:var(--gray);}
+  .rubric b{color:#2b3a4a;}
+  .aipanel .inner{background:#f3f0ff;border:1.5px solid #d9cfff;border-radius:12px;padding:13px 15px;font-size:.88rem;}
+  .aipanel a.linkbtn{display:inline-block;background:linear-gradient(135deg,#8b6bff,#2ba6ff);color:#fff;
+    text-decoration:none;border-radius:10px;padding:9px 18px;font-weight:800;font-size:.9rem;}
+  button.mini{border:1.5px solid var(--blue);background:#fff;color:var(--blue);
+    border-radius:10px;padding:7px 14px;font-size:.85rem;font-weight:800;cursor:pointer;}
+  @media(max-width:420px){ .zone .items{font-size:1.8rem;} .panels{grid-template-columns:repeat(2,1fr);} }
+</style>
+<!-- EFETL-PWA -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#2BA6FF">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="EFETL">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}</script>
+<!-- /EFETL-PWA -->
+</head>
+<body>
+<a href="geptkids-hub.html" style="position:fixed;top:12px;left:12px;background:rgba(255,255,255,.94);color:#2ba6ff;padding:7px 15px;border-radius:20px;text-decoration:none;font-size:.85rem;font-weight:800;z-index:999;box-shadow:0 3px 10px rgba(0,0,0,.15);">&#8592; 回題庫</a>
+<div class="wrap">
+  <header class="top">
+    <h1>小學英檢　口說測驗　<span style="opacity:.9">第8回</span></h1>
+    <p>GEPT Kids Speaking　&middot;　第8回　衣服・外貌・身體・心情</p>
+    <div class="meta">共 4 部分、13 題　|　各大題 3／2／1／0 分（同官方標準）　|　說完可請 AI 老師批改</div>
+  </header>
+
+  <div class="sticky">
+    <div class="bar">
+      <span>作答進度</span>
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <span id="count">0 / 13</span>
+    </div>
+  </div>
+
+  <div class="rubric"><b>官方給分標準（各大題分別計分，滿分 12 分）</b><br><b>3 分</b>　能自信且適切地達成題目的要求。　<b>2 分</b>　大致可以達成題目的要求。　<b>1 分</b>　勉強能達成部分題目的要求。　<b>0 分</b>　未答或等同未答。<br>👉 官方提醒：<b>儘量多說、完整表達，不要因為怕說錯就只說一兩個字或不回答。</b></div>
+  <form id="quiz"></form>
+
+  <div class="result" id="result">
+    <div class="suns" id="rSuns">☀️</div>
+    <div class="score" id="scoreNum">0</div>
+    <div class="sub" id="scoreTxt">分</div>
+    <div class="lvl" id="rLvl"></div>
+    <div class="bd">
+      <span style="color:var(--green)">答對 <b id="rOk">0</b></span>
+      <span style="color:var(--red)">答錯 <b id="rNo">0</b></span>
+      <span style="color:var(--gray)">未作答 <b id="rBlank">0</b></span>
+    </div>
+    <div class="part" id="rPart"></div>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="submit" id="submitBtn">送出並查看解析</button>
+    <div class="hint" id="hint">尚未作答任何題目</div>
+    <button type="button" class="reset" id="resetBtn">重新作答</button>
+  </div>
+
+  <footer>小學英檢 GEPT Kids　口說仿真練習　&middot;　全民補習班</footer>
+</div>
+
+<script>
+/* ====== 題庫資料 ====== */
+const AUDIO_DIR = "geptkids-speaking-audio";
+const AUDIO_PREFIX = "S8";
+
+const PARTS = [{"title": "第一部分　暖身與問候（3 題）", "desc": "聽老師的問題，用簡單的句子回答。可以先自我介紹、打招呼。"}, {"title": "第二部分　朗讀句子與描述圖片（6 題）", "desc": "前三題請大聲朗讀句子（可以先聽老師唸一次）；後三題看圖片，回答老師的問題。"}, {"title": "第三部分　看圖說話（1 題）", "desc": "看四格連環圖，用一到兩個句子描述每一格，把故事說完。"}, {"title": "第四部分　回答問題（3 題）", "desc": "聽老師的問題，談談你自己、你的家人或課餘活動。說錯沒關係，再說一次就好。"}];
+
+const Q = [{"n": 1, "p": 0, "type": "qa", "stem": "暖身問候", "ask": "Hello. What are you wearing today?", "ref": "Hello. I'm wearing a white shirt and blue pants today.", "zh": "現在進行式 I'm wearing…；顏色放在衣服前面。"}, {"n": 2, "p": 0, "type": "qa", "stem": "暖身問候", "ask": "How do you feel today? Why?", "ref": "I feel happy today, because it is Friday and tomorrow is Saturday.", "zh": "feel＋形容詞，再用 because 說理由。"}, {"n": 3, "p": 0, "type": "qa", "stem": "暖身問候", "ask": "Can you tell me about your hair and eyes?", "ref": "I have short black hair and brown eyes.", "zh": "用 I have＋形容詞＋名詞；順序是「長度＋顏色＋名詞」。"}, {"n": 4, "p": 1, "type": "read", "stem": "請大聲朗讀這個句子", "text": "She is wearing a yellow dress and pink shoes.", "zh": "dress 的 dr 要一起唸；shoes 的 sh 要送氣。"}, {"n": 5, "p": 1, "type": "read", "stem": "請大聲朗讀這個句子", "text": "My brother is tall and thin, and he wears glasses.", "zh": "thin 的 th 舌尖在牙齒中間；glasses 有兩個 s 音。"}, {"n": 6, "p": 1, "type": "read", "stem": "請大聲朗讀這個句子", "text": "Please wash your hands before you eat.", "zh": "hands 的 ds 要唸出來；before 重音在第二音節。"}, {"n": 7, "p": 1, "type": "pic", "stem": "看圖回答問題", "scene": {"t": "Amy's Clothes　艾美的衣服", "z": [{"l": "Amy is wearing　艾美穿著", "e": ["👕", "🩳"], "cap": "a pink T-shirt, blue shorts"}, {"l": "on the bed　床上", "e": ["🧥", "🧢"]}]}, "ask": "What is Amy wearing?", "ref": "She is wearing a pink T-shirt and blue shorts.", "zh": "用現在進行式；兩件衣服都要說到，用 and 連起來。"}, {"n": 8, "p": 1, "type": "pic", "stem": "看圖回答問題", "scene": {"t": "The Robot　機器人", "z": [{"l": "its head　頭", "e": ["🤖"], "cap": "one mouth, two ears"}, {"l": "its feet　腳", "e": ["🦶"], "cap": "only one foot"}]}, "ask": "How many feet does the robot have?", "ref": "It has only one foot.", "zh": "foot 的複數是 feet；只有一隻要用 one foot。"}, {"n": 9, "p": 1, "type": "pic", "stem": "看圖回答問題", "scene": {"t": "How Do They Feel?　心情", "z": [{"l": "Sam　山姆", "e": ["👦", "😠"]}, {"l": "Mia　米雅", "e": ["👧", "🤩"]}]}, "ask": "How does Sam feel?", "ref": "He feels mad. He is not happy.", "zh": "feel＋形容詞；生氣是 mad 或 angry。"}, {"n": 10, "p": 2, "type": "story", "stem": "看圖說話", "panels": [{"e": ["👦", "🧢", "🌳"], "cap": "The wind takes his cap."}, {"e": ["👦", "🏃", "💨"], "cap": "He runs after it."}, {"e": ["👧", "🧢", "🤲"], "cap": "A girl picks it up."}, {"e": ["👦", "👧", "😊"], "cap": "She gives it back."}], "ask": "These pictures tell a story. It's called The cap in the wind. Please look at the first picture. The wind takes the boy's cap. Now, you tell the story.", "ref": "One windy day a boy is walking in the park. Suddenly the wind takes his new cap away. He runs after it very fast, but he cannot get it. Then a girl picks up the cap and gives it back to him. The boy says thank you and they both smile.", "zh": "第一格說天氣和地點，中間說問題，最後說結果和心情。"}, {"n": 11, "p": 3, "type": "qa", "stem": "回答問題", "ask": "What clothes do you wear in winter?", "ref": "In winter I wear a warm coat, a sweater and long pants. Sometimes I wear a hat, too.", "zh": "說出三四樣衣服，用 and、too 連接。"}, {"n": 12, "p": 3, "type": "qa", "stem": "回答問題", "ask": "Tell me about your best friend. What does he or she look like?", "ref": "My best friend is Nina. She is tall and she has long black hair. She always makes me laugh.", "zh": "說名字、說外表、再說一句個性，就有三個句子。"}, {"n": 13, "p": 3, "type": "qa", "stem": "回答問題", "ask": "What makes you happy?", "ref": "My family and my friends make me happy. I am also happy when I play basketball.", "zh": "用 make me happy 的句型；再用 when 補一個情境。"}];
+/* ====== 產生畫面 ====== */
+const form = document.getElementById('quiz');
+const TOTAL = Q.length;
+const players = {};
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let lastPart = -1;
+
+function pad(n){ return String(n).padStart(2,'0'); }
+function norm(s){ return (s||'').trim().replace(/\s+/g,' '); }
+function words(s){ return norm(s).toLowerCase().replace(/[.,!?"']/g,'').split(' ').filter(Boolean); }
+
+function mkPlayer(card, n, kind, label, cls){
+  const box=document.createElement('div'); box.className='audio';
+  const btn=document.createElement('button'); btn.type='button'; btn.className='play '+(cls||'');
+  btn.innerHTML=`<span>▶</span><span>${label}</span>`;
+  const au=new Audio(`${AUDIO_DIR}/${AUDIO_PREFIX}-${kind}${pad(n)}.mp3`); au.preload='none';
+  (players[n] = players[n] || {})[kind] = au;
+  btn.addEventListener('click',()=>{
+    Object.values(players).forEach(o=>Object.values(o).forEach(x=>{ if(x!==au){x.pause();x.currentTime=0;} }));
+    document.querySelectorAll('button.play').forEach(b=>b.classList.remove('playing'));
+    au.currentTime=0; au.play(); btn.classList.add('playing');
+  });
+  au.addEventListener('ended',()=>btn.classList.remove('playing'));
+  box.appendChild(btn); card.appendChild(box);
+  return box;
+}
+
+function mkRecorder(card, q){
+  const lab=document.createElement('div'); lab.className='said-lab';
+  lab.textContent='👇 你說的話（按「開始說」用語音辨識，也可以直接自己打字修改）';
+  const ta=document.createElement('textarea'); ta.className='said'; ta.id='said'+q.n;
+  ta.placeholder='說完會自動填在這裡…';
+  ta.addEventListener('input',()=>{ updateProgress(); if(q.type==='read') showAcc(q); });
+
+  const row=document.createElement('div'); row.className='audio';
+  const rec=document.createElement('button'); rec.type='button'; rec.className='rec';
+  rec.innerHTML='<span>🎤</span><span>開始說</span>';
+  const acc=document.createElement('div'); acc.id='acc'+q.n;
+
+  if(!SR){
+    const w=document.createElement('div'); w.className='notsupport';
+    w.textContent='⚠️ 這個瀏覽器不支援語音辨識（建議用電腦或 Android 的 Chrome）。你還是可以自己把說的話打進下面的框，一樣可以請 AI 老師批改。';
+    card.appendChild(w);
+    rec.disabled=true; rec.style.opacity=.5;
+  } else {
+    let r=null, on=false;
+    rec.addEventListener('click',()=>{
+      if(on){ r && r.stop(); return; }
+      r=new SR(); r.lang='en-US'; r.interimResults=true; r.continuous=true;
+      let finalText = norm(ta.value);
+      r.onstart=()=>{ on=true; rec.classList.add('on'); rec.innerHTML='<span>⏹</span><span>說完了</span>'; };
+      r.onresult=e=>{
+        let interim='';
+        for(let i=e.resultIndex;i<e.results.length;i++){
+          const t=e.results[i][0].transcript;
+          if(e.results[i].isFinal) finalText=(finalText+' '+t).trim(); else interim+=t;
+        }
+        ta.value=norm(finalText+' '+interim); updateProgress();
+      };
+      r.onerror=()=>{};
+      r.onend=()=>{ on=false; rec.classList.remove('on'); rec.innerHTML='<span>🎤</span><span>再說一次</span>';
+                    ta.value=norm(ta.value); updateProgress(); if(q.type==='read') showAcc(q); };
+      r.start();
+    });
+  }
+  row.appendChild(rec); card.appendChild(row);
+  card.appendChild(lab); card.appendChild(ta); card.appendChild(acc);
+}
+
+/* 朗讀題：比對逐字稿與原句，給唸對比例 */
+function showAcc(q){
+  const said=words(document.getElementById('said'+q.n).value);
+  const want=words(q.text);
+  const box=document.getElementById('acc'+q.n);
+  if(!said.length){ box.innerHTML=''; return; }
+  const pool=[...said];
+  let hit=0;
+  want.forEach(w=>{ const i=pool.indexOf(w); if(i>=0){ hit++; pool.splice(i,1); } });
+  const pct=Math.round(hit/want.length*100);
+  const cls=pct>=90?'good':pct>=70?'mid':'bad';
+  const missed=want.filter(w=>!said.includes(w));
+  box.innerHTML=`<span class="acc ${cls}">唸對 ${hit}/${want.length} 個字（${pct}%）</span>` +
+    (missed.length?`<div class="said-lab">還沒唸清楚的字：<b>${missed.join('、')}</b></div>`:'');
+}
+
+Q.forEach(q=>{
+  if(q.p!==lastPart){
+    const st=document.createElement('div'); st.className='section-title s'+q.p; st.textContent=PARTS[q.p].title;
+    const sd=document.createElement('div'); sd.className='section-desc'; sd.textContent=PARTS[q.p].desc;
+    form.appendChild(st); form.appendChild(sd); lastPart=q.p;
+  }
+  const card=document.createElement('div'); card.className='q'; card.id='q'+q.n;
+  card.innerHTML=`<div class="stem"><span class="num">${q.n}</span>${q.stem||''}</div>`;
+
+  if(q.type==='read'){
+    const say=document.createElement('div'); say.className='say';
+    say.innerHTML=`${q.text}<small>${q.zh}</small>`;
+    card.appendChild(say);
+    mkPlayer(card,q.n,'q','聽老師唸一次','model');
+  } else if(q.type==='story'){
+    const p=document.createElement('div'); p.className='panels';
+    p.innerHTML=q.panels.map((x,i)=>`<div class="panel"><span class="n">${i+1}</span>
+      <div class="e">${x.e.join('')}</div><div class="cap">${x.cap}</div></div>`).join('');
+    card.appendChild(p);
+    mkPlayer(card,q.n,'q','聽老師的開頭提示');
+  } else {
+    if(q.scene){
+      const d=document.createElement('div'); d.innerHTML=
+        `<div class="scene"><h3><span class="pic">圖片</span>${q.scene.t}</h3><div class="zones">` +
+        q.scene.z.map(z=>`<div class="zone"><div class="zt">${z.l}</div><div class="items">${z.e.join('')}</div>
+          ${z.cap?`<div class="cap">${z.cap}</div>`:''}</div>`).join('') + `</div></div>`;
+      card.appendChild(d.firstChild);
+    }
+    mkPlayer(card,q.n,'q','聽老師問問題');
+  }
+
+  mkRecorder(card,q);
+
+  const exp=document.createElement('div'); exp.className='exp'; exp.id='exp'+q.n;
+  card.appendChild(exp);
+  form.appendChild(card);
+});
+
+function answered(){ return Q.filter(q=>norm(document.getElementById('said'+q.n).value)).length; }
+function updateProgress(){
+  const c=answered();
+  document.getElementById('count').textContent=`${c} / ${TOTAL}`;
+  document.getElementById('fill').style.width=(c/TOTAL*100)+'%';
+  document.getElementById('hint').textContent =
+    c===TOTAL ? `13 題都說完了，可以送出看參考答案` :
+    (c===0 ? '還沒開始說（仍可送出看參考答案）' : `已完成 ${c} 題，還有 ${TOTAL-c} 題`);
+}
+
+/* ---------- 送出：顯示參考答案 ＋ 一鍵 AI 批改 ---------- */
+const submitBtn=document.getElementById('submitBtn');
+const resetBtn=document.getElementById('resetBtn');
+
+submitBtn.addEventListener('click',()=>{
+  Q.forEach(q=>{
+    const exp=document.getElementById('exp'+q.n);
+    const said=norm(document.getElementById('said'+q.n).value);
+    let html='';
+    if(q.type==='read'){
+      html=`<div class="ref"><b>原句</b>　${q.text}</div>`;
+    } else {
+      html=`<div class="ref"><b>參考答案</b>　${q.ref}</div>`;
+    }
+    if(said) html+=`<div class="en"><b>你說的</b>&nbsp;${said.replace(/</g,'&lt;')}</div>`;
+    html+=`<div class="zh"><b>中</b>&nbsp;${q.zh}</div>`;
+    exp.innerHTML=html;
+    exp.classList.add('show');
+    if(q.type!=='read'){
+      const box=document.createElement('div'); box.className='audio';
+      const b=document.createElement('button'); b.type='button'; b.className='play model';
+      b.innerHTML='<span>▶</span><span>聽參考答案</span>';
+      const au=players[q.n].a || (players[q.n].a=new Audio(`${AUDIO_DIR}/${AUDIO_PREFIX}-a${pad(q.n)}.mp3`));
+      b.addEventListener('click',()=>{ au.currentTime=0; au.play(); });
+      box.appendChild(b); exp.appendChild(box);
+    }
+  });
+  buildAI();
+  document.getElementById('result').classList.add('show');
+  submitBtn.style.display='none'; document.getElementById('hint').style.display='none';
+  resetBtn.style.display='block';
+  document.getElementById('result').scrollIntoView({behavior:'smooth'});
+});
+
+function buildAI(){
+  const lines = Q.map(q=>{
+    const said=norm(document.getElementById('said'+q.n).value) || '（沒有作答）';
+    const ask = q.type==='read' ? `請朗讀：${q.text}` : q.ask;
+    return `第 ${q.n} 題（${PARTS[q.p].title}）\n老師：${ask}\n學生說：${said}`;
+  }).join('\n\n');
+  const prompt =
+`你是「小學英檢（GEPT Kids，CEFR A1）」的口說主考老師，正在評分一位台灣小學高年級學生。
+學生的回答是用語音辨識轉成文字的，可能有少量辨識錯誤，請以「有沒有表達出意思」為主，不要因為標點或大小寫扣分。
+請全程用繁體中文批改，語氣鼓勵、具體、小學生看得懂。
+
+【測驗內容與學生的回答】
+${lines}
+
+【請依下面格式批改】
+1. 逐題簡短回饋：有沒有答到重點？句子完不完整？用字對不對？並給一個「更好的說法」。
+2. 四個大題各給一個級分（官方標準）：
+   第一部分 暖身問候、第二部分 朗讀與描述圖片、第三部分 看圖說話、第四部分 回答問題。
+   3 分＝能自信且適切地達成題目的要求；2 分＝大致可以達成；1 分＝勉強能達成部分；0 分＝未答或等同未答。
+3. 換算總分：四個大題級分相加（滿分 12 分），並用一兩句說明整體表現。
+4. 發音與流利度：指出最需要注意的 2～3 個字或音。
+5. 最後給一句鼓勵，並說出「下次最該先練的一件事」。`;
+  if(navigator.clipboard) navigator.clipboard.writeText(prompt).catch(()=>{});
+  document.getElementById('aiBox').innerHTML=`<div class="inner">
+    <b>🤖 批改指令已經幫你複製好了！</b>
+    <ol style="margin:8px 0 10px;padding-left:20px;line-height:1.9;text-align:left">
+      <li>點下面按鈕開 ChatGPT（免登入也能用）</li>
+      <li>在對話框「貼上」（電腦 Ctrl+V／Mac ⌘+V；手機長按選貼上）</li>
+      <li>送出，就會看到逐題回饋和四個大題的級分</li>
+    </ol>
+    <a class="linkbtn" target="_blank" rel="noopener" href="https://chatgpt.com/?q=${encodeURIComponent(prompt)}">開 ChatGPT ↗</a>
+  </div>`;
+}
+
+resetBtn.addEventListener('click',()=>{ location.reload(); });
+
+/* 成績卡改成口說用：不自動給分，改放 AI 批改入口 */
+document.getElementById('rSuns').textContent='🎤';
+document.getElementById('scoreNum').textContent='';
+document.getElementById('scoreTxt').textContent='口說沒辦法自動給分，請 AI 老師幫你評';
+document.querySelector('.result .bd').innerHTML='';
+document.querySelector('.result .part').innerHTML='<div class="aipanel" id="aiBox"></div>';
+document.getElementById('rLvl').textContent='官方各大題 3／2／1／0 分，四個大題滿分 12 分';
+
+updateProgress();
+</script>
+</body>
+</html>
