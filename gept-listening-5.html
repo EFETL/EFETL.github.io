@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEPT 初級 聽力測驗　第5回　家庭生活</title>
+<style>
+  :root{
+    --blue:#2b8cff; --blue-dark:#1f6fe0;
+    --coral:#ff7a59; --amber:#ffb02e; --pink:#ff5d8f;
+    --bg:#f3f9ff; --card:#ffffff; --line:#e3edf9;
+    --green:#22b573; --green-bg:#e4f8ef;
+    --red:#ff5a5a; --red-bg:#ffecec;
+    --gray:#6b7785;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;
+    background:linear-gradient(180deg,#fff5ec,#fff9f4 70%);color:#22303f;line-height:1.6;
+    -webkit-text-size-adjust:100%;}
+  .wrap{max-width:760px;margin:0 auto;padding:16px;}
+  header.top{background:linear-gradient(135deg,#f6d365,#fda085 60%,#ff7a9c);color:#fff;
+    border-radius:18px;padding:24px 22px;margin-bottom:16px;box-shadow:0 8px 22px rgba(253,160,133,.35);}
+  header.top h1{margin:0 0 6px;font-size:1.5rem;text-shadow:0 1px 2px rgba(0,0,0,.14);}
+  header.top p{margin:0;font-size:.92rem;opacity:.96;}
+  .meta{margin-top:14px;font-size:.86rem;background:rgba(255,255,255,.24);
+    padding:9px 13px;border-radius:10px;}
+  .notice{background:#fffbeb;border:1.5px solid #f59e0b;border-radius:12px;
+    padding:11px 15px;margin-bottom:14px;font-size:.86rem;color:#78350f;
+    display:flex;align-items:flex-start;gap:9px;line-height:1.55;}
+  .notice .ic{font-size:1.1rem;flex-shrink:0;margin-top:1px;}
+  .sticky{position:sticky;top:0;z-index:20;padding:10px 0;
+    background:linear-gradient(180deg,#fff5ec 70%,rgba(255,245,236,0));}
+  .bar{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:11px 16px;display:flex;align-items:center;gap:12px;font-size:.9rem;
+    box-shadow:0 4px 12px rgba(253,160,133,.14);}
+  .bar .track{flex:1;height:9px;background:#f1e4dc;border-radius:6px;overflow:hidden;}
+  .bar .fill{height:100%;width:0;border-radius:6px;
+    background:linear-gradient(90deg,#ffb02e,#ff7a59);transition:width .35s;}
+  .bar #count{font-weight:700;color:#e0740a;}
+  .section-title{color:#fff;font-weight:800;border-radius:12px;
+    padding:10px 16px;margin:24px 0 6px;font-size:1.05rem;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);}
+  .section-title.s0{background:linear-gradient(135deg,#ff9a6c,#ff6f91);}
+  .section-title.s1{background:linear-gradient(135deg,#4dd0e1,#2b8cff);}
+  .section-title.s2{background:linear-gradient(135deg,#9b8bff,#b06bff);}
+  .section-title.s3{background:linear-gradient(135deg,#43cea2,#3ab0d6);}
+  .section-desc{font-size:.86rem;color:var(--gray);margin:0 4px 10px;}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:15px 17px;margin:12px 0;box-shadow:0 3px 10px rgba(253,160,133,.09);}
+  .qhead{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+  .qhead .num{display:inline-block;color:#fff;background:var(--coral);font-weight:700;
+    border-radius:8px;padding:1px 10px;font-size:.92rem;}
+  .play{display:inline-flex;align-items:center;gap:7px;border:0;cursor:pointer;
+    color:#fff;font-weight:800;font-size:.92rem;border-radius:22px;padding:8px 16px;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);box-shadow:0 4px 12px rgba(255,93,143,.3);}
+  .play:active{transform:translateY(1px);}
+  .play.playing{background:linear-gradient(135deg,#22b573,#1a9e63);}
+  .play .wave{font-size:.8rem;opacity:.9;}
+  .hintq{font-size:.8rem;color:var(--gray);}
+  .fig{text-align:center;margin:4px 0 12px;}
+  .fig svg{max-width:100%;height:auto;}
+  .pic-img{border-radius:9px;border:1px solid #e6ded7;object-fit:cover;}
+  .fig .pic-img{max-width:230px;width:100%;max-height:150px;}
+  .opt{display:flex;align-items:flex-start;gap:10px;border:2px solid var(--line);
+    border-radius:11px;padding:10px 13px;margin:8px 0;cursor:pointer;transition:.15s;
+    font-size:.95rem;background:#fbfdff;}
+  .opt:hover{border-color:var(--coral);background:#fff4ee;}
+  .opt input{margin-top:3px;accent-color:var(--coral);}
+  .opt .lab{font-weight:800;color:var(--coral);min-width:18px;}
+  .opt.sel{border-color:var(--coral);background:#ffeee6;}
+  .opt.correct{border-color:var(--green);background:var(--green-bg);}
+  .opt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .opt.lock{cursor:default;}
+  /* picture options (Part 4) */
+  .picopts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:6px 0;}
+  .picopt{border:2px solid var(--line);border-radius:12px;padding:9px 6px;cursor:pointer;
+    text-align:center;transition:.15s;background:#fbfdff;display:flex;flex-direction:column;align-items:center;gap:6px;}
+  .picopt:hover{border-color:var(--coral);background:#fff4ee;}
+  .picopt.sel{border-color:var(--coral);background:#ffeee6;}
+  .picopt.correct{border-color:var(--green);background:var(--green-bg);}
+  .picopt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .picopt .lab{font-weight:800;color:var(--coral);align-self:flex-start;margin-left:4px;}
+  .picopt.correct .lab{color:var(--green);}.picopt.wrong .lab{color:var(--red);}
+  .picopt img.pic-img{width:100%;height:82px;}
+  .picopt svg{width:100%;max-width:132px;height:auto;}
+  .picopt svg.chart{max-width:100%;}
+  .legend{display:flex;gap:12px;justify-content:center;font-size:.72rem;margin:2px 0 6px;color:#556;flex-wrap:wrap;}
+  .legend i{display:inline-block;width:11px;height:11px;border:1px solid #999;margin-right:4px;vertical-align:-1px;}
+  table.mini{border-collapse:collapse;font-size:.62rem;margin:0 auto;}
+  table.mini th{background:#33414f;color:#fff;padding:2px 4px;}
+  table.mini td{border:1px solid #bbb;padding:2px 4px;text-align:center;}
+  .board{background:#111;color:#ffd24a;border-radius:5px;padding:5px;font-family:"Courier New",monospace;display:inline-block;}
+  .board table{border-collapse:collapse;font-size:.6rem;color:#ffd24a;}
+  .board th{color:#7fd7ff;padding:1px 4px;border-bottom:1px solid #444;}
+  .board td{padding:1px 4px;text-align:center;}
+  .exp{display:none;margin-top:11px;border-top:2px dashed #ffe1c2;padding-top:11px;font-size:.9rem;}
+  .exp.show{display:block;}
+  .exp .tag{display:inline-block;font-weight:800;color:#fff;background:var(--green);
+    border-radius:7px;padding:2px 10px;font-size:.8rem;margin-bottom:7px;}
+  .exp .tag.miss{background:var(--red);}
+  .exp .scriptbox{background:#f4f8ff;border-radius:8px;padding:7px 11px;margin:5px 0;font-size:.88rem;color:#20364d;}
+  .exp .scriptbox b{color:var(--blue-dark);}
+  .exp .en{color:#1c4f7a;background:#eef7ff;border-radius:8px;padding:6px 10px;margin:5px 0;}
+  .exp .zh{color:#7a4a12;background:#fff7ea;border-radius:8px;padding:6px 10px;margin:5px 0;}
+  .actions{position:sticky;bottom:0;padding:14px 0 6px;margin-top:18px;
+    background:linear-gradient(transparent,#fff9f4 35%);}
+  button.submit{width:100%;color:#fff;border:0;border-radius:14px;padding:16px;
+    font-size:1.08rem;font-weight:800;cursor:pointer;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);
+    box-shadow:0 6px 16px rgba(255,93,143,.35);}
+  button.submit:active{transform:translateY(1px);}
+  button.reset{width:100%;background:#fff;color:var(--coral);border:2px solid var(--coral);
+    border-radius:14px;padding:14px;font-size:1rem;font-weight:800;cursor:pointer;margin-top:10px;display:none;}
+  .result{display:none;background:var(--card);border:3px solid transparent;border-radius:16px;
+    padding:22px;margin:16px 0;text-align:center;
+    background-image:linear-gradient(#fff,#fff),linear-gradient(135deg,#ffb02e,#ff7a59,#ff5d8f);
+    background-origin:border-box;background-clip:padding-box,border-box;
+    box-shadow:0 8px 22px rgba(255,122,89,.18);}
+  .result.show{display:block;}
+  .result .score{font-size:2.8rem;font-weight:900;
+    background:linear-gradient(135deg,#ff7a59,#ff5d8f);-webkit-background-clip:text;
+    background-clip:text;-webkit-text-fill-color:transparent;}
+  .result .sub{color:var(--gray);font-size:.95rem;}
+  .result .bd{display:flex;justify-content:center;gap:18px;margin-top:12px;flex-wrap:wrap;font-size:.95rem;}
+  .result .bd span{font-weight:800;}
+  .hint{text-align:center;font-size:.85rem;color:var(--gray);margin-top:9px;min-height:1.2em;}
+  footer{text-align:center;color:var(--gray);font-size:.8rem;margin:24px 0;}
+</style>
+<!-- EFETL-PWA -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#7C4DFF">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="EFETL">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}</script>
+<!-- /EFETL-PWA -->
+</head>
+<body>
+<a href="gept-listening.html" style="position:fixed;top:12px;left:12px;background:rgba(255,255,255,.92);color:#ff6f91;padding:7px 15px;border-radius:20px;text-decoration:none;font-size:.85rem;font-weight:800;z-index:999;box-shadow:0 3px 10px rgba(0,0,0,.15);">&#8592; 回聽力題庫</a>
+<div class="wrap">
+  <header class="top">
+    <h1>GEPT 初級　聽力測驗　<span style="opacity:.9">第5回　家庭生活</span></h1>
+    <p>互動聽力練習　&middot;　依官方四大題型與難度命題</p>
+    <div class="meta">共 4 大題、30 題　|　每題按 🔊 播放，聆聽後作答　|　送出後顯示聽力原文、中英解析與分數</div>
+  </header>
+
+  <div class="notice">
+    <span class="ic">🎧</span>
+    <span>每題皆附<strong>語音朗讀音檔</strong>，iPhone、Android 各廠牌手機與電腦瀏覽器皆可播放（請開啟媒體音量）。點各題的 <strong>🔊 播放</strong> 鈕聆聽；正式考試每題只播一次，練習時可重播。</span>
+  </div>
+
+  <a href="gept-listening-5-print.html" style="display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #ffb703;color:#8a5a00;border-radius:12px;padding:11px 16px;margin-bottom:18px;text-decoration:none;font-size:.9rem;font-weight:700;box-shadow:0 3px 10px rgba(255,183,3,.16);">
+    <span>🖨</span><span>列印版（學生卷／教師卷）— 適合課堂紙本練習與批改，可直接列印或存成 PDF</span>
+  </a>
+
+  <div class="sticky">
+    <div class="bar">
+      <span>作答進度</span>
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <span id="count">0 / 30</span>
+    </div>
+  </div>
+
+  <form id="quiz"></form>
+
+  <div class="result" id="result">
+    <div class="score" id="scoreNum">0</div>
+    <div class="sub" id="scoreTxt">分</div>
+    <div class="bd">
+      <span style="color:var(--green)">答對 <b id="rOk">0</b></span>
+      <span style="color:var(--red)">答錯 <b id="rNo">0</b></span>
+      <span style="color:var(--gray)">未作答 <b id="rBlank">0</b></span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="submit" id="submitBtn">送出並查看解析</button>
+    <div class="hint" id="hint">尚未作答任何題目</div>
+    <button type="button" class="reset" id="resetBtn">重新作答</button>
+  </div>
+
+  <footer>GEPT 初級聽力　互動練習　&middot;　第二顆腦 / GEPT初級</footer>
+</div>
+
+<script>
+/* ====== 圖形素材（第5回 家庭生活） ====== */
+const IMG = n => `<img class="pic-img" src="gept-listening-img/5/${n}.jpg" alt="${n}">`;
+const CLK=(h,m)=>{const ma=m*6,ha=(h%12)*30+m*0.5,r=Math.PI/180;
+ const hx=(60+Math.sin(ha*r)*20).toFixed(1),hy=(54-Math.cos(ha*r)*20).toFixed(1);
+ const mx=(60+Math.sin(ma*r)*30).toFixed(1),my=(54-Math.cos(ma*r)*30).toFixed(1);
+ return `<svg width="110" height="100" viewBox="0 0 120 110"><circle cx="60" cy="54" r="40" fill="#fff" stroke="#1a1a1a" stroke-width="3"/><g stroke="#1a1a1a" stroke-width="2" stroke-linecap="round"><line x1="60" y1="18" x2="60" y2="25"/><line x1="60" y1="83" x2="60" y2="90"/><line x1="24" y1="54" x2="31" y2="54"/><line x1="89" y1="54" x2="96" y2="54"/></g><line x1="60" y1="54" x2="${hx}" y2="${hy}" stroke="#1a1a1a" stroke-width="3.5" stroke-linecap="round"/><line x1="60" y1="54" x2="${mx}" y2="${my}" stroke="#e6007e" stroke-width="3" stroke-linecap="round"/><circle cx="60" cy="54" r="3.5" fill="#1a1a1a"/></svg>`;};
+const BARS=(title,labs,vals)=>{const max=Math.max(...vals),bw=28,gap=18,x0=20;let b='',l='';
+ labs.forEach((L,i)=>{const h=Math.round(vals[i]/max*70),x=x0+i*(bw+gap);
+  b+=`<rect x="${x}" y="${100-h}" width="${bw}" height="${h}" fill="#e9e9e9" stroke="#1a1a1a" stroke-width="1.5"/>`;
+  l+=`<text x="${x+bw/2}" y="116">${L}</text>`;});
+ return `<svg class="chart" width="176" height="132" viewBox="0 0 176 132"><text x="88" y="15" text-anchor="middle" font-size="14" font-weight="700">${title}</text><line x1="16" y1="22" x2="16" y2="100" stroke="#1a1a1a" stroke-width="1.5"/><line x1="16" y1="100" x2="170" y2="100" stroke="#1a1a1a" stroke-width="1.5"/>${b}<g font-size="11" text-anchor="middle">${l}</g></svg>`;};
+const WEDDING=`<svg width="130" height="112" viewBox="0 0 130 112"><circle cx="52" cy="60" r="24" fill="none" stroke="#e6b800" stroke-width="6"/><circle cx="80" cy="60" r="24" fill="none" stroke="#e6b800" stroke-width="6"/><path d="M92 30 l6 8 l-6 8 l-6 -8 z" fill="#e6007e"/><path d="M60 22 q6 -8 12 0 q6 8 -12 14 q-18 -6 -12 -14 q6 -8 12 0" fill="#ff6f91"/></svg>`;
+const WASHER=`<svg width="112" height="112" viewBox="0 0 112 112"><rect x="24" y="14" width="64" height="84" rx="6" fill="#eef2f6" stroke="#1a1a1a" stroke-width="2.5"/><rect x="24" y="14" width="64" height="16" fill="#cfd8e3"/><circle cx="36" cy="22" r="3" fill="#1a1a1a"/><circle cx="48" cy="22" r="3" fill="#1a1a1a"/><circle cx="56" cy="64" r="24" fill="#fff" stroke="#1a1a1a" stroke-width="2.5"/><circle cx="56" cy="64" r="16" fill="#dff1ff" stroke="#4dd0e1" stroke-width="2"/><path d="M46 64 q10 -8 20 0 q-10 8 -20 0" fill="#4dd0e1"/></svg>`;
+const SHELF=`<svg width="130" height="112" viewBox="0 0 130 112"><rect x="16" y="16" width="98" height="84" rx="4" fill="#f3e6d6" stroke="#8a5a2b" stroke-width="2.5"/><line x1="16" y1="58" x2="114" y2="58" stroke="#8a5a2b" stroke-width="3"/><g stroke="#1a1a1a" stroke-width="1.5"><rect x="24" y="24" width="10" height="30" fill="#e6007e"/><rect x="36" y="22" width="10" height="32" fill="#4dd0e1"/><rect x="48" y="26" width="10" height="28" fill="#ffb703"/><rect x="62" y="24" width="10" height="30" fill="#7c4dff"/><rect x="30" y="66" width="10" height="28" fill="#43cea2"/><rect x="42" y="64" width="10" height="30" fill="#ff6f91"/><rect x="70" y="66" width="10" height="28" fill="#2b8cff"/></g></svg>`;
+const HOMEWORK=`<svg width="130" height="112" viewBox="0 0 130 112"><rect x="26" y="16" width="70" height="88" rx="4" fill="#fff" stroke="#1a1a1a" stroke-width="2.5"/><g stroke="#bbb" stroke-width="1.5"><line x1="34" y1="34" x2="88" y2="34"/><line x1="34" y1="48" x2="88" y2="48"/><line x1="34" y1="62" x2="88" y2="62"/><line x1="34" y1="76" x2="70" y2="76"/></g><line x1="40" y1="16" x2="40" y2="104" stroke="#ff6f91" stroke-width="1.5"/><g transform="rotate(45 96 92)"><rect x="92" y="60" width="9" height="42" fill="#ffb703" stroke="#1a1a1a" stroke-width="1.5"/><path d="M92 102 l4.5 10 l4.5 -10 z" fill="#1a1a1a"/></g></svg>`;
+const DRUGSTORE=`<svg width="130" height="112" viewBox="0 0 130 112"><rect x="20" y="30" width="90" height="70" rx="4" fill="#eaf7ef" stroke="#1a1a1a" stroke-width="2.5"/><rect x="20" y="18" width="90" height="16" fill="#43a047"/><text x="65" y="30" text-anchor="middle" font-size="10" font-weight="800" fill="#fff">DRUGSTORE</text><g fill="#43a047"><rect x="55" y="48" width="20" height="44"/><rect x="43" y="60" width="44" height="20"/></g></svg>`;
+const HOUSE=`<svg width="130" height="112" viewBox="0 0 130 112"><path d="M20 54 L65 20 L110 54 Z" fill="#ff9a6c" stroke="#1a1a1a" stroke-width="2.5"/><rect x="30" y="54" width="70" height="46" fill="#fff5ec" stroke="#1a1a1a" stroke-width="2.5"/><rect x="55" y="70" width="20" height="30" fill="#8a5a2b"/><rect x="38" y="62" width="14" height="14" fill="#4dd0e1" stroke="#1a1a1a" stroke-width="1.5"/><rect x="78" y="62" width="14" height="14" fill="#4dd0e1" stroke="#1a1a1a" stroke-width="1.5"/></svg>`;
+/* ====== 大題 ====== */
+const PARTS=[
+ {t:"第一大題　看圖辨義",d:"共 5 題（1–5）。看圖並聆聽問題，從 A、B、C 三個選項中選出最適合的答案。"},
+ {t:"第二大題　問答",d:"共 10 題（6–15）。聆聽一個問句或直述句，選出最適合的回答。"},
+ {t:"第三大題　簡短對話",d:"共 10 題（16–25）。聆聽一段對話與問題，選出最適合的答案。"},
+ {t:"第四大題　短文聽解",d:"共 5 題（26–30）。聆聽一段短文與問題，從三張圖片中選出最適合的一張。"}
+];
+
+
+
+/* ====== 題庫（第5回 家庭生活） ====== */
+const Q=[
+{n:1,p:0,fig:WEDDING,o:["At the wedding, the man will marry his future wife.","The niece does her homework alone.","The uncle will wash the old machine."],a:0,
+ sen:"For question one, look at the picture. What does the picture show?",szh:"第一題，請看圖片。這張圖顯示什麼？",
+ en:"A wedding; the man will marry his wife.",zh:"婚禮(wedding)上男士將娶(marry)他未來的妻子(wife)，選 A。niece/homework、uncle/wash/machine 為干擾。"},
+{n:2,p:0,fig:WASHER,o:["The lady serves tea to her husband.","Our whole family bows to the guest.","It is a machine we use to wash clothes at home."],a:2,
+ sen:"For question two, look at the picture. What is the machine for?",szh:"第二題，請看圖片。這台機器是做什麼用的？",
+ en:"A machine to wash clothes.",zh:"這是我們(our)在家用來洗(wash)衣服的機器(machine)，選 C。lady/serve/husband、bow 為干擾。"},
+{n:3,p:0,fig:SHELF,o:["The single mother leads her son far away.","My sister's homework books are on the shelf.","The prince passes by the drugstore."],a:1,
+ sen:"For question three, look at the picture. What is on the shelf?",szh:"第三題，請看圖片。架子上有什麼？",
+ en:"Homework books on the shelf.",zh:"我姊姊(sister)的作業(homework)書放在架子(shelf)上，選 B。single/mother/lead/son/far、prince/pass/drugstore 為干擾。"},
+{n:4,p:0,fig:DRUGSTORE,o:["It is a drugstore, where the lady buys protection and medicine.","The hostess serves our relatives at the wedding.","The boy uses glue for his model."],a:0,
+ sen:"For question four, look at the picture. What kind of store is this?",szh:"第四題，請看圖片。這是什麼商店？",
+ en:"A drugstore selling medicine.",zh:"這是藥局(drugstore)，女士(lady)在此買保護用品(protection)和藥，選 A。hostess/serve/relative/wedding、boy/glue/model 為干擾。"},
+{n:5,p:0,fig:HOUSE,o:["The policewoman gives a command to the woman.","The heroine bows to the entire crowd.","The whole family lives in their old home."],a:2,
+ sen:"For question five, look at the picture. What does the picture show?",szh:"第五題，請看圖片。這張圖顯示什麼？",
+ en:"The family lives in their old home.",zh:"一家人住在他們的老(old)家(home)裡，選 C。policewoman/command/woman、heroine/bow/entire 為干擾。"},
+
+{n:6,p:1,o:["My uncle will glue the shelf.","He will propose marriage to my sister next month.","The lady coughs quite often."],a:1,
+ sen:"Why is your brother so nervous about the dinner?",szh:"你哥哥為什麼對這頓晚餐這麼緊張？",
+ en:"He will propose marriage to my sister.",zh:"問為何緊張，答『他下個月要向我姊姊(sister)求婚(propose)、談婚事(marriage)』，選 B。uncle/glue/shelf、lady/cough 為干擾。"},
+{n:7,p:1,o:["A single lady, but she has many relatives nearby.","The machine can wash and dig.","Our son passes the far bridge."],a:0,
+ sen:"Is your aunt married or single?",szh:"你阿姨結婚了還是單身？",
+ en:"Single, with many relatives nearby.",zh:"問單身還是已婚，答『單身(single)的女士(lady)，但附近有很多親戚(relative)』，選 A。machine/wash/dig、son/pass/far 為干擾。"},
+{n:8,p:1,o:["The prince serves the hostess.","He is jealous of the model boy.","At home, my mother and my wife do it while I cook."],a:2,
+ sen:"Who does the washing in your family?",szh:"你家是誰洗衣服？",
+ en:"My mother and wife, while I cook.",zh:"問誰洗衣，答『在家，我媽媽(mother)和太太(wife)洗，我(while 當…時)煮飯』，選 C。prince/serve/hostess、jealous/model/boy 為干擾。"},
+{n:9,p:1,o:["The niece does her homework.","No, my husband is not home; he went far away.","We compare two old machines."],a:1,
+ sen:"Is your husband at home now?",szh:"你先生現在在家嗎？",
+ en:"No, he went far away.",zh:"問先生(husband)是否在家，答『不，他去很遠(far)的地方了』，選 B。niece/homework、compare/machine 為干擾。"},
+{n:10,p:1,o:["Thirty guests, including my uncle and niece.","The heroine leads the entire army.","The boy uses glue on the model."],a:0,
+ sen:"How many people came to the wedding?",szh:"有多少人來參加婚禮？",
+ en:"Thirty guests, uncle and niece.",zh:"問婚禮(wedding)來幾人，答『三十(thirty)位，包括我叔叔(uncle)和姪女(niece)』，選 A。heroine/lead/entire、boy/glue/model 為干擾。"},
+{n:11,p:1,o:["The hostess serves cold tea.","We wash our clothes in the machine.","Yes, ma'am, the women's room is quite far, past the drugstore."],a:2,
+ sen:"Excuse me, is the restroom nearby?",szh:"不好意思，洗手間在附近嗎？",
+ en:"Ma'am, the women's room is past the drugstore.",zh:"問洗手間，答『女士(ma'am)，女廁(women's room)蠻(quite)遠的，過了(pass)藥局(drugstore)』，選 C。hostess/serve、wash/machine 為干擾。"},
+{n:12,p:1,o:["My old model needs new glue.","She is a policewoman, and also a super mother.","Our son bows to the prince."],a:1,
+ sen:"What does your wife do for a living?",szh:"你太太做什麼工作？",
+ en:"A policewoman and a super mother.",zh:"問太太(wife)的工作，答『她是女警(policewoman)，也是個超級(super)媽媽(mother)』，選 B。old/model/glue、son/bow/prince 為干擾。"},
+{n:13,p:1,o:["Nineteen years old, and still in school for homework.","The lady coughs in the women's room.","We serve dinner while they wash."],a:0,
+ sen:"How old is your elder son now?",szh:"你大兒子現在幾歲？",
+ en:"Nineteen, still in school.",zh:"問兒子(son)幾歲，答『十九(nineteen)歲，還在學校寫作業(homework)』，選 A。lady/cough/women's room、serve/while/wash 為干擾。"},
+{n:14,p:1,o:["The uncle digs in the far field.","Compare our house with the model home.","Because my sister is jealous of our new niece."],a:2,
+ sen:"Why does the little girl look upset?",szh:"小女孩為什麼看起來不高興？",
+ en:"Her sister is jealous of the new niece.",zh:"問女孩為何不開心，答『因為我姊姊(sister)嫉妒(jealous)我們(our)新來的姪女(niece)』，選 C。uncle/dig/far、compare/model 為干擾。"},
+{n:15,p:1,o:["The hostess bows to the woman.","I regard my parents as my best example in life.","The husband will marry the heroine."],a:1,
+ sen:"Who do you look up to the most?",szh:"你最崇拜誰？",
+ en:"My parents, my best example.",zh:"問最崇拜誰，答『我把父母(parent)當作人生最好的榜樣(example)、非常敬重(regard)』，選 A。hostess/bow/woman、husband/marry/heroine 為干擾。"},
+
+{n:16,p:2,o:["His wife.","His niece.","His mother."],a:0,
+ sen:"W: Who is that lady beside your uncle? &nbsp;M: That is his wife; they had their wedding last year. &nbsp;W: Lovely couple. &nbsp;Q: Who is the lady beside the uncle?",
+ szh:"女：你叔叔(uncle)旁邊那位女士(lady)是誰？　男：那是他太太(wife)，他們去年辦了婚禮(wedding)。　女：真是佳偶。　問：叔叔旁邊的女士是誰？",
+ en:"His wife.",zh:"那位女士是叔叔的太太(wife)，選 A。"},
+{n:17,p:2,o:["At the drugstore.","In the women's room.","At home doing homework."],a:2,
+ sen:"W: Where is your son now? &nbsp;M: He is at home, quite busy doing his homework. &nbsp;W: A good boy. &nbsp;Q: Where is the son?",
+ szh:"女：你兒子(son)現在在哪？　男：他在家(home)，正忙(quite)著寫作業(homework)。　女：真是好孩子(boy)。　問：兒子在哪裡？",
+ en:"At home doing homework.",zh:"兒子在家寫作業(homework)，選 C。"},
+{n:18,p:2,o:["Wash the machine.","Serve as the hostess of the party.","Dig in the garden."],a:1,
+ sen:"M: What will your mother do at the wedding? &nbsp;W: She will serve as the hostess and greet our relatives. &nbsp;M: Great. &nbsp;Q: What is the mother's job at the wedding?",
+ szh:"男：你媽媽(mother)在婚禮上要做什麼？　女：她要當女主人(hostess)，招待(serve)我們的親戚(relative)。　男：很好。　問：媽媽在婚禮上的工作是什麼？",
+ en:"Serve as the hostess.",zh:"媽媽當女主人(hostess)招待(serve)客人，選 B。"},
+{n:19,p:2,o:["Because she will marry a prince.","Because she is single and free.","Because she leads far too many people."],a:0,
+ sen:"M: Why is the whole town excited? &nbsp;W: Because the young lady will marry a prince next week. &nbsp;M: Like a fairy tale! &nbsp;Q: Why is the town excited?",
+ szh:"男：為什麼全鎮都很興奮？　女：因為那位年輕小姐(lady)下週要嫁(marry)給一位王子(prince)。　男：像童話一樣！　問：小鎮為何興奮？",
+ en:"She will marry a prince.",zh:"小姐將嫁(marry)給王子(prince)，選 A。"},
+{n:20,p:2,o:["He will bow to the woman.","He is jealous of his cousin.","He needs glue to fix the shelf."],a:2,
+ sen:"W: Why did your son go to the drugstore? &nbsp;M: Not for medicine; he needs glue to fix the shelf. &nbsp;W: I see. &nbsp;Q: Why did the son go out?",
+ szh:"女：你兒子為什麼去藥局(drugstore)？　男：不是買藥，他需要膠水(glue)修架子(shelf)。　女：了解。　問：兒子為什麼出門？",
+ en:"He needs glue to fix the shelf.",zh:"兒子要膠水(glue)修架子(shelf)，選 C。"},
+{n:21,p:2,o:["A super hero movie.","A review of our family history.","A model of an old house."],a:1,
+ sen:"M: What are you reading, Grandma? &nbsp;W: A review of our family history, comparing the old days with now. &nbsp;M: Interesting. &nbsp;Q: What is Grandma reading?",
+ szh:"男：奶奶，你在讀什麼？　女：一篇我們(our)家族歷史的回顧(review)，把過去和現在做比較(compare)。　男：真有趣。　問：奶奶在讀什麼？",
+ en:"A review of family history.",zh:"奶奶在讀家族史回顧(review)，選 B。compare 比較。"},
+{n:22,p:2,o:["Thirty dollars.","Nineteen dollars.","Far too much."],a:0,
+ sen:"W: How much did the model cost? &nbsp;M: Thirty dollars, not nineteen as I thought. &nbsp;W: Still cheap. &nbsp;Q: How much did the model cost?",
+ szh:"女：那個模型(model)多少錢？　男：三十(thirty)元，不是我以為的十九(nineteen)元。　女：還是很便宜。　問：模型多少錢？",
+ en:"Thirty dollars.",zh:"模型(model)要三十(thirty)元，選 A。十九是誤以為(干擾)。"},
+{n:23,p:2,o:["She will wash it.","She will marry soon.","She has a bad cough and needs protection."],a:2,
+ sen:"M: Why is the woman wearing a mask? &nbsp;W: She has a bad cough, so she wears it for protection. &nbsp;M: Take care. &nbsp;Q: Why does the woman wear a mask?",
+ szh:"男：那位女士(woman)為什麼戴口罩？　女：她咳嗽(cough)得厲害，戴著做防護(protection)。　男：保重。　問：女士為何戴口罩？",
+ en:"She has a cough; for protection.",zh:"她咳嗽(cough)，戴口罩防護(protection)，選 C。"},
+{n:24,p:2,o:["The husband leads the opening scene.","The heroine of the story does.","The single uncle does."],a:1,
+ sen:"W: In this movie, who saves the whole city? &nbsp;M: The heroine does; she leads the people bravely. &nbsp;W: What a hero. &nbsp;Q: Who saves the city?",
+ szh:"女：這部電影裡誰拯救了整座城市？　男：女主角(heroine)，她勇敢地帶領(lead)人民。　女：真英雄。　問：誰拯救了城市？",
+ en:"The heroine leads and saves it.",zh:"女主角(heroine)帶領(lead)人民拯救城市，選 B。"},
+{n:25,p:2,o:["Either the mother or the sister.","Only the prince.","The far uncle."],a:0,
+ sen:"M: Who will cook tonight? &nbsp;W: Either the mother or the sister; both are free while father works. &nbsp;M: Sounds good. &nbsp;Q: Who will cook tonight?",
+ szh:"男：今晚誰煮飯？　女：媽媽(mother)或姊姊(sister)其中一個(either)，爸爸工作時(while)她們都有空。　男：好。　問：今晚誰煮飯？",
+ en:"Either the mother or the sister.",zh:"媽媽或姊姊其中一位(either)煮飯，選 A。"},
+
+{n:26,p:3,pic:true,o:[CLK(6,30),CLK(7,30),CLK(7,0)],a:2,
+ sen:"In our family, dinner time is very regular. My mother starts cooking at six, while my father is still at work. He always comes home at seven o'clock, and then the whole family eats together. It is my favorite part of the day. &nbsp;Q: What time does the father come home?",
+ szh:"在我們(our)家，晚餐時間很規律。媽媽(mother)六點開始煮飯，這時(while)爸爸還在上班。他總是七點回到家(home)，然後全家一起吃飯。這是我一天中最愛的時光。　問：爸爸幾點回家？",
+ en:"Father comes home at seven.",zh:"爸爸七點回家，選 C(7:00)。六點半是媽媽開始煮飯(干擾)。"},
+{n:27,p:3,pic:true,o:[BARS("Chores/Week",["Mom","Dad","Son"],[80,55,30]),BARS("Chores/Week",["Mom","Dad","Son"],[30,55,80]),BARS("Chores/Week",["Mom","Dad","Son"],[55,80,30])],a:1,
+ sen:"Our family shares the housework, and we made a chart to compare it. My young son does the most chores now, because he wants to help. My father does the middle amount, and my mother, who used to do everything, now does the least. &nbsp;Q: Which chart compares our chores correctly?",
+ szh:"我們(our)家分擔家事，還做了張圖來比較(compare)。我年幼的兒子(son)現在做最多，因為他想幫忙；爸爸中等；以前包辦一切的媽媽(mother)現在做最少。　問：哪張圖正確比較我們的家事？",
+ en:"Son most, mother least.",zh:"兒子最多、媽媽最少，符合『Son 最高、Mom 最低』的 B。"},
+{n:28,p:3,pic:true,o:[IMG('bread'),IMG('noodles'),IMG('rice')],a:0,
+ sen:"Every Sunday my grandmother, the hostess of our home, cooks for the entire family. She does not make noodles or rice on that day. Instead, she bakes fresh bread, and its warm smell fills the house while we all wait around the table. &nbsp;Q: What does the grandmother make on Sunday?",
+ szh:"每個星期天，身為我們家女主人(hostess)的奶奶會為全(entire)家人做飯。那天她不做麵或飯，而是烤新鮮麵包(bread)，溫暖的香味充滿整個家，我們(while 當…時)全圍在餐桌旁等。　問：奶奶星期天做什麼？",
+ en:"Fresh bread.",zh:"奶奶做麵包(bread)，選 A。麵、飯為干擾。"},
+{n:29,p:3,pic:true,o:[CLK(9,0),CLK(8,15),CLK(8,30)],a:2,
+ sen:"On weekdays my niece has a strict routine for her homework. She gets home in the afternoon, plays for a while, and starts her homework at eight thirty in the evening. She always finishes before nine, then goes to bed. &nbsp;Q: What time does the niece start her homework?",
+ szh:"平日我姪女(niece)寫作業(homework)有嚴格的作息。她下午到家(in 進到)，先玩一會兒(while)，晚上八點半開始寫作業。她總在九點前寫完，然後上床。　問：姪女幾點開始寫作業？",
+ en:"At eight thirty.",zh:"姪女八點半開始寫作業，選 C(8:30)。九點是寫完時間(干擾)。"},
+{n:30,p:3,pic:true,o:[IMG('mountain'),IMG('beach'),IMG('park')],a:1,
+ sen:"Last summer our entire family took a trip together. My parents wanted to climb the mountain, and my sister wanted the park. But in the end, we all went to the beach, where my son and my niece dug in the sand for hours. It was a super holiday. &nbsp;Q: Where did the family finally go?",
+ szh:"去年夏天我們(our)全(entire)家一起旅行。父母(parent)想爬山，姊姊(sister)想去公園，但最後我們都去了海邊(beach)，我兒子(son)和姪女(niece)在沙灘挖(dig)了好幾個小時。真是超讚(super)的假期。　問：這家人最後去了哪裡？",
+ en:"The beach.",zh:"一家人最後去海邊(beach)，選 B。山、公園為干擾。"}
+];
+
+/* ====== 音檔播放（AAC/.m4a，各廠牌手機皆支援）====== */
+let curAudio=null, curBtn=null;
+function resetPlayBtn(b){ if(!b) return; b.classList.remove('playing'); b.querySelector('.txt').textContent = b.dataset.played?'重播':'播放'; }
+function stopAudio(){ if(curAudio) curAudio.pause(); if(curBtn) resetPlayBtn(curBtn); curAudio=null; curBtn=null; }
+function playAudio(audio,btn){
+  if(curAudio===audio){                       // 同一題：暫停 / 繼續
+    if(audio.paused){ audio.play(); btn.classList.add('playing'); btn.querySelector('.txt').textContent='播放中…'; }
+    else { audio.pause(); }
+    return;
+  }
+  if(curAudio){ curAudio.pause(); resetPlayBtn(curBtn); }   // 換題：停掉上一段
+  curAudio=audio; curBtn=btn; btn.dataset.played='1';
+  btn.classList.add('playing'); btn.querySelector('.txt').textContent='播放中…';
+  audio.play().catch(()=>resetPlayBtn(btn));
+}
+
+/* ====== 產生畫面 ====== */
+const form=document.getElementById('quiz');
+let lastP=-1;
+Q.forEach(q=>{
+  if(q.p!==lastP){
+    const st=document.createElement('div'); st.className='section-title s'+q.p; st.textContent=PARTS[q.p].t;
+    const sd=document.createElement('div'); sd.className='section-desc'; sd.textContent=PARTS[q.p].d;
+    form.appendChild(st); form.appendChild(sd); lastP=q.p;
+  }
+  const card=document.createElement('div'); card.className='q'; card.id='q'+q.n;
+  const head=document.createElement('div'); head.className='qhead';
+  head.innerHTML=`<span class="num">${q.n}</span>
+    <button type="button" class="play"><span class="wave">🔊</span><span class="txt">播放</span></button>
+    <span class="hintq">聆聽後作答</span>`;
+  card.appendChild(head);
+  const audio=document.createElement('audio'); audio.preload='none'; audio.src='gept-listening-audio/5/q'+q.n+'.m4a?v=r5-20260909'; card.appendChild(audio);
+  const pbtn=head.querySelector('.play');
+  pbtn.addEventListener('click',()=>playAudio(audio,pbtn));
+  audio.addEventListener('ended',()=>{ if(curBtn===pbtn){ resetPlayBtn(pbtn); curAudio=null; curBtn=null; } });
+  audio.addEventListener('pause',()=>{ if(curAudio===audio && curBtn===pbtn && !audio.ended){ pbtn.classList.remove('playing'); pbtn.querySelector('.txt').textContent='繼續'; } });
+  if(q.fig){ const f=document.createElement('div'); f.className='fig'; f.innerHTML=q.fig; card.appendChild(f); }
+  if(q.pic){
+    if(q.legend){ const lg=document.createElement('div'); lg.innerHTML=PIE_LEGEND; card.appendChild(lg.firstChild); }
+    const wrap=document.createElement('div'); wrap.className='picopts';
+    q.o.forEach((opt,i)=>{
+      const cell=document.createElement('label'); cell.className='picopt'; cell.dataset.i=i;
+      cell.innerHTML=`<span class="lab">${'ABC'[i]}</span>${opt}<input type="radio" name="q${q.n}" value="${i}" hidden>`;
+      cell.querySelector('input').addEventListener('change',()=>{ card.querySelectorAll('.picopt').forEach(o=>o.classList.remove('sel')); cell.classList.add('sel'); updateProgress(); });
+      wrap.appendChild(cell);
+    });
+    card.appendChild(wrap);
+  } else {
+    q.o.forEach((opt,i)=>{
+      const lab=document.createElement('label'); lab.className='opt'; lab.dataset.i=i;
+      lab.innerHTML=`<input type="radio" name="q${q.n}" value="${i}"><span class="lab">${'ABC'[i]}</span><span>${opt}</span>`;
+      lab.querySelector('input').addEventListener('change',()=>{ card.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel')); lab.classList.add('sel'); updateProgress(); });
+      card.appendChild(lab);
+    });
+  }
+  const exp=document.createElement('div'); exp.className='exp'; exp.id='exp'+q.n; card.appendChild(exp);
+  form.appendChild(card);
+});
+
+const submitBtn=document.getElementById('submitBtn');
+const resetBtn=document.getElementById('resetBtn');
+const hint=document.getElementById('hint');
+const TOT=Q.length;
+function answeredCount(){ let c=0; Q.forEach(q=>{ if(form.querySelector(`input[name="q${q.n}"]:checked`)) c++; }); return c; }
+function updateProgress(){
+  const c=answeredCount();
+  document.getElementById('count').textContent=`${c} / ${TOT}`;
+  document.getElementById('fill').style.width=(c/TOT*100)+'%';
+  hint.textContent = c===TOT ? '已完成全部 30 題' : (c===0 ? '尚未作答任何題目（仍可送出查看解析）' : `已作答 ${c} 題，未作答 ${TOT-c} 題（仍可送出）`);
+}
+
+submitBtn.addEventListener('click',()=>{
+  stopAudio();
+  let ok=0, blank=0;
+  Q.forEach(q=>{
+    const sel=form.querySelector(`input[name="q${q.n}"]:checked`);
+    const pick=sel?parseInt(sel.value):null;
+    if(pick===null) blank++;
+    const card=document.getElementById('q'+q.n);
+    const cls=q.pic?'.picopt':'.opt';
+    card.querySelectorAll(cls).forEach(o=>{
+      o.classList.add('lock');
+      const inp=o.querySelector('input'); if(inp) inp.disabled=true;
+      const i=parseInt(o.dataset.i);
+      if(i===q.a) o.classList.add('correct');
+      if(pick!==null && i===pick && pick!==q.a) o.classList.add('wrong');
+    });
+    const correct=pick===q.a; if(correct) ok++;
+    const exp=document.getElementById('exp'+q.n);
+    const tag=correct?'答對':(pick===null?'未作答':'答錯');
+    exp.innerHTML=`<span class="tag ${correct?'':'miss'}">${tag}　正解：${'ABC'[q.a]}</span>
+      <div class="scriptbox"><b>聽力原文</b>　${q.sen}<br><span style="color:#7a4a12">${q.szh}</span></div>
+      <div class="en"><b>EN</b>&nbsp;${q.en}</div><div class="zh"><b>中</b>&nbsp;${q.zh}</div>`;
+    exp.classList.add('show');
+  });
+  document.getElementById('scoreNum').textContent=Math.round(ok/TOT*100);
+  document.getElementById('scoreTxt').textContent=`分（答對 ${ok} / ${TOT} 題）`;
+  document.getElementById('rOk').textContent=ok;
+  document.getElementById('rNo').textContent=TOT-ok-blank;
+  document.getElementById('rBlank').textContent=blank;
+  const res=document.getElementById('result'); res.classList.add('show');
+  submitBtn.style.display='none'; hint.style.display='none'; resetBtn.style.display='block';
+  res.scrollIntoView({behavior:'smooth'});
+});
+
+resetBtn.addEventListener('click',()=>{
+  stopAudio(); form.reset();
+  Q.forEach(q=>{
+    const card=document.getElementById('q'+q.n);
+    card.querySelectorAll('.opt,.picopt').forEach(o=>{o.classList.remove('sel','correct','wrong','lock');const inp=o.querySelector('input');if(inp)inp.disabled=false;});
+    document.getElementById('exp'+q.n).classList.remove('show');
+  });
+  document.getElementById('result').classList.remove('show');
+  submitBtn.style.display='block'; hint.style.display='block'; resetBtn.style.display='none';
+  updateProgress(); window.scrollTo({top:0,behavior:'smooth'});
+});
+
+updateProgress();
+</script>
+</body>
+</html>

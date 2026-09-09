@@ -1,0 +1,219 @@
+<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEPT 初級聽力 第 5 回　家庭生活 列印版</title>
+<style>
+*{box-sizing:border-box;}
+body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;color:#1a1a1a;background:#f2f2f2;}
+.bar{position:sticky;top:0;background:#22303f;color:#fff;padding:10px 16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;z-index:9;}
+.bar b{margin-right:auto;font-size:.98rem;}
+.bar button{border:0;border-radius:8px;padding:8px 14px;font-weight:800;cursor:pointer;font-size:.86rem;}
+.bar .s{background:#ffb703;color:#22303f;} .bar .t{background:#e6007e;color:#fff;} .bar .a{background:#4dd0e1;color:#08343c;}
+.page{max-width:850px;margin:14px auto;background:#fff;padding:26px 30px;box-shadow:0 2px 10px rgba(0,0,0,.12);}
+.phead{text-align:center;border-bottom:2.5px solid #1a1a1a;padding-bottom:8px;margin-bottom:4px;}
+.phead h1{margin:0;font-size:1.24rem;} .phead .sub{font-size:.9rem;color:#444;margin-top:3px;}
+.pmeta{display:flex;gap:20px;flex-wrap:wrap;font-size:.9rem;margin:10px 0 4px;color:#222;}
+.pnote{font-size:.82rem;color:#555;margin-bottom:6px;}
+h2.pt{font-size:1.02rem;background:#1a1a1a;color:#fff;padding:5px 12px;border-radius:5px;margin:18px 0 3px;}
+p.pd{font-size:.82rem;color:#444;margin:0 0 10px;}
+.q{display:flex;gap:10px;padding:7px 0;border-bottom:1px dotted #ccc;page-break-inside:avoid;align-items:flex-start;}
+.qn{font-weight:800;white-space:nowrap;min-width:56px;}
+.qbody{flex:1;}
+.fig{margin:4px 0;} .fig svg,.fig img{vertical-align:middle;}
+.opts{list-style:none;margin:2px 0;padding:0;}
+.opts li{padding:1.5px 0;font-size:.94rem;}
+.pics{display:flex;gap:14px;flex-wrap:wrap;margin:4px 0;}
+.pico{text-align:center;border:1px solid #ddd;border-radius:8px;padding:6px;background:#fafafa;}
+.pico .lb{font-weight:800;font-size:.9rem;margin-bottom:2px;}
+.pic-img{width:120px;height:90px;object-fit:cover;border-radius:5px;}
+.ans{color:#c1121f;font-weight:800;}
+.tr{font-size:.86rem;color:#333;margin:3px 0;background:#f7f7f7;border-left:3px solid #999;padding:5px 9px;border-radius:0 5px 5px 0;line-height:1.5;}
+.ex{font-size:.84rem;color:#0a5;margin:2px 0 0;}
+.grid30{display:grid;grid-template-columns:repeat(5,1fr);gap:6px 10px;margin-top:8px;}
+.gc{border:1px solid #bbb;border-radius:6px;padding:4px 6px;font-size:.86rem;text-align:center;}
+.gc b{display:inline-block;min-width:20px;} .gc .ab{letter-spacing:2px;color:#555;}
+.gc .ans{color:#c1121f;}
+@media print{
+ .bar{display:none;} body{background:#fff;} .page{box-shadow:none;margin:0 auto;max-width:none;padding:0 6mm;}
+ .hidep{display:none !important;}
+ .page{page-break-after:always;}
+}
+</style></head><body>
+<div class="bar">
+ <b>🖨 第 5 回　家庭生活　聽力測驗　列印版</b>
+ <button class="s" onclick="show('s')">只印學生卷</button>
+ <button class="t" onclick="show('t')">只印教師卷</button>
+ <button class="a" onclick="show('a')">兩份都印</button>
+</div>
+<div id="root"></div>
+<script>
+/* 圖形素材（第5回 家庭生活） ====== */
+const IMG = n => `<img class="pic-img" src="gept-listening-img/5/${n}.jpg" alt="${n}">`;
+const CLK=(h,m)=>{const ma=m*6,ha=(h%12)*30+m*0.5,r=Math.PI/180;
+ const hx=(60+Math.sin(ha*r)*20).toFixed(1),hy=(54-Math.cos(ha*r)*20).toFixed(1);
+ const mx=(60+Math.sin(ma*r)*30).toFixed(1),my=(54-Math.cos(ma*r)*30).toFixed(1);
+ return `<svg width="110" height="100" viewBox="0 0 120 110"><circle cx="60" cy="54" r="40" fill="#fff" stroke="#1a1a1a" stroke-width="3"/><g stroke="#1a1a1a" stroke-width="2" stroke-linecap="round"><line x1="60" y1="18" x2="60" y2="25"/><line x1="60" y1="83" x2="60" y2="90"/><line x1="24" y1="54" x2="31" y2="54"/><line x1="89" y1="54" x2="96" y2="54"/></g><line x1="60" y1="54" x2="${hx}" y2="${hy}" stroke="#1a1a1a" stroke-width="3.5" stroke-linecap="round"/><line x1="60" y1="54" x2="${mx}" y2="${my}" stroke="#e6007e" stroke-width="3" stroke-linecap="round"/><circle cx="60" cy="54" r="3.5" fill="#1a1a1a"/></svg>`;};
+const BARS=(title,labs,vals)=>{const max=Math.max(...vals),bw=28,gap=18,x0=20;let b='',l='';
+ labs.forEach((L,i)=>{const h=Math.round(vals[i]/max*70),x=x0+i*(bw+gap);
+  b+=`<rect x="${x}" y="${100-h}" width="${bw}" height="${h}" fill="#e9e9e9" stroke="#1a1a1a" stroke-width="1.5"/>`;
+  l+=`<text x="${x+bw/2}" y="116">${L}</text>`;});
+ return `<svg class="chart" width="176" height="132" viewBox="0 0 176 132"><text x="88" y="15" text-anchor="middle" font-size="14" font-weight="700">${title}</text><line x1="16" y1="22" x2="16" y2="100" stroke="#1a1a1a" stroke-width="1.5"/><line x1="16" y1="100" x2="170" y2="100" stroke="#1a1a1a" stroke-width="1.5"/>${b}<g font-size="11" text-anchor="middle">${l}</g></svg>`;};
+const WEDDING=`<svg width="130" height="112" viewBox="0 0 130 112"><circle cx="52" cy="60" r="24" fill="none" stroke="#e6b800" stroke-width="6"/><circle cx="80" cy="60" r="24" fill="none" stroke="#e6b800" stroke-width="6"/><path d="M92 30 l6 8 l-6 8 l-6 -8 z" fill="#e6007e"/><path d="M60 22 q6 -8 12 0 q6 8 -12 14 q-18 -6 -12 -14 q6 -8 12 0" fill="#ff6f91"/></svg>`;
+const WASHER=`<svg width="112" height="112" viewBox="0 0 112 112"><rect x="24" y="14" width="64" height="84" rx="6" fill="#eef2f6" stroke="#1a1a1a" stroke-width="2.5"/><rect x="24" y="14" width="64" height="16" fill="#cfd8e3"/><circle cx="36" cy="22" r="3" fill="#1a1a1a"/><circle cx="48" cy="22" r="3" fill="#1a1a1a"/><circle cx="56" cy="64" r="24" fill="#fff" stroke="#1a1a1a" stroke-width="2.5"/><circle cx="56" cy="64" r="16" fill="#dff1ff" stroke="#4dd0e1" stroke-width="2"/><path d="M46 64 q10 -8 20 0 q-10 8 -20 0" fill="#4dd0e1"/></svg>`;
+const SHELF=`<svg width="130" height="112" viewBox="0 0 130 112"><rect x="16" y="16" width="98" height="84" rx="4" fill="#f3e6d6" stroke="#8a5a2b" stroke-width="2.5"/><line x1="16" y1="58" x2="114" y2="58" stroke="#8a5a2b" stroke-width="3"/><g stroke="#1a1a1a" stroke-width="1.5"><rect x="24" y="24" width="10" height="30" fill="#e6007e"/><rect x="36" y="22" width="10" height="32" fill="#4dd0e1"/><rect x="48" y="26" width="10" height="28" fill="#ffb703"/><rect x="62" y="24" width="10" height="30" fill="#7c4dff"/><rect x="30" y="66" width="10" height="28" fill="#43cea2"/><rect x="42" y="64" width="10" height="30" fill="#ff6f91"/><rect x="70" y="66" width="10" height="28" fill="#2b8cff"/></g></svg>`;
+const HOMEWORK=`<svg width="130" height="112" viewBox="0 0 130 112"><rect x="26" y="16" width="70" height="88" rx="4" fill="#fff" stroke="#1a1a1a" stroke-width="2.5"/><g stroke="#bbb" stroke-width="1.5"><line x1="34" y1="34" x2="88" y2="34"/><line x1="34" y1="48" x2="88" y2="48"/><line x1="34" y1="62" x2="88" y2="62"/><line x1="34" y1="76" x2="70" y2="76"/></g><line x1="40" y1="16" x2="40" y2="104" stroke="#ff6f91" stroke-width="1.5"/><g transform="rotate(45 96 92)"><rect x="92" y="60" width="9" height="42" fill="#ffb703" stroke="#1a1a1a" stroke-width="1.5"/><path d="M92 102 l4.5 10 l4.5 -10 z" fill="#1a1a1a"/></g></svg>`;
+const DRUGSTORE=`<svg width="130" height="112" viewBox="0 0 130 112"><rect x="20" y="30" width="90" height="70" rx="4" fill="#eaf7ef" stroke="#1a1a1a" stroke-width="2.5"/><rect x="20" y="18" width="90" height="16" fill="#43a047"/><text x="65" y="30" text-anchor="middle" font-size="10" font-weight="800" fill="#fff">DRUGSTORE</text><g fill="#43a047"><rect x="55" y="48" width="20" height="44"/><rect x="43" y="60" width="44" height="20"/></g></svg>`;
+const HOUSE=`<svg width="130" height="112" viewBox="0 0 130 112"><path d="M20 54 L65 20 L110 54 Z" fill="#ff9a6c" stroke="#1a1a1a" stroke-width="2.5"/><rect x="30" y="54" width="70" height="46" fill="#fff5ec" stroke="#1a1a1a" stroke-width="2.5"/><rect x="55" y="70" width="20" height="30" fill="#8a5a2b"/><rect x="38" y="62" width="14" height="14" fill="#4dd0e1" stroke="#1a1a1a" stroke-width="1.5"/><rect x="78" y="62" width="14" height="14" fill="#4dd0e1" stroke="#1a1a1a" stroke-width="1.5"/></svg>`;
+
+const PARTS=[
+ {t:"第一大題　看圖辨義",d:"共 5 題（1–5）。看圖並聆聽問題，從 A、B、C 三個選項中選出最適合的答案。"},
+ {t:"第二大題　問答",d:"共 10 題（6–15）。聆聽一個問句或直述句，選出最適合的回答。"},
+ {t:"第三大題　簡短對話",d:"共 10 題（16–25）。聆聽一段對話與問題，選出最適合的答案。"},
+ {t:"第四大題　短文聽解",d:"共 5 題（26–30）。聆聽一段短文與問題，從三張圖片中選出最適合的一張。"}
+];
+const Q=[
+{n:1,p:0,fig:WEDDING,o:["At the wedding, the man will marry his future wife.","The niece does her homework alone.","The uncle will wash the old machine."],a:0,
+ sen:"For question one, look at the picture. What does the picture show?",szh:"第一題，請看圖片。這張圖顯示什麼？",
+ en:"A wedding; the man will marry his wife.",zh:"婚禮(wedding)上男士將娶(marry)他未來的妻子(wife)，選 A。niece/homework、uncle/wash/machine 為干擾。"},
+{n:2,p:0,fig:WASHER,o:["The lady serves tea to her husband.","Our whole family bows to the guest.","It is a machine we use to wash clothes at home."],a:2,
+ sen:"For question two, look at the picture. What is the machine for?",szh:"第二題，請看圖片。這台機器是做什麼用的？",
+ en:"A machine to wash clothes.",zh:"這是我們(our)在家用來洗(wash)衣服的機器(machine)，選 C。lady/serve/husband、bow 為干擾。"},
+{n:3,p:0,fig:SHELF,o:["The single mother leads her son far away.","My sister's homework books are on the shelf.","The prince passes by the drugstore."],a:1,
+ sen:"For question three, look at the picture. What is on the shelf?",szh:"第三題，請看圖片。架子上有什麼？",
+ en:"Homework books on the shelf.",zh:"我姊姊(sister)的作業(homework)書放在架子(shelf)上，選 B。single/mother/lead/son/far、prince/pass/drugstore 為干擾。"},
+{n:4,p:0,fig:DRUGSTORE,o:["It is a drugstore, where the lady buys protection and medicine.","The hostess serves our relatives at the wedding.","The boy uses glue for his model."],a:0,
+ sen:"For question four, look at the picture. What kind of store is this?",szh:"第四題，請看圖片。這是什麼商店？",
+ en:"A drugstore selling medicine.",zh:"這是藥局(drugstore)，女士(lady)在此買保護用品(protection)和藥，選 A。hostess/serve/relative/wedding、boy/glue/model 為干擾。"},
+{n:5,p:0,fig:HOUSE,o:["The policewoman gives a command to the woman.","The heroine bows to the entire crowd.","The whole family lives in their old home."],a:2,
+ sen:"For question five, look at the picture. What does the picture show?",szh:"第五題，請看圖片。這張圖顯示什麼？",
+ en:"The family lives in their old home.",zh:"一家人住在他們的老(old)家(home)裡，選 C。policewoman/command/woman、heroine/bow/entire 為干擾。"},
+
+{n:6,p:1,o:["My uncle will glue the shelf.","He will propose marriage to my sister next month.","The lady coughs quite often."],a:1,
+ sen:"Why is your brother so nervous about the dinner?",szh:"你哥哥為什麼對這頓晚餐這麼緊張？",
+ en:"He will propose marriage to my sister.",zh:"問為何緊張，答『他下個月要向我姊姊(sister)求婚(propose)、談婚事(marriage)』，選 B。uncle/glue/shelf、lady/cough 為干擾。"},
+{n:7,p:1,o:["A single lady, but she has many relatives nearby.","The machine can wash and dig.","Our son passes the far bridge."],a:0,
+ sen:"Is your aunt married or single?",szh:"你阿姨結婚了還是單身？",
+ en:"Single, with many relatives nearby.",zh:"問單身還是已婚，答『單身(single)的女士(lady)，但附近有很多親戚(relative)』，選 A。machine/wash/dig、son/pass/far 為干擾。"},
+{n:8,p:1,o:["The prince serves the hostess.","He is jealous of the model boy.","At home, my mother and my wife do it while I cook."],a:2,
+ sen:"Who does the washing in your family?",szh:"你家是誰洗衣服？",
+ en:"My mother and wife, while I cook.",zh:"問誰洗衣，答『在家，我媽媽(mother)和太太(wife)洗，我(while 當…時)煮飯』，選 C。prince/serve/hostess、jealous/model/boy 為干擾。"},
+{n:9,p:1,o:["The niece does her homework.","No, my husband is not home; he went far away.","We compare two old machines."],a:1,
+ sen:"Is your husband at home now?",szh:"你先生現在在家嗎？",
+ en:"No, he went far away.",zh:"問先生(husband)是否在家，答『不，他去很遠(far)的地方了』，選 B。niece/homework、compare/machine 為干擾。"},
+{n:10,p:1,o:["Thirty guests, including my uncle and niece.","The heroine leads the entire army.","The boy uses glue on the model."],a:0,
+ sen:"How many people came to the wedding?",szh:"有多少人來參加婚禮？",
+ en:"Thirty guests, uncle and niece.",zh:"問婚禮(wedding)來幾人，答『三十(thirty)位，包括我叔叔(uncle)和姪女(niece)』，選 A。heroine/lead/entire、boy/glue/model 為干擾。"},
+{n:11,p:1,o:["The hostess serves cold tea.","We wash our clothes in the machine.","Yes, ma'am, the women's room is quite far, past the drugstore."],a:2,
+ sen:"Excuse me, is the restroom nearby?",szh:"不好意思，洗手間在附近嗎？",
+ en:"Ma'am, the women's room is past the drugstore.",zh:"問洗手間，答『女士(ma'am)，女廁(women's room)蠻(quite)遠的，過了(pass)藥局(drugstore)』，選 C。hostess/serve、wash/machine 為干擾。"},
+{n:12,p:1,o:["My old model needs new glue.","She is a policewoman, and also a super mother.","Our son bows to the prince."],a:1,
+ sen:"What does your wife do for a living?",szh:"你太太做什麼工作？",
+ en:"A policewoman and a super mother.",zh:"問太太(wife)的工作，答『她是女警(policewoman)，也是個超級(super)媽媽(mother)』，選 B。old/model/glue、son/bow/prince 為干擾。"},
+{n:13,p:1,o:["Nineteen years old, and still in school for homework.","The lady coughs in the women's room.","We serve dinner while they wash."],a:0,
+ sen:"How old is your elder son now?",szh:"你大兒子現在幾歲？",
+ en:"Nineteen, still in school.",zh:"問兒子(son)幾歲，答『十九(nineteen)歲，還在學校寫作業(homework)』，選 A。lady/cough/women's room、serve/while/wash 為干擾。"},
+{n:14,p:1,o:["The uncle digs in the far field.","Compare our house with the model home.","Because my sister is jealous of our new niece."],a:2,
+ sen:"Why does the little girl look upset?",szh:"小女孩為什麼看起來不高興？",
+ en:"Her sister is jealous of the new niece.",zh:"問女孩為何不開心，答『因為我姊姊(sister)嫉妒(jealous)我們(our)新來的姪女(niece)』，選 C。uncle/dig/far、compare/model 為干擾。"},
+{n:15,p:1,o:["The hostess bows to the woman.","I regard my parents as my best example in life.","The husband will marry the heroine."],a:1,
+ sen:"Who do you look up to the most?",szh:"你最崇拜誰？",
+ en:"My parents, my best example.",zh:"問最崇拜誰，答『我把父母(parent)當作人生最好的榜樣(example)、非常敬重(regard)』，選 A。hostess/bow/woman、husband/marry/heroine 為干擾。"},
+
+{n:16,p:2,o:["His wife.","His niece.","His mother."],a:0,
+ sen:"W: Who is that lady beside your uncle? &nbsp;M: That is his wife; they had their wedding last year. &nbsp;W: Lovely couple. &nbsp;Q: Who is the lady beside the uncle?",
+ szh:"女：你叔叔(uncle)旁邊那位女士(lady)是誰？　男：那是他太太(wife)，他們去年辦了婚禮(wedding)。　女：真是佳偶。　問：叔叔旁邊的女士是誰？",
+ en:"His wife.",zh:"那位女士是叔叔的太太(wife)，選 A。"},
+{n:17,p:2,o:["At the drugstore.","In the women's room.","At home doing homework."],a:2,
+ sen:"W: Where is your son now? &nbsp;M: He is at home, quite busy doing his homework. &nbsp;W: A good boy. &nbsp;Q: Where is the son?",
+ szh:"女：你兒子(son)現在在哪？　男：他在家(home)，正忙(quite)著寫作業(homework)。　女：真是好孩子(boy)。　問：兒子在哪裡？",
+ en:"At home doing homework.",zh:"兒子在家寫作業(homework)，選 C。"},
+{n:18,p:2,o:["Wash the machine.","Serve as the hostess of the party.","Dig in the garden."],a:1,
+ sen:"M: What will your mother do at the wedding? &nbsp;W: She will serve as the hostess and greet our relatives. &nbsp;M: Great. &nbsp;Q: What is the mother's job at the wedding?",
+ szh:"男：你媽媽(mother)在婚禮上要做什麼？　女：她要當女主人(hostess)，招待(serve)我們的親戚(relative)。　男：很好。　問：媽媽在婚禮上的工作是什麼？",
+ en:"Serve as the hostess.",zh:"媽媽當女主人(hostess)招待(serve)客人，選 B。"},
+{n:19,p:2,o:["Because she will marry a prince.","Because she is single and free.","Because she leads far too many people."],a:0,
+ sen:"M: Why is the whole town excited? &nbsp;W: Because the young lady will marry a prince next week. &nbsp;M: Like a fairy tale! &nbsp;Q: Why is the town excited?",
+ szh:"男：為什麼全鎮都很興奮？　女：因為那位年輕小姐(lady)下週要嫁(marry)給一位王子(prince)。　男：像童話一樣！　問：小鎮為何興奮？",
+ en:"She will marry a prince.",zh:"小姐將嫁(marry)給王子(prince)，選 A。"},
+{n:20,p:2,o:["He will bow to the woman.","He is jealous of his cousin.","He needs glue to fix the shelf."],a:2,
+ sen:"W: Why did your son go to the drugstore? &nbsp;M: Not for medicine; he needs glue to fix the shelf. &nbsp;W: I see. &nbsp;Q: Why did the son go out?",
+ szh:"女：你兒子為什麼去藥局(drugstore)？　男：不是買藥，他需要膠水(glue)修架子(shelf)。　女：了解。　問：兒子為什麼出門？",
+ en:"He needs glue to fix the shelf.",zh:"兒子要膠水(glue)修架子(shelf)，選 C。"},
+{n:21,p:2,o:["A super hero movie.","A review of our family history.","A model of an old house."],a:1,
+ sen:"M: What are you reading, Grandma? &nbsp;W: A review of our family history, comparing the old days with now. &nbsp;M: Interesting. &nbsp;Q: What is Grandma reading?",
+ szh:"男：奶奶，你在讀什麼？　女：一篇我們(our)家族歷史的回顧(review)，把過去和現在做比較(compare)。　男：真有趣。　問：奶奶在讀什麼？",
+ en:"A review of family history.",zh:"奶奶在讀家族史回顧(review)，選 B。compare 比較。"},
+{n:22,p:2,o:["Thirty dollars.","Nineteen dollars.","Far too much."],a:0,
+ sen:"W: How much did the model cost? &nbsp;M: Thirty dollars, not nineteen as I thought. &nbsp;W: Still cheap. &nbsp;Q: How much did the model cost?",
+ szh:"女：那個模型(model)多少錢？　男：三十(thirty)元，不是我以為的十九(nineteen)元。　女：還是很便宜。　問：模型多少錢？",
+ en:"Thirty dollars.",zh:"模型(model)要三十(thirty)元，選 A。十九是誤以為(干擾)。"},
+{n:23,p:2,o:["She will wash it.","She will marry soon.","She has a bad cough and needs protection."],a:2,
+ sen:"M: Why is the woman wearing a mask? &nbsp;W: She has a bad cough, so she wears it for protection. &nbsp;M: Take care. &nbsp;Q: Why does the woman wear a mask?",
+ szh:"男：那位女士(woman)為什麼戴口罩？　女：她咳嗽(cough)得厲害，戴著做防護(protection)。　男：保重。　問：女士為何戴口罩？",
+ en:"She has a cough; for protection.",zh:"她咳嗽(cough)，戴口罩防護(protection)，選 C。"},
+{n:24,p:2,o:["The husband leads the opening scene.","The heroine of the story does.","The single uncle does."],a:1,
+ sen:"W: In this movie, who saves the whole city? &nbsp;M: The heroine does; she leads the people bravely. &nbsp;W: What a hero. &nbsp;Q: Who saves the city?",
+ szh:"女：這部電影裡誰拯救了整座城市？　男：女主角(heroine)，她勇敢地帶領(lead)人民。　女：真英雄。　問：誰拯救了城市？",
+ en:"The heroine leads and saves it.",zh:"女主角(heroine)帶領(lead)人民拯救城市，選 B。"},
+{n:25,p:2,o:["Either the mother or the sister.","Only the prince.","The far uncle."],a:0,
+ sen:"M: Who will cook tonight? &nbsp;W: Either the mother or the sister; both are free while father works. &nbsp;M: Sounds good. &nbsp;Q: Who will cook tonight?",
+ szh:"男：今晚誰煮飯？　女：媽媽(mother)或姊姊(sister)其中一個(either)，爸爸工作時(while)她們都有空。　男：好。　問：今晚誰煮飯？",
+ en:"Either the mother or the sister.",zh:"媽媽或姊姊其中一位(either)煮飯，選 A。"},
+
+{n:26,p:3,pic:true,o:[CLK(6,30),CLK(7,30),CLK(7,0)],a:2,
+ sen:"In our family, dinner time is very regular. My mother starts cooking at six, while my father is still at work. He always comes home at seven o'clock, and then the whole family eats together. It is my favorite part of the day. &nbsp;Q: What time does the father come home?",
+ szh:"在我們(our)家，晚餐時間很規律。媽媽(mother)六點開始煮飯，這時(while)爸爸還在上班。他總是七點回到家(home)，然後全家一起吃飯。這是我一天中最愛的時光。　問：爸爸幾點回家？",
+ en:"Father comes home at seven.",zh:"爸爸七點回家，選 C(7:00)。六點半是媽媽開始煮飯(干擾)。"},
+{n:27,p:3,pic:true,o:[BARS("Chores/Week",["Mom","Dad","Son"],[80,55,30]),BARS("Chores/Week",["Mom","Dad","Son"],[30,55,80]),BARS("Chores/Week",["Mom","Dad","Son"],[55,80,30])],a:1,
+ sen:"Our family shares the housework, and we made a chart to compare it. My young son does the most chores now, because he wants to help. My father does the middle amount, and my mother, who used to do everything, now does the least. &nbsp;Q: Which chart compares our chores correctly?",
+ szh:"我們(our)家分擔家事，還做了張圖來比較(compare)。我年幼的兒子(son)現在做最多，因為他想幫忙；爸爸中等；以前包辦一切的媽媽(mother)現在做最少。　問：哪張圖正確比較我們的家事？",
+ en:"Son most, mother least.",zh:"兒子最多、媽媽最少，符合『Son 最高、Mom 最低』的 B。"},
+{n:28,p:3,pic:true,o:[IMG('bread'),IMG('noodles'),IMG('rice')],a:0,
+ sen:"Every Sunday my grandmother, the hostess of our home, cooks for the entire family. She does not make noodles or rice on that day. Instead, she bakes fresh bread, and its warm smell fills the house while we all wait around the table. &nbsp;Q: What does the grandmother make on Sunday?",
+ szh:"每個星期天，身為我們家女主人(hostess)的奶奶會為全(entire)家人做飯。那天她不做麵或飯，而是烤新鮮麵包(bread)，溫暖的香味充滿整個家，我們(while 當…時)全圍在餐桌旁等。　問：奶奶星期天做什麼？",
+ en:"Fresh bread.",zh:"奶奶做麵包(bread)，選 A。麵、飯為干擾。"},
+{n:29,p:3,pic:true,o:[CLK(9,0),CLK(8,15),CLK(8,30)],a:2,
+ sen:"On weekdays my niece has a strict routine for her homework. She gets home in the afternoon, plays for a while, and starts her homework at eight thirty in the evening. She always finishes before nine, then goes to bed. &nbsp;Q: What time does the niece start her homework?",
+ szh:"平日我姪女(niece)寫作業(homework)有嚴格的作息。她下午到家(in 進到)，先玩一會兒(while)，晚上八點半開始寫作業。她總在九點前寫完，然後上床。　問：姪女幾點開始寫作業？",
+ en:"At eight thirty.",zh:"姪女八點半開始寫作業，選 C(8:30)。九點是寫完時間(干擾)。"},
+{n:30,p:3,pic:true,o:[IMG('mountain'),IMG('beach'),IMG('park')],a:1,
+ sen:"Last summer our entire family took a trip together. My parents wanted to climb the mountain, and my sister wanted the park. But in the end, we all went to the beach, where my son and my niece dug in the sand for hours. It was a super holiday. &nbsp;Q: Where did the family finally go?",
+ szh:"去年夏天我們(our)全(entire)家一起旅行。父母(parent)想爬山，姊姊(sister)想去公園，但最後我們都去了海邊(beach)，我兒子(son)和姪女(niece)在沙灘挖(dig)了好幾個小時。真是超讚(super)的假期。　問：這家人最後去了哪裡？",
+ en:"The beach.",zh:"一家人最後去海邊(beach)，選 B。山、公園為干擾。"}
+];
+const AB=["A","B","C"];
+function optHTML(q){
+  if(q.pic){ // 三圖選項
+    return '<div class="pics">'+q.o.map((s,i)=>`<div class="pico"><div class="lb">(${AB[i]})</div>${s}</div>`).join('')+'</div>';
+  }
+  return '<ol class="opts">'+q.o.map((s,i)=>`<li>(${AB[i]}) ${s}</li>`).join('')+'</ol>';
+}
+function figHTML(q){ return q.fig?`<div class="fig">${q.fig}</div>`:''; }
+function partOf(n){return n<=5?0:n<=15?1:n<=25?2:3;}
+function sheet(kind){ // 's' student | 't' teacher
+  let h=`<div class="page ${kind==='s'?'sheet-s':'sheet-t'}">`;
+  h+=`<div class="phead"><h1>全民英檢 初級　聽力測驗</h1><div class="sub">第 5 回　家庭生活　${kind==='s'?'學生作答卷':'教師卷（答案・聽力原文・解析）'}</div></div>`;
+  if(kind==='s') h+=`<div class="pmeta"><span>姓名：____________</span><span>班級：__________</span><span>座號：______</span><span>分數：________</span></div>`;
+  h+=`<div class="pnote">說明：本測驗共 4 大題 30 題，每題聆聽音檔作答，從 (A) (B) (C) 中選出最適合的答案，填入題號前括號內。</div>`;
+  PARTS.forEach((pt,pi)=>{
+    h+=`<h2 class="pt">${pt.t}</h2><p class="pd">${pt.d}</p>`;
+    Q.filter(q=>partOf(q.n)===pi).forEach(q=>{
+      h+=`<div class="q"><div class="qn">（${kind==='t'?'<span class="ans">'+AB[q.a]+'</span>':'　'}）${q.n}.</div><div class="qbody">`;
+      h+=figHTML(q)+optHTML(q);
+      if(kind==='t'){
+        h+=`<div class="tr"><b>原文：</b>${(q.sen||'').replace(/&nbsp;/g,' ')}</div>`;
+        if(q.zh) h+=`<div class="ex"><b>解析：</b>${q.zh}</div>`;
+      }
+      h+=`</div></div>`;
+    });
+  });
+  h+=`</div>`;
+  return h;
+}
+function render(){document.getElementById('root').innerHTML=sheet('s')+sheet('t');}
+render();
+function show(m){
+  document.querySelectorAll('.sheet-s').forEach(e=>e.classList.toggle('hidep',m==='t'));
+  document.querySelectorAll('.sheet-t').forEach(e=>e.classList.toggle('hidep',m==='s'));
+  setTimeout(()=>window.print(),60);
+}
+</script></body></html>
