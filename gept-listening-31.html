@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEPT 初級 聽力測驗　第31回　天氣</title>
+<style>
+  :root{
+    --blue:#2b8cff; --blue-dark:#1f6fe0;
+    --coral:#ff7a59; --amber:#ffb02e; --pink:#ff5d8f;
+    --bg:#f3f9ff; --card:#ffffff; --line:#e3edf9;
+    --green:#22b573; --green-bg:#e4f8ef;
+    --red:#ff5a5a; --red-bg:#ffecec;
+    --gray:#6b7785;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;
+    background:linear-gradient(180deg,#fff5ec,#fff9f4 70%);color:#22303f;line-height:1.6;
+    -webkit-text-size-adjust:100%;}
+  .wrap{max-width:760px;margin:0 auto;padding:16px;}
+  header.top{background:linear-gradient(135deg,#f6d365,#fda085 60%,#ff7a9c);color:#fff;
+    border-radius:18px;padding:24px 22px;margin-bottom:16px;box-shadow:0 8px 22px rgba(253,160,133,.35);}
+  header.top h1{margin:0 0 6px;font-size:1.5rem;text-shadow:0 1px 2px rgba(0,0,0,.14);}
+  header.top p{margin:0;font-size:.92rem;opacity:.96;}
+  .meta{margin-top:14px;font-size:.86rem;background:rgba(255,255,255,.24);
+    padding:9px 13px;border-radius:10px;}
+  .notice{background:#fffbeb;border:1.5px solid #f59e0b;border-radius:12px;
+    padding:11px 15px;margin-bottom:14px;font-size:.86rem;color:#78350f;
+    display:flex;align-items:flex-start;gap:9px;line-height:1.55;}
+  .notice .ic{font-size:1.1rem;flex-shrink:0;margin-top:1px;}
+  .sticky{position:sticky;top:0;z-index:20;padding:10px 0;
+    background:linear-gradient(180deg,#fff5ec 70%,rgba(255,245,236,0));}
+  .bar{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:11px 16px;display:flex;align-items:center;gap:12px;font-size:.9rem;
+    box-shadow:0 4px 12px rgba(253,160,133,.14);}
+  .bar .track{flex:1;height:9px;background:#f1e4dc;border-radius:6px;overflow:hidden;}
+  .bar .fill{height:100%;width:0;border-radius:6px;
+    background:linear-gradient(90deg,#ffb02e,#ff7a59);transition:width .35s;}
+  .bar #count{font-weight:700;color:#e0740a;}
+  .section-title{color:#fff;font-weight:800;border-radius:12px;
+    padding:10px 16px;margin:24px 0 6px;font-size:1.05rem;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);}
+  .section-title.s0{background:linear-gradient(135deg,#ff9a6c,#ff6f91);}
+  .section-title.s1{background:linear-gradient(135deg,#4dd0e1,#2b8cff);}
+  .section-title.s2{background:linear-gradient(135deg,#9b8bff,#b06bff);}
+  .section-title.s3{background:linear-gradient(135deg,#43cea2,#3ab0d6);}
+  .section-desc{font-size:.86rem;color:var(--gray);margin:0 4px 10px;}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:15px 17px;margin:12px 0;box-shadow:0 3px 10px rgba(253,160,133,.09);}
+  .qhead{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+  .qhead .num{display:inline-block;color:#fff;background:var(--coral);font-weight:700;
+    border-radius:8px;padding:1px 10px;font-size:.92rem;}
+  .play{display:inline-flex;align-items:center;gap:7px;border:0;cursor:pointer;
+    color:#fff;font-weight:800;font-size:.92rem;border-radius:22px;padding:8px 16px;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);box-shadow:0 4px 12px rgba(255,93,143,.3);}
+  .play:active{transform:translateY(1px);}
+  .play.playing{background:linear-gradient(135deg,#22b573,#1a9e63);}
+  .play .wave{font-size:.8rem;opacity:.9;}
+  .hintq{font-size:.8rem;color:var(--gray);}
+  .fig{text-align:center;margin:4px 0 12px;}
+  .fig svg{max-width:100%;height:auto;}
+  .pic-img{border-radius:9px;border:1px solid #e6ded7;object-fit:cover;}
+  .fig .pic-img{max-width:230px;width:100%;max-height:150px;}
+  .opt{display:flex;align-items:flex-start;gap:10px;border:2px solid var(--line);
+    border-radius:11px;padding:10px 13px;margin:8px 0;cursor:pointer;transition:.15s;
+    font-size:.95rem;background:#fbfdff;}
+  .opt:hover{border-color:var(--coral);background:#fff4ee;}
+  .opt input{margin-top:3px;accent-color:var(--coral);}
+  .opt .lab{font-weight:800;color:var(--coral);min-width:18px;}
+  .opt.sel{border-color:var(--coral);background:#ffeee6;}
+  .opt.correct{border-color:var(--green);background:var(--green-bg);}
+  .opt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .opt.lock{cursor:default;}
+  /* picture options (Part 4) */
+  .picopts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:6px 0;}
+  .picopt{border:2px solid var(--line);border-radius:12px;padding:9px 6px;cursor:pointer;
+    text-align:center;transition:.15s;background:#fbfdff;display:flex;flex-direction:column;align-items:center;gap:6px;}
+  .picopt:hover{border-color:var(--coral);background:#fff4ee;}
+  .picopt.sel{border-color:var(--coral);background:#ffeee6;}
+  .picopt.correct{border-color:var(--green);background:var(--green-bg);}
+  .picopt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .picopt .lab{font-weight:800;color:var(--coral);align-self:flex-start;margin-left:4px;}
+  .picopt.correct .lab{color:var(--green);}.picopt.wrong .lab{color:var(--red);}
+  .picopt img.pic-img{width:100%;height:82px;}
+  .picopt svg{width:100%;max-width:132px;height:auto;}
+  .picopt svg.chart{max-width:100%;}
+  .legend{display:flex;gap:12px;justify-content:center;font-size:.72rem;margin:2px 0 6px;color:#556;flex-wrap:wrap;}
+  .legend i{display:inline-block;width:11px;height:11px;border:1px solid #999;margin-right:4px;vertical-align:-1px;}
+  table.mini{border-collapse:collapse;font-size:.62rem;margin:0 auto;}
+  table.mini th{background:#33414f;color:#fff;padding:2px 4px;}
+  table.mini td{border:1px solid #bbb;padding:2px 4px;text-align:center;}
+  .board{background:#111;color:#ffd24a;border-radius:5px;padding:5px;font-family:"Courier New",monospace;display:inline-block;}
+  .board table{border-collapse:collapse;font-size:.6rem;color:#ffd24a;}
+  .board th{color:#7fd7ff;padding:1px 4px;border-bottom:1px solid #444;}
+  .board td{padding:1px 4px;text-align:center;}
+  .exp{display:none;margin-top:11px;border-top:2px dashed #ffe1c2;padding-top:11px;font-size:.9rem;}
+  .exp.show{display:block;}
+  .exp .tag{display:inline-block;font-weight:800;color:#fff;background:var(--green);
+    border-radius:7px;padding:2px 10px;font-size:.8rem;margin-bottom:7px;}
+  .exp .tag.miss{background:var(--red);}
+  .exp .scriptbox{background:#f4f8ff;border-radius:8px;padding:7px 11px;margin:5px 0;font-size:.88rem;color:#20364d;}
+  .exp .scriptbox b{color:var(--blue-dark);}
+  .exp .en{color:#1c4f7a;background:#eef7ff;border-radius:8px;padding:6px 10px;margin:5px 0;}
+  .exp .zh{color:#7a4a12;background:#fff7ea;border-radius:8px;padding:6px 10px;margin:5px 0;}
+  .actions{position:sticky;bottom:0;padding:14px 0 6px;margin-top:18px;
+    background:linear-gradient(transparent,#fff9f4 35%);}
+  button.submit{width:100%;color:#fff;border:0;border-radius:14px;padding:16px;
+    font-size:1.08rem;font-weight:800;cursor:pointer;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);
+    box-shadow:0 6px 16px rgba(255,93,143,.35);}
+  button.submit:active{transform:translateY(1px);}
+  button.reset{width:100%;background:#fff;color:var(--coral);border:2px solid var(--coral);
+    border-radius:14px;padding:14px;font-size:1rem;font-weight:800;cursor:pointer;margin-top:10px;display:none;}
+  .result{display:none;background:var(--card);border:3px solid transparent;border-radius:16px;
+    padding:22px;margin:16px 0;text-align:center;
+    background-image:linear-gradient(#fff,#fff),linear-gradient(135deg,#ffb02e,#ff7a59,#ff5d8f);
+    background-origin:border-box;background-clip:padding-box,border-box;
+    box-shadow:0 8px 22px rgba(255,122,89,.18);}
+  .result.show{display:block;}
+  .result .score{font-size:2.8rem;font-weight:900;
+    background:linear-gradient(135deg,#ff7a59,#ff5d8f);-webkit-background-clip:text;
+    background-clip:text;-webkit-text-fill-color:transparent;}
+  .result .sub{color:var(--gray);font-size:.95rem;}
+  .result .bd{display:flex;justify-content:center;gap:18px;margin-top:12px;flex-wrap:wrap;font-size:.95rem;}
+  .result .bd span{font-weight:800;}
+  .hint{text-align:center;font-size:.85rem;color:var(--gray);margin-top:9px;min-height:1.2em;}
+  footer{text-align:center;color:var(--gray);font-size:.8rem;margin:24px 0;}
+</style>
+<!-- EFETL-PWA -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#7C4DFF">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="EFETL">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}</script>
+<!-- /EFETL-PWA -->
+</head>
+<body>
+<a href="gept-listening.html" style="position:fixed;top:12px;left:12px;background:rgba(255,255,255,.92);color:#ff6f91;padding:7px 15px;border-radius:20px;text-decoration:none;font-size:.85rem;font-weight:800;z-index:999;box-shadow:0 3px 10px rgba(0,0,0,.15);">&#8592; 回聽力題庫</a>
+<div class="wrap">
+  <header class="top">
+    <h1>GEPT 初級　聽力測驗　<span style="opacity:.9">第31回　天氣</span></h1>
+    <p>互動聽力練習　&middot;　依官方四大題型與難度命題</p>
+    <div class="meta">共 4 大題、30 題　|　每題按 🔊 播放，聆聽後作答　|　送出後顯示聽力原文、中英解析與分數</div>
+  </header>
+
+  <div class="notice">
+    <span class="ic">🎧</span>
+    <span>每題皆附<strong>語音朗讀音檔</strong>，iPhone、Android 各廠牌手機與電腦瀏覽器皆可播放（請開啟媒體音量）。點各題的 <strong>🔊 播放</strong> 鈕聆聽；正式考試每題只播一次，練習時可重播。</span>
+  </div>
+
+  <a href="gept-listening-31-print.html" style="display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #ffb703;color:#8a5a00;border-radius:12px;padding:11px 16px;margin-bottom:18px;text-decoration:none;font-size:.9rem;font-weight:700;box-shadow:0 3px 10px rgba(255,183,3,.16);">
+    <span>🖨</span><span>列印版（學生卷／教師卷）— 適合課堂紙本練習與批改，可直接列印或存成 PDF</span>
+  </a>
+
+  <div class="sticky">
+    <div class="bar">
+      <span>作答進度</span>
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <span id="count">0 / 30</span>
+    </div>
+  </div>
+
+  <form id="quiz"></form>
+
+  <div class="result" id="result">
+    <div class="score" id="scoreNum">0</div>
+    <div class="sub" id="scoreTxt">分</div>
+    <div class="bd">
+      <span style="color:var(--green)">答對 <b id="rOk">0</b></span>
+      <span style="color:var(--red)">答錯 <b id="rNo">0</b></span>
+      <span style="color:var(--gray)">未作答 <b id="rBlank">0</b></span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="submit" id="submitBtn">送出並查看解析</button>
+    <div class="hint" id="hint">尚未作答任何題目</div>
+    <button type="button" class="reset" id="resetBtn">重新作答</button>
+  </div>
+
+  <footer>GEPT 初級聽力　互動練習　&middot;　第二顆腦 / GEPT初級</footer>
+</div>
+
+<script>
+/* ====== 圖形素材（第31回 天氣） ====== */
+const IMG = n => `<img class="pic-img" src="gept-listening-img/31/${n}.jpg" alt="${n}">`;
+const BARS=(title,labs,vals)=>{const max=Math.max(...vals),bw=28,gap=18,x0=20;let b='',l='';
+ labs.forEach((L,i)=>{const h=Math.round(vals[i]/max*70),x=x0+i*(bw+gap);
+  b+=`<rect x="${x}" y="${100-h}" width="${bw}" height="${h}" fill="#e9e9e9" stroke="#1a1a1a" stroke-width="1.5"/>`;
+  l+=`<text x="${x+bw/2}" y="116">${L}</text>`;});
+ return `<svg class="chart" width="176" height="132" viewBox="0 0 176 132"><text x="88" y="15" text-anchor="middle" font-size="14" font-weight="700">${title}</text><line x1="16" y1="22" x2="16" y2="100" stroke="#1a1a1a" stroke-width="1.5"/><line x1="16" y1="100" x2="170" y2="100" stroke="#1a1a1a" stroke-width="1.5"/>${b}<g font-size="11" text-anchor="middle">${l}</g></svg>`;};
+const RAINCLOUD=`<svg width="130" height="102" viewBox="0 0 130 104"><g fill="#ffd166"><circle cx="98" cy="26" r="12"/></g><g fill="#cfd8e3" stroke="#1a1a1a" stroke-width="2"><ellipse cx="50" cy="46" rx="26" ry="18"/><circle cx="34" cy="50" r="14"/><circle cx="72" cy="50" r="14"/><rect x="30" y="50" width="46" height="14"/></g><g stroke="#4dd0e1" stroke-width="3" stroke-linecap="round"><line x1="36" y1="70" x2="30" y2="88"/><line x1="52" y1="70" x2="46" y2="90"/><line x1="68" y1="70" x2="62" y2="88"/></g></svg>`;
+const LIGHTNING=`<svg width="120" height="104" viewBox="0 0 120 106"><g fill="#5a6472" stroke="#1a1a1a" stroke-width="2"><ellipse cx="58" cy="40" rx="30" ry="20"/><circle cx="38" cy="44" r="15"/><circle cx="82" cy="44" r="15"/><rect x="34" y="44" width="52" height="16"/></g><path d="M58 58 L44 84 L56 84 L46 104 L78 74 L64 74 L74 58 Z" fill="#ffd166" stroke="#1a1a1a" stroke-width="1.5" stroke-linejoin="round"/></svg>`;
+const TYPHOON=`<svg width="118" height="106" viewBox="0 0 118 108"><g fill="none" stroke="#4a90c0" stroke-width="7" stroke-linecap="round"><path d="M59 54 q30 -34 44 -6 q10 22 -18 26"/><path d="M59 54 q-30 34 -44 6 q-10 -22 18 -26"/></g><circle cx="59" cy="54" r="10" fill="#2b6a9a"/><g stroke="#cfe6ff" stroke-width="2"><path d="M59 54 q18 -10 28 6" fill="none"/><path d="M59 54 q-18 10 -28 -6" fill="none"/></g></svg>`;
+const UMBRELLA=`<svg width="110" height="112" viewBox="0 0 110 114"><path d="M12 52 q43 -50 86 0 q-20 -14 -43 -14 q-23 0 -43 14z" fill="#e6007e" stroke="#1a1a1a" stroke-width="2.5"/><g stroke="#1a1a1a" stroke-width="1.5"><path d="M40 48 q15 -16 0 -30 M70 48 q-15 -16 0 -30" fill="none"/></g><line x1="55" y1="42" x2="55" y2="96" stroke="#8a5a2b" stroke-width="3"/><path d="M55 96 q0 10 -12 10" fill="none" stroke="#8a5a2b" stroke-width="3"/></svg>`;
+const SNOWFLAKE=`<svg width="104" height="104" viewBox="0 0 104 106"><g stroke="#4dd0e1" stroke-width="3" stroke-linecap="round"><line x1="52" y1="14" x2="52" y2="92"/><line x1="18" y1="34" x2="86" y2="72"/><line x1="86" y1="34" x2="18" y2="72"/></g><g stroke="#4dd0e1" stroke-width="2.5" stroke-linecap="round"><path d="M52 24 l-8 8 M52 24 l8 8 M52 82 l-8 -8 M52 82 l8 -8"/><path d="M26 39 l0 11 M26 39 l10 -3 M78 67 l0 -11 M78 67 l-10 3"/><path d="M78 39 l0 11 M78 39 l-10 -3 M26 67 l0 -11 M26 67 l10 3"/></g></svg>`;
+/* ====== 大題 ====== */
+const PARTS=[
+ {t:"第一大題　看圖辨義",d:"共 5 題（1–5）。看圖並聆聽問題，從 A、B、C 三個選項中選出最適合的答案。"},
+ {t:"第二大題　問答",d:"共 10 題（6–15）。聆聽一個問句或直述句，選出最適合的回答。"},
+ {t:"第三大題　簡短對話",d:"共 10 題（16–25）。聆聽一段對話與問題，選出最適合的答案。"},
+ {t:"第四大題　短文聽解",d:"共 5 題（26–30）。聆聽一段短文與問題，從三張圖片中選出最適合的一張。"}
+];
+
+
+
+/* ====== 題庫（第31回 天氣） ====== */
+const Q=[
+{n:1,p:0,fig:RAINCLOUD,o:["Rainy weather; the humid climate feels bitter and cold.","We jump into the pool.","The expert made a decision."],a:0,
+ sen:"For question one, look at the picture. What is the weather like?",szh:"第一題，請看圖片。天氣如何？",
+ en:"Rainy weather; humid climate feels bitter.",zh:"下雨(rainy)的天氣(weather)；潮濕(humid)的氣候(climate)又冷又刺骨(bitter)，選 A。jump/into、expert/decision 為干擾。"},
+{n:2,p:0,fig:LIGHTNING,o:["The voter needs information.","Imagine you clap for the necklace.","Lightning and thunder fill the stormy sky."],a:2,
+ sen:"For question two, look at the picture. What is in the sky?",szh:"第二題，請看圖片。天空中是什麼？",
+ en:"Lightning and thunder in a stormy sky.",zh:"閃電(lightning)和雷聲(thunder)充滿暴風雨(stormy)的天空，選 C。voter/information、imagine/clap/necklace 為干擾。"},
+{n:3,p:0,fig:TYPHOON,o:["The story is about a violin.","A huge typhoon is coming; it is a very bad storm.","We maintain the motorcycle."],a:1,
+ sen:"For question three, look at the picture. What kind of storm is this?",szh:"第三題，請看圖片。這是什麼樣的風暴？",
+ en:"A huge typhoon; a bad storm.",zh:"一個巨大(huge)的颱風(typhoon)要來了；是很糟(bad)的暴風雨(storm)，選 B。story/violin、maintain/motorcycle 為干擾。"},
+{n:4,p:0,fig:UMBRELLA,o:["An umbrella; the temperature is low, so take it with you.","The grape is red.","The pigeon touches a leaf."],a:0,
+ sen:"For question four, look at the picture. What do you need today?",szh:"第四題，請看圖片。今天你需要什麼？",
+ en:"An umbrella; the temperature is low, so take it.",zh:"一把雨傘(umbrella)；氣溫(temperature)低，所以(so)帶著它，選 A。grape/red、pigeon/touch/leaf 為干擾。"},
+{n:5,p:0,fig:SNOWFLAKE,o:["Voters like these red ties.","The expert drinks a Coke.","Snow falls; a leaf and a pigeon gently touch it."],a:2,
+ sen:"For question five, look at the picture. What falls in winter?",szh:"第五題，請看圖片。冬天飄下什麼？",
+ en:"Snow falls; a leaf and a pigeon touch it.",zh:"雪(snow)飄落；一片葉子(leaf)和一隻鴿子(pigeon)輕輕碰(touch)它，選 C。voter/these/red/tie、expert/Coke 為干擾。"},
+
+{n:6,p:1,o:["The pigeon flies.","In fact, I mean these red grapes; do you like them?","The storm is huge."],a:1,
+ sen:"Which fruit did you want me to buy?",szh:"你要我買哪種水果？",
+ en:"In fact, I mean these are red; do you like them?",zh:"問要買哪種水果，答『事實上(fact)，我是指(mean)這些(these)紅色(red)葡萄；你喜歡(like)嗎？』，選 B。pigeon、storm/huge 為干擾。"},
+{n:7,p:1,o:["I jump into the warm water; it is friendly and I really like it here.","The temperature is low.","The typhoon is bad."],a:0,
+ sen:"How do you start your day at the pool?",szh:"你在泳池怎麼開始一天？",
+ en:"I jump into the water; it is friendly and I like it.",zh:"問怎麼開始一天，答『我跳(jump)進(into)溫水裡；這裡很親切(friendly)，我很喜歡』，選 A。temperature、typhoon/bad 為干擾。"},
+{n:8,p:1,o:["The climate is humid.","The umbrella is red.","The story is amazing: a million dollars and an old violin, all found at lunch."],a:2,
+ sen:"What is the new book about?",szh:"這本新書在講什麼？",
+ en:"The story: a million dollars and a violin at lunch.",zh:"問新書內容，答『故事(story)很精彩：一百萬(million)美元和一把老小提琴(violin)，都在午餐(lunch)時發現』，選 C。climate/humid、umbrella/red 為干擾。"},
+{n:9,p:1,o:["The thunder is loud.","Yes, I maintain the old motorcycle myself, and then I eat a sweet grape.","The pigeon is friendly."],a:1,
+ sen:"Do you take care of your own bike?",szh:"你自己保養機車嗎？",
+ en:"I maintain the motorcycle and eat a grape.",zh:"問是否自己保養車，答『是，我自己保養(maintain)這台舊機車(motorcycle)，然後吃一顆甜葡萄(grape)』，選 B。thunder、pigeon/friendly 為干擾。"},
+{n:10,p:1,o:["Park it on the sidewalk, but not yet; first raise your voice so I can hear you.","The snow is deep.","The expert decides."],a:0,
+ sen:"Where should I leave the scooter?",szh:"機車我該停哪？",
+ en:"On the sidewalk, but not yet; use your voice.",zh:"問機車停哪，答『停在人行道(sidewalk)上，但先別(yet)停；先大聲(voice)說，我才聽得到』，選 A。snow、expert/decide 為干擾。"},
+{n:11,p:1,o:["The grape is red.","The pigeon touches the leaf.","The weather expert made a careful decision; then he drank a cold Coke."],a:2,
+ sen:"How was the forecast decided today?",szh:"今天的天氣預報是怎麼決定的？",
+ en:"The expert made a decision; drank a Coke.",zh:"問預報怎麼決定的，答『氣象專家(expert)做了謹慎的決定(decision)；然後喝了一罐冰可樂(Coke)』，選 C。grape/red、pigeon/touch/leaf 為干擾。"},
+{n:12,p:1,o:["The storm is huge.","Imagine this scene: the crowd clap, and a lady wears a shining necklace.","The lunch is late."],a:1,
+ sen:"What did the movie's happy ending look like?",szh:"電影快樂結局是什麼樣子？",
+ en:"Imagine this; the crowd clap, a necklace shines.",zh:"問結局的樣子，答『想像(imagine)這一幕：群眾鼓掌(clap)，一位女士戴著閃亮的項鍊(necklace)』，選 B。storm/huge、lunch 為干擾。"},
+{n:13,p:1,o:["Voters need clear information before they choose; also, tie the rope on the bucket.","The snow is white.","The grape is sweet."],a:0,
+ sen:"How can people make a good choice in the vote?",szh:"投票時人們怎樣才能做出好選擇？",
+ en:"Voters need information; tie the bucket.",zh:"問怎樣做好選擇，答『選民(voter)在選擇前需要清楚的資訊(information)；另外，把繩子綁(tie)在水桶(bucket)上』，選 A。snow、grape 為干擾。"},
+{n:14,p:1,o:["The typhoon is huge.","The pigeon flies.","My stomach hurts; it is already ten P.M., and I feel really bad."],a:2,
+ sen:"Why do you look so sick tonight?",szh:"你今晚怎麼看起來這麼不舒服？",
+ en:"My stomach hurts; it is ten P.M., I feel bad.",zh:"問為何不舒服，答『我胃(stomach)痛；已經晚上十(ten)點(P.M.)了，我覺得很難受(bad)』，選 C。typhoon/huge、pigeon 為干擾。"},
+{n:15,p:1,o:["The climate is bitter.","There are eighty of them, and please do not be careless with the count.","The umbrella is red."],a:1,
+ sen:"How many chairs must we set up?",szh:"我們得擺幾張椅子？",
+ en:"Eighty, and do not be careless.",zh:"問要擺幾張椅子，答『有八十(eighty)張，而且(and)點數時別粗心(careless)』，選 B。climate/bitter、umbrella/red 為干擾。"},
+
+{n:16,p:2,o:["Rainy and cool.","Hot and dry.","Snowy."],a:0,
+ sen:"W: What is the weather like today? &nbsp;M: Rainy and cool; bring your umbrella. &nbsp;W: I will. &nbsp;Q: What is the weather like today?",
+ szh:"女：今天天氣如何？　男：又下雨(rainy)又涼；記得帶傘。　女：好。　問：今天天氣(weather)如何？",
+ en:"Rainy and cool.",zh:"今天下雨(rainy)又涼，選 A。"},
+{n:17,p:2,o:["Sunny.","Windy.","A strong typhoon storm is coming."],a:2,
+ sen:"M: Why did they close the schools? &nbsp;W: A strong typhoon storm is coming tonight. &nbsp;M: Everyone stay safe. &nbsp;Q: Why did they close the schools?",
+ szh:"男：他們為什麼停課？　女：今晚有強烈颱風(typhoon)暴風雨(storm)要來。　男：大家注意安全。　問：他們為何停課？",
+ en:"A typhoon storm is coming.",zh:"因為颱風(typhoon)暴風(storm)要來，選 C。"},
+{n:18,p:2,o:["Rain.","Snow, because the temperature is very low.","Sun."],a:1,
+ sen:"W: What will fall tonight? &nbsp;M: Snow, because the temperature is very low. &nbsp;W: How cold! &nbsp;Q: What will fall tonight?",
+ szh:"女：今晚會飄下什麼？　男：雪(snow)，因為氣溫(temperature)很低。　女：好冷！　問：今晚會飄下什麼？",
+ en:"Snow, because the temperature is low.",zh:"會下雪(snow)，因氣溫(temperature)低，選 B。"},
+{n:19,p:2,o:["An umbrella, because it is humid and rainy.","A hat.","Sunglasses."],a:0,
+ sen:"M: What should I take out today? &nbsp;W: An umbrella, because it is humid and rainy. &nbsp;M: Good idea. &nbsp;Q: What should the man take?",
+ szh:"男：今天我該帶什麼出門？　女：一把傘(umbrella)，因為又濕(humid)又下雨。　男：好主意。　問：男士該帶什麼？",
+ en:"An umbrella; it is humid and rainy.",zh:"帶傘(umbrella)，因潮濕(humid)多雨，選 A。"},
+{n:20,p:2,o:["Soft music.","Silence.","Loud thunder and bright lightning."],a:2,
+ sen:"W: What woke you up last night? &nbsp;M: Loud thunder and bright lightning in the storm. &nbsp;W: How scary. &nbsp;Q: What woke the man up?",
+ szh:"女：你昨晚被什麼吵醒？　男：暴風雨中響亮的雷(thunder)和明亮的閃電(lightning)。　女：好可怕。　問：什麼吵醒了男士？",
+ en:"Thunder and lightning.",zh:"是雷(thunder)和閃電(lightning)，選 C。"},
+{n:21,p:2,o:["Warm and sunny.","A bitter, cold climate.","Hot and dry."],a:1,
+ sen:"M: How is the winter in that country? &nbsp;W: A bitter, cold climate, with snow for months. &nbsp;M: I could not live there. &nbsp;Q: How is the winter there?",
+ szh:"男：那個國家的冬天如何？　女：氣候(climate)苦寒(bitter)，會下好幾個月的雪。　男：我住不了。　問：那裡的冬天如何？",
+ en:"A bitter, cold climate.",zh:"氣候(climate)苦寒(bitter)，選 B。"},
+{n:22,p:2,o:["He rode a motorcycle on the sidewalk.","He walked.","He drove a car."],a:0,
+ sen:"W: How did the man get past the flood? &nbsp;M: He rode a motorcycle carefully along the high sidewalk. &nbsp;W: Clever. &nbsp;Q: How did the man get past the flood?",
+ szh:"女：那個人怎麼過淹水的？　男：他小心地騎機車(motorcycle)沿著高的人行道(sidewalk)過。　女：聰明。　問：那人怎麼過淹水的？",
+ en:"On a motorcycle on the sidewalk.",zh:"他騎機車(motorcycle)沿人行道(sidewalk)過，選 A。"},
+{n:23,p:2,o:["A song.","A game.","A story about a magic violin."],a:2,
+ sen:"M: What did the teacher read to the class? &nbsp;W: A story about a magic violin that could sing. &nbsp;M: Sounds lovely. &nbsp;Q: What did the teacher read?",
+ szh:"男：老師讀了什麼給全班？　女：一個關於會唱歌的魔法小提琴(violin)的故事(story)。　男：聽起來很美。　問：老師讀了什麼？",
+ en:"A story about a violin.",zh:"是關於小提琴(violin)的故事(story)，選 C。"},
+{n:24,p:2,o:["A guess.","An expert's careful decision.","A joke."],a:1,
+ sen:"W: How was the forecast made? &nbsp;M: It came from an expert's careful decision. &nbsp;W: I trust it then. &nbsp;Q: How was the forecast made?",
+ szh:"女：這預報是怎麼做出來的？　男：來自一位專家(expert)謹慎的決定(decision)。　女：那我相信。　問：預報是怎麼做出來的？",
+ en:"An expert's careful decision.",zh:"來自專家(expert)的決定(decision)，選 B。"},
+{n:25,p:2,o:["A pigeon resting on a leaf.","A cat.","A dog."],a:0,
+ sen:"W: What did you see on the tree after the rain? &nbsp;M: A pigeon resting on a wet green leaf. &nbsp;W: How peaceful. &nbsp;Q: What did the man see?",
+ szh:"女：雨後你在樹上看到什麼？　男：一隻鴿子(pigeon)停在濕濕的綠葉(leaf)上。　女：真寧靜。　問：男士看到什麼？",
+ en:"A pigeon on a leaf.",zh:"男士看到鴿子(pigeon)停在葉(leaf)上，選 A。"},
+
+{n:26,p:3,pic:true,o:[BARS("Rainy Days",["Jun","Jul","Aug"],[20,50,80]),BARS("Rainy Days",["Jun","Jul","Aug"],[50,80,20]),BARS("Rainy Days",["Jun","Jul","Aug"],[80,50,20])],a:2,
+ sen:"Our city counted the rainy days each summer month. June had the most rain, because of the wet season. July was in the middle, and August had the fewest rainy days. So the June bar should be the tallest. &nbsp;Q: Which chart shows the rainy days?",
+ szh:"我們城市統計每個夏季月份的雨天。六月最多雨，因為是雨季；七月中等；八月雨天(rainy)最少。所以六月長條最高。　問：哪張圖顯示雨天？",
+ en:"June most, August fewest.",zh:"六月最多、八月最少，符合『Jun 最高』的 C。"},
+{n:27,p:3,pic:true,o:[BARS("Temperature",["Mon","Tue","Wed"],[30,55,80]),BARS("Temperature",["Mon","Tue","Wed"],[80,55,30]),BARS("Temperature",["Mon","Tue","Wed"],[55,80,30])],a:1,
+ sen:"The weather station recorded the temperature over three days. On Monday it was the highest, a hot and humid day. On Tuesday it was in the middle, and by Wednesday the lowest, after a cool storm. So the temperature went down each day. &nbsp;Q: Which chart shows the temperature?",
+ szh:"氣象站記錄了三天的氣溫(temperature)。星期一最高，又熱又潮濕(humid)；星期二中等；到星期三最低，因為一場涼爽的暴風雨(storm)。所以氣溫逐日下降。　問：哪張圖顯示氣溫？",
+ en:"Mon highest, Wed lowest.",zh:"週一最高、逐日下降，符合『Mon 最高、Wed 最低』的 B。"},
+{n:28,p:3,pic:true,o:[IMG('bread'),IMG('noodles'),IMG('rice')],a:0,
+ sen:"During the big typhoon, our family was stuck at home and could not go out. With the power off, we could not cook noodles or steam rice on the electric stove. So we ate some bread for lunch by candlelight, and listened to the thunder and rain outside. &nbsp;Q: What did the family eat during the typhoon?",
+ szh:"大颱風(typhoon)期間，我們家困在家出不去。停電了，沒法用電爐煮麵或蒸飯。所以我們午餐(lunch)在燭光下吃麵包(bread)，聽外面的雷(thunder)和雨。　問：颱風期間一家人吃什麼？",
+ en:"Bread for lunch.",zh:"颱風時一家人吃麵包(bread)，選 A。麵、飯為干擾。"},
+{n:29,p:3,pic:true,o:[IMG('bread'),IMG('rice'),IMG('noodles')],a:2,
+ sen:"On a bitter, snowy night, my grandmother wanted to warm us up. She said cold bread or dry rice would not help on such a freezing day. So she cooked a big bowl of hot noodles, and the warm steam filled the whole kitchen while the snow fell outside. &nbsp;Q: What did grandmother cook on the snowy night?",
+ szh:"在一個苦寒(bitter)、下雪(snow)的夜晚，奶奶想讓我們暖起來。她說這麼冷的天，冷麵包或乾飯沒用。所以她煮了一大碗熱麵(noodle)，溫暖的蒸氣充滿廚房，外面雪一直下。　問：下雪的夜晚奶奶煮了什麼？",
+ en:"A bowl of noodles.",zh:"下雪夜奶奶煮熱麵(noodle)，選 C。麵包、飯為干擾。"},
+{n:30,p:3,pic:true,o:[IMG('mountain'),IMG('beach'),IMG('park')],a:1,
+ sen:"When the weather finally turned warm and sunny after the storm, our family wanted a trip. My father liked the mountain and my sister liked the park. But we chose the beach, because the humid air had cleared and the calm blue sea looked perfect under the bright sky. &nbsp;Q: Where did the family go when the weather cleared?",
+ szh:"暴風雨(storm)後天氣終於變得溫暖晴朗，我們家想出遊。爸爸喜歡山，姊姊喜歡公園，但我們選了海邊(beach)，因為潮濕(humid)的空氣已散去，晴空下平靜的藍海看起來很完美。　問：天氣放晴後一家人去哪裡？",
+ en:"The beach.",zh:"天氣放晴後一家人去海邊(beach)，選 B。山、公園為干擾。"}
+];
+
+/* ====== 音檔播放（AAC/.m4a，各廠牌手機皆支援）====== */
+let curAudio=null, curBtn=null;
+function resetPlayBtn(b){ if(!b) return; b.classList.remove('playing'); b.querySelector('.txt').textContent = b.dataset.played?'重播':'播放'; }
+function stopAudio(){ if(curAudio) curAudio.pause(); if(curBtn) resetPlayBtn(curBtn); curAudio=null; curBtn=null; }
+function playAudio(audio,btn){
+  if(curAudio===audio){                       // 同一題：暫停 / 繼續
+    if(audio.paused){ audio.play(); btn.classList.add('playing'); btn.querySelector('.txt').textContent='播放中…'; }
+    else { audio.pause(); }
+    return;
+  }
+  if(curAudio){ curAudio.pause(); resetPlayBtn(curBtn); }   // 換題：停掉上一段
+  curAudio=audio; curBtn=btn; btn.dataset.played='1';
+  btn.classList.add('playing'); btn.querySelector('.txt').textContent='播放中…';
+  audio.play().catch(()=>resetPlayBtn(btn));
+}
+
+/* ====== 產生畫面 ====== */
+const form=document.getElementById('quiz');
+let lastP=-1;
+Q.forEach(q=>{
+  if(q.p!==lastP){
+    const st=document.createElement('div'); st.className='section-title s'+q.p; st.textContent=PARTS[q.p].t;
+    const sd=document.createElement('div'); sd.className='section-desc'; sd.textContent=PARTS[q.p].d;
+    form.appendChild(st); form.appendChild(sd); lastP=q.p;
+  }
+  const card=document.createElement('div'); card.className='q'; card.id='q'+q.n;
+  const head=document.createElement('div'); head.className='qhead';
+  head.innerHTML=`<span class="num">${q.n}</span>
+    <button type="button" class="play"><span class="wave">🔊</span><span class="txt">播放</span></button>
+    <span class="hintq">聆聽後作答</span>`;
+  card.appendChild(head);
+  const audio=document.createElement('audio'); audio.preload='none'; audio.src='gept-listening-audio/31/q'+q.n+'.m4a?v=r31-20260909'; card.appendChild(audio);
+  const pbtn=head.querySelector('.play');
+  pbtn.addEventListener('click',()=>playAudio(audio,pbtn));
+  audio.addEventListener('ended',()=>{ if(curBtn===pbtn){ resetPlayBtn(pbtn); curAudio=null; curBtn=null; } });
+  audio.addEventListener('pause',()=>{ if(curAudio===audio && curBtn===pbtn && !audio.ended){ pbtn.classList.remove('playing'); pbtn.querySelector('.txt').textContent='繼續'; } });
+  if(q.fig){ const f=document.createElement('div'); f.className='fig'; f.innerHTML=q.fig; card.appendChild(f); }
+  if(q.pic){
+    if(q.legend){ const lg=document.createElement('div'); lg.innerHTML=PIE_LEGEND; card.appendChild(lg.firstChild); }
+    const wrap=document.createElement('div'); wrap.className='picopts';
+    q.o.forEach((opt,i)=>{
+      const cell=document.createElement('label'); cell.className='picopt'; cell.dataset.i=i;
+      cell.innerHTML=`<span class="lab">${'ABC'[i]}</span>${opt}<input type="radio" name="q${q.n}" value="${i}" hidden>`;
+      cell.querySelector('input').addEventListener('change',()=>{ card.querySelectorAll('.picopt').forEach(o=>o.classList.remove('sel')); cell.classList.add('sel'); updateProgress(); });
+      wrap.appendChild(cell);
+    });
+    card.appendChild(wrap);
+  } else {
+    q.o.forEach((opt,i)=>{
+      const lab=document.createElement('label'); lab.className='opt'; lab.dataset.i=i;
+      lab.innerHTML=`<input type="radio" name="q${q.n}" value="${i}"><span class="lab">${'ABC'[i]}</span><span>${opt}</span>`;
+      lab.querySelector('input').addEventListener('change',()=>{ card.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel')); lab.classList.add('sel'); updateProgress(); });
+      card.appendChild(lab);
+    });
+  }
+  const exp=document.createElement('div'); exp.className='exp'; exp.id='exp'+q.n; card.appendChild(exp);
+  form.appendChild(card);
+});
+
+const submitBtn=document.getElementById('submitBtn');
+const resetBtn=document.getElementById('resetBtn');
+const hint=document.getElementById('hint');
+const TOT=Q.length;
+function answeredCount(){ let c=0; Q.forEach(q=>{ if(form.querySelector(`input[name="q${q.n}"]:checked`)) c++; }); return c; }
+function updateProgress(){
+  const c=answeredCount();
+  document.getElementById('count').textContent=`${c} / ${TOT}`;
+  document.getElementById('fill').style.width=(c/TOT*100)+'%';
+  hint.textContent = c===TOT ? '已完成全部 30 題' : (c===0 ? '尚未作答任何題目（仍可送出查看解析）' : `已作答 ${c} 題，未作答 ${TOT-c} 題（仍可送出）`);
+}
+
+submitBtn.addEventListener('click',()=>{
+  stopAudio();
+  let ok=0, blank=0;
+  Q.forEach(q=>{
+    const sel=form.querySelector(`input[name="q${q.n}"]:checked`);
+    const pick=sel?parseInt(sel.value):null;
+    if(pick===null) blank++;
+    const card=document.getElementById('q'+q.n);
+    const cls=q.pic?'.picopt':'.opt';
+    card.querySelectorAll(cls).forEach(o=>{
+      o.classList.add('lock');
+      const inp=o.querySelector('input'); if(inp) inp.disabled=true;
+      const i=parseInt(o.dataset.i);
+      if(i===q.a) o.classList.add('correct');
+      if(pick!==null && i===pick && pick!==q.a) o.classList.add('wrong');
+    });
+    const correct=pick===q.a; if(correct) ok++;
+    const exp=document.getElementById('exp'+q.n);
+    const tag=correct?'答對':(pick===null?'未作答':'答錯');
+    exp.innerHTML=`<span class="tag ${correct?'':'miss'}">${tag}　正解：${'ABC'[q.a]}</span>
+      <div class="scriptbox"><b>聽力原文</b>　${q.sen}<br><span style="color:#7a4a12">${q.szh}</span></div>
+      <div class="en"><b>EN</b>&nbsp;${q.en}</div><div class="zh"><b>中</b>&nbsp;${q.zh}</div>`;
+    exp.classList.add('show');
+  });
+  document.getElementById('scoreNum').textContent=Math.round(ok/TOT*100);
+  document.getElementById('scoreTxt').textContent=`分（答對 ${ok} / ${TOT} 題）`;
+  document.getElementById('rOk').textContent=ok;
+  document.getElementById('rNo').textContent=TOT-ok-blank;
+  document.getElementById('rBlank').textContent=blank;
+  const res=document.getElementById('result'); res.classList.add('show');
+  submitBtn.style.display='none'; hint.style.display='none'; resetBtn.style.display='block';
+  res.scrollIntoView({behavior:'smooth'});
+});
+
+resetBtn.addEventListener('click',()=>{
+  stopAudio(); form.reset();
+  Q.forEach(q=>{
+    const card=document.getElementById('q'+q.n);
+    card.querySelectorAll('.opt,.picopt').forEach(o=>{o.classList.remove('sel','correct','wrong','lock');const inp=o.querySelector('input');if(inp)inp.disabled=false;});
+    document.getElementById('exp'+q.n).classList.remove('show');
+  });
+  document.getElementById('result').classList.remove('show');
+  submitBtn.style.display='block'; hint.style.display='block'; resetBtn.style.display='none';
+  updateProgress(); window.scrollTo({top:0,behavior:'smooth'});
+});
+
+updateProgress();
+</script>
+</body>
+</html>
