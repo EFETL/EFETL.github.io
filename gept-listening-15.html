@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEPT 初級 聽力測驗　第15回　買賣與商店</title>
+<style>
+  :root{
+    --blue:#2b8cff; --blue-dark:#1f6fe0;
+    --coral:#ff7a59; --amber:#ffb02e; --pink:#ff5d8f;
+    --bg:#f3f9ff; --card:#ffffff; --line:#e3edf9;
+    --green:#22b573; --green-bg:#e4f8ef;
+    --red:#ff5a5a; --red-bg:#ffecec;
+    --gray:#6b7785;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;
+    background:linear-gradient(180deg,#fff5ec,#fff9f4 70%);color:#22303f;line-height:1.6;
+    -webkit-text-size-adjust:100%;}
+  .wrap{max-width:760px;margin:0 auto;padding:16px;}
+  header.top{background:linear-gradient(135deg,#f6d365,#fda085 60%,#ff7a9c);color:#fff;
+    border-radius:18px;padding:24px 22px;margin-bottom:16px;box-shadow:0 8px 22px rgba(253,160,133,.35);}
+  header.top h1{margin:0 0 6px;font-size:1.5rem;text-shadow:0 1px 2px rgba(0,0,0,.14);}
+  header.top p{margin:0;font-size:.92rem;opacity:.96;}
+  .meta{margin-top:14px;font-size:.86rem;background:rgba(255,255,255,.24);
+    padding:9px 13px;border-radius:10px;}
+  .notice{background:#fffbeb;border:1.5px solid #f59e0b;border-radius:12px;
+    padding:11px 15px;margin-bottom:14px;font-size:.86rem;color:#78350f;
+    display:flex;align-items:flex-start;gap:9px;line-height:1.55;}
+  .notice .ic{font-size:1.1rem;flex-shrink:0;margin-top:1px;}
+  .sticky{position:sticky;top:0;z-index:20;padding:10px 0;
+    background:linear-gradient(180deg,#fff5ec 70%,rgba(255,245,236,0));}
+  .bar{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:11px 16px;display:flex;align-items:center;gap:12px;font-size:.9rem;
+    box-shadow:0 4px 12px rgba(253,160,133,.14);}
+  .bar .track{flex:1;height:9px;background:#f1e4dc;border-radius:6px;overflow:hidden;}
+  .bar .fill{height:100%;width:0;border-radius:6px;
+    background:linear-gradient(90deg,#ffb02e,#ff7a59);transition:width .35s;}
+  .bar #count{font-weight:700;color:#e0740a;}
+  .section-title{color:#fff;font-weight:800;border-radius:12px;
+    padding:10px 16px;margin:24px 0 6px;font-size:1.05rem;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);}
+  .section-title.s0{background:linear-gradient(135deg,#ff9a6c,#ff6f91);}
+  .section-title.s1{background:linear-gradient(135deg,#4dd0e1,#2b8cff);}
+  .section-title.s2{background:linear-gradient(135deg,#9b8bff,#b06bff);}
+  .section-title.s3{background:linear-gradient(135deg,#43cea2,#3ab0d6);}
+  .section-desc{font-size:.86rem;color:var(--gray);margin:0 4px 10px;}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:15px 17px;margin:12px 0;box-shadow:0 3px 10px rgba(253,160,133,.09);}
+  .qhead{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+  .qhead .num{display:inline-block;color:#fff;background:var(--coral);font-weight:700;
+    border-radius:8px;padding:1px 10px;font-size:.92rem;}
+  .play{display:inline-flex;align-items:center;gap:7px;border:0;cursor:pointer;
+    color:#fff;font-weight:800;font-size:.92rem;border-radius:22px;padding:8px 16px;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);box-shadow:0 4px 12px rgba(255,93,143,.3);}
+  .play:active{transform:translateY(1px);}
+  .play.playing{background:linear-gradient(135deg,#22b573,#1a9e63);}
+  .play .wave{font-size:.8rem;opacity:.9;}
+  .hintq{font-size:.8rem;color:var(--gray);}
+  .fig{text-align:center;margin:4px 0 12px;}
+  .fig svg{max-width:100%;height:auto;}
+  .pic-img{border-radius:9px;border:1px solid #e6ded7;object-fit:cover;}
+  .fig .pic-img{max-width:230px;width:100%;max-height:150px;}
+  .opt{display:flex;align-items:flex-start;gap:10px;border:2px solid var(--line);
+    border-radius:11px;padding:10px 13px;margin:8px 0;cursor:pointer;transition:.15s;
+    font-size:.95rem;background:#fbfdff;}
+  .opt:hover{border-color:var(--coral);background:#fff4ee;}
+  .opt input{margin-top:3px;accent-color:var(--coral);}
+  .opt .lab{font-weight:800;color:var(--coral);min-width:18px;}
+  .opt.sel{border-color:var(--coral);background:#ffeee6;}
+  .opt.correct{border-color:var(--green);background:var(--green-bg);}
+  .opt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .opt.lock{cursor:default;}
+  /* picture options (Part 4) */
+  .picopts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:6px 0;}
+  .picopt{border:2px solid var(--line);border-radius:12px;padding:9px 6px;cursor:pointer;
+    text-align:center;transition:.15s;background:#fbfdff;display:flex;flex-direction:column;align-items:center;gap:6px;}
+  .picopt:hover{border-color:var(--coral);background:#fff4ee;}
+  .picopt.sel{border-color:var(--coral);background:#ffeee6;}
+  .picopt.correct{border-color:var(--green);background:var(--green-bg);}
+  .picopt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .picopt .lab{font-weight:800;color:var(--coral);align-self:flex-start;margin-left:4px;}
+  .picopt.correct .lab{color:var(--green);}.picopt.wrong .lab{color:var(--red);}
+  .picopt img.pic-img{width:100%;height:82px;}
+  .picopt svg{width:100%;max-width:132px;height:auto;}
+  .picopt svg.chart{max-width:100%;}
+  .legend{display:flex;gap:12px;justify-content:center;font-size:.72rem;margin:2px 0 6px;color:#556;flex-wrap:wrap;}
+  .legend i{display:inline-block;width:11px;height:11px;border:1px solid #999;margin-right:4px;vertical-align:-1px;}
+  table.mini{border-collapse:collapse;font-size:.62rem;margin:0 auto;}
+  table.mini th{background:#33414f;color:#fff;padding:2px 4px;}
+  table.mini td{border:1px solid #bbb;padding:2px 4px;text-align:center;}
+  .board{background:#111;color:#ffd24a;border-radius:5px;padding:5px;font-family:"Courier New",monospace;display:inline-block;}
+  .board table{border-collapse:collapse;font-size:.6rem;color:#ffd24a;}
+  .board th{color:#7fd7ff;padding:1px 4px;border-bottom:1px solid #444;}
+  .board td{padding:1px 4px;text-align:center;}
+  .exp{display:none;margin-top:11px;border-top:2px dashed #ffe1c2;padding-top:11px;font-size:.9rem;}
+  .exp.show{display:block;}
+  .exp .tag{display:inline-block;font-weight:800;color:#fff;background:var(--green);
+    border-radius:7px;padding:2px 10px;font-size:.8rem;margin-bottom:7px;}
+  .exp .tag.miss{background:var(--red);}
+  .exp .scriptbox{background:#f4f8ff;border-radius:8px;padding:7px 11px;margin:5px 0;font-size:.88rem;color:#20364d;}
+  .exp .scriptbox b{color:var(--blue-dark);}
+  .exp .en{color:#1c4f7a;background:#eef7ff;border-radius:8px;padding:6px 10px;margin:5px 0;}
+  .exp .zh{color:#7a4a12;background:#fff7ea;border-radius:8px;padding:6px 10px;margin:5px 0;}
+  .actions{position:sticky;bottom:0;padding:14px 0 6px;margin-top:18px;
+    background:linear-gradient(transparent,#fff9f4 35%);}
+  button.submit{width:100%;color:#fff;border:0;border-radius:14px;padding:16px;
+    font-size:1.08rem;font-weight:800;cursor:pointer;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);
+    box-shadow:0 6px 16px rgba(255,93,143,.35);}
+  button.submit:active{transform:translateY(1px);}
+  button.reset{width:100%;background:#fff;color:var(--coral);border:2px solid var(--coral);
+    border-radius:14px;padding:14px;font-size:1rem;font-weight:800;cursor:pointer;margin-top:10px;display:none;}
+  .result{display:none;background:var(--card);border:3px solid transparent;border-radius:16px;
+    padding:22px;margin:16px 0;text-align:center;
+    background-image:linear-gradient(#fff,#fff),linear-gradient(135deg,#ffb02e,#ff7a59,#ff5d8f);
+    background-origin:border-box;background-clip:padding-box,border-box;
+    box-shadow:0 8px 22px rgba(255,122,89,.18);}
+  .result.show{display:block;}
+  .result .score{font-size:2.8rem;font-weight:900;
+    background:linear-gradient(135deg,#ff7a59,#ff5d8f);-webkit-background-clip:text;
+    background-clip:text;-webkit-text-fill-color:transparent;}
+  .result .sub{color:var(--gray);font-size:.95rem;}
+  .result .bd{display:flex;justify-content:center;gap:18px;margin-top:12px;flex-wrap:wrap;font-size:.95rem;}
+  .result .bd span{font-weight:800;}
+  .hint{text-align:center;font-size:.85rem;color:var(--gray);margin-top:9px;min-height:1.2em;}
+  footer{text-align:center;color:var(--gray);font-size:.8rem;margin:24px 0;}
+</style>
+<!-- EFETL-PWA -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#7C4DFF">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="EFETL">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}</script>
+<!-- /EFETL-PWA -->
+</head>
+<body>
+<a href="gept-listening.html" style="position:fixed;top:12px;left:12px;background:rgba(255,255,255,.92);color:#ff6f91;padding:7px 15px;border-radius:20px;text-decoration:none;font-size:.85rem;font-weight:800;z-index:999;box-shadow:0 3px 10px rgba(0,0,0,.15);">&#8592; 回聽力題庫</a>
+<div class="wrap">
+  <header class="top">
+    <h1>GEPT 初級　聽力測驗　<span style="opacity:.9">第15回　買賣與商店</span></h1>
+    <p>互動聽力練習　&middot;　依官方四大題型與難度命題</p>
+    <div class="meta">共 4 大題、30 題　|　每題按 🔊 播放，聆聽後作答　|　送出後顯示聽力原文、中英解析與分數</div>
+  </header>
+
+  <div class="notice">
+    <span class="ic">🎧</span>
+    <span>每題皆附<strong>語音朗讀音檔</strong>，iPhone、Android 各廠牌手機與電腦瀏覽器皆可播放（請開啟媒體音量）。點各題的 <strong>🔊 播放</strong> 鈕聆聽；正式考試每題只播一次，練習時可重播。</span>
+  </div>
+
+  <a href="gept-listening-15-print.html" style="display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #ffb703;color:#8a5a00;border-radius:12px;padding:11px 16px;margin-bottom:18px;text-decoration:none;font-size:.9rem;font-weight:700;box-shadow:0 3px 10px rgba(255,183,3,.16);">
+    <span>🖨</span><span>列印版（學生卷／教師卷）— 適合課堂紙本練習與批改，可直接列印或存成 PDF</span>
+  </a>
+
+  <div class="sticky">
+    <div class="bar">
+      <span>作答進度</span>
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <span id="count">0 / 30</span>
+    </div>
+  </div>
+
+  <form id="quiz"></form>
+
+  <div class="result" id="result">
+    <div class="score" id="scoreNum">0</div>
+    <div class="sub" id="scoreTxt">分</div>
+    <div class="bd">
+      <span style="color:var(--green)">答對 <b id="rOk">0</b></span>
+      <span style="color:var(--red)">答錯 <b id="rNo">0</b></span>
+      <span style="color:var(--gray)">未作答 <b id="rBlank">0</b></span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="submit" id="submitBtn">送出並查看解析</button>
+    <div class="hint" id="hint">尚未作答任何題目</div>
+    <button type="button" class="reset" id="resetBtn">重新作答</button>
+  </div>
+
+  <footer>GEPT 初級聽力　互動練習　&middot;　第二顆腦 / GEPT初級</footer>
+</div>
+
+<script>
+/* ====== 圖形素材（第15回 買賣與商店） ====== */
+const IMG = n => `<img class="pic-img" src="gept-listening-img/15/${n}.jpg" alt="${n}">`;
+const BARS=(title,labs,vals)=>{const max=Math.max(...vals),bw=28,gap=18,x0=20;let b='',l='';
+ labs.forEach((L,i)=>{const h=Math.round(vals[i]/max*70),x=x0+i*(bw+gap);
+  b+=`<rect x="${x}" y="${100-h}" width="${bw}" height="${h}" fill="#e9e9e9" stroke="#1a1a1a" stroke-width="1.5"/>`;
+  l+=`<text x="${x+bw/2}" y="116">${L}</text>`;});
+ return `<svg class="chart" width="176" height="132" viewBox="0 0 176 132"><text x="88" y="15" text-anchor="middle" font-size="14" font-weight="700">${title}</text><line x1="16" y1="22" x2="16" y2="100" stroke="#1a1a1a" stroke-width="1.5"/><line x1="16" y1="100" x2="170" y2="100" stroke="#1a1a1a" stroke-width="1.5"/>${b}<g font-size="11" text-anchor="middle">${l}</g></svg>`;};
+const STORE=`<svg width="140" height="102" viewBox="0 0 140 104"><rect x="20" y="40" width="100" height="58" fill="#fff5ec" stroke="#1a1a1a" stroke-width="2.5"/><path d="M16 40 h108 l-8 -16 h-92 z" fill="#e6007e" stroke="#1a1a1a" stroke-width="2"/><g fill="#fff"><rect x="24" y="26" width="12" height="10" opacity=".7"/><rect x="48" y="26" width="12" height="10" opacity=".7"/><rect x="72" y="26" width="12" height="10" opacity=".7"/><rect x="96" y="26" width="12" height="10" opacity=".7"/></g><rect x="30" y="56" width="30" height="42" fill="#a5d8ff" stroke="#1a1a1a" stroke-width="1.5"/><rect x="76" y="66" width="24" height="32" fill="#8a5a2b"/><text x="70" y="52" text-anchor="middle" font-size="9" font-weight="800" fill="#fff">SHOP</text></svg>`;
+const CART=`<svg width="120" height="104" viewBox="0 0 120 106"><path d="M14 22 h14 l14 52 h50 l12 -34 h-64" fill="none" stroke="#1a1a1a" stroke-width="2.5" stroke-linejoin="round"/><g fill="#43a047"><circle cx="60" cy="40" r="7"/><circle cx="76" cy="44" r="6"/></g><rect x="48" y="34" width="10" height="10" fill="#e6007e"/><circle cx="52" cy="88" r="7" fill="none" stroke="#1a1a1a" stroke-width="2.5"/><circle cx="82" cy="88" r="7" fill="none" stroke="#1a1a1a" stroke-width="2.5"/></svg>`;
+const FACTORY=`<svg width="140" height="100" viewBox="0 0 140 102"><rect x="18" y="52" width="100" height="46" fill="#cfd8e3" stroke="#1a1a1a" stroke-width="2.5"/><path d="M18 52 l24 -16 v16 M42 52 l24 -16 v16 M66 52 l24 -16 v16" fill="#aeb8c4" stroke="#1a1a1a" stroke-width="2"/><rect x="98" y="24" width="12" height="30" fill="#8b95a1" stroke="#1a1a1a" stroke-width="2"/><g fill="#ccc" opacity=".8"><circle cx="104" cy="18" r="6"/><circle cx="112" cy="12" r="5"/></g><g fill="#a5d8ff"><rect x="26" y="66" width="12" height="12"/><rect x="50" y="66" width="12" height="12"/><rect x="74" y="66" width="12" height="12"/></g></svg>`;
+const ADSIGN=`<svg width="130" height="104" viewBox="0 0 130 106"><rect x="22" y="14" width="86" height="56" rx="4" fill="#ffd166" stroke="#1a1a1a" stroke-width="2.5"/><text x="65" y="38" text-anchor="middle" font-size="12" font-weight="900" fill="#e6007e">SALE</text><text x="65" y="56" text-anchor="middle" font-size="10" font-weight="800" fill="#1a1a1a">50% OFF</text><rect x="42" y="70" width="6" height="30" fill="#8a5a2b"/><rect x="82" y="70" width="6" height="30" fill="#8a5a2b"/></svg>`;
+const DEPTSTORE=`<svg width="120" height="106" viewBox="0 0 120 108"><rect x="30" y="16" width="60" height="84" fill="#b06bff" stroke="#1a1a1a" stroke-width="2.5"/><g fill="#e9d8ff"><rect x="38" y="24" width="10" height="10"/><rect x="54" y="24" width="10" height="10"/><rect x="70" y="24" width="10" height="10"/><rect x="38" y="40" width="10" height="10"/><rect x="54" y="40" width="10" height="10"/><rect x="70" y="40" width="10" height="10"/><rect x="38" y="56" width="10" height="10"/><rect x="54" y="56" width="10" height="10"/><rect x="70" y="56" width="10" height="10"/></g><rect x="52" y="76" width="16" height="24" fill="#4a2f6b"/><text x="60" y="14" text-anchor="middle" font-size="9" font-weight="800" fill="#7c4dff">MALL</text></svg>`;
+/* ====== 大題 ====== */
+const PARTS=[
+ {t:"第一大題　看圖辨義",d:"共 5 題（1–5）。看圖並聆聽問題，從 A、B、C 三個選項中選出最適合的答案。"},
+ {t:"第二大題　問答",d:"共 10 題（6–15）。聆聽一個問句或直述句，選出最適合的回答。"},
+ {t:"第三大題　簡短對話",d:"共 10 題（16–25）。聆聽一段對話與問題，選出最適合的答案。"},
+ {t:"第四大題　短文聽解",d:"共 5 題（26–30）。聆聽一段短文與問題，從三張圖片中選出最適合的一張。"}
+];
+
+
+
+/* ====== 題庫（第15回 買賣與商店） ====== */
+const Q=[
+{n:1,p:0,fig:STORE,o:["This is a supermarket, where a customer shops for food.","The prisoner cries in the hall.","A giant fan blows from the south."],a:0,
+ sen:"For question one, look at the picture. What kind of place is this?",szh:"第一題，請看圖片。這是什麼地方？",
+ en:"A supermarket where a customer shops.",zh:"這是一家超市(supermarket)，顧客(customer)在此購物，選 A。prisoner/cry/hall、giant/fan/south 為干擾。"},
+{n:2,p:0,fig:CART,o:["The thief rushed to the basement.","We revise it, but not anymore.","She pushes a cart full of produce from the market."],a:2,
+ sen:"For question two, look at the picture. What is she pushing?",szh:"第二題，請看圖片。她在推什麼？",
+ en:"A cart full of produce from the market.",zh:"她推著一車從市場(market)買來的農產品(produce)，選 C。thief/rush/basement、revise/anymore 為干擾。"},
+{n:3,p:0,fig:FACTORY,o:["The sample is secret.","This big building is a factory for the car industry.","A clever thought is not wild."],a:1,
+ sen:"For question three, look at the picture. What building is this?",szh:"第三題，請看圖片。這是什麼建築？",
+ en:"A factory for the car industry.",zh:"這棟大建築是汽車工業(industry)的工廠(factory)，選 B。sample/secret、clever/thought/wild 為干擾。"},
+{n:4,p:0,fig:ADSIGN,o:["A big advertisement for the airline company.","The customer cries loud.","We punish the prisoner."],a:0,
+ sen:"For question four, look at the picture. What is on the sign?",szh:"第四題，請看圖片。招牌上是什麼？",
+ en:"An advertisement for the airline company.",zh:"這是航空(airline)公司(company)的大廣告(advertisement)，選 A。customer/cry/loud、punish/prisoner 為干擾。"},
+{n:5,p:0,fig:DEPTSTORE,o:["A thief hides in the hall.","The fan is in the south.","They shop in a department store; it is a good business deal."],a:2,
+ sen:"For question five, look at the picture. Where are they shopping?",szh:"第五題，請看圖片。他們在哪裡購物？",
+ en:"In a department store; a good business deal.",zh:"他們在百貨公司(department store)購物，是筆好生意(business/deal)，選 C。thief/hall、fan/south 為干擾。"},
+
+{n:6,p:1,o:["The prisoner cries in the hall.","A good deal; our firm will supply goods and trade fairly.","The thief rushed to the basement."],a:1,
+ sen:"How is the new trade agreement?",szh:"新的貿易協議如何？",
+ en:"A good deal; the firm will supply and trade.",zh:"問貿易(trade)協議如何，答『是筆好交易(deal)，我們公司(firm)會供應(supply)並公平交易』，選 B。prisoner/cry/hall、thief/rush/basement 為干擾。"},
+{n:7,p:1,o:["I cried loud since this morning, so my throat hurts.","The fan is giant.","The sample is a secret."],a:0,
+ sen:"Why is your voice so weak today?",szh:"你今天聲音怎麼這麼虛弱？",
+ en:"I cried loud since morning; my throat hurts.",zh:"問聲音為何虛弱，答『我從(since)早上就大聲(loud)哭(cry)，所以喉嚨(throat)痛』，選 A。fan/giant、sample/secret 為干擾。"},
+{n:8,p:1,o:["The prisoner is clever.","The market is low.","The same way; a giant fan blows from the south."],a:2,
+ sen:"Which direction is the exit?",szh:"出口在哪個方向？",
+ en:"The same way; a giant fan from the south.",zh:"問方向，答『同一(same)方向，一台巨大(giant)風扇(fan)從南方(south)吹來』，選 C。prisoner/clever、market/low 為干擾。"},
+{n:9,p:1,o:["The thief is wild.","Yes, sunny; I do not think anybody wants to kill the low mood.","We revise the contract."],a:1,
+ sen:"Is the weather good for the market fair?",szh:"這天氣適合辦市集嗎？",
+ en:"Sunny; anybody wouldn't kill the mood.",zh:"問天氣是否好，答『很晴朗(sunny)，我不覺得有任何人(anybody)想破壞(kill)這低(low)落的心情』，選 B。thief/wild、revise/contract 為干擾。"},
+{n:10,p:1,o:["I think, in my opinion, we should question the whole plan.","The hall is short.","The fan is loud."],a:0,
+ sen:"What do you say about the business deal?",szh:"你對這筆生意有什麼看法？",
+ en:"In my opinion, we should question the plan.",zh:"問對生意的看法，答『我認為(think)，依我看(opinion)，我們該質疑(question)整個計畫』，選 A。hall/short、fan/loud 為干擾。"},
+{n:11,p:1,o:["The prisoner is in the south.","We trade anymore.","It is one meter long; where it causes trouble, just ignore it."],a:2,
+ sen:"How big is the new sample product?",szh:"新的樣品有多大？",
+ en:"One meter; where it causes trouble, ignore it.",zh:"問樣品(sample)多大，答『一公尺(meter)長；哪裡(where)造成(cause)問題就忽略(ignore)它』，選 C。prisoner/south、trade/anymore 為干擾。"},
+{n:12,p:1,o:["The customer is short.","He is neither wild nor foolish; a joint effort makes him clever.","The factory is slow."],a:1,
+ sen:"Is the new business partner smart?",szh:"新的生意夥伴聰明嗎？",
+ en:"Neither wild nor foolish; a clever joint effort.",zh:"問夥伴是否聰明，答『他既不(nor)狂野也不笨；共同(joint)努力讓他很聰明(clever)』，選 B。customer/short、factory/slow 為干擾。"},
+{n:13,p:1,o:["In the hall, they punish the prisoner and keep the sample secret.","The market is sunny.","The airline is low."],a:0,
+ sen:"What happened at the court today?",szh:"今天法庭上發生了什麼？",
+ en:"They punish the prisoner; keep the sample secret.",zh:"問法庭發生什麼，答『在大廳(hall)裡，他們處罰(punish)囚犯(prisoner)，並把樣本(sample)保密(secret)』，選 A。market/sunny、airline/low 為干擾。"},
+{n:14,p:1,o:["The deal is same.","The company is giant.","The thief ran down to the basement in a great rush."],a:2,
+ sen:"Why is everyone running around the shop?",szh:"為什麼大家在店裡跑來跑去？",
+ en:"The thief ran to the basement in a rush.",zh:"問大家為何奔跑，答『小偷(thief)匆忙(rush)跑到地下室(basement)』，選 C。deal/same、company/giant 為干擾。"},
+{n:15,p:1,o:["The prisoner cries.","A wild thought: let's revise the contract and not wait anymore.","The fan is in the hall."],a:1,
+ sen:"Do you have any new idea for the firm?",szh:"你對公司有什麼新點子嗎？",
+ en:"A wild thought: revise it, don't wait anymore.",zh:"問對公司(firm)的新點子，答『一個大膽(wild)的想法(thought)：我們修改(revise)合約，別再(anymore)等了』，選 B。prisoner/cry、fan/hall 為干擾。"},
+
+{n:16,p:2,o:["At the supermarket.","At the factory.","At the hall."],a:0,
+ sen:"W: Where did you meet the new customer? &nbsp;M: At the supermarket, near the fruit stand. &nbsp;W: I see. &nbsp;Q: Where did the man meet the customer?",
+ szh:"女：你在哪遇到新客戶的？　男：在超市(supermarket)，水果攤附近。　女：了解。　問：男士在哪遇到顧客(customer)？",
+ en:"At the supermarket.",zh:"在超市(supermarket)遇到顧客(customer)，選 A。"},
+{n:17,p:2,o:["It sells clothes.","It sells cars.","It is a factory that produces toys."],a:2,
+ sen:"M: What does that big factory make? &nbsp;W: It is a factory that produces toys for children. &nbsp;M: Interesting. &nbsp;Q: What does the factory make?",
+ szh:"男：那間大工廠做什麼？　女：那是一間生產(produce)兒童玩具的工廠(factory)。　男：有趣。　問：工廠做什麼？",
+ en:"A factory that produces toys.",zh:"那是生產(produce)玩具的工廠(factory)，選 C。"},
+{n:18,p:2,o:["At home.","At the market, trading goods.","At school."],a:1,
+ sen:"W: Where does your uncle work? &nbsp;M: At the busy market, trading fresh goods every day. &nbsp;W: Hard work. &nbsp;Q: Where does the uncle work?",
+ szh:"女：你叔叔在哪工作？　男：在忙碌的市場(market)，每天交易(trade)新鮮貨物。　女：辛苦了。　問：叔叔在哪工作？",
+ en:"At the market, trading goods.",zh:"叔叔在市場(market)做買賣(trade)，選 B。"},
+{n:19,p:2,o:["She runs her own company and loves the business.","She is a student.","She is a farmer."],a:0,
+ sen:"M: What does your mother do? &nbsp;W: She runs her own company and loves the business. &nbsp;M: Impressive. &nbsp;Q: What does the mother do?",
+ szh:"男：你媽媽做什麼？　女：她經營自己的公司(company)，熱愛這門生意(business)。　男：厲害。　問：媽媽做什麼？",
+ en:"She runs her own company.",zh:"媽媽經營自己的公司(company)，選 A。"},
+{n:20,p:2,o:["From Japan.","From America.","Made in Taiwan."],a:2,
+ sen:"W: Where is this good phone made? &nbsp;M: It is made in Taiwan, and it is very reliable. &nbsp;W: Nice quality. &nbsp;Q: Where is the phone made?",
+ szh:"女：這支好手機是哪裡製造的？　男：台灣(Taiwan)製造，非常可靠。　女：品質很好。　問：手機在哪製造？",
+ en:"Made in Taiwan.",zh:"手機在台灣(Taiwan)製造，選 C。"},
+{n:21,p:2,o:["A person helped it.","The machine fixed itself, but hurt my leg.","Nobody touched it."],a:1,
+ sen:"W: How did the broken machine start again? &nbsp;M: The machine fixed itself, but a part hurt my leg. &nbsp;W: Be careful! &nbsp;Q: How did the machine start again?",
+ szh:"女：壞掉的機器怎麼又動了？　男：機器自己(itself)修好的，但有個零件弄傷了我的腿(leg)。　女：小心！　問：機器怎麼又動了？",
+ en:"The machine fixed itself.",zh:"機器自己(itself)修好的，選 B。leg 腿。"},
+{n:22,p:2,o:["It is short and quick.","It is long and slow.","It is expensive."],a:0,
+ sen:"M: How is the new way to the store? &nbsp;W: It is short and quick, not slow like before. &nbsp;M: Great. &nbsp;Q: How is the new way to the store?",
+ szh:"男：去商店的新路如何？　女：又短(short)又快，不像以前那麼慢(slow)。　男：太好了。　問：去商店的新路如何？",
+ en:"Short and quick.",zh:"新路又短(short)又快，不慢(slow)，選 A。"},
+{n:23,p:2,o:["Fifty.","Seventeen.","About seventy, in a hall seventy meters long."],a:2,
+ sen:"M: How many shops are in the new mall? &nbsp;W: About seventy, in a hall that is seventy meters long. &nbsp;M: Huge! &nbsp;Q: How many shops are in the mall?",
+ szh:"男：新商場有幾家店？　女：大約七十(seventy)家，在一個七十公尺(meter)長的大廳裡。　男：好大！　問：商場有幾家店？",
+ en:"About seventy shops.",zh:"大約七十(seventy)家店，選 C。"},
+{n:24,p:2,o:["A cheap deal.","A great deal at the department store.","A bad deal."],a:1,
+ sen:"W: How was the shopping today? &nbsp;M: We found a great deal at the department store. &nbsp;W: Lucky you. &nbsp;Q: What kind of deal did they find?",
+ szh:"女：今天購物如何？　男：我們在百貨公司(department store)找到超划算的交易(deal)。　女：真幸運。　問：他們找到什麼樣的交易？",
+ en:"A great deal at the department store.",zh:"在百貨公司(department store)找到好交易(deal)，選 B。"},
+{n:25,p:2,o:["On the airline's new advertisement.","In a book.","On the radio."],a:0,
+ sen:"M: Where did you see the cheap flight? &nbsp;W: On the airline's new advertisement in the paper. &nbsp;M: Let's book it. &nbsp;Q: Where did the woman see the cheap flight?",
+ szh:"男：你在哪看到便宜機票的？　女：在報紙上航空公司(airline)的新廣告(advertisement)。　男：我們訂吧。　問：女士在哪看到便宜機票？",
+ en:"On the airline's advertisement.",zh:"在航空公司(airline)的廣告(advertisement)上，選 A。"},
+
+{n:26,p:3,pic:true,o:[BARS("Shops in Town",["Market","Store","Mall"],[20,50,80]),BARS("Shops in Town",["Market","Store","Mall"],[50,80,20]),BARS("Shops in Town",["Market","Store","Mall"],[80,50,20])],a:2,
+ sen:"Our town counted its places to shop. Traditional markets were the most common, because people like fresh produce. Small stores were in the middle, and there was only one big mall. So the market bar should be the tallest. &nbsp;Q: Which chart shows the shops in town?",
+ szh:"我們鎮統計了購物的地方。傳統市場(market)最多，因為大家喜歡新鮮農產(produce)；小商店中等；大型商場只有一家。所以市場長條最高。　問：哪張圖顯示鎮上的商店？",
+ en:"Markets most, mall least.",zh:"市場最多、商場最少，符合『Market 最高』的 C。"},
+{n:27,p:3,pic:true,o:[BARS("Company Sales",["Q1","Q2","Q3"],[30,55,80]),BARS("Company Sales",["Q1","Q2","Q3"],[80,55,30]),BARS("Company Sales",["Q1","Q2","Q3"],[55,80,30])],a:1,
+ sen:"Our company checked its sales this year. In the first season sales were the highest, because a big advertisement worked well. In the second season they were in the middle, and in the third season the lowest, since a rival firm cut its prices. So sales went down each season. &nbsp;Q: Which chart shows the company's sales?",
+ szh:"我們公司(company)檢查今年的業績。第一季最高，因為一則大廣告(advertisement)很成功；第二季中等；第三季最低，因為對手公司(firm)降價。所以業績逐季下降。　問：哪張圖顯示公司業績？",
+ en:"Q1 highest, Q3 lowest.",zh:"第一季最高、逐季下降，符合『Q1 最高、Q3 最低』的 B。"},
+{n:28,p:3,pic:true,o:[IMG('bread'),IMG('noodles'),IMG('rice')],a:0,
+ sen:"On a busy market day, our shop had many customers and no time for a real lunch. We could not cook slow noodles or steam rice in the small store. So the boss bought fresh bread for everyone, and we ate quickly between customers. &nbsp;Q: What did the shop workers eat?",
+ szh:"在繁忙的市場(market)日，我們店裡很多顧客(customer)，沒空好好吃午餐。小店(store)裡不能煮慢的麵或蒸飯。所以老闆買了新鮮麵包(bread)給大家，我們趁客人之間快速吃。　問：店員吃了什麼？",
+ en:"Fresh bread.",zh:"店員吃了麵包(bread)，選 A。麵、飯為干擾。"},
+{n:29,p:3,pic:true,o:[IMG('bread'),IMG('rice'),IMG('noodles')],a:2,
+ sen:"After signing a big business contract, the company held a dinner in Taiwan. The manager did not want plain bread or dry rice for such a special night. Instead, he ordered a huge plate of local noodles, and every customer at the table was pleased. &nbsp;Q: What did the manager order for the dinner?",
+ szh:"簽下一筆大生意(business)合約後，公司在台灣(Taiwan)辦晚宴。經理不想在這麼特別的夜晚吃普通麵包或白飯，而是點了一大盤當地的麵(noodles)，桌上每位客人(customer)都很滿意。　問：經理晚宴點了什麼？",
+ en:"A plate of noodles.",zh:"經理點了麵(noodles)，選 C。麵包、飯為干擾。"},
+{n:30,p:3,pic:true,o:[IMG('mountain'),IMG('beach'),IMG('park')],a:1,
+ sen:"After closing a good deal, our whole company took a trip to relax. The boss liked the mountain and one customer liked the park. But we chose the beach, because after weeks of hard business, everyone wanted the sunny sea and cool wind. &nbsp;Q: Where did the company go to relax?",
+ szh:"談成一筆好交易(deal)後，全公司(company)去旅行放鬆。老闆喜歡山，一位客人(customer)喜歡公園，但我們選了海邊(beach)，因為經過幾週辛苦的生意(business)，大家都想要晴朗(sunny)的海和涼風。　問：公司去哪裡放鬆？",
+ en:"The beach.",zh:"公司去海邊(beach)放鬆，選 B。山、公園為干擾。"}
+];
+
+/* ====== 音檔播放（AAC/.m4a，各廠牌手機皆支援）====== */
+let curAudio=null, curBtn=null;
+function resetPlayBtn(b){ if(!b) return; b.classList.remove('playing'); b.querySelector('.txt').textContent = b.dataset.played?'重播':'播放'; }
+function stopAudio(){ if(curAudio) curAudio.pause(); if(curBtn) resetPlayBtn(curBtn); curAudio=null; curBtn=null; }
+function playAudio(audio,btn){
+  if(curAudio===audio){                       // 同一題：暫停 / 繼續
+    if(audio.paused){ audio.play(); btn.classList.add('playing'); btn.querySelector('.txt').textContent='播放中…'; }
+    else { audio.pause(); }
+    return;
+  }
+  if(curAudio){ curAudio.pause(); resetPlayBtn(curBtn); }   // 換題：停掉上一段
+  curAudio=audio; curBtn=btn; btn.dataset.played='1';
+  btn.classList.add('playing'); btn.querySelector('.txt').textContent='播放中…';
+  audio.play().catch(()=>resetPlayBtn(btn));
+}
+
+/* ====== 產生畫面 ====== */
+const form=document.getElementById('quiz');
+let lastP=-1;
+Q.forEach(q=>{
+  if(q.p!==lastP){
+    const st=document.createElement('div'); st.className='section-title s'+q.p; st.textContent=PARTS[q.p].t;
+    const sd=document.createElement('div'); sd.className='section-desc'; sd.textContent=PARTS[q.p].d;
+    form.appendChild(st); form.appendChild(sd); lastP=q.p;
+  }
+  const card=document.createElement('div'); card.className='q'; card.id='q'+q.n;
+  const head=document.createElement('div'); head.className='qhead';
+  head.innerHTML=`<span class="num">${q.n}</span>
+    <button type="button" class="play"><span class="wave">🔊</span><span class="txt">播放</span></button>
+    <span class="hintq">聆聽後作答</span>`;
+  card.appendChild(head);
+  const audio=document.createElement('audio'); audio.preload='none'; audio.src='gept-listening-audio/15/q'+q.n+'.m4a?v=r15-20260909'; card.appendChild(audio);
+  const pbtn=head.querySelector('.play');
+  pbtn.addEventListener('click',()=>playAudio(audio,pbtn));
+  audio.addEventListener('ended',()=>{ if(curBtn===pbtn){ resetPlayBtn(pbtn); curAudio=null; curBtn=null; } });
+  audio.addEventListener('pause',()=>{ if(curAudio===audio && curBtn===pbtn && !audio.ended){ pbtn.classList.remove('playing'); pbtn.querySelector('.txt').textContent='繼續'; } });
+  if(q.fig){ const f=document.createElement('div'); f.className='fig'; f.innerHTML=q.fig; card.appendChild(f); }
+  if(q.pic){
+    if(q.legend){ const lg=document.createElement('div'); lg.innerHTML=PIE_LEGEND; card.appendChild(lg.firstChild); }
+    const wrap=document.createElement('div'); wrap.className='picopts';
+    q.o.forEach((opt,i)=>{
+      const cell=document.createElement('label'); cell.className='picopt'; cell.dataset.i=i;
+      cell.innerHTML=`<span class="lab">${'ABC'[i]}</span>${opt}<input type="radio" name="q${q.n}" value="${i}" hidden>`;
+      cell.querySelector('input').addEventListener('change',()=>{ card.querySelectorAll('.picopt').forEach(o=>o.classList.remove('sel')); cell.classList.add('sel'); updateProgress(); });
+      wrap.appendChild(cell);
+    });
+    card.appendChild(wrap);
+  } else {
+    q.o.forEach((opt,i)=>{
+      const lab=document.createElement('label'); lab.className='opt'; lab.dataset.i=i;
+      lab.innerHTML=`<input type="radio" name="q${q.n}" value="${i}"><span class="lab">${'ABC'[i]}</span><span>${opt}</span>`;
+      lab.querySelector('input').addEventListener('change',()=>{ card.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel')); lab.classList.add('sel'); updateProgress(); });
+      card.appendChild(lab);
+    });
+  }
+  const exp=document.createElement('div'); exp.className='exp'; exp.id='exp'+q.n; card.appendChild(exp);
+  form.appendChild(card);
+});
+
+const submitBtn=document.getElementById('submitBtn');
+const resetBtn=document.getElementById('resetBtn');
+const hint=document.getElementById('hint');
+const TOT=Q.length;
+function answeredCount(){ let c=0; Q.forEach(q=>{ if(form.querySelector(`input[name="q${q.n}"]:checked`)) c++; }); return c; }
+function updateProgress(){
+  const c=answeredCount();
+  document.getElementById('count').textContent=`${c} / ${TOT}`;
+  document.getElementById('fill').style.width=(c/TOT*100)+'%';
+  hint.textContent = c===TOT ? '已完成全部 30 題' : (c===0 ? '尚未作答任何題目（仍可送出查看解析）' : `已作答 ${c} 題，未作答 ${TOT-c} 題（仍可送出）`);
+}
+
+submitBtn.addEventListener('click',()=>{
+  stopAudio();
+  let ok=0, blank=0;
+  Q.forEach(q=>{
+    const sel=form.querySelector(`input[name="q${q.n}"]:checked`);
+    const pick=sel?parseInt(sel.value):null;
+    if(pick===null) blank++;
+    const card=document.getElementById('q'+q.n);
+    const cls=q.pic?'.picopt':'.opt';
+    card.querySelectorAll(cls).forEach(o=>{
+      o.classList.add('lock');
+      const inp=o.querySelector('input'); if(inp) inp.disabled=true;
+      const i=parseInt(o.dataset.i);
+      if(i===q.a) o.classList.add('correct');
+      if(pick!==null && i===pick && pick!==q.a) o.classList.add('wrong');
+    });
+    const correct=pick===q.a; if(correct) ok++;
+    const exp=document.getElementById('exp'+q.n);
+    const tag=correct?'答對':(pick===null?'未作答':'答錯');
+    exp.innerHTML=`<span class="tag ${correct?'':'miss'}">${tag}　正解：${'ABC'[q.a]}</span>
+      <div class="scriptbox"><b>聽力原文</b>　${q.sen}<br><span style="color:#7a4a12">${q.szh}</span></div>
+      <div class="en"><b>EN</b>&nbsp;${q.en}</div><div class="zh"><b>中</b>&nbsp;${q.zh}</div>`;
+    exp.classList.add('show');
+  });
+  document.getElementById('scoreNum').textContent=Math.round(ok/TOT*100);
+  document.getElementById('scoreTxt').textContent=`分（答對 ${ok} / ${TOT} 題）`;
+  document.getElementById('rOk').textContent=ok;
+  document.getElementById('rNo').textContent=TOT-ok-blank;
+  document.getElementById('rBlank').textContent=blank;
+  const res=document.getElementById('result'); res.classList.add('show');
+  submitBtn.style.display='none'; hint.style.display='none'; resetBtn.style.display='block';
+  res.scrollIntoView({behavior:'smooth'});
+});
+
+resetBtn.addEventListener('click',()=>{
+  stopAudio(); form.reset();
+  Q.forEach(q=>{
+    const card=document.getElementById('q'+q.n);
+    card.querySelectorAll('.opt,.picopt').forEach(o=>{o.classList.remove('sel','correct','wrong','lock');const inp=o.querySelector('input');if(inp)inp.disabled=false;});
+    document.getElementById('exp'+q.n).classList.remove('show');
+  });
+  document.getElementById('result').classList.remove('show');
+  submitBtn.style.display='block'; hint.style.display='block'; resetBtn.style.display='none';
+  updateProgress(); window.scrollTo({top:0,behavior:'smooth'});
+});
+
+updateProgress();
+</script>
+</body>
+</html>
