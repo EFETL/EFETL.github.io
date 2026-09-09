@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEPT 初級 聽力測驗　第7回　音樂與美術</title>
+<style>
+  :root{
+    --blue:#2b8cff; --blue-dark:#1f6fe0;
+    --coral:#ff7a59; --amber:#ffb02e; --pink:#ff5d8f;
+    --bg:#f3f9ff; --card:#ffffff; --line:#e3edf9;
+    --green:#22b573; --green-bg:#e4f8ef;
+    --red:#ff5a5a; --red-bg:#ffecec;
+    --gray:#6b7785;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;
+    background:linear-gradient(180deg,#fff5ec,#fff9f4 70%);color:#22303f;line-height:1.6;
+    -webkit-text-size-adjust:100%;}
+  .wrap{max-width:760px;margin:0 auto;padding:16px;}
+  header.top{background:linear-gradient(135deg,#f6d365,#fda085 60%,#ff7a9c);color:#fff;
+    border-radius:18px;padding:24px 22px;margin-bottom:16px;box-shadow:0 8px 22px rgba(253,160,133,.35);}
+  header.top h1{margin:0 0 6px;font-size:1.5rem;text-shadow:0 1px 2px rgba(0,0,0,.14);}
+  header.top p{margin:0;font-size:.92rem;opacity:.96;}
+  .meta{margin-top:14px;font-size:.86rem;background:rgba(255,255,255,.24);
+    padding:9px 13px;border-radius:10px;}
+  .notice{background:#fffbeb;border:1.5px solid #f59e0b;border-radius:12px;
+    padding:11px 15px;margin-bottom:14px;font-size:.86rem;color:#78350f;
+    display:flex;align-items:flex-start;gap:9px;line-height:1.55;}
+  .notice .ic{font-size:1.1rem;flex-shrink:0;margin-top:1px;}
+  .sticky{position:sticky;top:0;z-index:20;padding:10px 0;
+    background:linear-gradient(180deg,#fff5ec 70%,rgba(255,245,236,0));}
+  .bar{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:11px 16px;display:flex;align-items:center;gap:12px;font-size:.9rem;
+    box-shadow:0 4px 12px rgba(253,160,133,.14);}
+  .bar .track{flex:1;height:9px;background:#f1e4dc;border-radius:6px;overflow:hidden;}
+  .bar .fill{height:100%;width:0;border-radius:6px;
+    background:linear-gradient(90deg,#ffb02e,#ff7a59);transition:width .35s;}
+  .bar #count{font-weight:700;color:#e0740a;}
+  .section-title{color:#fff;font-weight:800;border-radius:12px;
+    padding:10px 16px;margin:24px 0 6px;font-size:1.05rem;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);}
+  .section-title.s0{background:linear-gradient(135deg,#ff9a6c,#ff6f91);}
+  .section-title.s1{background:linear-gradient(135deg,#4dd0e1,#2b8cff);}
+  .section-title.s2{background:linear-gradient(135deg,#9b8bff,#b06bff);}
+  .section-title.s3{background:linear-gradient(135deg,#43cea2,#3ab0d6);}
+  .section-desc{font-size:.86rem;color:var(--gray);margin:0 4px 10px;}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:15px 17px;margin:12px 0;box-shadow:0 3px 10px rgba(253,160,133,.09);}
+  .qhead{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+  .qhead .num{display:inline-block;color:#fff;background:var(--coral);font-weight:700;
+    border-radius:8px;padding:1px 10px;font-size:.92rem;}
+  .play{display:inline-flex;align-items:center;gap:7px;border:0;cursor:pointer;
+    color:#fff;font-weight:800;font-size:.92rem;border-radius:22px;padding:8px 16px;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);box-shadow:0 4px 12px rgba(255,93,143,.3);}
+  .play:active{transform:translateY(1px);}
+  .play.playing{background:linear-gradient(135deg,#22b573,#1a9e63);}
+  .play .wave{font-size:.8rem;opacity:.9;}
+  .hintq{font-size:.8rem;color:var(--gray);}
+  .fig{text-align:center;margin:4px 0 12px;}
+  .fig svg{max-width:100%;height:auto;}
+  .pic-img{border-radius:9px;border:1px solid #e6ded7;object-fit:cover;}
+  .fig .pic-img{max-width:230px;width:100%;max-height:150px;}
+  .opt{display:flex;align-items:flex-start;gap:10px;border:2px solid var(--line);
+    border-radius:11px;padding:10px 13px;margin:8px 0;cursor:pointer;transition:.15s;
+    font-size:.95rem;background:#fbfdff;}
+  .opt:hover{border-color:var(--coral);background:#fff4ee;}
+  .opt input{margin-top:3px;accent-color:var(--coral);}
+  .opt .lab{font-weight:800;color:var(--coral);min-width:18px;}
+  .opt.sel{border-color:var(--coral);background:#ffeee6;}
+  .opt.correct{border-color:var(--green);background:var(--green-bg);}
+  .opt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .opt.lock{cursor:default;}
+  /* picture options (Part 4) */
+  .picopts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:6px 0;}
+  .picopt{border:2px solid var(--line);border-radius:12px;padding:9px 6px;cursor:pointer;
+    text-align:center;transition:.15s;background:#fbfdff;display:flex;flex-direction:column;align-items:center;gap:6px;}
+  .picopt:hover{border-color:var(--coral);background:#fff4ee;}
+  .picopt.sel{border-color:var(--coral);background:#ffeee6;}
+  .picopt.correct{border-color:var(--green);background:var(--green-bg);}
+  .picopt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .picopt .lab{font-weight:800;color:var(--coral);align-self:flex-start;margin-left:4px;}
+  .picopt.correct .lab{color:var(--green);}.picopt.wrong .lab{color:var(--red);}
+  .picopt img.pic-img{width:100%;height:82px;}
+  .picopt svg{width:100%;max-width:132px;height:auto;}
+  .picopt svg.chart{max-width:100%;}
+  .legend{display:flex;gap:12px;justify-content:center;font-size:.72rem;margin:2px 0 6px;color:#556;flex-wrap:wrap;}
+  .legend i{display:inline-block;width:11px;height:11px;border:1px solid #999;margin-right:4px;vertical-align:-1px;}
+  table.mini{border-collapse:collapse;font-size:.62rem;margin:0 auto;}
+  table.mini th{background:#33414f;color:#fff;padding:2px 4px;}
+  table.mini td{border:1px solid #bbb;padding:2px 4px;text-align:center;}
+  .board{background:#111;color:#ffd24a;border-radius:5px;padding:5px;font-family:"Courier New",monospace;display:inline-block;}
+  .board table{border-collapse:collapse;font-size:.6rem;color:#ffd24a;}
+  .board th{color:#7fd7ff;padding:1px 4px;border-bottom:1px solid #444;}
+  .board td{padding:1px 4px;text-align:center;}
+  .exp{display:none;margin-top:11px;border-top:2px dashed #ffe1c2;padding-top:11px;font-size:.9rem;}
+  .exp.show{display:block;}
+  .exp .tag{display:inline-block;font-weight:800;color:#fff;background:var(--green);
+    border-radius:7px;padding:2px 10px;font-size:.8rem;margin-bottom:7px;}
+  .exp .tag.miss{background:var(--red);}
+  .exp .scriptbox{background:#f4f8ff;border-radius:8px;padding:7px 11px;margin:5px 0;font-size:.88rem;color:#20364d;}
+  .exp .scriptbox b{color:var(--blue-dark);}
+  .exp .en{color:#1c4f7a;background:#eef7ff;border-radius:8px;padding:6px 10px;margin:5px 0;}
+  .exp .zh{color:#7a4a12;background:#fff7ea;border-radius:8px;padding:6px 10px;margin:5px 0;}
+  .actions{position:sticky;bottom:0;padding:14px 0 6px;margin-top:18px;
+    background:linear-gradient(transparent,#fff9f4 35%);}
+  button.submit{width:100%;color:#fff;border:0;border-radius:14px;padding:16px;
+    font-size:1.08rem;font-weight:800;cursor:pointer;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);
+    box-shadow:0 6px 16px rgba(255,93,143,.35);}
+  button.submit:active{transform:translateY(1px);}
+  button.reset{width:100%;background:#fff;color:var(--coral);border:2px solid var(--coral);
+    border-radius:14px;padding:14px;font-size:1rem;font-weight:800;cursor:pointer;margin-top:10px;display:none;}
+  .result{display:none;background:var(--card);border:3px solid transparent;border-radius:16px;
+    padding:22px;margin:16px 0;text-align:center;
+    background-image:linear-gradient(#fff,#fff),linear-gradient(135deg,#ffb02e,#ff7a59,#ff5d8f);
+    background-origin:border-box;background-clip:padding-box,border-box;
+    box-shadow:0 8px 22px rgba(255,122,89,.18);}
+  .result.show{display:block;}
+  .result .score{font-size:2.8rem;font-weight:900;
+    background:linear-gradient(135deg,#ff7a59,#ff5d8f);-webkit-background-clip:text;
+    background-clip:text;-webkit-text-fill-color:transparent;}
+  .result .sub{color:var(--gray);font-size:.95rem;}
+  .result .bd{display:flex;justify-content:center;gap:18px;margin-top:12px;flex-wrap:wrap;font-size:.95rem;}
+  .result .bd span{font-weight:800;}
+  .hint{text-align:center;font-size:.85rem;color:var(--gray);margin-top:9px;min-height:1.2em;}
+  footer{text-align:center;color:var(--gray);font-size:.8rem;margin:24px 0;}
+</style>
+<!-- EFETL-PWA -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#7C4DFF">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="EFETL">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}</script>
+<!-- /EFETL-PWA -->
+</head>
+<body>
+<a href="gept-listening.html" style="position:fixed;top:12px;left:12px;background:rgba(255,255,255,.92);color:#ff6f91;padding:7px 15px;border-radius:20px;text-decoration:none;font-size:.85rem;font-weight:800;z-index:999;box-shadow:0 3px 10px rgba(0,0,0,.15);">&#8592; 回聽力題庫</a>
+<div class="wrap">
+  <header class="top">
+    <h1>GEPT 初級　聽力測驗　<span style="opacity:.9">第7回　音樂與美術</span></h1>
+    <p>互動聽力練習　&middot;　依官方四大題型與難度命題</p>
+    <div class="meta">共 4 大題、30 題　|　每題按 🔊 播放，聆聽後作答　|　送出後顯示聽力原文、中英解析與分數</div>
+  </header>
+
+  <div class="notice">
+    <span class="ic">🎧</span>
+    <span>每題皆附<strong>語音朗讀音檔</strong>，iPhone、Android 各廠牌手機與電腦瀏覽器皆可播放（請開啟媒體音量）。點各題的 <strong>🔊 播放</strong> 鈕聆聽；正式考試每題只播一次，練習時可重播。</span>
+  </div>
+
+  <a href="gept-listening-7-print.html" style="display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #ffb703;color:#8a5a00;border-radius:12px;padding:11px 16px;margin-bottom:18px;text-decoration:none;font-size:.9rem;font-weight:700;box-shadow:0 3px 10px rgba(255,183,3,.16);">
+    <span>🖨</span><span>列印版（學生卷／教師卷）— 適合課堂紙本練習與批改，可直接列印或存成 PDF</span>
+  </a>
+
+  <div class="sticky">
+    <div class="bar">
+      <span>作答進度</span>
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <span id="count">0 / 30</span>
+    </div>
+  </div>
+
+  <form id="quiz"></form>
+
+  <div class="result" id="result">
+    <div class="score" id="scoreNum">0</div>
+    <div class="sub" id="scoreTxt">分</div>
+    <div class="bd">
+      <span style="color:var(--green)">答對 <b id="rOk">0</b></span>
+      <span style="color:var(--red)">答錯 <b id="rNo">0</b></span>
+      <span style="color:var(--gray)">未作答 <b id="rBlank">0</b></span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="submit" id="submitBtn">送出並查看解析</button>
+    <div class="hint" id="hint">尚未作答任何題目</div>
+    <button type="button" class="reset" id="resetBtn">重新作答</button>
+  </div>
+
+  <footer>GEPT 初級聽力　互動練習　&middot;　第二顆腦 / GEPT初級</footer>
+</div>
+
+<script>
+/* ====== 圖形素材（第7回 音樂與美術） ====== */
+const IMG = n => `<img class="pic-img" src="gept-listening-img/7/${n}.jpg" alt="${n}">`;
+const BARS=(title,labs,vals)=>{const max=Math.max(...vals),bw=28,gap=18,x0=20;let b='',l='';
+ labs.forEach((L,i)=>{const h=Math.round(vals[i]/max*70),x=x0+i*(bw+gap);
+  b+=`<rect x="${x}" y="${100-h}" width="${bw}" height="${h}" fill="#e9e9e9" stroke="#1a1a1a" stroke-width="1.5"/>`;
+  l+=`<text x="${x+bw/2}" y="116">${L}</text>`;});
+ return `<svg class="chart" width="176" height="132" viewBox="0 0 176 132"><text x="88" y="15" text-anchor="middle" font-size="14" font-weight="700">${title}</text><line x1="16" y1="22" x2="16" y2="100" stroke="#1a1a1a" stroke-width="1.5"/><line x1="16" y1="100" x2="170" y2="100" stroke="#1a1a1a" stroke-width="1.5"/>${b}<g font-size="11" text-anchor="middle">${l}</g></svg>`;};
+const GUITAR=`<svg width="120" height="112" viewBox="0 0 120 112"><rect x="70" y="14" width="8" height="52" fill="#8a5a2b"/><rect x="64" y="8" width="20" height="12" rx="2" fill="#5a3a1b"/><ellipse cx="52" cy="78" rx="30" ry="26" fill="#e6a23c" stroke="#1a1a1a" stroke-width="2.5"/><circle cx="52" cy="78" r="10" fill="#5a3a1b"/><g stroke="#1a1a1a" stroke-width="1"><line x1="74" y1="20" x2="52" y2="68"/><line x1="76" y1="20" x2="55" y2="68"/></g></svg>`;
+const PALETTE=`<svg width="128" height="106" viewBox="0 0 128 108"><path d="M20 54 q0 -34 44 -34 q44 0 44 30 q0 14 -18 14 q-14 0 -14 12 q0 16 -22 16 q-34 0 -34 -38 z" fill="#f3e9d2" stroke="#1a1a1a" stroke-width="2.5"/><circle cx="40" cy="40" r="6" fill="#e53935"/><circle cx="60" cy="34" r="6" fill="#2b8cff"/><circle cx="80" cy="42" r="6" fill="#ffb703"/><circle cx="46" cy="62" r="6" fill="#43a047"/><g transform="rotate(40 96 78)"><rect x="92" y="30" width="7" height="54" fill="#8a5a2b"/><rect x="92" y="24" width="7" height="8" fill="#c0c0c0"/><path d="M92 84 l3.5 12 l3.5 -12 z" fill="#e53935"/></g></svg>`;
+const MIC=`<svg width="96" height="112" viewBox="0 0 96 112"><rect x="34" y="12" width="28" height="52" rx="14" fill="#333" stroke="#1a1a1a" stroke-width="2"/><g stroke="#888" stroke-width="2"><line x1="40" y1="24" x2="56" y2="24"/><line x1="40" y1="34" x2="56" y2="34"/><line x1="40" y1="44" x2="56" y2="44"/></g><path d="M24 58 q0 24 24 24 q24 0 24 -24" fill="none" stroke="#1a1a1a" stroke-width="2.5"/><line x1="48" y1="82" x2="48" y2="100" stroke="#1a1a1a" stroke-width="3"/><line x1="34" y1="100" x2="62" y2="100" stroke="#1a1a1a" stroke-width="3" stroke-linecap="round"/><g fill="#e6007e"><path d="M74 18 l3 6 l6 1 l-4 5 l1 6 l-6 -3 l-6 3 l1 -6 l-4 -5 l6 -1 z"/></g></svg>`;
+const NOTE=`<svg width="118" height="108" viewBox="0 0 118 108"><g stroke="#1a1a1a" stroke-width="1.5"><line x1="16" y1="30" x2="102" y2="30"/><line x1="16" y1="44" x2="102" y2="44"/><line x1="16" y1="58" x2="102" y2="58"/><line x1="16" y1="72" x2="102" y2="72"/><line x1="16" y1="86" x2="102" y2="86"/></g><g fill="#e6007e"><ellipse cx="44" cy="80" rx="9" ry="7"/><ellipse cx="80" cy="70" rx="9" ry="7"/></g><g stroke="#e6007e" stroke-width="3"><line x1="52" y1="80" x2="52" y2="34"/><line x1="88" y1="70" x2="88" y2="26"/><path d="M52 34 q18 4 36 -8" fill="none"/></g></svg>`;
+const COMIC=`<svg width="118" height="110" viewBox="0 0 118 112"><rect x="20" y="12" width="78" height="90" rx="4" fill="#fff" stroke="#1a1a1a" stroke-width="2.5"/><line x1="59" y1="12" x2="59" y2="102" stroke="#1a1a1a" stroke-width="1.5"/><line x1="20" y1="57" x2="98" y2="57" stroke="#1a1a1a" stroke-width="1.5"/><path d="M28 26 q8 -8 16 0 q4 6 -4 8 h-4 v6" fill="none" stroke="#2b8cff" stroke-width="2"/><circle cx="36" cy="48" r="2" fill="#2b8cff"/><path d="M68 24 h20 v14 l-6 -4 h-14 z" fill="#ffe08a" stroke="#e6a23c" stroke-width="1.5"/><text x="77" y="35" text-anchor="middle" font-size="8" font-weight="800" fill="#e6007e">POW</text><circle cx="40" cy="80" r="10" fill="#ffd8a8" stroke="#1a1a1a" stroke-width="1.5"/><circle cx="78" cy="80" r="10" fill="#a5d8ff" stroke="#1a1a1a" stroke-width="1.5"/></svg>`;
+/* ====== 大題 ====== */
+const PARTS=[
+ {t:"第一大題　看圖辨義",d:"共 5 題（1–5）。看圖並聆聽問題，從 A、B、C 三個選項中選出最適合的答案。"},
+ {t:"第二大題　問答",d:"共 10 題（6–15）。聆聽一個問句或直述句，選出最適合的回答。"},
+ {t:"第三大題　簡短對話",d:"共 10 題（16–25）。聆聽一段對話與問題，選出最適合的答案。"},
+ {t:"第四大題　短文聽解",d:"共 5 題（26–30）。聆聽一段短文與問題，從三張圖片中選出最適合的一張。"}
+];
+
+
+
+/* ====== 題庫（第7回 音樂與美術） ====== */
+const Q=[
+{n:1,p:0,fig:GUITAR,o:["The boy plays a musical instrument and loves the music.","The artist draws a comic with a brush.","The singer sings a pop song."],a:0,
+ sen:"For question one, look at the picture. What is the boy playing?",szh:"第一題，請看圖片。男孩在彈什麼？",
+ en:"He plays a musical instrument.",zh:"男孩彈奏樂器(instrument)、享受音樂(music)，選 A。artist/draw/comic/brush、singer/sing/pop 為干擾。"},
+{n:2,p:0,fig:PALETTE,o:["The musician records a new album.","She pushes the lamp around in a circle.","The painter makes a painting; it is real art."],a:2,
+ sen:"For question two, look at the picture. What is the painter doing?",szh:"第二題，請看圖片。畫家在做什麼？",
+ en:"The painter makes a painting.",zh:"畫家(painter)在畫畫(painting)，是真正的藝術(art)，選 C。musician/record/new/album、push/lamp/circle 為干擾。"},
+{n:3,p:0,fig:MIC,o:["The fox climbs a hot lamp.","The singer sings her final song on the show.","The artist draws a doll."],a:1,
+ sen:"For question three, look at the picture. What is the woman doing?",szh:"第三題，請看圖片。女士在做什麼？",
+ en:"The singer sings her final song.",zh:"歌手(singer)在節目(show)上唱(sing)最後(final)一首歌(song)，選 B。fox/climb/hot/lamp、artist/draw/doll 為干擾。"},
+{n:4,p:0,fig:NOTE,o:["A music program to record and send songs.","The painter picks a brush.","A comic with a sneaky fox."],a:0,
+ sen:"For question four, look at the picture. What kind of program is this?",szh:"第四題，請看圖片。這是什麼樣的節目？",
+ en:"A music program to record songs.",zh:"這是用來錄(record)、傳送(send)歌曲(song)的音樂(music)節目(program)，選 A。painter/pick/brush、comic/sneaky/fox 為干擾。"},
+{n:5,p:0,fig:COMIC,o:["The musician blows the instrument.","She draws a circle on her knee.","A comic album that the artist drew by hand."],a:2,
+ sen:"For question five, look at the picture. What is the child reading?",szh:"第五題，請看圖片。孩子在讀什麼？",
+ en:"A comic album drawn by the artist.",zh:"是藝術家(artist)親手畫(draw)的漫畫(comic)專輯(album)，選 C。musician/blow/instrument、circle/knee 為干擾。"},
+
+{n:6,p:1,o:["The fox sends a doll.","I plan to draw and paint, though it may rain.","The singer picks a hot snack."],a:1,
+ sen:"What is your plan for the school art show?",szh:"你對學校美術展有什麼計畫？",
+ en:"Plan to draw and paint, though it may rain.",zh:"問美術(art)展(show)的計畫(plan)，答『我打算畫畫(draw/paint)，雖然(though)可能會下雨(rain)』，選 B。fox/send/doll、singer/pick/hot/snack 為干擾。"},
+{n:7,p:1,o:["Yeah, I will sing, but underline that note first.","The painter climbed the lamp.","The album is private."],a:0,
+ sen:"Can you sing this new song for us?",szh:"你能為我們唱這首新歌嗎？",
+ en:"Yeah, but underline that note first.",zh:"問能否唱(sing)這首歌(song)，答『好啊(yeah)，但先把那個(that)音符畫線(underline)標起來』，選 A。painter/climb/lamp、album/private 為干擾。"},
+{n:8,p:1,o:["The show has a final role.","The circle is new.","He hurt his knee and a tooth while he climbed."],a:2,
+ sen:"Why did the young musician stop the concert?",szh:"年輕音樂家為什麼中斷演奏會？",
+ en:"He hurt his knee and a tooth climbing.",zh:"問音樂家(musician)為何停，答『他爬(climb)的時候傷了膝蓋(knee)和一顆牙(tooth)』，選 C。show/final/role、circle/new 為干擾。"},
+{n:9,p:1,o:["The fox blew the horn.","A new album and a comic, sent to me by post.","She pushed the private door."],a:1,
+ sen:"What did the artist send you?",szh:"那位藝術家寄了什麼給你？",
+ en:"A new album and a comic.",zh:"問藝術家(artist)寄(send)了什麼，答『一張新(new)專輯(album)和一本漫畫(comic)』，選 B。fox/blow、push/private 為干擾。"},
+{n:10,p:1,o:["Yeah, the snacks are hot and a great value.","The painter drew a circle.","The role is final."],a:0,
+ sen:"How do you like the buffet at the party?",szh:"你覺得派對的自助餐如何？",
+ en:"The snacks are hot and great value.",zh:"問自助餐(buffet)如何，答『好啊(yeah)，點心(snack)很燙(hot)、很划算(value)』，選 A。painter/circle、role/final 為干擾。"},
+{n:11,p:1,o:["He records a song.","She pushed the lamp.","The final role of a sneaky fox in the show."],a:2,
+ sen:"What role will you play in the drama?",szh:"你在戲劇裡演什麼角色？",
+ en:"The role of a sneaky fox.",zh:"問角色(role)，答『節目(show)裡最後(final)那個狡猾(sneaky)狐狸(fox)的角色』，選 C。record/song、push/lamp 為干擾。"},
+{n:12,p:1,o:["The album has value.","Cross the circle, push the door; here is the link to the map.","He sang a pop song."],a:1,
+ sen:"Excuse me, where is the entrance to the art hall?",szh:"請問美術館入口在哪？",
+ en:"Cross the circle, push the door; here's the link.",zh:"問入口(entrance)，答『穿過(cross)圓環(circle)、推(push)門，這是地圖連結(link)』，選 B。album/value、pop/song 為干擾。"},
+{n:13,p:1,o:["The rapid changes concern me; in addition, the program is wrong.","The fox climbed a tooth.","Yeah, a private doll."],a:0,
+ sen:"What worries you about the new plan?",szh:"新計畫有什麼讓你擔心的？",
+ en:"Rapid changes; the wrong program.",zh:"問計畫(plan)的擔憂，答『快速(rapid)的變動讓我擔心(concern)，此外(addition)節目(program)也弄錯(wrong)了』，選 A。fox/climb/tooth、yeah/private/doll 為干擾。"},
+{n:14,p:1,o:["He drew a comic.","The singer records an album.","Some powder, a private note, and a small doll."],a:2,
+ sen:"What is inside the lady's purse?",szh:"這位小姐的皮包裡有什麼？",
+ en:"Powder, a private note, and a doll.",zh:"問皮包(purse)裡有什麼，答『一些粉(powder)、一張私人(private)紙條和一個小娃娃(doll)』，選 C。draw/comic、singer/record/album 為干擾。"},
+{n:15,p:1,o:["The fox sang a song.","Confucius did; that saying has great value.","The painter blew the lamp."],a:1,
+ sen:"Who said we should love learning?",szh:"是誰說我們應該熱愛學習？",
+ en:"Confucius; that saying has great value.",zh:"問是誰說的，答『孔子(Confucius)說的，那句(that)話很有價值(value)』，選 B。fox/song、painter/blow/lamp 為干擾。"},
+
+{n:16,p:2,o:["A painter.","A singer.","A musician."],a:0,
+ sen:"W: What does your aunt do? &nbsp;M: She is a painter; her paintings are full of art. &nbsp;W: Talented! &nbsp;Q: What is the aunt's job?",
+ szh:"女：你阿姨做什麼工作？　男：她是畫家(painter)，她的畫作(painting)充滿藝術(art)。　女：真有才華！　問：阿姨的工作是什麼？",
+ en:"A painter.",zh:"阿姨是畫家(painter)，選 A。"},
+{n:17,p:2,o:["Classical music.","Rock music.","Pop music, sung by a young singer."],a:2,
+ sen:"M: What kind of music do you like? &nbsp;W: I love pop music, especially songs sung by that young singer. &nbsp;M: Me too. &nbsp;Q: What music does the woman like?",
+ szh:"男：你喜歡什麼音樂？　女：我愛流行音樂(pop music)，特別是那位年輕歌手(singer)唱(sing)的歌(song)。　男：我也是。　問：女士喜歡什麼音樂？",
+ en:"Pop music.",zh:"女士喜歡流行音樂(pop music)，選 C。"},
+{n:18,p:2,o:["She will draw it.","You blow it, like a wind instrument.","You push it."],a:1,
+ sen:"W: How do I play this instrument? &nbsp;M: You blow it, like a flute; it is a wind instrument. &nbsp;W: I see. &nbsp;Q: How do you play the instrument?",
+ szh:"女：這個樂器怎麼吹奏？　男：你用吹(blow)的，像笛子，是管樂器(instrument)。　女：了解。　問：這個樂器怎麼演奏？",
+ en:"You blow it.",zh:"這個樂器(instrument)用吹(blow)的，選 B。"},
+{n:19,p:2,o:["A new album, and they will record it soon.","An old comic.","A private doll."],a:0,
+ sen:"M: What are the musicians working on? &nbsp;W: A new album; they will record all the songs next week. &nbsp;M: Exciting! &nbsp;Q: What are the musicians working on?",
+ szh:"男：音樂家們在忙什麼？　女：一張新(new)專輯(album)，他們下週會錄(record)所有歌(song)。　男：真令人期待！　問：音樂家在做什麼？",
+ en:"A new album to record.",zh:"音樂家在做新(new)專輯(album)、要錄(record)音，選 A。"},
+{n:20,p:2,o:["She sang a song.","He climbed a lamp.","She picked up a brush to draw."],a:2,
+ sen:"M: What did the art teacher do first? &nbsp;W: She picked up a brush to draw a big circle. &nbsp;M: Nice start. &nbsp;Q: What did the teacher do first?",
+ szh:"男：美術老師先做了什麼？　女：她拿起(pick)畫筆(brush)畫(draw)一個大圓(circle)。　男：好的開始。　問：老師先做什麼？",
+ en:"Picked up a brush to draw.",zh:"老師先拿起(pick)畫筆(brush)畫(draw)畫，選 C。"},
+{n:21,p:2,o:["The first show.","The final show of the tour.","A private show."],a:1,
+ sen:"W: Is this the last concert? &nbsp;M: Yes, it is the final show of the whole tour. &nbsp;W: How sad. &nbsp;Q: Which show is this?",
+ szh:"女：這是最後一場演唱會嗎？　男：對，這是整個巡演的最終(final)場(show)。　女：好捨不得。　問：這是哪一場表演？",
+ en:"The final show.",zh:"這是巡演的最終(final)場(show)，選 B。"},
+{n:22,p:2,o:["Underline it and circle the note.","Cross it out.","Send it away."],a:0,
+ sen:"W: How should I mark the important note? &nbsp;M: Underline it, and draw a circle around the note. &nbsp;W: Got it. &nbsp;Q: How should she mark the note?",
+ szh:"女：重要的音符我該怎麼標？　男：把它畫線(underline)，並在音符外圈(circle)一個圈。　女：了解。　問：她該怎麼標記音符？",
+ en:"Underline and circle it.",zh:"把音符畫線(underline)並圈(circle)起來，選 A。"},
+{n:23,p:2,o:["Ninety.","Forty.","About ninety, in addition to forty new ones."],a:2,
+ sen:"M: How many songs are on the album? &nbsp;W: About ninety old ones, in addition to forty new ones. &nbsp;M: So many! &nbsp;Q: How many songs in total?",
+ szh:"男：專輯裡有幾首歌？　女：大約九十(ninety)首舊的，外加(addition)四十(forty)首新的。　男：這麼多！　問：總共幾首歌？",
+ en:"Ninety plus forty.",zh:"九十(ninety)首加上(addition)四十(forty)首，選 C。"},
+{n:24,p:2,o:["A wrong program.","A new music program with a great view.","A private album."],a:1,
+ sen:"W: What are you watching? &nbsp;M: A new music program; the stage view is amazing. &nbsp;W: Sounds fun. &nbsp;Q: What is the man watching?",
+ szh:"男：你在看什麼？　女：一個新的音樂節目(program)，舞台視野(view)超棒。　男：聽起來很有趣。　問：男士在看什麼？",
+ en:"A new music program.",zh:"男士在看新的音樂節目(program)，視野(view)很棒，選 B。"},
+{n:25,p:2,o:["An artist who draws comics.","A sneaky fox.","A hot snack."],a:0,
+ sen:"W: Who is your role model? &nbsp;M: An artist who draws wonderful comics. &nbsp;W: Cool. &nbsp;Q: Who is the man's role model?",
+ szh:"女：你的偶像是誰？　男：一位畫(draw)出很棒漫畫(comic)的藝術家(artist)。　女：真酷。　問：男士的偶像是誰？",
+ en:"An artist who draws comics.",zh:"男士的偶像是畫漫畫(comic)的藝術家(artist)，選 A。"},
+
+{n:26,p:3,pic:true,o:[BARS("Album Sales",["Rock","Jazz","Pop"],[20,50,80]),BARS("Album Sales",["Rock","Jazz","Pop"],[50,80,20]),BARS("Album Sales",["Rock","Jazz","Pop"],[80,50,20])],a:2,
+ sen:"Our music shop kept a record of album sales this month. Rock albums sold the most, because a new band became famous. Jazz was in the middle, and pop music sold the least this time. So the rock bar should be the tallest. &nbsp;Q: Which chart shows the album sales?",
+ szh:"我們音樂(music)行記錄(record)了本月專輯(album)銷量。搖滾最多，因為有新樂團爆紅；爵士中等；流行音樂(pop music)這次最少。所以搖滾長條最高。　問：哪張圖顯示專輯銷量？",
+ en:"Rock most, pop least.",zh:"搖滾最多、流行最少，符合『Rock 最高』的 C。"},
+{n:27,p:3,pic:true,o:[BARS("Art Class",["Draw","Paint","Sing"],[30,55,80]),BARS("Art Class",["Draw","Paint","Sing"],[80,55,30]),BARS("Art Class",["Draw","Paint","Sing"],[55,80,30])],a:1,
+ sen:"In our art program we voted for our favorite activity. Drawing got the most votes, painting was in the middle, and singing got the fewest, because this is an art class, not a music class. So the drawing bar is the highest and singing the lowest. &nbsp;Q: Which chart shows the votes?",
+ szh:"在我們的美術課程(program)投票選最愛的活動：畫圖(draw)最多票，畫畫(paint)中等，唱歌(sing)最少，因為這是美術(art)課不是音樂課。所以畫圖最高、唱歌最低。　問：哪張圖顯示票數？",
+ en:"Draw most, sing least.",zh:"畫圖最多、唱歌最少，符合『Draw 最高、Sing 最低』的 B。"},
+{n:28,p:3,pic:true,o:[IMG('bread'),IMG('noodles'),IMG('rice')],a:0,
+ sen:"After the long concert, the tired musicians wanted a snack. There was a buffet with rice and noodles, but the singer was too hungry to wait for a hot meal. So she just grabbed some fresh bread, which was quick and full of value. &nbsp;Q: What did the singer eat?",
+ szh:"漫長的演唱會後，疲累的音樂家(musician)們想吃點心(snack)。自助餐(buffet)有飯和麵，但歌手(singer)太餓，等不及熱食，於是抓了新鮮麵包(bread)，又快又划算(value)。　問：歌手吃了什麼？",
+ en:"Fresh bread.",zh:"歌手吃了麵包(bread)，選 A。飯、麵為干擾。"},
+{n:29,p:3,pic:true,o:[IMG('rice'),IMG('bread'),IMG('noodles')],a:2,
+ sen:"The famous artist finished his new painting and felt hungry. He did not want rice or bread that night. Instead, he ordered a big bowl of hot noodles from the buffet, and he ate it while looking at his art. &nbsp;Q: What did the artist eat?",
+ szh:"這位有名的藝術家(artist)畫完新畫作(painting)後覺得餓。那晚他不想吃飯或麵包，而是從自助餐(buffet)點了一大碗熱(hot)麵(noodles)，一邊看著自己的藝術(art)一邊吃。　問：藝術家吃了什麼？",
+ en:"A bowl of hot noodles.",zh:"藝術家吃了熱麵(noodles)，選 C。飯、麵包為干擾。"},
+{n:30,p:3,pic:true,o:[IMG('mountain'),IMG('beach'),IMG('park')],a:1,
+ sen:"The band planned a music video for their new song. The painter suggested the mountain, and a fan suggested the park. But in the end the singer chose the beach, because the sound of the waves matched the mood of the song perfectly. &nbsp;Q: Where did the band film the music video?",
+ szh:"樂團為新歌(song)計畫(plan)拍音樂錄影帶。畫家(painter)建議去山上，粉絲建議公園，但最後歌手(singer)選了海邊(beach)，因為海浪聲與歌曲(song)的氣氛完美契合。　問：樂團在哪裡拍音樂錄影帶？",
+ en:"The beach.",zh:"樂團在海邊(beach)拍攝，選 B。山、公園為干擾。"}
+];
+
+/* ====== 音檔播放（AAC/.m4a，各廠牌手機皆支援）====== */
+let curAudio=null, curBtn=null;
+function resetPlayBtn(b){ if(!b) return; b.classList.remove('playing'); b.querySelector('.txt').textContent = b.dataset.played?'重播':'播放'; }
+function stopAudio(){ if(curAudio) curAudio.pause(); if(curBtn) resetPlayBtn(curBtn); curAudio=null; curBtn=null; }
+function playAudio(audio,btn){
+  if(curAudio===audio){                       // 同一題：暫停 / 繼續
+    if(audio.paused){ audio.play(); btn.classList.add('playing'); btn.querySelector('.txt').textContent='播放中…'; }
+    else { audio.pause(); }
+    return;
+  }
+  if(curAudio){ curAudio.pause(); resetPlayBtn(curBtn); }   // 換題：停掉上一段
+  curAudio=audio; curBtn=btn; btn.dataset.played='1';
+  btn.classList.add('playing'); btn.querySelector('.txt').textContent='播放中…';
+  audio.play().catch(()=>resetPlayBtn(btn));
+}
+
+/* ====== 產生畫面 ====== */
+const form=document.getElementById('quiz');
+let lastP=-1;
+Q.forEach(q=>{
+  if(q.p!==lastP){
+    const st=document.createElement('div'); st.className='section-title s'+q.p; st.textContent=PARTS[q.p].t;
+    const sd=document.createElement('div'); sd.className='section-desc'; sd.textContent=PARTS[q.p].d;
+    form.appendChild(st); form.appendChild(sd); lastP=q.p;
+  }
+  const card=document.createElement('div'); card.className='q'; card.id='q'+q.n;
+  const head=document.createElement('div'); head.className='qhead';
+  head.innerHTML=`<span class="num">${q.n}</span>
+    <button type="button" class="play"><span class="wave">🔊</span><span class="txt">播放</span></button>
+    <span class="hintq">聆聽後作答</span>`;
+  card.appendChild(head);
+  const audio=document.createElement('audio'); audio.preload='none'; audio.src='gept-listening-audio/7/q'+q.n+'.m4a?v=r7-20260909'; card.appendChild(audio);
+  const pbtn=head.querySelector('.play');
+  pbtn.addEventListener('click',()=>playAudio(audio,pbtn));
+  audio.addEventListener('ended',()=>{ if(curBtn===pbtn){ resetPlayBtn(pbtn); curAudio=null; curBtn=null; } });
+  audio.addEventListener('pause',()=>{ if(curAudio===audio && curBtn===pbtn && !audio.ended){ pbtn.classList.remove('playing'); pbtn.querySelector('.txt').textContent='繼續'; } });
+  if(q.fig){ const f=document.createElement('div'); f.className='fig'; f.innerHTML=q.fig; card.appendChild(f); }
+  if(q.pic){
+    if(q.legend){ const lg=document.createElement('div'); lg.innerHTML=PIE_LEGEND; card.appendChild(lg.firstChild); }
+    const wrap=document.createElement('div'); wrap.className='picopts';
+    q.o.forEach((opt,i)=>{
+      const cell=document.createElement('label'); cell.className='picopt'; cell.dataset.i=i;
+      cell.innerHTML=`<span class="lab">${'ABC'[i]}</span>${opt}<input type="radio" name="q${q.n}" value="${i}" hidden>`;
+      cell.querySelector('input').addEventListener('change',()=>{ card.querySelectorAll('.picopt').forEach(o=>o.classList.remove('sel')); cell.classList.add('sel'); updateProgress(); });
+      wrap.appendChild(cell);
+    });
+    card.appendChild(wrap);
+  } else {
+    q.o.forEach((opt,i)=>{
+      const lab=document.createElement('label'); lab.className='opt'; lab.dataset.i=i;
+      lab.innerHTML=`<input type="radio" name="q${q.n}" value="${i}"><span class="lab">${'ABC'[i]}</span><span>${opt}</span>`;
+      lab.querySelector('input').addEventListener('change',()=>{ card.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel')); lab.classList.add('sel'); updateProgress(); });
+      card.appendChild(lab);
+    });
+  }
+  const exp=document.createElement('div'); exp.className='exp'; exp.id='exp'+q.n; card.appendChild(exp);
+  form.appendChild(card);
+});
+
+const submitBtn=document.getElementById('submitBtn');
+const resetBtn=document.getElementById('resetBtn');
+const hint=document.getElementById('hint');
+const TOT=Q.length;
+function answeredCount(){ let c=0; Q.forEach(q=>{ if(form.querySelector(`input[name="q${q.n}"]:checked`)) c++; }); return c; }
+function updateProgress(){
+  const c=answeredCount();
+  document.getElementById('count').textContent=`${c} / ${TOT}`;
+  document.getElementById('fill').style.width=(c/TOT*100)+'%';
+  hint.textContent = c===TOT ? '已完成全部 30 題' : (c===0 ? '尚未作答任何題目（仍可送出查看解析）' : `已作答 ${c} 題，未作答 ${TOT-c} 題（仍可送出）`);
+}
+
+submitBtn.addEventListener('click',()=>{
+  stopAudio();
+  let ok=0, blank=0;
+  Q.forEach(q=>{
+    const sel=form.querySelector(`input[name="q${q.n}"]:checked`);
+    const pick=sel?parseInt(sel.value):null;
+    if(pick===null) blank++;
+    const card=document.getElementById('q'+q.n);
+    const cls=q.pic?'.picopt':'.opt';
+    card.querySelectorAll(cls).forEach(o=>{
+      o.classList.add('lock');
+      const inp=o.querySelector('input'); if(inp) inp.disabled=true;
+      const i=parseInt(o.dataset.i);
+      if(i===q.a) o.classList.add('correct');
+      if(pick!==null && i===pick && pick!==q.a) o.classList.add('wrong');
+    });
+    const correct=pick===q.a; if(correct) ok++;
+    const exp=document.getElementById('exp'+q.n);
+    const tag=correct?'答對':(pick===null?'未作答':'答錯');
+    exp.innerHTML=`<span class="tag ${correct?'':'miss'}">${tag}　正解：${'ABC'[q.a]}</span>
+      <div class="scriptbox"><b>聽力原文</b>　${q.sen}<br><span style="color:#7a4a12">${q.szh}</span></div>
+      <div class="en"><b>EN</b>&nbsp;${q.en}</div><div class="zh"><b>中</b>&nbsp;${q.zh}</div>`;
+    exp.classList.add('show');
+  });
+  document.getElementById('scoreNum').textContent=Math.round(ok/TOT*100);
+  document.getElementById('scoreTxt').textContent=`分（答對 ${ok} / ${TOT} 題）`;
+  document.getElementById('rOk').textContent=ok;
+  document.getElementById('rNo').textContent=TOT-ok-blank;
+  document.getElementById('rBlank').textContent=blank;
+  const res=document.getElementById('result'); res.classList.add('show');
+  submitBtn.style.display='none'; hint.style.display='none'; resetBtn.style.display='block';
+  res.scrollIntoView({behavior:'smooth'});
+});
+
+resetBtn.addEventListener('click',()=>{
+  stopAudio(); form.reset();
+  Q.forEach(q=>{
+    const card=document.getElementById('q'+q.n);
+    card.querySelectorAll('.opt,.picopt').forEach(o=>{o.classList.remove('sel','correct','wrong','lock');const inp=o.querySelector('input');if(inp)inp.disabled=false;});
+    document.getElementById('exp'+q.n).classList.remove('show');
+  });
+  document.getElementById('result').classList.remove('show');
+  submitBtn.style.display='block'; hint.style.display='block'; resetBtn.style.display='none';
+  updateProgress(); window.scrollTo({top:0,behavior:'smooth'});
+});
+
+updateProgress();
+</script>
+</body>
+</html>
