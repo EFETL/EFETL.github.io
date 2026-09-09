@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEPT 初級 聽力測驗　第20回　房屋與房間</title>
+<style>
+  :root{
+    --blue:#2b8cff; --blue-dark:#1f6fe0;
+    --coral:#ff7a59; --amber:#ffb02e; --pink:#ff5d8f;
+    --bg:#f3f9ff; --card:#ffffff; --line:#e3edf9;
+    --green:#22b573; --green-bg:#e4f8ef;
+    --red:#ff5a5a; --red-bg:#ffecec;
+    --gray:#6b7785;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;
+    background:linear-gradient(180deg,#fff5ec,#fff9f4 70%);color:#22303f;line-height:1.6;
+    -webkit-text-size-adjust:100%;}
+  .wrap{max-width:760px;margin:0 auto;padding:16px;}
+  header.top{background:linear-gradient(135deg,#f6d365,#fda085 60%,#ff7a9c);color:#fff;
+    border-radius:18px;padding:24px 22px;margin-bottom:16px;box-shadow:0 8px 22px rgba(253,160,133,.35);}
+  header.top h1{margin:0 0 6px;font-size:1.5rem;text-shadow:0 1px 2px rgba(0,0,0,.14);}
+  header.top p{margin:0;font-size:.92rem;opacity:.96;}
+  .meta{margin-top:14px;font-size:.86rem;background:rgba(255,255,255,.24);
+    padding:9px 13px;border-radius:10px;}
+  .notice{background:#fffbeb;border:1.5px solid #f59e0b;border-radius:12px;
+    padding:11px 15px;margin-bottom:14px;font-size:.86rem;color:#78350f;
+    display:flex;align-items:flex-start;gap:9px;line-height:1.55;}
+  .notice .ic{font-size:1.1rem;flex-shrink:0;margin-top:1px;}
+  .sticky{position:sticky;top:0;z-index:20;padding:10px 0;
+    background:linear-gradient(180deg,#fff5ec 70%,rgba(255,245,236,0));}
+  .bar{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:11px 16px;display:flex;align-items:center;gap:12px;font-size:.9rem;
+    box-shadow:0 4px 12px rgba(253,160,133,.14);}
+  .bar .track{flex:1;height:9px;background:#f1e4dc;border-radius:6px;overflow:hidden;}
+  .bar .fill{height:100%;width:0;border-radius:6px;
+    background:linear-gradient(90deg,#ffb02e,#ff7a59);transition:width .35s;}
+  .bar #count{font-weight:700;color:#e0740a;}
+  .section-title{color:#fff;font-weight:800;border-radius:12px;
+    padding:10px 16px;margin:24px 0 6px;font-size:1.05rem;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);}
+  .section-title.s0{background:linear-gradient(135deg,#ff9a6c,#ff6f91);}
+  .section-title.s1{background:linear-gradient(135deg,#4dd0e1,#2b8cff);}
+  .section-title.s2{background:linear-gradient(135deg,#9b8bff,#b06bff);}
+  .section-title.s3{background:linear-gradient(135deg,#43cea2,#3ab0d6);}
+  .section-desc{font-size:.86rem;color:var(--gray);margin:0 4px 10px;}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:15px 17px;margin:12px 0;box-shadow:0 3px 10px rgba(253,160,133,.09);}
+  .qhead{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+  .qhead .num{display:inline-block;color:#fff;background:var(--coral);font-weight:700;
+    border-radius:8px;padding:1px 10px;font-size:.92rem;}
+  .play{display:inline-flex;align-items:center;gap:7px;border:0;cursor:pointer;
+    color:#fff;font-weight:800;font-size:.92rem;border-radius:22px;padding:8px 16px;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);box-shadow:0 4px 12px rgba(255,93,143,.3);}
+  .play:active{transform:translateY(1px);}
+  .play.playing{background:linear-gradient(135deg,#22b573,#1a9e63);}
+  .play .wave{font-size:.8rem;opacity:.9;}
+  .hintq{font-size:.8rem;color:var(--gray);}
+  .fig{text-align:center;margin:4px 0 12px;}
+  .fig svg{max-width:100%;height:auto;}
+  .pic-img{border-radius:9px;border:1px solid #e6ded7;object-fit:cover;}
+  .fig .pic-img{max-width:230px;width:100%;max-height:150px;}
+  .opt{display:flex;align-items:flex-start;gap:10px;border:2px solid var(--line);
+    border-radius:11px;padding:10px 13px;margin:8px 0;cursor:pointer;transition:.15s;
+    font-size:.95rem;background:#fbfdff;}
+  .opt:hover{border-color:var(--coral);background:#fff4ee;}
+  .opt input{margin-top:3px;accent-color:var(--coral);}
+  .opt .lab{font-weight:800;color:var(--coral);min-width:18px;}
+  .opt.sel{border-color:var(--coral);background:#ffeee6;}
+  .opt.correct{border-color:var(--green);background:var(--green-bg);}
+  .opt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .opt.lock{cursor:default;}
+  /* picture options (Part 4) */
+  .picopts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:6px 0;}
+  .picopt{border:2px solid var(--line);border-radius:12px;padding:9px 6px;cursor:pointer;
+    text-align:center;transition:.15s;background:#fbfdff;display:flex;flex-direction:column;align-items:center;gap:6px;}
+  .picopt:hover{border-color:var(--coral);background:#fff4ee;}
+  .picopt.sel{border-color:var(--coral);background:#ffeee6;}
+  .picopt.correct{border-color:var(--green);background:var(--green-bg);}
+  .picopt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .picopt .lab{font-weight:800;color:var(--coral);align-self:flex-start;margin-left:4px;}
+  .picopt.correct .lab{color:var(--green);}.picopt.wrong .lab{color:var(--red);}
+  .picopt img.pic-img{width:100%;height:82px;}
+  .picopt svg{width:100%;max-width:132px;height:auto;}
+  .picopt svg.chart{max-width:100%;}
+  .legend{display:flex;gap:12px;justify-content:center;font-size:.72rem;margin:2px 0 6px;color:#556;flex-wrap:wrap;}
+  .legend i{display:inline-block;width:11px;height:11px;border:1px solid #999;margin-right:4px;vertical-align:-1px;}
+  table.mini{border-collapse:collapse;font-size:.62rem;margin:0 auto;}
+  table.mini th{background:#33414f;color:#fff;padding:2px 4px;}
+  table.mini td{border:1px solid #bbb;padding:2px 4px;text-align:center;}
+  .board{background:#111;color:#ffd24a;border-radius:5px;padding:5px;font-family:"Courier New",monospace;display:inline-block;}
+  .board table{border-collapse:collapse;font-size:.6rem;color:#ffd24a;}
+  .board th{color:#7fd7ff;padding:1px 4px;border-bottom:1px solid #444;}
+  .board td{padding:1px 4px;text-align:center;}
+  .exp{display:none;margin-top:11px;border-top:2px dashed #ffe1c2;padding-top:11px;font-size:.9rem;}
+  .exp.show{display:block;}
+  .exp .tag{display:inline-block;font-weight:800;color:#fff;background:var(--green);
+    border-radius:7px;padding:2px 10px;font-size:.8rem;margin-bottom:7px;}
+  .exp .tag.miss{background:var(--red);}
+  .exp .scriptbox{background:#f4f8ff;border-radius:8px;padding:7px 11px;margin:5px 0;font-size:.88rem;color:#20364d;}
+  .exp .scriptbox b{color:var(--blue-dark);}
+  .exp .en{color:#1c4f7a;background:#eef7ff;border-radius:8px;padding:6px 10px;margin:5px 0;}
+  .exp .zh{color:#7a4a12;background:#fff7ea;border-radius:8px;padding:6px 10px;margin:5px 0;}
+  .actions{position:sticky;bottom:0;padding:14px 0 6px;margin-top:18px;
+    background:linear-gradient(transparent,#fff9f4 35%);}
+  button.submit{width:100%;color:#fff;border:0;border-radius:14px;padding:16px;
+    font-size:1.08rem;font-weight:800;cursor:pointer;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);
+    box-shadow:0 6px 16px rgba(255,93,143,.35);}
+  button.submit:active{transform:translateY(1px);}
+  button.reset{width:100%;background:#fff;color:var(--coral);border:2px solid var(--coral);
+    border-radius:14px;padding:14px;font-size:1rem;font-weight:800;cursor:pointer;margin-top:10px;display:none;}
+  .result{display:none;background:var(--card);border:3px solid transparent;border-radius:16px;
+    padding:22px;margin:16px 0;text-align:center;
+    background-image:linear-gradient(#fff,#fff),linear-gradient(135deg,#ffb02e,#ff7a59,#ff5d8f);
+    background-origin:border-box;background-clip:padding-box,border-box;
+    box-shadow:0 8px 22px rgba(255,122,89,.18);}
+  .result.show{display:block;}
+  .result .score{font-size:2.8rem;font-weight:900;
+    background:linear-gradient(135deg,#ff7a59,#ff5d8f);-webkit-background-clip:text;
+    background-clip:text;-webkit-text-fill-color:transparent;}
+  .result .sub{color:var(--gray);font-size:.95rem;}
+  .result .bd{display:flex;justify-content:center;gap:18px;margin-top:12px;flex-wrap:wrap;font-size:.95rem;}
+  .result .bd span{font-weight:800;}
+  .hint{text-align:center;font-size:.85rem;color:var(--gray);margin-top:9px;min-height:1.2em;}
+  footer{text-align:center;color:var(--gray);font-size:.8rem;margin:24px 0;}
+</style>
+<!-- EFETL-PWA -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#7C4DFF">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="EFETL">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}</script>
+<!-- /EFETL-PWA -->
+</head>
+<body>
+<a href="gept-listening.html" style="position:fixed;top:12px;left:12px;background:rgba(255,255,255,.92);color:#ff6f91;padding:7px 15px;border-radius:20px;text-decoration:none;font-size:.85rem;font-weight:800;z-index:999;box-shadow:0 3px 10px rgba(0,0,0,.15);">&#8592; 回聽力題庫</a>
+<div class="wrap">
+  <header class="top">
+    <h1>GEPT 初級　聽力測驗　<span style="opacity:.9">第20回　房屋與房間</span></h1>
+    <p>互動聽力練習　&middot;　依官方四大題型與難度命題</p>
+    <div class="meta">共 4 大題、30 題　|　每題按 🔊 播放，聆聽後作答　|　送出後顯示聽力原文、中英解析與分數</div>
+  </header>
+
+  <div class="notice">
+    <span class="ic">🎧</span>
+    <span>每題皆附<strong>語音朗讀音檔</strong>，iPhone、Android 各廠牌手機與電腦瀏覽器皆可播放（請開啟媒體音量）。點各題的 <strong>🔊 播放</strong> 鈕聆聽；正式考試每題只播一次，練習時可重播。</span>
+  </div>
+
+  <a href="gept-listening-20-print.html" style="display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #ffb703;color:#8a5a00;border-radius:12px;padding:11px 16px;margin-bottom:18px;text-decoration:none;font-size:.9rem;font-weight:700;box-shadow:0 3px 10px rgba(255,183,3,.16);">
+    <span>🖨</span><span>列印版（學生卷／教師卷）— 適合課堂紙本練習與批改，可直接列印或存成 PDF</span>
+  </a>
+
+  <div class="sticky">
+    <div class="bar">
+      <span>作答進度</span>
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <span id="count">0 / 30</span>
+    </div>
+  </div>
+
+  <form id="quiz"></form>
+
+  <div class="result" id="result">
+    <div class="score" id="scoreNum">0</div>
+    <div class="sub" id="scoreTxt">分</div>
+    <div class="bd">
+      <span style="color:var(--green)">答對 <b id="rOk">0</b></span>
+      <span style="color:var(--red)">答錯 <b id="rNo">0</b></span>
+      <span style="color:var(--gray)">未作答 <b id="rBlank">0</b></span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="submit" id="submitBtn">送出並查看解析</button>
+    <div class="hint" id="hint">尚未作答任何題目</div>
+    <button type="button" class="reset" id="resetBtn">重新作答</button>
+  </div>
+
+  <footer>GEPT 初級聽力　互動練習　&middot;　第二顆腦 / GEPT初級</footer>
+</div>
+
+<script>
+/* ====== 圖形素材（第20回 房屋與房間） ====== */
+const IMG = n => `<img class="pic-img" src="gept-listening-img/20/${n}.jpg" alt="${n}">`;
+const BARS=(title,labs,vals)=>{const max=Math.max(...vals),bw=28,gap=18,x0=20;let b='',l='';
+ labs.forEach((L,i)=>{const h=Math.round(vals[i]/max*70),x=x0+i*(bw+gap);
+  b+=`<rect x="${x}" y="${100-h}" width="${bw}" height="${h}" fill="#e9e9e9" stroke="#1a1a1a" stroke-width="1.5"/>`;
+  l+=`<text x="${x+bw/2}" y="116">${L}</text>`;});
+ return `<svg class="chart" width="176" height="132" viewBox="0 0 176 132"><text x="88" y="15" text-anchor="middle" font-size="14" font-weight="700">${title}</text><line x1="16" y1="22" x2="16" y2="100" stroke="#1a1a1a" stroke-width="1.5"/><line x1="16" y1="100" x2="170" y2="100" stroke="#1a1a1a" stroke-width="1.5"/>${b}<g font-size="11" text-anchor="middle">${l}</g></svg>`;};
+const BUILDING=`<svg width="100" height="114" viewBox="0 0 100 116"><rect x="26" y="12" width="52" height="96" fill="#cfd8e3" stroke="#1a1a1a" stroke-width="2.5"/><g fill="#a5d8ff" stroke="#1a1a1a" stroke-width="1.2"><rect x="34" y="22" width="10" height="12"/><rect x="50" y="22" width="10" height="12"/><rect x="64" y="22" width="8" height="12"/><rect x="34" y="42" width="10" height="12"/><rect x="50" y="42" width="10" height="12"/><rect x="64" y="42" width="8" height="12"/><rect x="34" y="62" width="10" height="12"/><rect x="50" y="62" width="10" height="12"/><rect x="64" y="62" width="8" height="12"/></g><rect x="44" y="86" width="16" height="22" fill="#8a5a2b"/></svg>`;
+const DOOR=`<svg width="86" height="114" viewBox="0 0 86 116"><rect x="18" y="10" width="50" height="98" rx="3" fill="#a06a3b" stroke="#1a1a1a" stroke-width="2.5"/><rect x="26" y="20" width="34" height="34" fill="#8a5a2b" stroke="#1a1a1a" stroke-width="1.5"/><rect x="26" y="60" width="34" height="34" fill="#8a5a2b" stroke="#1a1a1a" stroke-width="1.5"/><circle cx="58" cy="60" r="3.5" fill="#ffd166"/></svg>`;
+const WINDOW=`<svg width="110" height="112" viewBox="0 0 110 114"><rect x="24" y="16" width="62" height="72" fill="#a5d8ff" stroke="#1a1a1a" stroke-width="2.5"/><line x1="55" y1="16" x2="55" y2="88" stroke="#1a1a1a" stroke-width="2"/><line x1="24" y1="52" x2="86" y2="52" stroke="#1a1a1a" stroke-width="2"/><path d="M18 12 q10 40 0 76 h10 q-8 -38 0 -76 z" fill="#e6007e" opacity=".85" stroke="#1a1a1a" stroke-width="1.5"/><path d="M92 12 q-10 40 0 76 h-10 q8 -38 0 -76 z" fill="#e6007e" opacity=".85" stroke="#1a1a1a" stroke-width="1.5"/><line x1="14" y1="96" x2="96" y2="96" stroke="#8a5a2b" stroke-width="4"/></svg>`;
+const STAIRS=`<svg width="120" height="108" viewBox="0 0 120 110"><g fill="#d0b48a" stroke="#1a1a1a" stroke-width="2"><rect x="16" y="86" width="88" height="16"/><rect x="30" y="70" width="74" height="16"/><rect x="44" y="54" width="60" height="16"/><rect x="58" y="38" width="46" height="16"/><rect x="72" y="22" width="32" height="16"/></g><line x1="16" y1="86" x2="88" y2="14" stroke="#8a5a2b" stroke-width="3"/></svg>`;
+const ROOFHOUSE=`<svg width="130" height="108" viewBox="0 0 130 110"><path d="M18 52 L65 16 L112 52 Z" fill="#c85a3b" stroke="#1a1a1a" stroke-width="2.5" stroke-linejoin="round"/><rect x="28" y="52" width="74" height="48" fill="#fff2e6" stroke="#1a1a1a" stroke-width="2.5"/><rect x="56" y="72" width="20" height="28" fill="#8a5a2b"/><rect x="36" y="60" width="14" height="14" fill="#a5d8ff" stroke="#1a1a1a" stroke-width="1.5"/><rect x="82" y="60" width="14" height="14" fill="#a5d8ff" stroke="#1a1a1a" stroke-width="1.5"/><rect x="88" y="24" width="10" height="18" fill="#8b95a1" stroke="#1a1a1a" stroke-width="1.5"/></svg>`;
+/* ====== 大題 ====== */
+const PARTS=[
+ {t:"第一大題　看圖辨義",d:"共 5 題（1–5）。看圖並聆聽問題，從 A、B、C 三個選項中選出最適合的答案。"},
+ {t:"第二大題　問答",d:"共 10 題（6–15）。聆聽一個問句或直述句，選出最適合的回答。"},
+ {t:"第三大題　簡短對話",d:"共 10 題（16–25）。聆聽一段對話與問題，選出最適合的答案。"},
+ {t:"第四大題　短文聽解",d:"共 5 題（26–30）。聆聽一段短文與問題，從三張圖片中選出最適合的一張。"}
+];
+
+
+
+/* ====== 題庫（第20回 房屋與房間） ====== */
+const Q=[
+{n:1,p:0,fig:BUILDING,o:["A tall apartment building with many floors.","The fisherman is alive on the beach.","The queen eats a banana."],a:0,
+ sen:"For question one, look at the picture. What building is this?",szh:"第一題，請看圖片。這是什麼建築？",
+ en:"A tall apartment building with many floors.",zh:"一棟有很多樓層(floor)的高公寓大樓(apartment/building)，選 A。fisherman/alive/beach、queen/banana 為干擾。"},
+{n:2,p:0,fig:DOOR,o:["The napkin is by the microwave.","The stairs reach the roof.","She opens the door and the gate, then will close them."],a:2,
+ sen:"For question two, look at the picture. What is she opening?",szh:"第二題，請看圖片。她在開什麼？",
+ en:"The door and the gate; then close them.",zh:"她打開門(door)和大門(gate)，之後會關(close)上，選 C。napkin/microwave、stair/roof 為干擾。"},
+{n:3,p:0,fig:WINDOW,o:["The loser makes a mistake.","A curtain hangs on the window in the bedroom.","The fisherman continues to page ten."],a:1,
+ sen:"For question three, look at the picture. What covers the window?",szh:"第三題，請看圖片。窗戶上是什麼？",
+ en:"A curtain on the bedroom window.",zh:"臥室(bedroom)的窗戶(window)上掛著窗簾(curtain)，選 B。loser/mistake、continue/page 為干擾。"},
+{n:4,p:0,fig:STAIRS,o:["The stairs go up to the top floor and the roof.","The kitten is at the post office.","We hurry to eat pizza."],a:0,
+ sen:"For question four, look at the picture. What connects the floors?",szh:"第四題，請看圖片。什麼連接各樓層？",
+ en:"The stairs go up to the roof.",zh:"樓梯(stair)通往頂樓和屋頂(roof)，選 A。kitten/post office、hurry/pizza 為干擾。"},
+{n:5,p:0,fig:ROOFHOUSE,o:["The queen is at the bottom.","We join the town in summer.","This flat has a wall, a room, and a small bathroom."],a:2,
+ sen:"For question five, look at the picture. What does this home have?",szh:"第五題，請看圖片。這個家有什麼？",
+ en:"A flat with a wall, a room, and a bathroom.",zh:"這間公寓(flat)有牆(wall)、一個房間(room)和一間小浴室(bathroom)，選 C。queen/bottom、join/town/summer 為干擾。"},
+
+{n:6,p:1,o:["The dryer is broken.","Good afternoon; we continue on page ten, chapter two.","The kitten is alive."],a:1,
+ sen:"Teacher, which page are we studying now?",szh:"老師，我們現在讀到哪一頁？",
+ en:"Good afternoon; continue on page ten, chapter two.",zh:"問讀到哪頁，答『午安(good afternoon)，我們接著(continue)讀第十頁(page)、第二章(chapter)』，選 B。dryer、kitten/alive 為干擾。"},
+{n:7,p:1,o:["Sorry, it was a strange mistake; one small movement fixed it.","The beach is cold.","The queen has interest."],a:0,
+ sen:"Why did the machine stop working?",szh:"機器為什麼停了？",
+ en:"Sorry, a strange mistake; one movement fixed it.",zh:"問機器為何停，答『抱歉(sorry)，是個奇怪(strange)的錯誤(mistake)；一個動作(movement)就修好了』，選 A。beach/cold、queen/interest 為干擾。"},
+{n:8,p:1,o:["The roof is flat.","The gate is closed.","Yes, the pizza is fresh but cold; hurry, I have great interest in it."],a:2,
+ sen:"Is the pizza still good to eat?",szh:"這披薩還能吃嗎？",
+ en:"Fresh but cold; hurry, I have interest in it.",zh:"問披薩(pizza)還能吃嗎，答『很新鮮(fresh)但冷(cold)了；快(hurry)，我很有興趣(interest)』，選 C。roof/flat、gate/close 為干擾。"},
+{n:9,p:1,o:["The stairs reach the roof.","I discovered a banana at the bottom of the box, next to a toy queen.","The napkin is fresh."],a:1,
+ sen:"What did you find in the old kitchen?",szh:"你在舊廚房發現了什麼？",
+ en:"A banana at the bottom, near a toy queen.",zh:"問發現什麼，答『我在箱子底部(bottom)發現一根香蕉(banana)，旁邊有個玩具女王(queen)』，選 B。stair/roof、napkin/fresh 為干擾。"},
+{n:10,p:1,o:["Yes, join us; the whole town takes a trip every summer.","The door is cold.","The loser is alive."],a:0,
+ sen:"Should I come on the class trip this year?",szh:"今年班遊我該參加嗎？",
+ en:"Join us; the whole town goes every summer.",zh:"問是否該參加，答『加入(join)我們吧；整個鎮(town)每年夏天(summer)都去旅行』，選 A。door/cold、loser/alive 為干擾。"},
+{n:11,p:1,o:["The queen eats a banana.","The roof is flat.","By the microwave and the dryer, next to a clean napkin and chopsticks."],a:2,
+ sen:"Where did you put the chopsticks?",szh:"你把筷子放哪了？",
+ en:"By the microwave and dryer, with a napkin.",zh:"問筷子(chopstick)在哪，答『在微波爐(microwave)和烘乾機(dryer)旁，靠著乾淨的餐巾(napkin)』，選 C。queen/banana、roof/flat 為干擾。"},
+{n:12,p:1,o:["The window is open.","Yes, the fisherman is alive; he was rather direct when he spoke.","The kitten sleeps."],a:1,
+ sen:"Did the old fisherman survive the storm?",szh:"那位老漁夫在暴風雨中活下來了嗎？",
+ en:"The fisherman is alive; rather direct.",zh:"問漁夫是否生還，答『是，漁夫(fisherman)還活著(alive)；他說話相當(rather)直接(direct)』，選 B。window、kitten 為干擾。"},
+{n:13,p:1,o:["I realize it now, whether or not the whole world believes me.","The bathroom is cold.","The queen is at the bottom."],a:0,
+ sen:"Do you finally understand your error?",szh:"你終於明白你的錯了嗎？",
+ en:"I realize it, whether or not the world believes.",zh:"問是否明白，答『我現在明白(realize)了，無論(whether)全世界(world)信不信我』，選 A。bathroom/cold、queen/bottom 為干擾。"},
+{n:14,p:1,o:["The dryer is loud.","The pizza is fresh.","No, he is no loser; he will determine to achieve his big goal."],a:2,
+ sen:"Do you think he will give up?",szh:"你覺得他會放棄嗎？",
+ en:"He is no loser; he will determine to achieve.",zh:"問他是否會放棄，答『不，他不是輸家(loser)；他會下定決心(determine)去達成(achieve)大目標』，選 C。dryer、pizza/fresh 為干擾。"},
+{n:15,p:1,o:["The roof is flat.","By the block, near the post office and the men's room.","The queen eats a banana."],a:1,
+ sen:"Where did you last see my little kitten?",szh:"你最後在哪看到我的小貓？",
+ en:"By the block, near the post office and men's room.",zh:"問我的(my)小貓(kitten)在哪，答『在街區(block)旁，靠近郵局(post office)和男廁(men's room)』，選 B。roof/flat、queen/banana 為干擾。"},
+
+{n:16,p:2,o:["On the fifth floor.","On the roof.","In the basement."],a:0,
+ sen:"W: Which floor is your apartment on? &nbsp;M: On the fifth floor, with a nice view. &nbsp;W: Lovely. &nbsp;Q: Which floor is the apartment on?",
+ szh:"女：你的公寓在幾樓？　男：在五樓(floor)，視野很好。　女：真好。　問：公寓在幾樓？",
+ en:"On the fifth floor.",zh:"公寓(apartment)在五樓(floor)，選 A。"},
+{n:17,p:2,o:["The kitchen.","The living room.","The bathroom, next to the bedroom."],a:2,
+ sen:"W: Which room needs cleaning most? &nbsp;M: The bathroom, right next to the bedroom. &nbsp;W: I'll do it. &nbsp;Q: Which room needs cleaning?",
+ szh:"女：哪個房間最需要打掃？　男：浴室(bathroom)，就在臥室(bedroom)旁邊。　女：我來。　問：哪個房間需要打掃？",
+ en:"The bathroom next to the bedroom.",zh:"臥室(bedroom)旁的浴室(bathroom)最需打掃，選 C。"},
+{n:18,p:2,o:["Open the door.","Close the curtain on the window.","Turn on the light."],a:1,
+ sen:"M: The sun is too bright in here. &nbsp;W: Then close the curtain on the window. &nbsp;M: Good idea. &nbsp;Q: What should they do?",
+ szh:"男：這裡陽光太亮了。　女：那就把窗戶(window)的窗簾(curtain)拉上。　男：好主意。　問：他們該怎麼做？",
+ en:"Close the curtain on the window.",zh:"拉上窗戶(window)的窗簾(curtain)，選 B。"},
+{n:19,p:2,o:["Take the stairs to the roof.","Take the lift down.","Go outside."],a:0,
+ sen:"W: How do we get to the top for the party? &nbsp;M: Take the stairs up to the roof. &nbsp;W: Let's go. &nbsp;Q: How do they get to the top?",
+ szh:"女：派對在頂樓，我們怎麼上去？　男：走樓梯(stair)上屋頂(roof)。　女：走吧。　問：他們怎麼上頂樓？",
+ en:"Take the stairs to the roof.",zh:"走樓梯(stair)上屋頂(roof)，選 A。"},
+{n:20,p:2,o:["To the mountains.","To town.","To the beach in summer."],a:2,
+ sen:"M: Where does your family go on holiday? &nbsp;W: To the beach every summer, to swim and rest. &nbsp;M: Sounds fun. &nbsp;Q: Where does the family go?",
+ szh:"男：你家假期去哪？　女：每年夏天(summer)去海邊(beach)游泳、休息。　男：聽起來很好玩。　問：這家人去哪？",
+ en:"To the beach in summer.",zh:"這家人夏天(summer)去海邊(beach)，選 C。"},
+{n:21,p:2,o:["Old bread.","Fresh, hot pizza.","Cold rice."],a:1,
+ sen:"W: What should we order tonight? &nbsp;M: Fresh, hot pizza, just out of the oven. &nbsp;W: Yummy. &nbsp;Q: What will they order?",
+ szh:"女：今晚我們點什麼？　男：新鮮(fresh)剛出爐的熱披薩(pizza)。　女：好吃。　問：他們會點什麼？",
+ en:"Fresh, hot pizza.",zh:"他們點新鮮(fresh)的披薩(pizza)，選 B。"},
+{n:22,p:2,o:["Close the front door.","Open the window.","Break the wall."],a:0,
+ sen:"M: It is getting cold in here. &nbsp;W: Please close the front door, then. &nbsp;M: Sure. &nbsp;Q: What does the woman ask?",
+ szh:"男：這裡越來越冷了。　女：那請把前門(door)關上(close)。　男：好。　問：女士要求什麼？",
+ en:"Close the front door.",zh:"把前門(door)關上(close)，選 A。"},
+{n:23,p:2,o:["In the garden.","On the roof.","In the warm room, my little kitten is sleeping."],a:2,
+ sen:"W: Where is your new pet? &nbsp;M: In the warm room, my little kitten is sleeping. &nbsp;W: So cute. &nbsp;Q: Where is the kitten?",
+ szh:"女：你的新寵物在哪？　男：在溫暖的房間(room)裡，我的小貓(kitten)在睡覺。　女：好可愛。　問：小貓在哪？",
+ en:"In the room, the kitten sleeps.",zh:"小貓(kitten)在房間(room)裡睡覺，選 C。"},
+{n:24,p:2,o:["A small hut.","A tall new building in town.","A tent."],a:1,
+ sen:"M: What are they building on the corner? &nbsp;W: A tall new building in the center of town. &nbsp;M: Impressive. &nbsp;Q: What are they building?",
+ szh:"男：他們在轉角蓋什麼？　女：鎮(town)中心一棟高高的新大樓(building)。　男：真氣派。　問：他們在蓋什麼？",
+ en:"A tall new building in town.",zh:"他們在鎮(town)上蓋新大樓(building)，選 B。"},
+{n:25,p:2,o:["Paint the wall and fix the gate.","Sell the house.","Move away."],a:0,
+ sen:"W: What will you do to your old house? &nbsp;M: Paint the wall and fix the broken gate. &nbsp;W: It will look new. &nbsp;Q: What will the man do?",
+ szh:"女：你的舊房子你要怎麼弄？　男：粉刷牆壁(wall)、修理壞掉的大門(gate)。　女：會煥然一新。　問：男士要做什麼？",
+ en:"Paint the wall and fix the gate.",zh:"粉刷牆(wall)、修大門(gate)，選 A。"},
+
+{n:26,p:3,pic:true,o:[BARS("Room Sizes",["Bed","Bath","Kitchen"],[20,50,80]),BARS("Room Sizes",["Bed","Bath","Kitchen"],[50,80,20]),BARS("Room Sizes",["Bed","Bath","Kitchen"],[80,50,20])],a:2,
+ sen:"In our new apartment we measured the rooms. The bedroom is the biggest, because we like a large space to sleep. The bathroom is in the middle, and the kitchen is the smallest. So the bedroom bar should be the tallest. &nbsp;Q: Which chart shows the room sizes?",
+ szh:"在新公寓(apartment)裡我們量了各房間(room)。臥室(bedroom)最大，因為喜歡大空間睡覺；浴室(bathroom)中等；廚房最小。所以臥室長條最高。　問：哪張圖顯示房間大小？",
+ en:"Bedroom biggest, kitchen smallest.",zh:"臥室最大、廚房最小，符合『Bed 最高』的 C。"},
+{n:27,p:3,pic:true,o:[BARS("Floors Built",["Jan","Feb","Mar"],[30,55,80]),BARS("Floors Built",["Jan","Feb","Mar"],[80,55,30]),BARS("Floors Built",["Jan","Feb","Mar"],[55,80,30])],a:1,
+ sen:"A company built a tall apartment block over three months. In January they built the most floors, working fast. In February the number was in the middle, and by March the fewest, because of cold weather. So the floors built went down each month. &nbsp;Q: Which chart shows the floors built?",
+ szh:"一家公司花三個月蓋一棟高公寓(apartment)大樓。一月蓋最多樓層(floor)，工作很快；二月中等；到三月最少，因為天冷(cold)。所以每月蓋的樓層數下降。　問：哪張圖顯示蓋的樓層數？",
+ en:"Jan most, Mar fewest.",zh:"一月最多、逐月下降，符合『Jan 最高、Mar 最低』的 B。"},
+{n:28,p:3,pic:true,o:[IMG('bread'),IMG('noodles'),IMG('rice')],a:0,
+ sen:"On the first morning in our new apartment, the kitchen was empty. We had no microwave to heat pizza and no pot to boil noodles or steam rice. So we simply ate some fresh bread on the floor of the bare room, happy to be in our new home. &nbsp;Q: What did they eat on the first morning?",
+ szh:"搬進新公寓(apartment)的第一個早上，廚房空空的。沒有微波爐(microwave)加熱披薩(pizza)，也沒鍋煮麵或蒸飯。所以我們就在空房間(room)的地板(floor)上吃新鮮麵包(bread)，開心地待在新家。　問：他們第一個早上吃什麼？",
+ en:"Fresh bread.",zh:"他們吃麵包(bread)，選 A。麵、飯為干擾。"},
+{n:29,p:3,pic:true,o:[IMG('bread'),IMG('rice'),IMG('noodles')],a:2,
+ sen:"When we finished cleaning every room of the old house, we were tired and hungry. We did not want cold bread or plain rice after such hard work. Instead, my mother cooked a big bowl of hot noodles in the kitchen, and we ate it happily by the window. &nbsp;Q: What did the mother cook?",
+ szh:"當我們打掃完舊房子的每個房間(room)後，又累又餓。這麼辛苦後我們不想吃冷(cold)麵包或白飯，於是媽媽在廚房煮了一大碗熱麵(noodles)，我們開心地在窗(window)邊吃。　問：媽媽煮了什麼？",
+ en:"A bowl of noodles.",zh:"媽媽煮了熱麵(noodles)，選 C。麵包、飯為干擾。"},
+{n:30,p:3,pic:true,o:[IMG('mountain'),IMG('beach'),IMG('park')],a:1,
+ sen:"After moving into our new home, our family wanted a break. My father liked the mountain and my sister liked the park. But we chose the beach, because in the hot summer we could leave the house behind and swim in the fresh, cool sea. &nbsp;Q: Where did the family go after moving?",
+ szh:"搬進新家後，我們家想休息一下。爸爸喜歡山，姊姊喜歡公園，但我們選了海邊(beach)，因為炎熱的夏天(summer)可以拋開房子，去清涼新鮮(fresh)的海裡游泳。　問：搬家後一家人去哪裡？",
+ en:"The beach.",zh:"一家人去海邊(beach)，選 B。山、公園為干擾。"}
+];
+
+/* ====== 音檔播放（AAC/.m4a，各廠牌手機皆支援）====== */
+let curAudio=null, curBtn=null;
+function resetPlayBtn(b){ if(!b) return; b.classList.remove('playing'); b.querySelector('.txt').textContent = b.dataset.played?'重播':'播放'; }
+function stopAudio(){ if(curAudio) curAudio.pause(); if(curBtn) resetPlayBtn(curBtn); curAudio=null; curBtn=null; }
+function playAudio(audio,btn){
+  if(curAudio===audio){                       // 同一題：暫停 / 繼續
+    if(audio.paused){ audio.play(); btn.classList.add('playing'); btn.querySelector('.txt').textContent='播放中…'; }
+    else { audio.pause(); }
+    return;
+  }
+  if(curAudio){ curAudio.pause(); resetPlayBtn(curBtn); }   // 換題：停掉上一段
+  curAudio=audio; curBtn=btn; btn.dataset.played='1';
+  btn.classList.add('playing'); btn.querySelector('.txt').textContent='播放中…';
+  audio.play().catch(()=>resetPlayBtn(btn));
+}
+
+/* ====== 產生畫面 ====== */
+const form=document.getElementById('quiz');
+let lastP=-1;
+Q.forEach(q=>{
+  if(q.p!==lastP){
+    const st=document.createElement('div'); st.className='section-title s'+q.p; st.textContent=PARTS[q.p].t;
+    const sd=document.createElement('div'); sd.className='section-desc'; sd.textContent=PARTS[q.p].d;
+    form.appendChild(st); form.appendChild(sd); lastP=q.p;
+  }
+  const card=document.createElement('div'); card.className='q'; card.id='q'+q.n;
+  const head=document.createElement('div'); head.className='qhead';
+  head.innerHTML=`<span class="num">${q.n}</span>
+    <button type="button" class="play"><span class="wave">🔊</span><span class="txt">播放</span></button>
+    <span class="hintq">聆聽後作答</span>`;
+  card.appendChild(head);
+  const audio=document.createElement('audio'); audio.preload='none'; audio.src='gept-listening-audio/20/q'+q.n+'.m4a?v=r20-20260909'; card.appendChild(audio);
+  const pbtn=head.querySelector('.play');
+  pbtn.addEventListener('click',()=>playAudio(audio,pbtn));
+  audio.addEventListener('ended',()=>{ if(curBtn===pbtn){ resetPlayBtn(pbtn); curAudio=null; curBtn=null; } });
+  audio.addEventListener('pause',()=>{ if(curAudio===audio && curBtn===pbtn && !audio.ended){ pbtn.classList.remove('playing'); pbtn.querySelector('.txt').textContent='繼續'; } });
+  if(q.fig){ const f=document.createElement('div'); f.className='fig'; f.innerHTML=q.fig; card.appendChild(f); }
+  if(q.pic){
+    if(q.legend){ const lg=document.createElement('div'); lg.innerHTML=PIE_LEGEND; card.appendChild(lg.firstChild); }
+    const wrap=document.createElement('div'); wrap.className='picopts';
+    q.o.forEach((opt,i)=>{
+      const cell=document.createElement('label'); cell.className='picopt'; cell.dataset.i=i;
+      cell.innerHTML=`<span class="lab">${'ABC'[i]}</span>${opt}<input type="radio" name="q${q.n}" value="${i}" hidden>`;
+      cell.querySelector('input').addEventListener('change',()=>{ card.querySelectorAll('.picopt').forEach(o=>o.classList.remove('sel')); cell.classList.add('sel'); updateProgress(); });
+      wrap.appendChild(cell);
+    });
+    card.appendChild(wrap);
+  } else {
+    q.o.forEach((opt,i)=>{
+      const lab=document.createElement('label'); lab.className='opt'; lab.dataset.i=i;
+      lab.innerHTML=`<input type="radio" name="q${q.n}" value="${i}"><span class="lab">${'ABC'[i]}</span><span>${opt}</span>`;
+      lab.querySelector('input').addEventListener('change',()=>{ card.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel')); lab.classList.add('sel'); updateProgress(); });
+      card.appendChild(lab);
+    });
+  }
+  const exp=document.createElement('div'); exp.className='exp'; exp.id='exp'+q.n; card.appendChild(exp);
+  form.appendChild(card);
+});
+
+const submitBtn=document.getElementById('submitBtn');
+const resetBtn=document.getElementById('resetBtn');
+const hint=document.getElementById('hint');
+const TOT=Q.length;
+function answeredCount(){ let c=0; Q.forEach(q=>{ if(form.querySelector(`input[name="q${q.n}"]:checked`)) c++; }); return c; }
+function updateProgress(){
+  const c=answeredCount();
+  document.getElementById('count').textContent=`${c} / ${TOT}`;
+  document.getElementById('fill').style.width=(c/TOT*100)+'%';
+  hint.textContent = c===TOT ? '已完成全部 30 題' : (c===0 ? '尚未作答任何題目（仍可送出查看解析）' : `已作答 ${c} 題，未作答 ${TOT-c} 題（仍可送出）`);
+}
+
+submitBtn.addEventListener('click',()=>{
+  stopAudio();
+  let ok=0, blank=0;
+  Q.forEach(q=>{
+    const sel=form.querySelector(`input[name="q${q.n}"]:checked`);
+    const pick=sel?parseInt(sel.value):null;
+    if(pick===null) blank++;
+    const card=document.getElementById('q'+q.n);
+    const cls=q.pic?'.picopt':'.opt';
+    card.querySelectorAll(cls).forEach(o=>{
+      o.classList.add('lock');
+      const inp=o.querySelector('input'); if(inp) inp.disabled=true;
+      const i=parseInt(o.dataset.i);
+      if(i===q.a) o.classList.add('correct');
+      if(pick!==null && i===pick && pick!==q.a) o.classList.add('wrong');
+    });
+    const correct=pick===q.a; if(correct) ok++;
+    const exp=document.getElementById('exp'+q.n);
+    const tag=correct?'答對':(pick===null?'未作答':'答錯');
+    exp.innerHTML=`<span class="tag ${correct?'':'miss'}">${tag}　正解：${'ABC'[q.a]}</span>
+      <div class="scriptbox"><b>聽力原文</b>　${q.sen}<br><span style="color:#7a4a12">${q.szh}</span></div>
+      <div class="en"><b>EN</b>&nbsp;${q.en}</div><div class="zh"><b>中</b>&nbsp;${q.zh}</div>`;
+    exp.classList.add('show');
+  });
+  document.getElementById('scoreNum').textContent=Math.round(ok/TOT*100);
+  document.getElementById('scoreTxt').textContent=`分（答對 ${ok} / ${TOT} 題）`;
+  document.getElementById('rOk').textContent=ok;
+  document.getElementById('rNo').textContent=TOT-ok-blank;
+  document.getElementById('rBlank').textContent=blank;
+  const res=document.getElementById('result'); res.classList.add('show');
+  submitBtn.style.display='none'; hint.style.display='none'; resetBtn.style.display='block';
+  res.scrollIntoView({behavior:'smooth'});
+});
+
+resetBtn.addEventListener('click',()=>{
+  stopAudio(); form.reset();
+  Q.forEach(q=>{
+    const card=document.getElementById('q'+q.n);
+    card.querySelectorAll('.opt,.picopt').forEach(o=>{o.classList.remove('sel','correct','wrong','lock');const inp=o.querySelector('input');if(inp)inp.disabled=false;});
+    document.getElementById('exp'+q.n).classList.remove('show');
+  });
+  document.getElementById('result').classList.remove('show');
+  submitBtn.style.display='block'; hint.style.display='block'; resetBtn.style.display='none';
+  updateProgress(); window.scrollTo({top:0,behavior:'smooth'});
+});
+
+updateProgress();
+</script>
+</body>
+</html>
