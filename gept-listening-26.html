@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEPT 初級 聽力測驗　第26回　個性與習慣</title>
+<style>
+  :root{
+    --blue:#2b8cff; --blue-dark:#1f6fe0;
+    --coral:#ff7a59; --amber:#ffb02e; --pink:#ff5d8f;
+    --bg:#f3f9ff; --card:#ffffff; --line:#e3edf9;
+    --green:#22b573; --green-bg:#e4f8ef;
+    --red:#ff5a5a; --red-bg:#ffecec;
+    --gray:#6b7785;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;
+    background:linear-gradient(180deg,#fff5ec,#fff9f4 70%);color:#22303f;line-height:1.6;
+    -webkit-text-size-adjust:100%;}
+  .wrap{max-width:760px;margin:0 auto;padding:16px;}
+  header.top{background:linear-gradient(135deg,#f6d365,#fda085 60%,#ff7a9c);color:#fff;
+    border-radius:18px;padding:24px 22px;margin-bottom:16px;box-shadow:0 8px 22px rgba(253,160,133,.35);}
+  header.top h1{margin:0 0 6px;font-size:1.5rem;text-shadow:0 1px 2px rgba(0,0,0,.14);}
+  header.top p{margin:0;font-size:.92rem;opacity:.96;}
+  .meta{margin-top:14px;font-size:.86rem;background:rgba(255,255,255,.24);
+    padding:9px 13px;border-radius:10px;}
+  .notice{background:#fffbeb;border:1.5px solid #f59e0b;border-radius:12px;
+    padding:11px 15px;margin-bottom:14px;font-size:.86rem;color:#78350f;
+    display:flex;align-items:flex-start;gap:9px;line-height:1.55;}
+  .notice .ic{font-size:1.1rem;flex-shrink:0;margin-top:1px;}
+  .sticky{position:sticky;top:0;z-index:20;padding:10px 0;
+    background:linear-gradient(180deg,#fff5ec 70%,rgba(255,245,236,0));}
+  .bar{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:11px 16px;display:flex;align-items:center;gap:12px;font-size:.9rem;
+    box-shadow:0 4px 12px rgba(253,160,133,.14);}
+  .bar .track{flex:1;height:9px;background:#f1e4dc;border-radius:6px;overflow:hidden;}
+  .bar .fill{height:100%;width:0;border-radius:6px;
+    background:linear-gradient(90deg,#ffb02e,#ff7a59);transition:width .35s;}
+  .bar #count{font-weight:700;color:#e0740a;}
+  .section-title{color:#fff;font-weight:800;border-radius:12px;
+    padding:10px 16px;margin:24px 0 6px;font-size:1.05rem;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);}
+  .section-title.s0{background:linear-gradient(135deg,#ff9a6c,#ff6f91);}
+  .section-title.s1{background:linear-gradient(135deg,#4dd0e1,#2b8cff);}
+  .section-title.s2{background:linear-gradient(135deg,#9b8bff,#b06bff);}
+  .section-title.s3{background:linear-gradient(135deg,#43cea2,#3ab0d6);}
+  .section-desc{font-size:.86rem;color:var(--gray);margin:0 4px 10px;}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:15px 17px;margin:12px 0;box-shadow:0 3px 10px rgba(253,160,133,.09);}
+  .qhead{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+  .qhead .num{display:inline-block;color:#fff;background:var(--coral);font-weight:700;
+    border-radius:8px;padding:1px 10px;font-size:.92rem;}
+  .play{display:inline-flex;align-items:center;gap:7px;border:0;cursor:pointer;
+    color:#fff;font-weight:800;font-size:.92rem;border-radius:22px;padding:8px 16px;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);box-shadow:0 4px 12px rgba(255,93,143,.3);}
+  .play:active{transform:translateY(1px);}
+  .play.playing{background:linear-gradient(135deg,#22b573,#1a9e63);}
+  .play .wave{font-size:.8rem;opacity:.9;}
+  .hintq{font-size:.8rem;color:var(--gray);}
+  .fig{text-align:center;margin:4px 0 12px;}
+  .fig svg{max-width:100%;height:auto;}
+  .pic-img{border-radius:9px;border:1px solid #e6ded7;object-fit:cover;}
+  .fig .pic-img{max-width:230px;width:100%;max-height:150px;}
+  .opt{display:flex;align-items:flex-start;gap:10px;border:2px solid var(--line);
+    border-radius:11px;padding:10px 13px;margin:8px 0;cursor:pointer;transition:.15s;
+    font-size:.95rem;background:#fbfdff;}
+  .opt:hover{border-color:var(--coral);background:#fff4ee;}
+  .opt input{margin-top:3px;accent-color:var(--coral);}
+  .opt .lab{font-weight:800;color:var(--coral);min-width:18px;}
+  .opt.sel{border-color:var(--coral);background:#ffeee6;}
+  .opt.correct{border-color:var(--green);background:var(--green-bg);}
+  .opt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .opt.lock{cursor:default;}
+  /* picture options (Part 4) */
+  .picopts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:6px 0;}
+  .picopt{border:2px solid var(--line);border-radius:12px;padding:9px 6px;cursor:pointer;
+    text-align:center;transition:.15s;background:#fbfdff;display:flex;flex-direction:column;align-items:center;gap:6px;}
+  .picopt:hover{border-color:var(--coral);background:#fff4ee;}
+  .picopt.sel{border-color:var(--coral);background:#ffeee6;}
+  .picopt.correct{border-color:var(--green);background:var(--green-bg);}
+  .picopt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .picopt .lab{font-weight:800;color:var(--coral);align-self:flex-start;margin-left:4px;}
+  .picopt.correct .lab{color:var(--green);}.picopt.wrong .lab{color:var(--red);}
+  .picopt img.pic-img{width:100%;height:82px;}
+  .picopt svg{width:100%;max-width:132px;height:auto;}
+  .picopt svg.chart{max-width:100%;}
+  .legend{display:flex;gap:12px;justify-content:center;font-size:.72rem;margin:2px 0 6px;color:#556;flex-wrap:wrap;}
+  .legend i{display:inline-block;width:11px;height:11px;border:1px solid #999;margin-right:4px;vertical-align:-1px;}
+  table.mini{border-collapse:collapse;font-size:.62rem;margin:0 auto;}
+  table.mini th{background:#33414f;color:#fff;padding:2px 4px;}
+  table.mini td{border:1px solid #bbb;padding:2px 4px;text-align:center;}
+  .board{background:#111;color:#ffd24a;border-radius:5px;padding:5px;font-family:"Courier New",monospace;display:inline-block;}
+  .board table{border-collapse:collapse;font-size:.6rem;color:#ffd24a;}
+  .board th{color:#7fd7ff;padding:1px 4px;border-bottom:1px solid #444;}
+  .board td{padding:1px 4px;text-align:center;}
+  .exp{display:none;margin-top:11px;border-top:2px dashed #ffe1c2;padding-top:11px;font-size:.9rem;}
+  .exp.show{display:block;}
+  .exp .tag{display:inline-block;font-weight:800;color:#fff;background:var(--green);
+    border-radius:7px;padding:2px 10px;font-size:.8rem;margin-bottom:7px;}
+  .exp .tag.miss{background:var(--red);}
+  .exp .scriptbox{background:#f4f8ff;border-radius:8px;padding:7px 11px;margin:5px 0;font-size:.88rem;color:#20364d;}
+  .exp .scriptbox b{color:var(--blue-dark);}
+  .exp .en{color:#1c4f7a;background:#eef7ff;border-radius:8px;padding:6px 10px;margin:5px 0;}
+  .exp .zh{color:#7a4a12;background:#fff7ea;border-radius:8px;padding:6px 10px;margin:5px 0;}
+  .actions{position:sticky;bottom:0;padding:14px 0 6px;margin-top:18px;
+    background:linear-gradient(transparent,#fff9f4 35%);}
+  button.submit{width:100%;color:#fff;border:0;border-radius:14px;padding:16px;
+    font-size:1.08rem;font-weight:800;cursor:pointer;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);
+    box-shadow:0 6px 16px rgba(255,93,143,.35);}
+  button.submit:active{transform:translateY(1px);}
+  button.reset{width:100%;background:#fff;color:var(--coral);border:2px solid var(--coral);
+    border-radius:14px;padding:14px;font-size:1rem;font-weight:800;cursor:pointer;margin-top:10px;display:none;}
+  .result{display:none;background:var(--card);border:3px solid transparent;border-radius:16px;
+    padding:22px;margin:16px 0;text-align:center;
+    background-image:linear-gradient(#fff,#fff),linear-gradient(135deg,#ffb02e,#ff7a59,#ff5d8f);
+    background-origin:border-box;background-clip:padding-box,border-box;
+    box-shadow:0 8px 22px rgba(255,122,89,.18);}
+  .result.show{display:block;}
+  .result .score{font-size:2.8rem;font-weight:900;
+    background:linear-gradient(135deg,#ff7a59,#ff5d8f);-webkit-background-clip:text;
+    background-clip:text;-webkit-text-fill-color:transparent;}
+  .result .sub{color:var(--gray);font-size:.95rem;}
+  .result .bd{display:flex;justify-content:center;gap:18px;margin-top:12px;flex-wrap:wrap;font-size:.95rem;}
+  .result .bd span{font-weight:800;}
+  .hint{text-align:center;font-size:.85rem;color:var(--gray);margin-top:9px;min-height:1.2em;}
+  footer{text-align:center;color:var(--gray);font-size:.8rem;margin:24px 0;}
+</style>
+<!-- EFETL-PWA -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#7C4DFF">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="EFETL">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}</script>
+<!-- /EFETL-PWA -->
+</head>
+<body>
+<a href="gept-listening.html" style="position:fixed;top:12px;left:12px;background:rgba(255,255,255,.92);color:#ff6f91;padding:7px 15px;border-radius:20px;text-decoration:none;font-size:.85rem;font-weight:800;z-index:999;box-shadow:0 3px 10px rgba(0,0,0,.15);">&#8592; 回聽力題庫</a>
+<div class="wrap">
+  <header class="top">
+    <h1>GEPT 初級　聽力測驗　<span style="opacity:.9">第26回　個性與習慣</span></h1>
+    <p>互動聽力練習　&middot;　依官方四大題型與難度命題</p>
+    <div class="meta">共 4 大題、30 題　|　每題按 🔊 播放，聆聽後作答　|　送出後顯示聽力原文、中英解析與分數</div>
+  </header>
+
+  <div class="notice">
+    <span class="ic">🎧</span>
+    <span>每題皆附<strong>語音朗讀音檔</strong>，iPhone、Android 各廠牌手機與電腦瀏覽器皆可播放（請開啟媒體音量）。點各題的 <strong>🔊 播放</strong> 鈕聆聽；正式考試每題只播一次，練習時可重播。</span>
+  </div>
+
+  <a href="gept-listening-26-print.html" style="display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #ffb703;color:#8a5a00;border-radius:12px;padding:11px 16px;margin-bottom:18px;text-decoration:none;font-size:.9rem;font-weight:700;box-shadow:0 3px 10px rgba(255,183,3,.16);">
+    <span>🖨</span><span>列印版（學生卷／教師卷）— 適合課堂紙本練習與批改，可直接列印或存成 PDF</span>
+  </a>
+
+  <div class="sticky">
+    <div class="bar">
+      <span>作答進度</span>
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <span id="count">0 / 30</span>
+    </div>
+  </div>
+
+  <form id="quiz"></form>
+
+  <div class="result" id="result">
+    <div class="score" id="scoreNum">0</div>
+    <div class="sub" id="scoreTxt">分</div>
+    <div class="bd">
+      <span style="color:var(--green)">答對 <b id="rOk">0</b></span>
+      <span style="color:var(--red)">答錯 <b id="rNo">0</b></span>
+      <span style="color:var(--gray)">未作答 <b id="rBlank">0</b></span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="submit" id="submitBtn">送出並查看解析</button>
+    <div class="hint" id="hint">尚未作答任何題目</div>
+    <button type="button" class="reset" id="resetBtn">重新作答</button>
+  </div>
+
+  <footer>GEPT 初級聽力　互動練習　&middot;　第二顆腦 / GEPT初級</footer>
+</div>
+
+<script>
+/* ====== 圖形素材（第26回 個性與習慣） ====== */
+const IMG = n => `<img class="pic-img" src="gept-listening-img/26/${n}.jpg" alt="${n}">`;
+const BARS=(title,labs,vals)=>{const max=Math.max(...vals),bw=28,gap=18,x0=20;let b='',l='';
+ labs.forEach((L,i)=>{const h=Math.round(vals[i]/max*70),x=x0+i*(bw+gap);
+  b+=`<rect x="${x}" y="${100-h}" width="${bw}" height="${h}" fill="#e9e9e9" stroke="#1a1a1a" stroke-width="1.5"/>`;
+  l+=`<text x="${x+bw/2}" y="116">${L}</text>`;});
+ return `<svg class="chart" width="176" height="132" viewBox="0 0 176 132"><text x="88" y="15" text-anchor="middle" font-size="14" font-weight="700">${title}</text><line x1="16" y1="22" x2="16" y2="100" stroke="#1a1a1a" stroke-width="1.5"/><line x1="16" y1="100" x2="170" y2="100" stroke="#1a1a1a" stroke-width="1.5"/>${b}<g font-size="11" text-anchor="middle">${l}</g></svg>`;};
+const SOUPBOWL=`<svg width="130" height="94" viewBox="0 0 130 96"><path d="M22 46 q43 30 86 0 q-4 32 -43 32 q-39 0 -43 -32z" fill="#eef3f7" stroke="#1a1a1a" stroke-width="2.5"/><path d="M30 50 q35 20 70 0" fill="#e8a33b" stroke="#c17d1f" stroke-width="2"/><g stroke="#ffd" stroke-width="1.5" opacity=".8"><path d="M48 34 q4 -8 -2 -14" fill="none"/><path d="M64 32 q4 -8 -2 -14" fill="none"/><path d="M80 34 q4 -8 -2 -14" fill="none"/></g><rect x="70" y="28" width="4" height="26" fill="#c0c0c0" transform="rotate(20 72 40)"/></svg>`;
+const HIPPO=`<svg width="130" height="96" viewBox="0 0 130 98"><ellipse cx="60" cy="60" rx="42" ry="26" fill="#9b7bd4" stroke="#1a1a1a" stroke-width="2"/><ellipse cx="98" cy="52" rx="22" ry="18" fill="#9b7bd4" stroke="#1a1a1a" stroke-width="2"/><ellipse cx="104" cy="58" rx="12" ry="8" fill="#b79ee0"/><circle cx="100" cy="52" r="2" fill="#1a1a1a"/><circle cx="108" cy="55" r="1.6" fill="#1a1a1a"/><circle cx="112" cy="59" r="1.6" fill="#1a1a1a"/><ellipse cx="88" cy="40" rx="4" ry="3" fill="#9b7bd4" stroke="#1a1a1a" stroke-width="1.5"/><g stroke="#1a1a1a" stroke-width="2.5"><line x1="40" y1="82" x2="40" y2="94"/><line x1="60" y1="84" x2="60" y2="96"/><line x1="78" y1="82" x2="78" y2="94"/></g><g stroke="#4dd0e1" stroke-width="2" opacity=".6"><line x1="10" y1="88" x2="118" y2="88"/></g></svg>`;
+const DONKEY=`<svg width="120" height="102" viewBox="0 0 120 104"><ellipse cx="52" cy="56" rx="34" ry="20" fill="#9aa3ad" stroke="#1a1a1a" stroke-width="2"/><circle cx="88" cy="46" r="15" fill="#9aa3ad" stroke="#1a1a1a" stroke-width="2"/><path d="M82 34 l-4 -18 l8 6 z M96 34 l4 -18 l-8 6z" fill="#9aa3ad" stroke="#1a1a1a" stroke-width="1.5"/><circle cx="92" cy="46" r="2" fill="#1a1a1a"/><ellipse cx="98" cy="52" rx="5" ry="4" fill="#7a828c"/><rect x="30" y="40" width="30" height="16" rx="4" fill="#c8863b" stroke="#1a1a1a" stroke-width="1.5"/><g stroke="#1a1a1a" stroke-width="2.5"><line x1="36" y1="74" x2="36" y2="98"/><line x1="60" y1="76" x2="60" y2="100"/></g></svg>`;
+const LANTERN=`<svg width="90" height="112" viewBox="0 0 90 114"><line x1="45" y1="6" x2="45" y2="18" stroke="#1a1a1a" stroke-width="2"/><rect x="30" y="16" width="30" height="6" rx="2" fill="#8a5a2b"/><path d="M30 22 q15 -8 30 0 q10 20 0 56 q-15 8 -30 0 q-10 -36 0 -56z" fill="#e53935" stroke="#1a1a1a" stroke-width="2"/><g stroke="#ffd166" stroke-width="1.5"><line x1="45" y1="24" x2="45" y2="76"/><line x1="34" y1="50" x2="56" y2="50"/></g><rect x="30" y="76" width="30" height="6" rx="2" fill="#8a5a2b"/><g stroke="#ffd166" stroke-width="2"><line x1="38" y1="82" x2="38" y2="98"/><line x1="45" y1="82" x2="45" y2="102"/><line x1="52" y1="82" x2="52" y2="98"/></g></svg>`;
+const CAGE=`<svg width="120" height="108" viewBox="0 0 120 110"><rect x="20" y="16" width="80" height="82" rx="4" fill="#f7f2e8" stroke="#1a1a1a" stroke-width="2.5"/><g stroke="#1a1a1a" stroke-width="2.5"><line x1="36" y1="16" x2="36" y2="98"/><line x1="52" y1="16" x2="52" y2="98"/><line x1="68" y1="16" x2="68" y2="98"/><line x1="84" y1="16" x2="84" y2="98"/></g><circle cx="60" cy="60" r="16" fill="#e8a33b" stroke="#1a1a1a" stroke-width="1.5"/><g fill="#1a1a1a"><circle cx="54" cy="56" r="2"/><circle cx="66" cy="56" r="2"/></g><path d="M54 64 q6 5 12 0" fill="none" stroke="#1a1a1a" stroke-width="1.5"/><path d="M60 40 l-6 -8 h12z" fill="#c17d1f"/></svg>`;
+/* ====== 大題 ====== */
+const PARTS=[
+ {t:"第一大題　看圖辨義",d:"共 5 題（1–5）。看圖並聆聽問題，從 A、B、C 三個選項中選出最適合的答案。"},
+ {t:"第二大題　問答",d:"共 10 題（6–15）。聆聽一個問句或直述句，選出最適合的回答。"},
+ {t:"第三大題　簡短對話",d:"共 10 題（16–25）。聆聽一段對話與問題，選出最適合的答案。"},
+ {t:"第四大題　短文聽解",d:"共 5 題（26–30）。聆聽一段短文與問題，從三張圖片中選出最適合的一張。"}
+];
+
+
+
+/* ====== 題庫（第26回 個性與習慣） ====== */
+const Q=[
+{n:1,p:0,fig:SOUPBOWL,o:["A round bowl of hot soup, ready to eat.","The donkey carries a bundle.","The hippopotamus bathes in the lake."],a:0,
+ sen:"For question one, look at the picture. What is on the table?",szh:"第一題，請看圖片。桌上是什麼？",
+ en:"A round bowl of hot soup to eat.",zh:"一個圓(round)碗(bowl)裝著熱湯(soup)，可以吃(eat)了，選 A。donkey/bundle、hippopotamus/bathe/lake 為干擾。"},
+{n:2,p:0,fig:HIPPO,o:["The engineer will repair the lantern.","The manager gives a speech.","A big hippopotamus bathes in the cool lake."],a:2,
+ sen:"For question two, look at the picture. What animal is this?",szh:"第二題，請看圖片。這是什麼動物？",
+ en:"A hippopotamus bathing in the lake.",zh:"一隻大河馬(hippopotamus)在涼涼的湖(lake)裡泡水(bathe)，選 C。engineer/repair/lantern、manager/speech 為干擾。"},
+{n:3,p:0,fig:DONKEY,o:["The brave guide falls behind.","A donkey carries a heavy bundle through the countryside.","The suit is wet on the side."],a:1,
+ sen:"For question three, look at the picture. What carries the load?",szh:"第三題，請看圖片。什麼在載貨？",
+ en:"A donkey carries a bundle in the countryside.",zh:"一頭驢子(donkey)馱著一大捆(bundle)貨物穿過鄉間(countryside)，選 B。brave/guide/fall/behind、suit/wet/side 為干擾。"},
+{n:4,p:0,fig:LANTERN,o:["A wonderful red lantern, held by a polite guide.","We may explain the rule now.","The engineer eats soup."],a:0,
+ sen:"For question four, look at the picture. What is at the festival?",szh:"第四題，請看圖片。節慶上有什麼？",
+ en:"A wonderful lantern, held by a polite guide.",zh:"一個很棒(wonderful)的紅燈籠(lantern)，由有禮貌(polite)的導遊(guide)拿著，選 A。may/explain/rule/now、engineer/eat/soup 為干擾。"},
+{n:5,p:0,fig:CAGE,o:["The suit is ugly.","The manager insists.","A brave lion sits behind the cage; do not fall in."],a:2,
+ sen:"For question five, look at the picture. What is behind the bars?",szh:"第五題，請看圖片。柵欄後面是什麼？",
+ en:"A brave lion behind the cage; do not fall.",zh:"一頭勇猛(brave)的獅子坐在(behind)籠子(cage)後面；別跌(fall)進去，選 C。suit/ugly、manager/insist 為干擾。"},
+
+{n:6,p:1,o:["The donkey is lazy.","Yes, she is honest; her honesty and humble manner impress everybody.","The suit is wet."],a:1,
+ sen:"Do you trust the new leader?",szh:"你信任新的領導者嗎？",
+ en:"She is honest; her honesty and humble manner impress everybody.",zh:"問是否信任，答『是，她很誠實(honest)；她的誠實(honesty)和謙虛(humble)態度(manner)讓每個人(everybody)佩服』，選 B。donkey/lazy、suit/wet 為干擾。"},
+{n:7,p:1,o:["He is diligent, not lazy; he has a responsible character.","The hippopotamus bathes.","The lantern is wonderful."],a:0,
+ sen:"What is your new classmate like?",szh:"你的新同學是什麼樣的人？",
+ en:"Diligent, not lazy; a responsible character.",zh:"問新同學怎樣，答『他很勤勞(diligent)，不懶惰(lazy)；有負責(responsible)的個性(character)』，選 A。hippopotamus/bathe、lantern/wonderful 為干擾。"},
+{n:8,p:1,o:["The rule is last.","The engineer repairs it.","No, the manager is generous, never selfish or dishonest."],a:2,
+ sen:"Is your boss hard to work with?",szh:"你的老闆很難相處嗎？",
+ en:"The manager is generous, never selfish or dishonest.",zh:"問老闆是否難相處，答『不，那位經理(manager)很慷慨(generous)，從不自私(selfish)或不誠實(dishonest)』，選 C。rule/last、engineer/repair 為干擾。"},
+{n:9,p:1,o:["The donkey falls behind.","You may explain your idea now; the rule is on the last page.","The soup is round."],a:1,
+ sen:"When can I share my opinion?",szh:"我什麼時候可以說我的想法？",
+ en:"You may explain now; the rule is on the last page.",zh:"問何時能分享想法，答『你現在(now)就可以(may)解釋(explain)；規則(rule)在最後(last)一頁』，選 B。donkey/fall/behind、soup/round 為干擾。"},
+{n:10,p:1,o:["The engineer will repair the bridge; that is our main topic today.","The lion is brave.","The guide is polite."],a:0,
+ sen:"What will the meeting be about?",szh:"這場會議要討論什麼？",
+ en:"The engineer will repair it; that is the topic.",zh:"問會議主題，答『工程師(engineer)會修好(repair)那座橋；這是我們今天的主題(topic)』，選 A。lion/brave、guide/polite 為干擾。"},
+{n:11,p:1,o:["The soup is hot.","The donkey carries a bundle.","He is proud but still polite; he gave a fine speech tonight."],a:2,
+ sen:"How was the champion after his win?",szh:"冠軍贏了之後表現如何？",
+ en:"He is proud but polite; he made a fine speech.",zh:"問冠軍如何，答『他很自豪(proud)但仍有禮貌(polite)；今晚發表了一場很好的演講(speech)』，選 C。soup、donkey/bundle 為干擾。"},
+{n:12,p:1,o:["The manager is generous.","The suit is wet on one side and now it looks quite ugly.","The engineer repairs it."],a:1,
+ sen:"Why won't you wear that jacket?",szh:"你為什麼不穿那件外套？",
+ en:"The suit is wet on the side; it looks ugly.",zh:"問為何不穿，答『這套西裝(suit)一邊(side)濕(wet)了，現在看起來很醜(ugly)』，選 B。manager/generous、engineer/repair 為干擾。"},
+{n:13,p:1,o:["I am willing to lend it to you, but do not confuse the two elements as you develop the plan.","The hippopotamus is in the lake.","The lantern is red."],a:0,
+ sen:"Can I borrow your science kit?",szh:"我可以借你的科學組嗎？",
+ en:"Willing to lend it; don't confuse the elements as you develop it.",zh:"問能否借，答『我願意(willing)借(lend)你，但發展(develop)計畫時別搞混(confuse)兩個元素(element)』，選 A。hippopotamus/lake、lantern 為干擾。"},
+{n:14,p:1,o:["The donkey is lazy.","The soup is round.","It takes four days to Europe; we head there on Saturday."],a:2,
+ sen:"How long is the trip to Europe?",szh:"去歐洲的旅程要多久？",
+ en:"Four days to Europe; head there on Saturday.",zh:"問去歐洲(Europe)多久，答『要四(four)天；我們星期六(Saturday)出發(head)』，選 C。donkey/lazy、soup/round 為干擾。"},
+{n:15,p:1,o:["The cage is behind.","Insist on good manners, and develop them a little each day.","The suit is ugly."],a:1,
+ sen:"How can I build good habits?",szh:"我要怎麼養成好習慣？",
+ en:"Insist on good manners; develop them each day.",zh:"問怎麼養成好習慣，答『堅持(insist)好禮貌(manner)，每天一點一點培養(develop)』，選 B。cage/behind、suit/ugly 為干擾。"},
+
+{n:16,p:2,o:["Brave, with a strong character.","Shy.","Lazy."],a:0,
+ sen:"W: What is your favorite hero like? &nbsp;M: Brave, with a very strong character. &nbsp;W: A good role model. &nbsp;Q: What is the hero like?",
+ szh:"女：你最愛的英雄是什麼樣的？　男：勇敢(brave)，有很強的個性(character)。　女：好榜樣。　問：那位英雄是什麼樣的？",
+ en:"Brave, with a strong character.",zh:"英雄勇敢(brave)、個性(character)強，選 A。"},
+{n:17,p:2,o:["Rude.","Selfish.","Honest and always polite."],a:2,
+ sen:"M: Why do people like your grandfather? &nbsp;W: He is honest and always polite to everyone. &nbsp;M: A fine gentleman. &nbsp;Q: What is the grandfather like?",
+ szh:"男：大家為什麼喜歡你爺爺？　女：他很誠實(honest)，對每個人都很有禮貌(polite)。　男：真是位紳士。　問：爺爺是什麼樣的人？",
+ en:"Honest and polite.",zh:"爺爺誠實(honest)又有禮(polite)，選 C。"},
+{n:18,p:2,o:["A lazy worker.","A responsible manager who cares for the team.","A rude guest."],a:1,
+ sen:"W: Who runs your father's company? &nbsp;M: A responsible manager who cares for the whole team. &nbsp;W: Lucky workers. &nbsp;Q: Who runs the company?",
+ szh:"女：你爸爸的公司誰在管？　男：一位負責(responsible)、關心整個團隊的經理(manager)。　女：員工真幸運。　問：誰在管理公司？",
+ en:"A responsible manager.",zh:"是負責(responsible)的經理(manager)，選 B。"},
+{n:19,p:2,o:["Diligent students who study hard.","Lazy students.","Sleepy students."],a:0,
+ sen:"M: Why does that class always win prizes? &nbsp;W: They are diligent students who study hard, not lazy at all. &nbsp;M: Impressive. &nbsp;Q: What kind of students are they?",
+ szh:"男：那個班為什麼總是得獎？　女：他們是用功(diligent)讀書的學生，一點都不懶(lazy)。　男：厲害。　問：他們是什麼樣的學生？",
+ en:"Diligent students.",zh:"他們是勤奮(diligent)的學生，選 A。"},
+{n:20,p:2,o:["In a big city.","By the sea.","In the quiet countryside, near a lake."],a:2,
+ sen:"W: Where do your grandparents live? &nbsp;M: In the quiet countryside, near a beautiful lake. &nbsp;W: How peaceful. &nbsp;Q: Where do the grandparents live?",
+ szh:"女：你祖父母住哪？　男：在安靜的鄉間(countryside)，一座美麗的湖(lake)附近。　女：真寧靜。　問：祖父母住哪？",
+ en:"In the countryside near a lake.",zh:"住在湖(lake)邊的鄉間(countryside)，選 C。"},
+{n:21,p:2,o:["A teacher.","An engineer who can repair machines.","A cook."],a:1,
+ sen:"M: What does your mother do? &nbsp;W: She is an engineer who can repair almost any machine. &nbsp;M: Very clever. &nbsp;Q: What is the mother's job?",
+ szh:"男：你媽媽做什麼工作？　女：她是工程師(engineer)，幾乎什麼機器都能修(repair)。　男：真聰明。　問：媽媽的工作是什麼？",
+ en:"An engineer who can repair machines.",zh:"媽媽是會修理(repair)機器的工程師(engineer)，選 B。"},
+{n:22,p:2,o:["Generous; she will lend it to me.","Selfish.","Mean."],a:0,
+ sen:"W: Will your friend share her book? &nbsp;M: Of course; she is generous and will lend it to me. &nbsp;W: What a good friend. &nbsp;Q: What is the friend like?",
+ szh:"女：你朋友會分享她的書嗎？　男：當然；她很慷慨(generous)，會借(lend)我。　女：真是好朋友。　問：那位朋友是什麼樣的人？",
+ en:"Generous; she'll lend it.",zh:"朋友很慷慨(generous)、會借(lend)，選 A。"},
+{n:23,p:2,o:["A funny story.","A song.","A speech on an important topic."],a:2,
+ sen:"M: What did the principal give this morning? &nbsp;W: A speech on a very important topic. &nbsp;M: I hope people listened. &nbsp;Q: What did the principal give?",
+ szh:"男：校長今早做了什麼？　女：一場關於重要主題(topic)的演講(speech)。　男：希望大家有聽。　問：校長做了什麼？",
+ en:"A speech on an important topic.",zh:"校長做了關於重要主題(topic)的演講(speech)，選 C。"},
+{n:24,p:2,o:["A cook.","A guide who has traveled all over Europe.","A driver."],a:1,
+ sen:"W: Who will show us around the city? &nbsp;M: A friendly guide who has traveled all over Europe. &nbsp;W: We are in good hands. &nbsp;Q: Who will show them around?",
+ szh:"女：誰帶我們逛這座城市？　男：一位友善的導遊(guide)，遊歷過整個歐洲(Europe)。　女：交給對的人了。　問：誰帶他們逛？",
+ en:"A guide who traveled Europe.",zh:"是遊歷過歐洲(Europe)的導遊(guide)，選 B。"},
+{n:25,p:2,o:["Some hot soup to eat.","A cold drink.","A sandwich."],a:0,
+ sen:"M: What should a sick person eat? &nbsp;W: Some hot soup is easy to eat and good for them. &nbsp;M: I will make some. &nbsp;Q: What should a sick person eat?",
+ szh:"男：生病的人該吃什麼？　女：熱湯(soup)好吃(eat)又對身體好。　男：我來煮。　問：生病的人該吃什麼？",
+ en:"Hot soup to eat.",zh:"該喝好入口的熱湯(soup)，選 A。"},
+
+{n:26,p:3,pic:true,o:[BARS("Best Traits",["Honest","Brave","Kind"],[20,50,80]),BARS("Best Traits",["Honest","Brave","Kind"],[50,80,20]),BARS("Best Traits",["Honest","Brave","Kind"],[80,50,20])],a:2,
+ sen:"Our class voted for the most important character trait. Honesty got the most votes, because we all value honest friends. Being brave was in the middle, and being kind, though loved, got the fewest votes this time. So the honest bar should be the tallest. &nbsp;Q: Which chart shows the votes?",
+ szh:"我們班票選最重要的個性(character)特質。誠實(honest)最多票，因為我們都重視誠實的朋友；勇敢(brave)中等；善良雖受喜愛，這次票最少。所以誠實長條最高。　問：哪張圖顯示票數？",
+ en:"Honest most, kind least.",zh:"誠實最多、善良最少，符合『Honest 最高』的 C。"},
+{n:27,p:3,pic:true,o:[BARS("Study Hours",["Mon","Wed","Fri"],[30,55,80]),BARS("Study Hours",["Mon","Wed","Fri"],[80,55,30]),BARS("Study Hours",["Mon","Wed","Fri"],[55,80,30])],a:1,
+ sen:"A diligent student wrote down her study hours. On Monday she studied the most, full of energy. On Wednesday it was in the middle, and by Friday the least, because she felt lazy at the end of the week. So her study hours went down each day. &nbsp;Q: Which chart shows her study hours?",
+ szh:"一位勤奮(diligent)的學生記下她的讀書時數。星期一讀最多，精力充沛；星期三中等；到星期五最少，因為週末前她變懶(lazy)了。所以讀書時數逐日下降。　問：哪張圖顯示她的讀書時數？",
+ en:"Mon most, Fri least.",zh:"週一最多、逐日下降，符合『Mon 最高、Fri 最低』的 B。"},
+{n:28,p:3,pic:true,o:[IMG('bread'),IMG('noodles'),IMG('rice')],a:0,
+ sen:"My grandmother is a humble and generous person who loves to feed her guests. When we visit, she does not make heavy noodles or dry rice, which take too long. Instead, she bakes warm bread for everyone, and while we eat, she tells us wonderful old stories. &nbsp;Q: What does grandmother make for her guests?",
+ szh:"我奶奶是個謙虛(humble)又慷慨(generous)的人，愛招待客人。我們去時，她不做費時的重口味麵或乾飯，而是為大家烤溫熱的麵包(bread)，我們吃(eat)的時候她講很棒(wonderful)的老故事。　問：奶奶為客人做什麼？",
+ en:"Warm bread.",zh:"奶奶做麵包(bread)，選 A。麵、飯為干擾。"},
+{n:29,p:3,pic:true,o:[IMG('bread'),IMG('rice'),IMG('noodles')],a:2,
+ sen:"Our polite and diligent manager wanted to thank the whole team after a hard month. He said the responsible workers deserved more than plain bread or dry rice. So he treated everyone to a big bowl of hot noodles, and we all felt his generous character. &nbsp;Q: What did the manager treat the team to?",
+ szh:"我們有禮(polite)又勤奮(diligent)的經理(manager)想在辛苦的一個月後感謝團隊。他說負責(responsible)的員工值得比普通麵包或乾飯更好的。所以他請大家吃一大碗熱麵(noodle)，我們都感受到他慷慨(generous)的個性。　問：經理請團隊吃什麼？",
+ en:"A bowl of noodles.",zh:"經理請吃熱麵(noodle)，選 C。麵包、飯為干擾。"},
+{n:30,p:3,pic:true,o:[IMG('mountain'),IMG('beach'),IMG('park')],a:1,
+ sen:"Our class of brave and diligent students planned a trip together. One member liked the mountain and another liked the park in the countryside. But we chose the beach, because everyone was willing to swim, and the open sea suited our happy, active characters. &nbsp;Q: Where did the class go?",
+ szh:"我們這群勇敢(brave)又勤奮(diligent)的學生一起計畫旅行。一位成員喜歡山，另一位喜歡鄉間(countryside)的公園，但我們選了海邊(beach)，因為大家都願意(willing)游泳，開闊的海也很適合我們快樂、好動的個性。　問：全班去了哪裡？",
+ en:"The beach.",zh:"全班去海邊(beach)，選 B。山、公園為干擾。"}
+];
+
+/* ====== 音檔播放（AAC/.m4a，各廠牌手機皆支援）====== */
+let curAudio=null, curBtn=null;
+function resetPlayBtn(b){ if(!b) return; b.classList.remove('playing'); b.querySelector('.txt').textContent = b.dataset.played?'重播':'播放'; }
+function stopAudio(){ if(curAudio) curAudio.pause(); if(curBtn) resetPlayBtn(curBtn); curAudio=null; curBtn=null; }
+function playAudio(audio,btn){
+  if(curAudio===audio){                       // 同一題：暫停 / 繼續
+    if(audio.paused){ audio.play(); btn.classList.add('playing'); btn.querySelector('.txt').textContent='播放中…'; }
+    else { audio.pause(); }
+    return;
+  }
+  if(curAudio){ curAudio.pause(); resetPlayBtn(curBtn); }   // 換題：停掉上一段
+  curAudio=audio; curBtn=btn; btn.dataset.played='1';
+  btn.classList.add('playing'); btn.querySelector('.txt').textContent='播放中…';
+  audio.play().catch(()=>resetPlayBtn(btn));
+}
+
+/* ====== 產生畫面 ====== */
+const form=document.getElementById('quiz');
+let lastP=-1;
+Q.forEach(q=>{
+  if(q.p!==lastP){
+    const st=document.createElement('div'); st.className='section-title s'+q.p; st.textContent=PARTS[q.p].t;
+    const sd=document.createElement('div'); sd.className='section-desc'; sd.textContent=PARTS[q.p].d;
+    form.appendChild(st); form.appendChild(sd); lastP=q.p;
+  }
+  const card=document.createElement('div'); card.className='q'; card.id='q'+q.n;
+  const head=document.createElement('div'); head.className='qhead';
+  head.innerHTML=`<span class="num">${q.n}</span>
+    <button type="button" class="play"><span class="wave">🔊</span><span class="txt">播放</span></button>
+    <span class="hintq">聆聽後作答</span>`;
+  card.appendChild(head);
+  const audio=document.createElement('audio'); audio.preload='none'; audio.src='gept-listening-audio/26/q'+q.n+'.m4a?v=r26-20260909'; card.appendChild(audio);
+  const pbtn=head.querySelector('.play');
+  pbtn.addEventListener('click',()=>playAudio(audio,pbtn));
+  audio.addEventListener('ended',()=>{ if(curBtn===pbtn){ resetPlayBtn(pbtn); curAudio=null; curBtn=null; } });
+  audio.addEventListener('pause',()=>{ if(curAudio===audio && curBtn===pbtn && !audio.ended){ pbtn.classList.remove('playing'); pbtn.querySelector('.txt').textContent='繼續'; } });
+  if(q.fig){ const f=document.createElement('div'); f.className='fig'; f.innerHTML=q.fig; card.appendChild(f); }
+  if(q.pic){
+    if(q.legend){ const lg=document.createElement('div'); lg.innerHTML=PIE_LEGEND; card.appendChild(lg.firstChild); }
+    const wrap=document.createElement('div'); wrap.className='picopts';
+    q.o.forEach((opt,i)=>{
+      const cell=document.createElement('label'); cell.className='picopt'; cell.dataset.i=i;
+      cell.innerHTML=`<span class="lab">${'ABC'[i]}</span>${opt}<input type="radio" name="q${q.n}" value="${i}" hidden>`;
+      cell.querySelector('input').addEventListener('change',()=>{ card.querySelectorAll('.picopt').forEach(o=>o.classList.remove('sel')); cell.classList.add('sel'); updateProgress(); });
+      wrap.appendChild(cell);
+    });
+    card.appendChild(wrap);
+  } else {
+    q.o.forEach((opt,i)=>{
+      const lab=document.createElement('label'); lab.className='opt'; lab.dataset.i=i;
+      lab.innerHTML=`<input type="radio" name="q${q.n}" value="${i}"><span class="lab">${'ABC'[i]}</span><span>${opt}</span>`;
+      lab.querySelector('input').addEventListener('change',()=>{ card.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel')); lab.classList.add('sel'); updateProgress(); });
+      card.appendChild(lab);
+    });
+  }
+  const exp=document.createElement('div'); exp.className='exp'; exp.id='exp'+q.n; card.appendChild(exp);
+  form.appendChild(card);
+});
+
+const submitBtn=document.getElementById('submitBtn');
+const resetBtn=document.getElementById('resetBtn');
+const hint=document.getElementById('hint');
+const TOT=Q.length;
+function answeredCount(){ let c=0; Q.forEach(q=>{ if(form.querySelector(`input[name="q${q.n}"]:checked`)) c++; }); return c; }
+function updateProgress(){
+  const c=answeredCount();
+  document.getElementById('count').textContent=`${c} / ${TOT}`;
+  document.getElementById('fill').style.width=(c/TOT*100)+'%';
+  hint.textContent = c===TOT ? '已完成全部 30 題' : (c===0 ? '尚未作答任何題目（仍可送出查看解析）' : `已作答 ${c} 題，未作答 ${TOT-c} 題（仍可送出）`);
+}
+
+submitBtn.addEventListener('click',()=>{
+  stopAudio();
+  let ok=0, blank=0;
+  Q.forEach(q=>{
+    const sel=form.querySelector(`input[name="q${q.n}"]:checked`);
+    const pick=sel?parseInt(sel.value):null;
+    if(pick===null) blank++;
+    const card=document.getElementById('q'+q.n);
+    const cls=q.pic?'.picopt':'.opt';
+    card.querySelectorAll(cls).forEach(o=>{
+      o.classList.add('lock');
+      const inp=o.querySelector('input'); if(inp) inp.disabled=true;
+      const i=parseInt(o.dataset.i);
+      if(i===q.a) o.classList.add('correct');
+      if(pick!==null && i===pick && pick!==q.a) o.classList.add('wrong');
+    });
+    const correct=pick===q.a; if(correct) ok++;
+    const exp=document.getElementById('exp'+q.n);
+    const tag=correct?'答對':(pick===null?'未作答':'答錯');
+    exp.innerHTML=`<span class="tag ${correct?'':'miss'}">${tag}　正解：${'ABC'[q.a]}</span>
+      <div class="scriptbox"><b>聽力原文</b>　${q.sen}<br><span style="color:#7a4a12">${q.szh}</span></div>
+      <div class="en"><b>EN</b>&nbsp;${q.en}</div><div class="zh"><b>中</b>&nbsp;${q.zh}</div>`;
+    exp.classList.add('show');
+  });
+  document.getElementById('scoreNum').textContent=Math.round(ok/TOT*100);
+  document.getElementById('scoreTxt').textContent=`分（答對 ${ok} / ${TOT} 題）`;
+  document.getElementById('rOk').textContent=ok;
+  document.getElementById('rNo').textContent=TOT-ok-blank;
+  document.getElementById('rBlank').textContent=blank;
+  const res=document.getElementById('result'); res.classList.add('show');
+  submitBtn.style.display='none'; hint.style.display='none'; resetBtn.style.display='block';
+  res.scrollIntoView({behavior:'smooth'});
+});
+
+resetBtn.addEventListener('click',()=>{
+  stopAudio(); form.reset();
+  Q.forEach(q=>{
+    const card=document.getElementById('q'+q.n);
+    card.querySelectorAll('.opt,.picopt').forEach(o=>{o.classList.remove('sel','correct','wrong','lock');const inp=o.querySelector('input');if(inp)inp.disabled=false;});
+    document.getElementById('exp'+q.n).classList.remove('show');
+  });
+  document.getElementById('result').classList.remove('show');
+  submitBtn.style.display='block'; hint.style.display='block'; resetBtn.style.display='none';
+  updateProgress(); window.scrollTo({top:0,behavior:'smooth'});
+});
+
+updateProgress();
+</script>
+</body>
+</html>
