@@ -1,0 +1,214 @@
+<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEPT 初級聽力 第 24 回　購物 列印版</title>
+<style>
+*{box-sizing:border-box;}
+body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;color:#1a1a1a;background:#f2f2f2;}
+.bar{position:sticky;top:0;background:#22303f;color:#fff;padding:10px 16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;z-index:9;}
+.bar b{margin-right:auto;font-size:.98rem;}
+.bar button{border:0;border-radius:8px;padding:8px 14px;font-weight:800;cursor:pointer;font-size:.86rem;}
+.bar .s{background:#ffb703;color:#22303f;} .bar .t{background:#e6007e;color:#fff;} .bar .a{background:#4dd0e1;color:#08343c;}
+.page{max-width:850px;margin:14px auto;background:#fff;padding:26px 30px;box-shadow:0 2px 10px rgba(0,0,0,.12);}
+.phead{text-align:center;border-bottom:2.5px solid #1a1a1a;padding-bottom:8px;margin-bottom:4px;}
+.phead h1{margin:0;font-size:1.24rem;} .phead .sub{font-size:.9rem;color:#444;margin-top:3px;}
+.pmeta{display:flex;gap:20px;flex-wrap:wrap;font-size:.9rem;margin:10px 0 4px;color:#222;}
+.pnote{font-size:.82rem;color:#555;margin-bottom:6px;}
+h2.pt{font-size:1.02rem;background:#1a1a1a;color:#fff;padding:5px 12px;border-radius:5px;margin:18px 0 3px;}
+p.pd{font-size:.82rem;color:#444;margin:0 0 10px;}
+.q{display:flex;gap:10px;padding:7px 0;border-bottom:1px dotted #ccc;page-break-inside:avoid;align-items:flex-start;}
+.qn{font-weight:800;white-space:nowrap;min-width:56px;}
+.qbody{flex:1;}
+.fig{margin:4px 0;} .fig svg,.fig img{vertical-align:middle;}
+.opts{list-style:none;margin:2px 0;padding:0;}
+.opts li{padding:1.5px 0;font-size:.94rem;}
+.pics{display:flex;gap:14px;flex-wrap:wrap;margin:4px 0;}
+.pico{text-align:center;border:1px solid #ddd;border-radius:8px;padding:6px;background:#fafafa;}
+.pico .lb{font-weight:800;font-size:.9rem;margin-bottom:2px;}
+.pic-img{width:120px;height:90px;object-fit:cover;border-radius:5px;}
+.ans{color:#c1121f;font-weight:800;}
+.tr{font-size:.86rem;color:#333;margin:3px 0;background:#f7f7f7;border-left:3px solid #999;padding:5px 9px;border-radius:0 5px 5px 0;line-height:1.5;}
+.ex{font-size:.84rem;color:#0a5;margin:2px 0 0;}
+.grid30{display:grid;grid-template-columns:repeat(5,1fr);gap:6px 10px;margin-top:8px;}
+.gc{border:1px solid #bbb;border-radius:6px;padding:4px 6px;font-size:.86rem;text-align:center;}
+.gc b{display:inline-block;min-width:20px;} .gc .ab{letter-spacing:2px;color:#555;}
+.gc .ans{color:#c1121f;}
+@media print{
+ .bar{display:none;} body{background:#fff;} .page{box-shadow:none;margin:0 auto;max-width:none;padding:0 6mm;}
+ .hidep{display:none !important;}
+ .page{page-break-after:always;}
+}
+</style></head><body>
+<div class="bar">
+ <b>🖨 第 24 回　購物　聽力測驗　列印版</b>
+ <button class="s" onclick="show('s')">只印學生卷</button>
+ <button class="t" onclick="show('t')">只印教師卷</button>
+ <button class="a" onclick="show('a')">兩份都印</button>
+</div>
+<div id="root"></div>
+<script>
+/* 圖形素材（第24回 購物） ====== */
+const IMG = n => `<img class="pic-img" src="gept-listening-img/24/${n}.jpg" alt="${n}">`;
+const BARS=(title,labs,vals)=>{const max=Math.max(...vals),bw=28,gap=18,x0=20;let b='',l='';
+ labs.forEach((L,i)=>{const h=Math.round(vals[i]/max*70),x=x0+i*(bw+gap);
+  b+=`<rect x="${x}" y="${100-h}" width="${bw}" height="${h}" fill="#e9e9e9" stroke="#1a1a1a" stroke-width="1.5"/>`;
+  l+=`<text x="${x+bw/2}" y="116">${L}</text>`;});
+ return `<svg class="chart" width="176" height="132" viewBox="0 0 176 132"><text x="88" y="15" text-anchor="middle" font-size="14" font-weight="700">${title}</text><line x1="16" y1="22" x2="16" y2="100" stroke="#1a1a1a" stroke-width="1.5"/><line x1="16" y1="100" x2="170" y2="100" stroke="#1a1a1a" stroke-width="1.5"/>${b}<g font-size="11" text-anchor="middle">${l}</g></svg>`;};
+const STORE=`<svg width="140" height="100" viewBox="0 0 140 102"><rect x="20" y="42" width="100" height="54" fill="#fff5ec" stroke="#1a1a1a" stroke-width="2.5"/><path d="M16 42 h108 v-8 q-54 -14 -108 0z" fill="#2b8cff" stroke="#1a1a1a" stroke-width="2"/><rect x="30" y="54" width="30" height="42" fill="#a5d8ff" stroke="#1a1a1a" stroke-width="1.5"/><rect x="76" y="66" width="24" height="30" fill="#8a5a2b"/><text x="70" y="38" text-anchor="middle" font-size="9" font-weight="800" fill="#fff">STORE</text></svg>`;
+const PRICETAG=`<svg width="120" height="100" viewBox="0 0 120 102"><path d="M22 30 L70 30 L104 64 L70 98 L22 60 Z" fill="#ffd166" stroke="#1a1a1a" stroke-width="2.5" stroke-linejoin="round"/><circle cx="40" cy="48" r="7" fill="#fff" stroke="#1a1a1a" stroke-width="2"/><text x="66" y="70" text-anchor="middle" font-size="16" font-weight="900" fill="#e6007e">$</text><text x="66" y="52" text-anchor="middle" font-size="9" font-weight="800" fill="#1a1a1a">SALE</text></svg>`;
+const SHOPBAG=`<svg width="100" height="112" viewBox="0 0 100 114"><path d="M24 40 h52 l6 66 h-64 z" fill="#e6007e" stroke="#1a1a1a" stroke-width="2.5" stroke-linejoin="round"/><path d="M36 40 q0 -18 14 -18 q14 0 14 18" fill="none" stroke="#1a1a1a" stroke-width="2.5"/><circle cx="50" cy="72" r="12" fill="#fff" opacity=".85"/><text x="50" y="77" text-anchor="middle" font-size="11" font-weight="900" fill="#e6007e">%</text></svg>`;
+const CONVENIENCE=`<svg width="140" height="100" viewBox="0 0 140 102"><rect x="18" y="34" width="104" height="62" fill="#eef7ff" stroke="#1a1a1a" stroke-width="2.5"/><rect x="18" y="22" width="104" height="14" fill="#43a047"/><rect x="18" y="36" width="104" height="5" fill="#e6007e"/><text x="70" y="33" text-anchor="middle" font-size="9" font-weight="800" fill="#fff">24 HR</text><g fill="#a5d8ff" stroke="#1a1a1a" stroke-width="1.2"><rect x="26" y="48" width="26" height="30"/><rect x="88" y="48" width="26" height="30"/></g><rect x="58" y="52" width="24" height="44" fill="#8a5a2b"/></svg>`;
+const SWEATER=`<svg width="120" height="106" viewBox="0 0 120 108"><path d="M34 20 L60 14 L86 20 L108 40 L92 56 L84 48 L84 98 L36 98 L36 48 L28 56 L12 40 Z" fill="#ff6f91" stroke="#1a1a1a" stroke-width="2.5" stroke-linejoin="round"/><path d="M48 22 q12 10 24 0" fill="none" stroke="#1a1a1a" stroke-width="2"/><g stroke="#c1005f" stroke-width="1.5"><line x1="44" y1="60" x2="76" y2="60"/><line x1="44" y1="72" x2="76" y2="72"/><line x1="44" y1="84" x2="76" y2="84"/></g></svg>`;
+
+const PARTS=[
+ {t:"第一大題　看圖辨義",d:"共 5 題（1–5）。看圖並聆聽問題，從 A、B、C 三個選項中選出最適合的答案。"},
+ {t:"第二大題　問答",d:"共 10 題（6–15）。聆聽一個問句或直述句，選出最適合的回答。"},
+ {t:"第三大題　簡短對話",d:"共 10 題（16–25）。聆聽一段對話與問題，選出最適合的答案。"},
+ {t:"第四大題　短文聽解",d:"共 5 題（26–30）。聆聽一段短文與問題，從三張圖片中選出最適合的一張。"}
+];
+const Q=[
+{n:1,p:0,fig:STORE,o:["A store where a friendly salesperson sells things.","The band begins to shout.","The puppy hikes north."],a:0,
+ sen:"For question one, look at the picture. What kind of place is this?",szh:"第一題，請看圖片。這是什麼地方？",
+ en:"A store where a salesperson sells things.",zh:"一家商店(store)，親切的店員(salesperson)在此賣(sell)東西(thing)，選 A。band/begin/shout、puppy/hike/north 為干擾。"},
+{n:2,p:0,fig:PRICETAG,o:["The bell rings ahead.","We argue about the crisis.","A price tag shows a big sale, half of the price."],a:2,
+ sen:"For question two, look at the picture. What shows the cost?",szh:"第二題，請看圖片。什麼顯示價錢？",
+ en:"A price tag; a sale, half of the price.",zh:"一個價格(price)標籤顯示大特價(sale)，只要原價的(of)一半，選 C。bell/ahead、argue/crisis 為干擾。"},
+{n:3,p:0,fig:SHOPBAG,o:["The chin shows talent.","She bought a sweater; it was a smart purchase.","We divide the difference."],a:1,
+ sen:"For question three, look at the picture. What did she buy?",szh:"第三題，請看圖片。她買了什麼？",
+ en:"She bought a sweater; a smart purchase.",zh:"她買(buy)了一件毛衣(sweater)，是聰明(smart)的購買(purchase)，選 B。chin/talent、divide/difference 為干擾。"},
+{n:4,p:0,fig:CONVENIENCE,o:["I shop at the convenience store, first thing in the morning.","With whom did you go on Wednesday?","The contact lens is natural."],a:0,
+ sen:"For question four, look at the picture. Where do you shop quickly?",szh:"第四題，請看圖片。你在哪裡快速購物？",
+ en:"At the convenience store, first thing.",zh:"我在便利商店(convenience store)購物(shop)，早上第一件(first)事，選 A。whom/Wednesday、contact lens/natural 為干擾。"},
+{n:5,p:0,fig:SWEATER,o:["The band is famous.","The puppy is boring.","Many sweaters hang here, all of good quality."],a:2,
+ sen:"For question five, look at the picture. What hangs on the rack?",szh:"第五題，請看圖片。架上掛著什麼？",
+ en:"Many sweaters hang, all good quality.",zh:"許多(many)毛衣掛(hang)在這裡，都是好品質(quality)，選 C。band/famous、puppy/boring 為干擾。"},
+
+{n:6,p:1,o:["The salesperson shouts.","I hope so; the shape and quality of it look fair.","The bell rings north."],a:1,
+ sen:"Is this a good price for the coat?",szh:"這件外套價格公道嗎？",
+ en:"I hope so; the shape and quality look fair.",zh:"問價格是否公道，答『希望(hope)如此；它的形狀(shape)和品質看(look)起來很公道(fair)』，選 B。salesperson/shout、bell/north 為干擾。"},
+{n:7,p:1,o:["Do not shout; the famous band will begin the show soon, when the bell rings.","We divide the price.","The puppy is smart."],a:0,
+ sen:"Why is everyone so excited at the concert?",szh:"演唱會大家為什麼這麼興奮？",
+ en:"Don't shout; the famous band will begin when the bell rings.",zh:"問大家為何興奮，答『別大叫(shout)；有名的(famous)樂團(band)在鐘(bell)響時就要開始(begin)』，選 A。divide/price、puppy/smart 為干擾。"},
+{n:8,p:1,o:["The store is fair.","We purchase noodles.","Go north, straight ahead; and do not rub the wet paint."],a:2,
+ sen:"Excuse me, how do I get to the exit?",szh:"請問出口怎麼走？",
+ en:"Go north, straight ahead; do not rub it.",zh:"問出口怎麼走，答『往北(north)、直直往前(ahead)；別擦(rub)到未乾的漆』，選 C。store/fair、purchase/noodle 為干擾。"},
+{n:9,p:1,o:["The sweater is boring.","It is natural to relax; we like to hike with our little puppy.","The price is fair."],a:1,
+ sen:"What do you do on a free afternoon?",szh:"空閒的下午你都做什麼？",
+ en:"It is natural to hike with the puppy.",zh:"問空閒下午做什麼，答『放鬆是很自然(natural)的；我們喜歡帶小狗(puppy)去健行(hike)』，選 B。sweater/boring、price/fair 為干擾。"},
+{n:10,p:1,o:["I will order some noodles and a warm bun, with a glass of water.","The band shouts.","The chin has talent."],a:0,
+ sen:"What would you like to eat at the shop?",szh:"你想在店裡吃什麼？",
+ en:"Order noodles and a bun, with water.",zh:"問想吃什麼，答『我要點(order)一些麵(noodle)和一個溫熱的包子(bun)，配一杯水(water)』，選 A。band/shout、chin/talent 為干擾。"},
+{n:11,p:1,o:["The store sells sweaters.","The puppy hikes.","Do not argue over small things; this crisis is a serious matter."],a:2,
+ sen:"Why are those two shouting at each other?",szh:"那兩個人為什麼互相大吼？",
+ en:"Do not argue; the crisis is a big thing.",zh:"問兩人為何互吼，答『別為小事爭吵(argue)；這場危機(crisis)是件大事(thing)』，選 C。store/sell、puppy/hike 為干擾。"},
+{n:12,p:1,o:["The band begins.","In general, we should divide the bill; I do not envy the difference.","The store is famous."],a:1,
+ sen:"How should we share the cost of the gift?",szh:"禮物的費用我們該怎麼分？",
+ en:"In general, divide it; I don't envy the difference.",zh:"問怎麼分攤，答『大致(general)上我們平分(divide)；我不羨慕(envy)那點差別(difference)』，選 B。band/begin、store/famous 為干擾。"},
+{n:13,p:1,o:["His strong chin shows talent; this contest is a real opportunity.","The price is fair.","The bell rings ahead."],a:0,
+ sen:"Do you think the young singer can win?",szh:"你覺得那位年輕歌手能贏嗎？",
+ en:"His chin shows talent; a real opportunity.",zh:"問歌手能否贏，答『他堅毅的下巴(chin)顯示他有才華(talent)；這是難得的機會(opportunity)』，選 A。price/fair、bell/ahead 為干擾。"},
+{n:14,p:1,o:["The sweater hangs there.","The store is fair.","With whom? With a teacher who inspires me every Wednesday."],a:2,
+ sen:"Who did you visit at the art class?",szh:"你在美術課去找了誰？",
+ en:"With whom? A teacher who inspires me on Wednesday.",zh:"問去找了誰，答『和誰(whom)？和一位每週三(Wednesday)啟發(inspire)我的老師』，選 C。sweater/hang、store/fair 為干擾。"},
+{n:15,p:1,o:["The band is famous.","Actually, yes; I got these contact lenses as a Christmas gift, and we had to import them.","The puppy is smart."],a:1,
+ sen:"Do you wear glasses or contacts?",szh:"你戴眼鏡還是隱形眼鏡？",
+ en:"Actually, contact lenses; a Christmas gift, imported.",zh:"問戴眼鏡還是隱形，答『其實(actually)戴隱形眼鏡(contact lens)；是聖誕節(Christmas)禮物，還得進口(import)』，選 B。band/famous、puppy/smart 為干擾。"},
+
+{n:16,p:2,o:["At the department store.","Online.","At home."],a:0,
+ sen:"W: Where did you buy that nice coat? &nbsp;M: At the big department store downtown. &nbsp;W: It looks great. &nbsp;Q: Where did the man buy the coat?",
+ szh:"女：你那件好看的外套在哪買(buy)的？　男：在市區的大百貨商店(store)。　女：很好看。　問：男士在哪買外套？",
+ en:"At the department store.",zh:"男士在百貨商店(store)買(buy)的，選 A。"},
+{n:17,p:2,o:["Full price.","On sale.","On sale, at half price."],a:2,
+ sen:"M: How much did the shoes cost? &nbsp;W: They were on sale, at half the usual price. &nbsp;M: What a deal! &nbsp;Q: How much did the shoes cost?",
+ szh:"男：那雙鞋多少錢？　女：在特價(sale)，只要平常價格(price)的一半。　男：真划算！　問：鞋子多少錢？",
+ en:"On sale, at half price.",zh:"鞋子特價(sale)、半價(price)，選 C。"},
+{n:18,p:2,o:["A customer.","A helpful salesperson who sells clothes.","A doctor."],a:1,
+ sen:"W: Who helped you choose the shirt? &nbsp;M: A helpful salesperson who sells clothes there. &nbsp;W: Kind person. &nbsp;Q: Who helped the man?",
+ szh:"女：誰幫你挑襯衫的？　男：一位樂於助人、賣(sell)衣服的店員(salesperson)。　女：親切的人(person)。　問：誰幫了男士？",
+ en:"A salesperson who sells clothes.",zh:"是賣(sell)衣服的店員(salesperson)，選 B。person 人。"},
+{n:19,p:2,o:["At the convenience store nearby.","At a farm.","At school."],a:0,
+ sen:"M: Where can I buy a drink quickly? &nbsp;W: At the convenience store nearby; it is open all night. &nbsp;M: Thanks. &nbsp;Q: Where can the man buy a drink?",
+ szh:"男：我要去哪快速買飲料？　女：附近的便利商店(convenience store)，整晚營業。　男：謝謝。　問：男士能去哪買飲料？",
+ en:"At the convenience store.",zh:"在附近便利商店(convenience store)買，選 A。"},
+{n:20,p:2,o:["On his birthday.","On New Year.","For Christmas."],a:2,
+ sen:"W: When did you get this new phone? &nbsp;M: For Christmas, as a gift from my parents. &nbsp;W: Lucky you. &nbsp;Q: When did the man get the phone?",
+ szh:"女：這支新手機你什麼時候拿到的？　男：聖誕節(Christmas)，爸媽送的禮物。　女：真幸運。　問：男士何時拿到手機？",
+ en:"For Christmas.",zh:"男士在聖誕節(Christmas)拿到手機，選 C。"},
+{n:21,p:2,o:["Low quality.","High quality, a good purchase.","Broken."],a:1,
+ sen:"M: How is the new bag you bought? &nbsp;W: High quality, really a good purchase. &nbsp;M: Worth the money. &nbsp;Q: What does the woman say about the bag?",
+ szh:"男：你買的新包包如何？　女：品質(quality)很好，真是划算的購買(purchase)。　男：值得。　問：女士怎麼說那個包？",
+ en:"High quality, a good purchase.",zh:"品質(quality)好、是好購買(purchase)，選 B。"},
+{n:22,p:2,o:["Order it online and pack it well.","Throw it away.","Eat it now."],a:0,
+ sen:"M: How can I send this gift to my aunt? &nbsp;W: Order a box online and pack it well. &nbsp;M: Good plan. &nbsp;Q: What does the woman suggest?",
+ szh:"男：我要怎麼把這禮物寄給阿姨？　女：上網訂(order)個箱子，好好打包(pack)。　男：好計畫。　問：女士建議什麼？",
+ en:"Order a box and pack it well.",zh:"上網訂(order)箱子並打包(pack)，選 A。"},
+{n:23,p:2,o:["It is boring.","It is local.","It is a famous brand, imported from abroad."],a:2,
+ sen:"W: Why is this watch so expensive? &nbsp;M: It is a famous brand, imported from abroad. &nbsp;W: I see. &nbsp;Q: Why is the watch expensive?",
+ szh:"女：這支手錶為什麼這麼貴？　男：它是有名(famous)的品牌，從國外進口(import)的。　女：了解。　問：手錶為何貴？",
+ en:"A famous brand, imported.",zh:"是有名(famous)品牌、進口(import)的，選 C。boring 無聊為干擾。"},
+{n:24,p:2,o:["One sweater.","Many warm sweaters for winter.","No sweater."],a:1,
+ sen:"M: What did you buy for the cold season? &nbsp;W: Many warm sweaters for the whole winter. &nbsp;M: Smart shopping. &nbsp;Q: What did the woman buy?",
+ szh:"男：你為寒冷季節買了什麼？　女：許多(many)整個冬天穿的暖毛衣(sweater)。　男：聰明的採購。　問：女士買了什麼？",
+ en:"Many warm sweaters.",zh:"女士買了許多(many)毛衣(sweater)，選 B。"},
+{n:25,p:2,o:["This contest is a great opportunity to show his talent.","A boring event.","A small thing."],a:0,
+ sen:"M: Why should my son join the science fair? &nbsp;W: This contest is a great opportunity to show his talent. &nbsp;M: You are right. &nbsp;Q: Why should the son join?",
+ szh:"男：我兒子為什麼該參加科展？　女：這場比賽是展現他才華(talent)的好機會(opportunity)。　男：你說得對。　問：兒子為何該參加？",
+ en:"A great opportunity to show his talent.",zh:"是展現才華(talent)的好機會(opportunity)，選 A。"},
+
+{n:26,p:3,pic:true,o:[BARS("Where to Shop",["Store","Online","Market"],[20,50,80]),BARS("Where to Shop",["Store","Online","Market"],[50,80,20]),BARS("Where to Shop",["Store","Online","Market"],[80,50,20])],a:2,
+ sen:"Our class asked where people like to shop. Most students shop in a physical store, so they can see the quality. Buying online was in the middle, and the market was the least popular. So the store bar should be the tallest. &nbsp;Q: Which chart shows where people shop?",
+ szh:"我們班問大家喜歡在哪購物(shop)。多數學生在實體店(store)買，因為能看品質(quality)；網購中等；市場最少。所以商店長條最高。　問：哪張圖顯示購物地點？",
+ en:"Store most, market least.",zh:"商店最多、市場最少，符合『Store 最高』的 C。"},
+{n:27,p:3,pic:true,o:[BARS("Sales by Month",["Oct","Nov","Dec"],[30,55,80]),BARS("Sales by Month",["Oct","Nov","Dec"],[80,55,30]),BARS("Sales by Month",["Oct","Nov","Dec"],[55,80,30])],a:1,
+ sen:"Our shop counted its sales before Christmas. In October the most people came to buy, for the early sale. In November it was in the middle, and by December, surprisingly, the fewest came because prices went up. So the sales went down each month. &nbsp;Q: Which chart shows the sales?",
+ szh:"我們店統計聖誕節(Christmas)前的銷售。十月最多人來買(buy)，因為提早特價(sale)；十一月中等；到十二月意外地最少，因為價格(price)上漲。所以銷售逐月下降。　問：哪張圖顯示銷售？",
+ en:"Oct most, Dec fewest.",zh:"十月最多、逐月下降，符合『Oct 最高、Dec 最低』的 B。"},
+{n:28,p:3,pic:true,o:[IMG('bread'),IMG('noodles'),IMG('rice')],a:0,
+ sen:"After a long day of shopping, our family was hungry but in a hurry. We had no time to order noodles or wait for rice at a busy restaurant. So we stopped at the convenience store and each bought a simple bread bun to eat on the way home. &nbsp;Q: What did the family eat after shopping?",
+ szh:"逛街(shop)一整天後，我們家又餓又趕。沒時間點(order)麵或在忙碌餐廳等飯。所以我們在便利商店(convenience store)停下，各買(buy)了一個簡單的麵包(bread)當回家路上吃。　問：一家人購物後吃什麼？",
+ en:"A bread bun.",zh:"一家人吃麵包(bread)，選 A。麵、飯為干擾。"},
+{n:29,p:3,pic:true,o:[IMG('bread'),IMG('rice'),IMG('noodles')],a:2,
+ sen:"To celebrate a good sale at her shop, my aunt cooked for all her staff. She said the hard-working salespeople deserved more than plain bread or dry rice. So she made a huge bowl of hot noodles, and everyone agreed it was worth the whole busy day. &nbsp;Q: What did the aunt cook for the staff?",
+ szh:"為了慶祝店裡的好業績(sale)，阿姨為所有員工做飯。她說辛苦的店員(salesperson)值得比普通麵包或白飯更好的。所以她煮了一大碗熱麵(noodle)，大家都覺得值得這忙碌的一天。　問：阿姨為員工煮了什麼？",
+ en:"A bowl of noodles.",zh:"阿姨煮了熱麵(noodle)，選 C。麵包、飯為干擾。"},
+{n:30,p:3,pic:true,o:[IMG('mountain'),IMG('beach'),IMG('park')],a:1,
+ sen:"After all our Christmas shopping was done, our family wanted a rest. My father wanted to hike up the mountain and my sister liked the park. But we chose the beach, because we could walk along the sand, look at the sea, and forget about the crowded stores. &nbsp;Q: Where did the family go to rest?",
+ szh:"聖誕節(Christmas)採購都完成後，我們家想休息。爸爸想去爬(hike)山，姊姊喜歡公園，但我們選了海邊(beach)，因為可以沿著沙灘走、看(look)海，忘掉擁擠的商店(store)。　問：一家人去哪裡休息？",
+ en:"The beach.",zh:"一家人去海邊(beach)休息，選 B。山、公園為干擾。"}
+];
+const AB=["A","B","C"];
+function optHTML(q){
+  if(q.pic){ // 三圖選項
+    return '<div class="pics">'+q.o.map((s,i)=>`<div class="pico"><div class="lb">(${AB[i]})</div>${s}</div>`).join('')+'</div>';
+  }
+  return '<ol class="opts">'+q.o.map((s,i)=>`<li>(${AB[i]}) ${s}</li>`).join('')+'</ol>';
+}
+function figHTML(q){ return q.fig?`<div class="fig">${q.fig}</div>`:''; }
+function partOf(n){return n<=5?0:n<=15?1:n<=25?2:3;}
+function sheet(kind){ // 's' student | 't' teacher
+  let h=`<div class="page ${kind==='s'?'sheet-s':'sheet-t'}">`;
+  h+=`<div class="phead"><h1>全民英檢 初級　聽力測驗</h1><div class="sub">第 24 回　購物　${kind==='s'?'學生作答卷':'教師卷（答案・聽力原文・解析）'}</div></div>`;
+  if(kind==='s') h+=`<div class="pmeta"><span>姓名：____________</span><span>班級：__________</span><span>座號：______</span><span>分數：________</span></div>`;
+  h+=`<div class="pnote">說明：本測驗共 4 大題 30 題，每題聆聽音檔作答，從 (A) (B) (C) 中選出最適合的答案，填入題號前括號內。</div>`;
+  PARTS.forEach((pt,pi)=>{
+    h+=`<h2 class="pt">${pt.t}</h2><p class="pd">${pt.d}</p>`;
+    Q.filter(q=>partOf(q.n)===pi).forEach(q=>{
+      h+=`<div class="q"><div class="qn">（${kind==='t'?'<span class="ans">'+AB[q.a]+'</span>':'　'}）${q.n}.</div><div class="qbody">`;
+      h+=figHTML(q)+optHTML(q);
+      if(kind==='t'){
+        h+=`<div class="tr"><b>原文：</b>${(q.sen||'').replace(/&nbsp;/g,' ')}</div>`;
+        if(q.zh) h+=`<div class="ex"><b>解析：</b>${q.zh}</div>`;
+      }
+      h+=`</div></div>`;
+    });
+  });
+  h+=`</div>`;
+  return h;
+}
+function render(){document.getElementById('root').innerHTML=sheet('s')+sheet('t');}
+render();
+function show(m){
+  document.querySelectorAll('.sheet-s').forEach(e=>e.classList.toggle('hidep',m==='t'));
+  document.querySelectorAll('.sheet-t').forEach(e=>e.classList.toggle('hidep',m==='s'));
+  setTimeout(()=>window.print(),60);
+}
+</script></body></html>
