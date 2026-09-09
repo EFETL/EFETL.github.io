@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEPT 初級 聽力測驗　第30回　工作與職業</title>
+<style>
+  :root{
+    --blue:#2b8cff; --blue-dark:#1f6fe0;
+    --coral:#ff7a59; --amber:#ffb02e; --pink:#ff5d8f;
+    --bg:#f3f9ff; --card:#ffffff; --line:#e3edf9;
+    --green:#22b573; --green-bg:#e4f8ef;
+    --red:#ff5a5a; --red-bg:#ffecec;
+    --gray:#6b7785;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;
+    background:linear-gradient(180deg,#fff5ec,#fff9f4 70%);color:#22303f;line-height:1.6;
+    -webkit-text-size-adjust:100%;}
+  .wrap{max-width:760px;margin:0 auto;padding:16px;}
+  header.top{background:linear-gradient(135deg,#f6d365,#fda085 60%,#ff7a9c);color:#fff;
+    border-radius:18px;padding:24px 22px;margin-bottom:16px;box-shadow:0 8px 22px rgba(253,160,133,.35);}
+  header.top h1{margin:0 0 6px;font-size:1.5rem;text-shadow:0 1px 2px rgba(0,0,0,.14);}
+  header.top p{margin:0;font-size:.92rem;opacity:.96;}
+  .meta{margin-top:14px;font-size:.86rem;background:rgba(255,255,255,.24);
+    padding:9px 13px;border-radius:10px;}
+  .notice{background:#fffbeb;border:1.5px solid #f59e0b;border-radius:12px;
+    padding:11px 15px;margin-bottom:14px;font-size:.86rem;color:#78350f;
+    display:flex;align-items:flex-start;gap:9px;line-height:1.55;}
+  .notice .ic{font-size:1.1rem;flex-shrink:0;margin-top:1px;}
+  .sticky{position:sticky;top:0;z-index:20;padding:10px 0;
+    background:linear-gradient(180deg,#fff5ec 70%,rgba(255,245,236,0));}
+  .bar{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:11px 16px;display:flex;align-items:center;gap:12px;font-size:.9rem;
+    box-shadow:0 4px 12px rgba(253,160,133,.14);}
+  .bar .track{flex:1;height:9px;background:#f1e4dc;border-radius:6px;overflow:hidden;}
+  .bar .fill{height:100%;width:0;border-radius:6px;
+    background:linear-gradient(90deg,#ffb02e,#ff7a59);transition:width .35s;}
+  .bar #count{font-weight:700;color:#e0740a;}
+  .section-title{color:#fff;font-weight:800;border-radius:12px;
+    padding:10px 16px;margin:24px 0 6px;font-size:1.05rem;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);}
+  .section-title.s0{background:linear-gradient(135deg,#ff9a6c,#ff6f91);}
+  .section-title.s1{background:linear-gradient(135deg,#4dd0e1,#2b8cff);}
+  .section-title.s2{background:linear-gradient(135deg,#9b8bff,#b06bff);}
+  .section-title.s3{background:linear-gradient(135deg,#43cea2,#3ab0d6);}
+  .section-desc{font-size:.86rem;color:var(--gray);margin:0 4px 10px;}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:15px 17px;margin:12px 0;box-shadow:0 3px 10px rgba(253,160,133,.09);}
+  .qhead{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+  .qhead .num{display:inline-block;color:#fff;background:var(--coral);font-weight:700;
+    border-radius:8px;padding:1px 10px;font-size:.92rem;}
+  .play{display:inline-flex;align-items:center;gap:7px;border:0;cursor:pointer;
+    color:#fff;font-weight:800;font-size:.92rem;border-radius:22px;padding:8px 16px;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);box-shadow:0 4px 12px rgba(255,93,143,.3);}
+  .play:active{transform:translateY(1px);}
+  .play.playing{background:linear-gradient(135deg,#22b573,#1a9e63);}
+  .play .wave{font-size:.8rem;opacity:.9;}
+  .hintq{font-size:.8rem;color:var(--gray);}
+  .fig{text-align:center;margin:4px 0 12px;}
+  .fig svg{max-width:100%;height:auto;}
+  .pic-img{border-radius:9px;border:1px solid #e6ded7;object-fit:cover;}
+  .fig .pic-img{max-width:230px;width:100%;max-height:150px;}
+  .opt{display:flex;align-items:flex-start;gap:10px;border:2px solid var(--line);
+    border-radius:11px;padding:10px 13px;margin:8px 0;cursor:pointer;transition:.15s;
+    font-size:.95rem;background:#fbfdff;}
+  .opt:hover{border-color:var(--coral);background:#fff4ee;}
+  .opt input{margin-top:3px;accent-color:var(--coral);}
+  .opt .lab{font-weight:800;color:var(--coral);min-width:18px;}
+  .opt.sel{border-color:var(--coral);background:#ffeee6;}
+  .opt.correct{border-color:var(--green);background:var(--green-bg);}
+  .opt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .opt.lock{cursor:default;}
+  /* picture options (Part 4) */
+  .picopts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:6px 0;}
+  .picopt{border:2px solid var(--line);border-radius:12px;padding:9px 6px;cursor:pointer;
+    text-align:center;transition:.15s;background:#fbfdff;display:flex;flex-direction:column;align-items:center;gap:6px;}
+  .picopt:hover{border-color:var(--coral);background:#fff4ee;}
+  .picopt.sel{border-color:var(--coral);background:#ffeee6;}
+  .picopt.correct{border-color:var(--green);background:var(--green-bg);}
+  .picopt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .picopt .lab{font-weight:800;color:var(--coral);align-self:flex-start;margin-left:4px;}
+  .picopt.correct .lab{color:var(--green);}.picopt.wrong .lab{color:var(--red);}
+  .picopt img.pic-img{width:100%;height:82px;}
+  .picopt svg{width:100%;max-width:132px;height:auto;}
+  .picopt svg.chart{max-width:100%;}
+  .legend{display:flex;gap:12px;justify-content:center;font-size:.72rem;margin:2px 0 6px;color:#556;flex-wrap:wrap;}
+  .legend i{display:inline-block;width:11px;height:11px;border:1px solid #999;margin-right:4px;vertical-align:-1px;}
+  table.mini{border-collapse:collapse;font-size:.62rem;margin:0 auto;}
+  table.mini th{background:#33414f;color:#fff;padding:2px 4px;}
+  table.mini td{border:1px solid #bbb;padding:2px 4px;text-align:center;}
+  .board{background:#111;color:#ffd24a;border-radius:5px;padding:5px;font-family:"Courier New",monospace;display:inline-block;}
+  .board table{border-collapse:collapse;font-size:.6rem;color:#ffd24a;}
+  .board th{color:#7fd7ff;padding:1px 4px;border-bottom:1px solid #444;}
+  .board td{padding:1px 4px;text-align:center;}
+  .exp{display:none;margin-top:11px;border-top:2px dashed #ffe1c2;padding-top:11px;font-size:.9rem;}
+  .exp.show{display:block;}
+  .exp .tag{display:inline-block;font-weight:800;color:#fff;background:var(--green);
+    border-radius:7px;padding:2px 10px;font-size:.8rem;margin-bottom:7px;}
+  .exp .tag.miss{background:var(--red);}
+  .exp .scriptbox{background:#f4f8ff;border-radius:8px;padding:7px 11px;margin:5px 0;font-size:.88rem;color:#20364d;}
+  .exp .scriptbox b{color:var(--blue-dark);}
+  .exp .en{color:#1c4f7a;background:#eef7ff;border-radius:8px;padding:6px 10px;margin:5px 0;}
+  .exp .zh{color:#7a4a12;background:#fff7ea;border-radius:8px;padding:6px 10px;margin:5px 0;}
+  .actions{position:sticky;bottom:0;padding:14px 0 6px;margin-top:18px;
+    background:linear-gradient(transparent,#fff9f4 35%);}
+  button.submit{width:100%;color:#fff;border:0;border-radius:14px;padding:16px;
+    font-size:1.08rem;font-weight:800;cursor:pointer;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);
+    box-shadow:0 6px 16px rgba(255,93,143,.35);}
+  button.submit:active{transform:translateY(1px);}
+  button.reset{width:100%;background:#fff;color:var(--coral);border:2px solid var(--coral);
+    border-radius:14px;padding:14px;font-size:1rem;font-weight:800;cursor:pointer;margin-top:10px;display:none;}
+  .result{display:none;background:var(--card);border:3px solid transparent;border-radius:16px;
+    padding:22px;margin:16px 0;text-align:center;
+    background-image:linear-gradient(#fff,#fff),linear-gradient(135deg,#ffb02e,#ff7a59,#ff5d8f);
+    background-origin:border-box;background-clip:padding-box,border-box;
+    box-shadow:0 8px 22px rgba(255,122,89,.18);}
+  .result.show{display:block;}
+  .result .score{font-size:2.8rem;font-weight:900;
+    background:linear-gradient(135deg,#ff7a59,#ff5d8f);-webkit-background-clip:text;
+    background-clip:text;-webkit-text-fill-color:transparent;}
+  .result .sub{color:var(--gray);font-size:.95rem;}
+  .result .bd{display:flex;justify-content:center;gap:18px;margin-top:12px;flex-wrap:wrap;font-size:.95rem;}
+  .result .bd span{font-weight:800;}
+  .hint{text-align:center;font-size:.85rem;color:var(--gray);margin-top:9px;min-height:1.2em;}
+  footer{text-align:center;color:var(--gray);font-size:.8rem;margin:24px 0;}
+</style>
+<!-- EFETL-PWA -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#7C4DFF">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="EFETL">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}</script>
+<!-- /EFETL-PWA -->
+</head>
+<body>
+<a href="gept-listening.html" style="position:fixed;top:12px;left:12px;background:rgba(255,255,255,.92);color:#ff6f91;padding:7px 15px;border-radius:20px;text-decoration:none;font-size:.85rem;font-weight:800;z-index:999;box-shadow:0 3px 10px rgba(0,0,0,.15);">&#8592; 回聽力題庫</a>
+<div class="wrap">
+  <header class="top">
+    <h1>GEPT 初級　聽力測驗　<span style="opacity:.9">第30回　工作與職業</span></h1>
+    <p>互動聽力練習　&middot;　依官方四大題型與難度命題</p>
+    <div class="meta">共 4 大題、30 題　|　每題按 🔊 播放，聆聽後作答　|　送出後顯示聽力原文、中英解析與分數</div>
+  </header>
+
+  <div class="notice">
+    <span class="ic">🎧</span>
+    <span>每題皆附<strong>語音朗讀音檔</strong>，iPhone、Android 各廠牌手機與電腦瀏覽器皆可播放（請開啟媒體音量）。點各題的 <strong>🔊 播放</strong> 鈕聆聽；正式考試每題只播一次，練習時可重播。</span>
+  </div>
+
+  <a href="gept-listening-30-print.html" style="display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #ffb703;color:#8a5a00;border-radius:12px;padding:11px 16px;margin-bottom:18px;text-decoration:none;font-size:.9rem;font-weight:700;box-shadow:0 3px 10px rgba(255,183,3,.16);">
+    <span>🖨</span><span>列印版（學生卷／教師卷）— 適合課堂紙本練習與批改，可直接列印或存成 PDF</span>
+  </a>
+
+  <div class="sticky">
+    <div class="bar">
+      <span>作答進度</span>
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <span id="count">0 / 30</span>
+    </div>
+  </div>
+
+  <form id="quiz"></form>
+
+  <div class="result" id="result">
+    <div class="score" id="scoreNum">0</div>
+    <div class="sub" id="scoreTxt">分</div>
+    <div class="bd">
+      <span style="color:var(--green)">答對 <b id="rOk">0</b></span>
+      <span style="color:var(--red)">答錯 <b id="rNo">0</b></span>
+      <span style="color:var(--gray)">未作答 <b id="rBlank">0</b></span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="submit" id="submitBtn">送出並查看解析</button>
+    <div class="hint" id="hint">尚未作答任何題目</div>
+    <button type="button" class="reset" id="resetBtn">重新作答</button>
+  </div>
+
+  <footer>GEPT 初級聽力　互動練習　&middot;　第二顆腦 / GEPT初級</footer>
+</div>
+
+<script>
+/* ====== 圖形素材（第30回 工作與職業） ====== */
+const IMG = n => `<img class="pic-img" src="gept-listening-img/30/${n}.jpg" alt="${n}">`;
+const BARS=(title,labs,vals)=>{const max=Math.max(...vals),bw=28,gap=18,x0=20;let b='',l='';
+ labs.forEach((L,i)=>{const h=Math.round(vals[i]/max*70),x=x0+i*(bw+gap);
+  b+=`<rect x="${x}" y="${100-h}" width="${bw}" height="${h}" fill="#e9e9e9" stroke="#1a1a1a" stroke-width="1.5"/>`;
+  l+=`<text x="${x+bw/2}" y="116">${L}</text>`;});
+ return `<svg class="chart" width="176" height="132" viewBox="0 0 176 132"><text x="88" y="15" text-anchor="middle" font-size="14" font-weight="700">${title}</text><line x1="16" y1="22" x2="16" y2="100" stroke="#1a1a1a" stroke-width="1.5"/><line x1="16" y1="100" x2="170" y2="100" stroke="#1a1a1a" stroke-width="1.5"/>${b}<g font-size="11" text-anchor="middle">${l}</g></svg>`;};
+const OFFICE=`<svg width="120" height="112" viewBox="0 0 120 114"><rect x="24" y="14" width="72" height="94" fill="#cfd8e3" stroke="#1a1a1a" stroke-width="2.5"/><g fill="#a5d8ff" stroke="#1a1a1a" stroke-width="1"><rect x="32" y="24" width="16" height="14"/><rect x="54" y="24" width="16" height="14"/><rect x="76" y="24" width="12" height="14"/><rect x="32" y="46" width="16" height="14"/><rect x="54" y="46" width="16" height="14"/><rect x="76" y="46" width="12" height="14"/><rect x="32" y="68" width="16" height="14"/><rect x="54" y="68" width="16" height="14"/><rect x="76" y="68" width="12" height="14"/></g><rect x="50" y="90" width="20" height="18" fill="#8a5a2b"/></svg>`;
+const DOCUMENT=`<svg width="110" height="112" viewBox="0 0 110 114"><rect x="30" y="12" width="58" height="80" rx="3" fill="#fff" stroke="#1a1a1a" stroke-width="2.5"/><rect x="22" y="20" width="58" height="80" rx="3" fill="#fff" stroke="#1a1a1a" stroke-width="2.5"/><g stroke="#bbb" stroke-width="1.6"><line x1="30" y1="34" x2="72" y2="34"/><line x1="30" y1="44" x2="72" y2="44"/><line x1="30" y1="54" x2="72" y2="54"/><line x1="30" y1="64" x2="60" y2="64"/></g><path d="M40 82 q10 -10 20 0" fill="none" stroke="#e6007e" stroke-width="2"/><circle cx="66" cy="90" r="8" fill="none" stroke="#e6007e" stroke-width="2"/></svg>`;
+const DESK=`<svg width="130" height="102" viewBox="0 0 130 104"><circle cx="62" cy="30" r="13" fill="#ffd8a8" stroke="#1a1a1a" stroke-width="1.5"/><path d="M42 60 q0 -18 20 -18 q20 0 20 18z" fill="#4dd0e1" stroke="#1a1a1a" stroke-width="2"/><rect x="18" y="62" width="94" height="10" fill="#c88f5a" stroke="#1a1a1a" stroke-width="2"/><rect x="26" y="72" width="30" height="24" fill="#e0c19a" stroke="#1a1a1a" stroke-width="1.5"/><line x1="100" y1="72" x2="100" y2="96" stroke="#1a1a1a" stroke-width="3"/><rect x="70" y="54" width="24" height="8" fill="#22303f"/></svg>`;
+const WORKER=`<svg width="100" height="112" viewBox="0 0 100 114"><path d="M28 34 q22 -18 44 0 v6 h-44z" fill="#ffb703" stroke="#1a1a1a" stroke-width="2"/><rect x="44" y="24" width="12" height="8" fill="#ffb703"/><circle cx="50" cy="52" r="14" fill="#ffd8a8" stroke="#1a1a1a" stroke-width="1.5"/><path d="M26 108 v-26 q0 -20 24 -20 q24 0 24 20 v26z" fill="#e67e22" stroke="#1a1a1a" stroke-width="2"/><rect x="42" y="70" width="16" height="30" fill="#c96a15"/></svg>`;
+const CHART=`<svg width="130" height="108" viewBox="0 0 130 110"><rect x="16" y="12" width="98" height="84" rx="4" fill="#fff" stroke="#1a1a1a" stroke-width="2.5"/><line x1="30" y1="24" x2="30" y2="82" stroke="#1a1a1a" stroke-width="1.5"/><line x1="30" y1="82" x2="104" y2="82" stroke="#1a1a1a" stroke-width="1.5"/><rect x="40" y="60" width="12" height="22" fill="#4dd0e1"/><rect x="60" y="46" width="12" height="36" fill="#ff6f91"/><rect x="80" y="34" width="12" height="48" fill="#43a047"/><polyline points="40,58 66,46 90,30" fill="none" stroke="#e6007e" stroke-width="2"/></svg>`;
+/* ====== 大題 ====== */
+const PARTS=[
+ {t:"第一大題　看圖辨義",d:"共 5 題（1–5）。看圖並聆聽問題，從 A、B、C 三個選項中選出最適合的答案。"},
+ {t:"第二大題　問答",d:"共 10 題（6–15）。聆聽一個問句或直述句，選出最適合的回答。"},
+ {t:"第三大題　簡短對話",d:"共 10 題（16–25）。聆聽一段對話與問題，選出最適合的答案。"},
+ {t:"第四大題　短文聽解",d:"共 5 題（26–30）。聆聽一段短文與問題，從三張圖片中選出最適合的一張。"}
+];
+
+
+
+/* ====== 題庫（第30回 工作與職業） ====== */
+const Q=[
+{n:1,p:0,fig:OFFICE,o:["An office where the boss and a clerk work together.","The soldier owns a blanket.","We roll the thick honey."],a:0,
+ sen:"For question one, look at the picture. What place is this?",szh:"第一題，請看圖片。這是什麼地方？",
+ en:"An office where the boss and clerk work.",zh:"一間辦公室(office)，老闆(boss)和職員(clerk)一起工作，選 A。soldier/own/blanket、roll/thick/honey 為干擾。"},
+{n:2,p:0,fig:DOCUMENT,o:["The cabbage is on top.","We rent an electric marker.","A document for the meeting; the director will sign it."],a:2,
+ sen:"For question two, look at the picture. What is on the desk?",szh:"第二題，請看圖片。桌上是什麼？",
+ en:"A document for the meeting; the director signs it.",zh:"開會(meeting)用的文件(document)；主任(director)會簽名，選 C。cabbage/top、rent/electric/marker 為干擾。"},
+{n:3,p:0,fig:DESK,o:["The soldier obeys the rule.","A secretary works hard in the sales department.","We mop the floor and export goods."],a:1,
+ sen:"For question three, look at the picture. Who works here?",szh:"第三題，請看圖片。誰在這裡工作？",
+ en:"A secretary in the sales department.",zh:"一位秘書(secretary)在業務部門(department)努力工作，選 B。soldier/obey、mop/export 為干擾。"},
+{n:4,p:0,fig:WORKER,o:["A worker who was hired; the company will employ more like him.","The fancy dish has pepper.","We take the MRT toward town."],a:0,
+ sen:"For question four, look at the picture. Who wears this hat?",szh:"第四題，請看圖片。誰戴這頂帽子？",
+ en:"A worker who was hired to employ others.",zh:"一位被雇用(hire)的工人(worker)；公司會聘僱(employ)更多像他的人，選 A。fancy/pepper、MRT/toward 為干擾。"},
+{n:5,p:0,fig:CHART,o:["Anyone at the top is ready.","The honey is thick.","A chart shows the result of the division's work."],a:2,
+ sen:"For question five, look at the picture. What shows the numbers?",szh:"第五題，請看圖片。什麼顯示數字？",
+ en:"A chart shows the result of the division.",zh:"一張圖表(chart)顯示這個部門(division)工作的成果(result)，選 C。anyone/top/ready、honey/thick 為干擾。"},
+
+{n:6,p:1,o:["The worker mops the floor.","Anyone at the top is ready now; if this fork is dirty, try another.","The honey is thick."],a:1,
+ sen:"Can we start the fancy dinner?",szh:"我們可以開始這頓豪華晚餐了嗎？",
+ en:"Anyone at the top is ready; try another fork.",zh:"問可否開飯，答『上面(top)任何人(anyone)都準備好(ready)了；這支叉子(fork)髒的話，換另一支(another)』，選 B。worker/mop、honey/thick 為干擾。"},
+{n:7,p:1,o:["Yes, I allow it; but you have far too much height for this small door.","The boss is here.","The chart is wide."],a:0,
+ sen:"May I come through this doorway?",szh:"我可以從這個門口過去嗎？",
+ en:"I allow it; you have too much height.",zh:"問可否通過，答『我允許(allow)；不過你身高(height)太(too)高，這門對你來說有(have)點矮』，選 A。boss、chart/wide 為干擾。"},
+{n:8,p:1,o:["The marker is electric.","The cabbage is fresh.","No, the soldier owns a career he truly loves; the army is his whole subject and life."],a:2,
+ sen:"Was army life terrible for your uncle?",szh:"軍旅生活對你叔叔來說很糟嗎？",
+ en:"The soldier owns a career he loves; his subject.",zh:"問軍旅生活是否很糟(terrible)，答『不，這位軍人(soldier)擁有(own)他真心熱愛(love)的事業(career)；軍隊是他一生的主題(subject)』，選 C。marker/electric、cabbage 為干擾。"},
+{n:9,p:1,o:["The office is wide.","I get thick honey from the farm and roll it into our conversation as a gift idea.","The soldier obeys."],a:1,
+ sen:"What did you bring back from the countryside?",szh:"你從鄉下帶回什麼？",
+ en:"I get thick honey and roll it into a conversation.",zh:"問帶回什麼，答『我從農場拿(get)到濃(thick)蜂蜜(honey)，把它捲(roll)進我們的對話(conversation)當作禮物點子』，選 B。office/wide、soldier/obey 為干擾。"},
+{n:10,p:1,o:["Wave the blanket to dry it, and put the cabbage on top of the box.","The director is ready.","The marker is electric."],a:0,
+ sen:"How should I pack the picnic things?",szh:"野餐的東西我該怎麼收？",
+ en:"Wave the blanket; put the cabbage on top.",zh:"問怎麼收野餐用品，答『把毯子(blanket)抖(wave)乾，把高麗菜(cabbage)放在箱子上(top)』，選 A。director/ready、marker/electric 為干擾。"},
+{n:11,p:1,o:["The honey is thick.","The office is wide.","I seldom make a promise, but I obey the rule; we can rent the room."],a:2,
+ sen:"Will you keep to the club's rules?",szh:"你會遵守社團規則嗎？",
+ en:"I seldom promise, but I obey the rule; rent it.",zh:"問是否會守規則，答『我很少(seldom)承諾(promise)，但我會遵守(obey)規則；房間我們可以租(rent)』，選 C。honey/thick、office/wide 為干擾。"},
+{n:12,p:1,o:["The soldier loves his career.","A wide result altogether; use the electric marker to draw the chart.","The cabbage is on top."],a:1,
+ sen:"How should I present the numbers?",szh:"這些數字我該怎麼呈現？",
+ en:"A wide result altogether; use the electric marker.",zh:"問怎麼呈現數字，答『整體(altogether)是個廣泛(wide)的結果(result)；用電動(electric)白板筆(marker)畫圖表』，選 B。soldier/love/career、cabbage/top 為干擾。"},
+{n:13,p:1,o:["I mop the floor each morning and help export the goods; it is true, hard work.","The honey is thick.","The office is wide."],a:0,
+ sen:"What is your daily job at the factory?",szh:"你在工廠每天的工作是什麼？",
+ en:"I mop the floor and export goods; it is true.",zh:"問工廠每天的工作，答『我每天早上拖(mop)地，並幫忙出口(export)貨物；這是真的(true)辛苦工作』，選 A。honey/thick、office/wide 為干擾。"},
+{n:14,p:1,o:["The director is ready.","The marker is electric.","A fancy dish with black pepper; then walk toward the room number twenty."],a:2,
+ sen:"What did the chef serve, and where do I sit?",szh:"主廚上了什麼菜，我坐哪？",
+ en:"A fancy dish with pepper; walk toward number twenty.",zh:"問上了什麼菜、坐哪，答『一道加黑胡椒(pepper)的精緻(fancy)菜；然後往(toward)二十(twenty)號房走』，選 C。director/ready、marker/electric 為干擾。"},
+{n:15,p:1,o:["The soldier obeys me.","It might be ours, not just mine; either way, take the MRT to get there.","The chart is wide."],a:1,
+ sen:"Whose new office is on the tenth floor?",szh:"十樓的新辦公室是誰的？",
+ en:"It might be ours, not just me; take the MRT.",zh:"問新辦公室是誰的，答『可能(might)是我們的(ours)，不只是我(me)；不管怎樣，搭捷運(MRT)去那裡』，選 B。soldier/obey、chart/wide 為干擾。"},
+
+{n:16,p:2,o:["To the office.","To the park.","To the beach."],a:0,
+ sen:"W: Where is your father going now? &nbsp;M: To the office, for an important meeting with his boss. &nbsp;W: Busy man. &nbsp;Q: Where is the father going?",
+ szh:"女：你爸爸現在要去哪？　男：去辦公室(office)，和老闆(boss)開重要的會。　女：忙碌的人。　問：爸爸要去哪？",
+ en:"To the office.",zh:"爸爸去辦公室(office)見老闆(boss)，選 A。"},
+{n:17,p:2,o:["A doctor.","A teacher.","A clerk in the sales department."],a:2,
+ sen:"M: What does your sister do? &nbsp;W: She is a clerk in the sales department of a big company. &nbsp;M: Good job. &nbsp;Q: What is the sister's job?",
+ szh:"男：你姊姊做什麼？　女：她是大公司業務部門(department)的職員(clerk)。　男：好工作。　問：姊姊的工作是什麼？",
+ en:"A clerk in the sales department.",zh:"姊姊是業務部門(department)的職員(clerk)，選 C。"},
+{n:18,p:2,o:["A party.","A meeting led by the director.","A holiday."],a:1,
+ sen:"W: What is happening in the big room? &nbsp;M: A meeting led by the company director. &nbsp;W: Important. &nbsp;Q: What is happening in the big room?",
+ szh:"女：大會議室在做什麼？　男：由公司主任(director)主持的會議(meeting)。　女：重要。　問：大會議室在做什麼？",
+ en:"A meeting led by the director.",zh:"是主任(director)主持的會議(meeting)，選 B。"},
+{n:19,p:2,o:["Type the document for the secretary.","Sing a song.","Take a nap."],a:0,
+ sen:"M: What did the boss ask you to do? &nbsp;W: Type the document for the secretary to check. &nbsp;M: I'll help. &nbsp;Q: What did the boss ask the woman to do?",
+ szh:"男：老闆要你做什麼？　女：打好文件(document)給秘書(secretary)檢查。　男：我幫你。　問：老闆要女士做什麼？",
+ en:"Type the document for the secretary.",zh:"打文件(document)給秘書(secretary)，選 A。"},
+{n:20,p:2,o:["Fire people.","Give a speech.","Hire a new worker for the team."],a:2,
+ sen:"W: What will the company do next month? &nbsp;M: Hire a new worker for our busy team. &nbsp;W: We need the help. &nbsp;Q: What will the company do?",
+ szh:"女：公司下個月要做什麼？　男：為我們忙碌的團隊聘僱(hire)一位新員工(worker)。　女：我們正需要幫手。　問：公司要做什麼？",
+ en:"Hire a new worker.",zh:"公司要聘僱(hire)新員工(worker)，選 C。"},
+{n:21,p:2,o:["A boring job.","A career she truly loves.","A tiring day."],a:1,
+ sen:"M: How does your aunt feel about her work? &nbsp;W: She has a career she truly loves. &nbsp;M: How lucky. &nbsp;Q: How does the aunt feel about her work?",
+ szh:"男：你阿姨對她的工作感覺如何？　女：她有一份真心熱愛(love)的事業(career)。　男：真幸運。　問：阿姨對工作感覺如何？",
+ en:"A career she loves.",zh:"阿姨有熱愛(love)的事業(career)，選 B。"},
+{n:22,p:2,o:["A soldier who obeys orders.","A singer.","A painter."],a:0,
+ sen:"W: What does your brother want to be? &nbsp;M: A brave soldier who obeys every order. &nbsp;W: A hard path. &nbsp;Q: What does the brother want to be?",
+ szh:"女：你弟弟想做什麼？　男：一位勇敢、服從(obey)命令的軍人(soldier)。　女：辛苦的路。　問：弟弟想做什麼？",
+ en:"A soldier who obeys orders.",zh:"弟弟想當服從(obey)命令的軍人(soldier)，選 A。"},
+{n:23,p:2,o:["A song.","A story.","A chart that shows the sales result."],a:2,
+ sen:"M: What did the manager show at the meeting? &nbsp;W: A chart that shows the sales result this year. &nbsp;M: Very clear. &nbsp;Q: What did the manager show?",
+ szh:"男：經理在會議上展示什麼？　女：一張顯示今年業績結果(result)的圖表(chart)。　男：很清楚。　問：經理展示了什麼？",
+ en:"A chart of the sales result.",zh:"是顯示結果(result)的圖表(chart)，選 C。"},
+{n:24,p:2,o:["By car.","By the MRT to the office.","On foot."],a:1,
+ sen:"W: How do you get to work every day? &nbsp;M: By the MRT, straight to the office. &nbsp;W: Quick and easy. &nbsp;Q: How does the man get to work?",
+ szh:"女：你每天怎麼上班？　男：搭捷運(MRT)，直達辦公室(office)。　女：又快又方便。　問：男士怎麼上班？",
+ en:"By the MRT to the office.",zh:"男士搭捷運(MRT)到辦公室(office)，選 B。"},
+{n:25,p:2,o:["It will employ more workers.","It will close.","It will move away."],a:0,
+ sen:"M: What good news does the factory have? &nbsp;W: It will employ more workers this year. &nbsp;M: Great for the town. &nbsp;Q: What is the factory's good news?",
+ szh:"男：工廠有什麼好消息？　女：今年會聘僱(employ)更多工人(worker)。　男：對小鎮很好。　問：工廠的好消息是什麼？",
+ en:"It will employ more workers.",zh:"工廠會聘僱(employ)更多工人(worker)，選 A。"},
+
+{n:26,p:3,pic:true,o:[BARS("Workers/Dept",["Sales","Tech","Office"],[20,50,80]),BARS("Workers/Dept",["Sales","Tech","Office"],[50,80,20]),BARS("Workers/Dept",["Sales","Tech","Office"],[80,50,20])],a:2,
+ sen:"Our company counted the workers in each department. The sales department has the most workers, because we sell all over the country. The tech team is in the middle, and the office staff is the smallest. So the sales bar should be the tallest. &nbsp;Q: Which chart shows the workers in each department?",
+ szh:"我們公司統計各部門(department)的員工(worker)。業務部門最多，因為我們賣到全國；技術組中等；辦公室(office)行政最少。所以業務長條最高。　問：哪張圖顯示各部門員工？",
+ en:"Sales most, office least.",zh:"業務最多、行政最少，符合『Sales 最高』的 C。"},
+{n:27,p:3,pic:true,o:[BARS("Sales Result",["Q1","Q2","Q3"],[30,55,80]),BARS("Sales Result",["Q1","Q2","Q3"],[80,55,30]),BARS("Sales Result",["Q1","Q2","Q3"],[55,80,30])],a:1,
+ sen:"At the meeting, the director showed the sales result over three seasons. In the first season the result was the highest, thanks to a big export order. In the second it was in the middle, and by the third the lowest. So the result went down each season. &nbsp;Q: Which chart shows the sales result?",
+ szh:"會議(meeting)上，主任(director)展示三季的業績結果(result)。第一季最高，因為有大筆出口(export)訂單；第二季中等；到第三季最低。所以結果逐季下降。　問：哪張圖顯示業績結果？",
+ en:"Q1 highest, Q3 lowest.",zh:"第一季最高、逐季下降，符合『Q1 最高、Q3 最低』的 B。"},
+{n:28,p:3,pic:true,o:[IMG('bread'),IMG('noodles'),IMG('rice')],a:0,
+ sen:"During a long meeting at the office, the busy workers had no lunch break. They could not order noodles or wait for rice from a restaurant. So the secretary bought fresh bread for everyone, and they ate it quietly while the boss kept talking. &nbsp;Q: What did the office workers eat?",
+ szh:"在辦公室(office)漫長的會議(meeting)中，忙碌的員工(worker)沒有午休。他們沒法點麵或等餐廳的飯。所以秘書(secretary)為大家買了新鮮麵包(bread)，趁老闆(boss)還在講話時安靜地吃。　問：辦公室員工吃什麼？",
+ en:"Fresh bread.",zh:"辦公室員工吃麵包(bread)，選 A。麵、飯為干擾。"},
+{n:29,p:3,pic:true,o:[IMG('bread'),IMG('rice'),IMG('noodles')],a:2,
+ sen:"To thank the team after a successful year, the boss held a dinner. He said the hard-working staff deserved more than plain bread or dry rice. So he treated everyone to a big bowl of hot noodles, and the whole department cheered for their kind director. &nbsp;Q: What did the boss treat the team to?",
+ szh:"為了在成功的一年後感謝團隊，老闆(boss)辦了一場晚宴。他說辛勤的員工(worker)值得比普通麵包或乾飯更好的。所以他請大家吃一大碗熱麵(noodle)，整個部門(department)為他們親切的主任(director)歡呼。　問：老闆請團隊吃什麼？",
+ en:"A bowl of noodles.",zh:"老闆請吃熱麵(noodle)，選 C。麵包、飯為干擾。"},
+{n:30,p:3,pic:true,o:[IMG('mountain'),IMG('beach'),IMG('park')],a:1,
+ sen:"After finishing a huge project, our office planned a day trip together. The director liked the mountain and the secretary liked the park. But the workers chose the beach, because after weeks of hard work, everyone wanted to relax by the wide, open sea. &nbsp;Q: Where did the office go for their trip?",
+ szh:"完成一個大專案後，我們辦公室(office)一起計畫一日遊。主任(director)喜歡山，秘書(secretary)喜歡公園，但員工(worker)選了海邊(beach)，因為辛苦工作幾週後，大家都想在開闊的海邊放鬆。　問：辦公室去哪裡旅行？",
+ en:"The beach.",zh:"辦公室去海邊(beach)，選 B。山、公園為干擾。"}
+];
+
+/* ====== 音檔播放（AAC/.m4a，各廠牌手機皆支援）====== */
+let curAudio=null, curBtn=null;
+function resetPlayBtn(b){ if(!b) return; b.classList.remove('playing'); b.querySelector('.txt').textContent = b.dataset.played?'重播':'播放'; }
+function stopAudio(){ if(curAudio) curAudio.pause(); if(curBtn) resetPlayBtn(curBtn); curAudio=null; curBtn=null; }
+function playAudio(audio,btn){
+  if(curAudio===audio){                       // 同一題：暫停 / 繼續
+    if(audio.paused){ audio.play(); btn.classList.add('playing'); btn.querySelector('.txt').textContent='播放中…'; }
+    else { audio.pause(); }
+    return;
+  }
+  if(curAudio){ curAudio.pause(); resetPlayBtn(curBtn); }   // 換題：停掉上一段
+  curAudio=audio; curBtn=btn; btn.dataset.played='1';
+  btn.classList.add('playing'); btn.querySelector('.txt').textContent='播放中…';
+  audio.play().catch(()=>resetPlayBtn(btn));
+}
+
+/* ====== 產生畫面 ====== */
+const form=document.getElementById('quiz');
+let lastP=-1;
+Q.forEach(q=>{
+  if(q.p!==lastP){
+    const st=document.createElement('div'); st.className='section-title s'+q.p; st.textContent=PARTS[q.p].t;
+    const sd=document.createElement('div'); sd.className='section-desc'; sd.textContent=PARTS[q.p].d;
+    form.appendChild(st); form.appendChild(sd); lastP=q.p;
+  }
+  const card=document.createElement('div'); card.className='q'; card.id='q'+q.n;
+  const head=document.createElement('div'); head.className='qhead';
+  head.innerHTML=`<span class="num">${q.n}</span>
+    <button type="button" class="play"><span class="wave">🔊</span><span class="txt">播放</span></button>
+    <span class="hintq">聆聽後作答</span>`;
+  card.appendChild(head);
+  const audio=document.createElement('audio'); audio.preload='none'; audio.src='gept-listening-audio/30/q'+q.n+'.m4a?v=r30-20260909'; card.appendChild(audio);
+  const pbtn=head.querySelector('.play');
+  pbtn.addEventListener('click',()=>playAudio(audio,pbtn));
+  audio.addEventListener('ended',()=>{ if(curBtn===pbtn){ resetPlayBtn(pbtn); curAudio=null; curBtn=null; } });
+  audio.addEventListener('pause',()=>{ if(curAudio===audio && curBtn===pbtn && !audio.ended){ pbtn.classList.remove('playing'); pbtn.querySelector('.txt').textContent='繼續'; } });
+  if(q.fig){ const f=document.createElement('div'); f.className='fig'; f.innerHTML=q.fig; card.appendChild(f); }
+  if(q.pic){
+    if(q.legend){ const lg=document.createElement('div'); lg.innerHTML=PIE_LEGEND; card.appendChild(lg.firstChild); }
+    const wrap=document.createElement('div'); wrap.className='picopts';
+    q.o.forEach((opt,i)=>{
+      const cell=document.createElement('label'); cell.className='picopt'; cell.dataset.i=i;
+      cell.innerHTML=`<span class="lab">${'ABC'[i]}</span>${opt}<input type="radio" name="q${q.n}" value="${i}" hidden>`;
+      cell.querySelector('input').addEventListener('change',()=>{ card.querySelectorAll('.picopt').forEach(o=>o.classList.remove('sel')); cell.classList.add('sel'); updateProgress(); });
+      wrap.appendChild(cell);
+    });
+    card.appendChild(wrap);
+  } else {
+    q.o.forEach((opt,i)=>{
+      const lab=document.createElement('label'); lab.className='opt'; lab.dataset.i=i;
+      lab.innerHTML=`<input type="radio" name="q${q.n}" value="${i}"><span class="lab">${'ABC'[i]}</span><span>${opt}</span>`;
+      lab.querySelector('input').addEventListener('change',()=>{ card.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel')); lab.classList.add('sel'); updateProgress(); });
+      card.appendChild(lab);
+    });
+  }
+  const exp=document.createElement('div'); exp.className='exp'; exp.id='exp'+q.n; card.appendChild(exp);
+  form.appendChild(card);
+});
+
+const submitBtn=document.getElementById('submitBtn');
+const resetBtn=document.getElementById('resetBtn');
+const hint=document.getElementById('hint');
+const TOT=Q.length;
+function answeredCount(){ let c=0; Q.forEach(q=>{ if(form.querySelector(`input[name="q${q.n}"]:checked`)) c++; }); return c; }
+function updateProgress(){
+  const c=answeredCount();
+  document.getElementById('count').textContent=`${c} / ${TOT}`;
+  document.getElementById('fill').style.width=(c/TOT*100)+'%';
+  hint.textContent = c===TOT ? '已完成全部 30 題' : (c===0 ? '尚未作答任何題目（仍可送出查看解析）' : `已作答 ${c} 題，未作答 ${TOT-c} 題（仍可送出）`);
+}
+
+submitBtn.addEventListener('click',()=>{
+  stopAudio();
+  let ok=0, blank=0;
+  Q.forEach(q=>{
+    const sel=form.querySelector(`input[name="q${q.n}"]:checked`);
+    const pick=sel?parseInt(sel.value):null;
+    if(pick===null) blank++;
+    const card=document.getElementById('q'+q.n);
+    const cls=q.pic?'.picopt':'.opt';
+    card.querySelectorAll(cls).forEach(o=>{
+      o.classList.add('lock');
+      const inp=o.querySelector('input'); if(inp) inp.disabled=true;
+      const i=parseInt(o.dataset.i);
+      if(i===q.a) o.classList.add('correct');
+      if(pick!==null && i===pick && pick!==q.a) o.classList.add('wrong');
+    });
+    const correct=pick===q.a; if(correct) ok++;
+    const exp=document.getElementById('exp'+q.n);
+    const tag=correct?'答對':(pick===null?'未作答':'答錯');
+    exp.innerHTML=`<span class="tag ${correct?'':'miss'}">${tag}　正解：${'ABC'[q.a]}</span>
+      <div class="scriptbox"><b>聽力原文</b>　${q.sen}<br><span style="color:#7a4a12">${q.szh}</span></div>
+      <div class="en"><b>EN</b>&nbsp;${q.en}</div><div class="zh"><b>中</b>&nbsp;${q.zh}</div>`;
+    exp.classList.add('show');
+  });
+  document.getElementById('scoreNum').textContent=Math.round(ok/TOT*100);
+  document.getElementById('scoreTxt').textContent=`分（答對 ${ok} / ${TOT} 題）`;
+  document.getElementById('rOk').textContent=ok;
+  document.getElementById('rNo').textContent=TOT-ok-blank;
+  document.getElementById('rBlank').textContent=blank;
+  const res=document.getElementById('result'); res.classList.add('show');
+  submitBtn.style.display='none'; hint.style.display='none'; resetBtn.style.display='block';
+  res.scrollIntoView({behavior:'smooth'});
+});
+
+resetBtn.addEventListener('click',()=>{
+  stopAudio(); form.reset();
+  Q.forEach(q=>{
+    const card=document.getElementById('q'+q.n);
+    card.querySelectorAll('.opt,.picopt').forEach(o=>{o.classList.remove('sel','correct','wrong','lock');const inp=o.querySelector('input');if(inp)inp.disabled=false;});
+    document.getElementById('exp'+q.n).classList.remove('show');
+  });
+  document.getElementById('result').classList.remove('show');
+  submitBtn.style.display='block'; hint.style.display='block'; resetBtn.style.display='none';
+  updateProgress(); window.scrollTo({top:0,behavior:'smooth'});
+});
+
+updateProgress();
+</script>
+</body>
+</html>
