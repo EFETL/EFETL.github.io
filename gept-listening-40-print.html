@@ -1,0 +1,214 @@
+<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEPT 初級聽力 第 40 回　自然科學小知識 列印版</title>
+<style>
+*{box-sizing:border-box;}
+body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;color:#1a1a1a;background:#f2f2f2;}
+.bar{position:sticky;top:0;background:#22303f;color:#fff;padding:10px 16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;z-index:9;}
+.bar b{margin-right:auto;font-size:.98rem;}
+.bar button{border:0;border-radius:8px;padding:8px 14px;font-weight:800;cursor:pointer;font-size:.86rem;}
+.bar .s{background:#ffb703;color:#22303f;} .bar .t{background:#e6007e;color:#fff;} .bar .a{background:#4dd0e1;color:#08343c;}
+.page{max-width:850px;margin:14px auto;background:#fff;padding:26px 30px;box-shadow:0 2px 10px rgba(0,0,0,.12);}
+.phead{text-align:center;border-bottom:2.5px solid #1a1a1a;padding-bottom:8px;margin-bottom:4px;}
+.phead h1{margin:0;font-size:1.24rem;} .phead .sub{font-size:.9rem;color:#444;margin-top:3px;}
+.pmeta{display:flex;gap:20px;flex-wrap:wrap;font-size:.9rem;margin:10px 0 4px;color:#222;}
+.pnote{font-size:.82rem;color:#555;margin-bottom:6px;}
+h2.pt{font-size:1.02rem;background:#1a1a1a;color:#fff;padding:5px 12px;border-radius:5px;margin:18px 0 3px;}
+p.pd{font-size:.82rem;color:#444;margin:0 0 10px;}
+.q{display:flex;gap:10px;padding:7px 0;border-bottom:1px dotted #ccc;page-break-inside:avoid;align-items:flex-start;}
+.qn{font-weight:800;white-space:nowrap;min-width:56px;}
+.qbody{flex:1;}
+.fig{margin:4px 0;} .fig svg,.fig img{vertical-align:middle;}
+.opts{list-style:none;margin:2px 0;padding:0;}
+.opts li{padding:1.5px 0;font-size:.94rem;}
+.pics{display:flex;gap:14px;flex-wrap:wrap;margin:4px 0;}
+.pico{text-align:center;border:1px solid #ddd;border-radius:8px;padding:6px;background:#fafafa;}
+.pico .lb{font-weight:800;font-size:.9rem;margin-bottom:2px;}
+.pic-img{width:120px;height:90px;object-fit:cover;border-radius:5px;}
+.ans{color:#c1121f;font-weight:800;}
+.tr{font-size:.86rem;color:#333;margin:3px 0;background:#f7f7f7;border-left:3px solid #999;padding:5px 9px;border-radius:0 5px 5px 0;line-height:1.5;}
+.ex{font-size:.84rem;color:#0a5;margin:2px 0 0;}
+.grid30{display:grid;grid-template-columns:repeat(5,1fr);gap:6px 10px;margin-top:8px;}
+.gc{border:1px solid #bbb;border-radius:6px;padding:4px 6px;font-size:.86rem;text-align:center;}
+.gc b{display:inline-block;min-width:20px;} .gc .ab{letter-spacing:2px;color:#555;}
+.gc .ans{color:#c1121f;}
+@media print{
+ .bar{display:none;} body{background:#fff;} .page{box-shadow:none;margin:0 auto;max-width:none;padding:0 6mm;}
+ .hidep{display:none !important;}
+ .page{page-break-after:always;}
+}
+</style></head><body>
+<div class="bar">
+ <b>🖨 第 40 回　自然科學小知識　聽力測驗　列印版</b>
+ <button class="s" onclick="show('s')">只印學生卷</button>
+ <button class="t" onclick="show('t')">只印教師卷</button>
+ <button class="a" onclick="show('a')">兩份都印</button>
+</div>
+<div id="root"></div>
+<script>
+/* 圖形素材（第40回 自然科學小知識） ====== */
+const IMG = n => `<img class="pic-img" src="gept-listening-img/40/${n}.jpg" alt="${n}">`;
+const BARS=(title,labs,vals)=>{const max=Math.max(...vals),bw=28,gap=18,x0=20;let b='',l='';
+ labs.forEach((L,i)=>{const h=Math.round(vals[i]/max*70),x=x0+i*(bw+gap);
+  b+=`<rect x="${x}" y="${100-h}" width="${bw}" height="${h}" fill="#e9e9e9" stroke="#1a1a1a" stroke-width="1.5"/>`;
+  l+=`<text x="${x+bw/2}" y="116">${L}</text>`;});
+ return `<svg class="chart" width="176" height="132" viewBox="0 0 176 132"><text x="88" y="15" text-anchor="middle" font-size="14" font-weight="700">${title}</text><line x1="16" y1="22" x2="16" y2="100" stroke="#1a1a1a" stroke-width="1.5"/><line x1="16" y1="100" x2="170" y2="100" stroke="#1a1a1a" stroke-width="1.5"/>${b}<g font-size="11" text-anchor="middle">${l}</g></svg>`;};
+const FLASK=`<svg width="100" height="112" viewBox="0 0 100 114"><path d="M40 14 h20 v34 l22 42 q6 12 -8 12 h-48 q-14 0 -8 -12 l22 -42 z" fill="none" stroke="#1a1a1a" stroke-width="2.5"/><path d="M36 66 l-8 16 q-6 12 8 12 h28 q14 0 8 -12 l-8 -16 z" fill="#7cc043" opacity=".8"/><rect x="38" y="10" width="24" height="6" fill="#8a5a2b"/><circle cx="42" cy="76" r="2.5" fill="#fff"/><circle cx="54" cy="84" r="2" fill="#fff"/></svg>`;
+const MIRROR=`<svg width="90" height="114" viewBox="0 0 90 116"><ellipse cx="45" cy="48" rx="30" ry="38" fill="#dff2ff" stroke="#8a5a2b" stroke-width="5"/><ellipse cx="45" cy="48" rx="24" ry="32" fill="#c6e6ff"/><path d="M30 30 q10 -8 20 0" fill="none" stroke="#fff" stroke-width="3"/><rect x="40" y="86" width="10" height="24" fill="#8a5a2b"/><rect x="30" y="108" width="30" height="6" rx="2" fill="#8a5a2b"/></svg>`;
+const NOTEBOOK=`<svg width="110" height="112" viewBox="0 0 110 114"><rect x="28" y="12" width="64" height="90" rx="4" fill="#e6007e" stroke="#1a1a1a" stroke-width="2.5"/><rect x="20" y="12" width="12" height="90" fill="#a3005a"/><g fill="#fff"><circle cx="26" cy="26" r="2"/><circle cx="26" cy="44" r="2"/><circle cx="26" cy="62" r="2"/><circle cx="26" cy="80" r="2"/></g><g stroke="#fff" stroke-width="1.6"><line x1="40" y1="30" x2="84" y2="30"/><line x1="40" y1="44" x2="84" y2="44"/><line x1="40" y1="58" x2="84" y2="58"/><line x1="40" y1="72" x2="70" y2="72"/></g></svg>`;
+const SWAN=`<svg width="130" height="102" viewBox="0 0 130 104"><rect x="0" y="80" width="130" height="24" fill="#a5d8ff"/><path d="M0 84 q16 -6 32 0 q16 6 32 0 q16 -6 32 0 q16 6 32 0" fill="none" stroke="#4dd0e1" stroke-width="2"/><path d="M36 84 q-8 -22 20 -30 q26 -6 30 12 q-10 -8 -22 -2 q28 6 24 24 q-30 6 -52 -4 z" fill="#fff" stroke="#1a1a1a" stroke-width="2" stroke-linejoin="round"/><path d="M56 54 q-6 -14 6 -22 q10 -6 14 4" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round"/><circle cx="74" cy="34" r="2" fill="#1a1a1a"/><path d="M78 36 l10 -2 l-8 6z" fill="#e6a800"/></svg>`;
+const ROSE=`<svg width="96" height="114" viewBox="0 0 96 116"><g fill="#e53935" stroke="#a02020" stroke-width="1"><circle cx="48" cy="34" r="20"/><path d="M48 20 q-10 6 -6 16 q6 8 12 0 q4 -10 -6 -16" fill="#c02020"/><path d="M34 34 q6 -8 14 -4 M62 34 q-6 -8 -14 -4" fill="none" stroke="#a02020" stroke-width="1.5"/></g><line x1="48" y1="52" x2="48" y2="104" stroke="#43a047" stroke-width="3"/><path d="M48 70 q-16 -4 -20 -18 q14 -2 20 12 M48 82 q16 -4 20 -18 q-14 -2 -20 12" fill="#43a047" stroke="#2f7a34" stroke-width="1"/></svg>`;
+
+const PARTS=[
+ {t:"第一大題　看圖辨義",d:"共 5 題（1–5）。看圖並聆聽問題，從 A、B、C 三個選項中選出最適合的答案。"},
+ {t:"第二大題　問答",d:"共 10 題（6–15）。聆聽一個問句或直述句，選出最適合的回答。"},
+ {t:"第三大題　簡短對話",d:"共 10 題（16–25）。聆聽一段對話與問題，選出最適合的答案。"},
+ {t:"第四大題　短文聽解",d:"共 5 題（26–30）。聆聽一段短文與問題，從三張圖片中選出最適合的一張。"}
+];
+const Q=[
+{n:1,p:0,fig:FLASK,o:["A scientist mixes a chemical liquid to study science.","The magician often appears.","We cut the cheese in space."],a:0,
+ sen:"For question one, look at the picture. What does a scientist use?",szh:"第一題，請看圖片。科學家用什麼？",
+ en:"A scientist mixes a chemical liquid in science.",zh:"一位科學家(scientist)調配化學(chemical)液體(liquid)來研究科學(science)，選 A。magician/often/appear、cut/cheese/space 為干擾。"},
+{n:2,p:0,fig:MIRROR,o:["The coach is skinny.","The swan swims on the stream.","A mirror; without it you cannot see your own lip."],a:2,
+ sen:"For question two, look at the picture. What shows your face?",szh:"第二題，請看圖片。什麼照出你的臉？",
+ en:"A mirror; without it you cannot see your lip.",zh:"一面鏡子(mirror)；沒有(without)它你看不到自己的嘴唇(lip)，選 C。coach/skinny、swan/stream 為干擾。"},
+{n:3,p:0,fig:NOTEBOOK,o:["The furniture production is slow.","A notebook for biology and physics class.","We wear pajamas."],a:1,
+ sen:"For question three, look at the picture. What do you write in?",szh:"第三題，請看圖片。你在什麼上面寫字？",
+ en:"A notebook for biology and physics class.",zh:"一本用於生物(biology)和物理(physics)課的筆記本(notebook)，選 B。furniture/production、wear/pajamas 為干擾。"},
+{n:4,p:0,fig:SWAN,o:["A white swan on the stream; how fine and comfortable it looks.","The degree is high.","The magician does a trick."],a:0,
+ sen:"For question four, look at the picture. What bird is this?",szh:"第四題，請看圖片。這是什麼鳥？",
+ en:"A swan on the stream; how fine and comfortable.",zh:"溪流(stream)上一隻白天鵝(swan)；看起來多優雅(fine)、多舒適(comfortable)，選 A。degree、magician/trick 為干擾。"},
+{n:5,p:0,fig:ROSE,o:["The coach gives advice.","The mirror is clean.","An orange rose; the magician often appears near it."],a:2,
+ sen:"For question five, look at the picture. What flower is this?",szh:"第五題，請看圖片。這是什麼花？",
+ en:"An orange rose; the magician often appears here.",zh:"一朵橘色(orange)玫瑰(rose)；魔術師(magician)常常(often)出現(appear)在附近，選 C。coach/advice、mirror 為干擾。"},
+
+{n:6,p:1,o:["The swan is white.","It was a skillful invention; the main skill is to invent something useful.","We attend on the eve."],a:1,
+ sen:"How did the young scientist win the prize?",szh:"年輕科學家怎麼贏得獎項？",
+ en:"A skillful invention; the main skill is to invent.",zh:"問怎麼得獎，答『那是個高明(skillful)的發明；主要(main)的技能(skill)就是發明(invent)有用的東西』，選 B。swan、attend/eve 為干擾。"},
+{n:7,p:1,o:["It is stupid to attack others; the total damage is serious.","The rose is orange.","The mirror is round."],a:0,
+ sen:"What did the teacher say about fighting?",szh:"老師對打架說了什麼？",
+ en:"It is stupid to attack; the total is serious.",zh:"問老師對打架的看法，答『攻擊(attack)別人很愚蠢(stupid)；總共(total)的傷害很嚴重(serious)』，選 A。rose/orange、mirror 為干擾。"},
+{n:8,p:1,o:["The notebook is new.","The swan is graceful.","Tell me, my dear; just cut the cheese and put it in the space on the plate."],a:2,
+ sen:"How should I set the table for dinner?",szh:"晚餐我該怎麼擺盤？",
+ en:"Tell me, dear; cut the cheese in space.",zh:"問怎麼擺盤，答『親愛的(dear)，告訴(tell)我；把起司(cheese)切(cut)好，放在盤子的空位(space)上』，選 C。notebook、swan 為干擾。"},
+{n:9,p:1,o:["The scientist is busy.","Yes, I will wear my pajamas and attend the party on New Year's eve.","The stream is clear."],a:1,
+ sen:"Will you join the sleepover tonight?",szh:"今晚你會參加睡衣派對嗎？",
+ en:"I wear pajamas and attend on the eve.",zh:"問是否參加，答『會，我會穿(wear)睡衣(pajamas)，在跨年前夕(eve)參加(attend)派對』，選 B。scientist、stream 為干擾。"},
+{n:10,p:1,o:["The water is a high degree hot; without control, it is dangerous, so the safety principle is clear.","The rose is red.","The magician smiles."],a:0,
+ sen:"Why must we be careful with the boiler?",szh:"為什麼我們要小心鍋爐？",
+ en:"A high degree; without control, the principle is clear.",zh:"問為何小心鍋爐，答『水溫高達好幾度(degree)；沒有(without)控制(control)很危險，所以安全原則(principle)很清楚』，選 A。rose、magician 為干擾。"},
+{n:11,p:1,o:["The swan flies.","The cheese is soft.","The furniture production line needs advice on the spelling of the labels."],a:2,
+ sen:"What problem does the factory have?",szh:"工廠有什麼問題？",
+ en:"The furniture production needs advice on spelling.",zh:"問工廠的問題，答『家具(furniture)生產(production)線需要標籤拼字(spelling)的建議(advice)』，選 C。swan、cheese 為干擾。"},
+{n:12,p:1,o:["The mirror is big.","It was a clever magic trick; the water seemed to sink during the operation on stage.","The coach is tall."],a:1,
+ sen:"How did the show amaze the crowd?",szh:"表演怎麼讓觀眾驚奇？",
+ en:"A magic trick; the water sinks in the operation.",zh:"問表演怎麼驚奇，答『那是個聰明的魔術戲法(trick)；表演過程(operation)中水好像沉(sink)下去了』，選 B。mirror、coach 為干擾。"},
+{n:13,p:1,o:["The coach is very skinny, but he is a strong and skillful player.","The rose is orange.","The swan is white."],a:0,
+ sen:"What is your new sports coach like?",szh:"你的新運動教練怎麼樣？",
+ en:"The coach is skinny but skillful.",zh:"問新教練怎麼樣，答『教練(coach)很瘦(skinny)，但他是個強壯又熟練(skillful)的球員』，選 A。rose/orange、swan 為干擾。"},
+{n:14,p:1,o:["The notebook is pink.","The mirror is round.","We study at a senior high school in the USA; we are all one big class."],a:2,
+ sen:"Where do you and your friends study?",szh:"你和朋友在哪讀書？",
+ en:"Senior high school in the USA; we are one team.",zh:"問在哪讀書，答『我們(we)在美國(USA)一所高中(senior high school)讀書；我們都是一(one)個大班級』，選 C。notebook、mirror 為干擾。"},
+{n:15,p:1,o:["The scientist invents.","Never smoke in the park; if it is hot, just turn on the air conditioner inside.","The swan swims."],a:1,
+ sen:"What is the main rule in this public place?",szh:"這個公共場所的主要規則是什麼？",
+ en:"Never smoke in the park; use the air conditioner.",zh:"問主要規則，答『絕不能在公園(park)抽菸(smoke)；如果熱，就開室內的冷氣(air conditioner)』，選 B。scientist/invent、swan 為干擾。"},
+
+{n:16,p:2,o:["A scientist who loves science.","A cook.","A driver."],a:0,
+ sen:"W: What does your uncle do? &nbsp;M: He is a scientist who loves science very much. &nbsp;W: Smart man. &nbsp;Q: What is the uncle's job?",
+ szh:"女：你叔叔做什麼？　男：他是一位很愛科學(science)的科學家(scientist)。　女：聰明的人。　問：叔叔的工作是什麼？",
+ en:"A scientist who loves science.",zh:"是熱愛科學(science)的科學家(scientist)，選 A。"},
+{n:17,p:2,o:["Art class.","Music class.","Biology and physics."],a:2,
+ sen:"M: Which classes do you have this morning? &nbsp;W: Biology and physics, my favorite science subjects. &nbsp;M: Hard subjects. &nbsp;Q: Which classes does the woman have?",
+ szh:"男：你今早有什麼課？　女：生物(biology)和物理(physics)，我最愛的科學科目。　男：難的科目。　問：女士有什麼課？",
+ en:"Biology and physics.",zh:"是生物(biology)和物理(physics)課，選 C。"},
+{n:18,p:2,o:["He copied it.","He used skill to invent a new tool.","He bought it."],a:1,
+ sen:"W: How did the boy win the contest? &nbsp;M: He used real skill to invent a new tool. &nbsp;W: Clever boy. &nbsp;Q: How did the boy win?",
+ szh:"女：那男孩怎麼贏得比賽？　男：他用真本事發明(invent)了一個新工具，靠的是技能(skill)。　女：聰明。　問：男孩怎麼贏的？",
+ en:"He used skill to invent a tool.",zh:"他用技能(skill)發明(invent)工具，選 B。"},
+{n:19,p:2,o:["A mirror and a notebook.","Only a pen.","A ball."],a:0,
+ sen:"M: What do you need for the science lab? &nbsp;W: A small mirror and a notebook to write my notes. &nbsp;M: I'll bring them. &nbsp;Q: What does the woman need?",
+ szh:"男：自然實驗室你需要什麼？　女：一面小鏡子(mirror)和一本筆記本(notebook)來記筆記。　男：我帶來。　問：女士需要什麼？",
+ en:"A mirror and a notebook.",zh:"需要鏡子(mirror)和筆記本(notebook)，選 A。"},
+{n:20,p:2,o:["A white lily.","A yellow tulip.","An orange rose."],a:2,
+ sen:"W: What flower did you plant in the garden? &nbsp;M: A lovely orange rose by the gate. &nbsp;W: Beautiful. &nbsp;Q: What flower did the man plant?",
+ szh:"女：你在花園種了什麼花？　男：門邊一朵可愛的橘色(orange)玫瑰(rose)。　女：真美。　問：男士種了什麼花？",
+ en:"An orange rose.",zh:"種了橘色(orange)玫瑰(rose)，選 C。"},
+{n:21,p:2,o:["A scientist.","A magician who does a great trick.","A singer."],a:1,
+ sen:"M: Who performed at the show tonight? &nbsp;W: A magician who did a great trick with cards. &nbsp;M: Amazing. &nbsp;Q: Who performed tonight?",
+ szh:"男：今晚是誰表演？　女：一位用紙牌變出精彩戲法(trick)的魔術師(magician)。　男：太神奇了。　問：今晚誰表演？",
+ en:"A magician who did a trick.",zh:"是變戲法(trick)的魔術師(magician)，選 B。"},
+{n:22,p:2,o:["A graceful swan on the stream.","A duck.","A fish."],a:0,
+ sen:"W: What did you see on the water? &nbsp;M: A graceful white swan on the clear stream. &nbsp;W: How peaceful. &nbsp;Q: What did the man see?",
+ szh:"女：水上你看到什麼？　男：清澈溪流(stream)上一隻優雅的白天鵝(swan)。　女：真寧靜。　問：男士看到什麼？",
+ en:"A swan on the stream.",zh:"看到溪流(stream)上的天鵝(swan)，選 A。"},
+{n:23,p:2,o:["Kindergarten.","Junior high.","A senior high school he will attend."],a:2,
+ sen:"M: Where will your cousin study next year? &nbsp;W: A good senior high school he will attend in the city. &nbsp;M: Great choice. &nbsp;Q: Where will the cousin study?",
+ szh:"男：你表哥明年在哪讀書？　女：他會就讀(attend)市區一所好的高中(senior high school)。　男：好選擇。　問：表哥明年在哪讀書？",
+ en:"A senior high school.",zh:"他會就讀(attend)高中(senior high school)，選 C。"},
+{n:24,p:2,o:["To eat more.","To follow the coach's advice.","To sleep."],a:1,
+ sen:"M: How can I improve my running? &nbsp;W: Just follow the coach's good advice. &nbsp;M: I will. &nbsp;Q: What does the woman suggest?",
+ szh:"男：我要怎麼跑得更好？　女：聽從教練(coach)的好建議(advice)就對了。　男：我會的。　問：女士建議什麼？",
+ en:"Follow the coach's advice.",zh:"聽從教練(coach)的建議(advice)，選 B。"},
+{n:25,p:2,o:["Turn on the air conditioner to stay comfortable.","Open a book.","Go outside."],a:0,
+ sen:"W: It is so hot in this room. &nbsp;M: Turn on the air conditioner to stay comfortable. &nbsp;W: Good idea. &nbsp;Q: What does the man suggest?",
+ szh:"女：這房間好熱。　男：開冷氣(air conditioner)才會舒服(comfortable)。　女：好主意。　問：男士建議什麼？",
+ en:"Turn on the air conditioner.",zh:"開冷氣(air conditioner)保持舒適(comfortable)，選 A。"},
+
+{n:26,p:3,pic:true,o:[BARS("Sci Subjects",["Bio","Physics","Chem"],[20,50,80]),BARS("Sci Subjects",["Bio","Physics","Chem"],[50,80,20]),BARS("Sci Subjects",["Bio","Physics","Chem"],[80,50,20])],a:2,
+ sen:"Our class voted for our favorite science subject. Biology got the most votes, because students love animals and plants. Physics was in the middle, and chemistry got the fewest votes. So the biology bar should be the tallest. &nbsp;Q: Which chart shows the votes?",
+ szh:"我們班票選最愛的科學(science)科目。生物(biology)最多票，因為學生愛動植物；物理(physics)中等；化學(chemical)最少票。所以生物長條最高。　問：哪張圖顯示票數？",
+ en:"Biology most, chemistry least.",zh:"生物最多、化學最少，符合『Bio 最高』的 C。"},
+{n:27,p:3,pic:true,o:[BARS("Inventions",["2021","2022","2023"],[30,55,80]),BARS("Inventions",["2021","2022","2023"],[80,55,30]),BARS("Inventions",["2021","2022","2023"],[55,80,30])],a:1,
+ sen:"Our school science club counted its inventions over three years. In 2021 the students made the most inventions, full of new ideas. In 2022 it was in the middle, and by 2023 the fewest, as members got busy. So the inventions went down each year. &nbsp;Q: Which chart shows the inventions?",
+ szh:"我們學校科學(science)社統計三年的發明。2021 年學生發明(invent)最多，點子多；2022 年中等；到 2023 年最少，因為社員變忙。所以發明數逐年下降。　問：哪張圖顯示發明數？",
+ en:"2021 most, 2023 fewest.",zh:"2021 最多、逐年下降，符合『2021 最高、2023 最低』的 B。"},
+{n:28,p:3,pic:true,o:[IMG('bread'),IMG('noodles'),IMG('rice')],a:0,
+ sen:"During the long science fair, the young scientists were too busy to have a real meal. There was no way to cook noodles or steam rice near the experiments. So a teacher brought fresh bread and some cheese, and everyone ate quickly before showing their next project. &nbsp;Q: What did the young scientists eat?",
+ szh:"漫長的科學(science)展中，年輕的科學家(scientist)們忙到沒空好好吃飯。在實驗旁沒法煮麵或蒸飯。所以老師帶來新鮮麵包(bread)和一些起司(cheese)，大家在展示下一個作品前快速吃。　問：年輕科學家吃什麼？",
+ en:"Fresh bread and cheese.",zh:"他們吃麵包(bread)配起司，選 A。麵、飯為干擾。"},
+{n:29,p:3,pic:true,o:[IMG('bread'),IMG('rice'),IMG('noodles')],a:2,
+ sen:"After the senior high school team won the national science contest, everyone celebrated. The tired students were bored of the dry bread and cold rice they ate while studying. So their coach cooked a big bowl of hot noodles, and the whole team ate together with joy. &nbsp;Q: What did the coach cook to celebrate?",
+ szh:"高中(senior high school)代表隊贏得全國科學競賽後，大家慶祝。疲累的學生受夠了讀書時吃的乾麵包和冷飯。所以他們的教練(coach)煮了一大碗熱麵(noodle)，全隊開心地一起吃。　問：教練煮什麼慶祝？",
+ en:"A bowl of noodles.",zh:"教練煮熱麵(noodle)慶祝，選 C。麵包、飯為干擾。"},
+{n:30,p:3,pic:true,o:[IMG('mountain'),IMG('beach'),IMG('park')],a:1,
+ sen:"After finishing a hard science project, our club wanted a relaxing trip. Some liked the mountain and others liked the park with its comfortable benches. But we chose the beach, because we could watch the swans on the nearby stream and feel the fine, fresh sea air all day. &nbsp;Q: Where did the science club go for their trip?",
+ szh:"完成一個辛苦的科學(science)專題後，我們社團想放鬆旅行。有些人喜歡山，有些人喜歡有舒適(comfortable)長椅的公園(park)，但我們選了海邊(beach)，因為可以看附近溪流(stream)上的天鵝(swan)，整天感受美好(fine)清新的海風。　問：科學社去哪裡旅行？",
+ en:"The beach.",zh:"科學社去海邊(beach)，選 B。山、公園為干擾。"}
+];
+const AB=["A","B","C"];
+function optHTML(q){
+  if(q.pic){ // 三圖選項
+    return '<div class="pics">'+q.o.map((s,i)=>`<div class="pico"><div class="lb">(${AB[i]})</div>${s}</div>`).join('')+'</div>';
+  }
+  return '<ol class="opts">'+q.o.map((s,i)=>`<li>(${AB[i]}) ${s}</li>`).join('')+'</ol>';
+}
+function figHTML(q){ return q.fig?`<div class="fig">${q.fig}</div>`:''; }
+function partOf(n){return n<=5?0:n<=15?1:n<=25?2:3;}
+function sheet(kind){ // 's' student | 't' teacher
+  let h=`<div class="page ${kind==='s'?'sheet-s':'sheet-t'}">`;
+  h+=`<div class="phead"><h1>全民英檢 初級　聽力測驗</h1><div class="sub">第 40 回　自然科學小知識　${kind==='s'?'學生作答卷':'教師卷（答案・聽力原文・解析）'}</div></div>`;
+  if(kind==='s') h+=`<div class="pmeta"><span>姓名：____________</span><span>班級：__________</span><span>座號：______</span><span>分數：________</span></div>`;
+  h+=`<div class="pnote">說明：本測驗共 4 大題 30 題，每題聆聽音檔作答，從 (A) (B) (C) 中選出最適合的答案，填入題號前括號內。</div>`;
+  PARTS.forEach((pt,pi)=>{
+    h+=`<h2 class="pt">${pt.t}</h2><p class="pd">${pt.d}</p>`;
+    Q.filter(q=>partOf(q.n)===pi).forEach(q=>{
+      h+=`<div class="q"><div class="qn">（${kind==='t'?'<span class="ans">'+AB[q.a]+'</span>':'　'}）${q.n}.</div><div class="qbody">`;
+      h+=figHTML(q)+optHTML(q);
+      if(kind==='t'){
+        h+=`<div class="tr"><b>原文：</b>${(q.sen||'').replace(/&nbsp;/g,' ')}</div>`;
+        if(q.zh) h+=`<div class="ex"><b>解析：</b>${q.zh}</div>`;
+      }
+      h+=`</div></div>`;
+    });
+  });
+  h+=`</div>`;
+  return h;
+}
+function render(){document.getElementById('root').innerHTML=sheet('s')+sheet('t');}
+render();
+function show(m){
+  document.querySelectorAll('.sheet-s').forEach(e=>e.classList.toggle('hidep',m==='t'));
+  document.querySelectorAll('.sheet-t').forEach(e=>e.classList.toggle('hidep',m==='s'));
+  setTimeout(()=>window.print(),60);
+}
+</script></body></html>
