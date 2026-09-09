@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEPT 初級 聽力測驗　第38回　安全與危險</title>
+<style>
+  :root{
+    --blue:#2b8cff; --blue-dark:#1f6fe0;
+    --coral:#ff7a59; --amber:#ffb02e; --pink:#ff5d8f;
+    --bg:#f3f9ff; --card:#ffffff; --line:#e3edf9;
+    --green:#22b573; --green-bg:#e4f8ef;
+    --red:#ff5a5a; --red-bg:#ffecec;
+    --gray:#6b7785;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;
+    background:linear-gradient(180deg,#fff5ec,#fff9f4 70%);color:#22303f;line-height:1.6;
+    -webkit-text-size-adjust:100%;}
+  .wrap{max-width:760px;margin:0 auto;padding:16px;}
+  header.top{background:linear-gradient(135deg,#f6d365,#fda085 60%,#ff7a9c);color:#fff;
+    border-radius:18px;padding:24px 22px;margin-bottom:16px;box-shadow:0 8px 22px rgba(253,160,133,.35);}
+  header.top h1{margin:0 0 6px;font-size:1.5rem;text-shadow:0 1px 2px rgba(0,0,0,.14);}
+  header.top p{margin:0;font-size:.92rem;opacity:.96;}
+  .meta{margin-top:14px;font-size:.86rem;background:rgba(255,255,255,.24);
+    padding:9px 13px;border-radius:10px;}
+  .notice{background:#fffbeb;border:1.5px solid #f59e0b;border-radius:12px;
+    padding:11px 15px;margin-bottom:14px;font-size:.86rem;color:#78350f;
+    display:flex;align-items:flex-start;gap:9px;line-height:1.55;}
+  .notice .ic{font-size:1.1rem;flex-shrink:0;margin-top:1px;}
+  .sticky{position:sticky;top:0;z-index:20;padding:10px 0;
+    background:linear-gradient(180deg,#fff5ec 70%,rgba(255,245,236,0));}
+  .bar{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:11px 16px;display:flex;align-items:center;gap:12px;font-size:.9rem;
+    box-shadow:0 4px 12px rgba(253,160,133,.14);}
+  .bar .track{flex:1;height:9px;background:#f1e4dc;border-radius:6px;overflow:hidden;}
+  .bar .fill{height:100%;width:0;border-radius:6px;
+    background:linear-gradient(90deg,#ffb02e,#ff7a59);transition:width .35s;}
+  .bar #count{font-weight:700;color:#e0740a;}
+  .section-title{color:#fff;font-weight:800;border-radius:12px;
+    padding:10px 16px;margin:24px 0 6px;font-size:1.05rem;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);}
+  .section-title.s0{background:linear-gradient(135deg,#ff9a6c,#ff6f91);}
+  .section-title.s1{background:linear-gradient(135deg,#4dd0e1,#2b8cff);}
+  .section-title.s2{background:linear-gradient(135deg,#9b8bff,#b06bff);}
+  .section-title.s3{background:linear-gradient(135deg,#43cea2,#3ab0d6);}
+  .section-desc{font-size:.86rem;color:var(--gray);margin:0 4px 10px;}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:15px 17px;margin:12px 0;box-shadow:0 3px 10px rgba(253,160,133,.09);}
+  .qhead{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+  .qhead .num{display:inline-block;color:#fff;background:var(--coral);font-weight:700;
+    border-radius:8px;padding:1px 10px;font-size:.92rem;}
+  .play{display:inline-flex;align-items:center;gap:7px;border:0;cursor:pointer;
+    color:#fff;font-weight:800;font-size:.92rem;border-radius:22px;padding:8px 16px;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);box-shadow:0 4px 12px rgba(255,93,143,.3);}
+  .play:active{transform:translateY(1px);}
+  .play.playing{background:linear-gradient(135deg,#22b573,#1a9e63);}
+  .play .wave{font-size:.8rem;opacity:.9;}
+  .hintq{font-size:.8rem;color:var(--gray);}
+  .fig{text-align:center;margin:4px 0 12px;}
+  .fig svg{max-width:100%;height:auto;}
+  .pic-img{border-radius:9px;border:1px solid #e6ded7;object-fit:cover;}
+  .fig .pic-img{max-width:230px;width:100%;max-height:150px;}
+  .opt{display:flex;align-items:flex-start;gap:10px;border:2px solid var(--line);
+    border-radius:11px;padding:10px 13px;margin:8px 0;cursor:pointer;transition:.15s;
+    font-size:.95rem;background:#fbfdff;}
+  .opt:hover{border-color:var(--coral);background:#fff4ee;}
+  .opt input{margin-top:3px;accent-color:var(--coral);}
+  .opt .lab{font-weight:800;color:var(--coral);min-width:18px;}
+  .opt.sel{border-color:var(--coral);background:#ffeee6;}
+  .opt.correct{border-color:var(--green);background:var(--green-bg);}
+  .opt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .opt.lock{cursor:default;}
+  /* picture options (Part 4) */
+  .picopts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:6px 0;}
+  .picopt{border:2px solid var(--line);border-radius:12px;padding:9px 6px;cursor:pointer;
+    text-align:center;transition:.15s;background:#fbfdff;display:flex;flex-direction:column;align-items:center;gap:6px;}
+  .picopt:hover{border-color:var(--coral);background:#fff4ee;}
+  .picopt.sel{border-color:var(--coral);background:#ffeee6;}
+  .picopt.correct{border-color:var(--green);background:var(--green-bg);}
+  .picopt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .picopt .lab{font-weight:800;color:var(--coral);align-self:flex-start;margin-left:4px;}
+  .picopt.correct .lab{color:var(--green);}.picopt.wrong .lab{color:var(--red);}
+  .picopt img.pic-img{width:100%;height:82px;}
+  .picopt svg{width:100%;max-width:132px;height:auto;}
+  .picopt svg.chart{max-width:100%;}
+  .legend{display:flex;gap:12px;justify-content:center;font-size:.72rem;margin:2px 0 6px;color:#556;flex-wrap:wrap;}
+  .legend i{display:inline-block;width:11px;height:11px;border:1px solid #999;margin-right:4px;vertical-align:-1px;}
+  table.mini{border-collapse:collapse;font-size:.62rem;margin:0 auto;}
+  table.mini th{background:#33414f;color:#fff;padding:2px 4px;}
+  table.mini td{border:1px solid #bbb;padding:2px 4px;text-align:center;}
+  .board{background:#111;color:#ffd24a;border-radius:5px;padding:5px;font-family:"Courier New",monospace;display:inline-block;}
+  .board table{border-collapse:collapse;font-size:.6rem;color:#ffd24a;}
+  .board th{color:#7fd7ff;padding:1px 4px;border-bottom:1px solid #444;}
+  .board td{padding:1px 4px;text-align:center;}
+  .exp{display:none;margin-top:11px;border-top:2px dashed #ffe1c2;padding-top:11px;font-size:.9rem;}
+  .exp.show{display:block;}
+  .exp .tag{display:inline-block;font-weight:800;color:#fff;background:var(--green);
+    border-radius:7px;padding:2px 10px;font-size:.8rem;margin-bottom:7px;}
+  .exp .tag.miss{background:var(--red);}
+  .exp .scriptbox{background:#f4f8ff;border-radius:8px;padding:7px 11px;margin:5px 0;font-size:.88rem;color:#20364d;}
+  .exp .scriptbox b{color:var(--blue-dark);}
+  .exp .en{color:#1c4f7a;background:#eef7ff;border-radius:8px;padding:6px 10px;margin:5px 0;}
+  .exp .zh{color:#7a4a12;background:#fff7ea;border-radius:8px;padding:6px 10px;margin:5px 0;}
+  .actions{position:sticky;bottom:0;padding:14px 0 6px;margin-top:18px;
+    background:linear-gradient(transparent,#fff9f4 35%);}
+  button.submit{width:100%;color:#fff;border:0;border-radius:14px;padding:16px;
+    font-size:1.08rem;font-weight:800;cursor:pointer;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);
+    box-shadow:0 6px 16px rgba(255,93,143,.35);}
+  button.submit:active{transform:translateY(1px);}
+  button.reset{width:100%;background:#fff;color:var(--coral);border:2px solid var(--coral);
+    border-radius:14px;padding:14px;font-size:1rem;font-weight:800;cursor:pointer;margin-top:10px;display:none;}
+  .result{display:none;background:var(--card);border:3px solid transparent;border-radius:16px;
+    padding:22px;margin:16px 0;text-align:center;
+    background-image:linear-gradient(#fff,#fff),linear-gradient(135deg,#ffb02e,#ff7a59,#ff5d8f);
+    background-origin:border-box;background-clip:padding-box,border-box;
+    box-shadow:0 8px 22px rgba(255,122,89,.18);}
+  .result.show{display:block;}
+  .result .score{font-size:2.8rem;font-weight:900;
+    background:linear-gradient(135deg,#ff7a59,#ff5d8f);-webkit-background-clip:text;
+    background-clip:text;-webkit-text-fill-color:transparent;}
+  .result .sub{color:var(--gray);font-size:.95rem;}
+  .result .bd{display:flex;justify-content:center;gap:18px;margin-top:12px;flex-wrap:wrap;font-size:.95rem;}
+  .result .bd span{font-weight:800;}
+  .hint{text-align:center;font-size:.85rem;color:var(--gray);margin-top:9px;min-height:1.2em;}
+  footer{text-align:center;color:var(--gray);font-size:.8rem;margin:24px 0;}
+</style>
+<!-- EFETL-PWA -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#7C4DFF">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="EFETL">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}</script>
+<!-- /EFETL-PWA -->
+</head>
+<body>
+<a href="gept-listening.html" style="position:fixed;top:12px;left:12px;background:rgba(255,255,255,.92);color:#ff6f91;padding:7px 15px;border-radius:20px;text-decoration:none;font-size:.85rem;font-weight:800;z-index:999;box-shadow:0 3px 10px rgba(0,0,0,.15);">&#8592; 回聽力題庫</a>
+<div class="wrap">
+  <header class="top">
+    <h1>GEPT 初級　聽力測驗　<span style="opacity:.9">第38回　安全與危險</span></h1>
+    <p>互動聽力練習　&middot;　依官方四大題型與難度命題</p>
+    <div class="meta">共 4 大題、30 題　|　每題按 🔊 播放，聆聽後作答　|　送出後顯示聽力原文、中英解析與分數</div>
+  </header>
+
+  <div class="notice">
+    <span class="ic">🎧</span>
+    <span>每題皆附<strong>語音朗讀音檔</strong>，iPhone、Android 各廠牌手機與電腦瀏覽器皆可播放（請開啟媒體音量）。點各題的 <strong>🔊 播放</strong> 鈕聆聽；正式考試每題只播一次，練習時可重播。</span>
+  </div>
+
+  <a href="gept-listening-38-print.html" style="display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #ffb703;color:#8a5a00;border-radius:12px;padding:11px 16px;margin-bottom:18px;text-decoration:none;font-size:.9rem;font-weight:700;box-shadow:0 3px 10px rgba(255,183,3,.16);">
+    <span>🖨</span><span>列印版（學生卷／教師卷）— 適合課堂紙本練習與批改，可直接列印或存成 PDF</span>
+  </a>
+
+  <div class="sticky">
+    <div class="bar">
+      <span>作答進度</span>
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <span id="count">0 / 30</span>
+    </div>
+  </div>
+
+  <form id="quiz"></form>
+
+  <div class="result" id="result">
+    <div class="score" id="scoreNum">0</div>
+    <div class="sub" id="scoreTxt">分</div>
+    <div class="bd">
+      <span style="color:var(--green)">答對 <b id="rOk">0</b></span>
+      <span style="color:var(--red)">答錯 <b id="rNo">0</b></span>
+      <span style="color:var(--gray)">未作答 <b id="rBlank">0</b></span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="submit" id="submitBtn">送出並查看解析</button>
+    <div class="hint" id="hint">尚未作答任何題目</div>
+    <button type="button" class="reset" id="resetBtn">重新作答</button>
+  </div>
+
+  <footer>GEPT 初級聽力　互動練習　&middot;　第二顆腦 / GEPT初級</footer>
+</div>
+
+<script>
+/* ====== 圖形素材（第38回 安全與危險） ====== */
+const IMG = n => `<img class="pic-img" src="gept-listening-img/38/${n}.jpg" alt="${n}">`;
+const BARS=(title,labs,vals)=>{const max=Math.max(...vals),bw=28,gap=18,x0=20;let b='',l='';
+ labs.forEach((L,i)=>{const h=Math.round(vals[i]/max*70),x=x0+i*(bw+gap);
+  b+=`<rect x="${x}" y="${100-h}" width="${bw}" height="${h}" fill="#e9e9e9" stroke="#1a1a1a" stroke-width="1.5"/>`;
+  l+=`<text x="${x+bw/2}" y="116">${L}</text>`;});
+ return `<svg class="chart" width="176" height="132" viewBox="0 0 176 132"><text x="88" y="15" text-anchor="middle" font-size="14" font-weight="700">${title}</text><line x1="16" y1="22" x2="16" y2="100" stroke="#1a1a1a" stroke-width="1.5"/><line x1="16" y1="100" x2="170" y2="100" stroke="#1a1a1a" stroke-width="1.5"/>${b}<g font-size="11" text-anchor="middle">${l}</g></svg>`;};
+const POLICE=`<svg width="100" height="112" viewBox="0 0 100 114"><path d="M32 30 q18 -10 36 0 v6 h-36z" fill="#2b3a67" stroke="#1a1a1a" stroke-width="1.5"/><rect x="46" y="24" width="8" height="8" fill="#ffd166"/><circle cx="50" cy="50" r="14" fill="#ffd8a8" stroke="#1a1a1a" stroke-width="1.5"/><path d="M26 108 v-30 q0 -22 24 -22 q24 0 24 22 v30z" fill="#2b3a67" stroke="#1a1a1a" stroke-width="2"/><path d="M40 66 l10 8 l10 -8 v20 h-20z" fill="#3a4d80"/><circle cx="50" cy="70" r="4" fill="#ffd166" stroke="#1a1a1a" stroke-width="1"/></svg>`;
+const WARNING=`<svg width="120" height="108" viewBox="0 0 120 110"><path d="M60 12 L108 96 L12 96 Z" fill="#ffd166" stroke="#1a1a1a" stroke-width="3" stroke-linejoin="round"/><rect x="55" y="42" width="10" height="30" fill="#1a1a1a"/><circle cx="60" cy="84" r="6" fill="#1a1a1a"/></svg>`;
+const PRISON=`<svg width="120" height="106" viewBox="0 0 120 108"><rect x="18" y="14" width="84" height="82" fill="#5a6472" stroke="#1a1a1a" stroke-width="2.5"/><g stroke="#c8d0da" stroke-width="4"><line x1="34" y1="14" x2="34" y2="96"/><line x1="52" y1="14" x2="52" y2="96"/><line x1="70" y1="14" x2="70" y2="96"/><line x1="88" y1="14" x2="88" y2="96"/></g><circle cx="61" cy="46" r="10" fill="#ffd8a8" stroke="#1a1a1a" stroke-width="1.5"/><path d="M48 78 q13 -14 26 0 v14 h-26z" fill="#e67e22"/></svg>`;
+const JEEP=`<svg width="140" height="90" viewBox="0 0 140 92"><path d="M14 60 v-18 h30 l10 -12 h50 v30 z" fill="#6a8a4a" stroke="#1a1a1a" stroke-width="2.5" stroke-linejoin="round"/><path d="M50 44 l6 -10 h30 v10z" fill="#a5d8ff" stroke="#1a1a1a" stroke-width="1.5"/><rect x="104" y="42" width="22" height="18" fill="#6a8a4a" stroke="#1a1a1a" stroke-width="2.5"/><circle cx="40" cy="70" r="13" fill="#333" stroke="#1a1a1a" stroke-width="2.5"/><circle cx="102" cy="70" r="13" fill="#333" stroke="#1a1a1a" stroke-width="2.5"/><circle cx="40" cy="70" r="5" fill="#888"/><circle cx="102" cy="70" r="5" fill="#888"/></svg>`;
+const HORSE=`<svg width="130" height="100" viewBox="0 0 130 102"><path d="M30 90 v-30 q-8 -8 -4 -22 q4 -14 20 -16 l14 -14 q6 -6 6 4 v10 q14 2 20 16 q4 10 4 22 v30 h-8 v-24 h-40 v24 z" fill="#a06a3b" stroke="#1a1a1a" stroke-width="2" stroke-linejoin="round"/><path d="M62 12 q-8 4 -6 14 l8 -4z" fill="#6a4a2b"/><circle cx="64" cy="20" r="2" fill="#1a1a1a"/><path d="M70 12 q6 2 4 12" fill="none" stroke="#6a4a2b" stroke-width="4"/><path d="M84 40 q10 -2 14 6" fill="none" stroke="#6a4a2b" stroke-width="3"/></svg>`;
+/* ====== 大題 ====== */
+const PARTS=[
+ {t:"第一大題　看圖辨義",d:"共 5 題（1–5）。看圖並聆聽問題，從 A、B、C 三個選項中選出最適合的答案。"},
+ {t:"第二大題　問答",d:"共 10 題（6–15）。聆聽一個問句或直述句，選出最適合的回答。"},
+ {t:"第三大題　簡短對話",d:"共 10 題（16–25）。聆聽一段對話與問題，選出最適合的答案。"},
+ {t:"第四大題　短文聽解",d:"共 5 題（26–30）。聆聽一段短文與問題，從三張圖片中選出最適合的一張。"}
+];
+
+
+
+/* ====== 題庫（第38回 安全與危險） ====== */
+const Q=[
+{n:1,p:0,fig:POLICE,o:["A policeman keeps our safety and gives aid to everyone.","The horse kicks the eye.","We read in the evening."],a:0,
+ sen:"For question one, look at the picture. Who keeps us safe?",szh:"第一題，請看圖片。誰保護我們的安全？",
+ en:"A policeman keeps our safety and gives aid.",zh:"一位警察(policeman)維護我們的安全(safety)、給予援助(aid)，選 A。horse/kick/eye、read/evening 為干擾。"},
+{n:2,p:0,fig:WARNING,o:["The master rides yesterday.","The mosquito bites the thumb.","A sign of danger; it is dangerous, so avoid this place."],a:2,
+ sen:"For question two, look at the picture. What warns you?",szh:"第二題，請看圖片。什麼在警告你？",
+ en:"A sign of danger; it is dangerous, avoid this place.",zh:"一個危險(danger)標誌；這裡很危險(dangerous)，避開(avoid)這個地方(place)，選 C。master/yesterday、mosquito/bite/thumb 為干擾。"},
+{n:3,p:0,fig:PRISON,o:["The hero is asleep.","To prison; the police will arrest those who rob a bank.","The speaker is loud."],a:1,
+ sen:"For question three, look at the picture. Where do robbers go?",szh:"第三題，請看圖片。搶匪會去哪裡？",
+ en:"To prison; the police arrest those who rob.",zh:"進監獄(prison)；警察會逮捕(arrest)那些搶劫(rob)銀行的人，選 B。hero/asleep、speaker 為干擾。"},
+{n:4,p:0,fig:JEEP,o:["A jeep on the snowy mountain; a brave hero drives it.","The pumpkin is orange.","We write a package note."],a:0,
+ sen:"For question four, look at the picture. What vehicle is this?",szh:"第四題，請看圖片。這是什麼車？",
+ en:"A jeep on the snowy mountain; a hero drives it.",zh:"雪(snowy)山(mountain)上(on)一台吉普車(jeep)；一位勇敢的英雄(hero)在開，選 A。pumpkin、write/package 為干擾。"},
+{n:5,p:0,fig:HORSE,o:["The user feels dizzy.","The mosquito is small.","A royal horse; the master rode it yesterday."],a:2,
+ sen:"For question five, look at the picture. What animal is this?",szh:"第五題，請看圖片。這是什麼動物？",
+ en:"A royal horse; the master rides it yesterday.",zh:"一匹皇家(royal)的馬(horse)；主人(master)昨天(yesterday)騎了它，選 C。user/dizzy、mosquito 為干擾。"},
+
+{n:6,p:1,o:["The horse runs away.","I read enough this evening; shall we do much more tomorrow?","The pumpkin is big."],a:1,
+ sen:"Have you studied for the test tonight?",szh:"你今晚為考試讀書了嗎？",
+ en:"I read enough this evening; shall we do much more?",zh:"問今晚讀書了嗎，答『我今晚(evening)讀(read)夠(enough)了；我們要(shall)再多(much)做一點嗎？』，選 B。horse/away、pumpkin 為干擾。"},
+{n:7,p:1,o:["It is certain that the very heavy package was sent far away.","The eye hurts.","The horse kicks."],a:0,
+ sen:"Where is the parcel you were expecting?",szh:"你在等的包裹在哪？",
+ en:"It is certain; the package is very far away.",zh:"問包裹在哪，答『可以確定(certain)那個很(very)重的包裹(package)被寄到很遠(away)的地方了』，選 A。eye、horse/kick 為干擾。"},
+{n:8,p:1,o:["The prison is dark.","The jeep is green.","No, it did not hit anything; but be careful, the horse might kick your eye."],a:2,
+ sen:"Did the runaway cart cause any harm?",szh:"那台失控的推車有造成傷害嗎？",
+ en:"It did not hit anything; it might kick your eye.",zh:"問推車是否造成傷害，答『不，它沒撞(hit)到任何東西(anything)；但小心，那匹馬可能踢(kick)到你的眼睛(eye)』，選 C。prison、jeep 為干擾。"},
+{n:9,p:1,o:["The speaker is loud.","Yes, we need extra help; do not worry, the master will not disappear.","The pumpkin is round."],a:1,
+ sen:"Do we need more people for the rescue?",szh:"救援需要更多人手嗎？",
+ en:"Yes, extra; the master will not disappear.",zh:"問是否需更多人，答『是，需要額外(extra)幫手；別擔心，那位主人(master)不會消失(disappear)』，選 B。speaker、pumpkin 為干擾。"},
+{n:10,p:1,o:["With courage, avoid the pumpkin patch; you must beat the fire in that direction, it is necessary.","The horse is royal.","The jeep is fast."],a:0,
+ sen:"How can the firefighters stop the wildfire?",szh:"消防員怎麼阻止野火？",
+ en:"With courage, avoid it; beat the fire in that direction. It is necessary.",zh:"問怎麼阻止野火，答『拿出勇氣(courage)，避開(avoid)南瓜(pumpkin)田；你們必須(necessary)朝那個方向(direction)撲滅(beat)火』，選 A。horse/royal、jeep 為干擾。"},
+{n:11,p:1,o:["The mosquito bites.","The eye is red.","Write it down now; the hero is fast asleep, and the speaker is too loud."],a:2,
+ sen:"How can I remember the safety rules?",szh:"我要怎麼記住安全規則？",
+ en:"Write it down; the hero is asleep, the speaker is loud.",zh:"問怎麼記住規則，答『現在就寫(write)下來；英雄(hero)睡熟(asleep)了，擴音器(speaker)又太吵』，選 C。mosquito/bite、eye 為干擾。"},
+{n:12,p:1,o:["The prison is far.","I am a regular user of this jeep, but it got worse and now I feel dizzy in it.","The pumpkin is big."],a:1,
+ sen:"How do you like your old car now?",szh:"你現在覺得你的舊車如何？",
+ en:"I am a user; the jeep got worse; I feel dizzy.",zh:"問舊車如何，答『我是這台吉普車(jeep)的常用者(user)，但它變得更糟(worse)，我坐它會頭暈(dizzy)』，選 B。prison、pumpkin 為干擾。"},
+{n:13,p:1,o:["A mosquito did bite my thumb last night; would you please pass me some cream?","The horse runs.","The hero sleeps."],a:0,
+ sen:"Why is your thumb so red and swollen?",szh:"你的大拇指為什麼又紅又腫？",
+ en:"A mosquito did bite my thumb; would you help?",zh:"問拇指為何紅腫，答『昨晚一隻蚊子(mosquito)咬(bite)了我的拇指(thumb)；你願意(would)遞我一些藥膏嗎？』，選 A。horse、hero 為干擾。"},
+{n:14,p:1,o:["The jeep is green.","The prison is cold.","Easter is a happy day for everyone; give them the aid they need."],a:2,
+ sen:"What holiday brings the family together in spring?",szh:"春天什麼節日讓家人團聚？",
+ en:"Easter is for everyone; give them the aid.",zh:"問春天什麼節日團聚，答『復活節(Easter)是每個人(everyone)的快樂日子；給他們(them)需要的幫助(aid)』，選 C。jeep、prison 為干擾。"},
+{n:15,p:1,o:["The mosquito is gone.","There was a bad accident yesterday; we must give aid and avoid more danger.","The pumpkin is orange."],a:1,
+ sen:"Why were the roads closed last night?",szh:"昨晚道路為什麼封閉？",
+ en:"There was an accident; give aid, avoid danger.",zh:"問道路為何封閉，答『昨天有一場嚴重的事故(accident)；我們必須施以援助(aid)、避免(avoid)更多危險(danger)』，選 B。mosquito、pumpkin 為干擾。"},
+
+{n:16,p:2,o:["A helpful policeman keeps us safe.","A thief.","A stranger."],a:0,
+ sen:"W: Who helped you find your way home? &nbsp;M: A helpful policeman who keeps us safe. &nbsp;W: Kind man. &nbsp;Q: Who helped the man?",
+ szh:"女：誰幫你找到回家的路？　男：一位維護我們安全的好警察(policeman)。　女：好人。　問：誰幫了男士？",
+ en:"A helpful policeman.",zh:"是維護安全的警察(policeman)，選 A。"},
+{n:17,p:2,o:["Safe and calm.","Quiet.","Very dangerous, full of danger."],a:2,
+ sen:"M: How is the cliff path in the rain? &nbsp;W: Very dangerous, full of danger; do not go. &nbsp;M: I'll stay away. &nbsp;Q: How is the cliff path?",
+ szh:"男：雨天的懸崖小路如何？　女：非常危險(dangerous)，充滿危險(danger)；別去。　男：我會避開。　問：懸崖小路如何？",
+ en:"Very dangerous.",zh:"非常危險(dangerous)，選 C。"},
+{n:18,p:2,o:["He got a prize.","The police will arrest him and send him to prison.","He went home."],a:1,
+ sen:"W: What happened to the man who robbed the shop? &nbsp;M: The police will arrest him and send him to prison. &nbsp;W: Good. &nbsp;Q: What happened to the robber?",
+ szh:"女：搶商店的那個人怎麼了？　男：警察會逮捕(arrest)他，送他進監獄(prison)。　女：好。　問：搶匪怎麼了？",
+ en:"Arrested and sent to prison.",zh:"被逮捕(arrest)、送進監獄(prison)，選 B。"},
+{n:19,p:2,o:["There was an accident, so we called for aid.","There was a party.","Nothing happened."],a:0,
+ sen:"M: Why were the ambulances here? &nbsp;W: There was an accident, so we called for aid. &nbsp;M: I hope they are okay. &nbsp;Q: Why were the ambulances here?",
+ szh:"男：救護車為什麼在這？　女：發生了事故(accident)，所以我們叫了援助(aid)。　男：希望他們沒事。　問：救護車為什麼在這？",
+ en:"An accident; they called for aid.",zh:"發生事故(accident)、叫了援助(aid)，選 A。"},
+{n:20,p:2,o:["A dog.","A cat.","A big horse, ridden by its master."],a:2,
+ sen:"W: What did you see on the ranch? &nbsp;M: A big horse, ridden by its master. &nbsp;W: Beautiful. &nbsp;Q: What did the man see?",
+ szh:"女：你在牧場看到什麼？　男：一匹大馬(horse)，被牠的主人(master)騎著。　女：真美。　問：男士看到什麼？",
+ en:"A horse ridden by its master.",zh:"看到主人(master)騎的馬(horse)，選 C。"},
+{n:21,p:2,o:["A bee.","A mosquito that bit her arm.","A fly."],a:1,
+ sen:"M: Why is your sister scratching her arm? &nbsp;W: A mosquito bit her arm last night. &nbsp;M: Poor her. &nbsp;Q: What bit the sister?",
+ szh:"男：你妹妹為什麼一直抓手臂？　女：昨晚一隻蚊子(mosquito)咬(bite)了她的手臂。　男：真可憐。　問：什麼咬了妹妹？",
+ en:"A mosquito bit her arm.",zh:"蚊子(mosquito)咬(bite)了她，選 B。"},
+{n:22,p:2,o:["By jeep, up the mountain.","By boat.","On foot."],a:0,
+ sen:"W: How did the rescue team reach the top? &nbsp;M: By jeep, all the way up the mountain. &nbsp;W: Tough drive. &nbsp;Q: How did the team reach the top?",
+ szh:"女：救援隊怎麼到山頂的？　男：開吉普車(jeep)，一路上(mountain)山。　女：辛苦的路。　問：救援隊怎麼到山頂？",
+ en:"By jeep up the mountain.",zh:"開吉普車(jeep)上山(mountain)，選 A。"},
+{n:23,p:2,o:["An apple.","A cake.","A big pumpkin for Easter... I mean Halloween."],a:2,
+ sen:"W: What did you carve into a lantern? &nbsp;M: A big pumpkin, near Easter... I mean the autumn holiday. &nbsp;W: Fun craft. &nbsp;Q: What did the man carve?",
+ szh:"女：你把什麼雕成燈籠？　男：一顆大南瓜(pumpkin)，靠近復活節(Easter)……我是說秋天的節日。　女：有趣的手作。　問：男士雕了什麼？",
+ en:"A big pumpkin.",zh:"雕了南瓜(pumpkin)，選 C。復活節(Easter)為口誤。"},
+{n:24,p:2,o:["A coward.","A brave hero, full of courage.","A lazy man."],a:1,
+ sen:"M: What was the firefighter like? &nbsp;W: A brave hero, full of courage. &nbsp;M: We should thank him. &nbsp;Q: What was the firefighter like?",
+ szh:"男：那位消防員怎麼樣？　女：一位勇敢的英雄(hero)，充滿勇氣(courage)。　男：我們該謝謝他。　問：那位消防員怎麼樣？",
+ en:"A brave hero, full of courage.",zh:"是充滿勇氣(courage)的英雄(hero)，選 B。"},
+{n:25,p:2,o:["Read the safety notice on the speaker.","Sleep.","Run away."],a:0,
+ sen:"W: How do we know when the drill starts? &nbsp;M: Read the safety notice, then listen to the speaker. &nbsp;W: Understood. &nbsp;Q: How do they know when the drill starts?",
+ szh:"女：我們怎麼知道演習何時開始？　男：讀(read)安全公告，再聽擴音器(speaker)。　女：了解。　問：他們怎麼知道演習開始？",
+ en:"Read the notice and the speaker.",zh:"讀(read)公告、聽擴音器(speaker)，選 A。"},
+
+{n:26,p:3,pic:true,o:[BARS("Safety Calls",["Fire","Police","Aid"],[20,50,80]),BARS("Safety Calls",["Fire","Police","Aid"],[50,80,20]),BARS("Safety Calls",["Fire","Police","Aid"],[80,50,20])],a:2,
+ sen:"Our town counted the safety calls this month. Fire calls were the most common, because of the dry season. Police calls were in the middle, and calls for medical aid were the fewest. So the fire bar should be the tallest. &nbsp;Q: Which chart shows the safety calls?",
+ szh:"我們鎮統計本月的安全(safety)求救電話。火災最多，因為乾季；警察(police)電話中等；求援(aid)最少。所以火災長條最高。　問：哪張圖顯示安全求救？",
+ en:"Fire most, aid least.",zh:"火災最多、求援最少，符合『Fire 最高』的 C。"},
+{n:27,p:3,pic:true,o:[BARS("Accidents",["2021","2022","2023"],[30,55,80]),BARS("Accidents",["2021","2022","2023"],[80,55,30]),BARS("Accidents",["2021","2022","2023"],[55,80,30])],a:1,
+ sen:"The police studied road accidents over three years. In 2021 there were the most accidents, so new safety signs were put up. In 2022 the number was in the middle, and by 2023 the fewest. So the accidents went down each year. &nbsp;Q: Which chart shows the accidents?",
+ szh:"警察(police)研究三年的道路事故(accident)。2021 年最多，於是設了新的安全(safety)標誌；2022 年中等；到 2023 年最少。所以事故逐年下降。　問：哪張圖顯示事故？",
+ en:"2021 most, 2023 least.",zh:"2021 最多、逐年下降，符合『2021 最高、2023 最低』的 B。"},
+{n:28,p:3,pic:true,o:[IMG('bread'),IMG('noodles'),IMG('rice')],a:0,
+ sen:"After a dangerous rescue on the snowy mountain, the tired team came down at last. There was no way to cook noodles or steam rice in the cold jeep. So the leader handed everyone warm bread, and they ate it with relief, glad that no one was hurt. &nbsp;Q: What did the rescue team eat?",
+ szh:"在雪(snowy)山(mountain)上一次危險(dangerous)的救援後，疲累的隊伍終於下山。在寒冷的吉普車(jeep)裡沒法煮麵或蒸飯。所以隊長發給大家溫熱的麵包(bread)，他們鬆一口氣地吃，慶幸沒人受傷。　問：救援隊吃什麼？",
+ en:"Warm bread.",zh:"救援隊吃麵包(bread)，選 A。麵、飯為干擾。"},
+{n:29,p:3,pic:true,o:[IMG('bread'),IMG('rice'),IMG('noodles')],a:2,
+ sen:"After the brave hero saved the child from the accident, the whole town wanted to thank him. He was tired of the dry bread and cold rice he ate on duty. So a kind cook made him a big bowl of hot noodles, and everyone cheered his courage. &nbsp;Q: What did the cook make for the hero?",
+ szh:"勇敢的英雄(hero)從事故(accident)中救出孩子後，全鎮都想謝謝他。他受夠了值勤時吃的乾麵包和冷飯。所以一位好心的廚子為他做了一大碗熱麵(noodle)，大家都為他的勇氣(courage)歡呼。　問：廚子為英雄做了什麼？",
+ en:"A bowl of noodles.",zh:"廚子做了熱麵(noodle)，選 C。麵包、飯為干擾。"},
+{n:30,p:3,pic:true,o:[IMG('mountain'),IMG('beach'),IMG('park')],a:1,
+ sen:"After a stressful week of safety drills, the team wanted a calm day off. Some liked the mountain but it felt dangerous after the storm, and others liked the park. So they chose the beach, because it was the safest place, and everyone could relax by the gentle sea. &nbsp;Q: Where did the team go to relax?",
+ szh:"經過一週緊張的安全(safety)演習後，隊伍想要平靜的休假。有些人喜歡山，但暴風後覺得危險(dangerous)，有些人喜歡公園。所以他們選了海邊(beach)，因為那是最安全的地方(place)，大家能在平靜的海邊放鬆。　問：隊伍去哪裡放鬆？",
+ en:"The beach.",zh:"隊伍去海邊(beach)放鬆，選 B。山、公園為干擾。"}
+];
+
+/* ====== 音檔播放（AAC/.m4a，各廠牌手機皆支援）====== */
+let curAudio=null, curBtn=null;
+function resetPlayBtn(b){ if(!b) return; b.classList.remove('playing'); b.querySelector('.txt').textContent = b.dataset.played?'重播':'播放'; }
+function stopAudio(){ if(curAudio) curAudio.pause(); if(curBtn) resetPlayBtn(curBtn); curAudio=null; curBtn=null; }
+function playAudio(audio,btn){
+  if(curAudio===audio){                       // 同一題：暫停 / 繼續
+    if(audio.paused){ audio.play(); btn.classList.add('playing'); btn.querySelector('.txt').textContent='播放中…'; }
+    else { audio.pause(); }
+    return;
+  }
+  if(curAudio){ curAudio.pause(); resetPlayBtn(curBtn); }   // 換題：停掉上一段
+  curAudio=audio; curBtn=btn; btn.dataset.played='1';
+  btn.classList.add('playing'); btn.querySelector('.txt').textContent='播放中…';
+  audio.play().catch(()=>resetPlayBtn(btn));
+}
+
+/* ====== 產生畫面 ====== */
+const form=document.getElementById('quiz');
+let lastP=-1;
+Q.forEach(q=>{
+  if(q.p!==lastP){
+    const st=document.createElement('div'); st.className='section-title s'+q.p; st.textContent=PARTS[q.p].t;
+    const sd=document.createElement('div'); sd.className='section-desc'; sd.textContent=PARTS[q.p].d;
+    form.appendChild(st); form.appendChild(sd); lastP=q.p;
+  }
+  const card=document.createElement('div'); card.className='q'; card.id='q'+q.n;
+  const head=document.createElement('div'); head.className='qhead';
+  head.innerHTML=`<span class="num">${q.n}</span>
+    <button type="button" class="play"><span class="wave">🔊</span><span class="txt">播放</span></button>
+    <span class="hintq">聆聽後作答</span>`;
+  card.appendChild(head);
+  const audio=document.createElement('audio'); audio.preload='none'; audio.src='gept-listening-audio/38/q'+q.n+'.m4a?v=r38-20260909'; card.appendChild(audio);
+  const pbtn=head.querySelector('.play');
+  pbtn.addEventListener('click',()=>playAudio(audio,pbtn));
+  audio.addEventListener('ended',()=>{ if(curBtn===pbtn){ resetPlayBtn(pbtn); curAudio=null; curBtn=null; } });
+  audio.addEventListener('pause',()=>{ if(curAudio===audio && curBtn===pbtn && !audio.ended){ pbtn.classList.remove('playing'); pbtn.querySelector('.txt').textContent='繼續'; } });
+  if(q.fig){ const f=document.createElement('div'); f.className='fig'; f.innerHTML=q.fig; card.appendChild(f); }
+  if(q.pic){
+    if(q.legend){ const lg=document.createElement('div'); lg.innerHTML=PIE_LEGEND; card.appendChild(lg.firstChild); }
+    const wrap=document.createElement('div'); wrap.className='picopts';
+    q.o.forEach((opt,i)=>{
+      const cell=document.createElement('label'); cell.className='picopt'; cell.dataset.i=i;
+      cell.innerHTML=`<span class="lab">${'ABC'[i]}</span>${opt}<input type="radio" name="q${q.n}" value="${i}" hidden>`;
+      cell.querySelector('input').addEventListener('change',()=>{ card.querySelectorAll('.picopt').forEach(o=>o.classList.remove('sel')); cell.classList.add('sel'); updateProgress(); });
+      wrap.appendChild(cell);
+    });
+    card.appendChild(wrap);
+  } else {
+    q.o.forEach((opt,i)=>{
+      const lab=document.createElement('label'); lab.className='opt'; lab.dataset.i=i;
+      lab.innerHTML=`<input type="radio" name="q${q.n}" value="${i}"><span class="lab">${'ABC'[i]}</span><span>${opt}</span>`;
+      lab.querySelector('input').addEventListener('change',()=>{ card.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel')); lab.classList.add('sel'); updateProgress(); });
+      card.appendChild(lab);
+    });
+  }
+  const exp=document.createElement('div'); exp.className='exp'; exp.id='exp'+q.n; card.appendChild(exp);
+  form.appendChild(card);
+});
+
+const submitBtn=document.getElementById('submitBtn');
+const resetBtn=document.getElementById('resetBtn');
+const hint=document.getElementById('hint');
+const TOT=Q.length;
+function answeredCount(){ let c=0; Q.forEach(q=>{ if(form.querySelector(`input[name="q${q.n}"]:checked`)) c++; }); return c; }
+function updateProgress(){
+  const c=answeredCount();
+  document.getElementById('count').textContent=`${c} / ${TOT}`;
+  document.getElementById('fill').style.width=(c/TOT*100)+'%';
+  hint.textContent = c===TOT ? '已完成全部 30 題' : (c===0 ? '尚未作答任何題目（仍可送出查看解析）' : `已作答 ${c} 題，未作答 ${TOT-c} 題（仍可送出）`);
+}
+
+submitBtn.addEventListener('click',()=>{
+  stopAudio();
+  let ok=0, blank=0;
+  Q.forEach(q=>{
+    const sel=form.querySelector(`input[name="q${q.n}"]:checked`);
+    const pick=sel?parseInt(sel.value):null;
+    if(pick===null) blank++;
+    const card=document.getElementById('q'+q.n);
+    const cls=q.pic?'.picopt':'.opt';
+    card.querySelectorAll(cls).forEach(o=>{
+      o.classList.add('lock');
+      const inp=o.querySelector('input'); if(inp) inp.disabled=true;
+      const i=parseInt(o.dataset.i);
+      if(i===q.a) o.classList.add('correct');
+      if(pick!==null && i===pick && pick!==q.a) o.classList.add('wrong');
+    });
+    const correct=pick===q.a; if(correct) ok++;
+    const exp=document.getElementById('exp'+q.n);
+    const tag=correct?'答對':(pick===null?'未作答':'答錯');
+    exp.innerHTML=`<span class="tag ${correct?'':'miss'}">${tag}　正解：${'ABC'[q.a]}</span>
+      <div class="scriptbox"><b>聽力原文</b>　${q.sen}<br><span style="color:#7a4a12">${q.szh}</span></div>
+      <div class="en"><b>EN</b>&nbsp;${q.en}</div><div class="zh"><b>中</b>&nbsp;${q.zh}</div>`;
+    exp.classList.add('show');
+  });
+  document.getElementById('scoreNum').textContent=Math.round(ok/TOT*100);
+  document.getElementById('scoreTxt').textContent=`分（答對 ${ok} / ${TOT} 題）`;
+  document.getElementById('rOk').textContent=ok;
+  document.getElementById('rNo').textContent=TOT-ok-blank;
+  document.getElementById('rBlank').textContent=blank;
+  const res=document.getElementById('result'); res.classList.add('show');
+  submitBtn.style.display='none'; hint.style.display='none'; resetBtn.style.display='block';
+  res.scrollIntoView({behavior:'smooth'});
+});
+
+resetBtn.addEventListener('click',()=>{
+  stopAudio(); form.reset();
+  Q.forEach(q=>{
+    const card=document.getElementById('q'+q.n);
+    card.querySelectorAll('.opt,.picopt').forEach(o=>{o.classList.remove('sel','correct','wrong','lock');const inp=o.querySelector('input');if(inp)inp.disabled=false;});
+    document.getElementById('exp'+q.n).classList.remove('show');
+  });
+  document.getElementById('result').classList.remove('show');
+  submitBtn.style.display='block'; hint.style.display='block'; resetBtn.style.display='none';
+  updateProgress(); window.scrollTo({top:0,behavior:'smooth'});
+});
+
+updateProgress();
+</script>
+</body>
+</html>
