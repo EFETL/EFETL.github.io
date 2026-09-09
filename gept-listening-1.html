@@ -84,7 +84,8 @@
   .picopt .lab{font-weight:800;color:var(--coral);align-self:flex-start;margin-left:4px;}
   .picopt.correct .lab{color:var(--green);}.picopt.wrong .lab{color:var(--red);}
   .picopt img.pic-img{width:100%;height:82px;}
-  .picopt svg{width:100%;max-width:96px;height:auto;}
+  .picopt svg{width:100%;max-width:132px;height:auto;}
+  .picopt svg.chart{max-width:100%;}
   .legend{display:flex;gap:12px;justify-content:center;font-size:.72rem;margin:2px 0 6px;color:#556;flex-wrap:wrap;}
   .legend i{display:inline-block;width:11px;height:11px;border:1px solid #999;margin-right:4px;vertical-align:-1px;}
   table.mini{border-collapse:collapse;font-size:.62rem;margin:0 auto;}
@@ -188,11 +189,11 @@ const CLK=(h,m)=>{const ma=m*6,ha=(h%12)*30+m*0.5,r=Math.PI/180;
  const hx=(60+Math.sin(ha*r)*20).toFixed(1),hy=(54-Math.cos(ha*r)*20).toFixed(1);
  const mx=(60+Math.sin(ma*r)*30).toFixed(1),my=(54-Math.cos(ma*r)*30).toFixed(1);
  return `<svg width="110" height="100" viewBox="0 0 120 110"><circle cx="60" cy="54" r="40" fill="#fff" stroke="#1a1a1a" stroke-width="3"/><g stroke="#1a1a1a" stroke-width="2" stroke-linecap="round"><line x1="60" y1="18" x2="60" y2="25"/><line x1="60" y1="83" x2="60" y2="90"/><line x1="24" y1="54" x2="31" y2="54"/><line x1="89" y1="54" x2="96" y2="54"/></g><line x1="60" y1="54" x2="${hx}" y2="${hy}" stroke="#1a1a1a" stroke-width="3.5" stroke-linecap="round"/><line x1="60" y1="54" x2="${mx}" y2="${my}" stroke="#e6007e" stroke-width="3" stroke-linecap="round"/><circle cx="60" cy="54" r="3.5" fill="#1a1a1a"/></svg>`;};
-const BARS=(title,labs,vals)=>{const max=Math.max(...vals),bw=30,gap=16,x0=48;let b='',l='';
- labs.forEach((L,i)=>{const h=Math.round(vals[i]/max*74),x=x0+i*(bw+gap);
-  b+=`<rect x="${x}" y="${112-h}" width="${bw}" height="${h}" fill="#e9e9e9" stroke="#1a1a1a" stroke-width="1.4"/>`;
-  l+=`<text x="${x+bw/2}" y="124">${L}</text>`;});
- return `<svg width="250" height="150" viewBox="0 0 250 150"><text x="125" y="14" text-anchor="middle" font-size="12" font-weight="700">${title}</text><line x1="38" y1="24" x2="38" y2="112" stroke="#1a1a1a" stroke-width="1.6"/><line x1="38" y1="112" x2="238" y2="112" stroke="#1a1a1a" stroke-width="1.6"/>${b}<g font-size="9" text-anchor="middle">${l}</g></svg>`;};
+const BARS=(title,labs,vals)=>{const max=Math.max(...vals),bw=28,gap=18,x0=20;let b='',l='';
+ labs.forEach((L,i)=>{const h=Math.round(vals[i]/max*70),x=x0+i*(bw+gap);
+  b+=`<rect x="${x}" y="${100-h}" width="${bw}" height="${h}" fill="#e9e9e9" stroke="#1a1a1a" stroke-width="1.5"/>`;
+  l+=`<text x="${x+bw/2}" y="116">${L}</text>`;});
+ return `<svg class="chart" width="176" height="132" viewBox="0 0 176 132"><text x="88" y="15" text-anchor="middle" font-size="14" font-weight="700">${title}</text><line x1="16" y1="22" x2="16" y2="100" stroke="#1a1a1a" stroke-width="1.5"/><line x1="16" y1="100" x2="170" y2="100" stroke="#1a1a1a" stroke-width="1.5"/>${b}<g font-size="11" text-anchor="middle">${l}</g></svg>`;};
 // Part1 scene SVGs
 const F_TABLE=`<svg width="170" height="120" viewBox="0 0 170 120"><ellipse cx="55" cy="86" rx="22" ry="6" fill="none" stroke="#1a1a1a" stroke-width="1.6"/><path d="M40 84 q0 -20 15 -20 q15 0 15 20" fill="#fff" stroke="#1a1a1a" stroke-width="2.2"/><path d="M70 70 h10 q4 0 4 6 t-4 6 h-10" fill="none" stroke="#1a1a1a" stroke-width="2"/><path d="M55 64 q3 -8 -1 -12" fill="none" stroke="#999" stroke-width="1.6"/><path d="M108 60 q-8 0 -8 10 v14 q0 8 10 8 h18 q10 0 10 -8 v-14 q0 -10 -8 -10z" fill="#fff" stroke="#1a1a1a" stroke-width="2.2"/><path d="M136 66 q12 2 10 12 q-2 8 -10 8" fill="none" stroke="#1a1a1a" stroke-width="2"/><path d="M104 56 l30 0" stroke="#1a1a1a" stroke-width="2"/><ellipse cx="120" cy="98" rx="26" ry="6" fill="none" stroke="#1a1a1a" stroke-width="1.6"/></svg>`;
 const F_FRY=`<svg width="160" height="120" viewBox="0 0 160 120"><ellipse cx="70" cy="70" rx="42" ry="12" fill="#fff" stroke="#1a1a1a" stroke-width="2.5"/><line x1="112" y1="66" x2="150" y2="58" stroke="#1a1a1a" stroke-width="4" stroke-linecap="round"/><circle cx="62" cy="66" r="9" fill="none" stroke="#e6a800" stroke-width="2"/><circle cx="62" cy="66" r="3" fill="#e6a800"/><circle cx="82" cy="68" r="7" fill="none" stroke="#e6a800" stroke-width="2"/><g stroke="#e6007e" stroke-width="2" stroke-linecap="round"><line x1="50" y1="90" x2="50" y2="102"/><line x1="70" y1="92" x2="70" y2="104"/><line x1="90" y1="90" x2="90" y2="102"/></g></svg>`;
@@ -204,7 +205,7 @@ const D_COFFEE=`<svg width="80" height="80" viewBox="0 0 80 80"><path d="M22 30 
 const D_BEER=`<svg width="80" height="80" viewBox="0 0 80 80"><path d="M26 26 h26 v34 q0 6 -6 6 h-14 q-6 0 -6 -6z" fill="#fff" stroke="#1a1a1a" stroke-width="2.4"/><path d="M52 32 h9 v20 h-9" fill="none" stroke="#1a1a1a" stroke-width="2.2"/><path d="M26 30 q4 -8 13 -6 q9 -2 13 6" fill="#fff" stroke="#1a1a1a" stroke-width="2"/><g stroke="#1a1a1a" stroke-width="1" opacity=".5"><line x1="33" y1="40" x2="33" y2="60"/><line x1="45" y1="40" x2="45" y2="60"/></g></svg>`;
 const D_TEA=`<svg width="80" height="80" viewBox="0 0 80 80"><path d="M20 32 h34 v14 q0 14 -17 14 q-17 0 -17 -14z" fill="#fff" stroke="#1a1a1a" stroke-width="2.4"/><path d="M54 36 h8 q6 0 6 8 t-6 8 h-6" fill="none" stroke="#1a1a1a" stroke-width="2.2"/><ellipse cx="37" cy="66" rx="22" ry="4" fill="none" stroke="#1a1a1a" stroke-width="1.6"/><path d="M30 27 q3 -6 -1 -10 M42 27 q3 -6 -1 -10" fill="none" stroke="#999" stroke-width="1.6"/></svg>`;
 // Part4 receipt SVG
-const RC=(total)=>`<svg width="86" height="120" viewBox="0 0 86 128"><rect x="18" y="8" width="50" height="112" fill="#fff" stroke="#1a1a1a" stroke-width="2"/><text x="43" y="26" text-anchor="middle" font-size="9" font-weight="700">BILL</text><text x="24" y="44" font-size="8">BBQ set</text><text x="62" y="44" text-anchor="end" font-size="8">200</text><text x="24" y="60" font-size="8">Drink</text><text x="62" y="60" text-anchor="end" font-size="8">50</text><line x1="24" y1="70" x2="62" y2="70" stroke="#1a1a1a"/><text x="24" y="86" font-size="9" font-weight="700">Total</text><text x="62" y="86" text-anchor="end" font-size="9" font-weight="700">${total}</text></svg>`;
+const RC=(total)=>`<svg width="118" height="126" viewBox="0 0 118 128"><rect x="8" y="8" width="102" height="112" fill="#fff" stroke="#1a1a1a" stroke-width="2"/><text x="59" y="27" text-anchor="middle" font-size="12" font-weight="700">BILL</text><text x="16" y="48" font-size="11">BBQ set</text><text x="102" y="48" text-anchor="end" font-size="11">200</text><text x="16" y="67" font-size="11">Drink</text><text x="102" y="67" text-anchor="end" font-size="11">50</text><line x1="16" y1="77" x2="102" y2="77" stroke="#1a1a1a"/><text x="16" y="98" font-size="12" font-weight="700">Total</text><text x="102" y="98" text-anchor="end" font-size="13" font-weight="700">${total}</text></svg>`;
 /* ====== 大題 ====== */
 const PARTS=[
  {t:"第一大題　看圖辨義",d:"共 5 題（1–5）。看圖並聆聽問題，從 A、B、C 三個選項中選出最適合的答案。"},
@@ -304,7 +305,7 @@ const Q=[
  szh:"男：服務生，烤箱(oven)裡有東西燒焦了！　女：別擔心，只是一些煙，沒有起火(fire)。　問：問題是什麼？",
  en:"The oven is making smoke (but no fire).",zh:"烤箱(oven)冒煙，但沒有火(fire)，選 A。"},
 
-{n:26,p:3,pic:true,o:[D_COFFEE,D_BEER,D_TEA],a:2,
+{n:26,p:3,pic:true,o:[IMG('coffee'),IMG('beer'),IMG('tea')],a:2,
  sen:"I went to the cafe after work. I was very thirsty, but I did not want coffee because it was late at night. I do not drink beer or wine either. So in the end, I ordered a nice hot cup of tea. It was just what I needed. &nbsp;Q: What did the speaker order?",
  szh:"我下班後去咖啡館(cafe)。我很渴，但因為很晚了，不想喝咖啡(coffee)；我也不喝啤酒(beer)或酒(wine)。所以最後我點了一杯熱茶(tea)，正好解渴。　問：說話者點了什麼？",
  en:"Not coffee, beer or wine — in the end a hot cup of tea.",zh:"不喝咖啡、啤酒、酒，最後點了熱茶(tea)，選 C。"},
