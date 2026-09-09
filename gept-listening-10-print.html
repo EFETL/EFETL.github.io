@@ -1,0 +1,214 @@
+<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEPT 初級聽力 第 10 回　身體與健康 列印版</title>
+<style>
+*{box-sizing:border-box;}
+body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;color:#1a1a1a;background:#f2f2f2;}
+.bar{position:sticky;top:0;background:#22303f;color:#fff;padding:10px 16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;z-index:9;}
+.bar b{margin-right:auto;font-size:.98rem;}
+.bar button{border:0;border-radius:8px;padding:8px 14px;font-weight:800;cursor:pointer;font-size:.86rem;}
+.bar .s{background:#ffb703;color:#22303f;} .bar .t{background:#e6007e;color:#fff;} .bar .a{background:#4dd0e1;color:#08343c;}
+.page{max-width:850px;margin:14px auto;background:#fff;padding:26px 30px;box-shadow:0 2px 10px rgba(0,0,0,.12);}
+.phead{text-align:center;border-bottom:2.5px solid #1a1a1a;padding-bottom:8px;margin-bottom:4px;}
+.phead h1{margin:0;font-size:1.24rem;} .phead .sub{font-size:.9rem;color:#444;margin-top:3px;}
+.pmeta{display:flex;gap:20px;flex-wrap:wrap;font-size:.9rem;margin:10px 0 4px;color:#222;}
+.pnote{font-size:.82rem;color:#555;margin-bottom:6px;}
+h2.pt{font-size:1.02rem;background:#1a1a1a;color:#fff;padding:5px 12px;border-radius:5px;margin:18px 0 3px;}
+p.pd{font-size:.82rem;color:#444;margin:0 0 10px;}
+.q{display:flex;gap:10px;padding:7px 0;border-bottom:1px dotted #ccc;page-break-inside:avoid;align-items:flex-start;}
+.qn{font-weight:800;white-space:nowrap;min-width:56px;}
+.qbody{flex:1;}
+.fig{margin:4px 0;} .fig svg,.fig img{vertical-align:middle;}
+.opts{list-style:none;margin:2px 0;padding:0;}
+.opts li{padding:1.5px 0;font-size:.94rem;}
+.pics{display:flex;gap:14px;flex-wrap:wrap;margin:4px 0;}
+.pico{text-align:center;border:1px solid #ddd;border-radius:8px;padding:6px;background:#fafafa;}
+.pico .lb{font-weight:800;font-size:.9rem;margin-bottom:2px;}
+.pic-img{width:120px;height:90px;object-fit:cover;border-radius:5px;}
+.ans{color:#c1121f;font-weight:800;}
+.tr{font-size:.86rem;color:#333;margin:3px 0;background:#f7f7f7;border-left:3px solid #999;padding:5px 9px;border-radius:0 5px 5px 0;line-height:1.5;}
+.ex{font-size:.84rem;color:#0a5;margin:2px 0 0;}
+.grid30{display:grid;grid-template-columns:repeat(5,1fr);gap:6px 10px;margin-top:8px;}
+.gc{border:1px solid #bbb;border-radius:6px;padding:4px 6px;font-size:.86rem;text-align:center;}
+.gc b{display:inline-block;min-width:20px;} .gc .ab{letter-spacing:2px;color:#555;}
+.gc .ans{color:#c1121f;}
+@media print{
+ .bar{display:none;} body{background:#fff;} .page{box-shadow:none;margin:0 auto;max-width:none;padding:0 6mm;}
+ .hidep{display:none !important;}
+ .page{page-break-after:always;}
+}
+</style></head><body>
+<div class="bar">
+ <b>🖨 第 10 回　身體與健康　聽力測驗　列印版</b>
+ <button class="s" onclick="show('s')">只印學生卷</button>
+ <button class="t" onclick="show('t')">只印教師卷</button>
+ <button class="a" onclick="show('a')">兩份都印</button>
+</div>
+<div id="root"></div>
+<script>
+/* 圖形素材（第10回 身體與健康） ====== */
+const IMG = n => `<img class="pic-img" src="gept-listening-img/10/${n}.jpg" alt="${n}">`;
+const BARS=(title,labs,vals)=>{const max=Math.max(...vals),bw=28,gap=18,x0=20;let b='',l='';
+ labs.forEach((L,i)=>{const h=Math.round(vals[i]/max*70),x=x0+i*(bw+gap);
+  b+=`<rect x="${x}" y="${100-h}" width="${bw}" height="${h}" fill="#e9e9e9" stroke="#1a1a1a" stroke-width="1.5"/>`;
+  l+=`<text x="${x+bw/2}" y="116">${L}</text>`;});
+ return `<svg class="chart" width="176" height="132" viewBox="0 0 176 132"><text x="88" y="15" text-anchor="middle" font-size="14" font-weight="700">${title}</text><line x1="16" y1="22" x2="16" y2="100" stroke="#1a1a1a" stroke-width="1.5"/><line x1="16" y1="100" x2="170" y2="100" stroke="#1a1a1a" stroke-width="1.5"/>${b}<g font-size="11" text-anchor="middle">${l}</g></svg>`;};
+const SOCCER=`<svg width="104" height="104" viewBox="0 0 104 104"><circle cx="52" cy="52" r="40" fill="#fff" stroke="#1a1a1a" stroke-width="2.5"/><path d="M52 30 l16 12 l-6 20 h-20 l-6 -20 z" fill="#1a1a1a"/><g fill="#1a1a1a"><path d="M52 14 l10 8 l-10 6 l-10 -6 z"/><path d="M86 44 l-4 12 l-10 -4 l2 -12 z"/><path d="M18 44 l4 12 l10 -4 l-2 -12 z"/><path d="M40 84 l-8 -10 l8 -4 l6 8 z"/><path d="M64 84 l8 -10 l-8 -4 l-6 8 z"/></g></svg>`;
+const TENNIS=`<svg width="100" height="112" viewBox="0 0 100 114"><ellipse cx="40" cy="38" rx="26" ry="30" fill="#eaf7d0" stroke="#1a1a1a" stroke-width="3"/><g stroke="#1a1a1a" stroke-width="1"><line x1="24" y1="20" x2="24" y2="58"/><line x1="34" y1="14" x2="34" y2="64"/><line x1="46" y1="14" x2="46" y2="64"/><line x1="56" y1="20" x2="56" y2="58"/><line x1="18" y1="30" x2="62" y2="30"/><line x1="16" y1="40" x2="64" y2="40"/><line x1="18" y1="50" x2="62" y2="50"/></g><rect x="36" y="66" width="8" height="42" rx="3" fill="#8a5a2b" stroke="#1a1a1a" stroke-width="1.5"/><circle cx="78" cy="82" r="12" fill="#d4f000" stroke="#1a1a1a" stroke-width="2"/><path d="M68 78 q10 4 20 0 M68 86 q10 -4 20 0" fill="none" stroke="#fff" stroke-width="1.5"/></svg>`;
+const SNEAKER=`<svg width="128" height="86" viewBox="0 0 128 88"><path d="M14 60 q0 -20 18 -22 q6 14 20 12 q10 -2 18 -12 l34 20 q10 4 10 14 h-100 q-8 0 -8 -6 z" fill="#ff6f91" stroke="#1a1a1a" stroke-width="2.5" stroke-linejoin="round"/><path d="M14 74 h100" stroke="#1a1a1a" stroke-width="4"/><g stroke="#fff" stroke-width="2"><line x1="52" y1="40" x2="60" y2="52"/><line x1="60" y1="38" x2="68" y2="50"/><line x1="68" y1="38" x2="76" y2="50"/></g></svg>`;
+const DUMBBELL=`<svg width="130" height="76" viewBox="0 0 130 78"><rect x="50" y="34" width="30" height="10" fill="#555" stroke="#1a1a1a" stroke-width="1.5"/><g fill="#333" stroke="#1a1a1a" stroke-width="2"><rect x="30" y="20" width="14" height="38" rx="3"/><rect x="16" y="26" width="12" height="26" rx="3"/><rect x="86" y="20" width="14" height="38" rx="3"/><rect x="102" y="26" width="12" height="26" rx="3"/></g></svg>`;
+const SCORE=`<svg width="140" height="92" viewBox="0 0 140 94"><rect x="12" y="14" width="116" height="66" rx="6" fill="#12203a" stroke="#1a1a1a" stroke-width="2.5"/><text x="70" y="30" text-anchor="middle" font-size="10" font-weight="800" fill="#8fb7ff">MATCH</text><text x="42" y="64" text-anchor="middle" font-size="30" font-weight="900" fill="#ffd166">3</text><text x="70" y="60" text-anchor="middle" font-size="18" font-weight="800" fill="#fff">:</text><text x="98" y="64" text-anchor="middle" font-size="30" font-weight="900" fill="#ffd166">1</text></svg>`;
+
+const PARTS=[
+ {t:"第一大題　看圖辨義",d:"共 5 題（1–5）。看圖並聆聽問題，從 A、B、C 三個選項中選出最適合的答案。"},
+ {t:"第二大題　問答",d:"共 10 題（6–15）。聆聽一個問句或直述句，選出最適合的回答。"},
+ {t:"第三大題　簡短對話",d:"共 10 題（16–25）。聆聽一段對話與問題，選出最適合的答案。"},
+ {t:"第四大題　短文聽解",d:"共 5 題（26–30）。聆聽一段短文與問題，從三張圖片中選出最適合的一張。"}
+];
+const Q=[
+{n:1,p:0,fig:SOCCER,o:["He plays soccer, a healthy sport for the body.","She practices golf at the gym.","They swim in a crowded tub."],a:0,
+ sen:"For question one, look at the picture. What sport is the boy playing?",szh:"第一題，請看圖片。男孩在玩什麼運動？",
+ en:"He plays soccer, a healthy sport.",zh:"男孩踢足球(soccer)，是有益身體的健康(healthy)運動(sport)，選 A。golf/gym、swim/tub 為干擾。"},
+{n:2,p:0,fig:TENNIS,o:["The player brings popcorn to the match.","A taxi waits inside the fog.","She holds a tennis racket; she is a fine player."],a:2,
+ sen:"For question two, look at the picture. What is the woman holding?",szh:"第二題，請看圖片。女士拿著什麼？",
+ en:"A tennis racket; a fine player.",zh:"她拿著網球(tennis)拍，是很棒的球員(player)，選 C。popcorn/match、taxi/inside/fog 為干擾。"},
+{n:3,p:0,fig:SNEAKER,o:["The duck swims well against the wave.","On the floor is a new pair of sneakers for the race.","He plays the flute inside."],a:1,
+ sen:"For question three, look at the picture. What is on the floor?",szh:"第三題，請看圖片。地板上是什麼？",
+ en:"A new pair of sneakers for the race.",zh:"地上是一雙(pair)新運動鞋(sneaker)，準備賽跑(race)用，選 B。duck/well/against、flute/inside 為干擾。"},
+{n:4,p:0,fig:DUMBBELL,o:["He trains at the gym to keep his health.","The chairperson eats a steak.","The lucky player wins a hundred dollars."],a:0,
+ sen:"For question four, look at the picture. What does the man do at the gym?",szh:"第四題，請看圖片。男士在健身房做什麼？",
+ en:"He trains at the gym for health.",zh:"他在健身房(gym)鍛鍊(train)以保持健康(health)，選 A。chairperson/steak、lucky/hundred/dollar 為干擾。"},
+{n:5,p:0,fig:SCORE,o:["The primary source of fog is the river.","They arrange the exact seats.","The board shows the final score of the volleyball match."],a:2,
+ sen:"For question five, look at the picture. What does the board show?",szh:"第五題，請看圖片。計分板顯示什麼？",
+ en:"The score of the volleyball match.",zh:"計分板顯示排球(volleyball)比賽(match)的最終比分(score)，選 C。primary/source/fog、arrange/exact 為干擾。"},
+
+{n:6,p:1,o:["The taxi is crowded.","I swim and practice golf, and I do it well.","He plays the flute inside."],a:1,
+ sen:"How do you keep yourself healthy?",szh:"你怎麼保持健康？",
+ en:"I swim and practice golf well.",zh:"問怎麼保持健康(healthy)，答『我游泳(swim)、練(practice)高爾夫(golf)，而且做得很好(well)』，選 B。taxi/crowded、flute/inside 為干擾。"},
+{n:7,p:1,o:["Table tennis and tennis; I play against my brother.","A duck swims in the tub.","The chairperson is shy."],a:0,
+ sen:"What sport do you enjoy the most?",szh:"你最喜歡什麼運動？",
+ en:"Table tennis and tennis; I play against my brother.",zh:"問最愛的運動，答『桌球(table tennis)和網球(tennis)，我和弟弟對打(against)』，選 A。duck/tub、chairperson/shy 為干擾。"},
+{n:8,p:1,o:["I woke up in the fog.","The sneakers are a pair.","I was lucky; I won a hundred dollars in the race."],a:2,
+ sen:"Why do you look so happy today?",szh:"你今天怎麼看起來這麼開心？",
+ en:"Lucky; I won a hundred dollars.",zh:"問為何開心，答『我很幸運(lucky)，在賽跑(race)贏了一百(hundred)元(dollar)』，選 C。wake/fog、sneaker/pair 為干擾。"},
+{n:9,p:1,o:["The steak is against the wall.","Bring your sneakers, clean underwear, and some popcorn.","The flute is inside the tub."],a:1,
+ sen:"What should I bring to the sports match?",szh:"運動比賽我該帶什麼？",
+ en:"Sneakers, underwear, and popcorn.",zh:"問比賽(match)該帶(bring)什麼，答『帶你的運動鞋(sneaker)、乾淨內衣(underwear)和一些爆米花(popcorn)』，選 B。steak/against、flute/inside/tub 為干擾。"},
+{n:10,p:1,o:["Great; we repeat each step inside the gym.","The duck wakes up early.","A taxi is lucky."],a:0,
+ sen:"How was your dance class today?",szh:"你今天的舞蹈課如何？",
+ en:"We repeat each step inside the gym.",zh:"問舞蹈(dance)課，答『很棒，我們在健身房(gym)裡(inside)重複(repeat)每個動作』，選 A。duck/wake、taxi/lucky 為干擾。"},
+{n:11,p:1,o:["The player is shy.","The fog is primary.","Go by taxi, and add three more people."],a:2,
+ sen:"How should we get to the stadium?",szh:"我們該怎麼去體育場？",
+ en:"Go by taxi; add three more people.",zh:"問怎麼去，答『搭(go)計程車(taxi)，再加(add)三(three)個人』，選 C。player/shy、fog/primary 為干擾。"},
+{n:12,p:1,o:["The gym is crowded.","A steak, and then I fed a duck near the tub.","The exact score is high."],a:1,
+ sen:"What did you eat after the long race?",szh:"長跑後你吃了什麼？",
+ en:"A steak; then I fed a duck near the tub.",zh:"問賽跑(race)後吃什麼，答『一塊牛排(steak)，然後在浴缸(tub)邊餵了鴨子(duck)』，選 B。gym/crowded、exact/score 為干擾。"},
+{n:13,p:1,o:["He woke up late, and it was his own fault, so he feels shy.","The sneaker is new.","The player scored well."],a:0,
+ sen:"Why won't the boy look at us?",szh:"男孩為什麼不看我們？",
+ en:"He woke late; his own fault, so shy.",zh:"問男孩為何不看人，答『他睡過頭(wake)，是他自己的錯(fault)，所以害羞(shy)』，選 A。sneaker、player/score 為干擾。"},
+{n:14,p:1,o:["The duck plays golf.","The chairperson is lucky.","The primary source of the smell is the river, and it will widen with the fog."],a:2,
+ sen:"Where does the strange smell come from?",szh:"這奇怪的味道從哪來？",
+ en:"The primary source is the river; it will widen.",zh:"問味道來源(source)，答『主要(primary)來源是那條河，隨著霧(fog)會擴大(widen)』，選 C。duck/golf、chairperson/lucky 為干擾。"},
+{n:15,p:1,o:["The steak is exact.","Yes, I will tidy the room and arrange the exact number of seats.","He plays against the duck."],a:1,
+ sen:"Can you prepare the meeting room?",szh:"你能整理好會議室嗎？",
+ en:"I'll tidy it and arrange the exact seats.",zh:"問能否準備房間，答『可以，我會整理(tidy)並安排(arrange)剛好(exact)數量的座位』，選 B。steak/exact、against/duck 為干擾。"},
+
+{n:16,p:2,o:["Soccer.","Golf.","Table tennis."],a:0,
+ sen:"W: What sport does your brother play? &nbsp;M: He plays soccer; he is the best player on the team. &nbsp;W: Impressive. &nbsp;Q: What sport does the brother play?",
+ szh:"女：你弟弟玩什麼運動？　男：他踢足球(soccer)，是隊上最好的球員(player)。　女：厲害。　問：弟弟玩什麼運動？",
+ en:"Soccer.",zh:"弟弟踢足球(soccer)、是最佳球員(player)，選 A。"},
+{n:17,p:2,o:["He swims.","He dances.","He likes to surf and swim in the sea."],a:2,
+ sen:"W: What does your uncle do for fun? &nbsp;M: He likes to surf and swim in the sea every summer. &nbsp;W: How cool. &nbsp;Q: What does the uncle like to do?",
+ szh:"女：你叔叔喜歡做什麼消遣？　男：他每年夏天愛衝浪(surf)和在海裡游泳(swim)。　女：好酷。　問：叔叔喜歡做什麼？",
+ en:"Surf and swim.",zh:"叔叔愛衝浪(surf)和游泳(swim)，選 C。"},
+{n:18,p:2,o:["Play golf.","Practice tennis every day.","Watch a match."],a:1,
+ sen:"M: How did she become such a good athlete? &nbsp;W: She practiced tennis every single day. &nbsp;M: Hard work! &nbsp;Q: How did she become good?",
+ szh:"男：她怎麼變成這麼好的運動員？　女：她每天練(practice)網球(tennis)。　男：真努力！　問：她怎麼變厲害的？",
+ en:"Practiced tennis every day.",zh:"她每天練(practice)網球(tennis)，選 B。"},
+{n:19,p:2,o:["Our team won by a high score.","We lost the match.","We watched a film."],a:0,
+ sen:"W: How was the big game last night? &nbsp;M: Our team won by a high score in the final match. &nbsp;W: Congratulations! &nbsp;Q: How was the game?",
+ szh:"女：昨晚的大賽如何？　男：在決賽(match)裡我們隊以高比分(score)獲勝。　女：恭喜！　問：比賽結果如何？",
+ en:"Won by a high score.",zh:"我們隊以高比分(score)贏得比賽(match)，選 A。"},
+{n:20,p:2,o:["She swims.","She plays soccer.","She plays the flute and then dances."],a:2,
+ sen:"M: What does your sister do in the show? &nbsp;W: She plays the flute first, and then she dances. &nbsp;M: Talented. &nbsp;Q: What does the sister do in the show?",
+ szh:"男：你姊姊在表演中做什麼？　女：她先吹長笛(flute)，然後跳舞(dance)。　男：真有才。　問：姊姊在表演中做什麼？",
+ en:"Plays the flute and dances.",zh:"姊姊吹長笛(flute)後跳舞(dance)，選 C。"},
+{n:21,p:2,o:["One shoe.","A new pair of sneakers.","A pair of socks."],a:1,
+ sen:"W: What did you buy for the race? &nbsp;M: A brand-new pair of sneakers, very light. &nbsp;W: Nice. &nbsp;Q: What did the man buy?",
+ szh:"女：你為賽跑買了什麼？　男：一雙(pair)全新的運動鞋(sneaker)，很輕。　女：不錯。　問：男士買了什麼？",
+ en:"A new pair of sneakers.",zh:"男士買了一雙(pair)新運動鞋(sneaker)，選 B。"},
+{n:22,p:2,o:["Train hard at the gym and stick to a plan.","Eat popcorn.","Take a taxi."],a:0,
+ sen:"M: How can I get stronger? &nbsp;W: Train hard at the gym, and stick to your plan. &nbsp;M: I will. &nbsp;Q: What does the woman suggest?",
+ szh:"男：我要怎麼變強壯？　女：在健身房(gym)努力鍛鍊(train)，並堅持(stick)你的計畫。　男：我會的。　問：女士建議什麼？",
+ en:"Train at the gym and stick to a plan.",zh:"在健身房(gym)努力訓練(train)、堅持(stick)計畫，選 A。"},
+{n:23,p:2,o:["A dance.","A swim.","A golf game before the race."],a:2,
+ sen:"W: What is on the schedule this morning? &nbsp;M: A golf game first, then the big race in the afternoon. &nbsp;W: Busy day. &nbsp;Q: What is first on the schedule?",
+ szh:"女：今早行程有什麼？　男：先打一場高爾夫(golf)，下午再有大賽跑(race)。　女：忙碌的一天。　問：行程上第一項是什麼？",
+ en:"A golf game before the race.",zh:"先打高爾夫(golf)，再賽跑(race)，選 C。"},
+{n:24,p:2,o:["Empty and quiet.","So crowded that many Asian fans were in tears of joy.","Cold and foggy."],a:1,
+ sen:"W: How was the stadium during the final? &nbsp;M: So crowded that many Asian fans were in tears of joy. &nbsp;W: What an event! &nbsp;Q: How was the stadium?",
+ szh:"女：決賽時體育場如何？　男：非常擁擠(crowded)，許多亞洲(Asian)球迷都激動落淚(tear)。　女：真是盛事！　問：體育場的情況如何？",
+ en:"Crowded; Asian fans in tears.",zh:"體育場很擁擠(crowded)，亞洲(Asian)球迷喜極而泣(tear)，選 B。"},
+{n:25,p:2,o:["The chairperson will arrange the sports day.","A player will.","A duck will."],a:0,
+ sen:"M: Who will plan the school sports day? &nbsp;W: The chairperson will arrange everything. &nbsp;M: Good hands. &nbsp;Q: Who will plan the sports day?",
+ szh:"男：誰來規劃學校運動會？　女：主席(chairperson)會安排(arrange)一切。　男：交給對的人。　問：誰來規劃運動會？",
+ en:"The chairperson will arrange it.",zh:"主席(chairperson)會安排(arrange)一切，選 A。"},
+
+{n:26,p:3,pic:true,o:[BARS("Favorite Sport",["Soccer","Tennis","Golf"],[20,50,80]),BARS("Favorite Sport",["Soccer","Tennis","Golf"],[50,80,20]),BARS("Favorite Sport",["Soccer","Tennis","Golf"],[80,50,20])],a:2,
+ sen:"Our school did a survey about the favorite sport of each player. Soccer got the most votes, because it is easy to play with friends. Tennis was in the middle, and golf got the fewest votes. So the soccer bar should be the tallest. &nbsp;Q: Which chart shows the favorite sport?",
+ szh:"我們學校調查每位球員(player)最愛的運動(sport)。足球(soccer)最多票，因為容易和朋友一起玩(play)；網球(tennis)中等；高爾夫(golf)最少。所以足球長條最高。　問：哪張圖顯示最愛運動？",
+ en:"Soccer most, golf least.",zh:"足球最多、高爾夫最少，符合『Soccer 最高』的 C。"},
+{n:27,p:3,pic:true,o:[BARS("Match Scores",["Game1","Game2","Game3"],[30,55,80]),BARS("Match Scores",["Game1","Game2","Game3"],[80,55,30]),BARS("Match Scores",["Game1","Game2","Game3"],[55,80,30])],a:1,
+ sen:"Our volleyball team kept the score of three matches. In game one we scored the most, because we practiced well. In game two we were in the middle, and in game three we scored the least, since the players were tired. So the scores went down each game. &nbsp;Q: Which chart shows our match scores?",
+ szh:"我們排球(volleyball)隊記錄了三(three)場比賽(match)的比分(score)。第一場最高，因為我們練(practice)得好(well)；第二場中等；第三場最低，因為球員(player)累了。所以比分逐場下降。　問：哪張圖顯示我們的比分？",
+ en:"Game1 most, game3 least.",zh:"第一場最高、逐場下降，符合『Game1 最高、Game3 最低』的 B。"},
+{n:28,p:3,pic:true,o:[IMG('bread'),IMG('noodles'),IMG('rice')],a:0,
+ sen:"Before every big race, our coach tells us to eat healthy food. He says we should not eat oily noodles or heavy rice, because they make us slow. Instead, he brings simple brown bread for the whole team, so we feel light and strong. &nbsp;Q: What food does the coach bring before the race?",
+ szh:"每次大賽跑(race)前，教練都叫我們吃健康(healthy)食物。他說不要吃油麵或吃太多飯，因為會讓我們變慢，於是他帶(bring)簡單的全麥麵包(bread)給全隊，讓我們感覺輕盈又有力。　問：教練賽前帶什麼食物？",
+ en:"Brown bread.",zh:"教練帶麵包(bread)，選 A。麵、飯為干擾。"},
+{n:29,p:3,pic:true,o:[IMG('rice'),IMG('bread'),IMG('noodles')],a:2,
+ sen:"After a hard game at the gym, our team is always hungry. We do not want dry bread or plain rice, which are boring after training. Instead, the chairperson orders a big bowl of hot noodles for every player, and we eat until we feel well again. &nbsp;Q: What does the team eat after training?",
+ szh:"在健身房(gym)激烈比賽後，我們隊總是很餓。訓練(train)後我們不想吃乾麵包或白飯，太無聊，於是主席(chairperson)為每位球員(player)點一大碗熱麵(noodles)，我們吃到重新感覺很好(well)。　問：球隊訓練後吃什麼？",
+ en:"Hot noodles.",zh:"球隊吃熱麵(noodles)，選 C。麵包、飯為干擾。"},
+{n:30,p:3,pic:true,o:[IMG('mountain'),IMG('beach'),IMG('park')],a:1,
+ sen:"Our sports club planned a training trip. The coach liked the mountain for climbing, and one player liked the park for running. But we chose the beach, because we could swim, surf, and play volleyball on the sand all day. &nbsp;Q: Where did the sports club go?",
+ szh:"我們運動社團計畫了訓練(train)之旅。教練喜歡山可以爬，一位球員(player)喜歡公園可以跑步，但我們選了海邊(beach)，因為可以整天游泳(swim)、衝浪(surf)、在沙灘打排球(volleyball)。　問：運動社團去了哪裡？",
+ en:"The beach.",zh:"社團去海邊(beach)，選 B。山、公園為干擾。"}
+];
+const AB=["A","B","C"];
+function optHTML(q){
+  if(q.pic){ // 三圖選項
+    return '<div class="pics">'+q.o.map((s,i)=>`<div class="pico"><div class="lb">(${AB[i]})</div>${s}</div>`).join('')+'</div>';
+  }
+  return '<ol class="opts">'+q.o.map((s,i)=>`<li>(${AB[i]}) ${s}</li>`).join('')+'</ol>';
+}
+function figHTML(q){ return q.fig?`<div class="fig">${q.fig}</div>`:''; }
+function partOf(n){return n<=5?0:n<=15?1:n<=25?2:3;}
+function sheet(kind){ // 's' student | 't' teacher
+  let h=`<div class="page ${kind==='s'?'sheet-s':'sheet-t'}">`;
+  h+=`<div class="phead"><h1>全民英檢 初級　聽力測驗</h1><div class="sub">第 10 回　身體與健康　${kind==='s'?'學生作答卷':'教師卷（答案・聽力原文・解析）'}</div></div>`;
+  if(kind==='s') h+=`<div class="pmeta"><span>姓名：____________</span><span>班級：__________</span><span>座號：______</span><span>分數：________</span></div>`;
+  h+=`<div class="pnote">說明：本測驗共 4 大題 30 題，每題聆聽音檔作答，從 (A) (B) (C) 中選出最適合的答案，填入題號前括號內。</div>`;
+  PARTS.forEach((pt,pi)=>{
+    h+=`<h2 class="pt">${pt.t}</h2><p class="pd">${pt.d}</p>`;
+    Q.filter(q=>partOf(q.n)===pi).forEach(q=>{
+      h+=`<div class="q"><div class="qn">（${kind==='t'?'<span class="ans">'+AB[q.a]+'</span>':'　'}）${q.n}.</div><div class="qbody">`;
+      h+=figHTML(q)+optHTML(q);
+      if(kind==='t'){
+        h+=`<div class="tr"><b>原文：</b>${(q.sen||'').replace(/&nbsp;/g,' ')}</div>`;
+        if(q.zh) h+=`<div class="ex"><b>解析：</b>${q.zh}</div>`;
+      }
+      h+=`</div></div>`;
+    });
+  });
+  h+=`</div>`;
+  return h;
+}
+function render(){document.getElementById('root').innerHTML=sheet('s')+sheet('t');}
+render();
+function show(m){
+  document.querySelectorAll('.sheet-s').forEach(e=>e.classList.toggle('hidep',m==='t'));
+  document.querySelectorAll('.sheet-t').forEach(e=>e.classList.toggle('hidep',m==='s'));
+  setTimeout(()=>window.print(),60);
+}
+</script></body></html>
