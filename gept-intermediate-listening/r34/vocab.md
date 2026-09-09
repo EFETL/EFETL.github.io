@@ -48,7 +48,7 @@
     ✓ website          第9題選項、第15題選項
     ✓ constitute       第9題選項、第15題選項
     ✓ equipment        第9題選項
-    ✓ offense          第9題選項
+    ✓ offense          第9題選項、第21題錄音稿
     ✓ cooperate        第9題選項
     ✓ incredible       第10題選項
     ✓ margin           第10題選項

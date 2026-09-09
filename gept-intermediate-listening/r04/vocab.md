@@ -6,22 +6,22 @@
 單字第 04 回：餐飲與烹飪
 
 【主題字】11/11 命中
-    ✓ alcohol          第7題正解、第22題錄音稿
-    ✓ alcoholic        第22題正解
+    ✓ alcohol          第7題正解、第21題錄音稿
+    ✓ alcoholic        第21題正解
     ✓ cocktail         第2題選項
     ✓ dine             第16題錄音稿
     ✓ drunk            第7題選項
     ✓ flavor           第14題正解、第18題正解
     ✓ ingredient       第6題題目、第23題錄音稿
-    ✓ liquor           第22題錄音稿、第26題錄音稿
+    ✓ liquor           第21題錄音稿、第26題錄音稿
     ✓ pub              第10題題目、第20題錄音稿
     ✓ recipe           第4題題目、第13題題目
-    ✓ roast            第1題選項、第3題正解
+    ✓ roast            第1題選項、第3題圖片
 
 【通用字】40/40 命中
-    ✓ long             第9題題目、第22題錄音稿
+    ✓ long             第9題題目、第21題錄音稿
     ✓ attempt          第13題選項
-    ✓ cocoa            第4題選項、第5題選項
+    ✓ cocoa            第4題圖片、第5題圖片
     ✓ balance          第12題選項
     ✓ grocery          第10題正解、第26題錄音稿
     ✓ scholar          第8題選項、第30題錄音稿
@@ -45,7 +45,7 @@
     ✓ immigration      第10題選項
     ✓ cottage          第11題選項、第24題錄音稿
     ✓ glimpse          第9題選項
-    ✓ welfare          第22題選項
+    ✓ welfare          第21題選項
     ✓ rebel            第10題選項
     ✓ isolate          第14題選項
     ✓ regulate         第23題錄音稿
@@ -85,10 +85,10 @@
     ✓ oak              第14題選項、第24題錄音稿
     ✓ fluent           第28題錄音稿
     ✓ impact           第30題錄音稿
-    ✓ tight            第22題錄音稿
+    ✓ tight            第21題錄音稿
     ✓ colony           第9題選項
     ✓ dock             第33題錄音稿
-    ✓ despite          第25題選項
+    ✓ despite          第25題錄音稿
     ✓ concrete         第17題選項
 
 合計：78/78 字（100%）

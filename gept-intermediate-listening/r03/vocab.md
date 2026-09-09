@@ -7,10 +7,10 @@
 
 【主題字】23/23 命中
     ✓ account          第6題題目、第16題選項
-    ✓ budget           第4題正解、第17題錄音稿
+    ✓ budget           第4題圖片、第17題錄音稿
     ✓ capital          第13題題目
     ✓ credit           第16題正解
-    ✓ deposit          第2題正解、第6題正解
+    ✓ deposit          第1題圖片、第2題正解
     ✓ earnings         第2題選項、第20題錄音稿
     ✓ economic         第21題錄音稿
     ✓ economical       第18題錄音稿
@@ -18,17 +18,17 @@
     ✓ economist        第15題正解、第30題錄音稿
     ✓ economy          第7題題目、第30題錄音稿
     ✓ expense          第7題正解
-    ✓ financial        第5題選項、第20題錄音稿
-    ✓ insurance        第4題選項、第5題選項
+    ✓ financial        第5題圖片、第20題錄音稿
+    ✓ insurance        第4題圖片、第5題圖片
     ✓ investment       第10題題目、第33題圖表
     ✓ investor         第13題正解
     ✓ loan             第9題題目、第16題選項
-    ✓ mortgage         第5題正解
+    ✓ mortgage         第5題圖片
     ✓ recession        第7題題目、第30題錄音稿
     ✓ salary           第8題題目、第17題錄音稿
-    ✓ saving           第4題選項、第6題題目
+    ✓ saving           第4題圖片、第6題題目
     ✓ stock            第10題題目、第30題錄音稿
-    ✓ tax              第5題選項、第14題題目
+    ✓ tax              第5題圖片、第14題題目
 
 【通用字】29/29 命中
     ✓ fit              第19題錄音稿
@@ -39,7 +39,7 @@
     ✓ fold             第2題選項、第8題選項
     ✓ locate           第12題選項
     ✓ multiply         第20題正解
-    ✓ entry            第6題選項、第33題錄音稿
+    ✓ entry            第6題選項
     ✓ request          第9題選項
     ✓ release          第11題選項
     ✓ bind             第12題選項
@@ -49,7 +49,7 @@
     ✓ dense            第9題選項
     ✓ explosion        第8題選項
     ✓ consumer         第30題錄音稿
-    ✓ consult          第5題選項、第10題正解
+    ✓ consult          第5題圖片、第10題正解
     ✓ intimate         第14題選項
     ✓ prime            第13題選項
     ✓ imitate          第10題選項

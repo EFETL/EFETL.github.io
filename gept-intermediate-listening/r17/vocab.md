@@ -16,7 +16,7 @@
     ✓ motel            第10題題目、第17題錄音稿
     ✓ sightseeing      第4題圖片、第5題圖片
     ✓ souvenir         第8題題目、第16題選項
-    ✓ tourism          第11題題目、第32題錄音稿
+    ✓ tourism          第11題題目、第31題錄音稿
 
 【通用字】41/41 命中
     ✓ shorts           第14題正解
@@ -59,7 +59,7 @@
     ✓ simplify         第9題選項
     ✓ moustache        第8題選項、第15題選項
     ✓ typist           第6題選項
-    ✓ nonetheless      第11題選項、第32題錄音稿
+    ✓ nonetheless      第11題選項、第31題錄音稿
     － 依規定排除：gay
 
 【衍生字】12/12 命中

@@ -11,13 +11,13 @@
     ✓ digest           第6題正解、第14題正解
     ✓ digestion        第6題正解、第19題錄音稿
     ✓ flesh            第16題錄音稿
-    ✓ grain            第4題選項、第6題題目
-    ✓ gum              第4題選項、第24題錄音稿
+    ✓ grain            第4題圖片、第6題題目
+    ✓ gum              第4題圖片、第24題錄音稿
     ✓ nutrient         第3題題目、第8題正解
-    ✓ nutrition        第15題題目、第21題圖表
-    ✓ protein          第3題正解、第5題正解
-    ✓ syrup            第4題選項、第11題題目
-    ✓ vitamin          第3題選項、第22題錄音稿
+    ✓ nutrition        第3題圖片、第15題題目
+    ✓ protein          第3題圖片、第5題圖片
+    ✓ syrup            第4題圖片、第11題題目
+    ✓ vitamin          第3題圖片、第21題錄音稿
 
 【通用字】40/40 命中
     ✓ strict           第6題選項、第26題錄音稿
@@ -28,7 +28,7 @@
     ✓ wicked           第9題選項
     ✓ whistle          第7題選項
     ✓ text             第8題選項
-    ✓ sum              第8題選項、第22題錄音稿
+    ✓ sum              第8題選項、第21題錄音稿
     ✓ wagon            第1題選項
     ✓ bead             第7題選項
     ✓ apology          第8題選項
@@ -37,7 +37,7 @@
     ✓ occasion         第14題選項
     ✓ specific         第11題題目
     ✓ enable           第9題選項
-    ✓ explosive        第33題錄音稿、第35題正解
+    ✓ explosive        第33題錄音稿
     ✓ durable          第13題題目
     ✓ instructor       第12題選項、第19題錄音稿
     ✓ accord           第3題題目、第23題錄音稿
@@ -48,7 +48,7 @@
     ✓ criticism        第8題選項
     ✓ collapse         第10題選項
     ✓ tendency         第13題選項
-    ✓ remarkable       第14題選項、第22題錄音稿
+    ✓ remarkable       第14題選項、第21題錄音稿
     ✓ microscope       第1題選項
     ✓ distinguish      第10題正解
     ✓ declaration      第11題選項
@@ -64,11 +64,11 @@
 【衍生字】11/11 命中
     ✓ commander        第6題選項
     ✓ concerning       第6題選項
-    ✓ considerable     第15題正解、第22題錄音稿
+    ✓ considerable     第15題正解、第21題錄音稿
     ✓ consideration    第15題題目
     ✓ container        第11題正解、第13題題目
-    ✓ continual        第13題正解
-    ✓ continuous       第30題錄音稿
+    ✓ continual        第30題錄音稿
+    ✓ continuous       第13題正解
     ✓ cooker           第1題選項
     ✓ costly           第6題選項
     ✓ counter          第1題題目、第15題選項

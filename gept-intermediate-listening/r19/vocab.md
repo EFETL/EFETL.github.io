@@ -36,7 +36,7 @@
     ✓ icy              第7題選項、第14題選項
     ✓ tease            第8題選項、第14題選項
     ✓ coconut          第1題選項、第7題選項
-    ✓ intend           第8題選項、第32題錄音稿
+    ✓ intend           第8題選項、第31題錄音稿
     ✓ ginger           第6題選項、第14題選項
     ✓ defensive        第8題選項
     ✓ reputation       第8題選項
@@ -50,7 +50,7 @@
     ✓ dynasty          第6題選項、第14題選項
     ✓ circumstance     第9題選項
     ✓ dye              第9題選項、第15題選項
-    ✓ flea             第10題選項、第15題選項
+    ✓ flea             第15題選項
     ✓ recommend        第8題選項
     ✓ coincidence      第10題選項
     ✓ democrat         第10題選項、第15題選項
@@ -59,7 +59,7 @@
     ✓ resistant        第10題選項
     ✓ grown-up         第8題選項、第14題選項
     ✓ frozen           第7題正解、第9題選項
-    ✓ unexpected       第10題選項、第32題錄音稿
+    ✓ unexpected       第10題選項、第31題錄音稿
     － 依規定排除：suicide
 
 【衍生字】14/14 命中
@@ -72,7 +72,7 @@
     ✓ learning         第11題選項
     ✓ legend           第6題選項
     ✓ lengthen         第11題選項
-    ✓ lifestyle        第8題選項、第13題選項
+    ✓ lifestyle        第8題選項
     ✓ lifetime         第11題選項
     ✓ lighten          第11題選項、第13題選項
     ✓ lighthouse       第2題選項、第11題選項

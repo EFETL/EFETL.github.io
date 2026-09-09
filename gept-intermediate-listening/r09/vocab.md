@@ -33,7 +33,7 @@
     ✓ definition       第12題選項
     ✓ rumor            第7題選項、第14題選項
     ✓ routine          第12題選項、第16題正解
-    ✓ vase             第2題選項、第6題選項
+    ✓ vase             第2題選項、第8題選項
     ✓ jelly            第2題選項
     ✓ mathematical     第6題選項
     ✓ spite            第6題選項

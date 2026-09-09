@@ -6,7 +6,7 @@
 單字第 18 回：交通與駕駛
 
 【主題字】12/12 命中
-    ✓ aboard           第9題題目、第35題錄音稿
+    ✓ aboard           第9題題目、第34題錄音稿
     ✓ automobile       第4題圖片、第15題題目
     ✓ brake            第5題圖片、第7題題目
     ✓ carriage         第8題題目、第18題正解
@@ -29,12 +29,12 @@
     ✓ jar              第1題選項、第8題選項
     ✓ civil            第9題選項、第13題選項
     ✓ pure             第8題選項、第13題選項
-    ✓ scout            第6題選項、第13題選項
+    ✓ scout            第6題選項
     ✓ appeal           第8題選項、第13題選項
     ✓ mission          第8題選項
     ✓ ambition         第6題選項、第14題選項
-    ✓ worm             第6題選項、第15題選項
-    ✓ slice            第8題選項、第15題選項
+    ✓ worm             第6題選項
+    ✓ slice            第15題選項
     ✓ joyful           第6題選項、第15題選項
     ✓ indoors          第10題選項、第15題選項
     ✓ interact         第11題選項
@@ -53,7 +53,7 @@
     ✓ companion        第8題選項、第15題選項
     ✓ gravity          第6題選項
     ✓ torch            第1題選項、第6題選項
-    ✓ destination      第12題選項、第35題圖表
+    ✓ destination      第12題選項、第34題圖表
     ✓ inherit          第11題選項
     ✓ compute          第11題選項
     ✓ caption          第11題選項
@@ -84,9 +84,9 @@
     ✓ moisture         第9題選項、第13題選項
     ✓ hush             第7題選項
     ✓ influential      第10題選項
-    ✓ gene             第7題選項、第13題選項
+    ✓ gene             第7題選項
     ✓ predict          第9題選項、第13題選項
-    ✓ melt             第9題選項、第13題選項
+    ✓ melt             第9題選項
     ✓ analyze          第7題選項、第15題選項
     ✓ satellite        第9題選項、第15題選項
     ✓ messy            第7題選項

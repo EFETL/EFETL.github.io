@@ -11,7 +11,7 @@
     ✓ cave             第3題圖片、第6題題目
     ✓ cliff            第3題圖片、第14題選項
     ✓ continent        第10題題目、第21題錄音稿
-    ✓ continental      第13題題目、第35題錄音稿
+    ✓ continental      第13題題目、第34題錄音稿
     ✓ damp             第5題圖片、第8題題目
     ✓ drought          第9題題目、第19題錄音稿
     ✓ frost            第5題圖片、第12題題目
@@ -27,7 +27,7 @@
     ✓ stretch          第6題選項
     ✓ burden           第8題選項、第13題選項
     ✓ puppet           第1題選項、第6題選項
-    ✓ racial           第7題選項、第12題選項
+    ✓ racial           第7題選項
     ✓ spinach          第7題選項、第12題選項
     ✓ dam              第6題選項、第13題選項
     ✓ wipe             第6題選項、第13題選項
@@ -37,17 +37,17 @@
     ✓ rotten           第6題選項、第10題選項
     ✓ bloody           第9題選項
     ✓ pat              第7題選項、第15題選項
-    ✓ tame             第7題選項、第13題選項
+    ✓ tame             第7題選項
     ✓ crawl            第6題選項、第12題選項
     ✓ eliminate        第8題選項、第13題選項
     ✓ logical          第7題選項、第15題選項
-    ✓ definite         第7題選項、第13題選項
+    ✓ definite         第7題選項
     ✓ abnormal         第8題選項
     ✓ timid            第6題選項、第14題選項
     ✓ genuine          第7題選項、第15題選項
     ✓ consultant       第6題選項、第12題選項
     ✓ calculate        第6題選項、第12題選項
-    ✓ protest          第7題選項、第14題選項
+    ✓ protest          第14題選項
     ✓ brutal           第8題選項、第13題選項
     ✓ encounter        第8題選項
     ✓ capacity         第6題選項、第12題選項
@@ -61,7 +61,7 @@
     ✓ hopefully        第9題選項、第13題選項
 
 【衍生字】12/12 命中
-    ✓ lipstick         第2題選項、第9題選項
+    ✓ lipstick         第2題選項、第14題選項
     ✓ listener         第9題選項、第13題選項
     ✓ literary         第9題選項、第15題選項
     ✓ loneliness       第9題選項、第13題選項

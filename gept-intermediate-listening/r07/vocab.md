@@ -7,18 +7,18 @@
 
 【主題字】15/15 命中
     ✓ ache             第6題題目、第16題選項
-    ✓ clinic           第2題正解、第13題題目
+    ✓ clinic           第2題正解、第3題圖片
     ✓ cripple          第11題正解
     ✓ heal             第7題正解、第30題錄音稿
     ✓ illness          第24題錄音稿
-    ✓ infect           第7題題目、第18題正解
-    ✓ infection        第5題選項、第7題題目
+    ✓ infect           第5題圖片、第7題題目
+    ✓ infection        第5題圖片、第7題題目
     ✓ injure           第11題題目
     ✓ medical          第26題錄音稿
     ✓ physician        第1題題目、第13題正解
     ✓ remedy           第10題題目、第19題錄音稿
     ✓ surgeon          第3題題目、第9題正解
-    ✓ surgery          第13題正解、第28題選項
+    ✓ surgery          第3題圖片、第13題正解
     ✓ symptom          第4題題目
     ✓ therapy          第12題正解、第17題正解
 

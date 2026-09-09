@@ -7,15 +7,15 @@
 
 【主題字】17/17 命中
     ✓ amateur          第6題正解、第13題題目
-    ✓ athlete          第2題正解、第5題題目
+    ✓ athlete          第1題題目、第2題正解
     ✓ athletic         第25題圖表、第28題錄音稿
     ✓ champion         第2題選項、第11題題目
-    ✓ championship     第1題選項、第3題題目
+    ✓ championship     第1題選項、第3題圖片
     ✓ compete          第6題題目、第22題錄音稿
     ✓ condition        第9題正解、第28題錄音稿
     ✓ contest          第2題正解、第30題錄音稿
-    ✓ cricket          第4題正解、第14題題目
-    ✓ dash             第5題選項
+    ✓ cricket          第4題圖片、第14題題目
+    ✓ dash             第5題圖片
     ✓ muscle           第16題錄音稿、第21題圖表
     ✓ pitch            第15題題目、第33題圖表
     ✓ sound            第28題錄音稿

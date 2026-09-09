@@ -6,7 +6,7 @@
 單字第 01 回：職場・求職與面試
 
 【主題字】21/21 命中
-    ✓ administration   第6題選項、第33題圖表
+    ✓ administration   第4題圖片、第6題選項
     ✓ appointment      第11題題目、第19題錄音稿
     ✓ associate        第24題錄音稿
     ✓ bureau           第12題選項、第28題錄音稿
@@ -14,19 +14,19 @@
     ✓ conference       第2題選項、第14題正解
     ✓ crew             第3題選項、第10題選項
     ✓ employee         第2題正解、第23題題目
-    ✓ executive        第4題題目、第30題錄音稿
+    ✓ executive        第4題圖片、第30題錄音稿
     ✓ file             第1題選項、第7題選項
     ✓ occupation       第8題題目
-    ✓ profession       第16題錄音稿
+    ✓ profession       第5題圖片、第16題錄音稿
     ✓ professional     第6題選項
-    ✓ researcher       第3題選項、第5題選項
+    ✓ researcher       第3題選項、第5題圖片
     ✓ retire           第10題題目、第30題錄音稿
-    ✓ sector           第9題選項、第12題正解
+    ✓ sector           第4題圖片、第9題選項
     ✓ session          第11題正解、第24題錄音稿
     ✓ shopkeeper       第3題選項、第9題選項
-    ✓ staff            第2題選項、第23題錄音稿
+    ✓ staff            第2題選項、第5題圖片
     ✓ supervisor       第2題正解、第13題題目
-    ✓ technician       第2題選項、第5題正解
+    ✓ technician       第2題選項、第5題圖片
 
 【通用字】31/31 命中
     ✓ depth            第8題正解
@@ -55,7 +55,7 @@
     ✓ decoration       第10題選項
     ✓ wilderness       第14題選項
     ✓ devotion         第10題正解
-    ✓ analyst          第5題選項、第13題選項
+    ✓ analyst          第5題圖片、第13題選項
     ✓ infer            第15題題目
     ✓ assassinate      第14題選項
     ✓ inference        第15題選項

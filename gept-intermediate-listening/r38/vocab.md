@@ -16,7 +16,7 @@
     ✓ representative   第7題題目
     ✓ tag              第2題選項、第23題選項
     ✓ tend             第15題選項
-    ✓ valuable         第10題題目、第23題錄音稿
+    ✓ valuable         第23題錄音稿、第29題錄音稿
     ✓ aspect           第7題選項
     ✓ nickname         第7題選項、第15題選項
     ✓ shallow          第7題選項、第13題選項

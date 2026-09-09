@@ -10,7 +10,7 @@
     ✓ afford           第4題題目、第6題題目
     ✓ agency           第11題題目、第18題錄音稿
     ✓ boycott          第8題題目、第19題錄音稿
-    ✓ brand            第1題選項、第5題正解
+    ✓ brand            第1題選項、第5題圖片
     ✓ campaign         第9題題目、第24題錄音稿
     ✓ client           第2題正解、第13題題目
     ✓ commerce         第14題選項
