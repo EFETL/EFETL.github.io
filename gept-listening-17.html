@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEPT 初級 聽力測驗　第17回　交通工具</title>
+<style>
+  :root{
+    --blue:#2b8cff; --blue-dark:#1f6fe0;
+    --coral:#ff7a59; --amber:#ffb02e; --pink:#ff5d8f;
+    --bg:#f3f9ff; --card:#ffffff; --line:#e3edf9;
+    --green:#22b573; --green-bg:#e4f8ef;
+    --red:#ff5a5a; --red-bg:#ffecec;
+    --gray:#6b7785;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;
+    background:linear-gradient(180deg,#fff5ec,#fff9f4 70%);color:#22303f;line-height:1.6;
+    -webkit-text-size-adjust:100%;}
+  .wrap{max-width:760px;margin:0 auto;padding:16px;}
+  header.top{background:linear-gradient(135deg,#f6d365,#fda085 60%,#ff7a9c);color:#fff;
+    border-radius:18px;padding:24px 22px;margin-bottom:16px;box-shadow:0 8px 22px rgba(253,160,133,.35);}
+  header.top h1{margin:0 0 6px;font-size:1.5rem;text-shadow:0 1px 2px rgba(0,0,0,.14);}
+  header.top p{margin:0;font-size:.92rem;opacity:.96;}
+  .meta{margin-top:14px;font-size:.86rem;background:rgba(255,255,255,.24);
+    padding:9px 13px;border-radius:10px;}
+  .notice{background:#fffbeb;border:1.5px solid #f59e0b;border-radius:12px;
+    padding:11px 15px;margin-bottom:14px;font-size:.86rem;color:#78350f;
+    display:flex;align-items:flex-start;gap:9px;line-height:1.55;}
+  .notice .ic{font-size:1.1rem;flex-shrink:0;margin-top:1px;}
+  .sticky{position:sticky;top:0;z-index:20;padding:10px 0;
+    background:linear-gradient(180deg,#fff5ec 70%,rgba(255,245,236,0));}
+  .bar{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:11px 16px;display:flex;align-items:center;gap:12px;font-size:.9rem;
+    box-shadow:0 4px 12px rgba(253,160,133,.14);}
+  .bar .track{flex:1;height:9px;background:#f1e4dc;border-radius:6px;overflow:hidden;}
+  .bar .fill{height:100%;width:0;border-radius:6px;
+    background:linear-gradient(90deg,#ffb02e,#ff7a59);transition:width .35s;}
+  .bar #count{font-weight:700;color:#e0740a;}
+  .section-title{color:#fff;font-weight:800;border-radius:12px;
+    padding:10px 16px;margin:24px 0 6px;font-size:1.05rem;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);}
+  .section-title.s0{background:linear-gradient(135deg,#ff9a6c,#ff6f91);}
+  .section-title.s1{background:linear-gradient(135deg,#4dd0e1,#2b8cff);}
+  .section-title.s2{background:linear-gradient(135deg,#9b8bff,#b06bff);}
+  .section-title.s3{background:linear-gradient(135deg,#43cea2,#3ab0d6);}
+  .section-desc{font-size:.86rem;color:var(--gray);margin:0 4px 10px;}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:15px 17px;margin:12px 0;box-shadow:0 3px 10px rgba(253,160,133,.09);}
+  .qhead{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+  .qhead .num{display:inline-block;color:#fff;background:var(--coral);font-weight:700;
+    border-radius:8px;padding:1px 10px;font-size:.92rem;}
+  .play{display:inline-flex;align-items:center;gap:7px;border:0;cursor:pointer;
+    color:#fff;font-weight:800;font-size:.92rem;border-radius:22px;padding:8px 16px;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);box-shadow:0 4px 12px rgba(255,93,143,.3);}
+  .play:active{transform:translateY(1px);}
+  .play.playing{background:linear-gradient(135deg,#22b573,#1a9e63);}
+  .play .wave{font-size:.8rem;opacity:.9;}
+  .hintq{font-size:.8rem;color:var(--gray);}
+  .fig{text-align:center;margin:4px 0 12px;}
+  .fig svg{max-width:100%;height:auto;}
+  .pic-img{border-radius:9px;border:1px solid #e6ded7;object-fit:cover;}
+  .fig .pic-img{max-width:230px;width:100%;max-height:150px;}
+  .opt{display:flex;align-items:flex-start;gap:10px;border:2px solid var(--line);
+    border-radius:11px;padding:10px 13px;margin:8px 0;cursor:pointer;transition:.15s;
+    font-size:.95rem;background:#fbfdff;}
+  .opt:hover{border-color:var(--coral);background:#fff4ee;}
+  .opt input{margin-top:3px;accent-color:var(--coral);}
+  .opt .lab{font-weight:800;color:var(--coral);min-width:18px;}
+  .opt.sel{border-color:var(--coral);background:#ffeee6;}
+  .opt.correct{border-color:var(--green);background:var(--green-bg);}
+  .opt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .opt.lock{cursor:default;}
+  /* picture options (Part 4) */
+  .picopts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:6px 0;}
+  .picopt{border:2px solid var(--line);border-radius:12px;padding:9px 6px;cursor:pointer;
+    text-align:center;transition:.15s;background:#fbfdff;display:flex;flex-direction:column;align-items:center;gap:6px;}
+  .picopt:hover{border-color:var(--coral);background:#fff4ee;}
+  .picopt.sel{border-color:var(--coral);background:#ffeee6;}
+  .picopt.correct{border-color:var(--green);background:var(--green-bg);}
+  .picopt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .picopt .lab{font-weight:800;color:var(--coral);align-self:flex-start;margin-left:4px;}
+  .picopt.correct .lab{color:var(--green);}.picopt.wrong .lab{color:var(--red);}
+  .picopt img.pic-img{width:100%;height:82px;}
+  .picopt svg{width:100%;max-width:132px;height:auto;}
+  .picopt svg.chart{max-width:100%;}
+  .legend{display:flex;gap:12px;justify-content:center;font-size:.72rem;margin:2px 0 6px;color:#556;flex-wrap:wrap;}
+  .legend i{display:inline-block;width:11px;height:11px;border:1px solid #999;margin-right:4px;vertical-align:-1px;}
+  table.mini{border-collapse:collapse;font-size:.62rem;margin:0 auto;}
+  table.mini th{background:#33414f;color:#fff;padding:2px 4px;}
+  table.mini td{border:1px solid #bbb;padding:2px 4px;text-align:center;}
+  .board{background:#111;color:#ffd24a;border-radius:5px;padding:5px;font-family:"Courier New",monospace;display:inline-block;}
+  .board table{border-collapse:collapse;font-size:.6rem;color:#ffd24a;}
+  .board th{color:#7fd7ff;padding:1px 4px;border-bottom:1px solid #444;}
+  .board td{padding:1px 4px;text-align:center;}
+  .exp{display:none;margin-top:11px;border-top:2px dashed #ffe1c2;padding-top:11px;font-size:.9rem;}
+  .exp.show{display:block;}
+  .exp .tag{display:inline-block;font-weight:800;color:#fff;background:var(--green);
+    border-radius:7px;padding:2px 10px;font-size:.8rem;margin-bottom:7px;}
+  .exp .tag.miss{background:var(--red);}
+  .exp .scriptbox{background:#f4f8ff;border-radius:8px;padding:7px 11px;margin:5px 0;font-size:.88rem;color:#20364d;}
+  .exp .scriptbox b{color:var(--blue-dark);}
+  .exp .en{color:#1c4f7a;background:#eef7ff;border-radius:8px;padding:6px 10px;margin:5px 0;}
+  .exp .zh{color:#7a4a12;background:#fff7ea;border-radius:8px;padding:6px 10px;margin:5px 0;}
+  .actions{position:sticky;bottom:0;padding:14px 0 6px;margin-top:18px;
+    background:linear-gradient(transparent,#fff9f4 35%);}
+  button.submit{width:100%;color:#fff;border:0;border-radius:14px;padding:16px;
+    font-size:1.08rem;font-weight:800;cursor:pointer;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);
+    box-shadow:0 6px 16px rgba(255,93,143,.35);}
+  button.submit:active{transform:translateY(1px);}
+  button.reset{width:100%;background:#fff;color:var(--coral);border:2px solid var(--coral);
+    border-radius:14px;padding:14px;font-size:1rem;font-weight:800;cursor:pointer;margin-top:10px;display:none;}
+  .result{display:none;background:var(--card);border:3px solid transparent;border-radius:16px;
+    padding:22px;margin:16px 0;text-align:center;
+    background-image:linear-gradient(#fff,#fff),linear-gradient(135deg,#ffb02e,#ff7a59,#ff5d8f);
+    background-origin:border-box;background-clip:padding-box,border-box;
+    box-shadow:0 8px 22px rgba(255,122,89,.18);}
+  .result.show{display:block;}
+  .result .score{font-size:2.8rem;font-weight:900;
+    background:linear-gradient(135deg,#ff7a59,#ff5d8f);-webkit-background-clip:text;
+    background-clip:text;-webkit-text-fill-color:transparent;}
+  .result .sub{color:var(--gray);font-size:.95rem;}
+  .result .bd{display:flex;justify-content:center;gap:18px;margin-top:12px;flex-wrap:wrap;font-size:.95rem;}
+  .result .bd span{font-weight:800;}
+  .hint{text-align:center;font-size:.85rem;color:var(--gray);margin-top:9px;min-height:1.2em;}
+  footer{text-align:center;color:var(--gray);font-size:.8rem;margin:24px 0;}
+</style>
+<!-- EFETL-PWA -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#7C4DFF">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="EFETL">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}</script>
+<!-- /EFETL-PWA -->
+</head>
+<body>
+<a href="gept-listening.html" style="position:fixed;top:12px;left:12px;background:rgba(255,255,255,.92);color:#ff6f91;padding:7px 15px;border-radius:20px;text-decoration:none;font-size:.85rem;font-weight:800;z-index:999;box-shadow:0 3px 10px rgba(0,0,0,.15);">&#8592; 回聽力題庫</a>
+<div class="wrap">
+  <header class="top">
+    <h1>GEPT 初級　聽力測驗　<span style="opacity:.9">第17回　交通工具</span></h1>
+    <p>互動聽力練習　&middot;　依官方四大題型與難度命題</p>
+    <div class="meta">共 4 大題、30 題　|　每題按 🔊 播放，聆聽後作答　|　送出後顯示聽力原文、中英解析與分數</div>
+  </header>
+
+  <div class="notice">
+    <span class="ic">🎧</span>
+    <span>每題皆附<strong>語音朗讀音檔</strong>，iPhone、Android 各廠牌手機與電腦瀏覽器皆可播放（請開啟媒體音量）。點各題的 <strong>🔊 播放</strong> 鈕聆聽；正式考試每題只播一次，練習時可重播。</span>
+  </div>
+
+  <a href="gept-listening-17-print.html" style="display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #ffb703;color:#8a5a00;border-radius:12px;padding:11px 16px;margin-bottom:18px;text-decoration:none;font-size:.9rem;font-weight:700;box-shadow:0 3px 10px rgba(255,183,3,.16);">
+    <span>🖨</span><span>列印版（學生卷／教師卷）— 適合課堂紙本練習與批改，可直接列印或存成 PDF</span>
+  </a>
+
+  <div class="sticky">
+    <div class="bar">
+      <span>作答進度</span>
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <span id="count">0 / 30</span>
+    </div>
+  </div>
+
+  <form id="quiz"></form>
+
+  <div class="result" id="result">
+    <div class="score" id="scoreNum">0</div>
+    <div class="sub" id="scoreTxt">分</div>
+    <div class="bd">
+      <span style="color:var(--green)">答對 <b id="rOk">0</b></span>
+      <span style="color:var(--red)">答錯 <b id="rNo">0</b></span>
+      <span style="color:var(--gray)">未作答 <b id="rBlank">0</b></span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="submit" id="submitBtn">送出並查看解析</button>
+    <div class="hint" id="hint">尚未作答任何題目</div>
+    <button type="button" class="reset" id="resetBtn">重新作答</button>
+  </div>
+
+  <footer>GEPT 初級聽力　互動練習　&middot;　第二顆腦 / GEPT初級</footer>
+</div>
+
+<script>
+/* ====== 圖形素材（第17回 交通工具） ====== */
+const IMG = n => `<img class="pic-img" src="gept-listening-img/17/${n}.jpg" alt="${n}">`;
+const BARS=(title,labs,vals)=>{const max=Math.max(...vals),bw=28,gap=18,x0=20;let b='',l='';
+ labs.forEach((L,i)=>{const h=Math.round(vals[i]/max*70),x=x0+i*(bw+gap);
+  b+=`<rect x="${x}" y="${100-h}" width="${bw}" height="${h}" fill="#e9e9e9" stroke="#1a1a1a" stroke-width="1.5"/>`;
+  l+=`<text x="${x+bw/2}" y="116">${L}</text>`;});
+ return `<svg class="chart" width="176" height="132" viewBox="0 0 176 132"><text x="88" y="15" text-anchor="middle" font-size="14" font-weight="700">${title}</text><line x1="16" y1="22" x2="16" y2="100" stroke="#1a1a1a" stroke-width="1.5"/><line x1="16" y1="100" x2="170" y2="100" stroke="#1a1a1a" stroke-width="1.5"/>${b}<g font-size="11" text-anchor="middle">${l}</g></svg>`;};
+const BICYCLE=`<svg width="140" height="94" viewBox="0 0 140 96"><circle cx="34" cy="66" r="22" fill="none" stroke="#1a1a1a" stroke-width="3"/><circle cx="104" cy="66" r="22" fill="none" stroke="#1a1a1a" stroke-width="3"/><path d="M34 66 L60 34 h20 M60 34 l16 32 M104 66 L82 34" fill="none" stroke="#e6007e" stroke-width="3" stroke-linejoin="round"/><line x1="52" y1="34" x2="66" y2="34" stroke="#1a1a1a" stroke-width="3" stroke-linecap="round"/><line x1="34" y1="66" x2="60" y2="66" stroke="#e6007e" stroke-width="3"/></svg>`;
+const BUS=`<svg width="140" height="96" viewBox="0 0 140 98"><rect x="16" y="24" width="108" height="52" rx="8" fill="#ffb703" stroke="#1a1a1a" stroke-width="2.5"/><g fill="#a5d8ff" stroke="#1a1a1a" stroke-width="1.5"><rect x="24" y="32" width="18" height="18"/><rect x="48" y="32" width="18" height="18"/><rect x="72" y="32" width="18" height="18"/><rect x="98" y="32" width="18" height="18"/></g><circle cx="42" cy="80" r="9" fill="#333" stroke="#1a1a1a" stroke-width="2"/><circle cx="100" cy="80" r="9" fill="#333" stroke="#1a1a1a" stroke-width="2"/><rect x="16" y="58" width="108" height="6" fill="#e6007e"/></svg>`;
+const CAR=`<svg width="140" height="90" viewBox="0 0 140 92"><path d="M14 66 v-14 l20 -4 l14 -16 h32 l18 20 h24 v14 z" fill="#e53935" stroke="#1a1a1a" stroke-width="2.5" stroke-linejoin="round"/><path d="M42 48 l8 -12 h24 l12 12 z" fill="#a5d8ff" stroke="#1a1a1a" stroke-width="1.5"/><circle cx="42" cy="70" r="11" fill="#333" stroke="#1a1a1a" stroke-width="2.5"/><circle cx="102" cy="70" r="11" fill="#333" stroke="#1a1a1a" stroke-width="2.5"/><ellipse cx="42" cy="88" rx="6" ry="2" fill="#888"/></svg>`;
+const BRIDGE=`<svg width="150" height="92" viewBox="0 0 150 94"><line x1="8" y1="40" x2="142" y2="40" stroke="#1a1a1a" stroke-width="4"/><path d="M8 40 q67 -34 134 0" fill="none" stroke="#e6007e" stroke-width="3"/><g stroke="#8a5a2b" stroke-width="2"><line x1="30" y1="40" x2="30" y2="24"/><line x1="55" y1="40" x2="55" y2="16"/><line x1="75" y1="40" x2="75" y2="14"/><line x1="95" y1="40" x2="95" y2="16"/><line x1="120" y1="40" x2="120" y2="24"/></g><g stroke="#1a1a1a" stroke-width="2"><line x1="20" y1="40" x2="20" y2="76"/><line x1="130" y1="40" x2="130" y2="76"/></g><line x1="8" y1="76" x2="142" y2="76" stroke="#aeb8c4" stroke-width="6"/></svg>`;
+const TRAFFICLIGHT=`<svg width="72" height="114" viewBox="0 0 72 116"><rect x="22" y="10" width="28" height="76" rx="8" fill="#333" stroke="#1a1a1a" stroke-width="2"/><circle cx="36" cy="28" r="9" fill="#e53935"/><circle cx="36" cy="48" r="9" fill="#ffd166"/><circle cx="36" cy="68" r="9" fill="#43a047"/><line x1="36" y1="86" x2="36" y2="106" stroke="#1a1a1a" stroke-width="4"/></svg>`;
+/* ====== 大題 ====== */
+const PARTS=[
+ {t:"第一大題　看圖辨義",d:"共 5 題（1–5）。看圖並聆聽問題，從 A、B、C 三個選項中選出最適合的答案。"},
+ {t:"第二大題　問答",d:"共 10 題（6–15）。聆聽一個問句或直述句，選出最適合的回答。"},
+ {t:"第三大題　簡短對話",d:"共 10 題（16–25）。聆聽一段對話與問題，選出最適合的答案。"},
+ {t:"第四大題　短文聽解",d:"共 5 題（26–30）。聆聽一段短文與問題，從三張圖片中選出最適合的一張。"}
+];
+
+
+
+/* ====== 題庫（第17回 交通工具） ====== */
+const Q=[
+{n:1,p:0,fig:BICYCLE,o:["A boy rides a bicycle along the road.","The bus is full of noisy passengers.","The driver fixes a flat tire."],a:0,
+ sen:"For question one, look at the picture. What is the boy riding?",szh:"第一題，請看圖片。男孩在騎什麼？",
+ en:"A bicycle along the road.",zh:"男孩沿著路(road)騎腳踏車(bicycle)，選 A。bus/noisy/passenger、driver/flat tire 為干擾。"},
+{n:2,p:0,fig:BUS,o:["The hunter examines the blood.","The lover tells the truth.","A bus with many passengers stops here."],a:2,
+ sen:"For question two, look at the picture. What is at the stop?",szh:"第二題，請看圖片。站牌邊是什麼？",
+ en:"A bus with passengers stops here.",zh:"一輛載滿乘客(passenger)的公車(bus)在此停(stop)靠，選 C。hunter/examine/blood、lover/truth 為干擾。"},
+{n:3,p:0,fig:CAR,o:["The crayon is pale.","The car has a flat tire, and the driver waits by the road.","A blind man please takes the bus."],a:1,
+ sen:"For question three, look at the picture. What is wrong with the car?",szh:"第三題，請看圖片。車子怎麼了？",
+ en:"The car has a flat tire; the driver waits.",zh:"汽車(car)爆胎(flat tire)，駕駛(driver)在路邊等，選 B。crayon/pale、blind/please/take 為干擾。"},
+{n:4,p:0,fig:BRIDGE,o:["A long bridge crosses over the busy highway.","The activity is childish.","We work only after noon."],a:0,
+ sen:"For question four, look at the picture. What crosses the river?",szh:"第四題，請看圖片。什麼橫跨河流？",
+ en:"A long bridge over the highway.",zh:"一座長橋(bridge)跨越繁忙的公路(highway)，選 A。activity/childish、work/only/after/noon 為干擾。"},
+{n:5,p:0,fig:TRAFFICLIGHT,o:["The planet shines tonight.","The hunter rejects the fever.","A traffic light controls the busy way."],a:2,
+ sen:"For question five, look at the picture. What controls the cars?",szh:"第五題，請看圖片。什麼在管制車輛？",
+ en:"A traffic light controls the way.",zh:"一個紅綠燈(traffic light)管制繁忙的道路(way)，選 C。planet/tonight、hunter/reject/fever 為干擾。"},
+
+{n:6,p:1,o:["The blind man hears the bus.","I will use the highway tonight, when the planet shines bright.","The activity is childish."],a:1,
+ sen:"Which road will you use tonight?",szh:"你今晚要走哪條路？",
+ en:"I'll use the highway tonight; the planet shines.",zh:"問今晚(tonight)走哪條路，答『我今晚走高速公路(highway/use)，那時星球(planet)閃亮』，選 B。blind/hear/bus、activity/childish 為干擾。"},
+{n:7,p:1,o:["Yes, it is noisy but very popular, and it will shake a little.","The lover is intelligent.","The crayon is pale."],a:0,
+ sen:"Is the old train comfortable?",szh:"這班舊火車舒服嗎？",
+ en:"Noisy but popular; it will shake a little.",zh:"問火車舒不舒服，答『很吵(noisy)但很受歡迎(popular)，會有點搖晃(shake)』，選 A。lover/intelligent、crayon/pale 為干擾。"},
+{n:8,p:1,o:["The car has a flat tire.","The driver works after noon.","Please help; take the blind man on board and let him hear the horn."],a:2,
+ sen:"How can we help the blind passenger?",szh:"我們怎麼幫助這位失明的乘客？",
+ en:"Please take the blind man; let him hear the horn.",zh:"問怎麼幫失明乘客，答『請(please)幫忙，帶(take)這位失明(blind)的人上車，讓他聽(hear)喇叭聲』，選 C。car/flat tire、driver/work/noon 為干擾。"},
+{n:9,p:1,o:["The bridge is northern.","I work only by day, after noon, when I have full power.","The truth is at the trial."],a:1,
+ sen:"When do you usually drive the truck?",szh:"你通常什麼時候開卡車？",
+ en:"Only by day, after noon, with full power.",zh:"問何時開車，答『我只(only)在白天(day)開，中午(noon)過後(after)、有精力(power)時工作(work)』，選 B。bridge/northern、truth/trial 為干擾。"},
+{n:10,p:1,o:["Yes, it is a northern road; do not give false directions to the restroom.","The lover is pale.","The dot is childish."],a:0,
+ sen:"Is this the way to the northern town?",szh:"這是往北方城鎮的路嗎？",
+ en:"Yes, northern; don't give false directions.",zh:"問是否往北方(northern)的路，答『是北方的路；別給錯誤(false)的方向到洗手間(restroom)』，選 A。lover/pale、dot/childish 為干擾。"},
+{n:11,p:1,o:["The bus is popular.","The car has power.","It is a childish activity: just connect the dots on the map."],a:2,
+ sen:"What game did the children play on the trip?",szh:"孩子們旅途上玩什麼遊戲？",
+ en:"A childish activity: connect the dots.",zh:"問玩什麼遊戲，答『一個幼稚(childish)的活動(activity)：把地圖上的點(dot)連起來』，選 C。bus/popular、car/power 為干擾。"},
+{n:12,p:1,o:["The highway is noisy.","Yes, the hunter's blood was examined, and he did not reject the test.","The planet shines tonight."],a:1,
+ sen:"Did the doctor check the injured man?",szh:"醫生檢查受傷的人了嗎？",
+ en:"The hunter's blood was examined; he didn't reject.",zh:"問醫生是否檢查，答『有，那位獵人(hunter)的血(blood)被檢驗(examine)，他沒有拒絕(reject)』，選 B。highway/noisy、planet/tonight 為干擾。"},
+{n:13,p:1,o:["I have a fever; my face is pale, so please hand me a crayon to write.","The bus stops here.","The bridge is long."],a:0,
+ sen:"Why do you look so sick today?",szh:"你今天怎麼看起來這麼不舒服？",
+ en:"I have a fever; my face is pale.",zh:"問為何不舒服，答『我發燒(fever)，臉色蒼白(pale)，請遞給我一支蠟筆(crayon)寫字』，選 A。bus/stop、bridge 為干擾。"},
+{n:14,p:1,o:["The car uses the tunnel.","The passenger is noisy.","The lover is intelligent, and the truth came out at the trial."],a:2,
+ sen:"What happened at the court case?",szh:"那場官司發生了什麼？",
+ en:"The lover is intelligent; the truth came at the trial.",zh:"問官司如何，答『那位愛人(lover)很聰明(intelligent)，真相(truth)在審判(trial)時揭曉』，選 C。car/tunnel、passenger/noisy 為干擾。"},
+{n:15,p:1,o:["The road is northern.","After the underpass, its living room is near, but I have a bad toothache.","The driver rejects the bus."],a:1,
+ sen:"Where is your grandmother's house?",szh:"你奶奶家在哪裡？",
+ en:"After the underpass; its living room is near.",zh:"問奶奶家在哪，答『過了地下道(underpass)，它的(its)客廳(living room)就在附近，但我牙痛(toothache)得厲害』，選 B。road/northern、driver/reject/bus 為干擾。"},
+
+{n:16,p:2,o:["By bicycle on the road.","By plane.","By boat."],a:0,
+ sen:"W: How do you get to school? &nbsp;M: By bicycle, along the quiet road every morning. &nbsp;W: Healthy! &nbsp;Q: How does the man get to school?",
+ szh:"女：你怎麼上學？　男：每天早上騎腳踏車(bicycle)沿著安靜的路(road)去。　女：健康！　問：男士怎麼上學？",
+ en:"By bicycle on the road.",zh:"男士騎腳踏車(bicycle)上學，選 A。"},
+{n:17,p:2,o:["The driver.","The boss.","A passenger on the crowded bus."],a:2,
+ sen:"M: Who did you meet this morning? &nbsp;W: A kind passenger on the crowded bus. &nbsp;M: Nice. &nbsp;Q: Who did the woman meet?",
+ szh:"男：你今早遇到誰？　女：擁擠公車(bus)上一位親切的乘客(passenger)。　男：不錯。　問：女士遇到誰？",
+ en:"A passenger on the bus.",zh:"女士遇到公車(bus)上的乘客(passenger)，選 C。"},
+{n:18,p:2,o:["A passenger.","The bus driver, who is very careful.","A hunter."],a:1,
+ sen:"W: Who drives your school bus? &nbsp;M: The bus driver, who is very careful and kind. &nbsp;W: Good to know. &nbsp;Q: Who drives the school bus?",
+ szh:"女：誰開你們的校車？　男：公車司機(driver)，他很小心也很親切。　女：了解。　問：誰開校車？",
+ en:"The bus driver.",zh:"是很小心的公車司機(driver)，選 B。"},
+{n:19,p:2,o:["Through a railroad tunnel.","Over a bridge.","On a boat."],a:0,
+ sen:"M: How does the train reach the other city? &nbsp;W: It goes through a long railroad tunnel in the mountain. &nbsp;M: Amazing. &nbsp;Q: How does the train reach the city?",
+ szh:"男：火車怎麼到另一座城市？　女：它穿過山裡一條長長的鐵路(railroad)隧道(tunnel)。　男：真厲害。　問：火車怎麼到城市？",
+ en:"Through a railroad tunnel.",zh:"火車穿過鐵路(railroad)隧道(tunnel)，選 A。"},
+{n:20,p:2,o:["On the road.","In the river.","In the parking lot, near the overpass."],a:2,
+ sen:"W: Where did you leave the car? &nbsp;M: In the parking lot, right near the overpass. &nbsp;W: I'll find it. &nbsp;Q: Where is the car?",
+ szh:"女：你把車停哪了？　男：在停車場(parking lot)，就在天橋(overpass)旁邊。　女：我去找。　問：車在哪？",
+ en:"In the parking lot near the overpass.",zh:"車在天橋(overpass)旁的停車場(parking lot)，選 C。"},
+{n:21,p:2,o:["To Japan.","To Russia by train.","To the moon."],a:1,
+ sen:"M: Where is your family traveling by train? &nbsp;W: All the way to Russia, across the cold north. &nbsp;M: What a journey! &nbsp;Q: Where is the family traveling?",
+ szh:"男：你家要搭火車去哪旅行？　女：一路到俄羅斯(Russia)，橫越寒冷的北方。　男：好長的旅程！　問：這家人要去哪旅行？",
+ en:"To Russia by train.",zh:"這家人搭火車去俄羅斯(Russia)，選 B。"},
+{n:22,p:2,o:["Because it is a popular flower spot.","Because it is empty.","Because it is dark."],a:0,
+ sen:"W: Why is this road always so busy? &nbsp;M: Because it is a popular flower spot in spring. &nbsp;W: I see. &nbsp;Q: Why is the road busy?",
+ szh:"女：這條路為什麼總是這麼忙？　男：因為春天這裡是熱門(popular)的賞花(flower)景點。　女：了解。　問：路為何繁忙？",
+ en:"A popular flower spot.",zh:"因為是熱門(popular)的賞花(flower)景點，選 A。"},
+{n:23,p:2,o:["A driver helped her.","A friend helped her.","She fixed the tire herself after work."],a:2,
+ sen:"M: How did your sister fix the flat tire? &nbsp;W: She fixed it herself, right after work. &nbsp;M: Impressive. &nbsp;Q: How did the sister fix the tire?",
+ szh:"男：你姊姊怎麼修好爆胎的？　女：她下班(work)後自己(herself)修好的。　男：厲害。　問：姊姊怎麼修好輪胎？",
+ en:"She fixed it herself after work.",zh:"姊姊下班(work)後自己(herself)修好的，選 C。"},
+{n:24,p:2,o:["The traffic is light.","Heavy traffic, so the bus must stop often.","The road is empty."],a:1,
+ sen:"W: Why is the bus so slow today? &nbsp;M: Heavy traffic, so the bus must stop often. &nbsp;W: How annoying. &nbsp;Q: Why is the bus slow?",
+ szh:"女：公車今天怎麼這麼慢？　男：交通(traffic)很擁擠，所以公車得常常停(stop)。　女：真煩。　問：公車為何很慢？",
+ en:"Heavy traffic; the bus stops often.",zh:"交通(traffic)擁擠，公車常停(stop)，選 B。"},
+{n:25,p:2,o:["Take the quick way through the tunnel.","Take the long way.","Do not go at all."],a:0,
+ sen:"M: Which way should I go to be on time? &nbsp;W: Take the quick way through the tunnel. &nbsp;M: Thanks. &nbsp;Q: Which way should the man take?",
+ szh:"男：我該走哪條路才能準時？　女：走(take)穿過隧道的快速路(way)。　男：謝謝。　問：男士該走哪條路？",
+ en:"The quick way through the tunnel.",zh:"走(take)穿隧道的快速路(way)，選 A。"},
+
+{n:26,p:3,pic:true,o:[BARS("Travel Ways",["Bus","Bike","Car"],[20,50,80]),BARS("Travel Ways",["Bus","Bike","Car"],[50,80,20]),BARS("Travel Ways",["Bus","Bike","Car"],[80,50,20])],a:2,
+ sen:"Our town asked how people travel to work each day. Most people take the bus, because it is cheap and popular. Bikes came second, and only a few drive a car, since the parking lot is small. So the bus bar should be the tallest. &nbsp;Q: Which chart shows how people travel?",
+ szh:"我們鎮調查大家每天怎麼通勤上班(work)。多數人搭公車(bus)，因為便宜又受歡迎(popular)；腳踏車第二；只有少數人開車(car)，因為停車場(parking lot)很小。所以公車長條最高。　問：哪張圖顯示通勤方式？",
+ en:"Bus most, car least.",zh:"公車最多、汽車最少，符合『Bus 最高』的 C。"},
+{n:27,p:3,pic:true,o:[BARS("Traffic by Hour",["8am","Noon","6pm"],[30,55,80]),BARS("Traffic by Hour",["8am","Noon","6pm"],[80,55,30]),BARS("Traffic by Hour",["8am","Noon","6pm"],[55,80,30])],a:1,
+ sen:"The city studied the traffic on the highway. At eight in the morning it was the heaviest, as everyone drove to work. At noon it was in the middle, and by six it had become the lightest. So the traffic went down through the day. &nbsp;Q: Which chart shows the traffic?",
+ szh:"城市研究了高速公路(highway)的交通(traffic)。早上八點最擁擠，因為大家都開車上班(work)；中午(noon)中等；到傍晚六點變最少。所以交通量整天下降。　問：哪張圖顯示交通量？",
+ en:"8am heaviest, 6pm lightest.",zh:"早八最多、逐時下降，符合『8am 最高、6pm 最低』的 B。"},
+{n:28,p:3,pic:true,o:[IMG('bread'),IMG('noodles'),IMG('rice')],a:0,
+ sen:"On a long bus trip to the northern city, we could not cook. There was no way to make hot noodles or steam rice on the moving bus. So the driver stopped at a shop, and every passenger bought some fresh bread to eat on the way. &nbsp;Q: What did the passengers eat on the bus?",
+ szh:"在往北方(northern)城市的長途公車(bus)上，我們無法煮飯。行進的公車上沒辦法(way)煮熱麵或蒸飯。所以司機(driver)在一家店停(stop)下，每位乘客(passenger)買了新鮮麵包(bread)在路上吃。　問：乘客在公車上吃什麼？",
+ en:"Fresh bread.",zh:"乘客吃麵包(bread)，選 A。麵、飯為干擾。"},
+{n:29,p:3,pic:true,o:[IMG('bread'),IMG('rice'),IMG('noodles')],a:2,
+ sen:"After a long day of driving on the highway, the tired driver reached a small town. He did not want dry bread or plain rice at the noisy roadside stall. Instead, he sat down and enjoyed a warm bowl of noodles, which gave him power for the road ahead. &nbsp;Q: What did the driver eat?",
+ szh:"在高速公路(highway)上開了一整天車，疲累的司機(driver)到了一個小鎮。他不想在吵鬧(noisy)的路邊攤吃乾麵包或白飯，而是坐下來享用一碗熱麵(noodles)，為接下來的路補充精力(power)。　問：司機吃了什麼？",
+ en:"A bowl of noodles.",zh:"司機吃了熱麵(noodles)，選 C。麵包、飯為干擾。"},
+{n:30,p:3,pic:true,o:[IMG('mountain'),IMG('beach'),IMG('park')],a:1,
+ sen:"Our club planned a bike trip for the weekend. One member liked the mountain road and another liked the park. But we chose the beach, because the flat way along the coast was easy and we could ride our bicycles beside the sea all day. &nbsp;Q: Where did the club ride their bikes?",
+ szh:"我們社團計畫週末的單車之旅。一位成員喜歡山路，另一位喜歡公園，但我們選了海邊(beach)，因為沿海岸的平坦路(way)好騎，可以整天在海邊騎腳踏車(bicycle)。　問：社團去哪裡騎車？",
+ en:"The beach.",zh:"社團去海邊(beach)騎車，選 B。山、公園為干擾。"}
+];
+
+/* ====== 音檔播放（AAC/.m4a，各廠牌手機皆支援）====== */
+let curAudio=null, curBtn=null;
+function resetPlayBtn(b){ if(!b) return; b.classList.remove('playing'); b.querySelector('.txt').textContent = b.dataset.played?'重播':'播放'; }
+function stopAudio(){ if(curAudio) curAudio.pause(); if(curBtn) resetPlayBtn(curBtn); curAudio=null; curBtn=null; }
+function playAudio(audio,btn){
+  if(curAudio===audio){                       // 同一題：暫停 / 繼續
+    if(audio.paused){ audio.play(); btn.classList.add('playing'); btn.querySelector('.txt').textContent='播放中…'; }
+    else { audio.pause(); }
+    return;
+  }
+  if(curAudio){ curAudio.pause(); resetPlayBtn(curBtn); }   // 換題：停掉上一段
+  curAudio=audio; curBtn=btn; btn.dataset.played='1';
+  btn.classList.add('playing'); btn.querySelector('.txt').textContent='播放中…';
+  audio.play().catch(()=>resetPlayBtn(btn));
+}
+
+/* ====== 產生畫面 ====== */
+const form=document.getElementById('quiz');
+let lastP=-1;
+Q.forEach(q=>{
+  if(q.p!==lastP){
+    const st=document.createElement('div'); st.className='section-title s'+q.p; st.textContent=PARTS[q.p].t;
+    const sd=document.createElement('div'); sd.className='section-desc'; sd.textContent=PARTS[q.p].d;
+    form.appendChild(st); form.appendChild(sd); lastP=q.p;
+  }
+  const card=document.createElement('div'); card.className='q'; card.id='q'+q.n;
+  const head=document.createElement('div'); head.className='qhead';
+  head.innerHTML=`<span class="num">${q.n}</span>
+    <button type="button" class="play"><span class="wave">🔊</span><span class="txt">播放</span></button>
+    <span class="hintq">聆聽後作答</span>`;
+  card.appendChild(head);
+  const audio=document.createElement('audio'); audio.preload='none'; audio.src='gept-listening-audio/17/q'+q.n+'.m4a?v=r17-20260909'; card.appendChild(audio);
+  const pbtn=head.querySelector('.play');
+  pbtn.addEventListener('click',()=>playAudio(audio,pbtn));
+  audio.addEventListener('ended',()=>{ if(curBtn===pbtn){ resetPlayBtn(pbtn); curAudio=null; curBtn=null; } });
+  audio.addEventListener('pause',()=>{ if(curAudio===audio && curBtn===pbtn && !audio.ended){ pbtn.classList.remove('playing'); pbtn.querySelector('.txt').textContent='繼續'; } });
+  if(q.fig){ const f=document.createElement('div'); f.className='fig'; f.innerHTML=q.fig; card.appendChild(f); }
+  if(q.pic){
+    if(q.legend){ const lg=document.createElement('div'); lg.innerHTML=PIE_LEGEND; card.appendChild(lg.firstChild); }
+    const wrap=document.createElement('div'); wrap.className='picopts';
+    q.o.forEach((opt,i)=>{
+      const cell=document.createElement('label'); cell.className='picopt'; cell.dataset.i=i;
+      cell.innerHTML=`<span class="lab">${'ABC'[i]}</span>${opt}<input type="radio" name="q${q.n}" value="${i}" hidden>`;
+      cell.querySelector('input').addEventListener('change',()=>{ card.querySelectorAll('.picopt').forEach(o=>o.classList.remove('sel')); cell.classList.add('sel'); updateProgress(); });
+      wrap.appendChild(cell);
+    });
+    card.appendChild(wrap);
+  } else {
+    q.o.forEach((opt,i)=>{
+      const lab=document.createElement('label'); lab.className='opt'; lab.dataset.i=i;
+      lab.innerHTML=`<input type="radio" name="q${q.n}" value="${i}"><span class="lab">${'ABC'[i]}</span><span>${opt}</span>`;
+      lab.querySelector('input').addEventListener('change',()=>{ card.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel')); lab.classList.add('sel'); updateProgress(); });
+      card.appendChild(lab);
+    });
+  }
+  const exp=document.createElement('div'); exp.className='exp'; exp.id='exp'+q.n; card.appendChild(exp);
+  form.appendChild(card);
+});
+
+const submitBtn=document.getElementById('submitBtn');
+const resetBtn=document.getElementById('resetBtn');
+const hint=document.getElementById('hint');
+const TOT=Q.length;
+function answeredCount(){ let c=0; Q.forEach(q=>{ if(form.querySelector(`input[name="q${q.n}"]:checked`)) c++; }); return c; }
+function updateProgress(){
+  const c=answeredCount();
+  document.getElementById('count').textContent=`${c} / ${TOT}`;
+  document.getElementById('fill').style.width=(c/TOT*100)+'%';
+  hint.textContent = c===TOT ? '已完成全部 30 題' : (c===0 ? '尚未作答任何題目（仍可送出查看解析）' : `已作答 ${c} 題，未作答 ${TOT-c} 題（仍可送出）`);
+}
+
+submitBtn.addEventListener('click',()=>{
+  stopAudio();
+  let ok=0, blank=0;
+  Q.forEach(q=>{
+    const sel=form.querySelector(`input[name="q${q.n}"]:checked`);
+    const pick=sel?parseInt(sel.value):null;
+    if(pick===null) blank++;
+    const card=document.getElementById('q'+q.n);
+    const cls=q.pic?'.picopt':'.opt';
+    card.querySelectorAll(cls).forEach(o=>{
+      o.classList.add('lock');
+      const inp=o.querySelector('input'); if(inp) inp.disabled=true;
+      const i=parseInt(o.dataset.i);
+      if(i===q.a) o.classList.add('correct');
+      if(pick!==null && i===pick && pick!==q.a) o.classList.add('wrong');
+    });
+    const correct=pick===q.a; if(correct) ok++;
+    const exp=document.getElementById('exp'+q.n);
+    const tag=correct?'答對':(pick===null?'未作答':'答錯');
+    exp.innerHTML=`<span class="tag ${correct?'':'miss'}">${tag}　正解：${'ABC'[q.a]}</span>
+      <div class="scriptbox"><b>聽力原文</b>　${q.sen}<br><span style="color:#7a4a12">${q.szh}</span></div>
+      <div class="en"><b>EN</b>&nbsp;${q.en}</div><div class="zh"><b>中</b>&nbsp;${q.zh}</div>`;
+    exp.classList.add('show');
+  });
+  document.getElementById('scoreNum').textContent=Math.round(ok/TOT*100);
+  document.getElementById('scoreTxt').textContent=`分（答對 ${ok} / ${TOT} 題）`;
+  document.getElementById('rOk').textContent=ok;
+  document.getElementById('rNo').textContent=TOT-ok-blank;
+  document.getElementById('rBlank').textContent=blank;
+  const res=document.getElementById('result'); res.classList.add('show');
+  submitBtn.style.display='none'; hint.style.display='none'; resetBtn.style.display='block';
+  res.scrollIntoView({behavior:'smooth'});
+});
+
+resetBtn.addEventListener('click',()=>{
+  stopAudio(); form.reset();
+  Q.forEach(q=>{
+    const card=document.getElementById('q'+q.n);
+    card.querySelectorAll('.opt,.picopt').forEach(o=>{o.classList.remove('sel','correct','wrong','lock');const inp=o.querySelector('input');if(inp)inp.disabled=false;});
+    document.getElementById('exp'+q.n).classList.remove('show');
+  });
+  document.getElementById('result').classList.remove('show');
+  submitBtn.style.display='block'; hint.style.display='block'; resetBtn.style.display='none';
+  updateProgress(); window.scrollTo({top:0,behavior:'smooth'});
+});
+
+updateProgress();
+</script>
+</body>
+</html>
