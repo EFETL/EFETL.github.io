@@ -1,0 +1,217 @@
+<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEPT 初級聽力 第 12 回　學校生活 列印版</title>
+<style>
+*{box-sizing:border-box;}
+body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;color:#1a1a1a;background:#f2f2f2;}
+.bar{position:sticky;top:0;background:#22303f;color:#fff;padding:10px 16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;z-index:9;}
+.bar b{margin-right:auto;font-size:.98rem;}
+.bar button{border:0;border-radius:8px;padding:8px 14px;font-weight:800;cursor:pointer;font-size:.86rem;}
+.bar .s{background:#ffb703;color:#22303f;} .bar .t{background:#e6007e;color:#fff;} .bar .a{background:#4dd0e1;color:#08343c;}
+.page{max-width:850px;margin:14px auto;background:#fff;padding:26px 30px;box-shadow:0 2px 10px rgba(0,0,0,.12);}
+.phead{text-align:center;border-bottom:2.5px solid #1a1a1a;padding-bottom:8px;margin-bottom:4px;}
+.phead h1{margin:0;font-size:1.24rem;} .phead .sub{font-size:.9rem;color:#444;margin-top:3px;}
+.pmeta{display:flex;gap:20px;flex-wrap:wrap;font-size:.9rem;margin:10px 0 4px;color:#222;}
+.pnote{font-size:.82rem;color:#555;margin-bottom:6px;}
+h2.pt{font-size:1.02rem;background:#1a1a1a;color:#fff;padding:5px 12px;border-radius:5px;margin:18px 0 3px;}
+p.pd{font-size:.82rem;color:#444;margin:0 0 10px;}
+.q{display:flex;gap:10px;padding:7px 0;border-bottom:1px dotted #ccc;page-break-inside:avoid;align-items:flex-start;}
+.qn{font-weight:800;white-space:nowrap;min-width:56px;}
+.qbody{flex:1;}
+.fig{margin:4px 0;} .fig svg,.fig img{vertical-align:middle;}
+.opts{list-style:none;margin:2px 0;padding:0;}
+.opts li{padding:1.5px 0;font-size:.94rem;}
+.pics{display:flex;gap:14px;flex-wrap:wrap;margin:4px 0;}
+.pico{text-align:center;border:1px solid #ddd;border-radius:8px;padding:6px;background:#fafafa;}
+.pico .lb{font-weight:800;font-size:.9rem;margin-bottom:2px;}
+.pic-img{width:120px;height:90px;object-fit:cover;border-radius:5px;}
+.ans{color:#c1121f;font-weight:800;}
+.tr{font-size:.86rem;color:#333;margin:3px 0;background:#f7f7f7;border-left:3px solid #999;padding:5px 9px;border-radius:0 5px 5px 0;line-height:1.5;}
+.ex{font-size:.84rem;color:#0a5;margin:2px 0 0;}
+.grid30{display:grid;grid-template-columns:repeat(5,1fr);gap:6px 10px;margin-top:8px;}
+.gc{border:1px solid #bbb;border-radius:6px;padding:4px 6px;font-size:.86rem;text-align:center;}
+.gc b{display:inline-block;min-width:20px;} .gc .ab{letter-spacing:2px;color:#555;}
+.gc .ans{color:#c1121f;}
+@media print{
+ .bar{display:none;} body{background:#fff;} .page{box-shadow:none;margin:0 auto;max-width:none;padding:0 6mm;}
+ .hidep{display:none !important;}
+ .page{page-break-after:always;}
+}
+</style></head><body>
+<div class="bar">
+ <b>🖨 第 12 回　學校生活　聽力測驗　列印版</b>
+ <button class="s" onclick="show('s')">只印學生卷</button>
+ <button class="t" onclick="show('t')">只印教師卷</button>
+ <button class="a" onclick="show('a')">兩份都印</button>
+</div>
+<div id="root"></div>
+<script>
+/* 圖形素材（第12回 學校生活） ====== */
+const IMG = n => `<img class="pic-img" src="gept-listening-img/12/${n}.jpg" alt="${n}">`;
+const BARS=(title,labs,vals)=>{const max=Math.max(...vals),bw=28,gap=18,x0=20;let b='',l='';
+ labs.forEach((L,i)=>{const h=Math.round(vals[i]/max*70),x=x0+i*(bw+gap);
+  b+=`<rect x="${x}" y="${100-h}" width="${bw}" height="${h}" fill="#e9e9e9" stroke="#1a1a1a" stroke-width="1.5"/>`;
+  l+=`<text x="${x+bw/2}" y="116">${L}</text>`;});
+ return `<svg class="chart" width="176" height="132" viewBox="0 0 176 132"><text x="88" y="15" text-anchor="middle" font-size="14" font-weight="700">${title}</text><line x1="16" y1="22" x2="16" y2="100" stroke="#1a1a1a" stroke-width="1.5"/><line x1="16" y1="100" x2="170" y2="100" stroke="#1a1a1a" stroke-width="1.5"/>${b}<g font-size="11" text-anchor="middle">${l}</g></svg>`;};
+const CLK=(h,m)=>{const ma=m*6,ha=(h%12)*30+m*0.5,r=Math.PI/180;
+ const hx=(60+Math.sin(ha*r)*20).toFixed(1),hy=(54-Math.cos(ha*r)*20).toFixed(1);
+ const mx=(60+Math.sin(ma*r)*30).toFixed(1),my=(54-Math.cos(ma*r)*30).toFixed(1);
+ return `<svg width="110" height="100" viewBox="0 0 120 110"><circle cx="60" cy="54" r="40" fill="#fff" stroke="#1a1a1a" stroke-width="3"/><g stroke="#1a1a1a" stroke-width="2" stroke-linecap="round"><line x1="60" y1="18" x2="60" y2="25"/><line x1="60" y1="83" x2="60" y2="90"/><line x1="24" y1="54" x2="31" y2="54"/><line x1="89" y1="54" x2="96" y2="54"/></g><line x1="60" y1="54" x2="${hx}" y2="${hy}" stroke="#1a1a1a" stroke-width="3.5" stroke-linecap="round"/><line x1="60" y1="54" x2="${mx}" y2="${my}" stroke="#e6007e" stroke-width="3" stroke-linecap="round"/><circle cx="60" cy="54" r="3.5" fill="#1a1a1a"/></svg>`;};
+const SCHOOL=`<svg width="140" height="108" viewBox="0 0 140 110"><rect x="24" y="46" width="92" height="54" fill="#fff5ec" stroke="#1a1a1a" stroke-width="2.5"/><path d="M20 46 L70 20 L120 46 Z" fill="#ff9a6c" stroke="#1a1a1a" stroke-width="2.5" stroke-linejoin="round"/><rect x="64" y="10" width="12" height="14" fill="#e6007e"/><path d="M76 12 l14 4 l-14 4 z" fill="#ffd166"/><rect x="60" y="74" width="20" height="26" fill="#8a5a2b"/><g fill="#a5d8ff" stroke="#1a1a1a" stroke-width="1.5"><rect x="34" y="58" width="16" height="14"/><rect x="90" y="58" width="16" height="14"/></g><text x="70" y="42" text-anchor="middle" font-size="9" font-weight="800" fill="#fff">SCHOOL</text></svg>`;
+const GRADCAP=`<svg width="130" height="104" viewBox="0 0 130 106"><path d="M65 26 L118 46 L65 66 L12 46 Z" fill="#1a1a1a" stroke="#1a1a1a" stroke-width="2" stroke-linejoin="round"/><path d="M40 56 v22 q25 16 50 0 v-22" fill="none" stroke="#1a1a1a" stroke-width="3"/><line x1="118" y1="46" x2="118" y2="78" stroke="#ffd166" stroke-width="2"/><circle cx="118" cy="82" r="5" fill="#ffd166"/></svg>`;
+const WORKBOOK=`<svg width="120" height="110" viewBox="0 0 120 112"><rect x="30" y="14" width="64" height="86" rx="4" fill="#4dd0e1" stroke="#1a1a1a" stroke-width="2.5"/><rect x="30" y="14" width="14" height="86" fill="#2b9db0"/><rect x="52" y="26" width="30" height="20" fill="#fff" stroke="#1a1a1a" stroke-width="1"/><g stroke="#fff" stroke-width="1.6"><line x1="52" y1="58" x2="84" y2="58"/><line x1="52" y1="66" x2="84" y2="66"/><line x1="52" y1="74" x2="84" y2="74"/><line x1="52" y1="82" x2="72" y2="82"/></g></svg>`;
+const CD=`<svg width="104" height="104" viewBox="0 0 104 104"><circle cx="52" cy="52" r="42" fill="#d0d8e0" stroke="#1a1a1a" stroke-width="2"/><circle cx="52" cy="52" r="42" fill="none" stroke="#a5d8ff" stroke-width="8" opacity=".5"/><circle cx="52" cy="52" r="30" fill="#eef3f7" stroke="#1a1a1a" stroke-width="1"/><circle cx="52" cy="52" r="9" fill="#fff" stroke="#1a1a1a" stroke-width="2"/><path d="M52 14 A38 38 0 0 1 82 34" fill="none" stroke="#fff" stroke-width="3" opacity=".8"/></svg>`;
+
+const PARTS=[
+ {t:"第一大題　看圖辨義",d:"共 5 題（1–5）。看圖並聆聽問題，從 A、B、C 三個選項中選出最適合的答案。"},
+ {t:"第二大題　問答",d:"共 10 題（6–15）。聆聽一個問句或直述句，選出最適合的回答。"},
+ {t:"第三大題　簡短對話",d:"共 10 題（16–25）。聆聽一段對話與問題，選出最適合的答案。"},
+ {t:"第四大題　短文聽解",d:"共 5 題（26–30）。聆聽一段短文與問題，從三張圖片中選出最適合的一張。"}
+];
+const Q=[
+{n:1,p:0,fig:SCHOOL,o:["This is our school on a big green campus.","The servant delivers the supper.","A dolphin swims along the curve."],a:0,
+ sen:"For question one, look at the picture. What building is this?",szh:"第一題，請看圖片。這是什麼建築？",
+ en:"Our school on a green campus.",zh:"這是我們在一大片綠色校園(campus)裡的學校(school)，選 A。servant/deliver/supper、dolphin/curve 為干擾。"},
+{n:2,p:0,fig:GRADCAP,o:["The current season is warm.","A cartoon plays on the CD.","She wears a cap; she finished university with a good grade."],a:2,
+ sen:"For question two, look at the picture. What is she wearing?",szh:"第二題，請看圖片。她戴著什麼？",
+ en:"A cap; she finished university with a good grade.",zh:"她戴著方帽(cap)，以好成績(grade)從大學(university)畢業，選 C。current/season、cartoon/CD 為干擾。"},
+{n:3,p:0,fig:WORKBOOK,o:["The key is in the garage.","On the desk is a workbook for the student's lesson.","A wooden servant stands there."],a:1,
+ sen:"For question three, look at the picture. What is on the desk?",szh:"第三題，請看圖片。桌上是什麼？",
+ en:"A workbook for the student's lesson.",zh:"桌上是學生(student)上課(lesson)用的作業本(workbook)，選 B。key/garage、wooden/servant 為干擾。"},
+{n:4,p:0,fig:CLK(9,0),o:["The exam starts at nine o'clock.","A slender dolphin jumps.","We guess nothing."],a:0,
+ sen:"For question four, look at the picture. What time does the exam start?",szh:"第四題，請看圖片。考試幾點開始？",
+ en:"The exam starts at nine o'clock.",zh:"考試(exam)在九點(o'clock)整開始，選 A。slender/dolphin、guess/nothing 為干擾。"},
+{n:5,p:0,fig:CD,o:["The garage cover is wooden.","We aim at the target.","The teacher holds a CD for the English course."],a:2,
+ sen:"For question five, look at the picture. What is the teacher holding?",szh:"第五題，請看圖片。老師拿著什麼？",
+ en:"A CD for the English course.",zh:"老師(teacher)拿著英語課程(course)的光碟(CD)，選 C。garage/cover/wooden、aim/target 為干擾。"},
+
+{n:6,p:1,o:["The dolphin is slender.","I study education at college; I want to be a professor.","The key covers the garage."],a:1,
+ sen:"What do you study at college?",szh:"你在大學讀什麼？",
+ en:"Education at college; to be a professor.",zh:"問在大學(college)讀什麼，答『我讀教育(education)，想當教授(professor)』，選 B。dolphin/slender、key/cover/garage 為干擾。"},
+{n:7,p:1,o:["We learned a lot; a thousand thanks to our teacher for the project.","The season is current.","The servant aims at the target."],a:0,
+ sen:"How did your class project go?",szh:"你們的班級專題進行得如何？",
+ en:"We learned a lot; thanks to our teacher.",zh:"問專題(project)如何，答『我們學(learn)到很多，千(thousand)謝老師(teacher)』，選 A。season/current、servant/aim/target 為干擾。"},
+{n:8,p:1,o:["The cartoon is on the CD.","The garage is wooden.","Nothing; I just guess I passed the big exam, so I smile."],a:2,
+ sen:"Why are you smiling so happily?",szh:"你為什麼笑得這麼開心？",
+ en:"I guess I passed the exam, so I smile.",zh:"問為何微笑(smile)，答『沒什麼(nothing)，我猜(guess)我通過了考試(exam)』，選 C。cartoon/CD、garage/wooden 為干擾。"},
+{n:9,p:1,o:["The professor delivers supper.","Any season is fine; however, the autumn air is the freshest.","A dolphin curves in the sea."],a:1,
+ sen:"Which season is best for studying?",szh:"哪個季節最適合讀書？",
+ en:"Any season; however, autumn air is fresh.",zh:"問哪個季節(season)適合讀書，答『任何季節都行，不過(however)秋天空氣(air)最清新』，選 B。professor/deliver/supper、dolphin/curve 為干擾。"},
+{n:10,p:1,o:["My aim this semester is to reach my target and support my grade.","The CD is slender.","The servant guesses nothing."],a:0,
+ sen:"What is your goal for this term?",szh:"你這學期的目標是什麼？",
+ en:"To reach my target and support my grade.",zh:"問這學期(semester)目標，答『我的目標(aim)是達到標的(target)、拉高我的成績(grade/support)』，選 A。CD/slender、servant/guess/nothing 為干擾。"},
+{n:11,p:1,o:["The dolphin is on the track.","The professor curves the wood.","Cover it well; the key is in the garage, not anywhere here."],a:2,
+ sen:"Where did you put the classroom key?",szh:"你把教室鑰匙放哪了？",
+ en:"The key is in the garage, not here.",zh:"問鑰匙(key)放哪，答『蓋好(cover)，鑰匙在車庫(garage)，不在(anywhere)這附近』，選 C。dolphin/track、professor/curve 為干擾。"},
+{n:12,p:1,o:["The exam is at three.","He suggested we deliver the project before supper.","A cartoon is on the CD."],a:1,
+ sen:"What did the professor tell the class to do?",szh:"教授要班上做什麼？",
+ en:"Deliver the project before supper.",zh:"問教授(professor)要求什麼，答『他建議(suggest)我們在晚餐(supper)前交(deliver)出專題』，選 B。exam、cartoon/CD 為干擾。"},
+{n:13,p:1,o:["Yes; with good reason, all students are equal in class.","The dolphin is slender.","The garage is wooden."],a:0,
+ sen:"Do you think the hard struggle in school is fair?",szh:"你覺得學校裡的努力奮鬥公平嗎？",
+ en:"With reason, all students are equal.",zh:"問奮鬥(struggle)是否公平，答『是，有道理(reason)，所有學生(student)都(are)平等(equal)』，選 A。dolphin/slender、garage/wooden 為干擾。"},
+{n:14,p:1,o:["The professor is slender.","The key is on the target.","A funny cartoon about a dolphin racing on a track."],a:2,
+ sen:"What is on the new school CD?",szh:"學校新光碟裡是什麼？",
+ en:"A cartoon about a dolphin on a track.",zh:"問CD裡是什麼，答『一部關於海豚(dolphin)在跑道(track)上比賽的卡通(cartoon)』，選 C。professor/slender、key/target 為干擾。"},
+{n:15,p:1,o:["The servant delivers supper.","On campus there is a slender wooden bridge on a gentle curve.","We aim at nothing."],a:1,
+ sen:"What can I see on your school campus?",szh:"在你們校園可以看到什麼？",
+ en:"A slender wooden bridge on a curve.",zh:"問校園(campus)有什麼，答『有一座細長(slender)的木(wooden)橋，在一個緩彎(curve)上』，選 B。servant/deliver/supper、aim/nothing 為干擾。"},
+
+{n:16,p:2,o:["An English lesson.","A math exam.","A sports class."],a:0,
+ sen:"W: What is the first class today at school? &nbsp;M: An English lesson, our favorite one. &nbsp;W: Great start. &nbsp;Q: What is the first class?",
+ szh:"女：今天學校(school)第一節是什麼課？　男：英語課(lesson)，我們最愛的。　女：好的開始。　問：第一節是什麼課？",
+ en:"An English lesson.",zh:"第一節是英語課(lesson)，選 A。"},
+{n:17,p:2,o:["A low grade.","A funny cartoon.","A high grade on the exam."],a:2,
+ sen:"M: How did you do on the science exam? &nbsp;W: I got a high grade; I studied hard. &nbsp;M: Well done! &nbsp;Q: What did the woman get?",
+ szh:"男：你自然考試(exam)考得如何？　女：我拿了高分(grade)，我很認真讀。　男：太棒了！　問：女士得到什麼？",
+ en:"A high grade.",zh:"女士考試(exam)得高分(grade)，選 C。"},
+{n:18,p:2,o:["A student.","A professor at the university.","A servant."],a:1,
+ sen:"W: What does your father do? &nbsp;M: He is a professor at the university, teaching history. &nbsp;W: Respectable job. &nbsp;Q: What is the father's job?",
+ szh:"女：你爸爸做什麼？　男：他是大學(university)的教授(professor)，教歷史。　女：受人尊敬的工作。　問：爸爸的工作是什麼？",
+ en:"A professor at the university.",zh:"爸爸是大學(university)教授(professor)，選 B。"},
+{n:19,p:2,o:["We thank our teachers on Teacher's Day.","We eat lemon.","We go to the garage."],a:0,
+ sen:"M: What do students do on Teacher's Day? &nbsp;W: We thank our teachers for their hard work. &nbsp;M: How sweet. &nbsp;Q: What do students do on Teacher's Day?",
+ szh:"男：教師節(Teacher's Day)學生做什麼？　女：我們感謝老師(teacher)的辛勞。　男：真溫馨。　問：教師節學生做什麼？",
+ en:"Thank our teachers.",zh:"教師節(Teacher's Day)學生感謝老師(teacher)，選 A。"},
+{n:20,p:2,o:["Read a book.","Sing a song.","Give a kiss and show more action on stage."],a:2,
+ sen:"W: What did the drama teacher ask for? &nbsp;M: A kiss scene and more action on the stage. &nbsp;W: Exciting play. &nbsp;Q: What did the teacher ask for?",
+ szh:"女：戲劇老師要求什麼？　男：一個親吻(kiss)場景和舞台上更多動作(action)。　女：刺激的戲。　問：老師要求什麼？",
+ en:"A kiss and more action.",zh:"老師要一個吻(kiss)戲和更多動作(action)，選 C。"},
+{n:21,p:2,o:["Study math.","Test a lemon in a nature lesson.","Read a cartoon."],a:1,
+ sen:"M: What did you do in science class? &nbsp;W: We tested a lemon battery in our nature lesson. &nbsp;M: Cool experiment. &nbsp;Q: What did they do in science class?",
+ szh:"男：你們自然課做了什麼？　女：我們在自然(nature)課(lesson)測試檸檬(lemon)電池。　男：好酷的實驗。　問：他們自然課做了什麼？",
+ en:"Tested a lemon in a nature lesson.",zh:"他們在自然(nature)課測試檸檬(lemon)，選 B。"},
+{n:22,p:2,o:["The whole class will support and help him.","A servant will.","Nobody will."],a:0,
+ sen:"W: Tom is struggling with his project. What now? &nbsp;M: The whole class will support and help him. &nbsp;W: Kind classmates. &nbsp;Q: Who will help Tom?",
+ szh:"女：Tom 的專題(project)遇到困難，怎麼辦？　男：全班會支持(support)並幫助他。　女：好同學。　問：誰會幫 Tom？",
+ en:"The whole class will support him.",zh:"全班會支持(support)幫助他，選 A。servant 僕人為干擾。"},
+{n:23,p:2,o:["Thirteen dollars.","One thousand.","About thirteen, out of one thousand students."],a:2,
+ sen:"M: How many students got a perfect score? &nbsp;W: About thirteen, out of one thousand students in the college. &nbsp;M: Very few! &nbsp;Q: How many got a perfect score?",
+ szh:"男：有幾個學生拿滿分？　女：大約十三(thirteen)個，全學院(college)一千(thousand)名學生裡。　男：真少！　問：有幾人拿滿分？",
+ en:"About thirteen students.",zh:"大約十三(thirteen)人拿滿分，選 C。一千(thousand)是總人數(干擾)。"},
+{n:24,p:2,o:["It is old news.","It is current, this season's report.","It is a cartoon."],a:1,
+ sen:"W: Is this school report new? &nbsp;M: Yes, it is current, from this very season. &nbsp;W: Good to know. &nbsp;Q: What does the man say about the report?",
+ szh:"女：這份校刊是新的嗎？　男：是的，很新(current)，就是這一季(season)的。　女：了解。　問：男士怎麼說這份報告？",
+ en:"It is current, this season's.",zh:"報告是最新(current)、這一季(season)的，選 B。"},
+{n:25,p:2,o:["To study hard and learn every lesson well.","To watch cartoons.","To play in the garage."],a:0,
+ sen:"M: What is your advice for new students? &nbsp;W: To study hard and learn every lesson well. &nbsp;M: Wise words. &nbsp;Q: What is the woman's advice?",
+ szh:"男：你給新生什麼建議？　女：認真讀書(study)，把每堂課(lesson)都學(learn)好。　男：金玉良言。　問：女士的建議是什麼？",
+ en:"Study hard and learn well.",zh:"認真讀書(study)、學(learn)好每堂課，選 A。"},
+
+{n:26,p:3,pic:true,o:[BARS("Exam Grades",["Math","English","Art"],[20,50,80]),BARS("Exam Grades",["Math","English","Art"],[50,80,20]),BARS("Exam Grades",["Math","English","Art"],[80,50,20])],a:2,
+ sen:"This semester our class checked the average grade in each exam. Math had the highest grade, because our teacher was excellent. English was in the middle, and art had the lowest, as few students practiced. So the math bar should be the tallest. &nbsp;Q: Which chart shows the exam grades?",
+ szh:"這學期(semester)我們班檢查每科考試(exam)的平均分(grade)。數學最高，因為老師(teacher)很棒；英語中等；美術最低，因為少有學生(student)練習。所以數學長條最高。　問：哪張圖顯示考試成績？",
+ en:"Math highest, art lowest.",zh:"數學最高、美術最低，符合『Math 最高』的 C。"},
+{n:27,p:3,pic:true,o:[BARS("Course Choice",["Science","History","Music"],[30,55,80]),BARS("Course Choice",["Science","History","Music"],[80,55,30]),BARS("Course Choice",["Science","History","Music"],[55,80,30])],a:1,
+ sen:"At our college, students chose an extra course this year. Science was the most popular, because a famous professor teaches it. History was in the middle, and music was the least chosen. So the science bar is the highest and music the lowest. &nbsp;Q: Which chart shows the course choices?",
+ szh:"在我們學院(college)，學生今年選了額外的課程(course)。自然最熱門，因為有名教授(professor)開課；歷史中等；音樂最少人選。所以自然最高、音樂最低。　問：哪張圖顯示選課結果？",
+ en:"Science most, music least.",zh:"自然最多、音樂最少，符合『Science 最高、Music 最低』的 B。"},
+{n:28,p:3,pic:true,o:[IMG('bread'),IMG('noodles'),IMG('rice')],a:0,
+ sen:"During exam week, our school canteen is very busy. Many students want a quick meal before their lessons. They do not order slow noodles or heavy rice, because there is no time. Instead, most of them grab a piece of bread and study while they eat. &nbsp;Q: What do most students eat during exam week?",
+ szh:"考試(exam)週，學校(school)餐廳很忙。許多學生(student)想在上課(lesson)前快速吃一餐。他們不點慢的麵或吃太多飯，因為沒時間，而是大多抓一塊麵包(bread)，邊吃邊讀書(study)。　問：考試週大多數學生吃什麼？",
+ en:"Bread.",zh:"大多數學生吃麵包(bread)，選 A。麵、飯為干擾。"},
+{n:29,p:3,pic:true,o:[IMG('bread'),IMG('rice'),IMG('noodles')],a:2,
+ sen:"On the last day of the semester, our professor invited the whole class for supper. He did not serve plain bread or dry rice, which we eat every day at school. Instead, he cooked a big pot of hot noodles for everyone, and we all thanked him warmly. &nbsp;Q: What did the professor cook for supper?",
+ szh:"學期(semester)最後一天，教授(professor)請全班吃晚餐(supper)。他沒端我們在學校天天吃的普通麵包或白飯，而是煮了一大鍋熱麵(noodles)給大家，我們都溫暖地感謝他。　問：教授晚餐煮了什麼？",
+ en:"Hot noodles.",zh:"教授煮了熱麵(noodles)，選 C。麵包、飯為干擾。"},
+{n:30,p:3,pic:true,o:[IMG('mountain'),IMG('beach'),IMG('park')],a:1,
+ sen:"Our school planned an end-of-semester trip. The history teacher liked the mountain for its old temples, and one student liked the park. But the class chose the beach, because after a long term of study, everyone wanted to relax by the sea. &nbsp;Q: Where did the class go for their trip?",
+ szh:"我們學校(school)計畫學期(semester)末旅行。歷史老師(teacher)喜歡山上的古廟，一位學生(student)喜歡公園，但全班選了海邊(beach)，因為經過一學期的讀書(study)，大家都想在海邊放鬆。　問：全班去哪裡旅行？",
+ en:"The beach.",zh:"全班去海邊(beach)，選 B。山、公園為干擾。"}
+];
+const AB=["A","B","C"];
+function optHTML(q){
+  if(q.pic){ // 三圖選項
+    return '<div class="pics">'+q.o.map((s,i)=>`<div class="pico"><div class="lb">(${AB[i]})</div>${s}</div>`).join('')+'</div>';
+  }
+  return '<ol class="opts">'+q.o.map((s,i)=>`<li>(${AB[i]}) ${s}</li>`).join('')+'</ol>';
+}
+function figHTML(q){ return q.fig?`<div class="fig">${q.fig}</div>`:''; }
+function partOf(n){return n<=5?0:n<=15?1:n<=25?2:3;}
+function sheet(kind){ // 's' student | 't' teacher
+  let h=`<div class="page ${kind==='s'?'sheet-s':'sheet-t'}">`;
+  h+=`<div class="phead"><h1>全民英檢 初級　聽力測驗</h1><div class="sub">第 12 回　學校生活　${kind==='s'?'學生作答卷':'教師卷（答案・聽力原文・解析）'}</div></div>`;
+  if(kind==='s') h+=`<div class="pmeta"><span>姓名：____________</span><span>班級：__________</span><span>座號：______</span><span>分數：________</span></div>`;
+  h+=`<div class="pnote">說明：本測驗共 4 大題 30 題，每題聆聽音檔作答，從 (A) (B) (C) 中選出最適合的答案，填入題號前括號內。</div>`;
+  PARTS.forEach((pt,pi)=>{
+    h+=`<h2 class="pt">${pt.t}</h2><p class="pd">${pt.d}</p>`;
+    Q.filter(q=>partOf(q.n)===pi).forEach(q=>{
+      h+=`<div class="q"><div class="qn">（${kind==='t'?'<span class="ans">'+AB[q.a]+'</span>':'　'}）${q.n}.</div><div class="qbody">`;
+      h+=figHTML(q)+optHTML(q);
+      if(kind==='t'){
+        h+=`<div class="tr"><b>原文：</b>${(q.sen||'').replace(/&nbsp;/g,' ')}</div>`;
+        if(q.zh) h+=`<div class="ex"><b>解析：</b>${q.zh}</div>`;
+      }
+      h+=`</div></div>`;
+    });
+  });
+  h+=`</div>`;
+  return h;
+}
+function render(){document.getElementById('root').innerHTML=sheet('s')+sheet('t');}
+render();
+function show(m){
+  document.querySelectorAll('.sheet-s').forEach(e=>e.classList.toggle('hidep',m==='t'));
+  document.querySelectorAll('.sheet-t').forEach(e=>e.classList.toggle('hidep',m==='s'));
+  setTimeout(()=>window.print(),60);
+}
+</script></body></html>

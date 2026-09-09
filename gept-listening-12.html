@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEPT 初級 聽力測驗　第12回　學校生活</title>
+<style>
+  :root{
+    --blue:#2b8cff; --blue-dark:#1f6fe0;
+    --coral:#ff7a59; --amber:#ffb02e; --pink:#ff5d8f;
+    --bg:#f3f9ff; --card:#ffffff; --line:#e3edf9;
+    --green:#22b573; --green-bg:#e4f8ef;
+    --red:#ff5a5a; --red-bg:#ffecec;
+    --gray:#6b7785;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;
+    background:linear-gradient(180deg,#fff5ec,#fff9f4 70%);color:#22303f;line-height:1.6;
+    -webkit-text-size-adjust:100%;}
+  .wrap{max-width:760px;margin:0 auto;padding:16px;}
+  header.top{background:linear-gradient(135deg,#f6d365,#fda085 60%,#ff7a9c);color:#fff;
+    border-radius:18px;padding:24px 22px;margin-bottom:16px;box-shadow:0 8px 22px rgba(253,160,133,.35);}
+  header.top h1{margin:0 0 6px;font-size:1.5rem;text-shadow:0 1px 2px rgba(0,0,0,.14);}
+  header.top p{margin:0;font-size:.92rem;opacity:.96;}
+  .meta{margin-top:14px;font-size:.86rem;background:rgba(255,255,255,.24);
+    padding:9px 13px;border-radius:10px;}
+  .notice{background:#fffbeb;border:1.5px solid #f59e0b;border-radius:12px;
+    padding:11px 15px;margin-bottom:14px;font-size:.86rem;color:#78350f;
+    display:flex;align-items:flex-start;gap:9px;line-height:1.55;}
+  .notice .ic{font-size:1.1rem;flex-shrink:0;margin-top:1px;}
+  .sticky{position:sticky;top:0;z-index:20;padding:10px 0;
+    background:linear-gradient(180deg,#fff5ec 70%,rgba(255,245,236,0));}
+  .bar{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:11px 16px;display:flex;align-items:center;gap:12px;font-size:.9rem;
+    box-shadow:0 4px 12px rgba(253,160,133,.14);}
+  .bar .track{flex:1;height:9px;background:#f1e4dc;border-radius:6px;overflow:hidden;}
+  .bar .fill{height:100%;width:0;border-radius:6px;
+    background:linear-gradient(90deg,#ffb02e,#ff7a59);transition:width .35s;}
+  .bar #count{font-weight:700;color:#e0740a;}
+  .section-title{color:#fff;font-weight:800;border-radius:12px;
+    padding:10px 16px;margin:24px 0 6px;font-size:1.05rem;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);}
+  .section-title.s0{background:linear-gradient(135deg,#ff9a6c,#ff6f91);}
+  .section-title.s1{background:linear-gradient(135deg,#4dd0e1,#2b8cff);}
+  .section-title.s2{background:linear-gradient(135deg,#9b8bff,#b06bff);}
+  .section-title.s3{background:linear-gradient(135deg,#43cea2,#3ab0d6);}
+  .section-desc{font-size:.86rem;color:var(--gray);margin:0 4px 10px;}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:15px 17px;margin:12px 0;box-shadow:0 3px 10px rgba(253,160,133,.09);}
+  .qhead{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+  .qhead .num{display:inline-block;color:#fff;background:var(--coral);font-weight:700;
+    border-radius:8px;padding:1px 10px;font-size:.92rem;}
+  .play{display:inline-flex;align-items:center;gap:7px;border:0;cursor:pointer;
+    color:#fff;font-weight:800;font-size:.92rem;border-radius:22px;padding:8px 16px;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);box-shadow:0 4px 12px rgba(255,93,143,.3);}
+  .play:active{transform:translateY(1px);}
+  .play.playing{background:linear-gradient(135deg,#22b573,#1a9e63);}
+  .play .wave{font-size:.8rem;opacity:.9;}
+  .hintq{font-size:.8rem;color:var(--gray);}
+  .fig{text-align:center;margin:4px 0 12px;}
+  .fig svg{max-width:100%;height:auto;}
+  .pic-img{border-radius:9px;border:1px solid #e6ded7;object-fit:cover;}
+  .fig .pic-img{max-width:230px;width:100%;max-height:150px;}
+  .opt{display:flex;align-items:flex-start;gap:10px;border:2px solid var(--line);
+    border-radius:11px;padding:10px 13px;margin:8px 0;cursor:pointer;transition:.15s;
+    font-size:.95rem;background:#fbfdff;}
+  .opt:hover{border-color:var(--coral);background:#fff4ee;}
+  .opt input{margin-top:3px;accent-color:var(--coral);}
+  .opt .lab{font-weight:800;color:var(--coral);min-width:18px;}
+  .opt.sel{border-color:var(--coral);background:#ffeee6;}
+  .opt.correct{border-color:var(--green);background:var(--green-bg);}
+  .opt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .opt.lock{cursor:default;}
+  /* picture options (Part 4) */
+  .picopts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:6px 0;}
+  .picopt{border:2px solid var(--line);border-radius:12px;padding:9px 6px;cursor:pointer;
+    text-align:center;transition:.15s;background:#fbfdff;display:flex;flex-direction:column;align-items:center;gap:6px;}
+  .picopt:hover{border-color:var(--coral);background:#fff4ee;}
+  .picopt.sel{border-color:var(--coral);background:#ffeee6;}
+  .picopt.correct{border-color:var(--green);background:var(--green-bg);}
+  .picopt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .picopt .lab{font-weight:800;color:var(--coral);align-self:flex-start;margin-left:4px;}
+  .picopt.correct .lab{color:var(--green);}.picopt.wrong .lab{color:var(--red);}
+  .picopt img.pic-img{width:100%;height:82px;}
+  .picopt svg{width:100%;max-width:132px;height:auto;}
+  .picopt svg.chart{max-width:100%;}
+  .legend{display:flex;gap:12px;justify-content:center;font-size:.72rem;margin:2px 0 6px;color:#556;flex-wrap:wrap;}
+  .legend i{display:inline-block;width:11px;height:11px;border:1px solid #999;margin-right:4px;vertical-align:-1px;}
+  table.mini{border-collapse:collapse;font-size:.62rem;margin:0 auto;}
+  table.mini th{background:#33414f;color:#fff;padding:2px 4px;}
+  table.mini td{border:1px solid #bbb;padding:2px 4px;text-align:center;}
+  .board{background:#111;color:#ffd24a;border-radius:5px;padding:5px;font-family:"Courier New",monospace;display:inline-block;}
+  .board table{border-collapse:collapse;font-size:.6rem;color:#ffd24a;}
+  .board th{color:#7fd7ff;padding:1px 4px;border-bottom:1px solid #444;}
+  .board td{padding:1px 4px;text-align:center;}
+  .exp{display:none;margin-top:11px;border-top:2px dashed #ffe1c2;padding-top:11px;font-size:.9rem;}
+  .exp.show{display:block;}
+  .exp .tag{display:inline-block;font-weight:800;color:#fff;background:var(--green);
+    border-radius:7px;padding:2px 10px;font-size:.8rem;margin-bottom:7px;}
+  .exp .tag.miss{background:var(--red);}
+  .exp .scriptbox{background:#f4f8ff;border-radius:8px;padding:7px 11px;margin:5px 0;font-size:.88rem;color:#20364d;}
+  .exp .scriptbox b{color:var(--blue-dark);}
+  .exp .en{color:#1c4f7a;background:#eef7ff;border-radius:8px;padding:6px 10px;margin:5px 0;}
+  .exp .zh{color:#7a4a12;background:#fff7ea;border-radius:8px;padding:6px 10px;margin:5px 0;}
+  .actions{position:sticky;bottom:0;padding:14px 0 6px;margin-top:18px;
+    background:linear-gradient(transparent,#fff9f4 35%);}
+  button.submit{width:100%;color:#fff;border:0;border-radius:14px;padding:16px;
+    font-size:1.08rem;font-weight:800;cursor:pointer;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);
+    box-shadow:0 6px 16px rgba(255,93,143,.35);}
+  button.submit:active{transform:translateY(1px);}
+  button.reset{width:100%;background:#fff;color:var(--coral);border:2px solid var(--coral);
+    border-radius:14px;padding:14px;font-size:1rem;font-weight:800;cursor:pointer;margin-top:10px;display:none;}
+  .result{display:none;background:var(--card);border:3px solid transparent;border-radius:16px;
+    padding:22px;margin:16px 0;text-align:center;
+    background-image:linear-gradient(#fff,#fff),linear-gradient(135deg,#ffb02e,#ff7a59,#ff5d8f);
+    background-origin:border-box;background-clip:padding-box,border-box;
+    box-shadow:0 8px 22px rgba(255,122,89,.18);}
+  .result.show{display:block;}
+  .result .score{font-size:2.8rem;font-weight:900;
+    background:linear-gradient(135deg,#ff7a59,#ff5d8f);-webkit-background-clip:text;
+    background-clip:text;-webkit-text-fill-color:transparent;}
+  .result .sub{color:var(--gray);font-size:.95rem;}
+  .result .bd{display:flex;justify-content:center;gap:18px;margin-top:12px;flex-wrap:wrap;font-size:.95rem;}
+  .result .bd span{font-weight:800;}
+  .hint{text-align:center;font-size:.85rem;color:var(--gray);margin-top:9px;min-height:1.2em;}
+  footer{text-align:center;color:var(--gray);font-size:.8rem;margin:24px 0;}
+</style>
+<!-- EFETL-PWA -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#7C4DFF">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="EFETL">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}</script>
+<!-- /EFETL-PWA -->
+</head>
+<body>
+<a href="gept-listening.html" style="position:fixed;top:12px;left:12px;background:rgba(255,255,255,.92);color:#ff6f91;padding:7px 15px;border-radius:20px;text-decoration:none;font-size:.85rem;font-weight:800;z-index:999;box-shadow:0 3px 10px rgba(0,0,0,.15);">&#8592; 回聽力題庫</a>
+<div class="wrap">
+  <header class="top">
+    <h1>GEPT 初級　聽力測驗　<span style="opacity:.9">第12回　學校生活</span></h1>
+    <p>互動聽力練習　&middot;　依官方四大題型與難度命題</p>
+    <div class="meta">共 4 大題、30 題　|　每題按 🔊 播放，聆聽後作答　|　送出後顯示聽力原文、中英解析與分數</div>
+  </header>
+
+  <div class="notice">
+    <span class="ic">🎧</span>
+    <span>每題皆附<strong>語音朗讀音檔</strong>，iPhone、Android 各廠牌手機與電腦瀏覽器皆可播放（請開啟媒體音量）。點各題的 <strong>🔊 播放</strong> 鈕聆聽；正式考試每題只播一次，練習時可重播。</span>
+  </div>
+
+  <a href="gept-listening-12-print.html" style="display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #ffb703;color:#8a5a00;border-radius:12px;padding:11px 16px;margin-bottom:18px;text-decoration:none;font-size:.9rem;font-weight:700;box-shadow:0 3px 10px rgba(255,183,3,.16);">
+    <span>🖨</span><span>列印版（學生卷／教師卷）— 適合課堂紙本練習與批改，可直接列印或存成 PDF</span>
+  </a>
+
+  <div class="sticky">
+    <div class="bar">
+      <span>作答進度</span>
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <span id="count">0 / 30</span>
+    </div>
+  </div>
+
+  <form id="quiz"></form>
+
+  <div class="result" id="result">
+    <div class="score" id="scoreNum">0</div>
+    <div class="sub" id="scoreTxt">分</div>
+    <div class="bd">
+      <span style="color:var(--green)">答對 <b id="rOk">0</b></span>
+      <span style="color:var(--red)">答錯 <b id="rNo">0</b></span>
+      <span style="color:var(--gray)">未作答 <b id="rBlank">0</b></span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="submit" id="submitBtn">送出並查看解析</button>
+    <div class="hint" id="hint">尚未作答任何題目</div>
+    <button type="button" class="reset" id="resetBtn">重新作答</button>
+  </div>
+
+  <footer>GEPT 初級聽力　互動練習　&middot;　第二顆腦 / GEPT初級</footer>
+</div>
+
+<script>
+/* ====== 圖形素材（第12回 學校生活） ====== */
+const IMG = n => `<img class="pic-img" src="gept-listening-img/12/${n}.jpg" alt="${n}">`;
+const BARS=(title,labs,vals)=>{const max=Math.max(...vals),bw=28,gap=18,x0=20;let b='',l='';
+ labs.forEach((L,i)=>{const h=Math.round(vals[i]/max*70),x=x0+i*(bw+gap);
+  b+=`<rect x="${x}" y="${100-h}" width="${bw}" height="${h}" fill="#e9e9e9" stroke="#1a1a1a" stroke-width="1.5"/>`;
+  l+=`<text x="${x+bw/2}" y="116">${L}</text>`;});
+ return `<svg class="chart" width="176" height="132" viewBox="0 0 176 132"><text x="88" y="15" text-anchor="middle" font-size="14" font-weight="700">${title}</text><line x1="16" y1="22" x2="16" y2="100" stroke="#1a1a1a" stroke-width="1.5"/><line x1="16" y1="100" x2="170" y2="100" stroke="#1a1a1a" stroke-width="1.5"/>${b}<g font-size="11" text-anchor="middle">${l}</g></svg>`;};
+const CLK=(h,m)=>{const ma=m*6,ha=(h%12)*30+m*0.5,r=Math.PI/180;
+ const hx=(60+Math.sin(ha*r)*20).toFixed(1),hy=(54-Math.cos(ha*r)*20).toFixed(1);
+ const mx=(60+Math.sin(ma*r)*30).toFixed(1),my=(54-Math.cos(ma*r)*30).toFixed(1);
+ return `<svg width="110" height="100" viewBox="0 0 120 110"><circle cx="60" cy="54" r="40" fill="#fff" stroke="#1a1a1a" stroke-width="3"/><g stroke="#1a1a1a" stroke-width="2" stroke-linecap="round"><line x1="60" y1="18" x2="60" y2="25"/><line x1="60" y1="83" x2="60" y2="90"/><line x1="24" y1="54" x2="31" y2="54"/><line x1="89" y1="54" x2="96" y2="54"/></g><line x1="60" y1="54" x2="${hx}" y2="${hy}" stroke="#1a1a1a" stroke-width="3.5" stroke-linecap="round"/><line x1="60" y1="54" x2="${mx}" y2="${my}" stroke="#e6007e" stroke-width="3" stroke-linecap="round"/><circle cx="60" cy="54" r="3.5" fill="#1a1a1a"/></svg>`;};
+const SCHOOL=`<svg width="140" height="108" viewBox="0 0 140 110"><rect x="24" y="46" width="92" height="54" fill="#fff5ec" stroke="#1a1a1a" stroke-width="2.5"/><path d="M20 46 L70 20 L120 46 Z" fill="#ff9a6c" stroke="#1a1a1a" stroke-width="2.5" stroke-linejoin="round"/><rect x="64" y="10" width="12" height="14" fill="#e6007e"/><path d="M76 12 l14 4 l-14 4 z" fill="#ffd166"/><rect x="60" y="74" width="20" height="26" fill="#8a5a2b"/><g fill="#a5d8ff" stroke="#1a1a1a" stroke-width="1.5"><rect x="34" y="58" width="16" height="14"/><rect x="90" y="58" width="16" height="14"/></g><text x="70" y="42" text-anchor="middle" font-size="9" font-weight="800" fill="#fff">SCHOOL</text></svg>`;
+const GRADCAP=`<svg width="130" height="104" viewBox="0 0 130 106"><path d="M65 26 L118 46 L65 66 L12 46 Z" fill="#1a1a1a" stroke="#1a1a1a" stroke-width="2" stroke-linejoin="round"/><path d="M40 56 v22 q25 16 50 0 v-22" fill="none" stroke="#1a1a1a" stroke-width="3"/><line x1="118" y1="46" x2="118" y2="78" stroke="#ffd166" stroke-width="2"/><circle cx="118" cy="82" r="5" fill="#ffd166"/></svg>`;
+const WORKBOOK=`<svg width="120" height="110" viewBox="0 0 120 112"><rect x="30" y="14" width="64" height="86" rx="4" fill="#4dd0e1" stroke="#1a1a1a" stroke-width="2.5"/><rect x="30" y="14" width="14" height="86" fill="#2b9db0"/><rect x="52" y="26" width="30" height="20" fill="#fff" stroke="#1a1a1a" stroke-width="1"/><g stroke="#fff" stroke-width="1.6"><line x1="52" y1="58" x2="84" y2="58"/><line x1="52" y1="66" x2="84" y2="66"/><line x1="52" y1="74" x2="84" y2="74"/><line x1="52" y1="82" x2="72" y2="82"/></g></svg>`;
+const CD=`<svg width="104" height="104" viewBox="0 0 104 104"><circle cx="52" cy="52" r="42" fill="#d0d8e0" stroke="#1a1a1a" stroke-width="2"/><circle cx="52" cy="52" r="42" fill="none" stroke="#a5d8ff" stroke-width="8" opacity=".5"/><circle cx="52" cy="52" r="30" fill="#eef3f7" stroke="#1a1a1a" stroke-width="1"/><circle cx="52" cy="52" r="9" fill="#fff" stroke="#1a1a1a" stroke-width="2"/><path d="M52 14 A38 38 0 0 1 82 34" fill="none" stroke="#fff" stroke-width="3" opacity=".8"/></svg>`;
+/* ====== 大題 ====== */
+const PARTS=[
+ {t:"第一大題　看圖辨義",d:"共 5 題（1–5）。看圖並聆聽問題，從 A、B、C 三個選項中選出最適合的答案。"},
+ {t:"第二大題　問答",d:"共 10 題（6–15）。聆聽一個問句或直述句，選出最適合的回答。"},
+ {t:"第三大題　簡短對話",d:"共 10 題（16–25）。聆聽一段對話與問題，選出最適合的答案。"},
+ {t:"第四大題　短文聽解",d:"共 5 題（26–30）。聆聽一段短文與問題，從三張圖片中選出最適合的一張。"}
+];
+
+
+
+/* ====== 題庫（第12回 學校生活） ====== */
+const Q=[
+{n:1,p:0,fig:SCHOOL,o:["This is our school on a big green campus.","The servant delivers the supper.","A dolphin swims along the curve."],a:0,
+ sen:"For question one, look at the picture. What building is this?",szh:"第一題，請看圖片。這是什麼建築？",
+ en:"Our school on a green campus.",zh:"這是我們在一大片綠色校園(campus)裡的學校(school)，選 A。servant/deliver/supper、dolphin/curve 為干擾。"},
+{n:2,p:0,fig:GRADCAP,o:["The current season is warm.","A cartoon plays on the CD.","She wears a cap; she finished university with a good grade."],a:2,
+ sen:"For question two, look at the picture. What is she wearing?",szh:"第二題，請看圖片。她戴著什麼？",
+ en:"A cap; she finished university with a good grade.",zh:"她戴著方帽(cap)，以好成績(grade)從大學(university)畢業，選 C。current/season、cartoon/CD 為干擾。"},
+{n:3,p:0,fig:WORKBOOK,o:["The key is in the garage.","On the desk is a workbook for the student's lesson.","A wooden servant stands there."],a:1,
+ sen:"For question three, look at the picture. What is on the desk?",szh:"第三題，請看圖片。桌上是什麼？",
+ en:"A workbook for the student's lesson.",zh:"桌上是學生(student)上課(lesson)用的作業本(workbook)，選 B。key/garage、wooden/servant 為干擾。"},
+{n:4,p:0,fig:CLK(9,0),o:["The exam starts at nine o'clock.","A slender dolphin jumps.","We guess nothing."],a:0,
+ sen:"For question four, look at the picture. What time does the exam start?",szh:"第四題，請看圖片。考試幾點開始？",
+ en:"The exam starts at nine o'clock.",zh:"考試(exam)在九點(o'clock)整開始，選 A。slender/dolphin、guess/nothing 為干擾。"},
+{n:5,p:0,fig:CD,o:["The garage cover is wooden.","We aim at the target.","The teacher holds a CD for the English course."],a:2,
+ sen:"For question five, look at the picture. What is the teacher holding?",szh:"第五題，請看圖片。老師拿著什麼？",
+ en:"A CD for the English course.",zh:"老師(teacher)拿著英語課程(course)的光碟(CD)，選 C。garage/cover/wooden、aim/target 為干擾。"},
+
+{n:6,p:1,o:["The dolphin is slender.","I study education at college; I want to be a professor.","The key covers the garage."],a:1,
+ sen:"What do you study at college?",szh:"你在大學讀什麼？",
+ en:"Education at college; to be a professor.",zh:"問在大學(college)讀什麼，答『我讀教育(education)，想當教授(professor)』，選 B。dolphin/slender、key/cover/garage 為干擾。"},
+{n:7,p:1,o:["We learned a lot; a thousand thanks to our teacher for the project.","The season is current.","The servant aims at the target."],a:0,
+ sen:"How did your class project go?",szh:"你們的班級專題進行得如何？",
+ en:"We learned a lot; thanks to our teacher.",zh:"問專題(project)如何，答『我們學(learn)到很多，千(thousand)謝老師(teacher)』，選 A。season/current、servant/aim/target 為干擾。"},
+{n:8,p:1,o:["The cartoon is on the CD.","The garage is wooden.","Nothing; I just guess I passed the big exam, so I smile."],a:2,
+ sen:"Why are you smiling so happily?",szh:"你為什麼笑得這麼開心？",
+ en:"I guess I passed the exam, so I smile.",zh:"問為何微笑(smile)，答『沒什麼(nothing)，我猜(guess)我通過了考試(exam)』，選 C。cartoon/CD、garage/wooden 為干擾。"},
+{n:9,p:1,o:["The professor delivers supper.","Any season is fine; however, the autumn air is the freshest.","A dolphin curves in the sea."],a:1,
+ sen:"Which season is best for studying?",szh:"哪個季節最適合讀書？",
+ en:"Any season; however, autumn air is fresh.",zh:"問哪個季節(season)適合讀書，答『任何季節都行，不過(however)秋天空氣(air)最清新』，選 B。professor/deliver/supper、dolphin/curve 為干擾。"},
+{n:10,p:1,o:["My aim this semester is to reach my target and support my grade.","The CD is slender.","The servant guesses nothing."],a:0,
+ sen:"What is your goal for this term?",szh:"你這學期的目標是什麼？",
+ en:"To reach my target and support my grade.",zh:"問這學期(semester)目標，答『我的目標(aim)是達到標的(target)、拉高我的成績(grade/support)』，選 A。CD/slender、servant/guess/nothing 為干擾。"},
+{n:11,p:1,o:["The dolphin is on the track.","The professor curves the wood.","Cover it well; the key is in the garage, not anywhere here."],a:2,
+ sen:"Where did you put the classroom key?",szh:"你把教室鑰匙放哪了？",
+ en:"The key is in the garage, not here.",zh:"問鑰匙(key)放哪，答『蓋好(cover)，鑰匙在車庫(garage)，不在(anywhere)這附近』，選 C。dolphin/track、professor/curve 為干擾。"},
+{n:12,p:1,o:["The exam is at three.","He suggested we deliver the project before supper.","A cartoon is on the CD."],a:1,
+ sen:"What did the professor tell the class to do?",szh:"教授要班上做什麼？",
+ en:"Deliver the project before supper.",zh:"問教授(professor)要求什麼，答『他建議(suggest)我們在晚餐(supper)前交(deliver)出專題』，選 B。exam、cartoon/CD 為干擾。"},
+{n:13,p:1,o:["Yes; with good reason, all students are equal in class.","The dolphin is slender.","The garage is wooden."],a:0,
+ sen:"Do you think the hard struggle in school is fair?",szh:"你覺得學校裡的努力奮鬥公平嗎？",
+ en:"With reason, all students are equal.",zh:"問奮鬥(struggle)是否公平，答『是，有道理(reason)，所有學生(student)都(are)平等(equal)』，選 A。dolphin/slender、garage/wooden 為干擾。"},
+{n:14,p:1,o:["The professor is slender.","The key is on the target.","A funny cartoon about a dolphin racing on a track."],a:2,
+ sen:"What is on the new school CD?",szh:"學校新光碟裡是什麼？",
+ en:"A cartoon about a dolphin on a track.",zh:"問CD裡是什麼，答『一部關於海豚(dolphin)在跑道(track)上比賽的卡通(cartoon)』，選 C。professor/slender、key/target 為干擾。"},
+{n:15,p:1,o:["The servant delivers supper.","On campus there is a slender wooden bridge on a gentle curve.","We aim at nothing."],a:1,
+ sen:"What can I see on your school campus?",szh:"在你們校園可以看到什麼？",
+ en:"A slender wooden bridge on a curve.",zh:"問校園(campus)有什麼，答『有一座細長(slender)的木(wooden)橋，在一個緩彎(curve)上』，選 B。servant/deliver/supper、aim/nothing 為干擾。"},
+
+{n:16,p:2,o:["An English lesson.","A math exam.","A sports class."],a:0,
+ sen:"W: What is the first class today at school? &nbsp;M: An English lesson, our favorite one. &nbsp;W: Great start. &nbsp;Q: What is the first class?",
+ szh:"女：今天學校(school)第一節是什麼課？　男：英語課(lesson)，我們最愛的。　女：好的開始。　問：第一節是什麼課？",
+ en:"An English lesson.",zh:"第一節是英語課(lesson)，選 A。"},
+{n:17,p:2,o:["A low grade.","A funny cartoon.","A high grade on the exam."],a:2,
+ sen:"M: How did you do on the science exam? &nbsp;W: I got a high grade; I studied hard. &nbsp;M: Well done! &nbsp;Q: What did the woman get?",
+ szh:"男：你自然考試(exam)考得如何？　女：我拿了高分(grade)，我很認真讀。　男：太棒了！　問：女士得到什麼？",
+ en:"A high grade.",zh:"女士考試(exam)得高分(grade)，選 C。"},
+{n:18,p:2,o:["A student.","A professor at the university.","A servant."],a:1,
+ sen:"W: What does your father do? &nbsp;M: He is a professor at the university, teaching history. &nbsp;W: Respectable job. &nbsp;Q: What is the father's job?",
+ szh:"女：你爸爸做什麼？　男：他是大學(university)的教授(professor)，教歷史。　女：受人尊敬的工作。　問：爸爸的工作是什麼？",
+ en:"A professor at the university.",zh:"爸爸是大學(university)教授(professor)，選 B。"},
+{n:19,p:2,o:["We thank our teachers on Teacher's Day.","We eat lemon.","We go to the garage."],a:0,
+ sen:"M: What do students do on Teacher's Day? &nbsp;W: We thank our teachers for their hard work. &nbsp;M: How sweet. &nbsp;Q: What do students do on Teacher's Day?",
+ szh:"男：教師節(Teacher's Day)學生做什麼？　女：我們感謝老師(teacher)的辛勞。　男：真溫馨。　問：教師節學生做什麼？",
+ en:"Thank our teachers.",zh:"教師節(Teacher's Day)學生感謝老師(teacher)，選 A。"},
+{n:20,p:2,o:["Read a book.","Sing a song.","Give a kiss and show more action on stage."],a:2,
+ sen:"W: What did the drama teacher ask for? &nbsp;M: A kiss scene and more action on the stage. &nbsp;W: Exciting play. &nbsp;Q: What did the teacher ask for?",
+ szh:"女：戲劇老師要求什麼？　男：一個親吻(kiss)場景和舞台上更多動作(action)。　女：刺激的戲。　問：老師要求什麼？",
+ en:"A kiss and more action.",zh:"老師要一個吻(kiss)戲和更多動作(action)，選 C。"},
+{n:21,p:2,o:["Study math.","Test a lemon in a nature lesson.","Read a cartoon."],a:1,
+ sen:"M: What did you do in science class? &nbsp;W: We tested a lemon battery in our nature lesson. &nbsp;M: Cool experiment. &nbsp;Q: What did they do in science class?",
+ szh:"男：你們自然課做了什麼？　女：我們在自然(nature)課(lesson)測試檸檬(lemon)電池。　男：好酷的實驗。　問：他們自然課做了什麼？",
+ en:"Tested a lemon in a nature lesson.",zh:"他們在自然(nature)課測試檸檬(lemon)，選 B。"},
+{n:22,p:2,o:["The whole class will support and help him.","A servant will.","Nobody will."],a:0,
+ sen:"W: Tom is struggling with his project. What now? &nbsp;M: The whole class will support and help him. &nbsp;W: Kind classmates. &nbsp;Q: Who will help Tom?",
+ szh:"女：Tom 的專題(project)遇到困難，怎麼辦？　男：全班會支持(support)並幫助他。　女：好同學。　問：誰會幫 Tom？",
+ en:"The whole class will support him.",zh:"全班會支持(support)幫助他，選 A。servant 僕人為干擾。"},
+{n:23,p:2,o:["Thirteen dollars.","One thousand.","About thirteen, out of one thousand students."],a:2,
+ sen:"M: How many students got a perfect score? &nbsp;W: About thirteen, out of one thousand students in the college. &nbsp;M: Very few! &nbsp;Q: How many got a perfect score?",
+ szh:"男：有幾個學生拿滿分？　女：大約十三(thirteen)個，全學院(college)一千(thousand)名學生裡。　男：真少！　問：有幾人拿滿分？",
+ en:"About thirteen students.",zh:"大約十三(thirteen)人拿滿分，選 C。一千(thousand)是總人數(干擾)。"},
+{n:24,p:2,o:["It is old news.","It is current, this season's report.","It is a cartoon."],a:1,
+ sen:"W: Is this school report new? &nbsp;M: Yes, it is current, from this very season. &nbsp;W: Good to know. &nbsp;Q: What does the man say about the report?",
+ szh:"女：這份校刊是新的嗎？　男：是的，很新(current)，就是這一季(season)的。　女：了解。　問：男士怎麼說這份報告？",
+ en:"It is current, this season's.",zh:"報告是最新(current)、這一季(season)的，選 B。"},
+{n:25,p:2,o:["To study hard and learn every lesson well.","To watch cartoons.","To play in the garage."],a:0,
+ sen:"M: What is your advice for new students? &nbsp;W: To study hard and learn every lesson well. &nbsp;M: Wise words. &nbsp;Q: What is the woman's advice?",
+ szh:"男：你給新生什麼建議？　女：認真讀書(study)，把每堂課(lesson)都學(learn)好。　男：金玉良言。　問：女士的建議是什麼？",
+ en:"Study hard and learn well.",zh:"認真讀書(study)、學(learn)好每堂課，選 A。"},
+
+{n:26,p:3,pic:true,o:[BARS("Exam Grades",["Math","English","Art"],[20,50,80]),BARS("Exam Grades",["Math","English","Art"],[50,80,20]),BARS("Exam Grades",["Math","English","Art"],[80,50,20])],a:2,
+ sen:"This semester our class checked the average grade in each exam. Math had the highest grade, because our teacher was excellent. English was in the middle, and art had the lowest, as few students practiced. So the math bar should be the tallest. &nbsp;Q: Which chart shows the exam grades?",
+ szh:"這學期(semester)我們班檢查每科考試(exam)的平均分(grade)。數學最高，因為老師(teacher)很棒；英語中等；美術最低，因為少有學生(student)練習。所以數學長條最高。　問：哪張圖顯示考試成績？",
+ en:"Math highest, art lowest.",zh:"數學最高、美術最低，符合『Math 最高』的 C。"},
+{n:27,p:3,pic:true,o:[BARS("Course Choice",["Science","History","Music"],[30,55,80]),BARS("Course Choice",["Science","History","Music"],[80,55,30]),BARS("Course Choice",["Science","History","Music"],[55,80,30])],a:1,
+ sen:"At our college, students chose an extra course this year. Science was the most popular, because a famous professor teaches it. History was in the middle, and music was the least chosen. So the science bar is the highest and music the lowest. &nbsp;Q: Which chart shows the course choices?",
+ szh:"在我們學院(college)，學生今年選了額外的課程(course)。自然最熱門，因為有名教授(professor)開課；歷史中等；音樂最少人選。所以自然最高、音樂最低。　問：哪張圖顯示選課結果？",
+ en:"Science most, music least.",zh:"自然最多、音樂最少，符合『Science 最高、Music 最低』的 B。"},
+{n:28,p:3,pic:true,o:[IMG('bread'),IMG('noodles'),IMG('rice')],a:0,
+ sen:"During exam week, our school canteen is very busy. Many students want a quick meal before their lessons. They do not order slow noodles or heavy rice, because there is no time. Instead, most of them grab a piece of bread and study while they eat. &nbsp;Q: What do most students eat during exam week?",
+ szh:"考試(exam)週，學校(school)餐廳很忙。許多學生(student)想在上課(lesson)前快速吃一餐。他們不點慢的麵或吃太多飯，因為沒時間，而是大多抓一塊麵包(bread)，邊吃邊讀書(study)。　問：考試週大多數學生吃什麼？",
+ en:"Bread.",zh:"大多數學生吃麵包(bread)，選 A。麵、飯為干擾。"},
+{n:29,p:3,pic:true,o:[IMG('bread'),IMG('rice'),IMG('noodles')],a:2,
+ sen:"On the last day of the semester, our professor invited the whole class for supper. He did not serve plain bread or dry rice, which we eat every day at school. Instead, he cooked a big pot of hot noodles for everyone, and we all thanked him warmly. &nbsp;Q: What did the professor cook for supper?",
+ szh:"學期(semester)最後一天，教授(professor)請全班吃晚餐(supper)。他沒端我們在學校天天吃的普通麵包或白飯，而是煮了一大鍋熱麵(noodles)給大家，我們都溫暖地感謝他。　問：教授晚餐煮了什麼？",
+ en:"Hot noodles.",zh:"教授煮了熱麵(noodles)，選 C。麵包、飯為干擾。"},
+{n:30,p:3,pic:true,o:[IMG('mountain'),IMG('beach'),IMG('park')],a:1,
+ sen:"Our school planned an end-of-semester trip. The history teacher liked the mountain for its old temples, and one student liked the park. But the class chose the beach, because after a long term of study, everyone wanted to relax by the sea. &nbsp;Q: Where did the class go for their trip?",
+ szh:"我們學校(school)計畫學期(semester)末旅行。歷史老師(teacher)喜歡山上的古廟，一位學生(student)喜歡公園，但全班選了海邊(beach)，因為經過一學期的讀書(study)，大家都想在海邊放鬆。　問：全班去哪裡旅行？",
+ en:"The beach.",zh:"全班去海邊(beach)，選 B。山、公園為干擾。"}
+];
+
+/* ====== 音檔播放（AAC/.m4a，各廠牌手機皆支援）====== */
+let curAudio=null, curBtn=null;
+function resetPlayBtn(b){ if(!b) return; b.classList.remove('playing'); b.querySelector('.txt').textContent = b.dataset.played?'重播':'播放'; }
+function stopAudio(){ if(curAudio) curAudio.pause(); if(curBtn) resetPlayBtn(curBtn); curAudio=null; curBtn=null; }
+function playAudio(audio,btn){
+  if(curAudio===audio){                       // 同一題：暫停 / 繼續
+    if(audio.paused){ audio.play(); btn.classList.add('playing'); btn.querySelector('.txt').textContent='播放中…'; }
+    else { audio.pause(); }
+    return;
+  }
+  if(curAudio){ curAudio.pause(); resetPlayBtn(curBtn); }   // 換題：停掉上一段
+  curAudio=audio; curBtn=btn; btn.dataset.played='1';
+  btn.classList.add('playing'); btn.querySelector('.txt').textContent='播放中…';
+  audio.play().catch(()=>resetPlayBtn(btn));
+}
+
+/* ====== 產生畫面 ====== */
+const form=document.getElementById('quiz');
+let lastP=-1;
+Q.forEach(q=>{
+  if(q.p!==lastP){
+    const st=document.createElement('div'); st.className='section-title s'+q.p; st.textContent=PARTS[q.p].t;
+    const sd=document.createElement('div'); sd.className='section-desc'; sd.textContent=PARTS[q.p].d;
+    form.appendChild(st); form.appendChild(sd); lastP=q.p;
+  }
+  const card=document.createElement('div'); card.className='q'; card.id='q'+q.n;
+  const head=document.createElement('div'); head.className='qhead';
+  head.innerHTML=`<span class="num">${q.n}</span>
+    <button type="button" class="play"><span class="wave">🔊</span><span class="txt">播放</span></button>
+    <span class="hintq">聆聽後作答</span>`;
+  card.appendChild(head);
+  const audio=document.createElement('audio'); audio.preload='none'; audio.src='gept-listening-audio/12/q'+q.n+'.m4a?v=r12-20260909'; card.appendChild(audio);
+  const pbtn=head.querySelector('.play');
+  pbtn.addEventListener('click',()=>playAudio(audio,pbtn));
+  audio.addEventListener('ended',()=>{ if(curBtn===pbtn){ resetPlayBtn(pbtn); curAudio=null; curBtn=null; } });
+  audio.addEventListener('pause',()=>{ if(curAudio===audio && curBtn===pbtn && !audio.ended){ pbtn.classList.remove('playing'); pbtn.querySelector('.txt').textContent='繼續'; } });
+  if(q.fig){ const f=document.createElement('div'); f.className='fig'; f.innerHTML=q.fig; card.appendChild(f); }
+  if(q.pic){
+    if(q.legend){ const lg=document.createElement('div'); lg.innerHTML=PIE_LEGEND; card.appendChild(lg.firstChild); }
+    const wrap=document.createElement('div'); wrap.className='picopts';
+    q.o.forEach((opt,i)=>{
+      const cell=document.createElement('label'); cell.className='picopt'; cell.dataset.i=i;
+      cell.innerHTML=`<span class="lab">${'ABC'[i]}</span>${opt}<input type="radio" name="q${q.n}" value="${i}" hidden>`;
+      cell.querySelector('input').addEventListener('change',()=>{ card.querySelectorAll('.picopt').forEach(o=>o.classList.remove('sel')); cell.classList.add('sel'); updateProgress(); });
+      wrap.appendChild(cell);
+    });
+    card.appendChild(wrap);
+  } else {
+    q.o.forEach((opt,i)=>{
+      const lab=document.createElement('label'); lab.className='opt'; lab.dataset.i=i;
+      lab.innerHTML=`<input type="radio" name="q${q.n}" value="${i}"><span class="lab">${'ABC'[i]}</span><span>${opt}</span>`;
+      lab.querySelector('input').addEventListener('change',()=>{ card.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel')); lab.classList.add('sel'); updateProgress(); });
+      card.appendChild(lab);
+    });
+  }
+  const exp=document.createElement('div'); exp.className='exp'; exp.id='exp'+q.n; card.appendChild(exp);
+  form.appendChild(card);
+});
+
+const submitBtn=document.getElementById('submitBtn');
+const resetBtn=document.getElementById('resetBtn');
+const hint=document.getElementById('hint');
+const TOT=Q.length;
+function answeredCount(){ let c=0; Q.forEach(q=>{ if(form.querySelector(`input[name="q${q.n}"]:checked`)) c++; }); return c; }
+function updateProgress(){
+  const c=answeredCount();
+  document.getElementById('count').textContent=`${c} / ${TOT}`;
+  document.getElementById('fill').style.width=(c/TOT*100)+'%';
+  hint.textContent = c===TOT ? '已完成全部 30 題' : (c===0 ? '尚未作答任何題目（仍可送出查看解析）' : `已作答 ${c} 題，未作答 ${TOT-c} 題（仍可送出）`);
+}
+
+submitBtn.addEventListener('click',()=>{
+  stopAudio();
+  let ok=0, blank=0;
+  Q.forEach(q=>{
+    const sel=form.querySelector(`input[name="q${q.n}"]:checked`);
+    const pick=sel?parseInt(sel.value):null;
+    if(pick===null) blank++;
+    const card=document.getElementById('q'+q.n);
+    const cls=q.pic?'.picopt':'.opt';
+    card.querySelectorAll(cls).forEach(o=>{
+      o.classList.add('lock');
+      const inp=o.querySelector('input'); if(inp) inp.disabled=true;
+      const i=parseInt(o.dataset.i);
+      if(i===q.a) o.classList.add('correct');
+      if(pick!==null && i===pick && pick!==q.a) o.classList.add('wrong');
+    });
+    const correct=pick===q.a; if(correct) ok++;
+    const exp=document.getElementById('exp'+q.n);
+    const tag=correct?'答對':(pick===null?'未作答':'答錯');
+    exp.innerHTML=`<span class="tag ${correct?'':'miss'}">${tag}　正解：${'ABC'[q.a]}</span>
+      <div class="scriptbox"><b>聽力原文</b>　${q.sen}<br><span style="color:#7a4a12">${q.szh}</span></div>
+      <div class="en"><b>EN</b>&nbsp;${q.en}</div><div class="zh"><b>中</b>&nbsp;${q.zh}</div>`;
+    exp.classList.add('show');
+  });
+  document.getElementById('scoreNum').textContent=Math.round(ok/TOT*100);
+  document.getElementById('scoreTxt').textContent=`分（答對 ${ok} / ${TOT} 題）`;
+  document.getElementById('rOk').textContent=ok;
+  document.getElementById('rNo').textContent=TOT-ok-blank;
+  document.getElementById('rBlank').textContent=blank;
+  const res=document.getElementById('result'); res.classList.add('show');
+  submitBtn.style.display='none'; hint.style.display='none'; resetBtn.style.display='block';
+  res.scrollIntoView({behavior:'smooth'});
+});
+
+resetBtn.addEventListener('click',()=>{
+  stopAudio(); form.reset();
+  Q.forEach(q=>{
+    const card=document.getElementById('q'+q.n);
+    card.querySelectorAll('.opt,.picopt').forEach(o=>{o.classList.remove('sel','correct','wrong','lock');const inp=o.querySelector('input');if(inp)inp.disabled=false;});
+    document.getElementById('exp'+q.n).classList.remove('show');
+  });
+  document.getElementById('result').classList.remove('show');
+  submitBtn.style.display='block'; hint.style.display='block'; resetBtn.style.display='none';
+  updateProgress(); window.scrollTo({top:0,behavior:'smooth'});
+});
+
+updateProgress();
+</script>
+</body>
+</html>
