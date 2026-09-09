@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEPT 初級 聽力測驗　第23回　閱讀寫作與旅行</title>
+<style>
+  :root{
+    --blue:#2b8cff; --blue-dark:#1f6fe0;
+    --coral:#ff7a59; --amber:#ffb02e; --pink:#ff5d8f;
+    --bg:#f3f9ff; --card:#ffffff; --line:#e3edf9;
+    --green:#22b573; --green-bg:#e4f8ef;
+    --red:#ff5a5a; --red-bg:#ffecec;
+    --gray:#6b7785;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;
+    background:linear-gradient(180deg,#fff5ec,#fff9f4 70%);color:#22303f;line-height:1.6;
+    -webkit-text-size-adjust:100%;}
+  .wrap{max-width:760px;margin:0 auto;padding:16px;}
+  header.top{background:linear-gradient(135deg,#f6d365,#fda085 60%,#ff7a9c);color:#fff;
+    border-radius:18px;padding:24px 22px;margin-bottom:16px;box-shadow:0 8px 22px rgba(253,160,133,.35);}
+  header.top h1{margin:0 0 6px;font-size:1.5rem;text-shadow:0 1px 2px rgba(0,0,0,.14);}
+  header.top p{margin:0;font-size:.92rem;opacity:.96;}
+  .meta{margin-top:14px;font-size:.86rem;background:rgba(255,255,255,.24);
+    padding:9px 13px;border-radius:10px;}
+  .notice{background:#fffbeb;border:1.5px solid #f59e0b;border-radius:12px;
+    padding:11px 15px;margin-bottom:14px;font-size:.86rem;color:#78350f;
+    display:flex;align-items:flex-start;gap:9px;line-height:1.55;}
+  .notice .ic{font-size:1.1rem;flex-shrink:0;margin-top:1px;}
+  .sticky{position:sticky;top:0;z-index:20;padding:10px 0;
+    background:linear-gradient(180deg,#fff5ec 70%,rgba(255,245,236,0));}
+  .bar{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:11px 16px;display:flex;align-items:center;gap:12px;font-size:.9rem;
+    box-shadow:0 4px 12px rgba(253,160,133,.14);}
+  .bar .track{flex:1;height:9px;background:#f1e4dc;border-radius:6px;overflow:hidden;}
+  .bar .fill{height:100%;width:0;border-radius:6px;
+    background:linear-gradient(90deg,#ffb02e,#ff7a59);transition:width .35s;}
+  .bar #count{font-weight:700;color:#e0740a;}
+  .section-title{color:#fff;font-weight:800;border-radius:12px;
+    padding:10px 16px;margin:24px 0 6px;font-size:1.05rem;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);}
+  .section-title.s0{background:linear-gradient(135deg,#ff9a6c,#ff6f91);}
+  .section-title.s1{background:linear-gradient(135deg,#4dd0e1,#2b8cff);}
+  .section-title.s2{background:linear-gradient(135deg,#9b8bff,#b06bff);}
+  .section-title.s3{background:linear-gradient(135deg,#43cea2,#3ab0d6);}
+  .section-desc{font-size:.86rem;color:var(--gray);margin:0 4px 10px;}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:15px 17px;margin:12px 0;box-shadow:0 3px 10px rgba(253,160,133,.09);}
+  .qhead{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+  .qhead .num{display:inline-block;color:#fff;background:var(--coral);font-weight:700;
+    border-radius:8px;padding:1px 10px;font-size:.92rem;}
+  .play{display:inline-flex;align-items:center;gap:7px;border:0;cursor:pointer;
+    color:#fff;font-weight:800;font-size:.92rem;border-radius:22px;padding:8px 16px;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);box-shadow:0 4px 12px rgba(255,93,143,.3);}
+  .play:active{transform:translateY(1px);}
+  .play.playing{background:linear-gradient(135deg,#22b573,#1a9e63);}
+  .play .wave{font-size:.8rem;opacity:.9;}
+  .hintq{font-size:.8rem;color:var(--gray);}
+  .fig{text-align:center;margin:4px 0 12px;}
+  .fig svg{max-width:100%;height:auto;}
+  .pic-img{border-radius:9px;border:1px solid #e6ded7;object-fit:cover;}
+  .fig .pic-img{max-width:230px;width:100%;max-height:150px;}
+  .opt{display:flex;align-items:flex-start;gap:10px;border:2px solid var(--line);
+    border-radius:11px;padding:10px 13px;margin:8px 0;cursor:pointer;transition:.15s;
+    font-size:.95rem;background:#fbfdff;}
+  .opt:hover{border-color:var(--coral);background:#fff4ee;}
+  .opt input{margin-top:3px;accent-color:var(--coral);}
+  .opt .lab{font-weight:800;color:var(--coral);min-width:18px;}
+  .opt.sel{border-color:var(--coral);background:#ffeee6;}
+  .opt.correct{border-color:var(--green);background:var(--green-bg);}
+  .opt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .opt.lock{cursor:default;}
+  /* picture options (Part 4) */
+  .picopts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:6px 0;}
+  .picopt{border:2px solid var(--line);border-radius:12px;padding:9px 6px;cursor:pointer;
+    text-align:center;transition:.15s;background:#fbfdff;display:flex;flex-direction:column;align-items:center;gap:6px;}
+  .picopt:hover{border-color:var(--coral);background:#fff4ee;}
+  .picopt.sel{border-color:var(--coral);background:#ffeee6;}
+  .picopt.correct{border-color:var(--green);background:var(--green-bg);}
+  .picopt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .picopt .lab{font-weight:800;color:var(--coral);align-self:flex-start;margin-left:4px;}
+  .picopt.correct .lab{color:var(--green);}.picopt.wrong .lab{color:var(--red);}
+  .picopt img.pic-img{width:100%;height:82px;}
+  .picopt svg{width:100%;max-width:132px;height:auto;}
+  .picopt svg.chart{max-width:100%;}
+  .legend{display:flex;gap:12px;justify-content:center;font-size:.72rem;margin:2px 0 6px;color:#556;flex-wrap:wrap;}
+  .legend i{display:inline-block;width:11px;height:11px;border:1px solid #999;margin-right:4px;vertical-align:-1px;}
+  table.mini{border-collapse:collapse;font-size:.62rem;margin:0 auto;}
+  table.mini th{background:#33414f;color:#fff;padding:2px 4px;}
+  table.mini td{border:1px solid #bbb;padding:2px 4px;text-align:center;}
+  .board{background:#111;color:#ffd24a;border-radius:5px;padding:5px;font-family:"Courier New",monospace;display:inline-block;}
+  .board table{border-collapse:collapse;font-size:.6rem;color:#ffd24a;}
+  .board th{color:#7fd7ff;padding:1px 4px;border-bottom:1px solid #444;}
+  .board td{padding:1px 4px;text-align:center;}
+  .exp{display:none;margin-top:11px;border-top:2px dashed #ffe1c2;padding-top:11px;font-size:.9rem;}
+  .exp.show{display:block;}
+  .exp .tag{display:inline-block;font-weight:800;color:#fff;background:var(--green);
+    border-radius:7px;padding:2px 10px;font-size:.8rem;margin-bottom:7px;}
+  .exp .tag.miss{background:var(--red);}
+  .exp .scriptbox{background:#f4f8ff;border-radius:8px;padding:7px 11px;margin:5px 0;font-size:.88rem;color:#20364d;}
+  .exp .scriptbox b{color:var(--blue-dark);}
+  .exp .en{color:#1c4f7a;background:#eef7ff;border-radius:8px;padding:6px 10px;margin:5px 0;}
+  .exp .zh{color:#7a4a12;background:#fff7ea;border-radius:8px;padding:6px 10px;margin:5px 0;}
+  .actions{position:sticky;bottom:0;padding:14px 0 6px;margin-top:18px;
+    background:linear-gradient(transparent,#fff9f4 35%);}
+  button.submit{width:100%;color:#fff;border:0;border-radius:14px;padding:16px;
+    font-size:1.08rem;font-weight:800;cursor:pointer;
+    background:linear-gradient(135deg,#ff8a5b,#ff5d8f);
+    box-shadow:0 6px 16px rgba(255,93,143,.35);}
+  button.submit:active{transform:translateY(1px);}
+  button.reset{width:100%;background:#fff;color:var(--coral);border:2px solid var(--coral);
+    border-radius:14px;padding:14px;font-size:1rem;font-weight:800;cursor:pointer;margin-top:10px;display:none;}
+  .result{display:none;background:var(--card);border:3px solid transparent;border-radius:16px;
+    padding:22px;margin:16px 0;text-align:center;
+    background-image:linear-gradient(#fff,#fff),linear-gradient(135deg,#ffb02e,#ff7a59,#ff5d8f);
+    background-origin:border-box;background-clip:padding-box,border-box;
+    box-shadow:0 8px 22px rgba(255,122,89,.18);}
+  .result.show{display:block;}
+  .result .score{font-size:2.8rem;font-weight:900;
+    background:linear-gradient(135deg,#ff7a59,#ff5d8f);-webkit-background-clip:text;
+    background-clip:text;-webkit-text-fill-color:transparent;}
+  .result .sub{color:var(--gray);font-size:.95rem;}
+  .result .bd{display:flex;justify-content:center;gap:18px;margin-top:12px;flex-wrap:wrap;font-size:.95rem;}
+  .result .bd span{font-weight:800;}
+  .hint{text-align:center;font-size:.85rem;color:var(--gray);margin-top:9px;min-height:1.2em;}
+  footer{text-align:center;color:var(--gray);font-size:.8rem;margin:24px 0;}
+</style>
+<!-- EFETL-PWA -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#7C4DFF">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="EFETL">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}</script>
+<!-- /EFETL-PWA -->
+</head>
+<body>
+<a href="gept-listening.html" style="position:fixed;top:12px;left:12px;background:rgba(255,255,255,.92);color:#ff6f91;padding:7px 15px;border-radius:20px;text-decoration:none;font-size:.85rem;font-weight:800;z-index:999;box-shadow:0 3px 10px rgba(0,0,0,.15);">&#8592; 回聽力題庫</a>
+<div class="wrap">
+  <header class="top">
+    <h1>GEPT 初級　聽力測驗　<span style="opacity:.9">第23回　閱讀寫作與旅行</span></h1>
+    <p>互動聽力練習　&middot;　依官方四大題型與難度命題</p>
+    <div class="meta">共 4 大題、30 題　|　每題按 🔊 播放，聆聽後作答　|　送出後顯示聽力原文、中英解析與分數</div>
+  </header>
+
+  <div class="notice">
+    <span class="ic">🎧</span>
+    <span>每題皆附<strong>語音朗讀音檔</strong>，iPhone、Android 各廠牌手機與電腦瀏覽器皆可播放（請開啟媒體音量）。點各題的 <strong>🔊 播放</strong> 鈕聆聽；正式考試每題只播一次，練習時可重播。</span>
+  </div>
+
+  <a href="gept-listening-23-print.html" style="display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #ffb703;color:#8a5a00;border-radius:12px;padding:11px 16px;margin-bottom:18px;text-decoration:none;font-size:.9rem;font-weight:700;box-shadow:0 3px 10px rgba(255,183,3,.16);">
+    <span>🖨</span><span>列印版（學生卷／教師卷）— 適合課堂紙本練習與批改，可直接列印或存成 PDF</span>
+  </a>
+
+  <div class="sticky">
+    <div class="bar">
+      <span>作答進度</span>
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <span id="count">0 / 30</span>
+    </div>
+  </div>
+
+  <form id="quiz"></form>
+
+  <div class="result" id="result">
+    <div class="score" id="scoreNum">0</div>
+    <div class="sub" id="scoreTxt">分</div>
+    <div class="bd">
+      <span style="color:var(--green)">答對 <b id="rOk">0</b></span>
+      <span style="color:var(--red)">答錯 <b id="rNo">0</b></span>
+      <span style="color:var(--gray)">未作答 <b id="rBlank">0</b></span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="submit" id="submitBtn">送出並查看解析</button>
+    <div class="hint" id="hint">尚未作答任何題目</div>
+    <button type="button" class="reset" id="resetBtn">重新作答</button>
+  </div>
+
+  <footer>GEPT 初級聽力　互動練習　&middot;　第二顆腦 / GEPT初級</footer>
+</div>
+
+<script>
+/* ====== 圖形素材（第23回 閱讀寫作與旅行） ====== */
+const IMG = n => `<img class="pic-img" src="gept-listening-img/23/${n}.jpg" alt="${n}">`;
+const BARS=(title,labs,vals)=>{const max=Math.max(...vals),bw=28,gap=18,x0=20;let b='',l='';
+ labs.forEach((L,i)=>{const h=Math.round(vals[i]/max*70),x=x0+i*(bw+gap);
+  b+=`<rect x="${x}" y="${100-h}" width="${bw}" height="${h}" fill="#e9e9e9" stroke="#1a1a1a" stroke-width="1.5"/>`;
+  l+=`<text x="${x+bw/2}" y="116">${L}</text>`;});
+ return `<svg class="chart" width="176" height="132" viewBox="0 0 176 132"><text x="88" y="15" text-anchor="middle" font-size="14" font-weight="700">${title}</text><line x1="16" y1="22" x2="16" y2="100" stroke="#1a1a1a" stroke-width="1.5"/><line x1="16" y1="100" x2="170" y2="100" stroke="#1a1a1a" stroke-width="1.5"/>${b}<g font-size="11" text-anchor="middle">${l}</g></svg>`;};
+const NOVEL=`<svg width="120" height="108" viewBox="0 0 120 110"><rect x="34" y="14" width="58" height="84" rx="3" fill="#8a5acb" stroke="#1a1a1a" stroke-width="2.5"/><rect x="34" y="14" width="12" height="84" fill="#6a3fa8"/><rect x="54" y="26" width="30" height="4" fill="#fff"/><rect x="54" y="36" width="30" height="3" fill="#e9d8ff"/><g stroke="#e9d8ff" stroke-width="2"><line x1="54" y1="52" x2="84" y2="52"/><line x1="54" y1="60" x2="84" y2="60"/><line x1="54" y1="68" x2="84" y2="68"/><line x1="54" y1="76" x2="76" y2="76"/></g></svg>`;
+const DICTIONARY=`<svg width="126" height="100" viewBox="0 0 126 102"><path d="M63 22 q-24 -12 -48 0 v66 q24 -10 48 0 q24 -10 48 0 v-66 q-24 -12 -48 0z" fill="#fff" stroke="#1a1a1a" stroke-width="2.5"/><line x1="63" y1="22" x2="63" y2="88" stroke="#1a1a1a" stroke-width="2"/><g stroke="#bbb" stroke-width="1.5"><line x1="24" y1="36" x2="54" y2="34"/><line x1="24" y1="46" x2="54" y2="44"/><line x1="24" y1="56" x2="54" y2="54"/><line x1="72" y1="34" x2="102" y2="36"/><line x1="72" y1="44" x2="102" y2="46"/><line x1="72" y1="54" x2="102" y2="56"/></g><path d="M63 14 v10" stroke="#e6007e" stroke-width="3"/></svg>`;
+const HOTEL=`<svg width="110" height="112" viewBox="0 0 110 114"><rect x="26" y="20" width="58" height="88" fill="#cfd8e3" stroke="#1a1a1a" stroke-width="2.5"/><rect x="26" y="8" width="58" height="14" fill="#e6007e"/><text x="55" y="19" text-anchor="middle" font-size="9" font-weight="800" fill="#fff">HOTEL</text><g fill="#a5d8ff" stroke="#1a1a1a" stroke-width="1"><rect x="34" y="30" width="10" height="10"/><rect x="50" y="30" width="10" height="10"/><rect x="66" y="30" width="10" height="10"/><rect x="34" y="48" width="10" height="10"/><rect x="50" y="48" width="10" height="10"/><rect x="66" y="48" width="10" height="10"/><rect x="34" y="66" width="10" height="10"/><rect x="50" y="66" width="10" height="10"/><rect x="66" y="66" width="10" height="10"/></g><rect x="48" y="88" width="14" height="20" fill="#8a5a2b"/></svg>`;
+const TENT=`<svg width="130" height="100" viewBox="0 0 130 102"><path d="M20 90 L65 20 L110 90 Z" fill="#43a047" stroke="#1a1a1a" stroke-width="2.5" stroke-linejoin="round"/><path d="M65 20 L55 90 L75 90 Z" fill="#2f7a34" stroke="#1a1a1a" stroke-width="1.5"/><path d="M60 90 q5 -30 5 -30 q0 0 5 30" fill="#1a3a1a"/><line x1="65" y1="14" x2="65" y2="24" stroke="#8a5a2b" stroke-width="2"/><path d="M65 14 l10 4 l-10 4z" fill="#ffd166"/><line x1="10" y1="90" x2="120" y2="90" stroke="#8a5a2b" stroke-width="3"/></svg>`;
+const BOARD=`<svg width="130" height="100" viewBox="0 0 130 102"><rect x="16" y="12" width="98" height="66" rx="3" fill="#2a5a3a" stroke="#8a5a2b" stroke-width="4"/><g stroke="#fff" stroke-width="2"><line x1="28" y1="28" x2="80" y2="28"/><line x1="28" y1="40" x2="96" y2="40"/><line x1="28" y1="52" x2="72" y2="52"/><line x1="28" y1="64" x2="88" y2="64"/></g><rect x="50" y="78" width="30" height="6" fill="#8a5a2b"/></svg>`;
+/* ====== 大題 ====== */
+const PARTS=[
+ {t:"第一大題　看圖辨義",d:"共 5 題（1–5）。看圖並聆聽問題，從 A、B、C 三個選項中選出最適合的答案。"},
+ {t:"第二大題　問答",d:"共 10 題（6–15）。聆聽一個問句或直述句，選出最適合的回答。"},
+ {t:"第三大題　簡短對話",d:"共 10 題（16–25）。聆聽一段對話與問題，選出最適合的答案。"},
+ {t:"第四大題　短文聽解",d:"共 5 題（26–30）。聆聽一段短文與問題，從三張圖片中選出最適合的一張。"}
+];
+
+
+
+/* ====== 題庫（第23回 閱讀寫作與旅行） ====== */
+const Q=[
+{n:1,p:0,fig:NOVEL,o:["A novel; she reads every word and even a poem inside.","The robot lands on the fish body.","The princess nods her powerful brain."],a:0,
+ sen:"For question one, look at the picture. What is she reading?",szh:"第一題，請看圖片。她在讀什麼？",
+ en:"A novel; every word and a poem.",zh:"一本小說(novel)；她讀每個(every)字(word)，裡面還有一首詩(poem)，選 A。robot/land/fish/body、princess/nod/brain/powerful 為干擾。"},
+{n:2,p:0,fig:DICTIONARY,o:["The visitor takes a vacation.","The vest is in the closet.","A dictionary helps you spell words in the English language."],a:2,
+ sen:"For question two, look at the picture. What helps you spell words?",szh:"第二題，請看圖片。什麼幫你拼字？",
+ en:"A dictionary in the English language.",zh:"一本字典(dictionary)幫你用英語(English)拼(spell)出字(word)、語言(language)，選 C。visitor/vacation、vest/closet 為干擾。"},
+{n:3,p:0,fig:HOTEL,o:["The princess survives the injury.","At the hotel, where visitors stay during their vacation.","The robot is funny."],a:1,
+ sen:"For question three, look at the picture. Where do the visitors stay?",szh:"第三題，請看圖片。訪客住在哪裡？",
+ en:"At the hotel during their vacation.",zh:"在旅館(hotel)，訪客(visitor)度假(vacation)時住在那，選 B。princess/survive/injury、robot/funny 為干擾。"},
+{n:4,p:0,fig:TENT,o:["A tent at the camp, ready for the summer trip.","The dictionary is blank.","The foreigner is rude."],a:0,
+ sen:"For question four, look at the picture. What is at the camp?",szh:"第四題，請看圖片。營地上有什麼？",
+ en:"A tent at the camp for the trip.",zh:"營地(camp)上一頂帳篷，為夏日旅行(trip)準備，選 A。dictionary/blank、foreigner/rude 為干擾。"},
+{n:5,p:0,fig:BOARD,o:["The princess is peaceful.","The treasure is in the closet.","A board with an article to press and read."],a:2,
+ sen:"For question five, look at the picture. What is on the wall?",szh:"第五題，請看圖片。牆上是什麼？",
+ en:"A board with an article to press and read.",zh:"一塊板子(board)上貼著一篇文章(article)，按(press)一下就能讀，選 C。princess/peaceful、treasure/closet 為干擾。"},
+
+{n:6,p:1,o:["The robot lands.","Yes, I listen to the news every hour; it is the least I can do.","The vest is blank."],a:1,
+ sen:"Do you keep up with the news?",szh:"你有跟上新聞嗎？",
+ en:"I listen every hour; the least I can do.",zh:"問是否跟上新聞，答『有，我每(every)個小時(hour)都聽(listen)，這是我最起碼(least)能做的』，選 B。robot/land、vest/blank 為干擾。"},
+{n:7,p:1,o:["The foreigner sits near me; I hope he will become my friend.","The novel is funny.","The treasure is powerful."],a:0,
+ sen:"Who is the new student beside you?",szh:"你旁邊的新學生是誰？",
+ en:"The foreigner sits near; he'll become my friend.",zh:"問旁邊的新學生，答『那位外國人(foreigner)坐(sit)在我附近(near)；我希望他能成為(become)我的朋友』，選 A。novel/funny、treasure/powerful 為干擾。"},
+{n:8,p:1,o:["The visitor is peaceful.","The poem is blank.","A funny robot that will land right on the fish's body."],a:2,
+ sen:"What is that strange thing in the game?",szh:"遊戲裡那個奇怪的東西是什麼？",
+ en:"A funny robot that will land on the fish body.",zh:"問遊戲裡的怪東西，答『一個好笑(funny)的機器人(robot)，會落(land)在魚(fish)的身體(body)上』，選 C。visitor/peaceful、poem/blank 為干擾。"},
+{n:9,p:1,o:["The board is rude.","I dream of a travel tour that starts on Thursday.","The closet is near."],a:1,
+ sen:"What are you looking forward to?",szh:"你在期待什麼？",
+ en:"I dream of a travel tour on Thursday.",zh:"問期待什麼，答『我夢想(dream)一趟星期四(Thursday)出發的旅行(travel)團(tour)』，選 B。board/rude、closet/near 為干擾。"},
+{n:10,p:1,o:["I care about it; please fix the loose pin and the nail.","The princess dreams.","The article is blank."],a:0,
+ sen:"Does the broken shelf bother you?",szh:"壞掉的架子讓你困擾嗎？",
+ en:"I care; fix the pin and the nail.",zh:"問壞架子是否困擾，答『我在乎(care)；請把鬆掉的別針(pin)和釘子(nail)修好(fix)』，選 A。princess/dream、article/blank 為干擾。"},
+{n:11,p:1,o:["The vest is in the closet.","The trip is near.","The princess nods; her brain is powerful, so she will survive."],a:2,
+ sen:"Can the clever princess win the hard game?",szh:"聰明的公主能贏得這場難關嗎？",
+ en:"The princess nods; her brain is powerful, she survives.",zh:"問公主能否過關，答『公主(princess)點頭(nod)；她的頭腦(brain)很強大(powerful)，所以能存活(survive)』，選 C。vest/closet、trip/near 為干擾。"},
+{n:12,p:1,o:["The hotel is near.","Which diet is truly peaceful? I admit I do not know; being rude helps no one.","The robot lands."],a:1,
+ sen:"What is the best way to stay healthy?",szh:"保持健康最好的方法是什麼？",
+ en:"Which diet is peaceful? I admit I don't know; rude helps no one.",zh:"問保持健康的方法，答『哪一種(which)飲食(diet)最平和(peaceful)？我承認(admit)不知道；粗魯(rude)對誰都沒幫助』，選 B。hotel/near、robot/land 為干擾。"},
+{n:13,p:1,o:["The blank page shows my weight before and after the injury.","The novel is funny.","The camp is near."],a:0,
+ sen:"What does this medical chart show?",szh:"這張醫療圖表顯示什麼？",
+ en:"The blank page shows my weight after the injury.",zh:"問圖表顯示什麼，答『這張空白(blank)頁記錄我受傷(injury)前後的體重(weight)』，選 A。novel/funny、camp/near 為干擾。"},
+{n:14,p:1,o:["The princess nods.","The dictionary is powerful.","Near the small village, a vest and a treasure are hidden in the closet."],a:2,
+ sen:"Where did your grandfather hide the old box?",szh:"你爺爺把舊盒子藏在哪？",
+ en:"Near the village, a vest and treasure in the closet.",zh:"問盒子藏哪，答『在小村莊(village)附近，一件背心(vest)和一件寶物(treasure)藏在衣櫥(closet)裡』，選 C。princess/nod、dictionary/powerful 為干擾。"},
+{n:15,p:1,o:["The board is blank.","Yes, somebody from the Philippines just took a long trip here.","The robot survives."],a:1,
+ sen:"Is anyone here from another country?",szh:"這裡有人來自別的國家嗎？",
+ en:"Somebody from the Philippines took a trip.",zh:"問是否有人來自他國，答『有，某人(somebody)從菲律賓(Philippines)來這裡旅行(trip)』，選 B。board/blank、robot/survive 為干擾。"},
+
+{n:16,p:2,o:["A novel with beautiful words.","A dictionary.","A map."],a:0,
+ sen:"W: What are you reading so happily? &nbsp;M: A novel with beautiful words and a great story. &nbsp;W: Sounds good. &nbsp;Q: What is the man reading?",
+ szh:"女：你在讀什麼讀得這麼開心？　男：一本文字(word)優美、故事精彩的小說(novel)。　女：聽起來不錯。　問：男士在讀什麼？",
+ en:"A novel with beautiful words.",zh:"男士在讀文字(word)優美的小說(novel)，選 A。"},
+{n:17,p:2,o:["Guess the word.","Ask a friend.","Look it up in a dictionary to spell it right."],a:2,
+ sen:"M: How can I spell this hard word? &nbsp;W: Look it up in a dictionary to spell it right. &nbsp;M: Good idea. &nbsp;Q: What does the woman suggest?",
+ szh:"男：這個難字我要怎麼拼？　女：查字典(dictionary)才能拼(spell)對。　男：好主意。　問：女士建議什麼？",
+ en:"Look it up in a dictionary.",zh:"查字典(dictionary)以正確拼字(spell)，選 C。"},
+{n:18,p:2,o:["At home.","At a hotel for the vacation.","At school."],a:1,
+ sen:"W: Where will your family stay on holiday? &nbsp;M: At a nice hotel by the sea for our whole vacation. &nbsp;W: Relaxing. &nbsp;Q: Where will the family stay?",
+ szh:"女：你家假期會住哪？　男：整個假期(vacation)住在海邊一家不錯的旅館(hotel)。　女：真放鬆。　問：這家人會住哪？",
+ en:"At a hotel for the vacation.",zh:"他們假期(vacation)住旅館(hotel)，選 B。"},
+{n:19,p:2,o:["A trip abroad to travel.","A test.","A meeting."],a:0,
+ sen:"M: What are you planning for the summer? &nbsp;W: A long trip abroad to travel and see the world. &nbsp;M: Exciting! &nbsp;Q: What is the woman planning?",
+ szh:"男：你暑假打算做什麼？　女：一趟出國的長途旅行(trip)，去旅遊(travel)看世界。　男：真令人期待！　問：女士在計畫什麼？",
+ en:"A trip abroad to travel.",zh:"女士計畫出國旅行(trip/travel)，選 A。"},
+{n:20,p:2,o:["A song.","A math test.","A poem for the school article."],a:2,
+ sen:"W: What did you write for the school paper? &nbsp;M: A short poem for the front-page article. &nbsp;W: How creative. &nbsp;Q: What did the man write?",
+ szh:"女：你為校刊寫了什麼？　男：一首放在頭版文章(article)的短詩(poem)。　女：真有創意。　問：男士寫了什麼？",
+ en:"A poem for the article.",zh:"男士寫了放進文章(article)的詩(poem)，選 C。"},
+{n:21,p:2,o:["A local guide.","A foreign visitor from far away.","A robot."],a:1,
+ sen:"M: Who is that person asking for directions? &nbsp;W: A foreign visitor, a friendly foreigner from far away. &nbsp;M: Let's help. &nbsp;Q: Who is the person?",
+ szh:"男：那個問路的人是誰？　女：一位外國訪客(visitor)，來自遠方的友善外國人(foreigner)。　男：我們幫忙吧。　問：那個人是誰？",
+ en:"A foreign visitor.",zh:"是外國訪客(visitor/foreigner)，選 B。"},
+{n:22,p:2,o:["English, the world language.","French only.","No language."],a:0,
+ sen:"W: What language do most visitors use here? &nbsp;M: English, the common world language. &nbsp;W: Useful to learn. &nbsp;Q: What language do most visitors use?",
+ szh:"女：這裡大多數訪客用什麼語言？　男：英語(English)，通用的世界語言(language)。　女：值得學。　問：大多數訪客用什麼語言？",
+ en:"English, the world language.",zh:"大多用英語(English)這個語言(language)，選 A。"},
+{n:23,p:2,o:["A quiet night.","A boring day.","A funny dream about a robot."],a:2,
+ sen:"W: Why are you laughing in your sleep? &nbsp;M: I had a funny dream about a dancing robot. &nbsp;W: How silly! &nbsp;Q: What did the man dream about?",
+ szh:"女：你怎麼睡覺還在笑？　男：我做了一個關於跳舞機器人(robot)的好笑夢(dream)。　女：真好笑！　問：男士夢到什麼？",
+ en:"A funny dream about a robot.",zh:"男士夢(dream)到機器人(robot)，選 C。"},
+{n:24,p:2,o:["In a hotel.","In a small mountain village near the camp.","In a city."],a:1,
+ sen:"M: Where did you stay on your trip? &nbsp;W: In a small mountain village, right near the camp. &nbsp;M: Peaceful place. &nbsp;Q: Where did the woman stay?",
+ szh:"男：你旅行時住哪？　女：一個山中小村莊(village)，就在營地(camp)附近。　男：寧靜的地方。　問：女士住哪？",
+ en:"In a village near the camp.",zh:"女士住在營地(camp)附近的村莊(village)，選 B。"},
+{n:25,p:2,o:["A treasure hidden behind the board.","A robot.","A novel."],a:0,
+ sen:"W: What did the pirates leave on the island? &nbsp;M: A treasure hidden behind an old wooden board. &nbsp;W: How exciting! &nbsp;Q: What did the pirates leave?",
+ szh:"女：海盜在島上留下了什麼？　男：一件寶藏(treasure)，藏在一塊舊木板(board)後面。　女：好刺激！　問：海盜留下了什麼？",
+ en:"A treasure behind the board.",zh:"海盜留下藏在板子(board)後的寶藏(treasure)，選 A。"},
+
+{n:26,p:3,pic:true,o:[BARS("Books Read",["Novel","Poem","News"],[20,50,80]),BARS("Books Read",["Novel","Poem","News"],[50,80,20]),BARS("Books Read",["Novel","Poem","News"],[80,50,20])],a:2,
+ sen:"Our class counted what students like to read. Novels were the most popular, because of their exciting stories. Poems were in the middle, and short news articles were the least read. So the novel bar should be the tallest. &nbsp;Q: Which chart shows what students read?",
+ szh:"我們班統計學生喜歡讀什麼。小說(novel)最受歡迎，因為故事精彩；詩(poem)中等；短新聞文章(article)讀最少。所以小說長條最高。　問：哪張圖顯示學生的閱讀？",
+ en:"Novels most, news least.",zh:"小說最多、新聞最少，符合『Novel 最高』的 C。"},
+{n:27,p:3,pic:true,o:[BARS("Trips Taken",["Spring","Summer","Fall"],[30,55,80]),BARS("Trips Taken",["Spring","Summer","Fall"],[80,55,30]),BARS("Trips Taken",["Spring","Summer","Fall"],[55,80,30])],a:1,
+ sen:"A travel company counted the trips people took. In spring the most people traveled, because the weather was lovely. In summer the number was in the middle, and in fall the fewest went on a trip. So the trips went down through the seasons. &nbsp;Q: Which chart shows the trips taken?",
+ szh:"一家旅行(travel)公司統計大家的旅行(trip)。春天最多人出遊，因為天氣好；夏天中等；秋天最少人旅行。所以旅行次數隨季節下降。　問：哪張圖顯示旅行次數？",
+ en:"Spring most, fall fewest.",zh:"春天最多、逐季下降，符合『Spring 最高、Fall 最低』的 B。"},
+{n:28,p:3,pic:true,o:[IMG('bread'),IMG('noodles'),IMG('rice')],a:0,
+ sen:"On our camping trip, we brought a good novel and a dictionary but forgot the pot. There was no way to boil noodles or steam rice by the tent. So we simply ate fresh bread near the fire while we read our books under the stars. &nbsp;Q: What did they eat on the camping trip?",
+ szh:"露營旅行(trip)時，我們帶了一本好小說(novel)和一本字典(dictionary)，卻忘了帶鍋。帳篷旁沒辦法煮麵或蒸飯。所以我們就在火邊(near)吃新鮮麵包(bread)，一邊在星空下讀書(book)。　問：他們露營時吃什麼？",
+ en:"Fresh bread.",zh:"他們吃麵包(bread)，選 A。麵、飯為干擾。"},
+{n:29,p:3,pic:true,o:[IMG('bread'),IMG('rice'),IMG('noodles')],a:2,
+ sen:"When we stayed at a small hotel in the village, the owner cooked for every visitor. She said tired travelers deserved more than plain bread or dry rice. So she made a big bowl of hot noodles, and the foreign visitors admitted it was the best meal of their trip. &nbsp;Q: What did the hotel owner cook?",
+ szh:"我們住在村莊(village)一家小旅館(hotel)時，老闆為每位訪客(visitor)做飯。她說疲累的旅人值得比普通麵包或白飯更好的，於是煮了一大碗熱麵(noodles)，外國訪客都承認(admit)那是旅程(trip)中最棒的一餐。　問：旅館老闆煮了什麼？",
+ en:"A bowl of noodles.",zh:"旅館老闆煮了熱麵(noodles)，選 C。麵包、飯為干擾。"},
+{n:30,p:3,pic:true,o:[IMG('mountain'),IMG('beach'),IMG('park')],a:1,
+ sen:"For our vacation, the whole family planned a trip to relax and read. My father liked the mountain and my sister liked the park. But we chose the beach, because we could lie on the sand, read our novels, and travel along the shore all day. &nbsp;Q: Where did the family go for their vacation?",
+ szh:"假期(vacation)時，全家計畫一趟放鬆讀書的旅行(trip)。爸爸喜歡山，姊姊喜歡公園，但我們選了海邊(beach)，因為可以躺在沙上讀小說(novel)、整天沿著海岸旅遊(travel)。　問：一家人假期去哪裡？",
+ en:"The beach.",zh:"一家人假期去海邊(beach)，選 B。山、公園為干擾。"}
+];
+
+/* ====== 音檔播放（AAC/.m4a，各廠牌手機皆支援）====== */
+let curAudio=null, curBtn=null;
+function resetPlayBtn(b){ if(!b) return; b.classList.remove('playing'); b.querySelector('.txt').textContent = b.dataset.played?'重播':'播放'; }
+function stopAudio(){ if(curAudio) curAudio.pause(); if(curBtn) resetPlayBtn(curBtn); curAudio=null; curBtn=null; }
+function playAudio(audio,btn){
+  if(curAudio===audio){                       // 同一題：暫停 / 繼續
+    if(audio.paused){ audio.play(); btn.classList.add('playing'); btn.querySelector('.txt').textContent='播放中…'; }
+    else { audio.pause(); }
+    return;
+  }
+  if(curAudio){ curAudio.pause(); resetPlayBtn(curBtn); }   // 換題：停掉上一段
+  curAudio=audio; curBtn=btn; btn.dataset.played='1';
+  btn.classList.add('playing'); btn.querySelector('.txt').textContent='播放中…';
+  audio.play().catch(()=>resetPlayBtn(btn));
+}
+
+/* ====== 產生畫面 ====== */
+const form=document.getElementById('quiz');
+let lastP=-1;
+Q.forEach(q=>{
+  if(q.p!==lastP){
+    const st=document.createElement('div'); st.className='section-title s'+q.p; st.textContent=PARTS[q.p].t;
+    const sd=document.createElement('div'); sd.className='section-desc'; sd.textContent=PARTS[q.p].d;
+    form.appendChild(st); form.appendChild(sd); lastP=q.p;
+  }
+  const card=document.createElement('div'); card.className='q'; card.id='q'+q.n;
+  const head=document.createElement('div'); head.className='qhead';
+  head.innerHTML=`<span class="num">${q.n}</span>
+    <button type="button" class="play"><span class="wave">🔊</span><span class="txt">播放</span></button>
+    <span class="hintq">聆聽後作答</span>`;
+  card.appendChild(head);
+  const audio=document.createElement('audio'); audio.preload='none'; audio.src='gept-listening-audio/23/q'+q.n+'.m4a?v=r23-20260909'; card.appendChild(audio);
+  const pbtn=head.querySelector('.play');
+  pbtn.addEventListener('click',()=>playAudio(audio,pbtn));
+  audio.addEventListener('ended',()=>{ if(curBtn===pbtn){ resetPlayBtn(pbtn); curAudio=null; curBtn=null; } });
+  audio.addEventListener('pause',()=>{ if(curAudio===audio && curBtn===pbtn && !audio.ended){ pbtn.classList.remove('playing'); pbtn.querySelector('.txt').textContent='繼續'; } });
+  if(q.fig){ const f=document.createElement('div'); f.className='fig'; f.innerHTML=q.fig; card.appendChild(f); }
+  if(q.pic){
+    if(q.legend){ const lg=document.createElement('div'); lg.innerHTML=PIE_LEGEND; card.appendChild(lg.firstChild); }
+    const wrap=document.createElement('div'); wrap.className='picopts';
+    q.o.forEach((opt,i)=>{
+      const cell=document.createElement('label'); cell.className='picopt'; cell.dataset.i=i;
+      cell.innerHTML=`<span class="lab">${'ABC'[i]}</span>${opt}<input type="radio" name="q${q.n}" value="${i}" hidden>`;
+      cell.querySelector('input').addEventListener('change',()=>{ card.querySelectorAll('.picopt').forEach(o=>o.classList.remove('sel')); cell.classList.add('sel'); updateProgress(); });
+      wrap.appendChild(cell);
+    });
+    card.appendChild(wrap);
+  } else {
+    q.o.forEach((opt,i)=>{
+      const lab=document.createElement('label'); lab.className='opt'; lab.dataset.i=i;
+      lab.innerHTML=`<input type="radio" name="q${q.n}" value="${i}"><span class="lab">${'ABC'[i]}</span><span>${opt}</span>`;
+      lab.querySelector('input').addEventListener('change',()=>{ card.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel')); lab.classList.add('sel'); updateProgress(); });
+      card.appendChild(lab);
+    });
+  }
+  const exp=document.createElement('div'); exp.className='exp'; exp.id='exp'+q.n; card.appendChild(exp);
+  form.appendChild(card);
+});
+
+const submitBtn=document.getElementById('submitBtn');
+const resetBtn=document.getElementById('resetBtn');
+const hint=document.getElementById('hint');
+const TOT=Q.length;
+function answeredCount(){ let c=0; Q.forEach(q=>{ if(form.querySelector(`input[name="q${q.n}"]:checked`)) c++; }); return c; }
+function updateProgress(){
+  const c=answeredCount();
+  document.getElementById('count').textContent=`${c} / ${TOT}`;
+  document.getElementById('fill').style.width=(c/TOT*100)+'%';
+  hint.textContent = c===TOT ? '已完成全部 30 題' : (c===0 ? '尚未作答任何題目（仍可送出查看解析）' : `已作答 ${c} 題，未作答 ${TOT-c} 題（仍可送出）`);
+}
+
+submitBtn.addEventListener('click',()=>{
+  stopAudio();
+  let ok=0, blank=0;
+  Q.forEach(q=>{
+    const sel=form.querySelector(`input[name="q${q.n}"]:checked`);
+    const pick=sel?parseInt(sel.value):null;
+    if(pick===null) blank++;
+    const card=document.getElementById('q'+q.n);
+    const cls=q.pic?'.picopt':'.opt';
+    card.querySelectorAll(cls).forEach(o=>{
+      o.classList.add('lock');
+      const inp=o.querySelector('input'); if(inp) inp.disabled=true;
+      const i=parseInt(o.dataset.i);
+      if(i===q.a) o.classList.add('correct');
+      if(pick!==null && i===pick && pick!==q.a) o.classList.add('wrong');
+    });
+    const correct=pick===q.a; if(correct) ok++;
+    const exp=document.getElementById('exp'+q.n);
+    const tag=correct?'答對':(pick===null?'未作答':'答錯');
+    exp.innerHTML=`<span class="tag ${correct?'':'miss'}">${tag}　正解：${'ABC'[q.a]}</span>
+      <div class="scriptbox"><b>聽力原文</b>　${q.sen}<br><span style="color:#7a4a12">${q.szh}</span></div>
+      <div class="en"><b>EN</b>&nbsp;${q.en}</div><div class="zh"><b>中</b>&nbsp;${q.zh}</div>`;
+    exp.classList.add('show');
+  });
+  document.getElementById('scoreNum').textContent=Math.round(ok/TOT*100);
+  document.getElementById('scoreTxt').textContent=`分（答對 ${ok} / ${TOT} 題）`;
+  document.getElementById('rOk').textContent=ok;
+  document.getElementById('rNo').textContent=TOT-ok-blank;
+  document.getElementById('rBlank').textContent=blank;
+  const res=document.getElementById('result'); res.classList.add('show');
+  submitBtn.style.display='none'; hint.style.display='none'; resetBtn.style.display='block';
+  res.scrollIntoView({behavior:'smooth'});
+});
+
+resetBtn.addEventListener('click',()=>{
+  stopAudio(); form.reset();
+  Q.forEach(q=>{
+    const card=document.getElementById('q'+q.n);
+    card.querySelectorAll('.opt,.picopt').forEach(o=>{o.classList.remove('sel','correct','wrong','lock');const inp=o.querySelector('input');if(inp)inp.disabled=false;});
+    document.getElementById('exp'+q.n).classList.remove('show');
+  });
+  document.getElementById('result').classList.remove('show');
+  submitBtn.style.display='block'; hint.style.display='block'; resetBtn.style.display='none';
+  updateProgress(); window.scrollTo({top:0,behavior:'smooth'});
+});
+
+updateProgress();
+</script>
+</body>
+</html>
