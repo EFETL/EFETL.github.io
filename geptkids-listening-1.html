@@ -136,6 +136,9 @@
   button.play[disabled]{background:#c9d6e2;box-shadow:none;cursor:not-allowed;}
   button.play.playing{background:linear-gradient(135deg,#ffb02e,#ff7a59);}
   .plays{font-size:.83rem;color:var(--gray);font-weight:700;}
+  .speed-wrap{display:flex;align-items:center;gap:6px;}
+  .speed-sel{border:1.5px solid var(--blue);border-radius:999px;padding:5px 10px;
+    font-size:.82rem;font-weight:800;color:var(--blue-dark);background:#fff;}
 
   /* ── 第三部分：圖片庫 ── */
   .bank{background:linear-gradient(160deg,#fff,#f4fffb);border:2px solid #bdeede;
@@ -157,6 +160,40 @@
   .tr{color:#14532d;background:#eafaf1;border-radius:9px;padding:6px 11px;margin:5px 0;
     font-size:.9rem;line-height:1.6;}
   @media(max-width:420px){ .zone .items{font-size:1.8rem;} .letters{grid-template-columns:repeat(4,1fr);} }
+
+  /* ─────────── 列印：題目與選項不可以被切到兩頁 ─────────── */
+  @media print {
+    @page { margin: 14mm 12mm; }
+    html, body { background:#fff !important; }
+    .wrap { max-width:none; padding:0; }
+
+    /* 螢幕互動用的東西不印出來 */
+    .sticky, .actions, .hint, .result, .aipanel,
+    button.play, button.rec, button.mini, button.submit, button.reset,
+    .audio, .plays, body > a[href="geptkids-hub.html"] { display:none !important; }
+
+    header.top { box-shadow:none; border:1px solid #ccd; }
+    header.top, .section-title { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+
+    /* ★ 核心：一題（題幹＋所有選項＋作答區）永遠留在同一頁 */
+    .q, .opt, .yn, .letters,
+    .scene, .zone, .passage, .diary, .bank, .hint-card,
+    .panels, .panel, .say, .build-area, .pool, .selfscore, .rubric,
+    textarea.ans, textarea.said, .exp {
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
+    }
+    /* 圖片／短文／大題標題不要單獨留在頁尾，要和後面的題目黏在一起 */
+    .scene, .passage, .diary, .bank, .section-title, .section-desc {
+      break-after: avoid !important;
+      page-break-after: avoid !important;
+    }
+    .section-title { break-before: auto; margin-top:14px; }
+
+    /* 紙本上把作答區留白，方便手寫 */
+    input.gap { border-bottom:1.5px solid #333; background:#fff !important; }
+    textarea.ans, textarea.said { display:block; min-height:52px; background:#fff !important; }
+  }
 </style>
 <!-- EFETL-PWA -->
 <link rel="manifest" href="/manifest.json">
@@ -183,6 +220,16 @@
       <span>作答進度</span>
       <div class="track"><div class="fill" id="fill"></div></div>
       <span id="count">0 / 25</span>
+      <div class="speed-wrap">
+        <span>🔊速度</span>
+        <select class="speed-sel" id="speedSel">
+          <option value="0.5">0.5x</option>
+          <option value="0.75">0.75x</option>
+          <option value="1" selected>1x</option>
+          <option value="1.25">1.25x</option>
+          <option value="1.5">1.5x</option>
+        </select>
+      </div>
     </div>
   </div>
 
@@ -229,6 +276,12 @@ const MAX_PLAYS = 2;                 // 官方規則：每題播放兩次
 let submitted = false;
 let lastPart = -1;
 const players = {};
+let SPEED = 1;
+const speedSel = document.getElementById('speedSel');
+speedSel.addEventListener('change',()=>{
+  SPEED = parseFloat(speedSel.value);
+  Object.values(players).forEach(p=>{ p.au.playbackRate = SPEED; });
+});
 
 function zonesHtml(zs, big){
   return zs.map(z=>{
@@ -270,12 +323,13 @@ Q.forEach(q=>{
   const left=document.createElement('span'); left.className='plays'; left.textContent=`還可以聽 ${MAX_PLAYS} 次`;
   const au=new Audio(`${AUDIO_DIR}/${AUDIO_PREFIX}-q${String(q.n).padStart(2,'0')}.mp3`);
   au.preload='none';
+  au.playbackRate=SPEED;
   players[q.n]={au, btn, left, plays:0};
   btn.addEventListener('click',()=>{
     const st=players[q.n];
     if(!submitted && st.plays>=MAX_PLAYS) return;
     Object.values(players).forEach(o=>{ if(o.au!==au){o.au.pause(); o.au.currentTime=0; o.btn.classList.remove('playing');} });
-    au.currentTime=0; au.play();
+    au.currentTime=0; au.playbackRate=SPEED; au.play();
     btn.classList.add('playing');
     if(!submitted){
       st.plays++;

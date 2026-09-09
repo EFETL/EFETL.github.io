@@ -125,6 +125,40 @@
   .hint{text-align:center;font-size:.85rem;color:var(--gray);margin-top:9px;min-height:1.2em;}
   footer{text-align:center;color:var(--gray);font-size:.8rem;margin:24px 0;}
   @media(max-width:420px){ .zone .items{font-size:1.8rem;} }
+
+  /* ─────────── 列印：題目與選項不可以被切到兩頁 ─────────── */
+  @media print {
+    @page { margin: 14mm 12mm; }
+    html, body { background:#fff !important; }
+    .wrap { max-width:none; padding:0; }
+
+    /* 螢幕互動用的東西不印出來 */
+    .sticky, .actions, .hint, .result, .aipanel,
+    button.play, button.rec, button.mini, button.submit, button.reset,
+    .audio, .plays, body > a[href="geptkids-hub.html"] { display:none !important; }
+
+    header.top { box-shadow:none; border:1px solid #ccd; }
+    header.top, .section-title { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+
+    /* ★ 核心：一題（題幹＋所有選項＋作答區）永遠留在同一頁 */
+    .q, .opt, .yn, .letters,
+    .scene, .zone, .passage, .diary, .bank, .hint-card,
+    .panels, .panel, .say, .build-area, .pool, .selfscore, .rubric,
+    textarea.ans, textarea.said, .exp {
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
+    }
+    /* 圖片／短文／大題標題不要單獨留在頁尾，要和後面的題目黏在一起 */
+    .scene, .passage, .diary, .bank, .section-title, .section-desc {
+      break-after: avoid !important;
+      page-break-after: avoid !important;
+    }
+    .section-title { break-before: auto; margin-top:14px; }
+
+    /* 紙本上把作答區留白，方便手寫 */
+    input.gap { border-bottom:1.5px solid #333; background:#fff !important; }
+    textarea.ans, textarea.said { display:block; min-height:52px; background:#fff !important; }
+  }
 </style>
 <!-- EFETL-PWA -->
 <link rel="manifest" href="/manifest.json">
