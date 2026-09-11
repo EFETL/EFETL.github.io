@@ -157,20 +157,24 @@ function renderStudentCard(){
       <div>目前身分：<b>${s.name||'(未填姓名)'}</b>　座號 ${s.seat||'-'}　·　班級碼 ${s.cls}</div>
       <div class="btnrow"><button class="btn" onclick="editStu()">修改</button></div></div>`;
   } else {
-    el.innerHTML=`<div class="card"><h2>🏫 交給老師（選填）</h2>
-      <div class="sub">填入老師給的<b>班級碼</b>後，作答成績才會上傳給老師；不填就<b>只存在本機</b>。</div>
+    el.innerHTML=`<div class="card"><h2>🏫 交給老師（選填上傳）</h2>
+      <div class="sub">要交給老師才填；不填就<b>只存在本機</b>。填了就要打完整，方便老師認得出是你——三欄皆為<b>必填</b>。</div>
       <div class="btnrow" style="align-items:center">
-        <input id="stuName" placeholder="姓名" style="padding:8px 12px;border:1.5px solid #eadfce;border-radius:12px;font-size:.9rem">
-        <input id="stuSeat" placeholder="座號" style="width:80px;padding:8px 12px;border:1.5px solid #eadfce;border-radius:12px;font-size:.9rem">
-        <input id="stuCls" placeholder="班級碼" style="width:120px;padding:8px 12px;border:1.5px solid #ffb3c4;border-radius:12px;font-size:.9rem">
+        <input id="stuName" placeholder="中文姓名（必填）" style="padding:8px 12px;border:1.5px solid #ffb3c4;border-radius:12px;font-size:.9rem">
+        <input id="stuSeat" placeholder="座號（必填）" style="width:110px;padding:8px 12px;border:1.5px solid #ffb3c4;border-radius:12px;font-size:.9rem">
+        <input id="stuCls" placeholder="班級碼（必填）" style="width:130px;padding:8px 12px;border:1.5px solid #ffb3c4;border-radius:12px;font-size:.9rem">
         <button class="btn primary" onclick="saveStu()">儲存並開始上傳</button>
       </div></div>`;
   }
 }
 function saveStu(){
+  const name=(document.getElementById('stuName').value||'').trim();
+  const seat=(document.getElementById('stuSeat').value||'').trim();
   const cls=(document.getElementById('stuCls').value||'').trim();
+  if(!name){ alert('請輸入你的中文姓名（老師要用它認出你）'); return; }
+  if(!seat){ alert('請輸入座號'); return; }
   if(!cls){ alert('請輸入老師給的班級碼'); return; }
-  EFETL_CLOUD.setStudent({name:(document.getElementById('stuName').value||'').trim(), seat:(document.getElementById('stuSeat').value||'').trim(), cls});
+  EFETL_CLOUD.setStudent({name, seat, cls});
   renderStudentCard();
 }
 function editStu(){ const s=EFETL_CLOUD.student()||{}; EFETL_CLOUD.setStudent({name:s.name,seat:s.seat,cls:''}); renderStudentCard(); }
