@@ -49,6 +49,7 @@
   footer{text-align:center;color:#9a8577;font-size:.8rem;margin-top:30px;}
   @media(max-width:560px){.stats{grid-template-columns:repeat(2,1fr);}.prow{grid-template-columns:96px 1fr 46px;}}
 </style>
+  <script src="gept-listening-cloud.js"></script>
 </head>
 <body>
 <div class="wrap">
@@ -57,6 +58,7 @@
     <h1>📈 我的成績 · 錯題回收</h1>
     <p>記錄你每一回的分數、找出最弱的單字與題型，把不會的重練起來。（成績只存在這台裝置的瀏覽器，不會上傳。）</p>
   </header>
+  <div id="stuCard"></div>
   <div id="app"></div>
   <footer>EFETL © 2025　‧　成績記錄僅儲存於本機瀏覽器</footer>
 </div>
@@ -145,6 +147,35 @@ function render(){
 }
 function clearAll(){ if(confirm('確定清除本機所有聽力成績紀錄？此動作無法復原。')){ localStorage.removeItem(KEY); render(); } }
 
+function renderStudentCard(){
+  const el=document.getElementById('stuCard');
+  const C=window.EFETL_CLOUD;
+  if(!C || !C.endpoint){ el.innerHTML=''; return; } // 老師尚未啟用雲端 → 不顯示、不上傳
+  const s=C.student();
+  if(s && s.cls){
+    el.innerHTML=`<div class="card"><h2>🏫 班級設定</h2><div class="sub">你的成績會在作答後上傳給老師（班級：<b>${s.cls}</b>）。</div>
+      <div>目前身分：<b>${s.name||'(未填姓名)'}</b>　座號 ${s.seat||'-'}　·　班級碼 ${s.cls}</div>
+      <div class="btnrow"><button class="btn" onclick="editStu()">修改</button></div></div>`;
+  } else {
+    el.innerHTML=`<div class="card"><h2>🏫 交給老師（選填）</h2>
+      <div class="sub">填入老師給的<b>班級碼</b>後，作答成績才會上傳給老師；不填就<b>只存在本機</b>。</div>
+      <div class="btnrow" style="align-items:center">
+        <input id="stuName" placeholder="姓名" style="padding:8px 12px;border:1.5px solid #eadfce;border-radius:12px;font-size:.9rem">
+        <input id="stuSeat" placeholder="座號" style="width:80px;padding:8px 12px;border:1.5px solid #eadfce;border-radius:12px;font-size:.9rem">
+        <input id="stuCls" placeholder="班級碼" style="width:120px;padding:8px 12px;border:1.5px solid #ffb3c4;border-radius:12px;font-size:.9rem">
+        <button class="btn primary" onclick="saveStu()">儲存並開始上傳</button>
+      </div></div>`;
+  }
+}
+function saveStu(){
+  const cls=(document.getElementById('stuCls').value||'').trim();
+  if(!cls){ alert('請輸入老師給的班級碼'); return; }
+  EFETL_CLOUD.setStudent({name:(document.getElementById('stuName').value||'').trim(), seat:(document.getElementById('stuSeat').value||'').trim(), cls});
+  renderStudentCard();
+}
+function editStu(){ const s=EFETL_CLOUD.student()||{}; EFETL_CLOUD.setStudent({name:s.name,seat:s.seat,cls:''}); renderStudentCard(); }
+
+renderStudentCard();
 fetch('gept-listening-vocab-map.json').then(r=>r.json()).then(v=>{VMAP=v;render();}).catch(()=>{render();});
 </script>
 </body>
