@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>英檢初級 聽力｜我的成績</title>
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;
+    color:#22303f;line-height:1.6;background:linear-gradient(180deg,#fff5ec,#fff4f7 70%);min-height:100vh;}
+  .wrap{max-width:1000px;margin:0 auto;padding:18px 16px 60px;}
+  a.home{display:inline-block;margin-bottom:14px;color:#ff6f91;font-weight:800;text-decoration:none;
+    background:#fff;padding:7px 16px;border-radius:20px;box-shadow:0 3px 10px rgba(255,111,145,.14);font-size:.9rem;}
+  header.hero{background:linear-gradient(135deg,#f6d365,#fda085 60%,#ff7a9c);color:#fff;
+    border-radius:22px;padding:26px 24px;margin-bottom:20px;box-shadow:0 10px 26px rgba(253,160,133,.32);}
+  header.hero h1{margin:0 0 6px;font-size:1.7rem;}
+  header.hero p{margin:0;opacity:.96;font-size:.95rem;}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+  .stat{background:#fff;border-radius:16px;padding:16px 12px;text-align:center;box-shadow:0 5px 16px rgba(253,160,133,.14);border:1px solid #f6e6da;}
+  .stat b{display:block;font-size:1.9rem;color:#ff6f91;line-height:1.1;}
+  .stat span{font-size:.82rem;color:#9a8577;}
+  .card{background:#fff;border-radius:18px;padding:18px 20px;margin-bottom:18px;box-shadow:0 5px 16px rgba(253,160,133,.14);border:1px solid #f6e6da;}
+  .card h2{margin:0 0 4px;font-size:1.15rem;}
+  .card .sub{color:#9a8577;font-size:.82rem;margin-bottom:14px;}
+  .empty{text-align:center;color:#9a8577;padding:30px 10px;}
+  .empty a{color:#ff6f91;font-weight:800;}
+  /* rounds grid */
+  .rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;}
+  .rcell{border:1px solid #eadfce;border-radius:12px;padding:10px 12px;text-decoration:none;color:inherit;display:block;transition:transform .12s;}
+  .rcell:hover{transform:translateY(-2px);}
+  .rcell .rn{font-weight:800;font-size:.9rem;}
+  .rcell .rt{font-size:.72rem;color:#9a8577;height:2.1em;overflow:hidden;}
+  .rcell .rs{font-weight:900;font-size:1.3rem;margin-top:4px;}
+  .sc-hi{color:#0a9d54;} .sc-mid{color:#e08a00;} .sc-lo{color:#e0384f;} .sc-na{color:#c3b6a8;font-size:.9rem;font-weight:700;}
+  .bar{height:14px;border-radius:8px;background:#f0e7db;overflow:hidden;}
+  .bar>i{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,#fda085,#ff6f91);}
+  .prow{display:grid;grid-template-columns:120px 1fr 56px;gap:10px;align-items:center;margin:9px 0;}
+  .prow .pl{font-weight:700;font-size:.9rem;}
+  .prow .pv{font-weight:800;font-size:.9rem;text-align:right;}
+  .wword{display:inline-flex;align-items:center;gap:6px;background:#fff3f5;border:1px solid #ffd7e0;
+    border-radius:20px;padding:5px 12px;margin:4px 5px 4px 0;font-size:.9rem;}
+  .wword b{color:#e0384f;} .wword .wn{background:#ff6f91;color:#fff;border-radius:10px;padding:0 7px;font-size:.75rem;font-weight:800;}
+  .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;}
+  .btn{background:#fff;border:1.5px solid #ffb3c4;color:#e0384f;border-radius:20px;padding:7px 16px;font-weight:800;font-size:.85rem;cursor:pointer;text-decoration:none;}
+  .btn.primary{background:linear-gradient(135deg,#fda085,#ff7a9c);color:#fff;border:none;}
+  .trend{display:flex;align-items:flex-end;gap:4px;height:90px;padding-top:10px;}
+  .trend .tb{flex:1;min-width:5px;background:linear-gradient(180deg,#fda085,#ff6f91);border-radius:4px 4px 0 0;}
+  footer{text-align:center;color:#9a8577;font-size:.8rem;margin-top:30px;}
+  @media(max-width:560px){.stats{grid-template-columns:repeat(2,1fr);}.prow{grid-template-columns:96px 1fr 46px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="home" href="gept-listening.html">← 回聽力測驗</a>
+  <header class="hero">
+    <h1>📈 我的成績 · 錯題回收</h1>
+    <p>記錄你每一回的分數、找出最弱的單字與題型，把不會的重練起來。（成績只存在這台裝置的瀏覽器，不會上傳。）</p>
+  </header>
+  <div id="app"></div>
+  <footer>EFETL © 2025　‧　成績記錄僅儲存於本機瀏覽器</footer>
+</div>
+<script>
+const THEMES={1:"餐廳與烹飪",2:"時間與日期",3:"數量與比較",4:"心情與感受",5:"家庭生活",6:"家人與親戚",7:"音樂與美術",8:"電視與通訊",9:"食物與飲料",10:"身體與健康",11:"運動與比賽",12:"學校生活",13:"家具與電器",14:"日常用品",15:"買賣與商店",16:"朋友與相處",17:"交通工具",18:"動物",19:"植物與花園",20:"房屋與房間",21:"衣服與外表",22:"節慶與習俗",23:"閱讀寫作與旅行",24:"購物",25:"看醫生",26:"個性與習慣",27:"金錢與付款",28:"電影與表演",29:"規則與公共服務",30:"工作與職業",31:"天氣",32:"飛機與船",33:"地形與地方",34:"田野與環境",35:"材料與能源",36:"電腦與手機",37:"故事與傳說",38:"安全與危險",39:"社區與人們",40:"自然科學小知識"};
+const PARTS=["第一大題 看圖辨義","第二大題 問答","第三大題 簡短對話","第四大題 短文聽解"];
+const KEY='efetl_listening_results';
+const app=document.getElementById('app');
+let VMAP={};
+
+function load(){ try{return JSON.parse(localStorage.getItem(KEY)||'[]');}catch(e){return [];} }
+function scoreClass(s){ return s>=80?'sc-hi':s>=60?'sc-mid':'sc-lo'; }
+
+function render(){
+  const recs=load();
+  if(!recs.length){
+    app.innerHTML=`<div class="card empty">你還沒有作答紀錄。<br>去 <a href="gept-listening.html">開始一回聽力測驗</a>，作答送出後這裡就會出現你的成績與錯題分析。</div>`;
+    return;
+  }
+  // latest attempt per round
+  const latest={};
+  recs.forEach(r=>{ if(!latest[r.round]||r.date>latest[r.round].date) latest[r.round]=r; });
+  const rounds=Object.keys(latest).map(Number).sort((a,b)=>a-b);
+  const scores=rounds.map(r=>latest[r].score);
+  const avg=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
+  const best=Math.max(...scores);
+  let html='';
+  // stats
+  html+=`<div class="stats">
+    <div class="stat"><b>${rounds.length}</b><span>已練習回數 / 40</span></div>
+    <div class="stat"><b>${avg}</b><span>平均分（最新）</span></div>
+    <div class="stat"><b>${best}</b><span>最佳單回</span></div>
+    <div class="stat"><b>${recs.length}</b><span>總作答次數</span></div>
+  </div>`;
+
+  // weak parts (aggregate over latest attempts)
+  const pc=[[0,0],[0,0],[0,0],[0,0]]; // [correct,total]
+  rounds.forEach(r=>latest[r].ans.forEach(a=>{ pc[a.p][1]++; if(a.ok)pc[a.p][0]++; }));
+  html+=`<div class="card"><h2>🎯 弱點題型</h2><div class="sub">依你各回最新一次作答統計，正確率越低代表越需要加強。</div>`;
+  pc.forEach((c,i)=>{ const pct=c[1]?Math.round(c[0]/c[1]*100):0;
+    html+=`<div class="prow"><div class="pl">${PARTS[i]}</div><div class="bar"><i style="width:${pct}%"></i></div><div class="pv" style="color:${pct>=80?'#0a9d54':pct>=60?'#e08a00':'#e0384f'}">${c[1]?pct+'%':'—'}</div></div>`;
+  });
+  html+=`</div>`;
+
+  // weak words (words appearing in questions you got wrong, latest attempts)
+  const wrongWordCount={}; // word -> {n, rounds:Set}
+  rounds.forEach(r=>{
+    const vm=VMAP[r]||{}; const wrongQs=new Set(latest[r].ans.filter(a=>!a.ok&&a.pick!==null).map(a=>a.n));
+    if(!wrongQs.size) return;
+    for(const w in vm){ if(vm[w].some(q=>wrongQs.has(q))){ if(!wrongWordCount[w])wrongWordCount[w]={n:0,rounds:new Set()}; wrongWordCount[w].n++; wrongWordCount[w].rounds.add(r); } }
+  });
+  const weak=Object.entries(wrongWordCount).sort((a,b)=>b[1].n-a[1].n).slice(0,18);
+  html+=`<div class="card"><h2>🔤 需要加強的單字</h2><div class="sub">出現在你「答錯題目」裡的單字（未作答不計）。數字＝出現在幾回的錯題中。</div>`;
+  if(weak.length){ html+='<div>'; weak.forEach(([w,o])=>{ html+=`<span class="wword"><b>${w}</b><span class="wn">${o.rounds.size}</span></span>`; }); html+='</div>'; }
+  else html+=`<div class="empty" style="padding:14px">目前沒有答錯的題目 👍 太厲害了！</div>`;
+  html+=`</div>`;
+
+  // rounds with wrong answers -> redo
+  const toRedo=rounds.filter(r=>latest[r].ans.some(a=>!a.ok)).sort((a,b)=>latest[a].score-latest[b].score);
+  if(toRedo.length){
+    html+=`<div class="card"><h2>🔁 錯題重練</h2><div class="sub">這些回次還有答錯或未作答的題，從最弱的開始重練最有效。</div><div class="btnrow">`;
+    toRedo.slice(0,8).forEach(r=>{ const wn=latest[r].ans.filter(a=>!a.ok).length; html+=`<a class="btn" href="gept-listening-${r}.html">第${r}回 ${THEMES[r]||''}　錯${wn}題 ›</a>`; });
+    html+=`</div></div>`;
+  }
+
+  // per-round grid
+  html+=`<div class="card"><h2>📚 各回成績</h2><div class="sub">點任一回可再次練習。灰色為尚未練習。</div><div class="rgrid">`;
+  for(let r=1;r<=40;r++){
+    const rec=latest[r];
+    const s=rec?rec.score:null;
+    const cls=s===null?'sc-na':scoreClass(s);
+    html+=`<a class="rcell" href="gept-listening-${r}.html"><div class="rn">第 ${r} 回</div><div class="rt">${THEMES[r]||''}</div><div class="rs ${cls}">${s===null?'未練習':s+'分'}</div></a>`;
+  }
+  html+=`</div></div>`;
+
+  // trend (recent attempts)
+  const recent=recs.slice(-24);
+  html+=`<div class="card"><h2>📈 最近作答趨勢</h2><div class="sub">最近 ${recent.length} 次作答的分數（由左到右）。</div><div class="trend">`;
+  recent.forEach(r=>{ html+=`<div class="tb" title="第${r.round}回 ${r.score}分" style="height:${Math.max(4,r.score)}%"></div>`; });
+  html+=`</div></div>`;
+
+  // clear
+  html+=`<div class="card"><h2>⚙️ 資料管理</h2><div class="sub">成績只存在這台裝置。換裝置或清除瀏覽器資料後會消失。</div><button class="btn" onclick="clearAll()">清除我的所有成績紀錄</button></div>`;
+
+  app.innerHTML=html;
+}
+function clearAll(){ if(confirm('確定清除本機所有聽力成績紀錄？此動作無法復原。')){ localStorage.removeItem(KEY); render(); } }
+
+fetch('gept-listening-vocab-map.json').then(r=>r.json()).then(v=>{VMAP=v;render();}).catch(()=>{render();});
+</script>
+</body>
+</html>

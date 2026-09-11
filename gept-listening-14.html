@@ -156,6 +156,9 @@
   <a href="gept-listening-14-print.html" style="display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #ffb703;color:#8a5a00;border-radius:12px;padding:11px 16px;margin-bottom:18px;text-decoration:none;font-size:.9rem;font-weight:700;box-shadow:0 3px 10px rgba(255,183,3,.16);">
     <span>🖨</span><span>列印版（學生卷／教師卷）— 適合課堂紙本練習與批改，可直接列印或存成 PDF</span>
   </a>
+  <a href="gept-listening-progress.html" style="display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #3ab0d6;color:#0a6a86;border-radius:12px;padding:11px 16px;margin-bottom:18px;text-decoration:none;font-size:.9rem;font-weight:700;box-shadow:0 3px 10px rgba(58,176,214,.16);">
+    <span>📈</span><span>我的成績 · 錯題回收 — 作答後看進步曲線、最弱單字與題型、一鍵重練</span>
+  </a>
 
   <div class="sticky">
     <div class="bar">
@@ -421,6 +424,16 @@ submitBtn.addEventListener('click',()=>{
   document.getElementById('rOk').textContent=ok;
   document.getElementById('rNo').textContent=TOT-ok-blank;
   document.getElementById('rBlank').textContent=blank;
+  try{
+    var _m=location.pathname.match(/gept-listening-(\d+)\.html/);
+    var _round=_m?parseInt(_m[1]):0;
+    var _ans=Q.map(function(q){var s=form.querySelector('input[name="q'+q.n+'"]:checked');var pk=s?parseInt(s.value):null;return {n:q.n,p:q.p,pick:pk,a:q.a,ok:pk===q.a};});
+    var _rec={round:_round,date:new Date().toISOString(),score:Math.round(ok/TOT*100),total:TOT,correct:ok,blank:blank,ans:_ans};
+    var _K='efetl_listening_results';
+    var _all=JSON.parse(localStorage.getItem(_K)||'[]');
+    _all.push(_rec);
+    localStorage.setItem(_K,JSON.stringify(_all.slice(-800)));
+  }catch(_e){}
   const res=document.getElementById('result'); res.classList.add('show');
   submitBtn.style.display='none'; hint.style.display='none'; resetBtn.style.display='block';
   res.scrollIntoView({behavior:'smooth'});
