@@ -14,18 +14,21 @@ window.EFETL_CLOUD = {
     try{
       if(!this.enabled()) return;
       var s=this.student();
-      var body=Object.assign({cls:s.cls, name:s.name||'', seat:s.seat||''}, rec);
+      // subject 區分聽力/閱讀（預設 listening；閱讀頁會帶 rec.subject='reading'）
+      var body=Object.assign({cls:s.cls, name:s.name||'', seat:s.seat||'', subject:(rec&&rec.subject)||'listening'}, rec);
       fetch(this.endpoint, {method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify(body)});
     }catch(e){}
   },
 
   // 老師端用：JSONP 讀回某班級的成績（Apps Script 不給 CORS，故用 JSONP）
-  fetchClass: function(cls, key, cb){
+  // subject 可選：'listening'（預設，後端也預設）／'reading'／'all'
+  fetchClass: function(cls, key, cb, subject){
     if(!this.endpoint){ cb({ok:false, err:'尚未設定雲端網址'}); return; }
     var fn='efetlcb_'+Math.random().toString(36).slice(2);
     window[fn]=function(data){ try{ delete window[fn]; }catch(e){} try{ document.body.removeChild(s); }catch(e){} cb(data); };
     var s=document.createElement('script');
-    s.src=this.endpoint+'?callback='+fn+'&class='+encodeURIComponent(cls)+'&key='+encodeURIComponent(key)+'&t='+Date.now();
+    s.src=this.endpoint+'?callback='+fn+'&class='+encodeURIComponent(cls)+'&key='+encodeURIComponent(key)
+        +(subject?('&subject='+encodeURIComponent(subject)):'')+'&t='+Date.now();
     s.onerror=function(){ cb({ok:false, err:'讀取失敗（網址或網路問題）'}); };
     document.body.appendChild(s);
   }

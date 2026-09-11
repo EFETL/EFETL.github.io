@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>英檢初級 閱讀｜老師 · 班級成績</title>
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Helvetica Neue","PingFang TC","Microsoft JhengHei",sans-serif;color:#22303f;line-height:1.6;background:linear-gradient(180deg,#f0fdfa,#f4f1fb 70%);min-height:100vh;}
+  .wrap{max-width:1040px;margin:0 auto;padding:18px 16px 60px;}
+  a.home{display:inline-block;margin-bottom:14px;color:#0d9488;font-weight:800;text-decoration:none;background:#fff;padding:7px 16px;border-radius:20px;box-shadow:0 3px 10px rgba(13,148,136,.14);font-size:.9rem;}
+  header.hero{background:linear-gradient(135deg,#0ea5a4,#6d28d9 75%);color:#fff;border-radius:22px;padding:24px;margin-bottom:18px;box-shadow:0 10px 26px rgba(109,40,217,.28);}
+  header.hero h1{margin:0 0 6px;font-size:1.55rem;}
+  header.hero p{margin:0;opacity:.95;font-size:.9rem;}
+  .card{background:#fff;border-radius:18px;padding:18px 20px;margin-bottom:16px;box-shadow:0 5px 16px rgba(109,40,217,.1);border:1px solid #e7e3f6;}
+  .card h2{margin:0 0 4px;font-size:1.12rem;}
+  .card .sub{color:#8a86a8;font-size:.82rem;margin-bottom:12px;}
+  input{padding:9px 13px;border:1.5px solid #ddd6f3;border-radius:12px;font-size:.92rem;}
+  .btn{background:linear-gradient(135deg,#0ea5a4,#6d28d9);color:#fff;border:none;border-radius:20px;padding:9px 20px;font-weight:800;font-size:.9rem;cursor:pointer;}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;}
+  .stat{background:#fff;border-radius:16px;padding:14px 10px;text-align:center;box-shadow:0 5px 16px rgba(109,40,217,.1);border:1px solid #e7e3f6;}
+  .stat b{display:block;font-size:1.7rem;color:#6d28d9;line-height:1.1;}
+  .stat span{font-size:.8rem;color:#8a86a8;}
+  table{width:100%;border-collapse:collapse;font-size:.9rem;}
+  th,td{text-align:left;padding:8px 8px;border-bottom:1px solid #eee;}
+  th{color:#8a86a8;font-weight:700;font-size:.82rem;}
+  td.n{text-align:right;font-variant-numeric:tabular-nums;}
+  .bar{height:13px;border-radius:8px;background:#eee9fb;overflow:hidden;}
+  .bar>i{display:block;height:100%;background:linear-gradient(90deg,#6d28d9,#0ea5a4);}
+  .prow{display:grid;grid-template-columns:130px 1fr 52px;gap:10px;align-items:center;margin:8px 0;}
+  .reteach{display:flex;flex-wrap:wrap;gap:8px;}
+  .rt{border:1px solid #ffd0d0;background:#fff5f5;border-radius:12px;padding:8px 12px;font-size:.86rem;}
+  .rt b{color:#e0384f;}
+  .msg{padding:14px;border-radius:12px;background:#fff8e6;border:1px solid #ffdf8f;color:#7a5a00;font-size:.9rem;}
+  footer{text-align:center;color:#9a95b5;font-size:.8rem;margin-top:28px;}
+  @media(max-width:560px){.stats{grid-template-columns:repeat(2,1fr);}}
+</style>
+<script src="/gept-listening-cloud.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <a class="home" href="index.html">← 回閱讀測驗</a>
+  <header class="hero">
+    <h1>👩‍🏫 老師 · 閱讀班級成績</h1>
+    <p>輸入班級碼與老師密鑰，看到全班閱讀的完成度、分數排名與最該重講的題目。分數為 GEPT 級距（滿分 120，參考通過線 80）。</p>
+  </header>
+
+  <div class="card">
+    <h2>🔑 查詢</h2>
+    <div class="sub">資料來自你部署的 Google 試算表（與聽力同一後端，閱讀成績已分開統計）。</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <input id="cls" placeholder="班級碼（例：APEX）">
+      <input id="key" type="password" placeholder="老師密鑰">
+      <button class="btn" onclick="query()">查詢</button>
+    </div>
+    <div id="loginmsg" style="margin-top:10px"></div>
+  </div>
+
+  <div id="out"></div>
+  <footer>EFETL © 2025　‧　老師端 · 閱讀班級成績</footer>
+</div>
+<script>
+try{ const sv=JSON.parse(localStorage.getItem('efetl_teacher')||'{}'); document.getElementById('cls').value=sv.cls||''; document.getElementById('key').value=sv.key||''; }catch(e){}
+
+function query(){
+  const cls=document.getElementById('cls').value.trim();
+  const key=document.getElementById('key').value.trim();
+  const lm=document.getElementById('loginmsg');
+  if(!cls||!key){ lm.innerHTML='<div class="msg">請輸入班級碼與老師密鑰。</div>'; return; }
+  if(!window.EFETL_CLOUD||!EFETL_CLOUD.endpoint){ lm.innerHTML='<div class="msg">雲端尚未啟用——請先完成 Apps Script 部署。</div>'; return; }
+  localStorage.setItem('efetl_teacher',JSON.stringify({cls,key}));
+  lm.innerHTML='查詢中…';
+  EFETL_CLOUD.fetchClass(cls,key,function(d){
+    if(!d.ok){ lm.innerHTML='<div class="msg">'+(d.err||'查詢失敗')+'</div>'; document.getElementById('out').innerHTML=''; return; }
+    lm.innerHTML='';
+    render(cls, d.rows||[]);
+  }, 'reading');   // ← 只讀閱讀成績
+}
+
+function render(cls, rows){
+  const out=document.getElementById('out');
+  if(!rows.length){ out.innerHTML='<div class="card"><div class="msg">這個班級目前還沒有閱讀上傳成績。請學生做「完整卷」並在測驗頁填入班級碼 '+cls+'（座號、姓名）。</div></div>'; return; }
+  // group by student(name#seat) → latest attempt per round
+  const stu={};
+  rows.forEach(r=>{ const id=(r.name||'?')+'#'+(r.seat||''); (stu[id]=stu[id]||{name:r.name,seat:r.seat,rounds:{},attempts:0,last:''});
+    const S=stu[id]; S.attempts++; if(r.date>S.last)S.last=r.date;
+    const cur=S.rounds[r.round]; if(!cur||r.date>cur.date) S.rounds[r.round]=r; });
+  const students=Object.values(stu);
+  const latest=[]; students.forEach(S=>Object.values(S.rounds).forEach(r=>latest.push(r)));
+  const totAtt=rows.length;
+  const avg=Math.round(latest.reduce((a,r)=>a+r.score,0)/latest.length);
+  const passRate=Math.round(latest.filter(r=>r.score>=80).length/latest.length*100);
+
+  let h=`<div class="stats">
+    <div class="stat"><b>${students.length}</b><span>學生數</span></div>
+    <div class="stat"><b>${totAtt}</b><span>總作答次數</span></div>
+    <div class="stat"><b>${avg}</b><span>班平均分（/120）</span></div>
+    <div class="stat"><b>${passRate}%</b><span>達通過線(80)比例</span></div>
+  </div>`;
+
+  // students table (rank by avg score)
+  h+=`<div class="card"><h2>👥 學生一覽</h2><div class="sub">依平均分排序（滿分 120，&lt;80 標紅）；完成回數＝做過幾回完整卷。</div>
+    <table><tr><th>姓名</th><th>座號</th><th class="n">完成回數</th><th class="n">平均分</th><th class="n">作答次數</th><th>最近作答</th></tr>`;
+  students.map(S=>{ const rs=Object.values(S.rounds); const a=Math.round(rs.reduce((x,r)=>x+r.score,0)/rs.length); return {S,a,done:rs.length}; })
+    .sort((x,y)=>x.a-y.a)
+    .forEach(({S,a,done})=>{ h+=`<tr><td>${S.name||'(未填)'}</td><td>${S.seat||'-'}</td><td class="n">${done}</td><td class="n" style="color:${a>=80?'#0a9d54':a>=60?'#e08a00':'#e0384f'};font-weight:800">${a}</td><td class="n">${S.attempts}</td><td>${(S.last||'').slice(0,10)}</td></tr>`; });
+  h+=`</table></div>`;
+
+  // per-round class average
+  const rc={}; latest.forEach(r=>{ (rc[r.round]=rc[r.round]||[]).push(r.score); });
+  const rounds=Object.keys(rc).map(Number).sort((a,b)=>a-b);
+  h+=`<div class="card"><h2>📚 各回班平均（/120）</h2><div class="sub">各生該回最新分數平均，越低越該全班複習。</div>`;
+  rounds.forEach(rd=>{ const arr=rc[rd]; const p=Math.round(arr.reduce((a,b)=>a+b,0)/arr.length); const w=Math.round(p/120*100);
+    h+=`<div class="prow"><div>第 ${rd} 回（${arr.length} 人）</div><div class="bar"><i style="width:${w}%"></i></div><div class="n" style="color:${p>=80?'#0a9d54':p>=60?'#e08a00':'#e0384f'};font-weight:800">${p}</div></div>`; });
+  h+=`</div>`;
+
+  // reteach: per (round,question) accuracy, lowest first
+  const qstat={};
+  latest.forEach(r=>(r.ans||[]).forEach(a=>{ if(a.pick==null&&!a.ok){} const k=r.round+'-'+a.n; const o=qstat[k]||[0,0,r.round,a.n]; o[1]++; if(a.ok)o[0]++; qstat[k]=o; }));
+  const need=Math.max(2,Math.ceil(students.length*0.4));
+  const hard=Object.values(qstat).filter(o=>o[1]>=need)
+    .map(o=>({round:o[2],n:o[3],acc:Math.round(o[0]/o[1]*100),tot:o[1]}))
+    .sort((a,b)=>a.acc-b.acc).slice(0,12);
+  h+=`<div class="card"><h2>🔁 最該重講的題目</h2><div class="sub">全班正確率最低的題（至少多位學生做過），課堂上優先講解。</div><div class="reteach">`;
+  if(hard.length) hard.forEach(q=>{ h+=`<div class="rt">第 ${q.round} 回 · 第 ${q.n} 題　正確率 <b>${q.acc}%</b>（${q.tot} 人）</div>`; });
+  else h+='<div class="sub">資料還不夠（需要多位學生作答同一題）。</div>';
+  h+=`</div></div>`;
+
+  out.innerHTML=h;
+}
+</script>
+</body>
+</html>
