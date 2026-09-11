@@ -185,7 +185,7 @@ footer{text-align:center;color:var(--muted);font-size:.72rem;padding:26px 0 10px
       <span>綠色進度＝已標記「學會」的比例</span>
     </div>
     <div class="rounds" id="roundGrid"></div>
-    <footer>提示：點單字卡上的 🔊 可聽美式發音。所有進度自動存在本機瀏覽器。</footer>
+    <footer>提示：點單字卡上的 🔊 可聽微軟 AI 美式發音。所有進度自動存在本機瀏覽器。</footer>
   </div>
 
   <!-- ROUND MENU -->
@@ -235,32 +235,51 @@ const LS = {
 function save(){localStorage.setItem('q_know',JSON.stringify(LS.know));localStorage.setItem('q_star',JSON.stringify(LS.star));}
 function idxKey(i){return i;}
 
-/* ---------- speech ---------- */
+/* ---------- speech：微軟 Edge TTS（en-US-AriaNeural）預錄音檔，找不到才退回瀏覽器語音 ---------- */
+const AUDIO_BASE='gept-elementary-vocab-audio/';
+function audioSlug(t){return String(t).toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'');}
 let VOICE=null;
 function pickVoice(){
   const vs=speechSynthesis.getVoices();
-  VOICE = vs.find(v=>/en-US/i.test(v.lang)&&/female|Samantha|Google US/i.test(v.name))
+  VOICE = vs.find(v=>/^en/i.test(v.lang)&&/Microsoft/i.test(v.name)&&/Natural|Online|Aria|Jenny/i.test(v.name))
+       || vs.find(v=>/^en/i.test(v.lang)&&/Microsoft/i.test(v.name))
+       || vs.find(v=>/en-US/i.test(v.lang)&&/female|Samantha|Google US/i.test(v.name))
        || vs.find(v=>/en-US/i.test(v.lang))
        || vs.find(v=>/^en/i.test(v.lang)) || null;
 }
 if('speechSynthesis' in window){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
-/* iOS/Safari 需要在使用者手勢中先「解鎖」語音，之後 setTimeout 內的朗讀才會有聲音 */
-let __voiceUnlocked=false;
+/* iOS/Safari 需要在使用者手勢中先「解鎖」音訊，之後 setTimeout 內的播放才會有聲音 */
+let __player=null, __voiceUnlocked=false, __sq=0;
+function ensurePlayer(){ if(!__player){ __player=new Audio(); __player.preload='auto'; } return __player; }
 function unlockVoice(){
-  if(__voiceUnlocked || !('speechSynthesis' in window)) return;
+  if(__voiceUnlocked) return;
   __voiceUnlocked=true;
-  try{ if(!VOICE)pickVoice(); const u=new SpeechSynthesisUtterance(' '); u.volume=0; speechSynthesis.speak(u); }catch(e){}
+  try{ const p=ensurePlayer(); p.src=AUDIO_BASE+'_silence.mp3'; const r=p.play(); if(r&&r.catch)r.catch(function(){}); }catch(e){}
+  try{ if('speechSynthesis' in window){ if(!VOICE)pickVoice(); const u=new SpeechSynthesisUtterance(' '); u.volume=0; speechSynthesis.speak(u); } }catch(e){}
 }
 document.addEventListener('pointerdown', unlockVoice, true);
 document.addEventListener('touchstart', unlockVoice, {capture:true, passive:true});
 document.addEventListener('click', unlockVoice, true);
-function speak(text){
+function speakTTS(text){
   if(!('speechSynthesis' in window))return;
   try{ if(speechSynthesis.paused)speechSynthesis.resume(); }catch(e){}
   speechSynthesis.cancel();
   const u=new SpeechSynthesisUtterance(text);
   u.lang='en-US'; u.rate=.9; if(VOICE)u.voice=VOICE;
   speechSynthesis.speak(u);
+}
+function stopSpeak(){ __sq++; try{ if(__player)__player.pause(); }catch(e){} try{ if('speechSynthesis' in window)speechSynthesis.cancel(); }catch(e){} }
+function speak(text){
+  const slug=audioSlug(text); if(!slug)return;
+  const my=++__sq; let fell=false;
+  function fallback(){ if(!fell && my===__sq){ fell=true; speakTTS(text); } }
+  try{ if('speechSynthesis' in window)speechSynthesis.cancel(); }catch(e){}
+  const p=ensurePlayer();
+  try{ p.pause(); }catch(e){}
+  p.onerror=fallback;
+  p.src=AUDIO_BASE+slug+'.mp3';
+  const r=p.play();
+  if(r&&r.catch)r.catch(function(err){ if(!(err&&err.name==='AbortError')) fallback(); });
 }
 
 /* ---------- helpers ---------- */
@@ -276,7 +295,7 @@ let curRound=0;
 const $home=document.getElementById('home'),$round=document.getElementById('roundView'),$game=document.getElementById('gameView');
 function show(el){[$home,$round,$game].forEach(e=>e.classList.add('hidden'));el.classList.remove('hidden');window.scrollTo(0,0);}
 function goHome(){renderHome();show($home);}
-function backToRound(){speechSynthesis&&speechSynthesis.cancel();openRound(curRound);}
+function backToRound(){stopSpeak();openRound(curRound);}
 
 function renderHome(){
   const g=document.getElementById('roundGrid');g.innerHTML='';
