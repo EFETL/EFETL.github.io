@@ -119,7 +119,6 @@ header.top{display:flex;align-items:center;gap:12px;padding:8px 2px 16px}
 .play-btn .ic{font-size:1.35rem}
 .spell-input{width:100%;max-width:360px;display:block;margin:0 auto;font-size:1.3rem;text-align:center;padding:12px;border:2px solid var(--line);border-radius:12px;letter-spacing:.05em;font-weight:700;color:var(--primary-d)}
 .spell-input:focus{outline:none;border-color:var(--primary)}
-.spell-hint{text-align:center;font-size:1.1rem;letter-spacing:.35em;color:var(--muted);margin:12px 0;font-family:ui-monospace,monospace;min-height:1.4em}
 .feedback{text-align:center;font-weight:700;min-height:1.6em;margin-top:10px}
 .feedback.ok{color:var(--green)}
 .feedback.no{color:var(--red)}
@@ -434,24 +433,22 @@ function quizDone(){
 }
 
 /* ================= SPELLING ================= */
-let spList=[],spPos=0,spScore=0,spReveal=0;
+let spList=[],spPos=0,spScore=0;
 function startSpell(){
   spList=shuffle(roundWords(curRound));spPos=0;spScore=0;
   document.getElementById('gameTitle').textContent='✍️ 聽寫拼字 Spelling';show($game);renderSpell();
 }
 function renderSpell(){
   if(spPos>=spList.length)return spellDone();
-  const wi=spList[spPos],w=WORDS[wi];spReveal=0;
+  const wi=spList[spPos],w=WORDS[wi];
   document.getElementById('gameBody').innerHTML=`
    <div class="panel">
     <div class="scoreline"><span>第 ${spPos+1} / ${spList.length} 題</span><span>得分 ${spScore}</span></div>
     <div class="spell-audio"><button class="play-btn" onclick="speak('${w.w.replace(/'/g,"\\'")}')"><span class="ic">🔊</span>播放發音 Play</button>
     <div style="font-size:.72rem;color:var(--muted);margin-top:8px">點按鈕即可聽發音，可重複點</div></div>
     <input class="spell-input" id="spIn" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="type here…">
-    <div class="spell-hint" id="spHint"></div>
     <div class="feedback" id="spFb"></div>
     <div class="rowbtns">
-      <button class="btn ghost sm" onclick="spellHint()">💡 提示（頭尾）</button>
       <button class="btn sm" onclick="checkSpell()">確認 Check</button>
       <button class="btn ghost sm" onclick="skipSpell()">跳過 ▸</button>
     </div>
@@ -462,18 +459,13 @@ function renderSpell(){
   inp.addEventListener('keydown',e=>{if(e.key==='Enter')checkSpell();});
   speak(w.w);                       // 同步在手勢內朗讀（iOS 解鎖後每題都能自動出聲）
 }
-function spellHint(){
-  const w=WORDS[spList[spPos]].w;spReveal=1; // 只給頭尾，中間留空；再按也一樣，拿不到完整答案
-  let s='';for(let i=0;i<w.length;i++)s+=(i===0||i===w.length-1)?w[i]:'_';
-  document.getElementById('spHint').textContent=s.split('').join(' ');
-}
 function checkSpell(){
   const wi=spList[spPos],w=WORDS[wi];
   const val=(document.getElementById('spIn').value||'').trim().toLowerCase();
   const fb=document.getElementById('spFb');
   if(val===w.w.toLowerCase()){
     fb.textContent='✓ 正確！ '+w.w;fb.className='feedback ok';
-    if(spReveal===0)spScore++;LS.know[wi]=true;save();speak(w.w);
+    spScore++;LS.know[wi]=true;save();speak(w.w);
     setTimeout(()=>{spPos++;renderSpell();},900);
   }else{
     fb.textContent='✗ 正確答案：'+w.w;fb.className='feedback no';
