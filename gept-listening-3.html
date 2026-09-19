@@ -421,8 +421,8 @@ submitBtn.addEventListener('click',()=>{
       <div class="en"><b>EN</b>&nbsp;${q.en}</div><div class="zh"><b>中</b>&nbsp;${q.zh}</div>`;
     exp.classList.add('show');
   });
-  document.getElementById('scoreNum').textContent=Math.round(ok/TOT*100);
-  document.getElementById('scoreTxt').textContent=`分（答對 ${ok} / ${TOT} 題）`;
+  document.getElementById('scoreNum').textContent=Math.round(ok/TOT*120);
+  document.getElementById('scoreTxt').textContent=`／120 分　${Math.round(ok/TOT*120)>=80?'達參考通過線 ✅':'未達通過線（80）'}（答對 ${ok}／${TOT} 題）`;
   document.getElementById('rOk').textContent=ok;
   document.getElementById('rNo').textContent=TOT-ok-blank;
   document.getElementById('rBlank').textContent=blank;
@@ -430,7 +430,7 @@ submitBtn.addEventListener('click',()=>{
     var _m=location.pathname.match(/gept-listening-(\d+)\.html/);
     var _round=_m?parseInt(_m[1]):0;
     var _ans=Q.map(function(q){var s=form.querySelector('input[name="q'+q.n+'"]:checked');var pk=s?parseInt(s.value):null;return {n:q.n,p:q.p,pick:pk,a:q.a,ok:pk===q.a};});
-    var _rec={round:_round,date:new Date().toISOString(),score:Math.round(ok/TOT*100),total:TOT,correct:ok,blank:blank,ans:_ans};
+    var _rec={round:_round,date:new Date().toISOString(),score:Math.round(ok/TOT*120),total:TOT,correct:ok,blank:blank,ans:_ans};
     var _K='efetl_listening_results';
     var _all=JSON.parse(localStorage.getItem(_K)||'[]');
     _all.push(_rec);
