@@ -119,6 +119,8 @@ header.top{display:flex;align-items:center;gap:12px;padding:8px 2px 16px}
 .play-btn .ic{font-size:1.35rem}
 .spell-input{width:100%;max-width:360px;display:block;margin:0 auto;font-size:1.3rem;text-align:center;padding:12px;border:2px solid var(--line);border-radius:12px;letter-spacing:.05em;font-weight:700;color:var(--primary-d)}
 .spell-input:focus{outline:none;border-color:var(--primary)}
+.spell-input.ok{border-color:var(--green);color:var(--green);background:#f0fdf4}
+.spell-input.no{border-color:var(--red);color:var(--red);background:#fef2f2}
 .feedback{text-align:center;font-weight:700;min-height:1.6em;margin-top:10px}
 .feedback.ok{color:var(--green)}
 .feedback.no{color:var(--red)}
@@ -252,32 +254,49 @@ function ensurePlayer(){ if(!__player){ __player=new Audio(); __player.preload='
 function unlockVoice(){
   if(__voiceUnlocked) return;
   __voiceUnlocked=true;
-  try{ const p=ensurePlayer(); p.src=AUDIO_BASE+'unlock-silence.mp3'; const r=p.play(); if(r&&r.catch)r.catch(function(){}); }catch(e){}
+  try{ const p=ensurePlayer(); p.onended=p.onerror=null; p.src=AUDIO_BASE+'unlock-silence.mp3'; const r=p.play(); if(r&&r.catch)r.catch(function(){}); }catch(e){}
   try{ if('speechSynthesis' in window){ if(!VOICE)pickVoice(); const u=new SpeechSynthesisUtterance(' '); u.volume=0; speechSynthesis.speak(u); } }catch(e){}
 }
 document.addEventListener('pointerdown', unlockVoice, true);
 document.addEventListener('touchstart', unlockVoice, {capture:true, passive:true});
 document.addEventListener('click', unlockVoice, true);
-function speakTTS(text){
-  if(!('speechSynthesis' in window))return;
+function speakTTS(text,onEnd){
+  if(!('speechSynthesis' in window)){ if(onEnd)onEnd(); return; }
   try{ if(speechSynthesis.paused)speechSynthesis.resume(); }catch(e){}
   speechSynthesis.cancel();
   const u=new SpeechSynthesisUtterance(text);
   u.lang='en-US'; u.rate=.9; if(VOICE)u.voice=VOICE;
+  if(onEnd){ u.onend=onEnd; u.onerror=onEnd; }
   speechSynthesis.speak(u);
 }
-function stopSpeak(){ __sq++; try{ if(__player)__player.pause(); }catch(e){} try{ if('speechSynthesis' in window)speechSynthesis.cancel(); }catch(e){} }
-function speak(text){
-  const slug=audioSlug(text); if(!slug)return;
+let __lock=false, __gt=0;
+function stopSpeak(){ __sq++; __gt++; __lock=false; try{ if(__player)__player.pause(); }catch(e){} try{ if('speechSynthesis' in window)speechSynthesis.cancel(); }catch(e){} }
+function speak(text,onDone){
+  if(__lock&&!onDone)return; // 等發音播完換題期間，忽略重複點 🔊
+  let finished=false;
+  function done(){ if(!finished){ finished=true; if(onDone)onDone(); } }
+  const slug=audioSlug(text); if(!slug){ done(); return; }
   const my=++__sq; let fell=false;
-  function fallback(){ if(!fell && my===__sq){ fell=true; speakTTS(text); } }
+  function fallback(){ if(!fell && my===__sq){ fell=true; speakTTS(text,done); } }
   try{ if('speechSynthesis' in window)speechSynthesis.cancel(); }catch(e){}
   const p=ensurePlayer();
   try{ p.pause(); }catch(e){}
   p.onerror=fallback;
+  p.onended=function(){ if(my===__sq)done(); };
   p.src=AUDIO_BASE+slug+'.mp3';
   const r=p.play();
   if(r&&r.catch)r.catch(function(err){ if(!(err&&err.name==='AbortError')) fallback(); });
+}
+/* 播完發音（且至少停留 minMs）才執行 fn；音檔載不到時 6 秒後照樣往下，不會卡住 */
+function speakThen(text,minMs,fn){
+  const tok=__gt, t0=Date.now(); let fired=false;
+  __lock=true;
+  function go(){
+    if(fired||tok!==__gt)return; fired=true; __lock=false;
+    setTimeout(function(){ if(tok===__gt)fn(); }, Math.max(200, minMs-(Date.now()-t0)));
+  }
+  speak(text,go);
+  setTimeout(go,6000);
 }
 
 /* ---------- helpers ---------- */
@@ -412,13 +431,13 @@ function renderQuiz(){
 }
 function answerQuiz(btn,chosen,correct,w){
   const all=[...document.querySelectorAll('.opt')];all.forEach(o=>o.onclick=null);
-  if(chosen===correct){btn.classList.add('correct');qScore++;LS.know[correct]=true;save();speak(w.w);}
+  if(chosen===correct){btn.classList.add('correct');qScore++;LS.know[correct]=true;save();}
   else{
     btn.classList.add('wrong');LS.star[correct]=true;save();
     all.forEach(o=>{if((qDir===0?o.textContent===WORDS[correct].zh:o.textContent===WORDS[correct].w))o.classList.add('correct');});
     all.forEach(o=>{if(!o.classList.contains('correct')&&o!==btn)o.classList.add('dim');});
   }
-  setTimeout(()=>{qPos++;renderQuiz();},chosen===correct?750:1500);
+  speakThen(w.w,chosen===correct?750:1500,()=>{qPos++;renderQuiz();});
 }
 function quizDone(){
   const pct=Math.round(qScore/qList.length*100);
@@ -432,13 +451,14 @@ function quizDone(){
 }
 
 /* ================= SPELLING ================= */
-let spList=[],spPos=0,spScore=0;
+let spList=[],spPos=0,spScore=0,spBusy=false;
 function startSpell(){
   spList=shuffle(roundWords(curRound));spPos=0;spScore=0;
   document.getElementById('gameTitle').textContent='✍️ 聽寫拼字 Spelling';show($game);renderSpell();
 }
 function renderSpell(){
   if(spPos>=spList.length)return spellDone();
+  spBusy=false;
   const wi=spList[spPos],w=WORDS[wi];
   document.getElementById('gameBody').innerHTML=`
    <div class="panel">
@@ -459,20 +479,24 @@ function renderSpell(){
   speak(w.w);                       // 同步在手勢內朗讀（iOS 解鎖後每題都能自動出聲）
 }
 function checkSpell(){
+  if(spBusy)return;
   const wi=spList[spPos],w=WORDS[wi];
-  const val=(document.getElementById('spIn').value||'').trim().toLowerCase();
+  const inp=document.getElementById('spIn');
+  const typed=(inp.value||'').trim();
+  const ok=typed.toLowerCase()===w.w.toLowerCase();
+  spBusy=true;
+  inp.value=w.w;inp.readOnly=true;inp.classList.add(ok?'ok':'no'); // 答案直接顯示在輸入欄
   const fb=document.getElementById('spFb');
-  if(val===w.w.toLowerCase()){
-    fb.textContent='✓ 正確！ '+w.w;fb.className='feedback ok';
-    spScore++;LS.know[wi]=true;save();speak(w.w);
-    setTimeout(()=>{spPos++;renderSpell();},900);
+  if(ok){
+    fb.textContent='✓ 正確！';fb.className='feedback ok';
+    spScore++;LS.know[wi]=true;save();
   }else{
-    fb.textContent='✗ 正確答案：'+w.w;fb.className='feedback no';
-    LS.star[wi]=true;save();speak(w.w);
-    setTimeout(()=>{spPos++;renderSpell();},1600);
+    fb.textContent=typed?'✗ 你拼成「'+typed+'」，正確拼法如上':'✗ 正確拼法如上';fb.className='feedback no';
+    LS.star[wi]=true;save();
   }
+  speakThen(w.w,ok?900:2000,()=>{spPos++;renderSpell();});
 }
-function skipSpell(){const wi=spList[spPos];LS.star[wi]=true;save();spPos++;renderSpell();}
+function skipSpell(){if(spBusy)return;const wi=spList[spPos];LS.star[wi]=true;save();spPos++;renderSpell();}
 function spellDone(){
   document.getElementById('gameBody').innerHTML=`<div class="panel result">
     <div class="emoji">✍️🎉</div>
