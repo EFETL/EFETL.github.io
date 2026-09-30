@@ -85,6 +85,14 @@ body.done #flow{display:none}
 .part h2{margin:0;font-size:18px;font-weight:900}
 .part .en2{font-size:12px;color:var(--sub);font-weight:600;font-style:italic}
 .part .tag{font-size:12px;color:var(--sub);font-weight:600}
+/* 題組太高、無法和大題標頭同頁時，只對該題組略收行距 */
+.q.tightgrp{padding:5px 12px;margin-bottom:4px}
+.tightgrp .opts{gap:3px 12px;margin-top:4px}
+.tightgrp .opt{padding:3px 9px}
+.passage.tightgrp{padding:8px 14px;margin:3px 0 5px}
+.part.tight{margin:0 0 8px}
+.part.tight .no{width:30px;height:30px;font-size:15px;border-radius:9px}
+.part.tight h2{font-size:16px}
 .instru{background:var(--wash);border-left:4px solid var(--brand);border-radius:0 10px 10px 0;padding:9px 14px;font-size:12.5px;color:#4b4560;margin-bottom:14px}
 
 .q{padding:9px 12px;border:1px solid var(--line);border-radius:12px;margin-bottom:6px;background:#fff}
@@ -199,9 +207,20 @@ function paginate(){
   blocks.forEach(function(el){var g=el.getAttribute('data-group');
     if(g&&cur&&cur.g===g){cur.els.push(el);}else{cur={g:g,els:[el]};units.push(cur);}});
   var pages=[],page=[],used=0;
+  // 標頭＋第一個題組放不下同一頁時：改用精簡標頭（小徽章，作答說明併到副標那一行，內容不刪）
+  function tighten(u){var tag=null,ins=null;
+    u.els.forEach(function(e){if(e.classList.contains('part')){e.classList.add('tight');tag=e.querySelector('.tag');}
+      if(e.classList.contains('instru'))ins=e;});
+    if(tag&&ins){tag.textContent=tag.textContent+'　｜　'+ins.textContent;ins.style.display='none';}}
   function uh(u){var s=0;u.els.forEach(function(e){s+=blockH(e);});return s;}
-  units.forEach(function(u){var h=uh(u);
+  units.forEach(function(u,k){var h=uh(u);
     if(u.els[0].classList.contains('breakbefore')&&page.length){pages.push(page);page=[];used=0;}
+    // 大題標頭不可落單：要和下一個區塊（題目／文章題組）同頁，放不下就整個移到下一頁
+    if(u.g&&/^ph/.test(u.g)&&units[k+1]){var nx=units[k+1],nh=uh(nx);
+      if(h+nh>BUD){tighten(u);h=uh(u);}
+      if(h+nh>BUD){nx.els.forEach(function(e){e.classList.add('tightgrp');});nh=uh(nx);}
+      var need=h+(h+nh<=BUD?nh:blockH(nx.els[0]));
+      if(used+need>BUD&&page.length){pages.push(page);page=[];used=0;}}
     if(h<=BUD){ if(used+h>BUD&&page.length){pages.push(page);page=[];used=0;}
       u.els.forEach(function(e){page.push(e);}); used+=h; }
     else { u.els.forEach(function(e){var eh=blockH(e);
