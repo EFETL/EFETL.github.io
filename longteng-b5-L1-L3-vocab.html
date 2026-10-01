@@ -245,14 +245,18 @@ function unlockVoice(){
 document.addEventListener('pointerdown', unlockVoice, true);
 document.addEventListener('touchstart', unlockVoice, {capture:true, passive:true});
 document.addEventListener('click', unlockVoice, true);
-function speak(text){
-  if(!('speechSynthesis' in window))return;
-  try{ if(speechSynthesis.paused)speechSynthesis.resume(); }catch(e){}
-  speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(text);
-  u.lang='en-US'; u.rate=.9; if(VOICE)u.voice=VOICE;
-  speechSynthesis.speak(u);
-}
+
+/* ---------- 微軟 Neural 語音（Edge TTS · en-US-AriaNeural 預錄 mp3），失敗才退回瀏覽器語音 ---------- */
+const MS_AUDIO_DIR='audio/longteng-b5/';
+const __au=new Audio();__au.preload='auto';let __auUnlocked=false;
+function __slug(t){return String(t).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');}
+function __unlockAudio(){if(__auUnlocked)return;__auUnlocked=true;try{__au.muted=true;__au.src=MS_AUDIO_DIR+'plain.mp3';const p=__au.play();if(p)p.then(()=>{__au.pause();__au.muted=false;}).catch(()=>{__au.muted=false;});}catch(e){__au.muted=false;}}
+document.addEventListener('pointerdown',__unlockAudio,true);
+document.addEventListener('touchstart',__unlockAudio,{capture:true,passive:true});
+function __ttsFallback(text){if(!('speechSynthesis' in window))return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=.9;if(typeof VOICE!=='undefined'&&VOICE)u.voice=VOICE;speechSynthesis.speak(u);}catch(e){}}
+function msPlay(file,text){try{if('speechSynthesis' in window)speechSynthesis.cancel();__au.pause();__au.muted=false;__au.src=MS_AUDIO_DIR+file;__au.currentTime=0;
+  __au.onerror=()=>__ttsFallback(text);const p=__au.play();if(p)p.catch(()=>__ttsFallback(text));}catch(e){__ttsFallback(text);}}
+function speak(text){ msPlay(__slug(text)+'.mp3',text); }
 
 /* ---------- helpers ---------- */
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),1400);}
@@ -267,7 +271,7 @@ let curRound=0;
 const $home=document.getElementById('home'),$round=document.getElementById('roundView'),$game=document.getElementById('gameView');
 function show(el){[$home,$round,$game].forEach(e=>e.classList.add('hidden'));el.classList.remove('hidden');window.scrollTo(0,0);}
 function goHome(){renderHome();show($home);}
-function backToRound(){speechSynthesis&&speechSynthesis.cancel();openRound(curRound);}
+function backToRound(){try{speechSynthesis.cancel();__au.pause();}catch(e){}openRound(curRound);}
 
 function renderHome(){
   const g=document.getElementById('roundGrid');g.innerHTML='';
