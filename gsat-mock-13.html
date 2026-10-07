@@ -820,5 +820,79 @@ function updateEssayStats(ta, wordId, paraId) {
   document.getElementById(paraId).textContent = paras;
 }
 </script>
+
+<!-- AK:answer-key -->
+<style id="ak-style">#ak-btn{position:fixed;left:14px;bottom:14px;z-index:9990;font:600 16px/1 "PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;background:#1f4e79;color:#fff;border:0;border-radius:999px;padding:11px 16px;box-shadow:0 4px 14px rgba(0,0,0,.22);cursor:pointer}#ak-btn:hover{background:#163a5c}#ak-box{display:none;position:fixed;inset:0;z-index:9995;background:rgba(15,25,40,.45);padding:16px;overflow:auto}#ak-box.show{display:block}#ak-box .ak-card{max-width:960px;margin:20px auto;background:#fff;color:#1d2733;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.25);font:16px/1.6 "PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;text-align:left}#ak-box .ak-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:14px 18px;border-bottom:1px solid #e3e8ef;position:sticky;top:0;background:#fff;border-radius:14px 14px 0 0}#ak-box .ak-head b{font-size:18px;color:#1f4e79}#ak-box .ak-head button{font:inherit;font-size:16px;margin-left:8px;border:1px solid #c9d3df;background:#f4f7fb;color:#1d2733;border-radius:8px;padding:6px 12px;cursor:pointer}#ak-box .ak-body{padding:6px 18px 18px}#ak-box h3{font-size:17px;margin:16px 0 6px;color:#1f4e79}#ak-box .ak-t{border-collapse:collapse;width:100%;margin:6px 0;table-layout:fixed}#ak-box .ak-t th,#ak-box .ak-t td{border:1px solid #cfd8e3;padding:5px 2px;text-align:center;font-size:16px;word-break:break-all}#ak-box .ak-t th{background:#eef3f9;color:#1f4e79;font-weight:600}#ak-box .ak-t th:first-child{width:3.6em}#ak-box .ak-t td{font-weight:700}#ak-box .ak-list{columns:2 300px;margin:6px 0;padding-left:0;list-style:none}#ak-box .ak-list li{break-inside:avoid;padding:3px 0;border-bottom:1px dashed #e3e8ef}@media print{#ak-btn{display:none!important}html:not(.ak-on) #ak-box{display:none!important}html.ak-on body>*:not(#ak-box){display:none!important}html.ak-on #ak-box{position:static;background:none;padding:0;display:block!important;overflow:visible}html.ak-on #ak-box .ak-card{box-shadow:none;margin:0;max-width:none}html.ak-on #ak-box .ak-head button{display:none}html.ak-on #ak-box .ak-head{position:static}}</style>
+<script id="ak-core">(function(){
+if(window.AK)return;
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function norm(secs){
+ if(!secs)return[];
+ if(!Array.isArray(secs[0]&&secs[0].items)&&Array.isArray(secs))secs=[{title:'',items:secs}];
+ return secs.map(function(s){return{title:s.title||'',items:(s.items||[]).map(function(x,i){return Array.isArray(x)?[x[0],x[1]]:[i+1,x]})}}).filter(function(s){return s.items.length});
+}
+function table(s){
+ var long=s.items.some(function(x){return String(x[1]).length>3});
+ var h=s.title?'<h3>'+esc(s.title)+'</h3>':'';
+ if(long){
+  return h+'<ol class="ak-list">'+s.items.map(function(x){return'<li><b>'+esc(x[0])+'.</b> '+esc(x[1])+'</li>'}).join('')+'</ol>';
+ }
+ var out=h;
+ for(var i=0;i<s.items.length;i+=10){
+  var r=s.items.slice(i,i+10);
+  out+='<table class="ak-t"><tr><th>題號</th>'+r.map(function(x){return'<th>'+esc(x[0])+'</th>'}).join('')+'</tr><tr><th>答案</th>'+r.map(function(x){return'<td>'+esc(x[1])+'</td>'}).join('')+'</tr></table>';
+ }
+ return out;
+}
+window.AK=function(fn){
+ function run(){
+  var secs;
+  try{secs=norm(typeof fn==='function'?fn():fn)}catch(e){console.warn('AK',e);return}
+  window.__AK_DATA=secs;
+  if(!secs.length)return;
+  var n=secs.reduce(function(a,s){return a+s.items.length},0);
+  var btn=document.createElement('button');btn.id='ak-btn';btn.type='button';btn.textContent='📋 答案總表';if(window.AK_BTN_STYLE)btn.style.cssText=window.AK_BTN_STYLE;
+  var box=document.createElement('div');box.id='ak-box';
+  box.innerHTML='<div class="ak-card" role="dialog" aria-label="答案總表"><div class="ak-head"><b>📋 答案總表（教師用，共 '+n+' 題）</b><span><button type="button" class="ak-p">🖨 列印答案</button><button type="button" class="ak-x" aria-label="關閉">✕</button></span></div><div class="ak-body">'+secs.map(table).join('')+'</div></div>';
+  document.body.appendChild(btn);document.body.appendChild(box);
+  function close(){box.classList.remove('show');document.documentElement.classList.remove('ak-on')}
+  btn.onclick=function(){box.classList.add('show');document.documentElement.classList.add('ak-on')};
+  box.querySelector('.ak-x').onclick=close;
+  box.onclick=function(e){if(e.target===box)close()};
+  box.querySelector('.ak-p').onclick=function(){window.print()};
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')close()});
+ }
+ if(document.readyState==='complete')setTimeout(run,0);else window.addEventListener('load',function(){setTimeout(run,0)});
+};
+})();</script>
+<script>AK(function(){
+// quiz.efetl.com gsat-mock-N 版型：.section-title + .q-block(.q-num)；選擇題讀渲染後 .opt[data-correct=true]；
+// 無選項題（文意選填/混合題/翻譯）從 .analysis 的「正解／參考答案／參考譯文」取；作文列「見範文」
+function clip(s){s=String(s).replace(/\s+/g,' ').trim();return s.length>60?s.slice(0,60)+'…':s}
+function lines(b){var a=b.querySelector('.analysis');return a?a.textContent.split('\n').map(function(l){return l.trim()}).filter(Boolean):[]}
+function after(ls,re){for(var i=0;i<ls.length;i++){var m=ls[i].match(re);if(m){var v=(m[1]||'').trim();if(!v&&i+1<ls.length)v=ls[i+1];return v}}return ''}
+var secs=[],cur=null;
+document.querySelectorAll('.section-title, .q-block').forEach(function(el){
+  if(el.classList.contains('section-title')){cur={title:el.textContent.replace(/（.*$/,'').replace(/\s+/g,' ').trim(),items:[]};secs.push(cur);return}
+  if(!cur){cur={title:'',items:[]};secs.push(cur)}
+  var lab=el.querySelector('.q-num').textContent.trim().replace(/[.．]$/,'');
+  var opts=el.querySelectorAll('.opt');
+  if(opts.length){
+    var c=[].filter.call(opts,function(o){return o.getAttribute('data-correct')==='true'}).map(function(o){var m=o.textContent.trim().match(/^\(?([A-Z])[).]/);return m?m[1]:clip(o.textContent)});
+    cur.items.push([lab,c.join('')]);return}
+  var ls=lines(el),rg=lab.match(/^(\d+)\s*-\s*(\d+)$/);
+  if(rg){for(var n=+rg[1];n<=+rg[2];n++){
+      var v=after(ls,new RegExp('^(?:第\\s*'+n+'\\s*格\\s*正解|正解\\s*'+n+'|第\\s*'+n+'\\s*題\\s*正解)\\s*[：:]\\s*(.*)$'));
+      if(!v)v=after(ls,new RegExp('^'+n+'\\s*[.．、:：]\\s*(.+)$'));
+      cur.items.push([n,clip(v)])}
+    return}
+  if(/作文/.test(lab)){cur.items.push([lab,'見範文']);return}
+  var L=after(ls,/^正解\s*\(([A-Z])\)/);
+  if(L){cur.items.push([lab,L]);return}
+  cur.items.push([lab,clip(after(ls,/^(?:正解|參考答案|參考譯文|答案)\s*[：:]\s*(.*)$/))]);
+});
+return secs.filter(function(s){return s.items.length});
+});</script>
+<!-- /AK -->
 </body>
 </html>
