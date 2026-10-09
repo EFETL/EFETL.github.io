@@ -166,14 +166,17 @@ function speakWithFallback(text, rate, tries, onDone){
   const src = AUDIO_MAP[text];
   if(!src){ speakWithSynth(text, rate, tries, onDone); return; }
   try{
-    if(__auEl){ __auEl.pause(); __auEl.onended = __auEl.onerror = null; }
-    __auEl = new Audio(src);
+    // 重複使用同一個 <audio>：iPhone/iPad 只允許「點按鈕當下播過」的播放器之後再播，
+    // 若每次 new Audio()，第 2 次（計時器觸發）會被擋掉而沒有聲音。
+    if(!__auEl) __auEl = new Audio();
+    __auEl.pause(); __auEl.onended = __auEl.onerror = null;
+    if(__auEl.getAttribute('src') !== src) __auEl.src = src; else __auEl.currentTime = 0;
     let done = false;
     const fin = ()=>{ if(done) return; done = true; if(onDone) onDone(); };
     __auEl.onended = fin;
     __auEl.onerror = ()=>{ if(done) return; done = true; speakWithSynth(text, rate, 0, onDone); };
     const p = __auEl.play();
-    if(p && p.catch) p.catch(()=>{ if(done) return; done = true; speakWithSynth(text, rate, 0, onDone); });
+    if(p && p.catch) p.catch(e=>{ if(done || (e && e.name==='AbortError')) return; done = true; speakWithSynth(text, rate, 0, onDone); });  // AbortError＝被下一段播放取代，不用退回語音
   }catch(e){ speakWithSynth(text, rate, 0, onDone); }
 }
 
@@ -211,7 +214,7 @@ function speakTwice(text, onDone){
       else onDone();
     });
   };
-  setTimeout(go,300);
+  go();  // 第 1 次直接在點擊當下播放，替 iOS 解鎖播放器
 }
 
 function loadQ(i){const q=QS[i];document.getElementById('prog').style.width=(i/QS.length*100)+'%';document.getElementById('qnum').textContent=`題 ${i+1} / ${QS.length}`;document.getElementById('speak-box').style.display='block';document.getElementById('rec-area').style.display='none';document.getElementById('result-area').style.display='none';document.getElementById('play-count').textContent='1';document.getElementById('speak-ready').style.display='block';document.getElementById('speak-playing').style.display='none';curFinal='',curFinalBase='';}
