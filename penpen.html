@@ -319,7 +319,8 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
     for (const n of pref) { const v = en.find(x => x.name.includes(n)); if (v) return v; }
     return en.find(v => /en[-_]US/i.test(v.lang)) || en[0] || null;
   }
-  function speak(text) {
+  // Built-in phone voice: only a fallback when the Worker's natural voice is unavailable.
+  function speakDevice(text) {
     return new Promise(res => {
       if (!hasTTS) return res();
       let done = false;
@@ -337,8 +338,65 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
       }, 60);
     });
   }
+
+  // Natural voice from the Worker (/tts). One <audio> element, unlocked by the first tap,
+  // so phones allow it to play later replies that arrive after a network wait.
+  const player = new Audio();
+  player.preload = 'auto';
+  const SILENT = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YQAAAAA=';
+  let audioUnlocked = false, ttsCtl = null, stopPlay = null, lastAudio = { text: '', url: '' };
+  function unlockAudio() {
+    if (audioUnlocked) return;
+    audioUnlocked = true;
+    try { player.src = SILENT; const p = player.play(); if (p) p.catch(() => { audioUnlocked = false; }); } catch (e) { audioUnlocked = false; }
+  }
+  ['pointerdown', 'touchend', 'keydown'].forEach(ev => document.addEventListener(ev, unlockAudio, true));
+
+  async function voiceUrl(text) {
+    if (lastAudio.text === text) return lastAudio.url;
+    ttsCtl = new AbortController();
+    const res = await fetch(WORKER_URL.replace(/\/chat$/, '/tts'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text }),
+      signal: ttsCtl.signal
+    });
+    if (!res.ok) throw new Error('tts ' + res.status);
+    const url = URL.createObjectURL(await res.blob());
+    if (lastAudio.url) URL.revokeObjectURL(lastAudio.url);
+    lastAudio = { text, url };
+    return url;
+  }
+  function playUrl(url) {
+    return new Promise((res, rej) => {
+      const rate = settings.slow ? 0.75 : 1;
+      const timer = setTimeout(() => res(), 30000);
+      stopPlay = () => { clearTimeout(timer); res(); };
+      player.onended = stopPlay;
+      player.onerror = () => rej(new Error('play'));
+      player.src = url;
+      player.defaultPlaybackRate = rate; player.playbackRate = rate;
+      player.preservesPitch = true;
+      const p = player.play();
+      if (p) p.catch(rej);
+    });
+  }
+  async function speak(text) {
+    const token = speakToken;
+    try {
+      const url = await voiceUrl(text);
+      if (token !== speakToken) return;
+      await playUrl(url);
+    } catch (e) {
+      if (token !== speakToken || (e && e.name === 'AbortError')) return;
+      await speakDevice(text);
+    }
+  }
   function cancelSpeech() {
     speakToken++;
+    if (ttsCtl) { try { ttsCtl.abort(); } catch (e) {} }
+    try { player.pause(); } catch (e) {}
+    if (stopPlay) { stopPlay(); stopPlay = null; }
     try { if (hasTTS) speechSynthesis.cancel(); } catch (e) {}
   }
   async function say(en, zh, mood) {
