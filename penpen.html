@@ -408,58 +408,137 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
     }
   }
 
-  /* ---------- speech in (STT) ---------- */
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  let rec = null;
+  /* ---------- speech in: record, then Whisper through the Worker ---------- */
+  let mediaRec = null, recTimer = null, recStart = 0;
   function openType() { typebox.hidden = false; }
   function noMic(msg) {
     heardEl.textContent = msg;
     openType();
     setState('idle');
   }
-  function startListening() {
-    if (!SR) { noMic('這個瀏覽器不能直接收音，請點句子或打字。'); return; }
-    cancelSpeech();
-    let heard = '', err = '', timer = null;
-    try { rec = new SR(); } catch (e) { noMic('無法開啟收音，請點句子或打字。'); return; }
-    rec.lang = settings.lang;
-    rec.interimResults = true;
-    rec.continuous = false;
-    rec.maxAlternatives = 1;
-    rec.onstart = () => {
-      stage.dataset.mood = 'happy';
-      heardEl.textContent = '';
-      setState('listening');
-      timer = setTimeout(() => { try { rec && rec.stop(); } catch (e) {} }, 12000);
-    };
-    rec.onresult = e => {
-      let t = '';
-      for (let i = 0; i < e.results.length; i++) t += e.results[i][0].transcript;
-      heard = t;
-      heardEl.textContent = '你說：' + t;
-    };
-    rec.onerror = e => { err = e.error || 'error'; };
-    rec.onend = () => {
-      clearTimeout(timer);
-      rec = null;
-      if (heard.trim()) { ask(heard); return; }
-      if (err === 'not-allowed' || err === 'service-not-allowed') {
-        noMic('麥克風被擋住了（頁面可能嵌在框架裡）。先用句子或打字吧。');
-      } else if (err === 'audio-capture') {
-        noMic('找不到麥克風。');
-      } else if (err === 'network') {
-        noMic('語音辨識需要網路。');
-      } else {
-        heardEl.textContent = '沒聽到聲音，再按一次麥克風試試。';
+  function b64FromBuffer(buf) {
+    const u8 = new Uint8Array(buf);
+    let s = '';
+    for (let i = 0; i < u8.length; i += 0x8000) s += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000));
+    return btoa(s);
+  }
+  // Decode whatever the browser recorded and re-encode as 16 kHz mono 16-bit WAV.
+  async function toWav(blob) {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    const ctx = new AC();
+    const audio = await ctx.decodeAudioData(await blob.arrayBuffer());
+    try { ctx.close(); } catch (e) {}
+    const OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+    const off = new OAC(1, Math.max(1, Math.ceil(audio.duration * 16000)), 16000);
+    const src = off.createBufferSource();
+    src.buffer = audio; src.connect(off.destination); src.start();
+    const pcm = (await off.startRendering()).getChannelData(0);
+    const view = new DataView(new ArrayBuffer(44 + pcm.length * 2));
+    const str = (o, t) => { for (let i = 0; i < t.length; i++) view.setUint8(o + i, t.charCodeAt(i)); };
+    str(0, 'RIFF'); view.setUint32(4, 36 + pcm.length * 2, true); str(8, 'WAVE'); str(12, 'fmt ');
+    view.setUint32(16, 16, true); view.setUint16(20, 1, true); view.setUint16(22, 1, true);
+    view.setUint32(24, 16000, true); view.setUint32(28, 32000, true); view.setUint16(32, 2, true); view.setUint16(34, 16, true);
+    str(36, 'data'); view.setUint32(40, pcm.length * 2, true);
+    for (let i = 0; i < pcm.length; i++) {
+      const v = Math.max(-1, Math.min(1, pcm[i]));
+      view.setInt16(44 + i * 2, v < 0 ? v * 0x8000 : v * 0x7fff, true);
+    }
+    return view.buffer;
+  }
+  async function transcribe(blob, peak) {
+    setState('thinking');
+    show('…', '');
+    heardEl.textContent = '辨識中…';
+    ctl = new AbortController();
+    try {
+      if (WORKER_URL.includes('REPLACE-ME')) throw { code: 'not_configured' };
+      const wav = await toWav(blob);
+      const res = await fetch(WORKER_URL.replace(/\/chat$/, '/stt'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ audio: b64FromBuffer(wav) }),
+        signal: ctl.signal
+      });
+      if (!res.ok) throw { code: res.status === 429 ? 'rate_limited' : 'http' };
+      const data = await res.json();
+      const text = (data.text || '').trim();
+      if (!text) {
+        show(lastEn === '…' ? '' : lastEn, lastZh);
+        heardEl.textContent = peak < 0.02 ? '麥克風好像沒收到聲音，靠近一點說，或檢查音量。' : '沒聽清楚，再說一次試試。';
         setState('idle');
+        return;
       }
+      setState('idle');
+      ask(text);
+    } catch (e) {
+      if (e && e.name === 'AbortError') { show(lastEn === '…' ? '' : lastEn, lastZh); setState('idle'); return; }
+      const m = ERR[e && e.code] || ERR.http;
+      show(m[0], m[1]);
+      heardEl.textContent = '辨識失敗：' + (e && (e.code || e.name || e.message) || 'error');
+      setState('idle');
+    }
+  }
+  function stopListening() {
+    if (mediaRec && mediaRec.state !== 'inactive') { try { mediaRec.stop(); } catch (e) {} }
+  }
+  async function startListening() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder) {
+      noMic('這個瀏覽器不能收音，請點句子或打字。');
+      return;
+    }
+    cancelSpeech();
+    let stream;
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
+    } catch (e) {
+      noMic(e && e.name === 'NotAllowedError' ? '麥克風被擋住了，請到瀏覽器設定允許麥克風。' : '找不到麥克風。');
+      return;
+    }
+    // Volume meter so we can tell "mic is silent" from "speech not understood".
+    let peak = 0, meter = null, ac = null;
+    try {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      ac = new AC();
+      const an = ac.createAnalyser(); an.fftSize = 1024;
+      ac.createMediaStreamSource(stream).connect(an);
+      const buf = new Uint8Array(an.fftSize);
+      meter = setInterval(() => {
+        an.getByteTimeDomainData(buf);
+        let m = 0; for (let i = 0; i < buf.length; i++) m = Math.max(m, Math.abs(buf[i] - 128) / 128);
+        peak = Math.max(peak, m);
+        if (state === 'listening') heardEl.textContent = m > 0.03 ? '🎤 收到聲音了…' : '🎤 請說話…';
+      }, 150);
+    } catch (e) {}
+    const mime = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', ''].find(m => !m || MediaRecorder.isTypeSupported(m));
+    const chunks = [];
+    try { mediaRec = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined); }
+    catch (e) { stream.getTracks().forEach(t => t.stop()); noMic('無法開始錄音，請點句子或打字。'); return; }
+    const rec = mediaRec;
+    rec.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); };
+    rec.onstop = () => {
+      clearTimeout(recTimer); clearInterval(meter);
+      stream.getTracks().forEach(t => t.stop());
+      try { ac && ac.close(); } catch (e) {}
+      mediaRec = null;
+      const blob = new Blob(chunks, { type: rec.mimeType || mime || 'audio/webm' });
+      if (Date.now() - recStart < 700 || blob.size < 1500) {
+        heardEl.textContent = '太短了，說完話再按一次停止。';
+        setState('idle');
+        return;
+      }
+      transcribe(blob, peak);
     };
-    try { rec.start(); } catch (e) { noMic('無法開啟收音，請點句子或打字。'); }
+    recStart = Date.now();
+    rec.start();
+    stage.dataset.mood = 'happy';
+    setState('listening');
+    heardEl.textContent = '🎤 請說話…';
+    recTimer = setTimeout(stopListening, 10000);
   }
 
   /* ---------- controls ---------- */
   micBtn.onclick = () => {
-    if (state === 'listening') { try { rec && rec.stop(); } catch (e) {} return; }
+    if (state === 'listening') { stopListening(); return; }
     if (state === 'thinking') { if (ctl) ctl.abort(); return; }
     startListening();
   };
