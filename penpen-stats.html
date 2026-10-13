@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>企鵝口說統計</title>
+<style>
+  :root{
+    color-scheme:light;
+    --bg:#f3f2ee; --surface:#fcfcfb; --text:#0b0b0b; --text-2:#52514e; --muted:#8a8984;
+    --grid:#e8e7e3; --line:#dcdad4; --series:#2a78d6; --series-wash:rgba(42,120,214,.1); --bad:#c0392b;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      color-scheme:dark;
+      --bg:#111110; --surface:#1a1a19; --text:#ffffff; --text-2:#c3c2b7; --muted:#8f8e86;
+      --grid:#2d2c2a; --line:#3a3936; --series:#3987e5; --series-wash:rgba(57,135,229,.14); --bad:#ff8a7a;
+    }
+  }
+  :root[data-theme="dark"]{
+    color-scheme:dark;
+    --bg:#111110; --surface:#1a1a19; --text:#ffffff; --text-2:#c3c2b7; --muted:#8f8e86;
+    --grid:#2d2c2a; --line:#3a3936; --series:#3987e5; --series-wash:rgba(57,135,229,.14); --bad:#ff8a7a;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 -apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC",sans-serif}
+  main{max-width:880px;margin:0 auto;padding:20px 16px 48px}
+  h1{font-size:24px;margin:0 0 2px}
+  h2{font-size:18px;margin:0 0 4px}
+  .sub{color:var(--text-2);font-size:15px;margin:0 0 18px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+  .muted{color:var(--muted);font-size:14px}
+  button,input{font:inherit;color:var(--text)}
+  button{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 14px;min-height:44px;cursor:pointer}
+  button:hover{border-color:var(--series)}
+  button[aria-pressed="true"]{background:var(--series-wash);border-color:var(--series);font-weight:600}
+  input[type=password]{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-height:44px;width:min(280px,100%)}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .err{color:var(--bad);margin-top:8px;min-height:1.4em}
+
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+  .tile{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px}
+  .tile .k{font-size:14px;color:var(--text-2)}
+  .tile .v{font-size:30px;font-weight:650;line-height:1.2;margin-top:2px;font-variant-numeric:tabular-nums}
+  .tile .d{font-size:14px;color:var(--text-2);margin-top:2px}
+
+  #chart{position:relative;width:100%}
+  #chart svg{display:block;width:100%;height:auto;overflow:visible}
+  #chart .bar{cursor:default}
+  #chart .bar:hover,#chart .bar:focus{opacity:.8;outline:none}
+  .tip{position:absolute;pointer-events:none;background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:14px;line-height:1.4;box-shadow:0 2px 8px rgba(0,0,0,.15);white-space:nowrap;transform:translate(-50%,-100%);z-index:3}
+
+  table{width:100%;border-collapse:collapse;font-size:15px;font-variant-numeric:tabular-nums}
+  th,td{text-align:right;padding:7px 6px;border-bottom:1px solid var(--grid)}
+  th:first-child,td:first-child{text-align:left}
+  th{font-weight:600;color:var(--text-2);font-size:14px}
+  .scroll{overflow-x:auto}
+  details>summary{cursor:pointer;color:var(--text-2);min-height:32px;padding:4px 0}
+
+  .words{display:flex;flex-wrap:wrap;gap:6px}
+  .words span{border:1px solid var(--line);border-radius:99px;padding:3px 10px;font-size:15px}
+  .words b{font-weight:600;color:var(--text-2);margin-left:4px;font-variant-numeric:tabular-nums}
+
+  .sent{border-bottom:1px solid var(--grid);padding:9px 0}
+  .sent:last-child{border-bottom:0}
+  .sent .meta{font-size:13px;color:var(--muted)}
+  .sent .t{font-size:17px}
+  .sent .r{font-size:14px;color:var(--text-2)}
+  .badge{display:inline-block;border:1px solid var(--line);border-radius:6px;padding:0 6px;font-size:12px;color:var(--text-2);margin-left:4px}
+  .oops{color:var(--bad)}
+  [hidden]{display:none !important}
+</style>
+</head>
+<body>
+<main>
+  <h1>🐧 企鵝口說統計</h1>
+  <p class="sub">看孩子跟企鵝說話有沒有進步。只有老師能看，需要密碼。</p>
+
+  <section class="card" id="login">
+    <h2>輸入密碼</h2>
+    <form class="row" id="loginform">
+      <input type="password" id="pw" autocomplete="current-password" aria-label="密碼" placeholder="統計密碼">
+      <button type="submit">看統計</button>
+    </form>
+    <div class="err" id="err" role="alert"></div>
+  </section>
+
+  <div id="app" hidden>
+    <div class="row" style="justify-content:space-between;margin-bottom:10px">
+      <span class="muted" id="stamp"></span>
+      <button type="button" id="reload">重新整理</button>
+    </div>
+
+    <h2>近 7 天 與 上週比較</h2>
+    <p class="muted" style="margin:0 0 10px">箭頭是和「前一個 7 天」相比。每天說話的人少時數字會跳動，請看趨勢，不要只看一天。</p>
+    <div class="tiles" id="tiles"></div>
+
+    <section class="card">
+      <h2 id="charttitle">每日趨勢</h2>
+      <div class="row" id="metrics" role="group" aria-label="選擇指標" style="margin:8px 0 12px"></div>
+      <div id="chart" role="img" aria-label="近 30 天每日趨勢長條圖，下方有表格版"></div>
+      <details style="margin-top:10px">
+        <summary>看表格</summary>
+        <div class="scroll"><table id="dailytable"></table></div>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2>孩子最常說的字（近 7 天）</h2>
+      <div class="words" id="words"></div>
+    </section>
+
+    <section class="card">
+      <h2>最近說的句子</h2>
+      <p class="muted" style="margin:0 0 8px" id="recentnote"></p>
+      <div class="row" style="margin-bottom:8px">
+        <button type="button" id="onlyvoice" aria-pressed="true">只看說話</button>
+        <button type="button" id="copy">複製近 7 天紀錄（可貼給 Claude 分析）</button>
+        <span class="muted" id="copied"></span>
+      </div>
+      <div id="sents"></div>
+    </section>
+
+    <p class="muted">隱私：只保存文字，沒有錄音、姓名或網路位址。原始句子保留 <span id="keep">7</span> 天後自動刪除；每日總數（只有數字，沒有句子）會長期保留，用來看整體進步。</p>
+  </div>
+</main>
+
+<script>
+(() => {
+  const API = 'https://penpen.horseturn.workers.dev/stats';
+  const $ = s => document.querySelector(s);
+  let data = null, metricKey = 'avg', onlyVoice = true;
+
+  const store = {
+    get(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } },
+    set(k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} },
+    del(k) { try { sessionStorage.removeItem(k); } catch (e) {} }
+  };
+
+  /* ---------- dates (Taiwan) ---------- */
+  const tw = ms => new Date(ms + 8 * 3600000).toISOString().slice(0, 10);
+  const addDays = (day, n) => new Date(Date.parse(day + 'T00:00:00Z') + n * 86400000).toISOString().slice(0, 10);
+  const dayList = (end, n) => Array.from({ length: n }, (_, i) => addDays(end, i - n + 1));
+  const mmdd = d => Number(d.slice(5, 7)) + '/' + Number(d.slice(8, 10));
+  const hhmm = ms => new Date(ms + 8 * 3600000).toISOString().slice(11, 16);
+
+  /* ---------- metrics from the per-day totals ---------- */
+  const sum = (rows, k) => rows.reduce((a, r) => a + (r[k] || 0), 0);
+  const div = (a, b) => (b > 0 ? a / b : null);
+  const METRICS = {
+    avg:  { label: '每句平均英文字數', short: '平均字數', fmt: v => v.toFixed(1), calc: r => div(sum(r, 'voice_words'), sum(r, 'voice_n')), n: r => sum(r, 'voice_n'), max: 8 },
+    en:   { label: '全英文句子比例（句子裡完全沒有中文）', short: '全英文', fmt: v => Math.round(v) + '%', calc: r => { const x = div(sum(r, 'voice_en_n'), sum(r, 'voice_n')); return x === null ? null : x * 100; }, n: r => sum(r, 'voice_n'), max: 100 },
+    long: { label: '長句比例（6 個英文字以上）', short: '長句', fmt: v => Math.round(v) + '%', calc: r => { const x = div(sum(r, 'voice_long_n'), sum(r, 'voice_n')); return x === null ? null : x * 100; }, n: r => sum(r, 'voice_n'), max: 100 },
+    n:    { label: '每日說話次數', short: '說話次數', fmt: v => String(Math.round(v)), calc: r => (sum(r, 'voice_n') || null), n: r => sum(r, 'voice_n'), max: 10 }
+  };
+
+  /* ---------- tiles ---------- */
+  function tile(k, v, d1, d2) {
+    const el = document.createElement('div'); el.className = 'tile';
+    el.innerHTML = '<div class="k"></div><div class="v"></div><div class="d"></div><div class="d muted"></div>';
+    el.children[0].textContent = k; el.children[1].textContent = v; el.children[2].textContent = d1; el.children[3].textContent = d2;
+    $('#tiles').appendChild(el);
+  }
+  // unit: '' for counts, ' 個百分點' for percentages
+  function delta(cur, prev, fmt, unit) {
+    if (cur === null || prev === null) return ['—', '上週沒有資料可比'];
+    if (fmt(cur) === fmt(prev)) return ['→ 和上週差不多', '上週 ' + fmt(prev)];
+    const diff = cur - prev, num = unit ? String(Math.abs(Math.round(diff))) : fmt(Math.abs(diff));
+    return [(diff > 0 ? '↑ 多 ' : '↓ 少 ') + num + unit, '上週 ' + fmt(prev)];
+  }
+  function renderTiles() {
+    $('#tiles').innerHTML = '';
+    const today = tw(data.now);
+    const win = (from, to) => data.daily.filter(r => r.day >= from && r.day <= to);
+    const cur = win(addDays(today, -6), today), prev = win(addDays(today, -13), addDays(today, -7));
+    const pc = x => Math.round(x) + '%', PT = ' 個百分點';
+    const pair = (f) => [f(cur), f(prev)];
+    const items = [
+      ['平均每句英文字數', r => div(sum(r, 'voice_words'), sum(r, 'voice_n')), v => v.toFixed(1)],
+      ['全英文句子', r => { const x = div(sum(r, 'voice_en_n'), sum(r, 'voice_n')); return x === null ? null : x * 100; }, pc, PT],
+      ['長句（6 字以上）', r => { const x = div(sum(r, 'voice_long_n'), sum(r, 'voice_n')); return x === null ? null : x * 100; }, pc, PT],
+      ['說話次數', r => sum(r, 'voice_n'), v => String(Math.round(v))],
+      ['來玩的人次', r => sum(r, 'sessions'), v => String(Math.round(v))],
+      ['每次聊幾輪', r => div(sum(r, 'turns'), sum(r, 'sessions')), v => v.toFixed(1)],
+      ['企鵝沒聽懂的比例', r => { const x = div(sum(r, 'oops_n'), sum(r, 'turns')); return x === null ? null : x * 100; }, pc, PT],
+      ['辨識信心', r => { const x = div(sum(r, 'conf_sum'), sum(r, 'conf_n')); return x === null ? null : x; }, v => Math.round(v) + '%', PT]
+    ];
+    items.forEach(([k, f, fmt, unit]) => {
+      const [a, b] = pair(f);
+      const [d1, d2] = delta(a, b, fmt, unit || '');
+      tile(k, a === null ? '—' : fmt(a), d1, d2);
+    });
+  }
+
+  /* ---------- chart: one series, thin bars, rounded data end, labels only where they matter ---------- */
+  const NS = 'http://www.w3.org/2000/svg';
+  function el(name, attrs, text) {
+    const e = document.createElementNS(NS, name);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function niceMax(v, floor) {
+    const m = Math.max(v, floor);
+    const p = Math.pow(10, Math.floor(Math.log10(m)));
+    const f = m / p;
+    return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * p;
+  }
+  function drawChart() {
+    const M = METRICS[metricKey];
+    $('#charttitle').textContent = M.label + '（近 30 天）';
+    const box = $('#chart'); box.innerHTML = '';
+    const today = tw(data.now), days = dayList(today, 30);
+    const byDay = {}; data.daily.forEach(r => { byDay[r.day] = r; });
+    const vals = days.map(d => (byDay[d] ? M.calc([byDay[d]]) : null));
+    const ns = days.map(d => (byDay[d] ? M.n([byDay[d]]) : 0));
+    if (vals.every(v => v === null)) { box.innerHTML = '<p class="muted">還沒有資料。孩子開始跟企鵝說話後，這裡就會出現。</p>'; return; }
+
+    const W = Math.max(300, box.clientWidth), H = 240, m = { l: 34, r: 8, t: 20, b: 28 };
+    const top = niceMax(Math.max(...vals.filter(v => v !== null)), metricKey === 'en' || metricKey === 'long' ? 100 : M.max);
+    const iw = W - m.l - m.r, ih = H - m.t - m.b, band = iw / days.length, bw = Math.min(24, band * 0.7);
+    const y = v => m.t + ih - (v / top) * ih;
+    const svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, width: W, height: H });
+
+    [0, 1, 2, 3, 4].forEach(i => {
+      const v = (top / 4) * i, yy = y(v);
+      svg.appendChild(el('line', { x1: m.l, x2: W - m.r, y1: yy, y2: yy, stroke: 'var(--grid)', 'stroke-width': 1 }));
+      svg.appendChild(el('text', { x: m.l - 6, y: yy + 4, 'text-anchor': 'end', 'font-size': 12, fill: 'var(--muted)' }, M.fmt(v)));
+    });
+    days.forEach((d, i) => {
+      if (i % 5 === 4 || i === 0) svg.appendChild(el('text', { x: m.l + band * i + band / 2, y: H - 8, 'text-anchor': 'middle', 'font-size': 12, fill: 'var(--muted)' }, mmdd(d)));
+    });
+
+    const present = vals.map((v, i) => (v === null ? -1 : i)).filter(i => i >= 0);
+    const last = present[present.length - 1];
+    let maxI = present[0]; present.forEach(i => { if (vals[i] > vals[maxI]) maxI = i; });
+    const tip = document.createElement('div'); tip.className = 'tip'; tip.hidden = true; box.appendChild(tip);
+
+    days.forEach((d, i) => {
+      const v = vals[i]; if (v === null) return;
+      const h = Math.max(1, ih - (y(v) - m.t)), x = m.l + band * i + (band - bw) / 2, yy = y(v), r = Math.min(4, h, bw / 2);
+      const path = 'M' + x + ',' + (yy + h) + 'L' + x + ',' + (yy + r) + 'Q' + x + ',' + yy + ' ' + (x + r) + ',' + yy +
+        'L' + (x + bw - r) + ',' + yy + 'Q' + (x + bw) + ',' + yy + ' ' + (x + bw) + ',' + (yy + r) + 'L' + (x + bw) + ',' + (yy + h) + 'Z';
+      const label = mmdd(d) + '：' + M.short + ' ' + M.fmt(v) + '（' + ns[i] + ' 句）';
+      const bar = el('path', { d: path, fill: 'var(--series)', class: 'bar', tabindex: 0, 'aria-label': label });
+      const show = () => {
+        tip.textContent = label; tip.hidden = false;
+        tip.style.left = Math.min(W - 80, Math.max(80, x + bw / 2)) + 'px'; tip.style.top = (yy - 6) + 'px';
+      };
+      bar.addEventListener('pointerenter', show); bar.addEventListener('focus', show);
+      bar.addEventListener('pointerleave', () => { tip.hidden = true; }); bar.addEventListener('blur', () => { tip.hidden = true; });
+      svg.appendChild(bar);
+      if (i === last || i === maxI) svg.appendChild(el('text', { x: x + bw / 2, y: yy - 5, 'text-anchor': 'middle', 'font-size': 13, 'font-weight': 600, fill: 'var(--text)' }, M.fmt(v)));
+    });
+    box.insertBefore(svg, tip);
+  }
+
+  function renderTable() {
+    const t = $('#dailytable');
+    const rows = data.daily.slice().reverse().slice(0, 60);
+    t.innerHTML = '<thead><tr><th>日期</th><th>人次</th><th>說話</th><th>平均字數</th><th>全英文</th><th>長句</th><th>信心</th></tr></thead>';
+    const tb = document.createElement('tbody');
+    rows.forEach(r => {
+      const a = div(r.voice_words, r.voice_n), e = div(r.voice_en_n, r.voice_n), l = div(r.voice_long_n, r.voice_n), c = div(r.conf_sum, r.conf_n);
+      const tr = document.createElement('tr');
+      [r.day.slice(5), r.sessions, r.voice_n, a === null ? '—' : a.toFixed(1), e === null ? '—' : Math.round(e * 100) + '%', l === null ? '—' : Math.round(l * 100) + '%', c === null ? '—' : Math.round(c) + '%']
+        .forEach(x => { const td = document.createElement('td'); td.textContent = x; tr.appendChild(td); });
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+  }
+
+  /* ---------- words & sentences from the last days of raw text ---------- */
+  const STOP = new Set('a an the i you he she it we they me my your his her our is am are was were be been to of in on at and or but so do does did have has had can will would not no yes ok okay this that these those what who how where when why with for from by as if then there here too very'.split(' '));
+  function renderWords() {
+    const c = {};
+    data.rows.filter(r => r.src === 'voice').forEach(r => {
+      (r.text.toLowerCase().match(/[a-z]+(?:'[a-z]+)?/g) || []).forEach(w => { if (w.length > 1 && !STOP.has(w)) c[w] = (c[w] || 0) + 1; });
+    });
+    const top = Object.entries(c).sort((a, b) => b[1] - a[1]).slice(0, 24);
+    const box = $('#words'); box.innerHTML = '';
+    if (!top.length) { box.innerHTML = '<span class="muted" style="border:0">還沒有資料</span>'; return; }
+    top.forEach(([w, n]) => { const s = document.createElement('span'); s.textContent = w; const b = document.createElement('b'); b.textContent = n; s.appendChild(b); box.appendChild(s); });
+  }
+  const LV = ['Easy', 'Medium', 'Challenge'];
+  function renderSents() {
+    const rows = data.rows.filter(r => !onlyVoice || r.src === 'voice');
+    $('#recentnote').textContent = '共 ' + rows.length + ' 句（最多顯示最近 100 句）。孩子說的話沒有辨識成英文時，也會原樣顯示。';
+    const box = $('#sents'); box.innerHTML = '';
+    if (!rows.length) { box.innerHTML = '<p class="muted">還沒有資料</p>'; return; }
+    rows.slice(0, 100).forEach(r => {
+      const d = document.createElement('div'); d.className = 'sent';
+      const meta = document.createElement('div'); meta.className = 'meta';
+      meta.textContent = mmdd(r.day) + ' ' + hhmm(r.ts) + '　第 ' + r.n + ' 輪　' + (LV[r.level] || '') + '　' + (r.src === 'voice' ? '說話' : r.src === 'chip' ? '點選' : '打字') + (r.conf != null ? '　信心 ' + r.conf + '%' : '');
+      const t = document.createElement('div'); t.className = 't'; t.textContent = r.text || '（空白）';
+      const rp = document.createElement('div'); rp.className = 'r' + (r.mood === 'oops' ? ' oops' : '');
+      rp.textContent = '企鵝：' + r.reply + (r.mood === 'oops' ? '（沒聽懂）' : '');
+      d.append(meta, t, rp); box.appendChild(d);
+    });
+  }
+  function copyText() {
+    const lines = ['【企鵝口說紀錄 近 ' + data.keep + ' 天，匿名，只有文字】'];
+    data.rows.slice().reverse().forEach(r => {
+      lines.push(r.day.slice(5) + ' ' + hhmm(r.ts) + ' ' + (LV[r.level] || '?') + ' ' + r.src + (r.conf != null ? ' 信心' + r.conf : '') + ' | ' + r.text + ' => ' + r.reply + (r.mood === 'oops' ? ' (沒聽懂)' : ''));
+    });
+    const txt = lines.join('\n');
+    const done = ok => { $('#copied').textContent = ok ? '已複製' : '複製失敗，請長按選取'; setTimeout(() => { $('#copied').textContent = ''; }, 3000); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(() => done(true), () => done(false));
+    else { const ta = document.createElement('textarea'); ta.value = txt; document.body.appendChild(ta); ta.select(); let ok = false; try { ok = document.execCommand('copy'); } catch (e) {} ta.remove(); done(ok); }
+  }
+
+  /* ---------- load ---------- */
+  function render() {
+    $('#keep').textContent = data.keep;
+    $('#stamp').textContent = '更新時間 ' + mmdd(tw(data.now)) + ' ' + hhmm(data.now);
+    renderTiles(); drawChart(); renderTable(); renderWords(); renderSents();
+  }
+  async function load(pw) {
+    $('#err').textContent = '';
+    let res;
+    try {
+      res = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: pw }) });
+    } catch (e) { $('#err').textContent = '連不上伺服器，請檢查網路。'; return false; }
+    if (res.status === 401) { store.del('pw'); $('#err').textContent = '密碼不對。'; return false; }
+    if (res.status === 429) { $('#err').textContent = '試太多次了，請 10 分鐘後再試。'; return false; }
+    if (res.status === 503) { $('#err').textContent = '統計功能還沒設定好（資料庫或密碼）。'; return false; }
+    if (!res.ok) { $('#err').textContent = '出了點問題（' + res.status + '）。'; return false; }
+    data = await res.json();
+    store.set('pw', pw);
+    $('#login').hidden = true; $('#app').hidden = false;
+    render();
+    return true;
+  }
+
+  const metricsBox = $('#metrics');
+  Object.keys(METRICS).forEach(k => {
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = METRICS[k].short; b.setAttribute('aria-pressed', k === metricKey);
+    b.onclick = () => { metricKey = k; [...metricsBox.children].forEach(x => x.setAttribute('aria-pressed', x === b)); drawChart(); };
+    metricsBox.appendChild(b);
+  });
+  $('#loginform').onsubmit = e => { e.preventDefault(); const pw = $('#pw').value; if (pw) load(pw); };
+  $('#reload').onclick = () => { const pw = store.get('pw'); if (pw) load(pw); };
+  $('#onlyvoice').onclick = function () { onlyVoice = !onlyVoice; this.setAttribute('aria-pressed', onlyVoice); renderSents(); };
+  $('#copy').onclick = copyText;
+  let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { if (data) drawChart(); }, 150); });
+  const saved = store.get('pw'); if (saved) load(saved);
+})();
+</script>
+</body>
+</html>

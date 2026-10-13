@@ -134,10 +134,26 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
 @keyframes pulse{0%{transform:scale(.95);opacity:.7}100%{transform:scale(1.18);opacity:0}}
 
 /* Overlays */
-.start{position:absolute;inset:0;z-index:5;display:flex;justify-content:center;align-items:flex-start;padding-top:24%;background:linear-gradient(rgba(10,30,60,.22),rgba(10,30,60,0))}
+.start{position:absolute;inset:0;z-index:5;display:flex;justify-content:center;align-items:flex-start;padding-top:24%;background:rgba(10,30,60,.38)}
 .startbtn{border:0;border-radius:8cqw;background:var(--bubble);color:var(--ink);padding:5cqw 9cqw;box-shadow:0 1.2cqw 0 var(--line);text-align:center}
 .startbtn b{display:block;font-size:8cqw;font-weight:600}
 .startbtn span{display:block;margin-top:1cqw;font-size:4cqw;color:var(--ink-soft)}
+.pick{width:84%;background:var(--bubble);border-radius:7cqw;padding:5cqw 5cqw 4cqw;box-shadow:0 1.2cqw 0 var(--line);text-align:center}
+.pick>b{display:block;font-size:7cqw;font-weight:600}
+.pick>span{display:block;margin:1cqw 0 3.5cqw;font-size:4cqw;color:var(--ink-soft)}
+.pick small{display:block;margin-top:3.5cqw;font-size:3cqw;line-height:1.5;color:var(--ink-soft)}
+.lv{display:flex;align-items:center;gap:3.5cqw;width:100%;margin-top:2.6cqw;padding:3.4cqw 4.5cqw;border:1.5px solid var(--line);border-radius:5cqw;background:var(--chip);color:var(--chip-ink);text-align:left}
+.lv i{font-style:normal;font-size:8cqw;line-height:1}
+.lv b{display:block;font-size:5.4cqw;font-weight:600}
+.lv span{display:block;font-size:3.7cqw;color:var(--ink-soft)}
+.dots{display:flex;justify-content:center;gap:2.6cqw;min-height:3.4cqw}
+.dots i{width:3cqw;height:3cqw;border-radius:50%;border:.5cqw solid var(--ink-soft);opacity:.6}
+.dots i.on{background:var(--accent);border-color:var(--accent);opacity:1}
+.bye{position:absolute;inset:0;z-index:7;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2.4cqw;background:rgba(10,30,60,.6);color:#fff;text-align:center;padding:0 8cqw}
+.bye b{font-size:11cqw;font-weight:700}
+.bye span{font-size:4.6cqw;line-height:1.5}
+.bye .stars{font-size:9cqw;letter-spacing:1.5cqw}
+#gear{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 .sheet{position:absolute;left:0;right:0;bottom:0;z-index:6;background:var(--sheet);color:var(--ink);border-radius:6cqw 6cqw 0 0;padding:5cqw 6cqw 6cqw;box-shadow:0 -1cqw 4cqw rgba(0,0,0,.18)}
 .sheet h2{margin:0 0 3cqw;font-size:5cqw;font-weight:600;display:flex;justify-content:space-between;align-items:center}
 .sheet h2 button{border:0;background:none;font-size:4.2cqw;color:var(--ink-soft);padding:1cqw 2cqw}
@@ -218,11 +234,24 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2.5"/><path d="M7 10h.01M11 10h.01M15 10h.01M17 10h.01M8 14h8"/></svg>
       </button>
     </div>
+    <div class="dots" id="dots" aria-hidden="true"></div>
     <div class="status" id="status"></div>
   </section>
 
   <div class="start" id="start">
-    <button class="startbtn" id="startbtn" type="button"><b>Tap to say hi!</b><span>點一下，開始跟企鵝聊天</span></button>
+    <div class="pick">
+      <b>Hi! I'm Pen-Pen</b>
+      <span>選一個，開始跟企鵝聊天</span>
+      <button class="lv" type="button" data-level="0"><i>🐣</i><div><b>Easy</b><span>國小低年級</span></div></button>
+      <button class="lv" type="button" data-level="1"><i>🐥</i><div><b>Medium</b><span>國小高年級</span></div></button>
+      <button class="lv" type="button" data-level="2"><i>🐧</i><div><b>Challenge</b><span>國中</span></div></button>
+      <small>為了改進教學，會匿名保存你說的英文文字 7 天，不記錄姓名，也不錄音。</small>
+    </div>
+  </div>
+  <div class="bye" id="bye" hidden>
+    <div class="stars">⭐⭐⭐⭐⭐</div>
+    <b>Great job!</b>
+    <span>你跟企鵝說了 5 句英文！<br>換下一位小朋友囉</span>
   </div>
 
   <div class="sheet" id="sheet" hidden>
@@ -231,7 +260,7 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
     <div class="set"><label>英文程度</label><div class="seg" id="seg-level"></div></div>
     <div class="set"><label>中文字幕</label><div class="seg" id="seg-zh"></div></div>
     <div class="set"><label>說話速度</label><div class="seg" id="seg-slow"></div></div>
-    <p class="note">本頁不會儲存錄音或對話紀錄。</p>
+    <p class="note">本頁不會錄音。為了改進教學，會匿名保存孩子說的英文文字 7 天（不記錄姓名），之後自動刪除。</p>
   </div>
 </main>
 
@@ -276,7 +305,13 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
     });
   }
   Object.keys(SEG).forEach(renderSeg);
-  $('#gear').onclick = () => { $('#sheet').hidden = false; };
+  // Settings are for the teacher: hold the gear for 1.5 seconds.
+  const gear = $('#gear');
+  let gearTimer = null;
+  gear.setAttribute('aria-label', '設定（長按 1.5 秒）');
+  gear.addEventListener('pointerdown', () => { clearTimeout(gearTimer); gearTimer = setTimeout(() => { $('#sheet').hidden = false; }, 1500); });
+  ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => gear.addEventListener(ev, () => clearTimeout(gearTimer)));
+  gear.addEventListener('contextmenu', e => e.preventDefault());
   $('#closesheet').onclick = () => { $('#sheet').hidden = true; };
 
   /* ---------- state + display ---------- */
@@ -286,9 +321,10 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
     thinking: 'Pen-Pen is thinking…',
     speaking: 'Pen-Pen is talking…'
   };
-  let state = 'idle', lastEn = '', lastZh = '';
+  let state = 'idle', lastEn = '', lastZh = '', lastActive = Date.now();
   function setState(s) {
     state = s;
+    lastActive = Date.now();   // any change (listening, thinking, speaking, idle) restarts the idle timer
     stage.dataset.state = s;
     statusEl.textContent = STATUS[s];
     micBtn.classList.toggle('on', s === 'listening');
@@ -435,9 +471,59 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
   const GREETING = { en: "Hi! I'm Pen-Pen. What's your name?", zh: '嗨！我是 Pen-Pen。你叫什麼名字？', mood: 'excited' };
   const turns = [];
 
-  async function ask(text) {
+  /* ---------- one visit = one child: pick a level, up to 5 rounds, then back to the start screen ---------- */
+  const MAX_ROUNDS = 5, IDLE_MS = 60000;
+  const startEl = $('#start'), byeEl = $('#bye'), dotsEl = $('#dots');
+  let sid = '', round = 0;
+  function newSid() {
+    const a = new Uint8Array(9);
+    try { crypto.getRandomValues(a); } catch (e) { for (let i = 0; i < a.length; i++) a[i] = Math.floor(Math.random() * 256); }
+    return Array.from(a, b => b.toString(36).padStart(2, '0')).join('').slice(0, 14);
+  }
+  function renderDots() {
+    dotsEl.innerHTML = '';
+    for (let i = 0; i < MAX_ROUNDS; i++) { const d = document.createElement('i'); if (i < round) d.className = 'on'; dotsEl.appendChild(d); }
+  }
+  renderDots();
+  function beginSession(level) {
+    settings.level = level;            // this visit only; not saved, so the next child picks again
+    sid = newSid(); round = 0; renderDots();
+    turns.length = 0;
+    turns.push({ role: 'assistant', content: JSON.stringify(GREETING) });
+    startEl.hidden = true; byeEl.hidden = true;
+    say(GREETING.en, GREETING.zh, GREETING.mood);
+  }
+  function resetToStart() {
+    recAbort = true;
+    cancelSpeech();
+    if (ctl) { try { ctl.abort(); } catch (e) {} }
+    if (nativeRec) { try { nativeRec.abort(); } catch (e) {} nativeRec = null; }
+    if (mediaRec && mediaRec.state !== 'inactive') { try { mediaRec.stop(); } catch (e) {} }
+    turns.length = 0; round = 0; sid = ''; renderDots();
+    typeInput.value = ''; typebox.hidden = true; $('#sheet').hidden = true; byeEl.hidden = true;
+    heardEl.textContent = '';
+    stage.dataset.mood = 'happy';
+    setState('idle');
+    show('', '');
+    startEl.hidden = false;
+  }
+  async function endSession() {
+    cancelSpeech();
+    byeEl.hidden = false;
+    setState('speaking');
+    const token = ++speakToken;
+    await speak('Great job! Next friend, please!');
+    if (token !== speakToken || byeEl.hidden) return;
+    setTimeout(() => { if (!byeEl.hidden) resetToStart(); }, 2500);
+  }
+  ['pointerdown', 'touchstart', 'keydown'].forEach(ev => document.addEventListener(ev, () => { lastActive = Date.now(); }, true));
+  setInterval(() => {
+    if (startEl.hidden && byeEl.hidden && state === 'idle' && Date.now() - lastActive > IDLE_MS) resetToStart();
+  }, 1000);
+
+  async function ask(text, src, conf) {
     text = (text || '').trim();
-    if (!text || state === 'thinking') return;
+    if (!text || state === 'thinking' || round >= MAX_ROUNDS || startEl.hidden === false) return;
     heardEl.textContent = '你說：' + text;
     cancelSpeech();
     setState('thinking');
@@ -449,14 +535,19 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
       const res = await fetch(WORKER_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ turns: turns.slice(-9), level: settings.level }),
+        body: JSON.stringify({
+          turns: turns.slice(-9), level: settings.level,
+          meta: { sid, n: round + 1, src: src || 'type', conf: typeof conf === 'number' && conf > 0 ? conf : undefined }
+        }),
         signal: ctl.signal
       });
       if (!res.ok) throw { code: res.status === 429 ? 'rate_limited' : 'http' };
       const data = await res.json();
       const r = parse(data.text);
       turns.push({ role: 'assistant', content: JSON.stringify(r) });
+      round++; renderDots();
       await say(r.en, r.zh, r.mood);
+      if (round >= MAX_ROUNDS && startEl.hidden) endSession();
     } catch (e) {
       turns.pop();
       if (e && e.name === 'AbortError') { show(lastEn === '…' ? '' : lastEn, lastZh); setState('idle'); return; }
@@ -527,7 +618,7 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
         return;
       }
       setState('idle');
-      ask(text);
+      ask(text, 'voice');
     } catch (e) {
       if (e && e.name === 'AbortError') { show(lastEn === '…' ? '' : lastEn, lastZh); setState('idle'); return; }
       const m = ERR[e && e.code] || ERR.http;
@@ -544,7 +635,7 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
   /* Fast path: the device's own recognizer (Safari/Chrome). Instant, ends by itself when the child
      stops talking, and costs no Worker quota. If it is missing or refused, fall back to Whisper below. */
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  let nativeRec = null, nativeOff = false;
+  let nativeRec = null, nativeOff = false, recAbort = false;
   function startNative() {
     cancelSpeech();
     const r = new SR();
@@ -552,12 +643,14 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
     r.lang = settings.lang || 'en-US';
     r.interimResults = true;
     r.continuous = false;
-    let text = '', err = '';
+    let text = '', err = '', conf = 0;
     const timer = setTimeout(() => { try { r.stop(); } catch (e) {} }, 12000);
     r.onresult = e => {
       let t = '';
       for (let i = 0; i < e.results.length; i++) t += e.results[i][0].transcript;
       text = t.trim();
+      const last = e.results[e.results.length - 1];
+      if (last && last.isFinal) conf = last[0].confidence || 0;
       if (text && state === 'listening') heardEl.textContent = '你說：' + text;
     };
     r.onerror = e => { err = e.error || 'error'; };
@@ -565,7 +658,7 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
       clearTimeout(timer);
       if (nativeRec === r) nativeRec = null;
       if (state !== 'listening') return;
-      if (text) { setState('idle'); ask(text); return; }
+      if (text) { setState('idle'); ask(text, 'voice', conf); return; }
       setState('idle');
       if (!err || err === 'no-speech' || err === 'aborted') {
         heardEl.textContent = '沒聽清楚，靠近一點再說一次。';
@@ -583,6 +676,8 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
     heardEl.textContent = '🎤 請說話…';
   }
   function startListening() {
+    if (round >= MAX_ROUNDS || startEl.hidden === false) return;
+    recAbort = false;
     if (SR && !nativeOff) startNative(); else startRecorder();
   }
 
@@ -625,6 +720,7 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
       stream.getTracks().forEach(t => t.stop());
       try { ac && ac.close(); } catch (e) {}
       mediaRec = null;
+      if (recAbort) { setState('idle'); return; }
       const blob = new Blob(chunks, { type: rec.mimeType || mime || 'audio/webm' });
       if (Date.now() - recStart < 700 || blob.size < 1500) {
         heardEl.textContent = '太短了，說完話再按一次停止。';
@@ -662,7 +758,7 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
   function sendTyped() {
     const t = typeInput.value;
     typeInput.value = '';
-    ask(t);
+    ask(t, 'type');
   }
   $('#send').onclick = sendTyped;
   typeInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); sendTyped(); } });
@@ -670,16 +766,12 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
   ['Hello!', 'My name is Amy.', '我喜歡 dog', 'How do you say 蘋果?', 'I am hungry.'].forEach(t => {
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'chip'; b.textContent = t;
-    b.onclick = () => ask(t);
+    b.onclick = () => ask(t, 'chip');
     $('#chips').appendChild(b);
   });
 
   /* ---------- start (a tap unlocks speech on phones) ---------- */
-  $('#startbtn').onclick = () => {
-    $('#start').hidden = true;
-    turns.push({ role: 'assistant', content: JSON.stringify(GREETING) });
-    say(GREETING.en, GREETING.zh, GREETING.mood);
-  };
+  startEl.querySelectorAll('.lv').forEach(b => { b.onclick = () => beginSession(Number(b.dataset.level)); });
 })();
 </script>
 </body>
