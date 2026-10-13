@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>企鵝語音辨識測試</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"PingFang TC",sans-serif;background:#eaf3fb;color:#17324d;padding:20px;max-width:720px;margin:0 auto}
+  h1{font-size:26px;margin:0 0 6px}
+  p.sub{margin:0 0 16px;font-size:18px;color:#46627d}
+  .card{background:#fff;border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+  .row{display:flex;gap:10px;flex-wrap:wrap}
+  button{font-size:22px;padding:14px 20px;border-radius:14px;border:2px solid #2f6fa8;background:#fff;color:#2f6fa8;min-height:56px}
+  button.on{background:#2f6fa8;color:#fff}
+  #mic{flex:1;background:#e5553d;border-color:#e5553d;color:#fff;font-size:26px;min-height:72px}
+  #mic.rec{background:#2b8a3e;border-color:#2b8a3e}
+  #mic:disabled{opacity:.4}
+  .big{font-size:28px;min-height:40px;word-break:break-word}
+  .lab{font-size:16px;color:#6b8299;margin-bottom:4px}
+  .ok{color:#2b8a3e;font-weight:700}.bad{color:#c0392b;font-weight:700}
+  table{width:100%;border-collapse:collapse;font-size:18px}
+  td,th{border-bottom:1px solid #dde7f0;padding:8px 4px;text-align:left}
+  textarea{width:100%;height:150px;font-size:16px;border-radius:10px;border:1px solid #bcd0e2;padding:8px}
+  ol{font-size:18px;line-height:1.6;padding-left:22px;margin:6px 0}
+</style>
+</head>
+<body>
+<h1>🐧 企鵝語音辨識測試</h1>
+<p class="sub">測試這台 iPad 內建的語音辨識能不能用、反應快不快</p>
+
+<div class="card">
+  <div class="lab">這台裝置</div>
+  <div id="env" style="font-size:18px;line-height:1.5"></div>
+</div>
+
+<div class="card">
+  <div class="lab">怎麼測</div>
+  <ol>
+    <li>選語言（先選 English）</li>
+    <li>按紅色按鈕，第一次會跳出「麥克風」和「語音辨識」權限，都按允許</li>
+    <li>說一句英文，例如 <b>I like dogs and apples.</b>，說完停下來不要按任何東西</li>
+    <li>多試幾次：慢慢說、快快說、說錯一點</li>
+    <li>最後按「整理結果」，把文字貼給我</li>
+  </ol>
+</div>
+
+<div class="card">
+  <div class="row" style="margin-bottom:12px">
+    <button id="en" class="on">English</button>
+    <button id="zh">中文</button>
+  </div>
+  <div class="row"><button id="mic">🎤 按一下開始說話</button></div>
+</div>
+
+<div class="card">
+  <div class="lab">邊說邊出現的字</div>
+  <div id="interim" class="big" style="color:#8aa0b5">—</div>
+  <div class="lab" style="margin-top:12px">最後結果</div>
+  <div id="final" class="big">—</div>
+  <div id="status" style="margin-top:10px;font-size:18px"></div>
+</div>
+
+<div class="card">
+  <div class="lab">每次測試</div>
+  <table><thead><tr><th>#</th><th>語言</th><th>第一個字</th><th>說完到結果</th><th>內容 / 錯誤</th></tr></thead><tbody id="rows"></tbody></table>
+</div>
+
+<div class="card">
+  <div class="row"><button id="report">整理結果</button></div>
+  <textarea id="out" readonly placeholder="按「整理結果」後，這裡會出現一段文字，全部選取後貼給我"></textarea>
+</div>
+
+<script>
+(function () {
+  const $ = s => document.querySelector(s);
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const ua = navigator.userAgent;
+  const iosVer = (ua.match(/OS (\d+)[_.](\d+)/) || [])[0];
+  $('#env').innerHTML =
+    '瀏覽器：' + (/CriOS/.test(ua) ? 'Chrome (iOS)' : /Safari/.test(ua) ? 'Safari' : '其他') + '<br>' +
+    '系統：' + (iosVer ? iosVer.replace(/_/g, '.') : ua.slice(0, 60)) + '<br>' +
+    '安全連線 https：<span class="' + (isSecureContext ? 'ok' : 'bad') + '">' + (isSecureContext ? '是' : '否（無法使用麥克風）') + '</span><br>' +
+    '內建語音辨識：<span class="' + (SR ? 'ok' : 'bad') + '">' + (SR ? '支援' : '不支援') + '</span>';
+
+  const mic = $('#mic'), status = $('#status');
+  if (!SR) { mic.disabled = true; status.innerHTML = '<span class="bad">這個瀏覽器沒有內建語音辨識，只能繼續用 Whisper。</span>'; }
+
+  let lang = 'en-US', n = 0;
+  const results = [];
+  function setLang(l) {
+    lang = l;
+    $('#en').classList.toggle('on', l === 'en-US');
+    $('#zh').classList.toggle('on', l === 'zh-TW');
+  }
+  $('#en').onclick = () => setLang('en-US');
+  $('#zh').onclick = () => setLang('zh-TW');
+
+  const ERR = {
+    'not-allowed': '權限被拒絕：到「設定 → Safari → 麥克風」或網站設定允許，並確認「設定 → 一般 → 鍵盤」開啟「啟用聽寫」',
+    'service-not-allowed': '語音辨識服務沒開：到「設定 → 一般 → 鍵盤」開啟「啟用聽寫」，並開啟 Siri',
+    'no-speech': '沒聽到聲音',
+    'audio-capture': '麥克風沒有收到聲音',
+    'network': '網路問題（辨識需要連網）',
+    'language-not-supported': '不支援這個語言',
+    'aborted': '被中斷'
+  };
+  let rec = null, t0 = 0, tFirst = 0, tEnd = 0, gotFinal = false, finalText = '', lastErr = '', conf = '';
+
+  function row(cells) {
+    const tr = document.createElement('tr');
+    cells.forEach(c => { const td = document.createElement('td'); td.textContent = c; tr.appendChild(td); });
+    $('#rows').appendChild(tr);
+  }
+
+  function start() {
+    if (rec) { try { rec.stop(); } catch (e) {} return; }
+    rec = new SR();
+    rec.lang = lang;
+    rec.interimResults = true;
+    rec.continuous = false;
+    rec.maxAlternatives = 1;
+    t0 = performance.now(); tFirst = 0; tEnd = 0; gotFinal = false; finalText = ''; lastErr = ''; conf = '';
+    $('#interim').textContent = '—'; $('#final').textContent = '—';
+    status.textContent = '準備中…';
+    mic.classList.add('rec'); mic.textContent = '🎙️ 請說話（說完等一下）';
+
+    rec.onaudiostart = () => { status.textContent = '麥克風已開，請說話'; };
+    rec.onspeechend = () => { tEnd = performance.now(); status.textContent = '偵測到說完了，辨識中…'; };
+    rec.onresult = e => {
+      let interim = '', fin = '';
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        const r = e.results[i];
+        if (r.isFinal) { fin += r[0].transcript; conf = r[0].confidence ? ' (信心 ' + r[0].confidence.toFixed(2) + ')' : ''; }
+        else interim += r[0].transcript;
+      }
+      if (!tFirst && (interim || fin)) tFirst = performance.now();
+      if (interim) $('#interim').textContent = interim;
+      if (fin) { gotFinal = true; finalText = fin.trim(); $('#final').textContent = finalText; }
+    };
+    rec.onerror = e => { lastErr = e.error; };
+    rec.onend = () => {
+      const tDone = performance.now();
+      n++;
+      const first = tFirst ? ((tFirst - t0) / 1000).toFixed(1) + ' 秒' : '—';
+      const after = gotFinal ? (((tDone - (tEnd || tDone))) / 1000).toFixed(1) + ' 秒' : '—';
+      const detail = lastErr ? ('錯誤：' + lastErr) : (finalText || '（沒有結果）') + conf;
+      row([n, lang === 'en-US' ? '英' : '中', first, after, detail]);
+      results.push({ n, lang, first, after, detail });
+      status.innerHTML = lastErr
+        ? '<span class="bad">' + (ERR[lastErr] || lastErr) + '</span>'
+        : gotFinal ? '<span class="ok">完成</span>' : '<span class="bad">沒有辨識到內容</span>';
+      rec = null;
+      mic.classList.remove('rec'); mic.textContent = '🎤 按一下開始說話';
+    };
+    try { rec.start(); } catch (e) {
+      lastErr = String(e && e.name || e); rec.onend();
+    }
+  }
+  mic.onclick = start;
+
+  $('#report').onclick = () => {
+    const lines = [
+      '【企鵝語音辨識測試結果】',
+      '系統：' + (iosVer ? iosVer.replace(/_/g, '.') : '未知') + '；瀏覽器：' + (/CriOS/.test(ua) ? 'Chrome' : 'Safari'),
+      'https：' + (isSecureContext ? '是' : '否') + '；支援：' + (SR ? '是' : '否'),
+      ...results.map(r => '#' + r.n + ' ' + (r.lang === 'en-US' ? '英' : '中') + '｜第一個字 ' + r.first + '｜說完到結果 ' + r.after + '｜' + r.detail)
+    ];
+    $('#out').value = lines.join('\n');
+    $('#out').focus(); $('#out').select();
+  };
+})();
+</script>
+</body>
+</html>
