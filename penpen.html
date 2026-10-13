@@ -227,7 +227,7 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
 
   <div class="sheet" id="sheet" hidden>
     <h2>設定 <button type="button" id="closesheet">完成</button></h2>
-    <div class="set"><label>辨識語言（中英夾雜時，兩種都試試看）</label><div class="seg" id="seg-lang"></div></div>
+    <div class="set"><label>辨識語言（練英文請選 English）</label><div class="seg" id="seg-lang"></div></div>
     <div class="set"><label>英文程度</label><div class="seg" id="seg-level"></div></div>
     <div class="set"><label>中文字幕</label><div class="seg" id="seg-zh"></div></div>
     <div class="set"><label>說話速度</label><div class="seg" id="seg-slow"></div></div>
@@ -537,9 +537,56 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
     }
   }
   function stopListening() {
+    if (nativeRec) { try { nativeRec.stop(); } catch (e) {} return; }
     if (mediaRec && mediaRec.state !== 'inactive') { try { mediaRec.stop(); } catch (e) {} }
   }
-  async function startListening() {
+
+  /* Fast path: the device's own recognizer (Safari/Chrome). Instant, ends by itself when the child
+     stops talking, and costs no Worker quota. If it is missing or refused, fall back to Whisper below. */
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  let nativeRec = null, nativeOff = false;
+  function startNative() {
+    cancelSpeech();
+    const r = new SR();
+    nativeRec = r;
+    r.lang = settings.lang || 'en-US';
+    r.interimResults = true;
+    r.continuous = false;
+    let text = '', err = '';
+    const timer = setTimeout(() => { try { r.stop(); } catch (e) {} }, 12000);
+    r.onresult = e => {
+      let t = '';
+      for (let i = 0; i < e.results.length; i++) t += e.results[i][0].transcript;
+      text = t.trim();
+      if (text && state === 'listening') heardEl.textContent = '你說：' + text;
+    };
+    r.onerror = e => { err = e.error || 'error'; };
+    r.onend = () => {
+      clearTimeout(timer);
+      if (nativeRec === r) nativeRec = null;
+      if (state !== 'listening') return;
+      if (text) { setState('idle'); ask(text); return; }
+      setState('idle');
+      if (!err || err === 'no-speech' || err === 'aborted') {
+        heardEl.textContent = '沒聽清楚，靠近一點再說一次。';
+      } else if (err === 'audio-capture') {
+        heardEl.textContent = '找不到麥克風。';
+      } else {
+        nativeOff = true;
+        heardEl.textContent = '改用備用辨識（' + err + '），請再按一次麥克風。';
+      }
+    };
+    try { r.start(); } catch (e) { clearTimeout(timer); nativeRec = null; nativeOff = true; startRecorder(); return; }
+    stage.dataset.mood = 'happy';
+    STATUS.listening = '我在聽… 說完停一下就好';
+    setState('listening');
+    heardEl.textContent = '🎤 請說話…';
+  }
+  function startListening() {
+    if (SR && !nativeOff) startNative(); else startRecorder();
+  }
+
+  async function startRecorder() {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder) {
       noMic('這個瀏覽器不能收音，請點句子或打字。');
       return;
@@ -589,6 +636,7 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
     recStart = Date.now();
     rec.start();
     stage.dataset.mood = 'happy';
+    STATUS.listening = '我在聽… 說完再按一下';
     setState('listening');
     heardEl.textContent = '🎤 請說話…';
     recTimer = setTimeout(stopListening, 10000);
