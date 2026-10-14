@@ -143,6 +143,18 @@
 <script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}</script>
 <!-- /EFETL-PWA -->
   <script src="gept-listening-cloud.js"></script>
+<style id="fullplay-css">
+.fullplay{background:#fff7e6;border:1.5px solid #f6c56b;border-radius:16px;padding:14px 16px;margin:4px 0 16px;box-shadow:0 4px 12px rgba(246,197,107,.18)}
+.fp-h{font-weight:900;color:#b4690e;font-size:1.02rem;margin-bottom:9px}
+.fp-ctl{display:flex;align-items:center;gap:12px;background:#f1f3f4;border-radius:999px;padding:7px 14px 7px 8px}
+#fpBtn{width:40px;height:40px;border-radius:50%;border:0;background:linear-gradient(135deg,#ffb02e,#ff7a59);color:#fff;font-size:1rem;font-weight:900;cursor:pointer;flex:none;box-shadow:0 3px 8px rgba(255,122,89,.35)}
+#fpTime{font-variant-numeric:tabular-nums;font-size:.9rem;color:#333;white-space:nowrap}
+.fp-track{flex:1;height:8px;background:#d9dde1;border-radius:6px;cursor:pointer;overflow:hidden;min-width:60px}
+.fp-fill{height:100%;width:0;background:linear-gradient(90deg,#ffb02e,#ff7a59)}
+.fp-st{font-size:.84rem;color:#8a5a14;margin-top:8px;line-height:1.5}
+.q.fp-now{border-color:#ffb02e;box-shadow:0 0 0 3px rgba(255,176,46,.35)}
+@media print{.fullplay{display:none}}
+</style>
 </head>
 <body>
 <a href="gept-listening.html" style="position:fixed;top:12px;left:12px;background:rgba(255,255,255,.92);color:#ff6f91;padding:7px 15px;border-radius:20px;text-decoration:none;font-size:.85rem;font-weight:800;z-index:999;box-shadow:0 3px 10px rgba(0,0,0,.15);">&#8592; 回聽力題庫</a>
@@ -169,7 +181,18 @@
     </div>
   </div>
 
-  <form id="quiz"></form>
+  <!-- FULLPLAY -->
+<div class="fullplay" id="fullplay">
+  <div class="fp-h">🎧 整回連續播放（模擬正式測驗）</div>
+  <div class="fp-ctl">
+    <button type="button" id="fpBtn" aria-label="播放">▶</button>
+    <span id="fpTime">0:00 / 0:00</span>
+    <div class="fp-track" id="fpTrack" title="點一下跳到該題"><div class="fp-fill" id="fpFill"></div></div>
+  </div>
+  <div class="fp-st" id="fpSt">從第一大題說明開始，依序播完 30 題，每題後面自動留 8 秒作答時間，中途不要暫停。</div>
+</div>
+<!-- /FULLPLAY -->
+<form id="quiz"></form>
 
   <div class="result" id="result">
     <div class="score" id="scoreNum">0</div>
@@ -592,6 +615,78 @@ return secs;
   bar.querySelector('[data-a="close"]').onclick=close;
 })();
 
+</script>
+<script id="fullplay-js">
+/* ====== 整回連續播放（模擬正式測驗）：大題說明 → 逐題 → 8 秒留白 ====== */
+(function(){
+const FP={"r": 28, "v": "r28p0d-20261003", "d": [21.1, 20.6, 23.12, 23.25, 23.25, 5.58, 6.0, 6.0, 5.94, 5.97, 6.16, 5.63, 6.83, 6.23, 6.51, 21.07, 25.53, 13.64, 20.28, 19.73, 13.5, 12.51, 18.11, 17.87, 14.27, 33.62, 34.53, 40.02, 36.0, 37.93], "i": [14.66, 14.62, 15.22, 13.96]};
+const base='gept-listening-audio/', CV='?v=20261014';
+const RANGES=[[1,5],[6,15],[16,25],[26,30]], PN=['一','二','三','四'];
+const segs=[];
+RANGES.forEach((rg,p)=>{
+  segs.push({src:base+'common/part'+(p+1)+'.m4a'+CV,d:FP.i[p],k:'intro',p:p,n:rg[0]});
+  for(let n=rg[0];n<=rg[1];n++){
+    segs.push({src:base+FP.r+'/q'+n+'.m4a?v='+FP.v,d:FP.d[n-1],k:'q',p:p,n:n});
+    segs.push({src:base+'common/gap8.m4a'+CV,d:8,k:'gap',p:p,n:n});
+  }
+});
+let T=0; segs.forEach(s=>{s.t=T;T+=s.d;});
+const fa=new Audio(); fa.preload='auto';
+const btn=document.getElementById('fpBtn'), tm=document.getElementById('fpTime'),
+      fill=document.getElementById('fpFill'), st=document.getElementById('fpSt'), track=document.getElementById('fpTrack');
+let idx=-1, on=false, switching=false, done=false;
+const fmt=s=>{s=Math.max(0,Math.floor(s));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');};
+function ui(){
+  const s=segs[idx], cur=s?s.t+Math.min(fa.currentTime||0,s.d):(done?T:0);
+  tm.textContent=fmt(cur)+' / '+fmt(T); fill.style.width=(cur/T*100)+'%';
+  btn.textContent=on?'❚❚':'▶'; btn.setAttribute('aria-label',on?'暫停':'播放');
+  if(done&&!s){st.textContent='整回播放完畢 ✅ 檢查一下答案，再按下方「送出並查看解析」。';return;}
+  if(!s){st.textContent='從第一大題說明開始，依序播完 30 題，每題後面自動留 8 秒作答時間，中途不要暫停。';return;}
+  const pre=on?'':'⏸ 已暫停　';
+  if(s.k==='intro') st.textContent=pre+'第'+PN[s.p]+'大題　說明';
+  else if(s.k==='q') st.textContent=pre+'▶ 正在播放：第 '+s.n+' 題';
+  else st.textContent=pre+'✏️ 第 '+s.n+' 題作答時間　剩 '+Math.max(1,Math.ceil(s.d-(fa.currentTime||0)))+' 秒';
+}
+function mark(n){
+  document.querySelectorAll('.q.fp-now').forEach(e=>e.classList.remove('fp-now'));
+  const c=n&&document.getElementById('q'+n); if(!c) return;
+  c.classList.add('fp-now');
+  const r=c.getBoundingClientRect();
+  if(r.top<70||r.bottom>innerHeight) c.scrollIntoView({behavior:'smooth',block:'center'});
+}
+function load(i,play){
+  idx=i; done=false; const s=segs[i]; switching=true;
+  fa.src=s.src; mark(s.n);
+  if(play){ fa.play().then(()=>{switching=false;}).catch(()=>{switching=false;on=false;ui();}); }
+  else switching=false;
+  ui();
+}
+fa.addEventListener('ended',()=>{
+  if(idx+1<segs.length){ load(idx+1,on); }
+  else { on=false; idx=-1; done=true; mark(0); ui(); }
+});
+fa.addEventListener('timeupdate',ui);
+fa.addEventListener('pause',()=>{ if(!fa.ended&&!switching&&on){ on=false; ui(); } });
+btn.addEventListener('click',()=>{
+  if(!on){
+    if(typeof stopAudio==='function') stopAudio();
+    on=true;
+    if(idx<0) load(0,true);
+    else { switching=true; fa.play().then(()=>{switching=false;}).catch(()=>{switching=false;on=false;ui();}); }
+  } else { on=false; fa.pause(); }
+  ui();
+});
+track.addEventListener('click',e=>{
+  const r=track.getBoundingClientRect(), t=(e.clientX-r.left)/r.width*T;
+  let i=segs.findIndex(s=>t<s.t+s.d); if(i<0) i=segs.length-1;
+  if(segs[i].k==='gap') i-=1;                     // 點到留白就從那一題開頭播
+  if(!on&&typeof stopAudio==='function') stopAudio();
+  load(i,on); if(!on){ fa.currentTime=0; }
+});
+// 學生自己按某一題的 🔊 播放時，暫停整回播放
+document.addEventListener('play',e=>{ if(e.target!==fa&&on){ on=false; fa.pause(); ui(); } },true);
+ui();
+})();
 </script>
 </body>
 </html>

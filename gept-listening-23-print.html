@@ -38,7 +38,14 @@ p.pd{font-size:.82rem;color:#444;margin:0 0 10px;}
  .page{page-break-after:always;}
 }
 .p0img{width:200px;height:150px;}
-</style></head><body>
+</style><style id="lprint-css">
+.ptkeep{break-inside:avoid;page-break-inside:avoid}
+.lsn{font-size:.94rem;margin:4px 0 2px;letter-spacing:1px}
+.lsn span{font-size:.8rem;color:#777;letter-spacing:0}
+@media print{.sheet-s .q{padding:5px 0}.sheet-s .p0img{width:176px;height:132px}.sheet-s .pic-img:not(.p0img){width:108px;height:81px}.sheet-s h2.pt{margin-top:12px}}
+@media screen{body[data-mode=s] .sheet-t,body[data-mode=t] .sheet-s{display:none}}
+</style>
+</head><body>
 <div class="bar">
  <b>🖨 第 23 回　閱讀寫作與旅行　聽力測驗　列印版</b>
  <button class="s" onclick="show('s')">只印學生卷</button>
@@ -116,15 +123,16 @@ function sheet(kind){ // 's' student | 't' teacher
   if(kind==='s') h+=`<div class="pmeta"><span>姓名：____________</span><span>班級：__________</span><span>座號：______</span><span>分數：________</span></div>`;
   h+=`<div class="pnote">說明：本測驗共 4 大題 30 題，每題聆聽音檔作答，從 (A) (B) (C) 中選出最適合的答案，填入題號前括號內。</div>`;
   PARTS.forEach((pt,pi)=>{
-    h+=`<h2 class="pt">${pt.t}</h2><p class="pd">${pt.d}</p>`;
-    Q.filter(q=>partOf(q.n)===pi).forEach(q=>{
+    h+=`<div class="ptkeep"><h2 class="pt">${pt.t}</h2><p class="pd">${pt.d}</p>`;
+    Q.filter(q=>partOf(q.n)===pi).forEach((q,qi)=>{
       h+=`<div class="q"><div class="qn">（${kind==='t'?'<span class="ans">'+AB[q.a]+'</span>':'　'}）${q.n}.</div><div class="qbody">`;
-      h+=figHTML(q)+optHTML(q);
+      h+=figHTML(q)+((kind==='s'&&q.p===0)?'<div class="lsn">(A)　(B)　(C)　<span>（選項只用聽，不印在題本上）</span></div>':optHTML(q));
       if(kind==='t'){
         h+=`<div class="tr"><b>原文：</b>${(q.sen||'').replace(/&nbsp;/g,' ')}</div>`;
         if(q.zh) h+=`<div class="ex"><b>解析：</b>${q.zh}</div>`;
       }
       h+=`</div></div>`;
+      if(qi===0) h+=`</div>`;
     });
   });
   h+=`</div>`;
@@ -132,11 +140,12 @@ function sheet(kind){ // 's' student | 't' teacher
 }
 function render(){document.getElementById('root').innerHTML=sheet('s')+sheet('t');}
 render();
-function show(m){
+function mode(m){ m=(m==='s'||m==='t')?m:'a'; document.body.dataset.mode=m;
   document.querySelectorAll('.sheet-s').forEach(e=>e.classList.toggle('hidep',m==='t'));
-  document.querySelectorAll('.sheet-t').forEach(e=>e.classList.toggle('hidep',m==='s'));
-  setTimeout(()=>window.print(),60);
-}
+  document.querySelectorAll('.sheet-t').forEach(e=>e.classList.toggle('hidep',m==='s')); }
+function show(m){ mode(m); setTimeout(()=>window.print(),60); }
+mode(location.hash.slice(1));
+window.addEventListener('hashchange',()=>mode(location.hash.slice(1)));
 </script><style>@media print{#penBtn,#penBar,#penCv,#penHit,#penBoard{display:none!important}}</style>
 <script>
 /* ================= ✏️ 老師手寫 =================
