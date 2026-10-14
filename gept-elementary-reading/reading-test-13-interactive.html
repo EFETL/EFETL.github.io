@@ -90,6 +90,10 @@ body.done #flow{display:none}
 .tightgrp .opts{gap:3px 12px;margin-top:4px}
 .tightgrp .opt{padding:3px 9px}
 .passage.tightgrp{padding:8px 14px;margin:3px 0 5px}
+.tightgrp2.passage p,.tightgrp2.passage ul{margin:3px 0;line-height:1.5}
+.tightgrp2.passage th,.tightgrp2.passage td{padding:3px 8px}
+.tightgrp2.passage .ptitle{margin:0 0 3px}.tightgrp2.passage .ptype{margin-bottom:4px}
+.q.tightgrp2 .stem{line-height:1.5}
 .part.tight{margin:0 0 8px}
 .part.tight .no{width:30px;height:30px;font-size:15px;border-radius:9px}
 .part.tight h2{font-size:16px}
@@ -219,8 +223,12 @@ function paginate(){
     if(u.g&&/^ph/.test(u.g)&&units[k+1]){var nx=units[k+1],nh=uh(nx);
       if(h+nh>BUD){tighten(u);h=uh(u);}
       if(h+nh>BUD){nx.els.forEach(function(e){e.classList.add('tightgrp');});nh=uh(nx);}
+      // 仍放不下：再收一級行距（.tightgrp2），避免標頭獨占一頁（列印時像空白頁）
+      if(h+nh>BUD&&nh<=BUD){nx.els.forEach(function(e){e.classList.add('tightgrp2');});nh=uh(nx);}
       var need=h+(h+nh<=BUD?nh:blockH(nx.els[0]));
       if(used+need>BUD&&page.length){pages.push(page);page=[];used=0;}}
+    // 題組本身比一頁還高：先收行距（.tightgrp），盡量不要把文章和題目拆到兩頁
+    if(h>BUD&&u.g&&!/^ph/.test(u.g)){u.els.forEach(function(e){e.classList.add('tightgrp');});h=uh(u);}
     if(h<=BUD){ if(used+h>BUD&&page.length){pages.push(page);page=[];used=0;}
       u.els.forEach(function(e){page.push(e);}); used+=h; }
     else { u.els.forEach(function(e){var eh=blockH(e);
