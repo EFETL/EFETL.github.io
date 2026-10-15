@@ -44,13 +44,15 @@ p.pd{font-size:.82rem;color:#444;margin:0 0 10px;}
 .lsn span{font-size:.8rem;color:#777;letter-spacing:0}
 @media print{.sheet-s .q{padding:5px 0}.sheet-s .p0img{width:176px;height:132px}.sheet-s .pic-img:not(.p0img){width:108px;height:81px}.sheet-s h2.pt{margin-top:12px}}
 @media screen{body[data-mode=s] .sheet-t,body[data-mode=t] .sheet-s{display:none}}
+/* 教師卷不對學生顯示：只有 #teacher（教師卷）／#all（兩份）才出現教師卷與它的按鈕 */
+body:not([data-mode=t]):not([data-mode=a]) .bar .tonly{display:none}
 </style>
 </head><body>
 <div class="bar">
  <b>🖨 第 12 回　學校生活　聽力測驗　列印版</b>
- <button class="s" onclick="show('s')">只印學生卷</button>
- <button class="t" onclick="show('t')">只印教師卷</button>
- <button class="a" onclick="show('a')">兩份都印</button>
+ <button class="s" onclick="show('s')">🖨 列印學生卷</button>
+ <button class="t tonly" onclick="show('t')">只印教師卷</button>
+ <button class="a tonly" onclick="show('a')">兩份都印</button>
 </div>
 <div id="root"></div>
 <script>
@@ -143,12 +145,12 @@ function sheet(kind){ // 's' student | 't' teacher
 }
 function render(){document.getElementById('root').innerHTML=sheet('s')+sheet('t');}
 render();
-function mode(m){ m=(m==='s'||m==='t')?m:'a'; document.body.dataset.mode=m;
+function mode(m){ m=(m==='t'||m==='a')?m:'s'; document.body.dataset.mode=m;
   document.querySelectorAll('.sheet-s').forEach(e=>e.classList.toggle('hidep',m==='t'));
   document.querySelectorAll('.sheet-t').forEach(e=>e.classList.toggle('hidep',m==='s')); }
 function show(m){ mode(m); setTimeout(()=>window.print(),60); }
-mode(location.hash.slice(1));
-window.addEventListener('hashchange',()=>mode(location.hash.slice(1)));
+const fromHash=()=>mode(({teacher:'t',all:'a'})[location.hash.slice(1)]||'s');
+fromHash(); window.addEventListener('hashchange',fromHash);
 </script><style>@media print{#penBtn,#penBar,#penCv,#penHit,#penBoard{display:none!important}}</style>
 <script>
 /* ================= ✏️ 老師手寫 =================
