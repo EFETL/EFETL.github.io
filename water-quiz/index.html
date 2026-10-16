@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>水域環境互動測驗｜60 題</title>
+<style>
+:root{--blue:#176b87;--light:#eaf6fa;--green:#237a57;--red:#b42318;--ink:#18313b;--muted:#5c7078}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Noto Sans TC","Microsoft JhengHei",sans-serif;color:var(--ink);background:#f4f8fa;line-height:1.65}
+header{background:linear-gradient(135deg,#145b75,#2999a8);color:white;padding:30px 18px}
+header .wrap,main{max-width:980px;margin:auto}
+h1{margin:0 0 8px;font-size:clamp(1.6rem,4vw,2.25rem)}
+header p{margin:0;opacity:.94}
+main{padding:20px 14px 48px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+select,button{font:inherit;border-radius:10px;border:1px solid #bfd0d7;padding:10px 13px;background:white;color:var(--ink)}
+button{cursor:pointer;font-weight:650}
+button.primary{background:var(--blue);color:white;border-color:var(--blue)}
+button:hover{filter:brightness(.97)}
+.progress-wrap{background:#dce8ec;border-radius:999px;height:10px;overflow:hidden;margin:10px 0 18px}
+#progress{height:100%;width:0;background:#28a17b;transition:width .2s}
+.summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:18px}
+.stat{background:white;border:1px solid #d9e5e9;border-radius:14px;padding:12px 14px}
+.stat strong{display:block;font-size:1.35rem}
+.stat span{font-size:.9rem;color:var(--muted)}
+.question{background:white;border:1px solid #d9e5e9;border-radius:15px;padding:18px;margin:14px 0;box-shadow:0 2px 8px #163b4a0a}
+.qhead{display:flex;gap:10px;align-items:flex-start}
+.num{background:var(--light);color:var(--blue);border-radius:8px;padding:2px 8px;font-weight:750;white-space:nowrap}
+.qtitle{font-weight:700;flex:1}
+.activity{font-size:.82rem;color:var(--muted);margin-bottom:5px}
+.options{display:grid;gap:8px;margin:14px 0 8px}
+.option{display:flex;align-items:flex-start;gap:9px;border:1px solid #d7e2e6;border-radius:10px;padding:10px 12px;cursor:pointer}
+.option:hover{background:#f4fbfd}
+.option input{margin-top:5px;accent-color:var(--blue)}
+.option.correct{border-color:#6bb995;background:#effaf4}
+.option.wrong{border-color:#e8a09b;background:#fff3f2}
+.feedback{font-weight:650;margin-top:8px}
+.feedback.ok{color:var(--green)} .feedback.no{color:var(--red)}
+.explanation{color:var(--muted);font-size:.94rem;margin-top:3px}
+footer{color:var(--muted);font-size:.9rem;text-align:center;padding:18px}
+@media(max-width:600px){.summary{grid-template-columns:1fr 1fr}.question{padding:14px}.toolbar select{flex:1}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<h1>水域環境互動測驗</h1>
+<p>三個活動・共 60 題｜選擇答案後可立即核對，也可查看總成績。</p>
+</div></header>
+<main>
+<div class="toolbar">
+<label for="activityFilter">顯示活動：</label>
+<select id="activityFilter">
+<option value="all">全部活動（60 題）</option>
+<option value="0">活動一：水生物的生活環境</option>
+<option value="1">活動二：水生植物的外形和構造</option>
+<option value="2">活動三：保護水域環境</option>
+</select>
+<button class="primary" id="gradeBtn">計算成績</button>
+<button id="resetBtn">重新作答</button>
+<button id="reviewBtn">只看錯題／未作答</button>
+</div>
+<div class="summary">
+<div class="stat"><strong id="answered">0 / 60</strong><span>已作答</span></div>
+<div class="stat"><strong id="score">—</strong><span>目前答對率</span></div>
+<div class="stat"><strong id="wrongCount">0</strong><span>錯題／未作答</span></div>
+</div>
+<div class="progress-wrap"><div id="progress"></div></div>
+<div id="result" aria-live="polite"></div>
+<div id="quiz"></div>
+<footer>本測驗可離線使用。作答紀錄只保存在目前頁面，重新整理或關閉後不會上傳。</footer>
+</main>
+<script>
+const activities = [
+{
+title:"活動一：水生物的生活環境",
+questions:[
+{"q":"水生生物主要生活在哪一種環境？","options":["沙漠","水域","高山頂部","乾燥岩石上"],"answer":1,"explanation":"水生生物的身體構造適合在水中生活，所以主要住在河流、池塘、海洋等水域；沙漠和乾燥岩石缺水，不適合牠們。"},
+{"q":"下列哪一個地方屬於淡水環境？","options":["海洋","珊瑚礁","池塘","鹽田"],"answer":2,"explanation":"池塘的水含鹽很少，屬於淡水；海洋、珊瑚礁和鹽田的水都含大量鹽分，是海水環境。"},
+{"q":"海水和淡水最主要的差異之一是什麼？","options":["顏色一定不同","海水含有較多溶解鹽類","淡水完全沒有礦物質","海水一定比較清澈"],"answer":1,"explanation":"海水溶有大量鹽類，所以喝起來鹹；淡水其實也含少量礦物質，並不是「完全沒有」，所以 C 錯。"},
+{"q":"下列哪一種動物通常生活在海水中？","options":["海豚","青蛙","鯉魚","蜻蜓幼蟲"],"answer":0,"explanation":"海豚生活在海洋中；青蛙、鯉魚和蜻蜓幼蟲（水蠆）都生活在池塘、溪流等淡水環境。"},
+{"q":"池塘中常見的水生動物是哪一種？","options":["駱駝","鯉魚","山羊","蚯蚓"],"answer":1,"explanation":"鯉魚是池塘常見的淡水魚；蚯蚓雖然喜歡潮濕，但住在土壤裡，不是水生動物。"},
+{"q":"魚類主要用什麼構造在水中呼吸？","options":["肺","皮膚上的毛孔","鰓","鼻子"],"answer":2,"explanation":"魚用鰓吸取溶在水中的氧氣；肺是用來呼吸空氣的構造，魚並不是靠肺呼吸。"},
+{"q":"魚在水中移動時，哪一個構造最能協助改變方向與保持平衡？","options":["魚鰭","羽毛","角","蹄"],"answer":0,"explanation":"魚擺動胸鰭、背鰭、尾鰭等來前進、轉彎和保持平衡；羽毛、角、蹄都不是魚的構造。"},
+{"q":"青蛙的幼體蝌蚪通常在哪裡生活？","options":["水中","沙漠","樹洞乾處","地下深處"],"answer":0,"explanation":"蝌蚪用鰓呼吸、用尾巴游泳，只能在水中生活；長成青蛙後才能到陸地上活動。"},
+{"q":"下列哪一項是水生生物的非生物環境因素？","options":["水溫","魚","水草","蝦子"],"answer":0,"explanation":"水溫是沒有生命的環境條件，屬於非生物因素；魚、水草、蝦子都有生命，屬於生物。"},
+{"q":"水中的溶氧量會影響什麼？","options":["魚類呼吸與生存","石頭的形狀","月亮大小","河流名稱"],"answer":0,"explanation":"溶氧量是水中溶解的氧氣多寡，魚要靠鰓吸取這些氧氣；溶氧不足時，魚會浮到水面呼吸，甚至死亡。"},
+{"q":"水域中的植物可以為部分動物提供什麼？","options":["食物與躲藏處","塑膠容器","電力","鹽巴"],"answer":0,"explanation":"有些動物會吃水生植物，茂密的水草也讓小魚、小蝦躲避天敵和產卵。"},
+{"q":"為什麼有些水生生物只能生活在特定水域？","options":["每種生物都能住在任何地方","不同生物對水溫、鹽度和氧氣等條件需求不同","水域沒有環境差異","所有水域都一樣"],"answer":1,"explanation":"每種生物適合的水溫、鹽度和溶氧不同，例如海水魚放進淡水就無法生存；A、C、D 都忽略了水域之間的差異。"},
+{"q":"河流和池塘的水流狀況有何常見差異？","options":["河流通常有流動的水，池塘水流較緩","池塘一定比河流深","河流沒有生物","池塘都是海水"],"answer":0,"explanation":"河流的水會由高處往低處流動，池塘的水大多靜止或流得很慢；池塘不一定比河流深，所以 B 錯。"},
+{"q":"下列哪一種環境通常鹽度較高？","options":["溪流","湖泊","海洋","淡水池塘"],"answer":2,"explanation":"海水溶有大量鹽類，鹽度最高；溪流、湖泊、淡水池塘都是淡水。"},
+{"q":"水域底部的泥沙、石頭等可提供生物什麼？","options":["棲息或附著的地方","陽光來源","空氣製造機","翅膀"],"answer":0,"explanation":"水底的石頭、泥沙是螺、貝、水生昆蟲附著、躲藏或產卵的地方；陽光來自太陽，不是石頭提供的。"},
+{"q":"如果水域受到污染，最可能造成什麼影響？","options":["水生生物健康受影響","水會自動變成純水","所有生物都長更快","氧氣永遠增加"],"answer":0,"explanation":"污染會讓水質變差、溶氧減少，水生生物可能生病或死亡；受污染的水不會自己變回乾淨的水。"},
+{"q":"水生生物的食物來源可能包括什麼？","options":["藻類、小型生物或其他生物","只有塑膠","只有石頭","只有沙子"],"answer":0,"explanation":"水中動物會吃藻類、小型生物或捕食其他動物；塑膠、石頭不能當食物，誤食塑膠反而會傷害動物。"},
+{"q":"觀察水域生物時，哪一種做法較恰當？","options":["把所有生物帶回家","觀察後盡量放回原處並避免傷害","把水全部倒掉","餵食大量人類零食"],"answer":1,"explanation":"觀察後把生物放回原處、小心不傷害牠們，才能維持水域生態；把生物全部帶回家會破壞當地生態。"},
+{"q":"水域中的陽光對水生植物有什麼重要作用？","options":["幫助行光合作用","讓植物不需要水","把淡水變海水","使植物立即開花"],"answer":0,"explanation":"水生植物和陸生植物一樣，需要陽光行光合作用製造養分；有陽光並不代表植物就不需要水，所以 B 錯。"},
+{"q":"維持水域環境健康的好方法是什麼？","options":["任意丟垃圾","大量捕捉生物","減少污染並保護棲地","把外來生物隨意放生"],"answer":2,"explanation":"減少污染、保護棲地，生物才能持續生活；隨意放生外來生物可能搶走原生生物的食物和棲地，反而破壞生態。"}
+]},
+{
+title:"活動二：水生植物的外形和構造",
+questions:[
+{"q":"水生植物通常生長在哪裡？","options":["完全乾燥的沙漠","水中或水邊潮濕環境","沒有光線的密閉箱","高溫火焰旁"],"answer":1,"explanation":"水生植物長在水中或水邊潮濕的地方，例如池塘、溝渠、溼地；沙漠缺水，不適合它們生長。"},
+{"q":"睡蓮的葉片常浮在水面，這樣有什麼好處？","options":["較容易接受陽光","可以完全不需要水","能捕捉大型魚類","可以在空氣中行走"],"answer":0,"explanation":"睡蓮葉片平貼水面，能直接照到陽光、方便行光合作用；它仍然需要水才能生活，所以 B 錯。"},
+{"q":"荷花的葉柄和花梗常有什麼特徵？","options":["內部有助於通氣的空隙","全是金屬","沒有任何組織","能發出電流"],"answer":0,"explanation":"荷花的葉柄、花梗和地下莖（蓮藕）內有許多孔洞，可以讓空氣流通，這也是蓮藕切開有很多孔的原因。"},
+{"q":"沉水植物的主要特徵是什麼？","options":["大部分植株沉在水中","只長在沙漠","葉片永遠在高空","完全沒有根、莖、葉"],"answer":0,"explanation":"沉水植物（如金魚藻、水蘊草）大部分植株都沉在水裡；它們仍有根、莖、葉，所以 D 錯。"},
+{"q":"浮水植物如何漂浮在水面？","options":["部分構造含有空隙或具有浮力","靠石頭吊住","靠翅膀飛行","把水變成固體"],"answer":0,"explanation":"浮水植物（如布袋蓮、浮萍）的葉柄或葉片有空隙能儲存空氣、產生浮力，例如布袋蓮膨大的葉柄裡充滿空氣。"},
+{"q":"水生植物的根可能有哪些功能？","options":["固定植物並吸收水分、養分","製造塑膠","捕捉陽光","讓植物離開水"],"answer":0,"explanation":"根能把植物固定在水底泥土中，並吸收水分和養分；接受陽光主要是葉片的工作，所以 C 錯。"},
+{"q":"植物的葉片最重要的功能之一是什麼？","options":["行光合作用製造養分","吸收石頭當食物","讓植物游泳","取代所有根部功能"],"answer":0,"explanation":"葉片含有葉綠素，能利用陽光行光合作用製造養分；植物不會吃石頭，也不靠葉片游泳。"},
+{"q":"植物行光合作用通常需要哪些條件？","options":["陽光、水和二氧化碳","黑暗、塑膠和沙子","只有鹽巴","只有泥土，不需光"],"answer":0,"explanation":"光合作用需要陽光、水和二氧化碳，製造養分並放出氧氣；在黑暗中植物無法行光合作用。"},
+{"q":"水生植物的莖可能有什麼作用？","options":["支撐並運送水分、養分","讓植物發出聲音","把水變成空氣","只用來吸引昆蟲，沒有其他功能"],"answer":0,"explanation":"莖能支撐植物，並把根吸收的水分、養分運送到其他部位；吸引昆蟲主要是花的作用，而且莖不只有一種功能。"},
+{"q":"浮葉植物和沉水植物的差別主要是什麼？","options":["葉片分布的位置不同","一種是動物、一種是石頭","兩者都不能生長","只差花朵顏色，其他完全相同"],"answer":0,"explanation":"浮葉植物的葉片浮在水面上，沉水植物的葉片則在水面下，兩者主要差在葉片的位置；不是只差花朵顏色。"},
+{"q":"水生植物的葉片表面可能有哪些適應特徵？","options":["依種類不同，可能有防水或利於漂浮的特徵","一定長滿羽毛","一定有牙齒","一定會發光"],"answer":0,"explanation":"不同水生植物各有適應方式，例如荷葉表面有細小突起和蠟質能防水，布袋蓮葉柄有空氣能漂浮；「一定長羽毛、牙齒」都不正確。"},
+{"q":"為什麼部分水生植物的莖內有空隙？","options":["有助於氣體在植株內運輸","用來儲存石頭","讓植物不需陽光","讓植物變成動物"],"answer":0,"explanation":"莖內的空隙能儲存和輸送空氣，讓泡在水裡的部位也得到需要的氣體，同時增加浮力。"},
+{"q":"水草過度繁殖可能造成什麼問題？","options":["遮蔽水面、影響水中光線與溶氧","讓所有生物都更健康","使水域完全沒有變化","把污染全部吸走"],"answer":0,"explanation":"水草太多會蓋住水面，擋住陽光進入水中；水草死亡分解時還會消耗溶氧，讓魚蝦缺氧。"},
+{"q":"觀察水生植物時，應注意什麼？","options":["觀察構造與生長位置，不任意破壞","把整株拔起帶走","踩踏棲地","將植物丟到其他水域"],"answer":0,"explanation":"觀察時注意植物的構造和生長位置，不隨意拔除或踩踏，才不會破壞棲地。"},
+{"q":"下列哪一種植物常見於水面附近、葉片可浮在水面？","options":["睡蓮","仙人掌","松樹","小麥"],"answer":0,"explanation":"睡蓮的葉片圓形、有一道缺口，浮在水面上；仙人掌、松樹、小麥都是陸生植物。"},
+{"q":"水生植物和陸生植物都需要什麼來製造養分？","options":["光合作用所需條件","塑膠袋","汽油","鹽粒"],"answer":0,"explanation":"不論水生或陸生植物，都需要陽光、水和二氧化碳行光合作用來製造養分。"},
+{"q":"植物吸收的水分和養分主要透過哪一類構造進入植株？","options":["根或其他可吸收的植物部位","花瓣顏色","果實外形","種子大小"],"answer":0,"explanation":"植物主要靠根吸收水分和養分，有些沉水植物的莖和葉也能直接從水中吸收；花瓣顏色、果實外形和吸收無關。"},
+{"q":"水生植物的葉片形狀為什麼可能不同？","options":["不同種類適應不同的生長環境","所有葉片都必須一樣","葉片形狀完全隨機且無關環境","水中植物沒有葉片"],"answer":0,"explanation":"葉形和生長環境有關，例如沉水的金魚藻葉片細長，能減少水流衝擊；浮在水面的睡蓮葉片大而平，能接受更多陽光。"},
+{"q":"如果水域缺少陽光，水生植物可能怎樣？","options":["光合作用受限，生長可能變差","一定長得更快","不再需要任何養分","立即變成動物"],"answer":0,"explanation":"缺少陽光時，植物無法順利行光合作用，製造的養分不足，生長就會變差；植物不會因此長得更快。"},
+{"q":"保護水生植物棲地的方式是哪一項？","options":["不任意採摘，並減少水域污染","把植物全部拔除","倒入清潔劑","把外來植物隨意放生"],"answer":0,"explanation":"不隨意採摘、減少污染，水生植物才有良好的生長環境；倒清潔劑、放生外來植物都會破壞棲地。"}
+]},
+{
+title:"活動三：保護水域環境",
+questions:[
+{"q":"保護河川與池塘最基本的做法是什麼？","options":["不亂丟垃圾","把廢水倒入河裡","捕捉所有魚類","拔除所有水草"],"answer":0,"explanation":"不亂丟垃圾是每個人都做得到、最基本的保護方法；倒廢水、捕光魚、拔光水草都會破壞水域。"},
+{"q":"生活污水直接排入水域可能造成什麼？","options":["水質污染","水質一定變好","水中氧氣永久增加","所有生物立即變多"],"answer":0,"explanation":"生活污水含有清潔劑、油脂和食物殘渣，直接排入會污染水質，讓水變臭、溶氧降低。"},
+{"q":"看到河邊有垃圾時，較好的做法是什麼？","options":["在安全情況下撿拾並妥善分類，或通報成人","把垃圾踢進水裡","丟到草叢中","不管安全直接下水撈"],"answer":0,"explanation":"在安全的情況下撿垃圾並分類，或請大人處理；D「不管安全直接下水」可能發生溺水危險，絕對不可以。"},
+{"q":"為什麼不能隨意放生寵物或外來生物？","options":["可能影響原生生物與生態平衡","一定會改善所有環境","所有生物都能適應任何地方","放生後不會有任何影響"],"answer":0,"explanation":"外來生物可能和原生生物搶食物、搶棲地，甚至吃掉原生生物，破壞生態平衡，例如福壽螺。"},
+{"q":"減少使用一次性塑膠有什麼好處？","options":["減少垃圾進入河海的機會","增加海洋塑膠","讓水變鹹","使魚類不需要氧氣"],"answer":0,"explanation":"一次性塑膠用完就丟，容易被沖進河川和海洋；少用就能減少水中的塑膠垃圾。"},
+{"q":"水域優養化可能與什麼有關？","options":["過多氮、磷等養分進入水中","水中完全沒有養分","石頭太多","月光太亮"],"answer":0,"explanation":"優養化是水中氮、磷等養分太多，使藻類大量繁殖；常見來源是肥料和生活污水，所以不是「完全沒有養分」。"},
+{"q":"水中藻類大量繁殖後，可能發生什麼？","options":["藻類死亡分解時消耗溶氧，危害水生生物","水永遠變得更清澈","所有魚都不需呼吸","水域不再有細菌"],"answer":0,"explanation":"藻類大量繁殖後死亡，被分解時會用掉大量溶氧，魚蝦可能因缺氧死亡；水不會因此變得更清澈。"},
+{"q":"保護水域生態系時，為什麼要保留棲地？","options":["讓生物有適合生活、覓食與繁殖的地方","讓所有生物離開","讓水域沒有植物","只為了讓水變深"],"answer":0,"explanation":"棲地是生物生活、覓食和繁殖的地方，棲地消失了，生物就沒有地方生存。"},
+{"q":"下列哪一種行為較節省水資源？","options":["刷牙時關掉水龍頭","一直開著水龍頭","把乾淨水倒掉","漏水也不處理"],"answer":0,"explanation":"刷牙時關掉水龍頭可以減少浪費；一直開著水龍頭或漏水不修理都會浪費水資源。"},
+{"q":"農田使用過多肥料，雨水沖刷後可能造成什麼？","options":["養分流入水域，造成水質問題","河川自動淨化所有污染","海水變成淡水","魚類不再需要食物"],"answer":0,"explanation":"多餘的肥料會被雨水沖進河川、池塘，造成優養化等水質問題；河川不會自動淨化所有污染。"},
+{"q":"參加水域淨灘或淨溪活動時，應該怎麼做？","options":["遵守安全規範並做好垃圾分類","獨自進入深水區","徒手碰觸不明化學物","把垃圾集中丟進水裡"],"answer":0,"explanation":"淨灘、淨溪要遵守安全規範、不進入深水區，並把垃圾分類；不明化學物不可以徒手碰觸。"},
+{"q":"保護水域環境需要誰一起參與？","options":["個人、社區、學校與政府等共同努力","只有魚類","只有一個人就能解決全部問題","不需要任何人"],"answer":0,"explanation":"水域保護需要個人、家庭、學校、社區和政府一起合作；只靠一個人無法解決全部問題。"},
+{"q":"如果發現大量死魚或不明污染，應該怎麼辦？","options":["遠離現場並通知成人或相關單位","把死魚帶回家","直接喝水確認","把污染物攪散"],"answer":0,"explanation":"死魚或不明污染可能有毒，應遠離現場並通知大人或環保單位；不可以碰觸、帶走或飲用。"},
+{"q":"水域中的垃圾可能對動物造成什麼傷害？","options":["誤食、纏繞或受傷","幫助所有動物長大","讓動物不必覓食","完全沒有影響"],"answer":0,"explanation":"動物可能把塑膠誤當食物吃下，或被漁網、塑膠繩纏住而受傷，甚至死亡。"},
+{"q":"為什麼不應將油脂或化學清潔劑倒入排水溝？","options":["可能污染水體並影響生物","可以增加水中氧氣","會自動變成食物","能讓所有水域消毒而無害"],"answer":0,"explanation":"油脂和清潔劑會隨排水溝流進河川，污染水質並傷害水生生物；它們不會增加氧氣，也不是無害的消毒。"},
+{"q":"保護濕地的重要原因是什麼？","options":["提供生物棲地並具有調節水文等功能","濕地完全沒有生物","濕地只能用來倒垃圾","濕地會阻止所有降雨"],"answer":0,"explanation":"濕地是許多鳥類、魚蝦和植物的家，也能儲存雨水、減緩洪水；濕地有豐富的生物，不是倒垃圾的地方。"},
+{"q":"使用環保餐具可能帶來什麼幫助？","options":["減少一次性用品和垃圾","增加塑膠垃圾","讓水域鹽度升高","使水生植物停止生長"],"answer":0,"explanation":"自備環保餐具可以減少免洗餐具和塑膠垃圾，也就減少流入水域的垃圾。"},
+{"q":"保護水域時，為什麼要避免過度捕撈？","options":["避免生物族群減少並維持生態平衡","讓魚類全部消失","使食物鏈不再重要","讓水域沒有變化"],"answer":0,"explanation":"捕撈太多，魚蝦來不及繁殖，數量會越來越少，也會影響以牠們為食的其他生物。"},
+{"q":"社區想改善附近河川水質，哪個做法最適合？","options":["減少污染源、妥善處理污水並持續監測","只把垃圾推到下游","用香水遮住異味","把河道全部封起來"],"answer":0,"explanation":"要從源頭減少污染、妥善處理污水並持續檢查水質；把垃圾推到下游或用香水遮味，都沒有真正解決問題。"},
+{"q":"我們可以如何向他人推廣水域保護？","options":["分享正確知識並以行動示範","鼓勵大家亂丟垃圾","散播不實資訊","把生物帶離棲地"],"answer":0,"explanation":"把正確知識告訴別人，並自己用行動做示範，才能讓更多人一起保護水域。"}
+]}
+];
+const letters=["A","B","C","D"];
+let reviewOnly=false, graded=false;
+const quiz=document.getElementById("quiz");
+const filter=document.getElementById("activityFilter");
+function allQuestions(){return activities.flatMap((a,ai)=>a.questions.map((q,qi)=>({a,ai,q,qi,id:`${ai}-${qi}`})))}
+function selectedQuestions(){return allQuestions().filter(x=>filter.value==="all"||String(x.ai)===filter.value)}
+const answers={};
+function getChoice(id){return id in answers?answers[id]:null}
+function render(){
+ const items=selectedQuestions(); quiz.innerHTML="";
+ items.forEach(({a,ai,q,qi,id})=>{
+  const choice=getChoice(id), correct=choice===q.answer, unanswered=choice===null;
+  if(reviewOnly && !unanswered && correct) return;
+  const card=document.createElement("section");card.className="question";card.id="card-"+id;
+  card.innerHTML=`<div class="activity">${a.title}</div><div class="qhead"><span class="num">第 ${qi+1} 題</span><div class="qtitle">${q.q}</div></div><div class="options"></div><div class="feedback" aria-live="polite"></div>`;
+  const opts=card.querySelector(".options");
+  q.options.forEach((opt,oi)=>{
+   const lab=document.createElement("label");lab.className="option";
+   lab.innerHTML=`<input type="radio" name="q${id}" value="${oi}" ${choice===oi?"checked":""}><span><b>${letters[oi]}.</b> ${opt}</span>`;
+   const input=lab.querySelector("input");
+   input.addEventListener("change",()=>{answers[id]=oi;graded=false;updateStats();if(reviewOnly)render()});
+   opts.appendChild(lab);
+  });
+  if(graded){
+   const fb=card.querySelector(".feedback"),right=letters[q.answer]+"．"+q.options[q.answer];
+   if(!unanswered){
+    const labs=[...opts.querySelectorAll(".option")];labs[q.answer].classList.add("correct");if(!correct)labs[choice].classList.add("wrong");
+    fb.className="feedback "+(correct?"ok":"no");
+    fb.textContent=correct?"答對了！":"答錯了。正確答案："+right;
+   } else {fb.className="feedback no";fb.textContent="尚未作答。正確答案："+right}
+   const ex=document.createElement("div");ex.className="explanation";ex.textContent="💡 解析："+q.explanation;
+   card.appendChild(ex);
+  }
+  quiz.appendChild(card);
+ });
+ updateStats();
+}
+function updateStats(){
+ const qs=allQuestions();let answered=0,correct=0,wrong=0;
+ qs.forEach(({q,id})=>{const c=getChoice(id);if(c!==null){answered++;if(c===q.answer)correct++;else wrong++}else wrong++});
+ document.getElementById("answered").textContent=`${answered} / 60`;
+ document.getElementById("score").textContent=answered?`${correct} / 60（${Math.round(correct/60*100)}%）`:"—";
+ document.getElementById("wrongCount").textContent=wrong;
+ document.getElementById("progress").style.width=`${answered/60*100}%`;
+ if(graded){
+  const result=document.getElementById("result");
+  result.innerHTML=`<div class="question"><strong>測驗結果：</strong>答對 ${correct} 題，答錯 ${answered-correct} 題，未作答 ${60-answered} 題。<br><strong>總分：${correct} / 60（${Math.round(correct/60*100)}%）</strong></div>`;
+ }
+}
+document.getElementById("gradeBtn").addEventListener("click",()=>{graded=true;reviewOnly=false;document.getElementById("reviewBtn").textContent="只看錯題／未作答";render();document.getElementById("result").scrollIntoView({behavior:"smooth",block:"nearest"})});
+document.getElementById("resetBtn").addEventListener("click",()=>{if(!confirm("確定清除全部 60 題答案並重新作答？"))return;Object.keys(answers).forEach(k=>delete answers[k]);graded=false;reviewOnly=false;document.getElementById("result").innerHTML="";document.getElementById("reviewBtn").textContent="只看錯題／未作答";render();window.scrollTo({top:0,behavior:"smooth"})});
+document.getElementById("reviewBtn").addEventListener("click",()=>{reviewOnly=!reviewOnly;document.getElementById("reviewBtn").textContent=reviewOnly?"顯示全部題目":"只看錯題／未作答";render()});
+filter.addEventListener("change",()=>render());
+render();
+</script>
+</body>
+</html>
