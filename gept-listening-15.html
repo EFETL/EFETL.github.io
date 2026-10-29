@@ -190,7 +190,7 @@
     <span id="fpTime">0:00 / 0:00</span>
     <div class="fp-track" id="fpTrack" title="點一下跳到該題"><div class="fp-fill" id="fpFill"></div></div>
   </div>
-  <div class="fp-st" id="fpSt">從第一大題說明開始，依序播完 30 題，每題後面自動留 8 秒作答時間，中途不要暫停。</div>
+  <div class="fp-st" id="fpSt">從第一大題說明開始，依序播完 30 題，第一至三大題每題後面自動留 8 秒作答時間，第四大題題與題之間只留 2 秒，中途不要暫停。</div>
 </div>
 <!-- /FULLPLAY -->
 <form id="quiz"></form>
@@ -613,17 +613,18 @@ return secs;
 
 </script>
 <script id="fullplay-js">
-/* ====== 整回連續播放（模擬正式測驗）：大題說明 → 逐題 → 8 秒留白 ====== */
+/* ====== 整回連續播放（模擬正式測驗）：大題說明 → 逐題 → 8 秒留白（第四大題 2 秒） ====== */
 (function(){
 const FP={"r": 15, "v": "r15hard-20261009", "d": [28.2, 25.29, 27.07, 25.58, 29.03, 6.35, 6.05, 6.13, 6.61, 5.71, 8.76, 8.16, 6.94, 11.35, 6.8, 28.48, 19.95, 23.84, 28.81, 27.56, 27.05, 24.29, 28.73, 29.13, 22.71, 38.99, 36.81, 33.46, 37.65, 32.49], "i": [14.66, 14.62, 15.22, 13.96]};
-const base='gept-listening-audio/', CV='?v=20261014';
+const base='gept-listening-audio/', CV='?v=20261029';
 const RANGES=[[1,5],[6,15],[16,25],[26,30]], PN=['一','二','三','四'];
 const segs=[];
 RANGES.forEach((rg,p)=>{
   segs.push({src:base+'common/part'+(p+1)+'.m4a'+CV,d:FP.i[p],k:'intro',p:p,n:rg[0]});
   for(let n=rg[0];n<=rg[1];n++){
     segs.push({src:base+FP.r+'/q'+n+'.m4a?v='+FP.v,d:FP.d[n-1],k:'q',p:p,n:n});
-    segs.push({src:base+'common/gap8.m4a'+CV,d:8,k:'gap',p:p,n:n});
+    const g=(p===3)?2:8;                           // 第四大題（短文聽解）題與題之間只留 2 秒
+    segs.push({src:base+'common/gap'+g+'.m4a'+CV,d:g,k:'gap',p:p,n:n});
   }
 });
 let T=0; segs.forEach(s=>{s.t=T;T+=s.d;});
@@ -637,7 +638,7 @@ function ui(){
   tm.textContent=fmt(cur)+' / '+fmt(T); fill.style.width=(cur/T*100)+'%';
   btn.textContent=on?'❚❚':'▶'; btn.setAttribute('aria-label',on?'暫停':'播放');
   if(done&&!s){st.textContent='整回播放完畢 ✅ 檢查一下答案，再按下方「送出並查看解析」。';return;}
-  if(!s){st.textContent='從第一大題說明開始，依序播完 30 題，每題後面自動留 8 秒作答時間，中途不要暫停。';return;}
+  if(!s){st.textContent='從第一大題說明開始，依序播完 30 題，第一至三大題每題後面自動留 8 秒作答時間，第四大題題與題之間只留 2 秒，中途不要暫停。';return;}
   const pre=on?'':'⏸ 已暫停　';
   if(s.k==='intro') st.textContent=pre+'第'+PN[s.p]+'大題　說明';
   else if(s.k==='q') st.textContent=pre+'▶ 正在播放：第 '+s.n+' 題';
