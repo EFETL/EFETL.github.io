@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>EFETL 高職綜合英文 · 統測單字記憶闖關 | Vocational Word Quest</title>
+<style>
+:root{
+  --bg:#f6f4ef; --ink:#2b2b33; --muted:#7a7a86; --line:#e7e3da;
+  --primary:#2f6f6b; --primary-d:#265a57; --primary-l:#e3efee;
+  --accent:#e0803a; --accent-l:#fbeede; --gold:#e6b422;
+  --green:#3f9d5a; --green-l:#e6f4ea; --red:#d1544a; --red-l:#fbe7e5;
+  --card:#ffffff; --shadow:0 2px 10px rgba(40,40,50,.06),0 6px 24px rgba(40,40,50,.05);
+  --radius:18px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  background:var(--bg); color:var(--ink); line-height:1.55; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:920px;margin:0 auto;padding:18px 16px 90px}
+a{color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+.hidden{display:none!important}
+
+/* header */
+header.top{display:flex;align-items:center;gap:12px;padding:8px 2px 16px}
+.brand{display:flex;flex-direction:column}
+.brand .en{font-weight:800;font-size:1.28rem;letter-spacing:-.02em;color:var(--primary-d)}
+.brand .zh{font-size:.82rem;color:var(--muted);margin-top:-2px}
+.spacer{flex:1}
+.pill{font-size:.72rem;background:var(--primary-l);color:var(--primary-d);padding:5px 11px;border-radius:999px;font-weight:700}
+
+/* hero intro */
+.hero{background:linear-gradient(135deg,#2f6f6b,#3f8f7c);color:#fff;border-radius:var(--radius);padding:22px 22px;box-shadow:var(--shadow);margin-bottom:18px}
+.hero h1{margin:0 0 4px;font-size:1.35rem;letter-spacing:-.01em}
+.hero p{margin:0;opacity:.92;font-size:.9rem}
+.methods{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px}
+.method{background:rgba(255,255,255,.14);border-radius:12px;padding:10px 8px;text-align:center;font-size:.72rem}
+.method b{display:block;font-size:1.25rem;margin-bottom:3px}
+@media(max-width:560px){.methods{grid-template-columns:repeat(2,1fr)}}
+
+/* round grid */
+.section-title{display:flex;align-items:baseline;gap:8px;margin:6px 2px 12px}
+.section-title h2{font-size:1.05rem;margin:0}
+.section-title span{font-size:.78rem;color:var(--muted)}
+.rounds{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:640px){.rounds{grid-template-columns:repeat(2,1fr)}}
+.rc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 13px;box-shadow:var(--shadow);text-align:left;transition:transform .12s,box-shadow .12s;position:relative;overflow:hidden}
+.rc:active{transform:scale(.97)}
+.rc .no{font-size:.72rem;color:var(--accent);font-weight:800;letter-spacing:.04em}
+.rc .rng{font-size:18px;font-weight:700;margin:3px 0 2px;color:var(--primary-d);word-break:break-all}
+.rc .cnt{font-size:.72rem;color:var(--muted)}
+.bar{height:6px;background:#eee7db;border-radius:6px;margin-top:10px;overflow:hidden}
+.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--green),#5fbf7d);width:0;transition:width .4s}
+.rc .pct{position:absolute;top:11px;right:12px;font-size:.68rem;font-weight:800;color:var(--green)}
+.star-badge{position:absolute;bottom:12px;right:12px;font-size:.72rem;color:var(--gold)}
+
+/* round view */
+.subhead{display:flex;align-items:center;gap:10px;margin:2px 2px 14px}
+.parts{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 4px}.ptab{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:8px 14px;font-weight:700;font-size:.9rem;color:var(--primary-d)}.ptab small{color:var(--muted);font-weight:600}.ptab.on{background:var(--primary);color:#fff;border-color:var(--primary)}.ptab.on small{color:#e8f3f1}
+.back{font-size:.9rem;font-weight:700;color:var(--primary-d);display:flex;align-items:center;gap:5px;padding:6px 4px}
+.subhead h2{font-size:1.1rem;margin:0}
+.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:6px}
+@media(max-width:560px){.modes{grid-template-columns:repeat(2,1fr)}}
+.mode{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 10px;text-align:center;box-shadow:var(--shadow);transition:transform .12s}
+.mode:active{transform:scale(.96)}
+.mode .ic{font-size:1.7rem}
+.mode .t{font-weight:800;font-size:.92rem;margin-top:5px;color:var(--primary-d)}
+.mode .d{font-size:.7rem;color:var(--muted);margin-top:2px}
+.mode .tag{display:inline-block;margin-top:7px;font-size:.63rem;background:var(--accent-l);color:var(--accent);padding:2px 8px;border-radius:999px;font-weight:700}
+
+/* generic panel */
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;margin-top:14px}
+.rowbtns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn{background:var(--primary);color:#fff;font-weight:700;padding:11px 20px;border-radius:12px;font-size:.92rem;box-shadow:var(--shadow)}
+.btn.ghost{background:#fff;color:var(--primary-d);border:1.5px solid var(--primary)}
+.btn.sm{padding:8px 14px;font-size:.82rem}
+.btn:active{transform:translateY(1px)}
+
+/* flashcard */
+.progress-line{text-align:center;font-size:.78rem;color:var(--muted);margin-bottom:8px}
+.flash{perspective:1200px;margin:6px auto 16px;max-width:460px}
+.flash-inner{position:relative;width:100%;min-height:240px;transition:transform .5s;transform-style:preserve-3d;cursor:pointer}
+.flash.flipped .flash-inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:var(--radius);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;border:1px solid var(--line)}
+.face.front{background:linear-gradient(160deg,#ffffff,#f3f7f6)}
+.face.back{background:linear-gradient(160deg,#fff8ef,#fdeede);transform:rotateY(180deg)}
+.word-en{font-size:2.4rem;font-weight:800;letter-spacing:-.02em;color:var(--primary-d);word-break:break-word}
+.pos{font-size:.85rem;color:var(--accent);font-weight:700;margin-top:4px;font-style:italic}
+.word-zh{font-size:1.9rem;font-weight:800;color:var(--accent)}
+.hintflip{font-size:.72rem;color:var(--muted);margin-top:14px}
+.speak{margin-top:12px;background:var(--primary-l);color:var(--primary-d);border-radius:999px;width:52px;height:52px;font-size:1.4rem;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow)}
+.speak:active{transform:scale(.9)}
+.fc-controls{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:460px;margin:0 auto}
+.nav-btn{background:#fff;border:1.5px solid var(--line);border-radius:12px;width:48px;height:48px;font-size:1.3rem;color:var(--primary-d);box-shadow:var(--shadow)}
+.mark-row{display:flex;gap:10px;justify-content:center;margin-top:14px}
+.mark{border-radius:12px;padding:9px 16px;font-weight:700;font-size:.85rem;border:1.5px solid var(--line);background:#fff}
+.mark.know.on{background:var(--green-l);border-color:var(--green);color:var(--green)}
+.mark.star.on{background:#fdf6df;border-color:var(--gold);color:#b8860b}
+
+/* quiz */
+.q-word{text-align:center;font-size:2rem;font-weight:800;color:var(--primary-d);margin:6px 0 2px;word-break:break-word}
+.q-sub{text-align:center;font-size:.8rem;color:var(--muted);margin-bottom:16px}
+.opts{display:grid;gap:10px}
+.opt{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:13px 16px;font-size:18px;text-align:left;font-weight:600;transition:.12s}
+.opt:active{transform:scale(.99)}
+.opt.correct{background:var(--green-l);border-color:var(--green);color:#1f7a3d}
+.opt.wrong{background:var(--red-l);border-color:var(--red);color:#b23b32}
+.opt.dim{opacity:.5}
+.scoreline{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);margin-bottom:6px}
+
+/* spell */
+.spell-audio{text-align:center;margin:10px 0 18px}
+.big-speak{background:var(--primary);color:#fff;border-radius:999px;width:76px;height:76px;font-size:2rem;box-shadow:var(--shadow)}
+.big-speak:active{transform:scale(.92)}
+.play-btn{display:inline-flex;align-items:center;gap:8px;background:var(--primary);color:#fff;font-weight:800;font-size:1.05rem;padding:13px 26px;border-radius:999px;box-shadow:var(--shadow);letter-spacing:.02em}
+.play-btn:active{transform:scale(.95)}
+.play-btn .ic{font-size:1.35rem}
+.spell-input{width:100%;max-width:360px;display:block;margin:0 auto;font-size:1.3rem;text-align:center;padding:12px;border:2px solid var(--line);border-radius:12px;letter-spacing:.05em;font-weight:700;color:var(--primary-d)}
+.rowbtns .btn:disabled{opacity:.4;cursor:not-allowed}
+.spell-input:focus{outline:none;border-color:var(--primary)}
+.spell-hint{text-align:center;font-size:1.1rem;letter-spacing:.35em;color:var(--muted);margin:12px 0;font-family:ui-monospace,monospace;min-height:1.4em}
+.feedback{text-align:center;font-weight:700;min-height:1.6em;margin-top:10px}
+.feedback.ok{color:var(--green)}
+.feedback.no{color:var(--red)}
+
+/* match */
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mcell{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px 10px;text-align:center;font-weight:700;font-size:18px;min-height:54px;display:flex;align-items:center;justify-content:center;transition:.12s;word-break:break-word}
+.mcell.sel{background:var(--primary-l);border-color:var(--primary);color:var(--primary-d)}
+.mcell.done{background:var(--green-l);border-color:var(--green);color:var(--green);opacity:.65}
+.mcell.err{background:var(--red-l);border-color:var(--red)}
+.mcell .en{font-weight:800}
+
+/* result */
+.result{text-align:center;padding:20px}
+.result .big{font-size:3rem;font-weight:900;color:var(--primary-d)}
+.result .emoji{font-size:3.2rem}
+.result p{color:var(--muted)}
+
+/* toast */
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#2b2b33;color:#fff;padding:10px 18px;border-radius:999px;font-size:.85rem;opacity:0;transition:.3s;z-index:50;pointer-events:none}
+.toast.show{opacity:.95}
+
+footer{text-align:center;color:var(--muted);font-size:.72rem;padding:26px 0 10px}
+.count-chip{font-size:.7rem;color:var(--muted);text-align:center;margin-top:4px}
+</style>
+<style>.pill{white-space:nowrap;flex-shrink:0}</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <span class="en">Vocational Word Quest</span>
+      <span class="zh">EFETL 高職綜合英文 · 統測單字記憶闖關</span>
+    </div>
+    <div class="spacer"></div>
+    <a class="pill" href="tongce.html" style="text-decoration:none;margin-right:6px">‹ 統測</a>
+    <button class="pill" id="resetBtn" title="清除進度">↺ 重設進度</button>
+  </header>
+
+  <!-- HOME -->
+  <div id="home">
+    <div class="hero">
+      <h1>用「記憶科學」背單字 🧠</h1>
+      <p>把 <b id="totalWords"></b> 個必考單字切成 <b id="totalRounds"></b> 回，每回用四種遊戲反覆訓練。<br>Learn smarter with spaced repetition, active recall &amp; sound.</p>
+      <div class="methods">
+        <div class="method"><b>🔁</b>間隔重複<br><small>Spaced</small></div>
+        <div class="method"><b>🧩</b>主動回想<br><small>Recall</small></div>
+        <div class="method"><b>🔊</b>聽覺記憶<br><small>Audio</small></div>
+        <div class="method"><b>🎮</b>遊戲闖關<br><small>Games</small></div>
+      </div>
+    </div>
+
+    <div class="section-title">
+      <h2>選擇回數 Choose a Round</h2>
+      <span>綠色進度＝已標記「學會」的比例</span>
+    </div>
+    <div class="rounds" id="roundGrid"></div>
+    <footer>提示：點單字卡上的 🔊 可聽美式發音。所有進度自動存在本機瀏覽器。</footer>
+  </div>
+
+  <!-- ROUND MENU -->
+  <div id="roundView" class="hidden">
+    <div class="subhead">
+      <button class="back" onclick="goHome()">‹ 回首頁</button>
+      <h2 id="roundTitle"></h2>
+    </div>
+    <div class="count-chip" id="roundRange"></div>
+    <div class="parts" id="partTabs"></div>
+    <div class="modes" style="margin-top:14px">
+      <button class="mode" onclick="startFlash()"><div class="ic">📖</div><div class="t">單字卡</div><div class="d">Flashcards</div><div class="tag">看＋聽＋翻</div></button>
+      <button class="mode" onclick="startQuiz()"><div class="ic">🎯</div><div class="t">選擇題</div><div class="d">Quiz</div><div class="tag">中英互測</div></button>
+      <button class="mode" onclick="startSpell()"><div class="ic">✍️</div><div class="t">聽寫拼字</div><div class="d">Spelling</div><div class="tag">聽音拼字</div></button>
+      <button class="mode" onclick="startMatch()"><div class="ic">🔗</div><div class="t">配對遊戲</div><div class="d">Matching</div><div class="tag">限時連連看</div></button>
+      <button class="mode" onclick="startReview()"><div class="ic">⭐</div><div class="t">重點複習</div><div class="d">Review</div><div class="tag">只練星號</div></button>
+    </div>
+    <div class="panel" style="text-align:center">
+      <div style="font-size:.85rem;color:var(--muted)">本回學習進度</div>
+      <div class="bar" style="max-width:320px;margin:10px auto"><i id="roundBarFill"></i></div>
+      <div id="roundStat" style="font-size:.82rem;color:var(--primary-d);font-weight:700"></div>
+    </div>
+  </div>
+
+  <!-- GAME AREA -->
+  <div id="gameView" class="hidden">
+    <div class="subhead">
+      <button class="back" onclick="backToRound()">‹ 返回</button>
+      <h2 id="gameTitle"></h2>
+    </div>
+    <div id="gameBody"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const WORDS = [{"w":"attraction","pos":"n","zh":"吸引力；景點","r":1,"p":"A"},{"w":"bargain","pos":"n","zh":"特價品；便宜貨","r":1,"p":"A"},{"w":"crowd","pos":"n","zh":"人群","r":1,"p":"A"},{"w":"lively","pos":"adj","zh":"熱鬧的；活潑的","r":1,"p":"A"},{"w":"popular","pos":"adj","zh":"受歡迎的","r":1,"p":"A"},{"w":"protect","pos":"v","zh":"保護","r":1,"p":"A"},{"w":"snack","pos":"n","zh":"點心；小吃","r":1,"p":"A"},{"w":"vendor","pos":"n","zh":"攤販","r":1,"p":"A"},{"w":"encourage","pos":"v","zh":"鼓勵","r":1,"p":"B"},{"w":"harm","pos":"v","zh":"傷害","r":1,"p":"B"},{"w":"pollution","pos":"n","zh":"污染","r":1,"p":"B"},{"w":"switch","pos":"v","zh":"轉換","r":1,"p":"B"},{"w":"attract","pos":"v","zh":"吸引","r":2,"p":"A"},{"w":"bill","pos":"n","zh":"帳單","r":2,"p":"A"},{"w":"competition","pos":"n","zh":"比賽；競爭","r":2,"p":"A"},{"w":"convenience","pos":"n","zh":"方便；便利","r":2,"p":"A"},{"w":"customer","pos":"n","zh":"顧客","r":2,"p":"A"},{"w":"order","pos":"v","zh":"訂購；點餐","r":2,"p":"A"},{"w":"routine","pos":"n","zh":"例行公事；日常作息","r":2,"p":"A"},{"w":"service","pos":"n","zh":"服務","r":2,"p":"A"},{"w":"rate","pos":"n","zh":"速率；比率","r":2,"p":"B"},{"w":"recycling","pos":"n","zh":"資源回收","r":2,"p":"B"},{"w":"remind","pos":"v","zh":"提醒","r":2,"p":"B"},{"w":"separate","pos":"v","zh":"分開；分類","r":2,"p":"B"},{"w":"trash","pos":"n","zh":"垃圾","r":2,"p":"B"},{"w":"waste","pos":"n","zh":"浪費；廢棄物","r":2,"p":"B"},{"w":"attention","pos":"n","zh":"注意；關注","r":3,"p":"A"},{"w":"cycle","pos":"n","zh":"循環；週期","r":3,"p":"A"},{"w":"exercise","pos":"n","zh":"運動","r":3,"p":"A"},{"w":"health","pos":"n","zh":"健康","r":3,"p":"A"},{"w":"healthy","pos":"adj","zh":"健康的","r":3,"p":"A"},{"w":"jog","pos":"v","zh":"慢跑","r":3,"p":"A"},{"w":"reduce","pos":"v","zh":"減少","r":3,"p":"A"},{"w":"schedule","pos":"n","zh":"時間表；行程","r":3,"p":"A"},{"w":"stress","pos":"n","zh":"壓力","r":3,"p":"A"},{"w":"citizen","pos":"n","zh":"公民；市民","r":3,"p":"B"},{"w":"community","pos":"n","zh":"社區；社群","r":3,"p":"B"},{"w":"responsible","pos":"adj","zh":"負責的","r":3,"p":"B"},{"w":"valuable","pos":"adj","zh":"珍貴的；有價值的","r":3,"p":"B"},{"w":"volunteer","pos":"n","zh":"志工","r":3,"p":"B"},{"w":"abroad","pos":"adv","zh":"在國外；到國外","r":4,"p":"A"},{"w":"bubble tea","pos":"n","zh":"珍珠奶茶","r":4,"p":"A"},{"w":"chewy","pos":"adj","zh":"有嚼勁的","r":4,"p":"A"},{"w":"introduce","pos":"v","zh":"介紹","r":4,"p":"A"},{"w":"pearl","pos":"n","zh":"珍珠","r":4,"p":"A"},{"w":"popular","pos":"adj","zh":"受歡迎的","r":4,"p":"A"},{"w":"greener","pos":"adj","zh":"更環保的","r":4,"p":"B"},{"w":"plastic","pos":"n","zh":"塑膠","r":4,"p":"B"},{"w":"pollute","pos":"v","zh":"污染","r":4,"p":"B"},{"w":"reusable","pos":"adj","zh":"可重複使用的","r":4,"p":"B"},{"w":"straw","pos":"n","zh":"吸管","r":4,"p":"B"},{"w":"waste","pos":"n","zh":"浪費；廢棄物","r":4,"p":"B"},{"w":"business","pos":"n","zh":"生意；商業","r":5,"p":"A"},{"w":"high speed rail","pos":"n","zh":"高速鐵路","r":5,"p":"A"},{"w":"modern","pos":"adj","zh":"現代的","r":5,"p":"A"},{"w":"regular","pos":"adj","zh":"定期的；規律的","r":5,"p":"A"},{"w":"commute","pos":"v","zh":"通勤","r":5,"p":"B"},{"w":"environment","pos":"n","zh":"環境","r":5,"p":"B"},{"w":"parking","pos":"n","zh":"停車","r":5,"p":"B"},{"w":"pollution","pos":"n","zh":"污染","r":5,"p":"B"},{"w":"public transport","pos":"n","zh":"大眾運輸","r":5,"p":"B"},{"w":"reduce","pos":"v","zh":"減少","r":5,"p":"B"},{"w":"stressful","pos":"adj","zh":"壓力大的","r":5,"p":"B"},{"w":"traffic","pos":"n","zh":"交通；車流","r":5,"p":"B"},{"w":"bill","pos":"n","zh":"帳單","r":6,"p":"A"},{"w":"cash","pos":"n","zh":"現金","r":6,"p":"A"},{"w":"coin","pos":"n","zh":"硬幣","r":6,"p":"A"},{"w":"mobile payment","pos":"n","zh":"行動支付","r":6,"p":"A"},{"w":"scan","pos":"v","zh":"掃描","r":6,"p":"A"},{"w":"wallet","pos":"n","zh":"錢包","r":6,"p":"A"},{"w":"arrive","pos":"v","zh":"抵達","r":6,"p":"B"},{"w":"click","pos":"v","zh":"點擊","r":6,"p":"B"},{"w":"deliver","pos":"v","zh":"遞送；配送","r":6,"p":"B"},{"w":"online","pos":"adj","zh":"線上的","r":6,"p":"B"},{"w":"product","pos":"n","zh":"產品","r":6,"p":"B"},{"w":"service","pos":"n","zh":"服務","r":6,"p":"B"},{"w":"breakfast","pos":"n","zh":"早餐","r":7,"p":"A"},{"w":"energy","pos":"n","zh":"能量；精力","r":7,"p":"A"},{"w":"focus","pos":"v","zh":"專注","r":7,"p":"A"},{"w":"meal","pos":"n","zh":"餐點","r":7,"p":"A"},{"w":"skip","pos":"v","zh":"跳過；略過","r":7,"p":"A"},{"w":"contain","pos":"v","zh":"包含","r":7,"p":"B"},{"w":"harm","pos":"v","zh":"傷害","r":7,"p":"B"},{"w":"healthy","pos":"adj","zh":"健康的","r":7,"p":"B"},{"w":"little by little","pos":"adv","zh":"逐漸地","r":7,"p":"B"},{"w":"sugar","pos":"n","zh":"糖","r":7,"p":"B"},{"w":"suggest","pos":"v","zh":"建議","r":7,"p":"B"},{"w":"weight","pos":"n","zh":"體重","r":7,"p":"B"},{"w":"health","pos":"n","zh":"健康","r":8,"p":"A"},{"w":"hot spring","pos":"n","zh":"溫泉","r":8,"p":"A"},{"w":"relax","pos":"v","zh":"放鬆","r":8,"p":"A"},{"w":"season","pos":"n","zh":"季節","r":8,"p":"A"},{"w":"visitor","pos":"n","zh":"訪客","r":8,"p":"A"},{"w":"worth","pos":"adj","zh":"值得的","r":8,"p":"A"},{"w":"guest","pos":"n","zh":"客人","r":8,"p":"B"},{"w":"homestay","pos":"n","zh":"民宿","r":8,"p":"B"},{"w":"host","pos":"n","zh":"主人","r":8,"p":"B"},{"w":"local","pos":"adj","zh":"當地的","r":8,"p":"B"},{"w":"owner","pos":"n","zh":"擁有者；老闆","r":8,"p":"B"},{"w":"view","pos":"n","zh":"景色","r":8,"p":"B"},{"w":"focus","pos":"v","zh":"專注","r":9,"p":"A"},{"w":"smartphone","pos":"n","zh":"智慧型手機","r":9,"p":"A"},{"w":"useful","pos":"adj","zh":"有用的","r":9,"p":"A"},{"w":"wise","pos":"adj","zh":"明智的","r":9,"p":"A"},{"w":"care","pos":"n","zh":"照顧","r":9,"p":"B"},{"w":"compare","pos":"v","zh":"比較","r":9,"p":"B"},{"w":"likes","pos":"n","zh":"按讚數","r":9,"p":"B"},{"w":"online","pos":"adj","zh":"線上的","r":9,"p":"B"},{"w":"post","pos":"v","zh":"發布；張貼","r":9,"p":"B"},{"w":"social media","pos":"n","zh":"社群媒體","r":9,"p":"B"},{"w":"teenager","pos":"n","zh":"青少年","r":9,"p":"B"},{"w":"true","pos":"adj","zh":"真實的","r":9,"p":"B"},{"w":"care","pos":"n","zh":"照顧","r":10,"p":"A"},{"w":"duty","pos":"n","zh":"責任；義務","r":10,"p":"A"},{"w":"feed","pos":"v","zh":"餵食","r":10,"p":"A"},{"w":"pet","pos":"n","zh":"寵物","r":10,"p":"A"},{"w":"responsibility","pos":"n","zh":"責任","r":10,"p":"A"},{"w":"sick","pos":"adj","zh":"生病的","r":10,"p":"A"},{"w":"adopt","pos":"v","zh":"領養；採用","r":10,"p":"B"},{"w":"homeless","pos":"adj","zh":"無家可歸的","r":10,"p":"B"},{"w":"save","pos":"v","zh":"拯救；節省","r":10,"p":"B"},{"w":"shelter","pos":"n","zh":"收容所；庇護所","r":10,"p":"B"},{"w":"stray","pos":"adj","zh":"流浪的","r":10,"p":"B"},{"w":"willing","pos":"adj","zh":"願意的","r":10,"p":"B"},{"w":"cloth","pos":"n","zh":"布料","r":11,"p":"A"},{"w":"harm","pos":"v","zh":"傷害","r":11,"p":"A"},{"w":"ocean","pos":"n","zh":"海洋","r":11,"p":"A"},{"w":"plastic","pos":"n","zh":"塑膠","r":11,"p":"A"},{"w":"reduce","pos":"v","zh":"減少","r":11,"p":"A"},{"w":"waste","pos":"n","zh":"浪費；廢棄物","r":11,"p":"A"},{"w":"environment","pos":"n","zh":"環境","r":11,"p":"B"},{"w":"package","pos":"n","zh":"包裝；包裹","r":11,"p":"B"},{"w":"product","pos":"n","zh":"產品","r":11,"p":"B"},{"w":"source","pos":"n","zh":"來源","r":11,"p":"B"},{"w":"valuable","pos":"adj","zh":"珍貴的；有價值的","r":11,"p":"B"},{"w":"wrap","pos":"v","zh":"包裝","r":11,"p":"B"},{"w":"club","pos":"n","zh":"社團；俱樂部","r":12,"p":"A"},{"w":"interest","pos":"n","zh":"興趣","r":12,"p":"A"},{"w":"leader","pos":"n","zh":"領導者","r":12,"p":"A"},{"w":"memory","pos":"n","zh":"回憶；記憶","r":12,"p":"A"},{"w":"skill","pos":"n","zh":"技能","r":12,"p":"A"},{"w":"cheer","pos":"v","zh":"歡呼；加油","r":12,"p":"B"},{"w":"playground","pos":"n","zh":"操場","r":12,"p":"B"},{"w":"proud","pos":"adj","zh":"驕傲的","r":12,"p":"B"},{"w":"relay","pos":"n","zh":"接力賽","r":12,"p":"B"},{"w":"sports","pos":"n","zh":"運動","r":12,"p":"B"},{"w":"support","pos":"v","zh":"支持","r":12,"p":"B"},{"w":"team","pos":"n","zh":"團隊","r":12,"p":"B"},{"w":"balance","pos":"n","zh":"平衡","r":13,"p":"A"},{"w":"customer","pos":"n","zh":"顧客","r":13,"p":"A"},{"w":"earn","pos":"v","zh":"賺取","r":13,"p":"A"},{"w":"part-time","pos":"adj","zh":"兼職的","r":13,"p":"A"},{"w":"polite","pos":"adj","zh":"有禮貌的","r":13,"p":"A"},{"w":"boss","pos":"n","zh":"老闆","r":13,"p":"B"},{"w":"coworker","pos":"n","zh":"同事","r":13,"p":"B"},{"w":"habit","pos":"n","zh":"習慣","r":13,"p":"B"},{"w":"manners","pos":"n","zh":"禮貌；禮儀","r":13,"p":"B"},{"w":"punctual","pos":"adj","zh":"守時的","r":13,"p":"B"},{"w":"respect","pos":"n","zh":"尊重","r":13,"p":"B"},{"w":"trust","pos":"n","zh":"信任","r":13,"p":"B"},{"w":"bowl","pos":"n","zh":"碗","r":14,"p":"A"},{"w":"braised","pos":"adj","zh":"滷的；燉的","r":14,"p":"A"},{"w":"delicious","pos":"adj","zh":"美味的","r":14,"p":"A"},{"w":"dish","pos":"n","zh":"菜餚","r":14,"p":"A"},{"w":"pork","pos":"n","zh":"豬肉","r":14,"p":"A"},{"w":"sauce","pos":"n","zh":"醬汁","r":14,"p":"A"},{"w":"stand","pos":"n","zh":"攤位","r":14,"p":"A"},{"w":"balloon","pos":"n","zh":"氣球","r":14,"p":"B"},{"w":"excitement","pos":"n","zh":"興奮","r":14,"p":"B"},{"w":"laughter","pos":"n","zh":"笑聲","r":14,"p":"B"},{"w":"prize","pos":"n","zh":"獎品","r":14,"p":"B"},{"w":"worth","pos":"adj","zh":"值得的","r":14,"p":"B"},{"w":"exercise","pos":"n","zh":"運動","r":15,"p":"A"},{"w":"gym","pos":"n","zh":"健身房","r":15,"p":"A"},{"w":"heart","pos":"n","zh":"心臟","r":15,"p":"A"},{"w":"jog","pos":"v","zh":"慢跑","r":15,"p":"A"},{"w":"sleep","pos":"v","zh":"睡覺","r":15,"p":"A"},{"w":"stress","pos":"n","zh":"壓力","r":15,"p":"A"},{"w":"brain","pos":"n","zh":"大腦","r":15,"p":"B"},{"w":"focus","pos":"v","zh":"專注","r":15,"p":"B"},{"w":"fresh","pos":"adj","zh":"新鮮的","r":15,"p":"B"},{"w":"repair","pos":"v","zh":"修復","r":15,"p":"B"},{"w":"rested","pos":"adj","zh":"休息充足的","r":15,"p":"B"},{"w":"store","pos":"n","zh":"商店","r":15,"p":"B"},{"w":"benefit","pos":"n","zh":"好處；益處","r":16,"p":"A"},{"w":"borrow","pos":"v","zh":"借入","r":16,"p":"A"},{"w":"calm","pos":"adj","zh":"平靜的","r":16,"p":"A"},{"w":"habit","pos":"n","zh":"習慣","r":16,"p":"A"},{"w":"library","pos":"n","zh":"圖書館","r":16,"p":"A"},{"w":"widely","pos":"adv","zh":"廣泛地","r":16,"p":"A"},{"w":"connection","pos":"n","zh":"連結；關聯","r":16,"p":"B"},{"w":"course","pos":"n","zh":"課程","r":16,"p":"B"},{"w":"manage","pos":"v","zh":"設法做到；管理","r":16,"p":"B"},{"w":"online","pos":"adj","zh":"線上的","r":16,"p":"B"},{"w":"pace","pos":"n","zh":"步調","r":16,"p":"B"},{"w":"self-control","pos":"n","zh":"自制力","r":16,"p":"B"},{"w":"absorb","pos":"v","zh":"吸收","r":17,"p":"A"},{"w":"amazed","pos":"adj","zh":"驚訝的","r":17,"p":"A"},{"w":"authority","pos":"n","zh":"當局；權威","r":17,"p":"A"},{"w":"bias","pos":"n","zh":"偏見","r":17,"p":"A"},{"w":"broaden","pos":"v","zh":"拓寬；擴大","r":17,"p":"A"},{"w":"convincing","pos":"adj","zh":"有說服力的","r":17,"p":"A"},{"w":"flexibility","pos":"n","zh":"彈性","r":17,"p":"A"},{"w":"generate","pos":"v","zh":"產生","r":17,"p":"A"},{"w":"generative","pos":"adj","zh":"生成式的","r":17,"p":"A"},{"w":"hallucination","pos":"n","zh":"幻覺","r":17,"p":"A"},{"w":"instruction","pos":"n","zh":"指令；指示","r":17,"p":"A"},{"w":"natural","pos":"adj","zh":"自然的","r":17,"p":"A"},{"w":"popular","pos":"adj","zh":"受歡迎的","r":17,"p":"A"},{"w":"prompt","pos":"n","zh":"提示詞","r":17,"p":"A"},{"w":"respond","pos":"v","zh":"回應","r":17,"p":"A"},{"w":"useful","pos":"adj","zh":"有用的","r":17,"p":"A"},{"w":"chip","pos":"n","zh":"晶片","r":17,"p":"B"},{"w":"console","pos":"n","zh":"遊戲主機","r":17,"p":"B"},{"w":"depend","pos":"v","zh":"依賴；取決於","r":17,"p":"B"},{"w":"improve","pos":"v","zh":"改善","r":17,"p":"B"},{"w":"indispensable","pos":"adj","zh":"不可或缺的","r":17,"p":"B"},{"w":"leader","pos":"n","zh":"領導者","r":17,"p":"B"},{"w":"powerful","pos":"adj","zh":"強大的","r":17,"p":"B"},{"w":"precision","pos":"n","zh":"精確度","r":17,"p":"B"},{"w":"produce","pos":"v","zh":"生成；生產","r":17,"p":"B"},{"w":"security","pos":"n","zh":"安全；保安","r":17,"p":"B"},{"w":"semiconductor","pos":"n","zh":"半導體","r":17,"p":"B"},{"w":"shortage","pos":"n","zh":"短缺","r":17,"p":"B"},{"w":"carbon","pos":"n","zh":"碳","r":18,"p":"A"},{"w":"clean","pos":"adj","zh":"乾淨的；潔淨的","r":18,"p":"A"},{"w":"climate","pos":"n","zh":"氣候","r":18,"p":"A"},{"w":"coal","pos":"n","zh":"煤炭","r":18,"p":"A"},{"w":"delegate","pos":"n","zh":"代表","r":18,"p":"A"},{"w":"drought","pos":"n","zh":"乾旱","r":18,"p":"A"},{"w":"energy","pos":"n","zh":"能量；精力","r":18,"p":"A"},{"w":"fuel","pos":"n","zh":"燃料","r":18,"p":"A"},{"w":"glacier","pos":"n","zh":"冰河","r":18,"p":"A"},{"w":"promise","pos":"v","zh":"承諾","r":18,"p":"A"},{"w":"renewable","pos":"adj","zh":"可再生的","r":18,"p":"A"},{"w":"summit","pos":"n","zh":"高峰會","r":18,"p":"A"},{"w":"sustainable","pos":"adj","zh":"永續的","r":18,"p":"A"},{"w":"teamwork","pos":"n","zh":"團隊合作","r":18,"p":"A"},{"w":"trivial","pos":"adj","zh":"瑣碎的","r":18,"p":"A"},{"w":"warming","pos":"n","zh":"暖化","r":18,"p":"A"},{"w":"atmosphere","pos":"n","zh":"大氣；氣氛","r":18,"p":"B"},{"w":"coast","pos":"n","zh":"海岸","r":18,"p":"B"},{"w":"depend","pos":"v","zh":"依賴；取決於","r":18,"p":"B"},{"w":"harness","pos":"v","zh":"利用","r":18,"p":"B"},{"w":"panel","pos":"n","zh":"面板","r":18,"p":"B"},{"w":"resolve","pos":"v","zh":"解決","r":18,"p":"B"},{"w":"solar","pos":"adj","zh":"太陽能的；太陽的","r":18,"p":"B"},{"w":"surge","pos":"n","zh":"激增","r":18,"p":"B"},{"w":"turbine","pos":"n","zh":"渦輪機","r":18,"p":"B"},{"w":"vulnerable","pos":"adj","zh":"脆弱的；易受傷害的","r":18,"p":"B"},{"w":"affect","pos":"v","zh":"影響；感動","r":19,"p":"A"},{"w":"carefully","pos":"adv","zh":"小心地；仔細地","r":19,"p":"A"},{"w":"compare","pos":"v","zh":"比較","r":19,"p":"A"},{"w":"economist","pos":"n","zh":"經濟學家","r":19,"p":"A"},{"w":"erode","pos":"v","zh":"侵蝕；削弱","r":19,"p":"A"},{"w":"goods","pos":"n","zh":"商品","r":19,"p":"A"},{"w":"inflation","pos":"n","zh":"通貨膨脹","r":19,"p":"A"},{"w":"interest rate","pos":"n","zh":"利率","r":19,"p":"A"},{"w":"pandemic","pos":"n","zh":"疫情大流行","r":19,"p":"A"},{"w":"pension","pos":"n","zh":"退休金","r":19,"p":"A"},{"w":"rebound","pos":"n","zh":"反彈；回升","r":19,"p":"A"},{"w":"surge","pos":"n","zh":"激增","r":19,"p":"A"},{"w":"vicious cycle","pos":"n","zh":"惡性循環","r":19,"p":"A"},{"w":"wage","pos":"n","zh":"薪資","r":19,"p":"A"},{"w":"worth","pos":"adj","zh":"值得的","r":19,"p":"A"},{"w":"blurred","pos":"adj","zh":"模糊的","r":19,"p":"B"},{"w":"burnout","pos":"n","zh":"倦怠；過勞","r":19,"p":"B"},{"w":"collaboration","pos":"n","zh":"合作","r":19,"p":"B"},{"w":"commute","pos":"v","zh":"通勤","r":19,"p":"B"},{"w":"employee","pos":"n","zh":"員工","r":19,"p":"B"},{"w":"flexibility","pos":"n","zh":"彈性","r":19,"p":"B"},{"w":"hybrid","pos":"adj","zh":"混合的","r":19,"p":"B"},{"w":"productivity","pos":"n","zh":"生產力","r":19,"p":"B"},{"w":"trust","pos":"n","zh":"信任","r":19,"p":"B"},{"w":"athlete","pos":"n","zh":"運動員","r":20,"p":"A"},{"w":"cheer","pos":"v","zh":"歡呼；加油","r":20,"p":"A"},{"w":"compete","pos":"v","zh":"競爭；比賽","r":20,"p":"A"},{"w":"discipline","pos":"n","zh":"紀律","r":20,"p":"A"},{"w":"graceful","pos":"adj","zh":"優雅的","r":20,"p":"A"},{"w":"medal","pos":"n","zh":"獎牌","r":20,"p":"A"},{"w":"olympic","pos":"adj","zh":"奧運的","r":20,"p":"A"},{"w":"revival","pos":"n","zh":"復甦；復興","r":20,"p":"A"},{"w":"rival","pos":"n","zh":"對手","r":20,"p":"A"},{"w":"sacrifice","pos":"n","zh":"犧牲","r":20,"p":"A"},{"w":"spectator","pos":"n","zh":"觀眾","r":20,"p":"A"},{"w":"staggering","pos":"adj","zh":"驚人的","r":20,"p":"A"},{"w":"badminton","pos":"n","zh":"羽毛球","r":20,"p":"B"},{"w":"courage","pos":"n","zh":"勇氣","r":20,"p":"B"},{"w":"determination","pos":"n","zh":"決心","r":20,"p":"B"},{"w":"flag","pos":"n","zh":"旗幟","r":20,"p":"B"},{"w":"grit","pos":"n","zh":"毅力","r":20,"p":"B"},{"w":"identity","pos":"n","zh":"身分；認同","r":20,"p":"B"},{"w":"instinct","pos":"n","zh":"本能","r":20,"p":"B"},{"w":"proud","pos":"adj","zh":"驕傲的","r":20,"p":"B"},{"w":"record","pos":"n","zh":"紀錄","r":20,"p":"B"},{"w":"strategy","pos":"n","zh":"策略","r":20,"p":"B"},{"w":"victory","pos":"n","zh":"勝利","r":20,"p":"B"},{"w":"weightlifting","pos":"n","zh":"舉重","r":20,"p":"B"},{"w":"brand","pos":"n","zh":"品牌","r":21,"p":"A"},{"w":"disposable","pos":"adj","zh":"用完即丟的","r":21,"p":"A"},{"w":"fashion","pos":"n","zh":"時尚","r":21,"p":"A"},{"w":"landfill","pos":"n","zh":"掩埋場","r":21,"p":"A"},{"w":"manufacturer","pos":"n","zh":"製造商","r":21,"p":"A"},{"w":"pollution","pos":"n","zh":"污染","r":21,"p":"A"},{"w":"protect","pos":"v","zh":"保護","r":21,"p":"A"},{"w":"reduce","pos":"v","zh":"減少","r":21,"p":"A"},{"w":"resale","pos":"n","zh":"轉售","r":21,"p":"A"},{"w":"second-hand","pos":"adj","zh":"二手的","r":21,"p":"A"},{"w":"sustainable","pos":"adj","zh":"永續的","r":21,"p":"A"},{"w":"waste","pos":"n","zh":"浪費；廢棄物","r":21,"p":"A"},{"w":"wasteful","pos":"adj","zh":"浪費的","r":21,"p":"A"},{"w":"craftsmanship","pos":"n","zh":"工藝；手藝","r":21,"p":"B"},{"w":"creative","pos":"adj","zh":"有創意的","r":21,"p":"B"},{"w":"culture","pos":"n","zh":"文化","r":21,"p":"B"},{"w":"designer","pos":"n","zh":"設計師","r":21,"p":"B"},{"w":"heritage","pos":"n","zh":"文化遺產","r":21,"p":"B"},{"w":"inspiration","pos":"n","zh":"靈感","r":21,"p":"B"},{"w":"originality","pos":"n","zh":"原創性","r":21,"p":"B"},{"w":"pattern","pos":"n","zh":"圖案；模式","r":21,"p":"B"},{"w":"reinterpret","pos":"v","zh":"重新詮釋","r":21,"p":"B"},{"w":"battery","pos":"n","zh":"電池","r":22,"p":"A"},{"w":"commuter","pos":"n","zh":"通勤者","r":22,"p":"A"},{"w":"electric","pos":"adj","zh":"電動的；電的","r":22,"p":"A"},{"w":"emission","pos":"n","zh":"排放","r":22,"p":"A"},{"w":"network","pos":"n","zh":"網路；網絡","r":22,"p":"A"},{"w":"performance","pos":"n","zh":"性能；表現","r":22,"p":"A"},{"w":"pollution","pos":"n","zh":"污染","r":22,"p":"A"},{"w":"scooter","pos":"n","zh":"機車；速克達","r":22,"p":"A"},{"w":"smoke","pos":"n","zh":"煙","r":22,"p":"A"},{"w":"subsidy","pos":"n","zh":"補助金","r":22,"p":"A"},{"w":"technology","pos":"n","zh":"科技","r":22,"p":"A"},{"w":"vehicle","pos":"n","zh":"車輛","r":22,"p":"A"},{"w":"automatically","pos":"adv","zh":"自動地","r":22,"p":"B"},{"w":"boundary","pos":"n","zh":"界線；範圍","r":22,"p":"B"},{"w":"connect","pos":"v","zh":"連接","r":22,"p":"B"},{"w":"control","pos":"n","zh":"控制；掌控","r":22,"p":"B"},{"w":"convenient","pos":"adj","zh":"方便的","r":22,"p":"B"},{"w":"device","pos":"n","zh":"裝置；設備","r":22,"p":"B"},{"w":"privacy","pos":"n","zh":"隱私","r":22,"p":"B"},{"w":"secure","pos":"adj","zh":"安全的","r":22,"p":"B"},{"w":"sensor","pos":"n","zh":"感測器","r":22,"p":"B"},{"w":"transmit","pos":"v","zh":"傳輸","r":22,"p":"B"},{"w":"disease","pos":"n","zh":"疾病","r":23,"p":"A"},{"w":"distance","pos":"n","zh":"距離","r":23,"p":"A"},{"w":"immunity","pos":"n","zh":"免疫力","r":23,"p":"A"},{"w":"infection","pos":"n","zh":"感染","r":23,"p":"A"},{"w":"mask","pos":"n","zh":"口罩","r":23,"p":"A"},{"w":"prevention","pos":"n","zh":"預防","r":23,"p":"A"},{"w":"protect","pos":"v","zh":"保護","r":23,"p":"A"},{"w":"remarkable","pos":"adj","zh":"顯著的；非凡的","r":23,"p":"A"},{"w":"restriction","pos":"n","zh":"限制","r":23,"p":"A"},{"w":"spread","pos":"v","zh":"傳播；蔓延","r":23,"p":"A"},{"w":"vaccine","pos":"n","zh":"疫苗","r":23,"p":"A"},{"w":"virus","pos":"n","zh":"病毒","r":23,"p":"A"},{"w":"border","pos":"n","zh":"邊界；國界","r":23,"p":"B"},{"w":"crowded","pos":"adj","zh":"擁擠的","r":23,"p":"B"},{"w":"demand","pos":"n","zh":"需求","r":23,"p":"B"},{"w":"landmark","pos":"n","zh":"地標","r":23,"p":"B"},{"w":"pandemic","pos":"n","zh":"疫情大流行","r":23,"p":"B"},{"w":"revival","pos":"n","zh":"復甦；復興","r":23,"p":"B"},{"w":"standstill","pos":"n","zh":"停頓；停擺","r":23,"p":"B"},{"w":"tourism","pos":"n","zh":"觀光業","r":23,"p":"B"},{"w":"travel","pos":"v","zh":"旅行","r":23,"p":"B"},{"w":"visitor","pos":"n","zh":"訪客","r":23,"p":"B"},{"w":"alternative","pos":"n","zh":"替代品；選擇","r":24,"p":"A"},{"w":"consumption","pos":"n","zh":"消耗；消費","r":24,"p":"A"},{"w":"danger","pos":"n","zh":"危險","r":24,"p":"A"},{"w":"food chain","pos":"n","zh":"食物鏈","r":24,"p":"A"},{"w":"fragment","pos":"n","zh":"碎片","r":24,"p":"A"},{"w":"microplastic","pos":"n","zh":"微塑膠","r":24,"p":"A"},{"w":"ocean","pos":"n","zh":"海洋","r":24,"p":"A"},{"w":"plastic","pos":"n","zh":"塑膠","r":24,"p":"A"},{"w":"reusable","pos":"adj","zh":"可重複使用的","r":24,"p":"A"},{"w":"single-use","pos":"adj","zh":"一次性的","r":24,"p":"A"},{"w":"straw","pos":"n","zh":"吸管","r":24,"p":"A"},{"w":"waste","pos":"n","zh":"浪費；廢棄物","r":24,"p":"A"},{"w":"awareness","pos":"n","zh":"意識；認知","r":24,"p":"B"},{"w":"circular economy","pos":"n","zh":"循環經濟","r":24,"p":"B"},{"w":"coast","pos":"n","zh":"海岸","r":24,"p":"B"},{"w":"current","pos":"adj","zh":"目前的","r":24,"p":"B"},{"w":"limit","pos":"v","zh":"限制","r":24,"p":"B"},{"w":"product","pos":"n","zh":"產品","r":24,"p":"B"},{"w":"recycle","pos":"v","zh":"回收","r":24,"p":"B"},{"w":"resource","pos":"n","zh":"資源","r":24,"p":"B"},{"w":"trash","pos":"n","zh":"垃圾","r":24,"p":"B"},{"w":"volunteer","pos":"n","zh":"志工","r":24,"p":"B"},{"w":"cash","pos":"n","zh":"現金","r":25,"p":"A"},{"w":"convenient","pos":"adj","zh":"方便的","r":25,"p":"A"},{"w":"customer","pos":"n","zh":"顧客","r":25,"p":"A"},{"w":"delivery","pos":"n","zh":"配送；遞送","r":25,"p":"A"},{"w":"e-commerce","pos":"n","zh":"電子商務","r":25,"p":"A"},{"w":"goods","pos":"n","zh":"商品","r":25,"p":"A"},{"w":"necessity","pos":"n","zh":"必需品","r":25,"p":"A"},{"w":"order","pos":"v","zh":"訂購；點餐","r":25,"p":"A"},{"w":"pandemic","pos":"n","zh":"疫情大流行","r":25,"p":"A"},{"w":"payment","pos":"n","zh":"付款","r":25,"p":"A"},{"w":"platform","pos":"n","zh":"平台","r":25,"p":"A"},{"w":"surge","pos":"n","zh":"激增","r":25,"p":"A"},{"w":"transaction","pos":"n","zh":"交易","r":25,"p":"A"},{"w":"warehouse","pos":"n","zh":"倉庫","r":25,"p":"A"},{"w":"cashless","pos":"adj","zh":"無現金的","r":25,"p":"B"},{"w":"coin","pos":"n","zh":"硬幣","r":25,"p":"B"},{"w":"contactless","pos":"adj","zh":"非接觸式的","r":25,"p":"B"},{"w":"fraud","pos":"n","zh":"詐騙","r":25,"p":"B"},{"w":"interface","pos":"n","zh":"介面","r":25,"p":"B"},{"w":"merchant","pos":"n","zh":"商人","r":25,"p":"B"},{"w":"mobile","pos":"adj","zh":"行動的","r":25,"p":"B"},{"w":"society","pos":"n","zh":"社會","r":25,"p":"B"},{"w":"connection","pos":"n","zh":"連結；關聯","r":26,"p":"A"},{"w":"episode","pos":"n","zh":"一集；一段","r":26,"p":"A"},{"w":"exclusive","pos":"adj","zh":"獨家的；專屬的","r":26,"p":"A"},{"w":"overwhelmed","pos":"adj","zh":"不堪負荷的","r":26,"p":"A"},{"w":"recommendation","pos":"n","zh":"推薦；建議","r":26,"p":"A"},{"w":"service","pos":"n","zh":"服務","r":26,"p":"A"},{"w":"share","pos":"v","zh":"分享","r":26,"p":"A"},{"w":"streaming","pos":"n","zh":"串流","r":26,"p":"A"},{"w":"subscriber","pos":"n","zh":"訂閱者","r":26,"p":"A"},{"w":"viewer","pos":"n","zh":"觀眾","r":26,"p":"A"},{"w":"addictive","pos":"adj","zh":"使人上癮的","r":26,"p":"B"},{"w":"attention","pos":"n","zh":"注意；關注","r":26,"p":"B"},{"w":"clip","pos":"n","zh":"短片；片段","r":26,"p":"B"},{"w":"dozen","pos":"n","zh":"一打；十二個","r":26,"p":"B"},{"w":"entertainment","pos":"n","zh":"娛樂","r":26,"p":"B"},{"w":"focus","pos":"v","zh":"專注","r":26,"p":"B"},{"w":"imitate","pos":"v","zh":"模仿","r":26,"p":"B"},{"w":"mindful","pos":"adj","zh":"留意的；正念的","r":26,"p":"B"},{"w":"promote","pos":"v","zh":"推廣；促進","r":26,"p":"B"},{"w":"warn","pos":"v","zh":"警告","r":26,"p":"B"},{"w":"campaign","pos":"n","zh":"活動；宣傳活動","r":27,"p":"A"},{"w":"community","pos":"n","zh":"社區；社群","r":27,"p":"A"},{"w":"concert","pos":"n","zh":"演唱會","r":27,"p":"A"},{"w":"culture","pos":"n","zh":"文化","r":27,"p":"A"},{"w":"fan","pos":"n","zh":"粉絲","r":27,"p":"A"},{"w":"fashion","pos":"n","zh":"時尚","r":27,"p":"A"},{"w":"following","pos":"n","zh":"追隨者；粉絲群","r":27,"p":"A"},{"w":"global","pos":"adj","zh":"全球的","r":27,"p":"A"},{"w":"idol","pos":"n","zh":"偶像","r":27,"p":"A"},{"w":"lyric","pos":"n","zh":"歌詞","r":27,"p":"A"},{"w":"phenomenon","pos":"n","zh":"現象","r":27,"p":"A"},{"w":"precision","pos":"n","zh":"精確度","r":27,"p":"A"},{"w":"spread","pos":"v","zh":"傳播；蔓延","r":27,"p":"A"},{"w":"trend","pos":"n","zh":"趨勢","r":27,"p":"A"},{"w":"bond","pos":"n","zh":"聯繫；情誼","r":27,"p":"B"},{"w":"devotion","pos":"n","zh":"奉獻；熱愛","r":27,"p":"B"},{"w":"loyal","pos":"adj","zh":"忠實的","r":27,"p":"B"},{"w":"nurture","pos":"v","zh":"培育","r":27,"p":"B"},{"w":"reputation","pos":"n","zh":"名聲；聲譽","r":27,"p":"B"},{"w":"support","pos":"v","zh":"支持","r":27,"p":"B"},{"w":"drought","pos":"n","zh":"乾旱","r":28,"p":"A"},{"w":"emission","pos":"n","zh":"排放","r":28,"p":"A"},{"w":"extreme","pos":"adj","zh":"極端的","r":28,"p":"A"},{"w":"glacier","pos":"n","zh":"冰河","r":28,"p":"A"},{"w":"irreversible","pos":"adj","zh":"不可逆的","r":28,"p":"A"},{"w":"store","pos":"n","zh":"商店","r":28,"p":"A"},{"w":"storm","pos":"n","zh":"暴風雨","r":28,"p":"A"},{"w":"sustainable","pos":"adj","zh":"永續的","r":28,"p":"A"},{"w":"temperature","pos":"n","zh":"溫度","r":28,"p":"A"},{"w":"vulnerable","pos":"adj","zh":"脆弱的；易受傷害的","r":28,"p":"A"},{"w":"warming","pos":"n","zh":"暖化","r":28,"p":"A"},{"w":"weather","pos":"n","zh":"天氣","r":28,"p":"A"},{"w":"wildfire","pos":"n","zh":"野火","r":28,"p":"A"},{"w":"disaster","pos":"n","zh":"災難","r":28,"p":"B"},{"w":"drainage","pos":"n","zh":"排水","r":28,"p":"B"},{"w":"evacuate","pos":"v","zh":"撤離","r":28,"p":"B"},{"w":"forecast","pos":"n","zh":"預報","r":28,"p":"B"},{"w":"powerful","pos":"adj","zh":"強大的","r":28,"p":"B"},{"w":"prepare","pos":"v","zh":"準備","r":28,"p":"B"},{"w":"typhoon","pos":"n","zh":"颱風","r":28,"p":"B"},{"w":"warning","pos":"n","zh":"警報；警告","r":28,"p":"B"},{"w":"activity","pos":"n","zh":"活動","r":29,"p":"A"},{"w":"astonishment","pos":"n","zh":"驚訝","r":29,"p":"A"},{"w":"atmosphere","pos":"n","zh":"大氣；氣氛","r":29,"p":"A"},{"w":"attention","pos":"n","zh":"注意；關注","r":29,"p":"A"},{"w":"audience","pos":"n","zh":"觀眾","r":29,"p":"A"},{"w":"broadcaster","pos":"n","zh":"轉播員；廣播業者","r":29,"p":"A"},{"w":"collective","pos":"adj","zh":"集體的","r":29,"p":"A"},{"w":"dramatic","pos":"adj","zh":"劇烈的；戲劇性的","r":29,"p":"A"},{"w":"economic","pos":"adj","zh":"經濟的","r":29,"p":"A"},{"w":"fan","pos":"n","zh":"粉絲","r":29,"p":"A"},{"w":"hospitality","pos":"n","zh":"款待","r":29,"p":"A"},{"w":"match","pos":"n","zh":"比賽","r":29,"p":"A"},{"w":"preparation","pos":"n","zh":"準備","r":29,"p":"A"},{"w":"resources","pos":"n","zh":"資源","r":29,"p":"A"},{"w":"supporter","pos":"n","zh":"支持者","r":29,"p":"A"},{"w":"underdog","pos":"n","zh":"弱者；不被看好者","r":29,"p":"A"},{"w":"whistle","pos":"n","zh":"哨子","r":29,"p":"A"},{"w":"world cup","pos":"n","zh":"世界盃","r":29,"p":"A"},{"w":"accessible","pos":"adj","zh":"可到達的；容易取得的","r":29,"p":"B"},{"w":"chronic","pos":"adj","zh":"慢性的","r":29,"p":"B"},{"w":"confidence","pos":"n","zh":"自信；信心","r":29,"p":"B"},{"w":"exercise","pos":"n","zh":"運動","r":29,"p":"B"},{"w":"facility","pos":"n","zh":"設施","r":29,"p":"B"},{"w":"health","pos":"n","zh":"健康","r":29,"p":"B"},{"w":"jog","pos":"v","zh":"慢跑","r":29,"p":"B"},{"w":"lifestyle","pos":"n","zh":"生活方式","r":29,"p":"B"},{"w":"motivated","pos":"adj","zh":"有動力的","r":29,"p":"B"},{"w":"regular","pos":"adj","zh":"定期的；規律的","r":29,"p":"B"},{"w":"routine","pos":"n","zh":"例行公事；日常作息","r":29,"p":"B"},{"w":"together","pos":"adv","zh":"一起","r":29,"p":"B"},{"w":"astronomer","pos":"n","zh":"天文學家","r":30,"p":"A"},{"w":"collision","pos":"n","zh":"碰撞","r":30,"p":"A"},{"w":"cooperate","pos":"v","zh":"合作","r":30,"p":"A"},{"w":"coordinated","pos":"adj","zh":"協調的；協同的","r":30,"p":"A"},{"w":"coverage","pos":"n","zh":"涵蓋範圍；報導","r":30,"p":"A"},{"w":"economics","pos":"n","zh":"經濟學","r":30,"p":"A"},{"w":"engineer","pos":"n","zh":"工程師","r":30,"p":"A"},{"w":"network","pos":"n","zh":"網路；網絡","r":30,"p":"A"},{"w":"orbit","pos":"n","zh":"軌道","r":30,"p":"A"},{"w":"regulator","pos":"n","zh":"監管機構","r":30,"p":"A"},{"w":"remote","pos":"adj","zh":"遠距的；偏遠的","r":30,"p":"A"},{"w":"reusability","pos":"n","zh":"可重複使用性","r":30,"p":"A"},{"w":"rocket","pos":"n","zh":"火箭","r":30,"p":"A"},{"w":"satellite","pos":"n","zh":"衛星","r":30,"p":"A"},{"w":"space","pos":"n","zh":"太空；空間","r":30,"p":"A"},{"w":"technology","pos":"n","zh":"科技","r":30,"p":"A"},{"w":"aerospace","pos":"n","zh":"航太","r":30,"p":"B"},{"w":"ambition","pos":"n","zh":"抱負；野心","r":30,"p":"B"},{"w":"contributor","pos":"n","zh":"貢獻者","r":30,"p":"B"},{"w":"disaster","pos":"n","zh":"災難","r":30,"p":"B"},{"w":"evacuation","pos":"n","zh":"撤離；疏散","r":30,"p":"B"},{"w":"expertise","pos":"n","zh":"專業知識","r":30,"p":"B"},{"w":"explore","pos":"v","zh":"探索","r":30,"p":"B"},{"w":"improve","pos":"v","zh":"改善","r":30,"p":"B"},{"w":"partnership","pos":"n","zh":"合作關係","r":30,"p":"B"},{"w":"program","pos":"n","zh":"程式；計畫","r":30,"p":"B"},{"w":"provide","pos":"v","zh":"提供","r":30,"p":"B"},{"w":"sophisticated","pos":"adj","zh":"精密的；複雜的","r":30,"p":"B"},{"w":"typhoon","pos":"n","zh":"颱風","r":30,"p":"B"},{"w":"business","pos":"n","zh":"生意；商業","r":31,"p":"A"},{"w":"bustling","pos":"adj","zh":"熱鬧的；繁忙的","r":31,"p":"A"},{"w":"domestic","pos":"adj","zh":"國內的","r":31,"p":"A"},{"w":"downturn","pos":"n","zh":"衰退；低迷","r":31,"p":"A"},{"w":"efficient","pos":"adj","zh":"有效率的","r":31,"p":"A"},{"w":"enterprise","pos":"n","zh":"企業","r":31,"p":"A"},{"w":"high speed rail","pos":"n","zh":"高速鐵路","r":31,"p":"A"},{"w":"holiday","pos":"n","zh":"假期","r":31,"p":"A"},{"w":"optimism","pos":"n","zh":"樂觀","r":31,"p":"A"},{"w":"pandemic","pos":"n","zh":"疫情大流行","r":31,"p":"A"},{"w":"rebound","pos":"n","zh":"反彈；回升","r":31,"p":"A"},{"w":"revive","pos":"v","zh":"使復甦","r":31,"p":"A"},{"w":"subsidy","pos":"n","zh":"補助金","r":31,"p":"A"},{"w":"tourism","pos":"n","zh":"觀光業","r":31,"p":"A"},{"w":"competitive","pos":"adj","zh":"有競爭力的","r":31,"p":"B"},{"w":"fuel","pos":"n","zh":"燃料","r":31,"p":"B"},{"w":"hire","pos":"v","zh":"雇用","r":31,"p":"B"},{"w":"household","pos":"n","zh":"家庭","r":31,"p":"B"},{"w":"inflation","pos":"n","zh":"通貨膨脹","r":31,"p":"B"},{"w":"patience","pos":"n","zh":"耐心","r":31,"p":"B"},{"w":"price","pos":"n","zh":"價格","r":31,"p":"B"},{"w":"recover","pos":"v","zh":"恢復；復原","r":31,"p":"B"},{"w":"retiree","pos":"n","zh":"退休人士","r":31,"p":"B"},{"w":"rise","pos":"v","zh":"上升；上漲","r":31,"p":"B"},{"w":"scarcity","pos":"n","zh":"短缺；稀少","r":31,"p":"B"},{"w":"shortage","pos":"n","zh":"短缺","r":31,"p":"B"},{"w":"support","pos":"v","zh":"支持","r":31,"p":"B"},{"w":"worry","pos":"v","zh":"擔心","r":31,"p":"B"},{"w":"anxiety","pos":"n","zh":"焦慮","r":32,"p":"A"},{"w":"camping","pos":"n","zh":"露營","r":32,"p":"A"},{"w":"comfortable","pos":"adj","zh":"舒適的","r":32,"p":"A"},{"w":"countryside","pos":"n","zh":"鄉間","r":32,"p":"A"},{"w":"escape","pos":"v","zh":"逃離；逃脫","r":32,"p":"A"},{"w":"healing","pos":"adj","zh":"療癒的","r":32,"p":"A"},{"w":"psychologist","pos":"n","zh":"心理學家","r":32,"p":"A"},{"w":"stillness","pos":"n","zh":"寂靜；靜止","r":32,"p":"A"},{"w":"stress","pos":"n","zh":"壓力","r":32,"p":"A"},{"w":"surge","pos":"n","zh":"激增","r":32,"p":"A"},{"w":"suspended","pos":"adj","zh":"暫停的","r":32,"p":"A"},{"w":"tent","pos":"n","zh":"帳篷","r":32,"p":"A"},{"w":"trend","pos":"n","zh":"趨勢","r":32,"p":"A"},{"w":"boutique","pos":"n","zh":"精品店","r":32,"p":"B"},{"w":"confident","pos":"adj","zh":"有自信的","r":32,"p":"B"},{"w":"copy","pos":"v","zh":"模仿；複製","r":32,"p":"B"},{"w":"elegance","pos":"n","zh":"優雅","r":32,"p":"B"},{"w":"fashion","pos":"n","zh":"時尚","r":32,"p":"B"},{"w":"imitation","pos":"n","zh":"模仿；仿製品","r":32,"p":"B"},{"w":"influence","pos":"n","zh":"影響","r":32,"p":"B"},{"w":"minimalist","pos":"adj","zh":"極簡的","r":32,"p":"B"},{"w":"mix","pos":"v","zh":"混搭；混合","r":32,"p":"B"},{"w":"outfit","pos":"n","zh":"服裝；穿搭","r":32,"p":"B"},{"w":"refinement","pos":"n","zh":"改良；精緻","r":32,"p":"B"},{"w":"style","pos":"n","zh":"風格","r":32,"p":"B"},{"w":"thrift","pos":"adj","zh":"節儉的；二手的","r":32,"p":"B"},{"w":"understated","pos":"adj","zh":"低調的","r":32,"p":"B"},{"w":"versatile","pos":"adj","zh":"多用途的","r":32,"p":"B"},{"w":"ban","pos":"v","zh":"禁止","r":33,"p":"A"},{"w":"chopsticks","pos":"n","zh":"筷子","r":33,"p":"A"},{"w":"coastline","pos":"n","zh":"海岸線","r":33,"p":"A"},{"w":"environment","pos":"n","zh":"環境","r":33,"p":"A"},{"w":"harm","pos":"v","zh":"傷害","r":33,"p":"A"},{"w":"landfill","pos":"n","zh":"掩埋場","r":33,"p":"A"},{"w":"microplastics","pos":"n","zh":"微塑膠","r":33,"p":"A"},{"w":"plastic","pos":"n","zh":"塑膠","r":33,"p":"A"},{"w":"reduce","pos":"v","zh":"減少","r":33,"p":"A"},{"w":"reusable","pos":"adj","zh":"可重複使用的","r":33,"p":"A"},{"w":"single-use","pos":"adj","zh":"一次性的","r":33,"p":"A"},{"w":"tableware","pos":"n","zh":"餐具","r":33,"p":"A"},{"w":"waste","pos":"n","zh":"浪費；廢棄物","r":33,"p":"A"},{"w":"carbon","pos":"n","zh":"碳","r":33,"p":"B"},{"w":"charging station","pos":"n","zh":"充電站","r":33,"p":"B"},{"w":"climate change","pos":"n","zh":"氣候變遷","r":33,"p":"B"},{"w":"commute","pos":"v","zh":"通勤","r":33,"p":"B"},{"w":"electric","pos":"adj","zh":"電動的；電的","r":33,"p":"B"},{"w":"emissions","pos":"n","zh":"排放量","r":33,"p":"B"},{"w":"exhaust","pos":"n","zh":"廢氣","r":33,"p":"B"},{"w":"network","pos":"n","zh":"網路；網絡","r":33,"p":"B"},{"w":"pollution","pos":"n","zh":"污染","r":33,"p":"B"},{"w":"public transport","pos":"n","zh":"大眾運輸","r":33,"p":"B"},{"w":"release","pos":"v","zh":"釋放；排放","r":33,"p":"B"},{"w":"accurate","pos":"adj","zh":"準確的","r":34,"p":"A"},{"w":"device","pos":"n","zh":"裝置；設備","r":34,"p":"A"},{"w":"exercise","pos":"n","zh":"運動","r":34,"p":"A"},{"w":"heart rate","pos":"n","zh":"心率","r":34,"p":"A"},{"w":"motivate","pos":"v","zh":"激勵","r":34,"p":"A"},{"w":"notice","pos":"v","zh":"注意到","r":34,"p":"A"},{"w":"recover","pos":"v","zh":"恢復；復原","r":34,"p":"A"},{"w":"remind","pos":"v","zh":"提醒","r":34,"p":"A"},{"w":"replace","pos":"v","zh":"取代；更換","r":34,"p":"A"},{"w":"routine","pos":"n","zh":"例行公事；日常作息","r":34,"p":"A"},{"w":"sensor","pos":"n","zh":"感測器","r":34,"p":"A"},{"w":"wearable","pos":"adj","zh":"可穿戴的","r":34,"p":"A"},{"w":"blood pressure","pos":"n","zh":"血壓","r":34,"p":"B"},{"w":"examination","pos":"n","zh":"檢查；考試","r":34,"p":"B"},{"w":"illness","pos":"n","zh":"疾病","r":34,"p":"B"},{"w":"internet","pos":"n","zh":"網際網路","r":34,"p":"B"},{"w":"patient","pos":"n","zh":"病人","r":34,"p":"B"},{"w":"pill","pos":"n","zh":"藥丸","r":34,"p":"B"},{"w":"prescription","pos":"n","zh":"處方","r":34,"p":"B"},{"w":"reduce","pos":"v","zh":"減少","r":34,"p":"B"},{"w":"serious","pos":"adj","zh":"嚴重的；認真的","r":34,"p":"B"},{"w":"specialist","pos":"n","zh":"專科醫師；專家","r":34,"p":"B"},{"w":"symptom","pos":"n","zh":"症狀","r":34,"p":"B"},{"w":"telemedicine","pos":"n","zh":"遠距醫療","r":34,"p":"B"},{"w":"accept","pos":"v","zh":"接受","r":35,"p":"A"},{"w":"acceptance","pos":"n","zh":"接受；認可","r":35,"p":"A"},{"w":"allow","pos":"v","zh":"允許","r":35,"p":"A"},{"w":"couple","pos":"n","zh":"情侶；夫妻","r":35,"p":"A"},{"w":"democratic","pos":"adj","zh":"民主的","r":35,"p":"A"},{"w":"law","pos":"n","zh":"法律","r":35,"p":"A"},{"w":"legal","pos":"adj","zh":"合法的","r":35,"p":"A"},{"w":"mutual respect","pos":"n","zh":"互相尊重","r":35,"p":"A"},{"w":"same-sex marriage","pos":"n","zh":"同性婚姻","r":35,"p":"A"},{"w":"society","pos":"n","zh":"社會","r":35,"p":"A"},{"w":"support","pos":"v","zh":"支持","r":35,"p":"A"},{"w":"aging","pos":"adj","zh":"高齡化的","r":35,"p":"B"},{"w":"born","pos":"adj","zh":"出生的","r":35,"p":"B"},{"w":"caregiver","pos":"n","zh":"照顧者","r":35,"p":"B"},{"w":"demographer","pos":"n","zh":"人口學家","r":35,"p":"B"},{"w":"dignity","pos":"n","zh":"尊嚴","r":35,"p":"B"},{"w":"elderly","pos":"adj","zh":"年長的","r":35,"p":"B"},{"w":"frail","pos":"adj","zh":"虛弱的","r":35,"p":"B"},{"w":"funding","pos":"n","zh":"資金","r":35,"p":"B"},{"w":"loneliness","pos":"n","zh":"孤獨","r":35,"p":"B"},{"w":"long-term care","pos":"n","zh":"長期照護","r":35,"p":"B"},{"w":"nurse","pos":"n","zh":"護理師","r":35,"p":"B"},{"w":"retiree","pos":"n","zh":"退休人士","r":35,"p":"B"},{"w":"workforce","pos":"n","zh":"勞動力","r":35,"p":"B"},{"w":"abroad","pos":"adv","zh":"在國外；到國外","r":36,"p":"A"},{"w":"attractive","pos":"adj","zh":"有吸引力的","r":36,"p":"A"},{"w":"branding","pos":"n","zh":"品牌塑造","r":36,"p":"A"},{"w":"bubble tea","pos":"n","zh":"珍珠奶茶","r":36,"p":"A"},{"w":"customer","pos":"n","zh":"顧客","r":36,"p":"A"},{"w":"export","pos":"v","zh":"出口；外銷","r":36,"p":"A"},{"w":"flavor","pos":"n","zh":"風味","r":36,"p":"A"},{"w":"invent","pos":"v","zh":"發明","r":36,"p":"A"},{"w":"moderation","pos":"n","zh":"適度；節制","r":36,"p":"A"},{"w":"popular","pos":"adj","zh":"受歡迎的","r":36,"p":"A"},{"w":"profit","pos":"n","zh":"利潤","r":36,"p":"A"},{"w":"promote","pos":"v","zh":"推廣；促進","r":36,"p":"A"},{"w":"queue","pos":"n","zh":"隊伍；排隊","r":36,"p":"A"},{"w":"signature","pos":"adj","zh":"招牌的；代表性的","r":36,"p":"A"},{"w":"tapioca","pos":"n","zh":"木薯；珍珠粉圓","r":36,"p":"A"},{"w":"advertise","pos":"v","zh":"宣傳；做廣告","r":36,"p":"B"},{"w":"attraction","pos":"n","zh":"吸引力；景點","r":36,"p":"B"},{"w":"bargain","pos":"n","zh":"特價品；便宜貨","r":36,"p":"B"},{"w":"benefit","pos":"n","zh":"好處；益處","r":36,"p":"B"},{"w":"social media","pos":"n","zh":"社群媒體","r":36,"p":"B"},{"w":"souvenir","pos":"n","zh":"紀念品","r":36,"p":"B"},{"w":"tourism","pos":"n","zh":"觀光業","r":36,"p":"B"},{"w":"tourist","pos":"n","zh":"觀光客","r":36,"p":"B"},{"w":"vendor","pos":"n","zh":"攤販","r":36,"p":"B"},{"w":"artificial","pos":"adj","zh":"人工的","r":37,"p":"A"},{"w":"artistic","pos":"adj","zh":"藝術的","r":37,"p":"A"},{"w":"assistant","pos":"n","zh":"助理","r":37,"p":"A"},{"w":"colorful","pos":"adj","zh":"色彩繽紛的","r":37,"p":"A"},{"w":"convincing","pos":"adj","zh":"有說服力的","r":37,"p":"A"},{"w":"cooperate","pos":"v","zh":"合作","r":37,"p":"A"},{"w":"creative","pos":"adj","zh":"有創意的","r":37,"p":"A"},{"w":"creativity","pos":"n","zh":"創造力","r":37,"p":"A"},{"w":"enormous","pos":"adj","zh":"巨大的","r":37,"p":"A"},{"w":"genuine","pos":"adj","zh":"真正的","r":37,"p":"A"},{"w":"gradually","pos":"adv","zh":"逐漸地","r":37,"p":"A"},{"w":"imitate","pos":"v","zh":"模仿","r":37,"p":"A"},{"w":"intelligence","pos":"n","zh":"智慧","r":37,"p":"A"},{"w":"produce","pos":"v","zh":"生成；生產","r":37,"p":"A"},{"w":"reason","pos":"n","zh":"理由；原因","r":37,"p":"A"},{"w":"wisely","pos":"adv","zh":"明智地","r":37,"p":"A"},{"w":"criminal","pos":"n","zh":"罪犯","r":37,"p":"B"},{"w":"defence","pos":"n","zh":"防禦","r":37,"p":"B"},{"w":"fraud","pos":"n","zh":"詐騙","r":37,"p":"B"},{"w":"information","pos":"n","zh":"資訊","r":37,"p":"B"},{"w":"password","pos":"n","zh":"密碼","r":37,"p":"B"},{"w":"personal","pos":"adj","zh":"個人的","r":37,"p":"B"},{"w":"phishing","pos":"n","zh":"網路釣魚","r":37,"p":"B"},{"w":"private","pos":"adj","zh":"私人的","r":37,"p":"B"},{"w":"protection","pos":"n","zh":"保護","r":37,"p":"B"},{"w":"reputation","pos":"n","zh":"名聲；聲譽","r":37,"p":"B"},{"w":"scam","pos":"n","zh":"詐騙","r":37,"p":"B"},{"w":"stranger","pos":"n","zh":"陌生人","r":37,"p":"B"},{"w":"strong","pos":"adj","zh":"強的；堅固的","r":37,"p":"B"},{"w":"suspicious","pos":"adj","zh":"可疑的","r":37,"p":"B"},{"w":"verification","pos":"n","zh":"驗證","r":37,"p":"B"},{"w":"beekeeper","pos":"n","zh":"養蜂人","r":38,"p":"A"},{"w":"chemical","pos":"n","zh":"化學物質","r":38,"p":"A"},{"w":"crop","pos":"n","zh":"農作物","r":38,"p":"A"},{"w":"disappear","pos":"v","zh":"消失","r":38,"p":"A"},{"w":"ecosystem","pos":"n","zh":"生態系","r":38,"p":"A"},{"w":"insect","pos":"n","zh":"昆蟲","r":38,"p":"A"},{"w":"nature","pos":"n","zh":"大自然","r":38,"p":"A"},{"w":"pollen","pos":"n","zh":"花粉","r":38,"p":"A"},{"w":"pollinator","pos":"n","zh":"授粉者","r":38,"p":"A"},{"w":"pollution","pos":"n","zh":"污染","r":38,"p":"A"},{"w":"produce","pos":"v","zh":"生成；生產","r":38,"p":"A"},{"w":"protect","pos":"v","zh":"保護","r":38,"p":"A"},{"w":"recover","pos":"v","zh":"恢復；復原","r":38,"p":"A"},{"w":"rooftop","pos":"n","zh":"屋頂","r":38,"p":"A"},{"w":"seed","pos":"n","zh":"種子","r":38,"p":"A"},{"w":"species","pos":"n","zh":"物種","r":38,"p":"A"},{"w":"tireless","pos":"adj","zh":"不知疲倦的","r":38,"p":"A"},{"w":"vegetable","pos":"n","zh":"蔬菜","r":38,"p":"A"},{"w":"absorb","pos":"v","zh":"吸收","r":38,"p":"B"},{"w":"companion","pos":"n","zh":"同伴","r":38,"p":"B"},{"w":"concrete","pos":"n","zh":"混凝土","r":38,"p":"B"},{"w":"electricity","pos":"n","zh":"電力","r":38,"p":"B"},{"w":"fragrant","pos":"adj","zh":"芬芳的","r":38,"p":"B"},{"w":"herb","pos":"n","zh":"草本植物","r":38,"p":"B"},{"w":"neighbor","pos":"n","zh":"鄰居","r":38,"p":"B"},{"w":"provide","pos":"v","zh":"提供","r":38,"p":"B"},{"w":"resident","pos":"n","zh":"居民","r":38,"p":"B"},{"w":"rhythm","pos":"n","zh":"節奏；韻律","r":38,"p":"B"},{"w":"skyscraper","pos":"n","zh":"摩天大樓","r":38,"p":"B"},{"w":"thrive","pos":"v","zh":"蓬勃發展","r":38,"p":"B"},{"w":"urban","pos":"adj","zh":"都市的","r":38,"p":"B"},{"w":"celebrity","pos":"n","zh":"名人","r":39,"p":"A"},{"w":"comfortable","pos":"adj","zh":"舒適的","r":39,"p":"A"},{"w":"exercise","pos":"n","zh":"運動","r":39,"p":"A"},{"w":"fabric","pos":"n","zh":"布料","r":39,"p":"A"},{"w":"fashion","pos":"n","zh":"時尚","r":39,"p":"A"},{"w":"garment","pos":"n","zh":"衣服","r":39,"p":"A"},{"w":"generation","pos":"n","zh":"世代","r":39,"p":"A"},{"w":"healthy","pos":"adj","zh":"健康的","r":39,"p":"A"},{"w":"industry","pos":"n","zh":"產業","r":39,"p":"A"},{"w":"influencer","pos":"n","zh":"網紅","r":39,"p":"A"},{"w":"occasion","pos":"n","zh":"場合","r":39,"p":"A"},{"w":"outfit","pos":"n","zh":"服裝；穿搭","r":39,"p":"A"},{"w":"recycled","pos":"adj","zh":"回收再製的","r":39,"p":"A"},{"w":"style","pos":"n","zh":"風格","r":39,"p":"A"},{"w":"stylish","pos":"adj","zh":"時尚的","r":39,"p":"A"},{"w":"trend","pos":"n","zh":"趨勢","r":39,"p":"A"},{"w":"wellness","pos":"n","zh":"健康幸福","r":39,"p":"A"},{"w":"cattle","pos":"n","zh":"牛；牲畜","r":39,"p":"B"},{"w":"choice","pos":"n","zh":"選擇","r":39,"p":"B"},{"w":"cholesterol","pos":"n","zh":"膽固醇","r":39,"p":"B"},{"w":"dramatically","pos":"adv","zh":"劇烈地；大幅地","r":39,"p":"B"},{"w":"luxury","pos":"n","zh":"奢侈品；奢華","r":39,"p":"B"},{"w":"planet","pos":"n","zh":"地球；星球","r":39,"p":"B"},{"w":"processed","pos":"adj","zh":"加工的","r":39,"p":"B"},{"w":"product","pos":"n","zh":"產品","r":39,"p":"B"},{"w":"protect","pos":"v","zh":"保護","r":39,"p":"B"},{"w":"recipe","pos":"n","zh":"食譜","r":39,"p":"B"},{"w":"release","pos":"v","zh":"釋放；排放","r":39,"p":"B"},{"w":"surprisingly","pos":"adv","zh":"令人驚訝地","r":39,"p":"B"},{"w":"taste","pos":"n","zh":"味道；口味","r":39,"p":"B"},{"w":"texture","pos":"n","zh":"口感；質地","r":39,"p":"B"},{"w":"ultimately","pos":"adv","zh":"最終","r":39,"p":"B"},{"w":"atmosphere","pos":"n","zh":"大氣；氣氛","r":40,"p":"A"},{"w":"attract","pos":"v","zh":"吸引","r":40,"p":"A"},{"w":"compete","pos":"v","zh":"競爭；比賽","r":40,"p":"A"},{"w":"convenient","pos":"adj","zh":"方便的","r":40,"p":"A"},{"w":"destination","pos":"n","zh":"目的地","r":40,"p":"A"},{"w":"genuine","pos":"adj","zh":"真正的","r":40,"p":"A"},{"w":"glimpse","pos":"n","zh":"一瞥","r":40,"p":"A"},{"w":"government","pos":"n","zh":"政府","r":40,"p":"A"},{"w":"guesthouse","pos":"n","zh":"民宿；旅舍","r":40,"p":"A"},{"w":"income","pos":"n","zh":"收入","r":40,"p":"A"},{"w":"island","pos":"n","zh":"島嶼","r":40,"p":"A"},{"w":"local","pos":"adj","zh":"當地的","r":40,"p":"A"},{"w":"revive","pos":"v","zh":"使復甦","r":40,"p":"A"},{"w":"scenery","pos":"n","zh":"風景","r":40,"p":"A"},{"w":"tourism","pos":"n","zh":"觀光業","r":40,"p":"A"},{"w":"tourist","pos":"n","zh":"觀光客","r":40,"p":"A"},{"w":"tradition","pos":"n","zh":"傳統","r":40,"p":"A"},{"w":"transport","pos":"n","zh":"運輸","r":40,"p":"A"},{"w":"visitor","pos":"n","zh":"訪客","r":40,"p":"A"},{"w":"welcome","pos":"v","zh":"歡迎","r":40,"p":"A"},{"w":"ambassador","pos":"n","zh":"大使","r":40,"p":"B"},{"w":"barrier","pos":"n","zh":"障礙","r":40,"p":"B"},{"w":"belief","pos":"n","zh":"信念；信仰","r":40,"p":"B"},{"w":"culture","pos":"n","zh":"文化","r":40,"p":"B"},{"w":"delighted","pos":"adj","zh":"高興的","r":40,"p":"B"},{"w":"festival","pos":"n","zh":"節慶","r":40,"p":"B"},{"w":"gesture","pos":"n","zh":"手勢","r":40,"p":"B"},{"w":"impression","pos":"n","zh":"印象","r":40,"p":"B"},{"w":"patience","pos":"n","zh":"耐心","r":40,"p":"B"},{"w":"ritual","pos":"n","zh":"儀式","r":40,"p":"B"},{"w":"statue","pos":"n","zh":"雕像","r":40,"p":"B"},{"w":"temple","pos":"n","zh":"寺廟","r":40,"p":"B"},{"w":"unforgettable","pos":"adj","zh":"難忘的","r":40,"p":"B"}];
+const ROUNDS = [{"s":0,"e":12,"r":1,"t":"台灣夜市／電動機車","parts":[{"k":"A","s":0,"e":8,"t":"台灣夜市"},{"k":"B","s":8,"e":12,"t":"電動機車"}]},{"s":12,"e":26,"r":2,"t":"便利商店／資源回收","parts":[{"k":"A","s":12,"e":20,"t":"便利商店"},{"k":"B","s":20,"e":26,"t":"資源回收"}]},{"s":26,"e":40,"r":3,"t":"運動與健康／志工服務","parts":[{"k":"A","s":26,"e":35,"t":"運動與健康"},{"k":"B","s":35,"e":40,"t":"志工服務"}]},{"s":40,"e":52,"r":4,"t":"珍珠奶茶的流行／環保吸管與減塑","parts":[{"k":"A","s":40,"e":46,"t":"珍珠奶茶的流行"},{"k":"B","s":46,"e":52,"t":"環保吸管與減塑"}]},{"s":52,"e":64,"r":5,"t":"台灣高鐵／大眾運輸通勤","parts":[{"k":"A","s":52,"e":56,"t":"台灣高鐵"},{"k":"B","s":56,"e":64,"t":"大眾運輸通勤"}]},{"s":64,"e":76,"r":6,"t":"行動支付／網路購物宅配","parts":[{"k":"A","s":64,"e":70,"t":"行動支付"},{"k":"B","s":70,"e":76,"t":"網路購物宅配"}]},{"s":76,"e":88,"r":7,"t":"健康的早餐／含糖飲料的問題","parts":[{"k":"A","s":76,"e":81,"t":"健康的早餐"},{"k":"B","s":81,"e":88,"t":"含糖飲料的問題"}]},{"s":88,"e":100,"r":8,"t":"泡溫泉與國內旅遊／民宿住宿體驗","parts":[{"k":"A","s":88,"e":94,"t":"泡溫泉與國內旅遊"},{"k":"B","s":94,"e":100,"t":"民宿住宿體驗"}]},{"s":100,"e":112,"r":9,"t":"智慧型手機與學生／社群媒體的影響","parts":[{"k":"A","s":100,"e":104,"t":"智慧型手機與學生"},{"k":"B","s":104,"e":112,"t":"社群媒體的影響"}]},{"s":112,"e":124,"r":10,"t":"養寵物的責任／認養流浪動物","parts":[{"k":"A","s":112,"e":118,"t":"養寵物的責任"},{"k":"B","s":118,"e":124,"t":"認養流浪動物"}]},{"s":124,"e":136,"r":11,"t":"自備購物袋減塑／商品過度包裝的問題","parts":[{"k":"A","s":124,"e":130,"t":"自備購物袋減塑"},{"k":"B","s":130,"e":136,"t":"商品過度包裝的問題"}]},{"s":136,"e":148,"r":12,"t":"學校社團活動／校慶運動會","parts":[{"k":"A","s":136,"e":141,"t":"學校社團活動"},{"k":"B","s":141,"e":148,"t":"校慶運動會"}]},{"s":148,"e":160,"r":13,"t":"高中職生打工／職場守時與禮貌","parts":[{"k":"A","s":148,"e":153,"t":"高中職生打工"},{"k":"B","s":153,"e":160,"t":"職場守時與禮貌"}]},{"s":160,"e":172,"r":14,"t":"滷肉飯與台灣小吃／夜市遊戲攤位","parts":[{"k":"A","s":160,"e":167,"t":"滷肉飯與台灣小吃"},{"k":"B","s":167,"e":172,"t":"夜市遊戲攤位"}]},{"s":172,"e":184,"r":15,"t":"慢跑的好處／充足睡眠的重要","parts":[{"k":"A","s":172,"e":178,"t":"慢跑的好處"},{"k":"B","s":178,"e":184,"t":"充足睡眠的重要"}]},{"s":184,"e":196,"r":16,"t":"圖書館與閱讀習慣／線上課程學習","parts":[{"k":"A","s":184,"e":190,"t":"圖書館與閱讀習慣"},{"k":"B","s":190,"e":196,"t":"線上課程學習"}]},{"s":196,"e":224,"r":17,"t":"生成式 AI 與 ChatGPT 的崛起／台灣半導體與晶片熱潮","parts":[{"k":"A","s":196,"e":212,"t":"生成式 AI 與 ChatGPT 的崛起"},{"k":"B","s":212,"e":224,"t":"台灣半導體與晶片熱潮"}]},{"s":224,"e":250,"r":18,"t":"全球淨零碳排與聯合國氣候峰會／台灣 2050 淨零與再生能源","parts":[{"k":"A","s":224,"e":240,"t":"全球淨零碳排與聯合國氣候峰會"},{"k":"B","s":240,"e":250,"t":"台灣 2050 淨零與再生能源"}]},{"s":250,"e":274,"r":19,"t":"疫情後的通貨膨脹與物價上漲／遠距與混合辦公的新常態","parts":[{"k":"A","s":250,"e":265,"t":"疫情後的通貨膨脹與物價上漲"},{"k":"B","s":265,"e":274,"t":"遠距與混合辦公的新常態"}]},{"s":274,"e":298,"r":20,"t":"2024 巴黎奧運／台灣選手在國際賽事奪牌","parts":[{"k":"A","s":274,"e":286,"t":"2024 巴黎奧運"},{"k":"B","s":286,"e":298,"t":"台灣選手在國際賽事奪牌"}]},{"s":298,"e":320,"r":21,"t":"永續時尚與二手衣循環／台灣文創與本土設計品牌","parts":[{"k":"A","s":298,"e":311,"t":"永續時尚與二手衣循環"},{"k":"B","s":311,"e":320,"t":"台灣文創與本土設計品牌"}]},{"s":320,"e":342,"r":22,"t":"電動車熱潮：Tesla 與台灣電動機車／5G 與物聯網智慧生活","parts":[{"k":"A","s":320,"e":332,"t":"電動車熱潮：Tesla 與台灣電動機車"},{"k":"B","s":332,"e":342,"t":"5G 與物聯網智慧生活"}]},{"s":342,"e":364,"r":23,"t":"COVID-19 疫情與口罩、疫苗／疫情後的觀光與旅遊復甦","parts":[{"k":"A","s":342,"e":354,"t":"COVID-19 疫情與口罩、疫苗"},{"k":"B","s":354,"e":364,"t":"疫情後的觀光與旅遊復甦"}]},{"s":364,"e":386,"r":24,"t":"海洋塑膠垃圾與減塑吸管政策／台灣淨灘行動與循環經濟","parts":[{"k":"A","s":364,"e":376,"t":"海洋塑膠垃圾與減塑吸管政策"},{"k":"B","s":376,"e":386,"t":"台灣淨灘行動與循環經濟"}]},{"s":386,"e":408,"r":25,"t":"疫情帶動電商與網路購物成長／行動支付與無現金社會","parts":[{"k":"A","s":386,"e":400,"t":"疫情帶動電商與網路購物成長"},{"k":"B","s":400,"e":408,"t":"行動支付與無現金社會"}]},{"s":408,"e":428,"r":26,"t":"串流影音追劇熱潮／短影音的崛起","parts":[{"k":"A","s":408,"e":418,"t":"串流影音追劇熱潮"},{"k":"B","s":418,"e":428,"t":"短影音的崛起"}]},{"s":428,"e":448,"r":27,"t":"K-pop 韓流全球熱潮／台灣偶像團體與粉絲文化","parts":[{"k":"A","s":428,"e":442,"t":"K-pop 韓流全球熱潮"},{"k":"B","s":442,"e":448,"t":"台灣偶像團體與粉絲文化"}]},{"s":448,"e":469,"r":28,"t":"極端氣候、熱浪與野火／台灣颱風與防災","parts":[{"k":"A","s":448,"e":461,"t":"極端氣候、熱浪與野火"},{"k":"B","s":461,"e":469,"t":"台灣颱風與防災"}]},{"s":469,"e":499,"r":29,"t":"2022 卡達世界盃足球賽／台灣運動風氣與全民運動","parts":[{"k":"A","s":469,"e":487,"t":"2022 卡達世界盃足球賽"},{"k":"B","s":487,"e":499,"t":"台灣運動風氣與全民運動"}]},{"s":499,"e":528,"r":30,"t":"太空探索與星鏈衛星／台灣太空計畫與福爾摩沙衛星","parts":[{"k":"A","s":499,"e":515,"t":"太空探索與星鏈衛星"},{"k":"B","s":515,"e":528,"t":"台灣太空計畫與福爾摩沙衛星"}]},{"s":528,"e":556,"r":31,"t":"高鐵、國旅補助與觀光復甦／缺工與缺蛋等民生物價議題","parts":[{"k":"A","s":528,"e":542,"t":"高鐵、國旅補助與觀光復甦"},{"k":"B","s":542,"e":556,"t":"缺工與缺蛋等民生物價議題"}]},{"s":556,"e":584,"r":32,"t":"露營與戶外活動風潮／韓系與日系穿搭潮流","parts":[{"k":"A","s":556,"e":569,"t":"露營與戶外活動風潮"},{"k":"B","s":569,"e":584,"t":"韓系與日系穿搭潮流"}]},{"s":584,"e":608,"r":33,"t":"禁用一次性塑膠餐具與吸管／電動公車與綠色大眾運輸","parts":[{"k":"A","s":584,"e":597,"t":"禁用一次性塑膠餐具與吸管"},{"k":"B","s":597,"e":608,"t":"電動公車與綠色大眾運輸"}]},{"s":608,"e":632,"r":34,"t":"智慧手錶與穿戴裝置健康監測／遠距醫療與健康管理 App","parts":[{"k":"A","s":608,"e":620,"t":"智慧手錶與穿戴裝置健康監測"},{"k":"B","s":620,"e":632,"t":"遠距醫療與健康管理 App"}]},{"s":632,"e":656,"r":35,"t":"台灣同婚合法與多元共融／高齡社會與長期照顧","parts":[{"k":"A","s":632,"e":643,"t":"台灣同婚合法與多元共融"},{"k":"B","s":643,"e":656,"t":"高齡社會與長期照顧"}]},{"s":656,"e":680,"r":36,"t":"手搖飲、珍珠奶茶外銷全球／台灣夜市與觀光行銷","parts":[{"k":"A","s":656,"e":671,"t":"手搖飲、珍珠奶茶外銷全球"},{"k":"B","s":671,"e":680,"t":"台灣夜市與觀光行銷"}]},{"s":680,"e":711,"r":37,"t":"AI 繪圖與 AI 助理走入生活／網路資安與個資保護","parts":[{"k":"A","s":680,"e":696,"t":"AI 繪圖與 AI 助理走入生活"},{"k":"B","s":696,"e":711,"t":"網路資安與個資保護"}]},{"s":711,"e":742,"r":38,"t":"蜜蜂消失與生物多樣性危機／都市綠化與屋頂農園","parts":[{"k":"A","s":711,"e":729,"t":"蜜蜂消失與生物多樣性危機"},{"k":"B","s":729,"e":742,"t":"都市綠化與屋頂農園"}]},{"s":742,"e":774,"r":39,"t":"運動休閒風與健身熱潮／蔬食與植物肉風潮","parts":[{"k":"A","s":742,"e":759,"t":"運動休閒風與健身熱潮"},{"k":"B","s":759,"e":774,"t":"蔬食與植物肉風潮"}]},{"s":774,"e":807,"r":40,"t":"台灣觀光宣傳與國際能見度／向外國朋友介紹台灣文化","parts":[{"k":"A","s":774,"e":794,"t":"台灣觀光宣傳與國際能見度"},{"k":"B","s":794,"e":807,"t":"向外國朋友介紹台灣文化"}]}];
+document.getElementById('totalWords').textContent = WORDS.length;
+document.getElementById('totalRounds').textContent = ROUNDS.length;
+
+/* ---------- storage ---------- */
+const LS = {
+  know: JSON.parse(localStorage.getItem('tcv_know')||'{}'),
+  star: JSON.parse(localStorage.getItem('tcv_star')||'{}'),
+};
+function save(){localStorage.setItem('tcv_know',JSON.stringify(LS.know));localStorage.setItem('tcv_star',JSON.stringify(LS.star));}
+function idxKey(i){return i;}
+
+/* ---------- speech ---------- */
+let VOICE=null;
+function pickVoice(){
+  const vs=speechSynthesis.getVoices();
+  VOICE = vs.find(v=>/en-US/i.test(v.lang)&&/female|Samantha|Google US/i.test(v.name))
+       || vs.find(v=>/en-US/i.test(v.lang))
+       || vs.find(v=>/^en/i.test(v.lang)) || null;
+}
+if('speechSynthesis' in window){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
+/* iOS/Safari 需要在使用者手勢中先「解鎖」語音，之後 setTimeout 內的朗讀才會有聲音 */
+let __voiceUnlocked=false;
+function unlockVoice(){
+  if(__voiceUnlocked || !('speechSynthesis' in window)) return;
+  __voiceUnlocked=true;
+  try{ if(!VOICE)pickVoice(); const u=new SpeechSynthesisUtterance(' '); u.volume=0; speechSynthesis.speak(u); }catch(e){}
+}
+document.addEventListener('pointerdown', unlockVoice, true);
+document.addEventListener('touchstart', unlockVoice, {capture:true, passive:true});
+document.addEventListener('click', unlockVoice, true);
+function speak(text){
+  if(!('speechSynthesis' in window))return;
+  try{ if(speechSynthesis.paused)speechSynthesis.resume(); }catch(e){}
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='en-US'; u.rate=.9; if(VOICE)u.voice=VOICE;
+  speechSynthesis.speak(u);
+}
+
+/* ---------- helpers ---------- */
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),1400);}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+let curPart='all';
+function roundWordsAll(ri){const r=ROUNDS[ri];const out=[];for(let i=r.s;i<r.e;i++)out.push(i);return out;}
+function roundWords(ri){const r=ROUNDS[ri];let s=r.s,e=r.e;if(curPart!=='all'&&r.parts){const p=r.parts.find(x=>x.k===curPart);if(p){s=p.s;e=p.e;}}const out=[];for(let i=s;i<e;i++)out.push(i);return out;}
+function knowCount(ri){return roundWordsAll(ri).filter(i=>LS.know[i]).length;}
+function starCount(ri){return roundWordsAll(ri).filter(i=>LS.star[i]).length;}
+const POSZH={n:'名詞',v:'動詞',adj:'形容詞',adv:'副詞',prep:'介系詞',conj:'連接詞',pron:'代名詞',aux:'助動詞',int:'感嘆詞',art:'冠詞'};
+
+/* ---------- navigation ---------- */
+let curRound=0;
+const $home=document.getElementById('home'),$round=document.getElementById('roundView'),$game=document.getElementById('gameView');
+function show(el){[$home,$round,$game].forEach(e=>e.classList.add('hidden'));el.classList.remove('hidden');window.scrollTo(0,0);}
+function goHome(){renderHome();show($home);}
+function backToRound(){speechSynthesis&&speechSynthesis.cancel();openRound(curRound,true);}
+
+function renderHome(){
+  const g=document.getElementById('roundGrid');g.innerHTML='';
+  ROUNDS.forEach((r,ri)=>{
+    const total=r.e-r.s, kn=knowCount(ri), pct=Math.round(kn/total*100), st=starCount(ri);
+    const first=WORDS[r.s].w, last=WORDS[r.e-1].w;
+    const el=document.createElement('button');el.className='rc';
+    el.onclick=()=>openRound(ri);
+    const ab=(r.parts&&r.parts.length>1)?r.parts.map(p=>p.k+' '+(p.e-p.s)).join(' · ')+' · ':'';
+    el.innerHTML=`<div class="no">${r.r?'第 '+String(r.r).padStart(2,'0')+' 回':'回 '+String(ri+1).padStart(2,'0')+' · ROUND'}</div>
+      <div class="rng">${r.t||(first+' — '+last)}</div>
+      <div class="cnt">${ab}共 ${total} 字</div>
+      ${pct>0?`<div class="pct">${pct}%</div>`:''}
+      ${st>0?`<div class="star-badge">⭐${st}</div>`:''}
+      <div class="bar"><i style="width:${pct}%"></i></div>`;
+    g.appendChild(el);
+  });
+}
+
+function setPart(k){curPart=k;renderParts();}
+function renderParts(){const box=document.getElementById('partTabs');if(!box)return;const r=ROUNDS[curRound];if(!r.parts||r.parts.length<2){box.innerHTML='';return;}const tabs=[['all','全部 All',r.e-r.s]].concat(r.parts.map(p=>[p.k,p.k+' 篇'+(p.t?'：'+p.t:''),p.e-p.s]));box.innerHTML=tabs.map(t=>`<button class="ptab ${curPart===t[0]?'on':''}" onclick="setPart('${t[0]}')">${t[1]} <small>${t[2]} 字</small></button>`).join('');}
+function openRound(ri,keep){
+  curRound=ri;if(!keep)curPart='all';const r=ROUNDS[ri];renderParts();
+  document.getElementById('roundTitle').textContent=`第 ${ri+1} 回 · Round ${ri+1}`;
+  document.getElementById('roundRange').textContent=`${WORDS[r.s].w} … ${WORDS[r.e-1].w}　共 ${r.e-r.s} 字`;
+  const total=r.e-r.s,kn=knowCount(ri),pct=Math.round(kn/total*100);
+  document.getElementById('roundBarFill').style.width=pct+'%';
+  document.getElementById('roundStat').textContent=`已學會 ${kn} / ${total} 字（${pct}%）　⭐複習清單 ${starCount(ri)} 字`;
+  show($round);
+}
+
+/* ================= FLASHCARDS ================= */
+let fcList=[],fcPos=0,fcReviewMode=false;
+function startFlash(){fcReviewMode=false;fcList=roundWords(curRound);launchFlash('📖 單字卡 Flashcards');}
+function startReview(){
+  const list=roundWords(curRound).filter(i=>LS.star[i]||!LS.know[i]);
+  if(list.length===0){toast('太棒了！本回沒有待複習的字 🎉');return;}
+  fcReviewMode=true;fcList=shuffle(list);launchFlash('⭐ 重點複習 Review');
+}
+function launchFlash(title){
+  fcPos=0;document.getElementById('gameTitle').textContent=title;show($game);renderFlash();
+}
+function renderFlash(){
+  const wi=fcList[fcPos],w=WORDS[wi];
+  const body=document.getElementById('gameBody');
+  body.innerHTML=`
+    <div class="progress-line">${fcPos+1} / ${fcList.length}　${fcReviewMode?'複習模式':''}</div>
+    <div class="flash" id="flash">
+      <div class="flash-inner" onclick="flipCard(event)">
+        <div class="face front">
+          <div class="word-en">${w.w}</div>
+          <div class="pos">${w.pos}. ${POSZH[w.pos]||''}</div>
+          <button class="speak" onclick="event.stopPropagation();speak('${w.w.replace(/'/g,"\\'")}')">🔊</button>
+          <div class="hintflip">點卡片看中文 · Tap to flip</div>
+        </div>
+        <div class="face back">
+          <div class="word-zh">${w.zh}</div>
+          <div class="pos">${w.w}　(${w.pos}.)</div>
+          <div class="hintflip">點卡片翻回英文</div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-controls">
+      <button class="nav-btn" onclick="fcPrev()">‹</button>
+      <div class="mark-row">
+        <button class="mark know ${LS.know[wi]?'on':''}" id="mkKnow" onclick="toggleKnow(${wi})">✓ 學會了</button>
+        <button class="mark star ${LS.star[wi]?'on':''}" id="mkStar" onclick="toggleStar(${wi})">⭐ 要複習</button>
+      </div>
+      <button class="nav-btn" onclick="fcNext()">›</button>
+    </div>`;
+  setTimeout(()=>speak(w.w),180);
+}
+function flipCard(e){document.getElementById('flash').classList.toggle('flipped');}
+function fcNext(){if(fcPos<fcList.length-1){fcPos++;renderFlash();}else{flashDone();}}
+function fcPrev(){if(fcPos>0){fcPos--;renderFlash();}}
+function toggleKnow(wi){LS.know[wi]=!LS.know[wi];if(LS.know[wi]){LS.star[wi]=false;}save();document.getElementById('mkKnow').classList.toggle('on',!!LS.know[wi]);document.getElementById('mkStar').classList.toggle('on',!!LS.star[wi]);toast(LS.know[wi]?'已標記學會 ✓':'取消標記');}
+function toggleStar(wi){LS.star[wi]=!LS.star[wi];save();document.getElementById('mkStar').classList.toggle('on',!!LS.star[wi]);toast(LS.star[wi]?'加入複習清單 ⭐':'移出複習清單');}
+function flashDone(){
+  document.getElementById('gameBody').innerHTML=`<div class="panel result">
+    <div class="emoji">🎉</div><h3>這一輪看完了！</h3>
+    <p>複習是記憶的關鍵，多看幾次會更熟。</p>
+    <div class="rowbtns"><button class="btn" onclick="renderFlashRestart()">再看一次</button>
+    <button class="btn ghost" onclick="backToRound()">返回本回</button></div></div>`;
+}
+function renderFlashRestart(){fcPos=0;renderFlash();}
+
+/* ================= QUIZ ================= */
+let qList=[],qPos=0,qScore=0,qDir=0;
+function startQuiz(){
+  qList=shuffle(roundWords(curRound));qPos=0;qScore=0;
+  document.getElementById('gameTitle').textContent='🎯 選擇題 Quiz';show($game);renderQuiz();
+}
+function renderQuiz(){
+  if(qPos>=qList.length){return quizDone();}
+  const wi=qList[qPos],w=WORDS[wi];
+  qDir=Math.random()<0.5?0:1; // 0: EN->ZH, 1: ZH->EN
+  const seenW=new Set([w.w]);const poolIdx=[];for(const i of shuffle(WORDS.map((_,i)=>i))){if(poolIdx.length>=3)break;const x=WORDS[i];if(seenW.has(x.w)||x.zh===w.zh)continue;seenW.add(x.w);poolIdx.push(i);}
+  const options=shuffle([wi,...poolIdx]);
+  const body=document.getElementById('gameBody');
+  const promptTxt=qDir===0?w.w:w.zh;
+  const sub=qDir===0?`(${w.pos}.) 這個字是什麼意思？`:'下列哪個英文字是這個意思？';
+  body.innerHTML=`
+    <div class="panel">
+      <div class="scoreline"><span>第 ${qPos+1} / ${qList.length} 題</span><span>得分 ${qScore}</span></div>
+      <div class="q-word">${promptTxt} ${qDir===0?`<button class="speak" style="width:38px;height:38px;font-size:1rem;display:inline-flex;vertical-align:middle" onclick="speak('${w.w.replace(/'/g,"\\'")}')">🔊</button>`:''}</div>
+      <div class="q-sub">${sub}</div>
+      <div class="opts" id="opts"></div>
+    </div>`;
+  const opts=document.getElementById('opts');
+  options.forEach(oi=>{
+    const b=document.createElement('button');b.className='opt';
+    b.textContent=qDir===0?WORDS[oi].zh:WORDS[oi].w;
+    b.onclick=()=>answerQuiz(b,oi,wi,w);
+    opts.appendChild(b);
+  });
+  if(qDir===0)setTimeout(()=>speak(w.w),150);
+}
+function answerQuiz(btn,chosen,correct,w){
+  const all=[...document.querySelectorAll('.opt')];all.forEach(o=>o.onclick=null);
+  if(chosen===correct){btn.classList.add('correct');qScore++;LS.know[correct]=true;save();speak(w.w);}
+  else{
+    btn.classList.add('wrong');LS.star[correct]=true;save();
+    all.forEach(o=>{if((qDir===0?o.textContent===WORDS[correct].zh:o.textContent===WORDS[correct].w))o.classList.add('correct');});
+    all.forEach(o=>{if(!o.classList.contains('correct')&&o!==btn)o.classList.add('dim');});
+  }
+  setTimeout(()=>{qPos++;renderQuiz();},chosen===correct?750:1500);
+}
+function quizDone(){
+  const pct=Math.round(qScore/qList.length*100);
+  const emo=pct>=90?'🏆':pct>=70?'😃':pct>=50?'💪':'📚';
+  document.getElementById('gameBody').innerHTML=`<div class="panel result">
+    <div class="emoji">${emo}</div>
+    <div class="big">${qScore}<span style="font-size:1.2rem;color:var(--muted)"> / ${qList.length}</span></div>
+    <p>答對率 ${pct}%${pct>=90?'，超強！':pct>=50?'，繼續加油！':'，多練幾次一定進步！'}</p>
+    <div class="rowbtns"><button class="btn" onclick="startQuiz()">再測一次</button>
+    <button class="btn ghost" onclick="backToRound()">返回本回</button></div></div>`;
+}
+
+/* ================= SPELLING ================= */
+let spList=[],spPos=0,spScore=0,spReveal=0,spAns=[];
+function startSpell(){
+  spList=shuffle(roundWords(curRound));spPos=0;spScore=0;spAns=[];
+  document.getElementById('gameTitle').textContent='✍️ 聽寫拼字 Spelling';show($game);renderSpell();
+}
+function renderSpell(){
+  if(spPos>=spList.length)return spellDone();
+  const wi=spList[spPos],w=WORDS[wi];spReveal=0;
+  document.getElementById('gameBody').innerHTML=`
+   <div class="panel">
+    <div class="scoreline"><span>第 ${spPos+1} / ${spList.length} 題</span><span>得分 ${spScore}</span></div>
+    <div class="q-sub">聽發音，拼出這個英文單字（提示：${w.zh}）</div>
+    <div class="spell-audio"><button class="play-btn" onclick="speak('${w.w.replace(/'/g,"\\'")}')"><span class="ic">🔊</span>播放發音 Play</button>
+    <div style="font-size:.72rem;color:var(--muted);margin-top:8px">點按鈕即可聽發音，可重複點</div></div>
+    <input class="spell-input" id="spIn" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="type here…">
+    <div class="spell-hint" id="spHint"></div>
+    <div class="feedback" id="spFb"></div>
+    <div class="rowbtns">
+      <button class="btn ghost sm" id="spHintBtn" onclick="spellHint()">💡 提示（頭尾）</button>
+      <button class="btn sm" id="spChk" onclick="checkSpell()">確認 Check</button>
+    </div>
+    <div class="rowbtns" style="margin-top:10px">
+      <button class="btn ghost sm" onclick="prevSpell()"${spPos===0?' disabled':''}>◂ 上一題</button>
+      <button class="btn ghost sm" id="spNext" onclick="nextSpell()">${spPos===spList.length-1?'看成績 ▸':'下一題 ▸'}</button>
+    </div>
+   </div>`;
+  const inp=document.getElementById('spIn');
+  const isTouch=('ontouchstart' in window)||navigator.maxTouchPoints>0;
+  if(!isTouch)inp.focus(); // 手機不自動搶 focus，避免鍵盤彈出干擾播放
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();spAns[spPos]?nextSpell():checkSpell();}});
+  showSpell();                      // 回到已作答的題目時直接顯示結果
+  speak(w.w);                       // 同步在手勢內朗讀（iOS 解鎖後每題都能自動出聲）
+}
+function spellHint(){
+  if(spAns[spPos])return;
+  const w=WORDS[spList[spPos]].w;spReveal=1; // 只給頭尾，中間留空；再按也一樣，拿不到完整答案
+  let s='';for(let i=0;i<w.length;i++)s+=(i===0||i===w.length-1)?w[i]:'_';
+  document.getElementById('spHint').textContent=s.split('').join(' ');
+}
+function checkSpell(){
+  if(spAns[spPos])return;
+  const wi=spList[spPos],w=WORDS[wi];
+  const typed=(document.getElementById('spIn').value||'').trim();
+  const ok=typed.toLowerCase()===w.w.toLowerCase();
+  spAns[spPos]={typed:typed,ok:ok};
+  if(ok){if(spReveal===0)spScore++;LS.know[wi]=true;}else{LS.star[wi]=true;}
+  save();showSpell();speak(w.w);    // 確認後停在本題，由「下一題」自己前進
+}
+/* 顯示本題已作答的結果（確認後、或用上一題/下一題回到已作答的題目） */
+function showSpell(){
+  const a=spAns[spPos];if(!a)return;
+  const w=WORDS[spList[spPos]];
+  const inp=document.getElementById('spIn');inp.value=a.typed;inp.readOnly=true;
+  const fb=document.getElementById('spFb');
+  if(a.ok){fb.textContent='✓ 正確！ '+w.w;fb.className='feedback ok';}
+  else{fb.textContent=(a.typed?'✗ 你拼成「'+a.typed+'」，':'✗ ')+'正確答案：'+w.w;fb.className='feedback no';}
+  document.getElementById('spChk').disabled=true;document.getElementById('spHintBtn').disabled=true;
+  document.querySelector('#gameBody .scoreline span:last-child').textContent='得分 '+spScore;
+  document.getElementById('spNext').focus();
+}
+function prevSpell(){if(spPos>0){spPos--;renderSpell();}}
+function nextSpell(){
+  if(!spAns[spPos]){LS.star[spList[spPos]]=true;save();}   // 沒作答就往下＝跳過，加入重點複習
+  spPos++;renderSpell();
+}
+function spellDone(){
+  document.getElementById('gameBody').innerHTML=`<div class="panel result">
+    <div class="emoji">✍️🎉</div>
+    <div class="big">${spScore}<span style="font-size:1.2rem;color:var(--muted)"> / ${spList.length}</span></div>
+    <p>一次就拼對 ${spScore} 個！拼字是最扎實的記憶。</p>
+    <div class="rowbtns"><button class="btn" onclick="startSpell()">再練一次</button>
+    <button class="btn ghost" onclick="backToRound()">返回本回</button></div></div>`;
+}
+
+/* ================= MATCHING ================= */
+let mPairs=[],mSel=null,mDone=0,mStart=0,mTimer=null,mQueue=[],mRound=0;
+function startMatch(){
+  mQueue=shuffle(roundWords(curRound));mRound=0;mStart=Date.now();
+  document.getElementById('gameTitle').textContent='🔗 配對遊戲 Matching';show($game);
+  clearInterval(mTimer);mTimer=setInterval(updateMTimer,500);
+  renderMatch();
+}
+function renderMatch(){
+  const MB=Math.ceil(mQueue.length/Math.ceil(mQueue.length/6))||6;const batch=mQueue.slice(mRound*MB,mRound*MB+MB);
+  if(batch.length===0)return matchDone();
+  const leftEmpty=false;
+  const lefts=batch.map(i=>({i,txt:WORDS[i].w,type:'en'}));
+  const rights=shuffle(batch.map(i=>({i,txt:WORDS[i].zh,type:'zh'})));
+  mSel=null;mDone=0;
+  const body=document.getElementById('gameBody');
+  body.innerHTML=`<div class="panel">
+    <div class="scoreline"><span>第 ${mRound+1} 組 / ${Math.ceil(mQueue.length/MB)}　配對英文↔中文</span><span id="mTime">0s</span></div>
+    <div class="match-grid" id="mgrid"></div>
+   </div>`;
+  const grid=document.getElementById('mgrid');
+  // interleave columns: build combined rows
+  const rows=Math.max(lefts.length,rights.length);
+  for(let r=0;r<rows;r++){
+    if(lefts[r]){grid.appendChild(mkCell(lefts[r]));}else{const e=document.createElement('div');grid.appendChild(e);}
+    if(rights[r]){grid.appendChild(mkCell(rights[r]));}else{const e=document.createElement('div');grid.appendChild(e);}
+  }
+}
+function mkCell(item){
+  const c=document.createElement('button');c.className='mcell';
+  c.innerHTML=item.type==='en'?`<span class="en">${item.txt}</span>`:item.txt;
+  c.dataset.i=item.i;c.dataset.type=item.type;
+  c.onclick=()=>clickCell(c);
+  return c;
+}
+function clickCell(c){
+  if(c.classList.contains('done'))return;
+  if(c.dataset.type==='en')speak(WORDS[+c.dataset.i].w);
+  if(!mSel){mSel=c;c.classList.add('sel');return;}
+  if(mSel===c){c.classList.remove('sel');mSel=null;return;}
+  if(mSel.dataset.type===c.dataset.type){mSel.classList.remove('sel');mSel=c;c.classList.add('sel');return;}
+  // check match
+  if(mSel.dataset.i===c.dataset.i){
+    mSel.classList.remove('sel');mSel.classList.add('done');c.classList.add('done');
+    LS.know[+c.dataset.i]=true;save();mSel=null;mDone++;
+    if(mDone*2>=document.querySelectorAll('#mgrid .mcell').length){
+      setTimeout(()=>{mRound++;renderMatch();},500);
+    }
+  }else{
+    const a=mSel,b=c;a.classList.add('err');b.classList.add('err');a.classList.remove('sel');
+    LS.star[+a.dataset.i]=true;LS.star[+b.dataset.i]=true;save();
+    setTimeout(()=>{a.classList.remove('err');b.classList.remove('err');},500);
+    mSel=null;
+  }
+}
+function updateMTimer(){const el=document.getElementById('mTime');if(el)el.textContent=Math.floor((Date.now()-mStart)/1000)+'s';}
+function matchDone(){
+  clearInterval(mTimer);const secs=Math.floor((Date.now()-mStart)/1000);
+  document.getElementById('gameBody').innerHTML=`<div class="panel result">
+    <div class="emoji">🔗🏁</div><h3>全部配對完成！</h3>
+    <p>總共花了 <b>${secs}</b> 秒，挑戰更快一次吧！</p>
+    <div class="rowbtns"><button class="btn" onclick="startMatch()">再玩一次</button>
+    <button class="btn ghost" onclick="backToRound()">返回本回</button></div></div>`;
+}
+
+/* ---------- reset ---------- */
+document.getElementById('resetBtn').onclick=()=>{
+  if(confirm('確定要清除所有學習進度嗎？此動作無法復原。')){
+    LS.know={};LS.star={};save();renderHome();toast('已清除所有進度');
+  }
+};
+
+/* init */
+renderHome();
+</script>
+</body>
+</html>
