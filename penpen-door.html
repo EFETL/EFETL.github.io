@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Pen-Pen 門口企鵝</title>
+<title>彭彭企鵝</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
@@ -180,6 +180,9 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
 @keyframes helloPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
 @media (prefers-reduced-motion: reduce){.hello{animation:none}}
 #dots{display:none}
+.power{border:0;border-radius:99px;padding:1.8cqw 4.2cqw;font-size:3.9cqw;font-weight:600;background:var(--accent-live);color:#fff;box-shadow:0 .7cqw 0 rgba(0,0,0,.16);white-space:nowrap}
+.power:active{transform:translateY(.5cqw);box-shadow:0 .2cqw 0 rgba(0,0,0,.16)}
+.power.off{background:#2f9e6b}
 svg.penguin{--pg-body:#27518f;--pg-wing:#1f4380;--cap:#3a6fc4;--ol:#4a2b2e}
 #dbg{max-width:100%;font-size:2.8cqw;line-height:1.4;color:var(--ink-soft);text-align:center;word-break:break-all;opacity:.85}
 #unlock{position:absolute;left:50%;top:14%;transform:translateX(-50%);z-index:8;max-width:86%;background:#ffe27a;color:#4a3500;border-radius:99px;padding:2.4cqw 5cqw;font-size:4cqw;font-weight:600;text-align:center;box-shadow:0 .8cqw 0 rgba(0,0,0,.12)}
@@ -201,10 +204,11 @@ svg.penguin{--pg-body:#27518f;--pg-wing:#1f4380;--cap:#3a6fc4;--ol:#4a2b2e}
 <body>
 <main class="stage" id="stage" data-state="idle" data-mood="happy">
   <header class="top">
-    <div class="brand">Pen-Pen 門口企鵝</div>
+    <div class="brand">彭彭企鵝</div>
     <button class="iconbtn" id="gear" type="button" aria-label="設定">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2.4" fill="var(--chip)"/><circle cx="15" cy="17" r="2.4" fill="var(--chip)"/></svg>
     </button>
+    <button class="power" id="power" type="button" aria-pressed="false">⏹ 停止聆聽</button>
   </header>
 
   <section class="bubble" aria-live="polite">
@@ -453,24 +457,47 @@ svg.penguin{--pg-body:#27518f;--pg-wing:#1f4380;--cap:#3a6fc4;--ol:#4a2b2e}
   // turn around (a full spin on the spot)
   const mTurn = () => A('air', [T('scale(1,1)'), { transform: 'scale(.04,1)', offset: .35 }, { transform: 'scale(-1,1)', offset: .6 }, { transform: 'scale(.04,1)', offset: .8 }, T('scale(1,1)')], 1100);
   // waddle across the ice
-  async function mWalk(dist) {
+  async function mWalk(dist, o) {
+    o = o || {};
     if (walking) return;
     const from = posX, to = Math.max(-MAXX, Math.min(MAXX, posX + dist)), d = to - from;
     if (Math.abs(d) < 14) return;
     walking = true;
-    const steps = Math.max(2, Math.round(Math.abs(d) / 24)), n = steps * 2;
-    const ms = Math.abs(d) / 90 * 1000, dir = d > 0 ? 1 : -1;
+    const steps = Math.max(2, Math.round(Math.abs(d) / (o.stride || 24))), n = steps * 2;
+    const ms = Math.abs(d) / (o.speed || 90) * 1000, dir = d > 0 ? 1 : -1, rock = o.rock || 6, hopY = o.bob || 6;
     const wk = [], bounce = [];
     for (let k = 0; k <= n; k++) {
-      wk.push(T('translateX(' + (from + d * k / n) + 'px) ' + R(k % 2 ? (k % 4 === 1 ? 6 : -6) : 0)));
-      bounce.push(T('translateY(' + (k % 2 ? -6 : 0) + 'px)'));
+      wk.push(T('translateX(' + (from + d * k / n) + 'px) ' + R(k % 2 ? (k % 4 === 1 ? rock : -rock) : 0)));
+      bounce.push(T('translateY(' + (k % 2 ? -hopY : 0) + 'px)'));
     }
     const w = A('walker', wk, ms, { easing: 'linear', fill: 'forwards' }, true);
-    await Promise.all([w, A('air', bounce, ms, { easing: 'linear' }), A('head', [T(R(0)), T(R(5 * dir)), T(R(0))], ms), feetTap(ms, steps)]);
+    await Promise.all([w, A('air', bounce, ms, { easing: 'linear' }), A('head', [T(R(0)), T(R(5 * dir)), T(R(0))], ms), feetTap(ms, steps),
+      o.flap ? A('wwl', [T(R(0)), T(R(26)), T(R(10)), T(R(26)), T(R(0))], ms) : null, o.flap ? A('wwr', [T(R(0)), T(R(-26)), T(R(-10)), T(R(-26)), T(R(0))], ms) : null]);
     setX(to);
     try { w.anim.cancel(); } catch (e) {}
     walking = false;
   }
+  // run: dash across the ice and back, flippers out behind, bouncing
+  const RUN = { speed: 250, stride: 16, rock: 9, bob: 11, flap: true };
+  const mRun = async () => {
+    const dir = posX > 20 ? -1 : posX < -20 ? 1 : sgn();
+    await mWalk(dir * rnd(110, 190), RUN);
+    if (Math.random() < .6) await mWalk(-dir * rnd(90, 190), RUN);
+  };
+  // wiggle: sway the whole body from side to side
+  const mWiggle = () => Promise.all([
+    A('air', [T(R(0)), T(R(-7)), T(R(7)), T(R(-7)), T(R(7)), T(R(-5)), T(R(5)), T(R(0))], 1400),
+    A('head', [T(R(0)), T(R(8)), T(R(-8)), T(R(8)), T(R(-8)), T(R(0))], 1400),
+    A('wwl', [T(R(0)), T(R(20)), T(R(0)), T(R(20)), T(R(0))], 1400),
+    A('wwr', [T(R(0)), T(R(-20)), T(R(0)), T(R(-20)), T(R(0))], 1400)
+  ]);
+  // jump with a full spin
+  const mJumpTwist = () => Promise.all([
+    A('air', [T('translateY(0) scale(1,1)'), { transform: 'translateY(0) scale(1.07,.9)', offset: .12 }, { transform: 'translateY(-54px) scale(.04,1.05)', offset: .38 }, { transform: 'translateY(-54px) scale(-1,1.05)', offset: .56 }, { transform: 'translateY(-20px) scale(.04,1)', offset: .74 }, { transform: 'translateY(0) scale(1.06,.92)', offset: .9 }, T('translateY(0) scale(1,1)')], 1000, { easing: 'ease-out' }),
+    A('shadow', [T('scale(1)'), { transform: 'scale(.65)', offset: .45 }, T('scale(1)')], 1000),
+    A('wwl', [T(R(0)), { transform: R(48), offset: .45 }, T(R(0))], 1000),
+    A('wwr', [T(R(0)), { transform: R(-48), offset: .45 }, T(R(0))], 1000)
+  ]);
   const walkR = () => { const dir = posX > 30 ? -1 : posX < -30 ? 1 : sgn(); return mWalk(dir * rnd(40, 90)); };
   const walkHome = () => mWalk(-posX);
 
@@ -491,19 +518,20 @@ svg.penguin{--pg-body:#27518f;--pg-wing:#1f4380;--cap:#3a6fc4;--ol:#4a2b2e}
     }
     if (st === 'listening') return pick([[3, mCurious], [2, mLook], [1, mNod]]);
     if (st === 'thinking') return pick([[3, mThink], [2, mLook]]);
-    return pick([[3, mSway], [2, mLook], [2, wk], [1, mHopWave], [1, mTurn]]);
+    const wr = walking ? mWiggle : mRun;
+    return pick([[3, mSway], [2, mLook], [3, wk], [3, wr], [2, mWiggle], [2, mHopWave], [1, mTurn], [1, mDance], [2, mJumpTwist]]);
   }
   function gap() {
     if (!startEl.hidden) return rnd(1600, 3800);
     const st = stage.dataset.state;
     if (st === 'speaking') return rnd(60, 260);
     if (st === 'listening' || st === 'thinking') return rnd(150, 500);
-    return rnd(2200, 5200);
+    return rnd(1200, 3200);
   }
   async function director() {
     for (;;) {
       const mv = calm ? null : pickMove();
-      if (mv) { try { await Promise.race([mv(), wake()]); } catch (e) {} }
+      if (mv) { try { await Promise.race([mv(), wake()]); } catch (e) { try { console.warn('[Pen-Pen] move failed', e); } catch (x) {} } }
       await Promise.race([sleep(gap()), wake()]);
     }
   }
@@ -628,7 +656,7 @@ svg.penguin{--pg-body:#27518f;--pg-wing:#1f4380;--cap:#3a6fc4;--ol:#4a2b2e}
   let emptyListens = 0, autoTimer = null;
   function autoListen() {
     clearTimeout(autoTimer);
-    if (startEl.hidden === false || !byeEl.hidden || round >= MAX_ROUNDS || emptyListens >= (vadOff ? 3 : 1e9)) return;
+    if (paused || startEl.hidden === false || !byeEl.hidden || round >= MAX_ROUNDS || emptyListens >= (vadOff ? 3 : 1e9)) return;
     autoTimer = setTimeout(() => { if (state === 'idle' && startEl.hidden && byeEl.hidden) startListening(); }, 350);
   }
 
@@ -743,7 +771,7 @@ svg.penguin{--pg-body:#27518f;--pg-wing:#1f4380;--cap:#3a6fc4;--ol:#4a2b2e}
 
   async function ask(text, src, conf) {
     text = (text || '').trim();
-    if (!text || state === 'thinking' || round >= MAX_ROUNDS || startEl.hidden === false) return;
+    if (!text || paused || state === 'thinking' || round >= MAX_ROUNDS || startEl.hidden === false) return;
     if (!sid) newVisit();
     lastTalk = Date.now();
     heardEl.textContent = '你說：' + text;
@@ -782,7 +810,7 @@ svg.penguin{--pg-body:#27518f;--pg-wing:#1f4380;--cap:#3a6fc4;--ol:#4a2b2e}
 
   /* ---------- speech in: record, then Whisper through the Worker ---------- */
   let mediaRec = null, recTimer = null, recStart = 0;
-  let vadStop = null, listenToken = 0, vadOff = false, vadFail = 0, nativeLang = 'en-US', roomFloor = 0.008, mic = null;
+  let vadStop = null, listenToken = 0, vadOff = false, vadFail = 0, nativeLang = 'en-US', roomFloor = 0.008, mic = null, paused = false;
   function openType() { typebox.hidden = false; }
   function noMic(msg) {
     heardEl.textContent = msg;
@@ -1083,8 +1111,37 @@ svg.penguin{--pg-body:#27518f;--pg-wing:#1f4380;--cap:#3a6fc4;--ol:#4a2b2e}
     }
   }
 
+  const powerBtn = $('#power');
+  function pauseListening() {
+    paused = true;
+    listenToken++; if (vadStop) vadStop();
+    clearTimeout(autoTimer);
+    cancelSpeech();
+    if (ctl) { try { ctl.abort(); } catch (e) {} }
+    if (nativeRec) { try { nativeRec.abort(); } catch (e) {} nativeRec = null; }
+    if (mediaRec && mediaRec.state !== 'inactive') { recAbort = true; try { mediaRec.stop(); } catch (e) {} }
+    closeMic(); meter(0);
+    turns.length = 0; sid = ''; round = 0; emptyListens = 0;
+    stage.dataset.mood = 'happy';
+    STATUS.idle = '已暫停：不收音，也不會傳送任何資料';
+    setState('idle');
+    show('Zzz… tap Start to wake me up!', '已暫停。點右上角「開始聆聽」叫醒我。');
+    heardEl.textContent = '';
+    powerBtn.textContent = '▶ 開始聆聽'; powerBtn.classList.add('off'); powerBtn.setAttribute('aria-pressed', 'true');
+  }
+  function resumeListening() {
+    paused = false; recAbort = false; emptyListens = 0; vadOff = false; vadFail = 0;
+    STATUS.idle = '直接跟我說話，中文或英文都可以';
+    statusEl.textContent = STATUS.idle;
+    show(HINT.en, HINT.zh);
+    heardEl.textContent = '';
+    powerBtn.textContent = '⏹ 停止聆聽'; powerBtn.classList.remove('off'); powerBtn.setAttribute('aria-pressed', 'false');
+    startListening();
+  }
+  powerBtn.onclick = () => { if (paused) resumeListening(); else pauseListening(); };
+
   function startListening() {
-    if (round >= MAX_ROUNDS || startEl.hidden === false) return;
+    if (paused || round >= MAX_ROUNDS || startEl.hidden === false) return;
     recAbort = false;
     if (Q.get('stt') === 'native' || vadOff) { if (SR && !nativeOff) startNative(); else startRecorder(); return; }
     startVad();
@@ -1149,6 +1206,7 @@ svg.penguin{--pg-body:#27518f;--pg-wing:#1f4380;--cap:#3a6fc4;--ol:#4a2b2e}
 
   /* ---------- controls ---------- */
   micBtn.onclick = () => {
+    if (paused) { resumeListening(); return; }
     if (state === 'listening') { stopListening(); return; }
     if (state === 'thinking') { if (ctl) ctl.abort(); return; }
     emptyListens = 0; startListening();
