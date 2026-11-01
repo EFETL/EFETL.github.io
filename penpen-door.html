@@ -164,10 +164,6 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
 .seg button.on{background:var(--ink);color:var(--bubble);border-color:var(--ink)}
 .note{margin:3.4cqw 0 0;font-size:3.5cqw;line-height:1.5;color:var(--ink-soft)}
 
-@media (prefers-reduced-motion: reduce){
-  .penguin *,.mic::after{animation:none !important}
-  .penguin .tilt,.penguin .eyes{transition:none}
-}
 
 /* ---- door mode: no typing, no chips, no settings visible; kids just talk ---- */
 #kbd,#chips,#typebox,#gear{display:none !important}
@@ -178,13 +174,15 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
 .hello span{display:block;margin-top:1.4cqw;font-size:4.6cqw;color:var(--ink-soft)}
 .hello small{display:block;margin-top:3.5cqw;font-size:3cqw;line-height:1.5;color:var(--ink-soft)}
 @keyframes helloPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
-@media (prefers-reduced-motion: reduce){.hello{animation:none}}
 #dots{display:none}
+#fitName{position:absolute;left:0;right:0;bottom:.4%;text-align:center;font-size:3.3cqw;font-weight:600;color:var(--ink-soft);pointer-events:none}
 .power{border:0;border-radius:99px;padding:1.8cqw 4.2cqw;font-size:3.9cqw;font-weight:600;background:var(--accent-live);color:#fff;box-shadow:0 .7cqw 0 rgba(0,0,0,.16);white-space:nowrap}
 .power:active{transform:translateY(.5cqw);box-shadow:0 .2cqw 0 rgba(0,0,0,.16)}
 .power.off{background:#2f9e6b}
+.tools{display:flex;gap:1.6cqw}
+.power.lang{background:#3a6fc4}
 svg.penguin{--pg-body:#27518f;--pg-wing:#1f4380;--cap:#3a6fc4;--ol:#4a2b2e}
-#dbg{max-width:100%;font-size:2.8cqw;line-height:1.4;color:var(--ink-soft);text-align:center;word-break:break-all;opacity:.85}
+#dbg{white-space:pre-line;max-width:100%;font-size:2.8cqw;line-height:1.4;color:var(--ink-soft);text-align:center;word-break:break-all;opacity:.85}
 #unlock{position:absolute;left:50%;top:14%;transform:translateX(-50%);z-index:8;max-width:86%;background:#ffe27a;color:#4a3500;border-radius:99px;padding:2.4cqw 5cqw;font-size:4cqw;font-weight:600;text-align:center;box-shadow:0 .8cqw 0 rgba(0,0,0,.12)}
 /* penguin parts: where each one pivots */
 .penguin .walker,.penguin .air{transform-box:view-box;transform-origin:160px 392px}
@@ -208,7 +206,7 @@ svg.penguin{--pg-body:#27518f;--pg-wing:#1f4380;--cap:#3a6fc4;--ol:#4a2b2e}
     <button class="iconbtn" id="gear" type="button" aria-label="設定">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2.4" fill="var(--chip)"/><circle cx="15" cy="17" r="2.4" fill="var(--chip)"/></svg>
     </button>
-    <button class="power" id="power" type="button" aria-pressed="false">⏹ 停止聆聽</button>
+    <div class="tools"><button class="power lang" id="lang" type="button">🌐 自動</button><button class="power" id="power" type="button" aria-pressed="false">⏹ 停止聆聽</button></div>
   </header>
 
   <section class="bubble" aria-live="polite">
@@ -220,42 +218,8 @@ svg.penguin{--pg-body:#27518f;--pg-wing:#1f4380;--cap:#3a6fc4;--ol:#4a2b2e}
 
   <section class="scene">
     <div class="floe"></div>
-    <svg class="penguin" viewBox="0 0 320 420" role="img" aria-label="企鵝 Pen-Pen">
-      <g class="walker">
-      <ellipse class="shadow" cx="160" cy="398" rx="108" ry="11" fill="rgba(18,48,90,.16)"/>
-      <g class="air"><g class="bob"><g class="tilt">
-        <g class="foot fl"><path d="M86 392 C84 404 96 410 108 407 C112 412 126 412 130 406 C142 406 150 398 146 390 C140 382 96 382 86 392Z" fill="var(--beak)" stroke="var(--ol)" stroke-width="3.5" stroke-linejoin="round"/><path d="M106 398 v8 M122 399 v8" stroke="var(--ol)" stroke-width="2.6" stroke-linecap="round"/></g>
-        <g class="foot fr"><path d="M234 392 C236 404 224 410 212 407 C208 412 194 412 190 406 C178 406 170 398 174 390 C180 382 224 382 234 392Z" fill="var(--beak)" stroke="var(--ol)" stroke-width="3.5" stroke-linejoin="round"/><path d="M214 398 v8 M198 399 v8" stroke="var(--ol)" stroke-width="2.6" stroke-linecap="round"/></g>
-        <g class="ww wwl"><g class="wing wl"><path d="M62 215 C14 250 10 320 40 336 C70 322 86 270 92 232Z" fill="var(--pg-wing)" stroke="var(--ol)" stroke-width="4" stroke-linejoin="round"/></g></g>
-        <g class="ww wwr"><g class="wing wr"><path d="M258 215 C306 250 310 320 280 336 C250 322 234 270 228 232Z" fill="var(--pg-wing)" stroke="var(--ol)" stroke-width="4" stroke-linejoin="round"/></g></g>
-        <path d="M160 150 C84 150 46 232 50 304 C54 366 104 396 160 396 C216 396 266 366 270 304 C274 232 236 150 160 150Z" fill="var(--pg-body)" stroke="var(--ol)" stroke-width="4.5" stroke-linejoin="round"/>
-        <path d="M160 246 C112 246 92 296 98 338 C103 374 130 390 160 390 C190 390 217 374 222 338 C228 296 208 246 160 246Z" fill="#fff"/>
-        <g class="head">
-          <path d="M160 92 C98 92 66 134 66 180 C66 232 108 258 160 258 C212 258 254 232 254 180 C254 134 222 92 160 92Z" fill="var(--pg-body)" stroke="var(--ol)" stroke-width="4.5" stroke-linejoin="round"/>
-          <path d="M160 156 C136 128 86 140 86 188 C86 226 120 246 160 246 C200 246 234 226 234 188 C234 140 184 128 160 156Z" fill="#fff"/>
-          <circle cx="100" cy="206" r="12" fill="#ff9fb0" opacity=".6"/>
-          <circle cx="220" cy="206" r="12" fill="#ff9fb0" opacity=".6"/>
-          <g class="eyes">
-            <g class="eye"><ellipse cx="124" cy="186" rx="10" ry="13" fill="#11223f"/><circle cx="128" cy="180" r="4" fill="#fff"/><circle cx="121" cy="191" r="2" fill="#fff"/></g>
-            <g class="eye"><ellipse cx="196" cy="186" rx="10" ry="13" fill="#11223f"/><circle cx="200" cy="180" r="4" fill="#fff"/><circle cx="193" cy="191" r="2" fill="#fff"/></g>
-          </g>
-          <g class="jaw"><path d="M143 207 Q160 236 177 207 Q160 213 143 207Z" fill="#ff7b72" stroke="var(--ol)" stroke-width="2.6" stroke-linejoin="round"/></g>
-          <path d="M136 200 Q160 184 184 200 Q160 218 136 200Z" fill="var(--beak)" stroke="var(--ol)" stroke-width="3" stroke-linejoin="round"/>
-          <path d="M84 148 C80 98 122 68 166 70 C216 72 246 104 238 150 C206 140 116 140 84 148Z" fill="var(--cap)" stroke="var(--ol)" stroke-width="4" stroke-linejoin="round"/>
-          <path d="M162 71 C150 100 150 128 158 144 M162 71 C180 100 184 128 178 144" fill="none" stroke="var(--ol)" stroke-width="1.8" stroke-dasharray="5 4" opacity=".55"/>
-          <circle cx="164" cy="70" r="5" fill="var(--cap)" stroke="var(--ol)" stroke-width="3"/>
-          <path d="M66 156 C106 176 214 176 254 156 C246 138 76 138 66 156Z" fill="var(--cap)" stroke="var(--ol)" stroke-width="4" stroke-linejoin="round"/>
-          <text x="162" y="130" text-anchor="middle" font-family="Fredoka,'Noto Sans TC',sans-serif" font-size="25" font-weight="700" letter-spacing="1.5" fill="#fff4dc" stroke="var(--ol)" stroke-width=".6" transform="rotate(-3 162 124)">EFETL</text>
-        </g>
-        <path d="M66 244 Q160 286 254 244 L262 270 Q160 316 58 270Z" fill="var(--scarf)" stroke="var(--ol)" stroke-width="3.5" stroke-linejoin="round"/>
-        <path d="M208 282 L238 350 L205 358 L184 298Z" fill="var(--scarf-dark)" stroke="var(--ol)" stroke-width="3.5" stroke-linejoin="round"/>
-        <ellipse cx="176" cy="284" rx="19" ry="14" fill="var(--scarf)" stroke="var(--ol)" stroke-width="3.5"/>
-        <g class="dots" fill="var(--ink)"><circle cx="236" cy="104" r="6"/><circle cx="258" cy="86" r="8"/><circle cx="284" cy="64" r="10"/></g>
-      </g></g>
-      <g class="rings"><circle cx="160" cy="180" r="110"/><circle cx="160" cy="180" r="110"/><circle cx="160" cy="180" r="110"/></g>
-      </g>
-      </g>
-    </svg>
+    <svg class="penguin" viewBox="0 0 320 420" role="img" aria-label="彭彭企鵝"></svg>
+    <div id="fitName"></div>
   </section>
 
   <section class="controls">
@@ -307,6 +271,7 @@ svg.penguin{--pg-body:#27518f;--pg-wing:#1f4380;--cap:#3a6fc4;--ol:#4a2b2e}
   </div>
 </main>
 
+<script src="penpen-outfits.js"></script>
 <script>
 (() => {
   const $ = s => document.querySelector(s);
@@ -382,8 +347,22 @@ svg.penguin{--pg-body:#27518f;--pg-wing:#1f4380;--cap:#3a6fc4;--ol:#4a2b2e}
   }
   /* ---------- penguin choreography: walk, hop, sway, shake, nod, wave, dance ---------- */
   const PG = {};
-  ['walker', 'air', 'head', 'fl', 'fr', 'wwl', 'wwr', 'shadow'].forEach(k => { PG[k] = document.querySelector('.penguin .' + k); });
-  const calm = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const bindPG = () => ['walker', 'air', 'head', 'fl', 'fr', 'wwl', 'wwr', 'shadow'].forEach(k => { PG[k] = document.querySelector('.penguin .' + k); });
+  // Today's outfit: a new one every day, 30-day cycle (?day=1..30 previews any day; see penpen-outfits.html for all of them).
+  const OUT = window.PenpenOutfits;
+  const dayParam = Number(new URLSearchParams(location.search).get('day'));
+  const pickOutfit = () => (dayParam >= 1 && dayParam <= OUT.count) ? dayParam - 1 : OUT.dayIndex();
+  let outfitNow = -1;
+  function mountOutfit() {
+    outfitNow = pickOutfit();
+    document.querySelector('svg.penguin').innerHTML = OUT.build(outfitNow);
+    document.getElementById('fitName').textContent = '今天的彭彭：' + OUT.list[outfitNow] + '（第 ' + (outfitNow + 1) + ' 天）';
+    bindPG();
+    try { setX(posX); } catch (e) {}                      // keep the penguin where it was standing (posX is not set up yet on the very first call)
+  }
+  mountOutfit();
+  setInterval(() => { if (pickOutfit() !== outfitNow) { mountOutfit(); kick(); } }, 60000);   // midnight: change clothes
+  const calm = new URLSearchParams(location.search).get('calm') === '1';   // the OS 'reduce motion' setting is ignored on purpose: this is a door toy; ?calm=1 turns the antics off
   const live = new Set();
   let posX = 0, walking = false, wantHome = false, kickRes = null;
   const MAXX = 92;
@@ -607,6 +586,7 @@ svg.penguin{--pg-body:#27518f;--pg-wing:#1f4380;--cap:#3a6fc4;--ol:#4a2b2e}
       const timer = setTimeout(() => res(), 30000);
       stopPlay = () => { clearTimeout(timer); res(); };
       player.onended = stopPlay;
+      player.onplaying = () => { TM.play = performance.now(); dbgTimes(); };
       player.onerror = () => rej(new Error('play'));
       player.src = url;
       player.defaultPlaybackRate = rate; player.playbackRate = rate;
@@ -615,15 +595,24 @@ svg.penguin{--pg-body:#27518f;--pg-wing:#1f4380;--cap:#3a6fc4;--ol:#4a2b2e}
       if (p) p.catch(e => { if (e && e.name === 'NotAllowedError') showUnlock(); rej(e); });
     });
   }
-  function dbgVoice(msg) {
+  const TM = {}, DBG = { voice: '', time: '' };
+  function dbgShow() {
     const el = document.getElementById('dbg');
     if (!el || !/[?&]debug=1/.test(location.search)) return;
-    el.hidden = false; el.textContent = msg;
+    el.hidden = false; el.textContent = [DBG.time, DBG.voice].filter(Boolean).join('\n');
+  }
+  function dbgVoice(msg) { DBG.voice = msg; dbgShow(); }
+  function dbgTimes() {
+    if (!TM.end || !TM.play) return;
+    const f = (a, b) => (a && b ? ((b - a) / 1000).toFixed(1) : '?') + 's';
+    DBG.time = '⏱ 說完→辨識 ' + f(TM.end, TM.stt) + '｜→回答 ' + f(TM.stt, TM.chat) + '｜→語音 ' + f(TM.chat, TM.tts) + '｜→開口 ' + f(TM.tts, TM.play) + '｜合計 ' + f(TM.end, TM.play);
+    dbgShow();
   }
   async function speak(text) {
     const token = speakToken;
     try {
       const url = await voiceUrl(text);
+      TM.tts = performance.now();
       if (token !== speakToken) return;
       dbgVoice('🔊 自然語音（Worker /tts）正常');
       await playUrl(url);
@@ -787,12 +776,13 @@ svg.penguin{--pg-body:#27518f;--pg-wing:#1f4380;--cap:#3a6fc4;--ol:#4a2b2e}
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           turns: turns.slice(-9), level: settings.level,
-          meta: { sid, n: round + 1, src: src || 'type', conf: typeof conf === 'number' && conf > 0 ? conf : undefined, lang: detectLang(text) }
+          meta: { sid, n: round + 1, src: src || 'type', conf: typeof conf === 'number' && conf > 0 ? conf : undefined, lang: forceLang || detectLang(text) }
         }),
         signal: ctl.signal
       });
       if (!res.ok) throw { code: res.status === 429 ? 'rate_limited' : 'http' };
       const data = await res.json();
+      TM.chat = performance.now();
       const r = parse(data.text);
       turns.push({ role: 'assistant', content: JSON.stringify(r) });
       round++; renderDots();
@@ -810,7 +800,7 @@ svg.penguin{--pg-body:#27518f;--pg-wing:#1f4380;--cap:#3a6fc4;--ol:#4a2b2e}
 
   /* ---------- speech in: record, then Whisper through the Worker ---------- */
   let mediaRec = null, recTimer = null, recStart = 0;
-  let vadStop = null, listenToken = 0, vadOff = false, vadFail = 0, nativeLang = 'en-US', roomFloor = 0.008, mic = null, paused = false;
+  let forceLang = null, vadStop = null, listenToken = 0, vadOff = false, vadFail = 0, nativeLang = 'en-US', roomFloor = 0.008, mic = null, paused = false;
   function openType() { typebox.hidden = false; }
   function noMic(msg) {
     heardEl.textContent = msg;
@@ -912,11 +902,11 @@ svg.penguin{--pg-body:#27518f;--pg-wing:#1f4380;--cap:#3a6fc4;--ol:#4a2b2e}
       clearTimeout(timer);
       if (nativeRec === r) nativeRec = null;
       if (state !== 'listening') return;
-      if (text) { emptyListens = 0; nativeLang = detectLang(text) === 'zh' ? 'zh-TW' : 'en-US'; setState('idle'); ask(text, 'voice', conf); return; }
+      if (text) { emptyListens = 0; if (!forceLang) nativeLang = detectLang(text) === 'zh' ? 'zh-TW' : 'en-US'; setState('idle'); ask(text, 'voice', conf); return; }
       setState('idle');
       if (!err || err === 'no-speech' || err === 'aborted') {
         heardEl.textContent = emptyListens >= 2 ? '點一下麥克風，再跟我說話。' : '沒聽清楚，靠近一點再說一次。';
-        nativeLang = nativeLang === 'en-US' ? 'zh-TW' : 'en-US';
+        if (!forceLang) nativeLang = nativeLang === 'en-US' ? 'zh-TW' : 'en-US';
         emptyListens++; autoListen();
       } else if (err === 'audio-capture') {
         heardEl.textContent = '找不到麥克風。';
@@ -935,6 +925,7 @@ svg.penguin{--pg-body:#27518f;--pg-wing:#1f4380;--cap:#3a6fc4;--ol:#4a2b2e}
      Always-on listening with its own volume gate: it learns the room's noise level, starts when someone talks,
      stops when they pause, boosts quiet voices, and sends the clip to Whisper (which picks Chinese or English by itself).
      If the mic path fails twice, it falls back to the browser's own recognizer. */
+  const TAIL = Math.min(1500, Math.max(350, Number(Q.get('tail')) || 650));   // how long a pause means "finished" (ms)
   const SENS = Math.min(3, Math.max(0.4, Number(Q.get('sens')) || 1));   // ?sens=2 listens harder, ?sens=0.6 ignores more noise
   const STT_URL = WORKER_URL.replace(/\/chat$/, '/stt');
   const CJK = /[㐀-鿿豈-﫿]/g;
@@ -977,7 +968,8 @@ svg.penguin{--pg-body:#27518f;--pg-wing:#1f4380;--cap:#3a6fc4;--ol:#4a2b2e}
         let pre = [], preLen = 0, chunks = [], total = 0;
         let phase = 'wait', warm = [], floor = roomFloor, loudRun = 0, loudChunks = 0, peak = 0, lastLoud = 0, speechAt = 0, done = false;
         const t0 = performance.now(), deadline = t0 + (waitMs || 9000);
-        const pack = () => ({ chunks, rate, dur: total / rate, ratio: peak / Math.max(floor, 0.002) });
+        let loudEnd = 0;
+        const pack = () => { const kept = chunks.slice(0, Math.min(chunks.length, loudEnd + 6)); let n = 0; kept.forEach(k => { n += k.length; }); return { chunks: kept, rate, dur: n / rate, ratio: peak / Math.max(floor, 0.002) }; };   // drop the silence after the last word: smaller clip, faster Whisper
         const end = res => { if (done) return; done = true; m.onchunk = null; vadStop = null; meter(0); resolve(res); };
         vadStop = () => end(phase === 'speech' ? pack() : null);
         const remember = f => { pre.push(f); preLen += f.length; while (pre.length > 1 && preLen - pre[0].length >= preMax) preLen -= pre.shift().length; };
@@ -999,14 +991,14 @@ svg.penguin{--pg-body:#27518f;--pg-wing:#1f4380;--cap:#3a6fc4;--ol:#4a2b2e}
             remember(f);
             loudRun = rms > thr ? loudRun + 1 : 0;
             if (loudRun >= 3) {
-              phase = 'speech'; speechAt = lastLoud = now; chunks = pre.slice(); total = preLen; peak = rms; loudChunks = loudRun;
+              phase = 'speech'; speechAt = lastLoud = now; chunks = pre.slice(); total = preLen; peak = rms; loudChunks = loudRun; loudEnd = chunks.length;
               if (cb.start) cb.start();
             } else if (now > deadline) end(null);
           } else {
             chunks.push(f); total += f.length; peak = Math.max(peak, rms);
-            if (rms > thr * 0.55) { lastLoud = now; loudChunks++; }
+            if (rms > thr * 0.55) { lastLoud = now; loudChunks++; loudEnd = chunks.length; }
             const len = now - speechAt;
-            if (now - lastLoud > 1000 || len > 10000) {
+            if (now - lastLoud > TAIL || len > 10000) {
               if (loudChunks < 8 && len <= 10000) {               // only a bump or a click: keep waiting
                 phase = 'wait'; chunks = []; total = 0; loudRun = 0; loudChunks = 0; peak = 0; pre = []; preLen = 0;
                 if (cb.reset) cb.reset();
@@ -1072,6 +1064,7 @@ svg.penguin{--pg-body:#27518f;--pg-wing:#1f4380;--cap:#3a6fc4;--ol:#4a2b2e}
     transcribeVad(res);
   }
   async function transcribeVad(res) {
+    TM.end = performance.now(); TM.stt = TM.chat = TM.tts = TM.play = 0;
     setState('thinking');
     show('…', '');
     heardEl.textContent = '辨識中…';
@@ -1081,11 +1074,12 @@ svg.penguin{--pg-body:#27518f;--pg-wing:#1f4380;--cap:#3a6fc4;--ol:#4a2b2e}
       const r = await fetch(STT_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ audio: b64FromBuffer(wav), lang: 'auto' }),
+        body: JSON.stringify({ audio: b64FromBuffer(wav), lang: forceLang || 'auto', language: forceLang || undefined }),
         signal: ctl.signal
       });
       if (!r.ok) throw { code: r.status === 429 ? 'rate_limited' : 'http' };
       const data = await r.json();
+      TM.stt = performance.now();
       let text = (data.text || '').trim();
       if (text && isArtifact(text, res)) text = '';
       vadFail = 0;
@@ -1139,6 +1133,13 @@ svg.penguin{--pg-body:#27518f;--pg-wing:#1f4380;--cap:#3a6fc4;--ol:#4a2b2e}
     startListening();
   }
   powerBtn.onclick = () => { if (paused) resumeListening(); else pauseListening(); };
+  // Language: auto by default; tap to lock Chinese or English (more accurate when you know who is talking).
+  const langBtn = $('#lang');
+  langBtn.onclick = () => {
+    forceLang = forceLang === null ? 'zh' : forceLang === 'zh' ? 'en' : null;
+    langBtn.textContent = forceLang === 'zh' ? '🌐 中文' : forceLang === 'en' ? '🌐 English' : '🌐 自動';
+    if (forceLang) nativeLang = forceLang === 'zh' ? 'zh-TW' : 'en-US';
+  };
 
   function startListening() {
     if (paused || round >= MAX_ROUNDS || startEl.hidden === false) return;
