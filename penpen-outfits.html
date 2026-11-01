@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>彭彭企鵝 30 款造型</title>
+<style>
+:root{--ink:#12305a;--ink-soft:#4f6d93;--beak:#ff9f1c;--ol:#4a2b2e}
+body{margin:0;background:#d7f0fa;color:var(--ink);font-family:'Noto Sans TC','PingFang TC','Microsoft JhengHei',system-ui,sans-serif}
+header{padding:20px 16px 4px;text-align:center}
+h1{margin:0;font-size:24px}
+header p{margin:6px 0 0;color:var(--ink-soft);font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;padding:16px;max-width:1100px;margin:0 auto}
+.card{background:#fff;border-radius:16px;padding:8px 8px 10px;text-align:center;box-shadow:0 3px 0 #b5dff2;position:relative}
+.card.today{outline:4px solid #ff6a57}
+.card svg{width:100%;height:auto;display:block;overflow:visible;--pg-body:#27518f;--pg-wing:#1f4380;--beak:#ff9f1c;--ol:#4a2b2e;--scarf:#ff6a57;--ink:#12305a}
+.card .jaw{transform:scaleY(.4);transform-box:fill-box;transform-origin:50% 0}
+.card .dots,.card .rings{opacity:0}
+.day{position:absolute;left:8px;top:6px;background:#12305a;color:#fff;border-radius:99px;font-size:12px;font-weight:700;padding:1px 8px}
+.name{margin-top:4px;font-weight:700;font-size:15px}
+.tag{margin-top:2px;font-size:12px;color:#ff6a57;font-weight:700}
+</style>
+</head>
+<body>
+<header>
+  <h1>彭彭企鵝 30 款造型</h1>
+  <p>每天換一款，30 天一輪。紅框是今天的造型。門口頁加上 <b>?day=1</b>～<b>?day=30</b> 可以預覽任何一天。</p>
+</header>
+<div class="grid" id="grid"></div>
+<script src="penpen-outfits.js"></script>
+<script>
+(function () {
+  var P = window.PenpenOutfits, today = P.dayIndex(), g = document.getElementById('grid');
+  for (var i = 0; i < P.count; i++) {
+    var d = document.createElement('div');
+    d.className = 'card' + (i === today ? ' today' : '');
+    d.innerHTML = '<span class="day">第 ' + (i + 1) + ' 天</span><svg viewBox="-30 20 380 400" role="img" aria-label="' + P.list[i] + '">' + P.build(i) + '</svg><div class="name">' + P.list[i] + '</div>' + (i === today ? '<div class="tag">今天</div>' : '');
+    g.appendChild(d);
+  }
+})();
+</script>
+</body>
+</html>
