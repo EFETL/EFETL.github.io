@@ -180,6 +180,7 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
 @keyframes helloPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
 @media (prefers-reduced-motion: reduce){.hello{animation:none}}
 #dots{display:none}
+#dbg{max-width:100%;font-size:2.8cqw;line-height:1.4;color:var(--ink-soft);text-align:center;word-break:break-all;opacity:.85}
 #unlock{position:absolute;left:50%;top:14%;transform:translateX(-50%);z-index:8;max-width:86%;background:#ffe27a;color:#4a3500;border-radius:99px;padding:2.4cqw 5cqw;font-size:4cqw;font-weight:600;text-align:center;box-shadow:0 .8cqw 0 rgba(0,0,0,.12)}
 /* penguin parts: where each one pivots */
 .penguin .walker,.penguin .air{transform-box:view-box;transform-origin:160px 392px}
@@ -265,6 +266,7 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
     </div>
     <div class="dots" id="dots" aria-hidden="true"></div>
     <div class="status" id="status"></div>
+    <div id="dbg" hidden></div>
   </section>
 
   <div class="start" id="start" style="align-items:center;padding-top:0" hidden>
@@ -506,7 +508,7 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
   if (hasTTS) { loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
   function pickVoice() {
     const en = voices.filter(v => /^en[-_]/i.test(v.lang));
-    const pref = ['Samantha', 'Google US English', 'Aria', 'Jenny', 'Ava', 'Karen', 'Zira', 'Allison'];
+    const pref = ['Natural', 'Premium', 'Enhanced', 'Aria', 'Jenny', 'Ava', 'Samantha', 'Google US English', 'Karen', 'Zira', 'Allison'];
     for (const n of pref) { const v = en.find(x => x.name.includes(n)); if (v) return v; }
     return en.find(v => /en[-_]US/i.test(v.lang)) || en[0] || null;
   }
@@ -521,8 +523,8 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
         const u = new SpeechSynthesisUtterance(text);
         u.lang = 'en-US';
         const v = pickVoice(); if (v) u.voice = v;
-        u.rate = settings.slow ? 0.65 : 0.9;
-        u.pitch = 1.25;
+        u.rate = settings.slow ? 0.65 : 0.95;
+        u.pitch = 1.0;
         u.onend = finish; u.onerror = finish;
         try { speechSynthesis.speak(u); } catch (e) { finish(); }
         setTimeout(finish, 20000);
@@ -576,14 +578,23 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
       if (p) p.catch(e => { if (e && e.name === 'NotAllowedError') showUnlock(); rej(e); });
     });
   }
+  function dbgVoice(msg) {
+    const el = document.getElementById('dbg');
+    if (!el || !/[?&]debug=1/.test(location.search)) return;
+    el.hidden = false; el.textContent = msg;
+  }
   async function speak(text) {
     const token = speakToken;
     try {
       const url = await voiceUrl(text);
       if (token !== speakToken) return;
+      dbgVoice('🔊 自然語音（Worker /tts）正常');
       await playUrl(url);
     } catch (e) {
       if (token !== speakToken || (e && e.name === 'AbortError')) return;
+      const why = e && e.name === 'TypeError' ? '連不上或被網域限制（CORS）' : String(e && e.message || e);
+      dbgVoice('⚠️ 改用裝置內建語音（機械音）。原因：' + why);
+      try { console.warn('[Pen-Pen] natural voice failed:', e); } catch (x) {}
       await speakDevice(text);
     }
   }
