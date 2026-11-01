@@ -179,6 +179,8 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
 .hello small{display:block;margin-top:3.5cqw;font-size:3cqw;line-height:1.5;color:var(--ink-soft)}
 @keyframes helloPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
 @media (prefers-reduced-motion: reduce){.hello{animation:none}}
+#dots{display:none}
+#unlock{position:absolute;left:50%;top:14%;transform:translateX(-50%);z-index:8;max-width:86%;background:#ffe27a;color:#4a3500;border-radius:99px;padding:2.4cqw 5cqw;font-size:4cqw;font-weight:600;text-align:center;box-shadow:0 .8cqw 0 rgba(0,0,0,.12)}
 /* penguin parts: where each one pivots */
 .penguin .walker,.penguin .air{transform-box:view-box;transform-origin:160px 392px}
 .penguin .head{transform-box:view-box;transform-origin:160px 214px}
@@ -191,7 +193,7 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
 .stage[data-state="listening"] .tilt{transform:translateY(3px)}
 .stage[data-mood="oops"][data-state="speaking"] .tilt{transform:none}
 /* mic ring grows with the volume it hears, so a teacher can see the mic is alive */
-.mic.on::before{content:"";position:absolute;inset:-1cqw;border-radius:50%;border:.7cqw solid #fff;opacity:calc(.2 + var(--lvl,0) * .7);transform:scale(calc(1 + var(--lvl,0) * .28));transition:transform .06s,opacity .06s}
+.mic::before{content:"";pointer-events:none;position:absolute;inset:-1cqw;border-radius:50%;border:.7cqw solid #fff;opacity:calc(var(--lvl,0) * .85);transform:scale(calc(1 + var(--lvl,0) * .28));transition:transform .06s,opacity .06s}
 </style>
 </head>
 <body>
@@ -205,8 +207,8 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
 
   <section class="bubble" aria-live="polite">
     <div class="btext"><div class="binner">
-      <p class="en" id="en">Hi! I'm Pen-Pen.</p>
-      <p class="zh" id="zh">嗨！我是 Pen-Pen。</p>
+      <p class="en" id="en">Hi! I'm Pen-Pen. Say hello!</p>
+      <p class="zh" id="zh">嗨！我是 Pen-Pen，跟我打招呼吧！</p>
     </div></div>
   </section>
 
@@ -265,7 +267,7 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
     <div class="status" id="status"></div>
   </section>
 
-  <div class="start" id="start" style="align-items:center;padding-top:0">
+  <div class="start" id="start" style="align-items:center;padding-top:0" hidden>
     <button class="hello" id="hello" type="button">
       <i>🐧</i>
       <b>Hi! Talk to me!</b>
@@ -273,6 +275,7 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
       <small>為了改進教學，會匿名保存你說的英文文字 7 天，不記錄姓名，也不錄音。</small>
     </button>
   </div>
+  <div id="unlock" hidden>👆 點一下畫面，打開聲音和麥克風（只要一次）</div>
   <div class="bye" id="bye" hidden>
     <div class="stars">⭐⭐⭐⭐⭐</div>
     <b>Great job!</b>
@@ -341,7 +344,7 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
 
   /* ---------- state + display ---------- */
   const STATUS = {
-    idle: '直接說英文就可以，我在聽',
+    idle: '直接跟我說話，中文或英文都可以',
     listening: '我在聽… 說完停一下就好',
     thinking: 'Pen-Pen is thinking…',
     speaking: 'Pen-Pen is talking…'
@@ -533,7 +536,11 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
   player.preload = 'auto';
   const SILENT = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YQAAAAA=';
   let audioUnlocked = false, ttsCtl = null, stopPlay = null, lastAudio = { text: '', url: '' };
+  const unlockEl = $('#unlock');
+  const showUnlock = () => { unlockEl.hidden = false; };
   function unlockAudio() {
+    unlockEl.hidden = true;
+    if (mic && mic.ctx.state !== 'running') { try { mic.ctx.resume(); } catch (e) {} }
     if (audioUnlocked) return;
     audioUnlocked = true;
     try { player.src = SILENT; const p = player.play(); if (p) p.catch(() => { audioUnlocked = false; }); } catch (e) { audioUnlocked = false; }
@@ -566,7 +573,7 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
       player.defaultPlaybackRate = rate; player.playbackRate = rate;
       player.preservesPitch = true;
       const p = player.play();
-      if (p) p.catch(rej);
+      if (p) p.catch(e => { if (e && e.name === 'NotAllowedError') showUnlock(); rej(e); });
     });
   }
   async function speak(text) {
@@ -589,6 +596,7 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
   }
   async function say(en, zh, mood) {
     show(en, zh);
+    lastTalk = Date.now();
     stage.dataset.mood = mood || 'happy';
     setState('speaking');
     if (mood === 'excited') hop();
@@ -600,7 +608,7 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
   let emptyListens = 0, autoTimer = null;
   function autoListen() {
     clearTimeout(autoTimer);
-    if (startEl.hidden === false || !byeEl.hidden || round >= MAX_ROUNDS || emptyListens >= 3) return;
+    if (startEl.hidden === false || !byeEl.hidden || round >= MAX_ROUNDS || emptyListens >= (vadOff ? 3 : 1e9)) return;
     autoTimer = setTimeout(() => { if (state === 'idle' && startEl.hidden && byeEl.hidden) startListening(); }, 350);
   }
 
@@ -638,7 +646,7 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
 
   /* ---------- one visit = one child: pick a level, up to 5 rounds, then back to the start screen ---------- */
   const Q = new URLSearchParams(location.search);
-  const MAX_ROUNDS = Math.min(20, Math.max(3, Number(Q.get('rounds')) || 10)), IDLE_MS = 45000;
+  const MAX_ROUNDS = 1e9, VISIT_MS = 60000;            // a visit has no round limit; it ends after a minute of quiet
   const DOOR_LEVEL = [0, 1, 2].includes(Number(Q.get('level'))) && Q.get('level') !== null ? Number(Q.get('level')) : 1;
   const startEl = $('#start'), byeEl = $('#bye'), dotsEl = $('#dots');
   let sid = '', round = 0;
@@ -649,7 +657,6 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
   }
   function renderDots() {
     dotsEl.innerHTML = '';
-    for (let i = 0; i < MAX_ROUNDS; i++) { const d = document.createElement('i'); if (i < round) d.className = 'on'; dotsEl.appendChild(d); }
   }
   renderDots();
   let wakeLock = null;
@@ -662,12 +669,27 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
     wantHome = true;                                   // walk back to the middle to say hello
     openMic().catch(() => {});                         // ask for the mic during the tap, while the greeting plays
     settings.level = level;            // this visit only; not saved, so the next child picks again
-    sid = newSid(); round = 0; renderDots(); emptyListens = 0;
-    GREETING = GREETINGS[Math.floor(Math.random() * GREETINGS.length)];
-    turns.length = 0;
-    turns.push({ role: 'assistant', content: JSON.stringify(GREETING) });
+    newVisit();
     startEl.hidden = true; byeEl.hidden = true;
     say(GREETING.en, GREETING.zh, GREETING.mood);
+  }
+  const HINT = { en: "Hi! I'm Pen-Pen. Say hello!", zh: '嗨！我是 Pen-Pen，跟我打招呼吧！' };
+  let lastTalk = Date.now();
+  function newVisit() {
+    sid = newSid(); round = 0; emptyListens = 0; lastTalk = Date.now();
+    GREETING = GREETINGS[Math.floor(Math.random() * GREETINGS.length)];
+    turns.length = 0;
+    turns.push({ role: 'assistant', content: JSON.stringify(GREETING) });   // keeps the conversation shape the Worker expects; not spoken
+    wantHome = true;                                                         // walk to the middle to meet them
+  }
+  // Quiet for a minute: forget this child, show the hint again, and keep listening for the next one.
+  function endVisit() {
+    cancelSpeech();
+    if (ctl) { try { ctl.abort(); } catch (e) {} }
+    turns.length = 0; sid = ''; round = 0; emptyListens = 0;
+    stage.dataset.mood = 'happy';
+    show(HINT.en, HINT.zh);
+    heardEl.textContent = '';
   }
   function resetToStart() {
     recAbort = true;
@@ -696,12 +718,14 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
   }
   ['pointerdown', 'touchstart', 'keydown'].forEach(ev => document.addEventListener(ev, () => { lastActive = Date.now(); }, true));
   setInterval(() => {
-    if (startEl.hidden && byeEl.hidden && state === 'idle' && Date.now() - lastActive > IDLE_MS) resetToStart();
+    if (sid && (state === 'idle' || state === 'listening') && Date.now() - lastTalk > VISIT_MS) endVisit();
   }, 1000);
 
   async function ask(text, src, conf) {
     text = (text || '').trim();
     if (!text || state === 'thinking' || round >= MAX_ROUNDS || startEl.hidden === false) return;
+    if (!sid) newVisit();
+    lastTalk = Date.now();
     heardEl.textContent = '你說：' + text;
     cancelSpeech();
     setState('thinking');
@@ -732,6 +756,7 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
       const m = ERR[e && e.code] || ERR.http;
       show(m[0], m[1]);
       setState('idle');
+      autoListen();
     }
   }
 
@@ -877,6 +902,8 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
     const AC = window.AudioContext || window.webkitAudioContext;
     const ctx = new AC();
     if (ctx.state === 'suspended') { try { await ctx.resume(); } catch (e) {} }
+    while (ctx.state !== 'running') { showUnlock(); await sleep(400); try { await ctx.resume(); } catch (e) {} }
+    unlockEl.hidden = true;
     const src = ctx.createMediaStreamSource(stream);
     const proc = ctx.createScriptProcessor(2048, 1, 1);
     const sink = ctx.createGain(); sink.gain.value = 0;      // keeps the graph running without playing the mic out loud
@@ -894,13 +921,14 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
   function meter(v) { micBtn.style.setProperty('--lvl', Math.max(0, Math.min(1, v)).toFixed(2)); }
 
   // Resolves with { chunks, rate, dur, ratio } when someone has spoken and paused, or null if nobody spoke for 9 seconds.
-  function listenVad() {
+  function listenVad(cb, waitMs) {
+    cb = cb || {};
     return new Promise((resolve, reject) => {
       openMic().then(m => {
         const rate = m.rate, preMax = Math.ceil(rate * 0.6);
         let pre = [], preLen = 0, chunks = [], total = 0;
         let phase = 'wait', warm = [], floor = roomFloor, loudRun = 0, loudChunks = 0, peak = 0, lastLoud = 0, speechAt = 0, done = false;
-        const t0 = performance.now(), deadline = t0 + 9000;
+        const t0 = performance.now(), deadline = t0 + (waitMs || 9000);
         const pack = () => ({ chunks, rate, dur: total / rate, ratio: peak / Math.max(floor, 0.002) });
         const end = res => { if (done) return; done = true; m.onchunk = null; vadStop = null; meter(0); resolve(res); };
         vadStop = () => end(phase === 'speech' ? pack() : null);
@@ -924,7 +952,7 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
             loudRun = rms > thr ? loudRun + 1 : 0;
             if (loudRun >= 3) {
               phase = 'speech'; speechAt = lastLoud = now; chunks = pre.slice(); total = preLen; peak = rms; loudChunks = loudRun;
-              heardEl.textContent = '🎤 收到聲音了…';
+              if (cb.start) cb.start();
             } else if (now > deadline) end(null);
           } else {
             chunks.push(f); total += f.length; peak = Math.max(peak, rms);
@@ -933,7 +961,7 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
             if (now - lastLoud > 1000 || len > 10000) {
               if (loudChunks < 8 && len <= 10000) {               // only a bump or a click: keep waiting
                 phase = 'wait'; chunks = []; total = 0; loudRun = 0; loudChunks = 0; peak = 0; pre = []; preLen = 0;
-                heardEl.textContent = '🎤 請說話…';
+                if (cb.reset) cb.reset();
               } else end(pack());
             }
           }
@@ -973,23 +1001,23 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
   async function startVad() {
     cancelSpeech();
     const token = ++listenToken;
-    stage.dataset.mood = 'happy';
     STATUS.listening = '我在聽… 直接說就可以';
-    setState('listening');
-    heardEl.textContent = '🎤 請說話…';
     let res;
-    try { res = await listenVad(); }
+    try {
+      res = await listenVad({
+        start() { if (token === listenToken) { stage.dataset.mood = 'happy'; setState('listening'); heardEl.textContent = '🎤 收到聲音了…'; } },
+        reset() { if (token === listenToken && state === 'listening') { setState('idle'); heardEl.textContent = ''; } }
+      }, sid ? 9000 : 60000);
+    }
     catch (e) {                                              // mic refused or missing: use the browser's recognizer instead
       vadOff = true;
       if (token !== listenToken) return;
       if (SR && !nativeOff) startNative(); else noMic(e && e.name === 'NotAllowedError' ? '麥克風被擋住了，請到瀏覽器設定允許麥克風。' : '找不到麥克風。');
       return;
     }
-    if (token !== listenToken || state !== 'listening') return;
-    if (!res) {
-      setState('idle');
-      emptyListens++;
-      heardEl.textContent = emptyListens >= 3 ? '點一下麥克風，再跟我說話。' : '我在這裡，說說看吧！';
+    if (token !== listenToken) return;
+    if (!res) {                                              // nobody spoke: stay in standby and keep listening
+      if (state === 'listening') setState('idle');
       autoListen();
       return;
     }
@@ -1137,6 +1165,10 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
   /* ---------- start (a tap unlocks speech on phones) ---------- */
   $('#hello').onclick = () => beginSession(DOOR_LEVEL);
   director();
+  keepAwake();
+  show(HINT.en, HINT.zh);
+  { const p = player.play ? (player.src = SILENT, player.play()) : null; if (p) p.then(() => { audioUnlocked = true; }, () => showUnlock()); }
+  setTimeout(startListening, 400);
 })();
 </script>
 </body>
