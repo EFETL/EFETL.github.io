@@ -179,6 +179,19 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
 .hello small{display:block;margin-top:3.5cqw;font-size:3cqw;line-height:1.5;color:var(--ink-soft)}
 @keyframes helloPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
 @media (prefers-reduced-motion: reduce){.hello{animation:none}}
+/* penguin parts: where each one pivots */
+.penguin .walker,.penguin .air{transform-box:view-box;transform-origin:160px 392px}
+.penguin .head{transform-box:view-box;transform-origin:160px 214px}
+.penguin .fl{transform-box:view-box;transform-origin:118px 388px}
+.penguin .fr{transform-box:view-box;transform-origin:202px 388px}
+.penguin .wwl{transform-box:view-box;transform-origin:62px 215px}
+.penguin .wwr{transform-box:view-box;transform-origin:258px 215px}
+.penguin .shadow{transform-box:fill-box;transform-origin:center}
+/* the old poses only ever leaned one way: the head now does the leaning, from both sides */
+.stage[data-state="listening"] .tilt{transform:translateY(3px)}
+.stage[data-mood="oops"][data-state="speaking"] .tilt{transform:none}
+/* mic ring grows with the volume it hears, so a teacher can see the mic is alive */
+.mic.on::before{content:"";position:absolute;inset:-1cqw;border-radius:50%;border:.7cqw solid #fff;opacity:calc(.2 + var(--lvl,0) * .7);transform:scale(calc(1 + var(--lvl,0) * .28));transition:transform .06s,opacity .06s}
 </style>
 </head>
 <body>
@@ -200,15 +213,16 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
   <section class="scene">
     <div class="floe"></div>
     <svg class="penguin" viewBox="0 0 320 420" role="img" aria-label="企鵝 Pen-Pen">
-      <ellipse cx="160" cy="398" rx="108" ry="11" fill="rgba(18,48,90,.16)"/>
-      <g class="bob"><g class="tilt">
-        <ellipse cx="118" cy="392" rx="34" ry="14" fill="var(--beak)"/>
-        <ellipse cx="202" cy="392" rx="34" ry="14" fill="var(--beak)"/>
-        <g class="wing wl"><path d="M62 215 C14 250 10 320 40 336 C70 322 86 270 92 232Z" fill="var(--pg-wing)"/></g>
-        <g class="wing wr"><path d="M258 215 C306 250 310 320 280 336 C250 322 234 270 228 232Z" fill="var(--pg-wing)"/></g>
+      <g class="walker">
+      <ellipse class="shadow" cx="160" cy="398" rx="108" ry="11" fill="rgba(18,48,90,.16)"/>
+      <g class="air"><g class="bob"><g class="tilt">
+        <g class="foot fl"><ellipse cx="118" cy="392" rx="34" ry="14" fill="var(--beak)"/></g>
+        <g class="foot fr"><ellipse cx="202" cy="392" rx="34" ry="14" fill="var(--beak)"/></g>
+        <g class="ww wwl"><g class="wing wl"><path d="M62 215 C14 250 10 320 40 336 C70 322 86 270 92 232Z" fill="var(--pg-wing)"/></g></g>
+        <g class="ww wwr"><g class="wing wr"><path d="M258 215 C306 250 310 320 280 336 C250 322 234 270 228 232Z" fill="var(--pg-wing)"/></g></g>
         <ellipse cx="160" cy="240" rx="112" ry="150" fill="var(--pg-body)"/>
         <ellipse cx="160" cy="292" rx="80" ry="94" fill="#fff"/>
-        <ellipse cx="160" cy="176" rx="86" ry="62" fill="#fff"/>
+        <g class="head"><ellipse cx="160" cy="176" rx="86" ry="62" fill="#fff"/>
         <path d="M150 94 q-4 -14 -13 -17 M160 92 q0 -16 4 -21 M170 94 q6 -12 15 -14" fill="none" stroke="var(--pg-body)" stroke-width="5" stroke-linecap="round"/>
         <circle cx="100" cy="199" r="11" fill="#ff9fb0" opacity=".55"/>
         <circle cx="220" cy="199" r="11" fill="#ff9fb0" opacity=".55"/>
@@ -217,12 +231,14 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
           <g class="eye"><ellipse cx="196" cy="170" rx="13" ry="16" fill="#12203a"/><circle cx="200" cy="163" r="5" fill="#fff"/><circle cx="192" cy="176" r="2.5" fill="#fff"/></g>
         </g>
         <g class="jaw"><path d="M146 198 Q160 226 174 198 Q160 204 146 198Z" fill="var(--beak-low)"/></g>
-        <path d="M138 190 Q160 174 182 190 Q160 208 138 190Z" fill="var(--beak)"/>
+        <path d="M138 190 Q160 174 182 190 Q160 208 138 190Z" fill="var(--beak)"/></g>
         <path d="M66 240 Q160 282 254 240 L260 266 Q160 312 60 266Z" fill="var(--scarf)"/>
         <path d="M206 276 L234 346 L203 354 L182 292Z" fill="var(--scarf-dark)"/>
         <g class="dots" fill="var(--ink)"><circle cx="236" cy="104" r="6"/><circle cx="258" cy="86" r="8"/><circle cx="284" cy="64" r="10"/></g>
       </g></g>
       <g class="rings"><circle cx="160" cy="180" r="110"/><circle cx="160" cy="180" r="110"/><circle cx="160" cy="180" r="110"/></g>
+      </g>
+      </g>
     </svg>
   </section>
 
@@ -334,6 +350,7 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
   function setState(s) {
     state = s;
     lastActive = Date.now();   // any change (listening, thinking, speaking, idle) restarts the idle timer
+    if (typeof kick === 'function') kick();
     stage.dataset.state = s;
     statusEl.textContent = STATUS[s];
     micBtn.classList.toggle('on', s === 'listening');
@@ -345,12 +362,138 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
     enEl.textContent = en;
     zhEl.textContent = settings.zh ? zh : '';
   }
-  function hop() {
-    bob.classList.remove('hop');
-    void bob.getBoundingClientRect();
-    bob.classList.add('hop');
-    bob.addEventListener('animationend', () => bob.classList.remove('hop'), { once: true });
+  /* ---------- penguin choreography: walk, hop, sway, shake, nod, wave, dance ---------- */
+  const PG = {};
+  ['walker', 'air', 'head', 'fl', 'fr', 'wwl', 'wwr', 'shadow'].forEach(k => { PG[k] = document.querySelector('.penguin .' + k); });
+  const calm = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const live = new Set();
+  let posX = 0, walking = false, wantHome = false, kickRes = null;
+  const MAXX = 92;
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  const sgn = () => (Math.random() < .5 ? -1 : 1);
+  const R = d => 'rotate(' + d + 'deg)';
+  const T = v => ({ transform: v });
+  function A(name, frames, ms, opts, keep) {
+    const el = PG[name];
+    if (!el || !el.animate) return Promise.resolve();
+    const a = el.animate(frames, Object.assign({ duration: ms, easing: 'ease-in-out' }, opts || {}));
+    if (!keep) live.add(a);
+    const p = a.finished.then(() => {}, () => {}).then(() => { live.delete(a); });
+    p.anim = a;
+    return p;
   }
+  function setX(x) { posX = Math.max(-MAXX, Math.min(MAXX, x)); PG.walker.style.transform = 'translateX(' + posX + 'px)'; }
+  // The state changed (listening / thinking / speaking): drop whatever the head, wings and body were doing and choose again.
+  function kick() {
+    live.forEach(a => { try { a.cancel(); } catch (e) {} });
+    live.clear();
+    if (kickRes) { const r = kickRes; kickRes = null; r(); }
+  }
+  const wake = () => new Promise(r => { kickRes = r; });
+
+  const feetTap = (ms, n) => Promise.all([
+    A('fl', [T('translateY(0)'), T('translateY(-13px)'), T('translateY(0)')], ms / n, { iterations: n }),
+    A('fr', [T('translateY(0)'), T('translateY(-13px)'), T('translateY(0)')], ms / n, { iterations: n, delay: ms / n / 2 })
+  ]);
+  // 擺頭: the head swings left and right
+  const mSway = () => { const s = sgn(); return Promise.all([
+    A('head', [T(R(0)), T(R(-12 * s)), T(R(12 * s)), T(R(-8 * s)), T(R(8 * s)), T(R(0))], 1700),
+    A('air', [T(R(0)), T(R(2 * s)), T(R(-2 * s)), T(R(0))], 1700)
+  ]); };
+  // 搖頭: quick "no"
+  const mShake = () => A('head', [T('translateX(0) ' + R(0)), T('translateX(-9px) ' + R(-7)), T('translateX(9px) ' + R(7)), T('translateX(-9px) ' + R(-7)), T('translateX(9px) ' + R(7)), T('translateX(-4px) ' + R(-3)), T('translateX(0) ' + R(0))], 1000);
+  // 點頭
+  const mNod = () => A('head', [T('translateY(0)'), T('translateY(8px)'), T('translateY(0)'), T('translateY(8px)'), T('translateY(0)')], 900);
+  // look around
+  const mLook = () => A('head', [T('translateX(0) ' + R(0)), T('translateX(-9px) ' + R(-6)), T('translateX(-9px) ' + R(-6)), T('translateX(9px) ' + R(6)), T('translateX(9px) ' + R(6)), T('translateX(0) ' + R(0))], 2000);
+  // curious head tilt (either side), used while listening
+  const mCurious = () => { const s = sgn(); return Promise.all([
+    A('head', [T(R(0)), T(R(10 * s)), T(R(10 * s)), T(R(-6 * s)), T(R(0))], 1500),
+    A('air', [T('translateY(0)'), T('translateY(3px)'), T('translateY(0)')], 1500)
+  ]); };
+  const mThink = () => { const s = sgn(); return A('head', [T('translateY(0) ' + R(0)), T('translateY(-3px) ' + R(-9 * s)), T('translateY(-3px) ' + R(-9 * s)), T('translateY(0) ' + R(0))], 1500); };
+  // wave with the right wing
+  const mWave = () => Promise.all([
+    A('wwr', [T(R(0)), T(R(-64)), T(R(-30)), T(R(-64)), T(R(-30)), T(R(-64)), T(R(0))], 1300),
+    A('head', [T(R(0)), T(R(7)), T(R(7)), T(R(0))], 1300)
+  ]);
+  // jump with a little squash and stretch, both wings up, feet tucked
+  const mHop = () => Promise.all([
+    A('air', [T('translateY(0) scale(1,1)'), { transform: 'translateY(0) scale(1.07,.9)', offset: .15 }, { transform: 'translateY(-48px) scale(.96,1.06)', offset: .5 }, { transform: 'translateY(0) scale(1.08,.9)', offset: .82 }, T('translateY(0) scale(1,1)')], 780, { easing: 'ease-out' }),
+    A('shadow', [T('scale(1)'), { transform: 'scale(.7)', offset: .5 }, T('scale(1)')], 780),
+    A('wwl', [T(R(0)), { transform: R(44), offset: .5 }, T(R(0))], 780),
+    A('wwr', [T(R(0)), { transform: R(-44), offset: .5 }, T(R(0))], 780),
+    A('fl', [T('translateY(0)'), { transform: 'translateY(-12px)', offset: .5 }, T('translateY(0)')], 780),
+    A('fr', [T('translateY(0)'), { transform: 'translateY(-12px)', offset: .5 }, T('translateY(0)')], 780)
+  ]);
+  const mHopWave = async () => { await mHop(); await mWave(); };
+  // dance: flap, rock, tap feet, swing the head
+  const mDance = () => { const s = sgn(); return Promise.all([
+    A('air', [T(R(0)), T(R(-4 * s) + ' translateY(-6px)'), T(R(0)), T(R(4 * s) + ' translateY(-6px)'), T(R(0)), T(R(-4 * s) + ' translateY(-6px)'), T(R(0))], 1600),
+    A('wwl', [T(R(0)), T(R(34)), T(R(0)), T(R(34)), T(R(0)), T(R(34)), T(R(0))], 1600),
+    A('wwr', [T(R(0)), T(R(-34)), T(R(0)), T(R(-34)), T(R(0)), T(R(-34)), T(R(0))], 1600, { delay: 200 }),
+    A('head', [T(R(0)), T(R(-10 * s)), T(R(10 * s)), T(R(-10 * s)), T(R(10 * s)), T(R(0))], 1600),
+    feetTap(1600, 4)
+  ]); };
+  // turn around (a full spin on the spot)
+  const mTurn = () => A('air', [T('scale(1,1)'), { transform: 'scale(.04,1)', offset: .35 }, { transform: 'scale(-1,1)', offset: .6 }, { transform: 'scale(.04,1)', offset: .8 }, T('scale(1,1)')], 1100);
+  // waddle across the ice
+  async function mWalk(dist) {
+    if (walking) return;
+    const from = posX, to = Math.max(-MAXX, Math.min(MAXX, posX + dist)), d = to - from;
+    if (Math.abs(d) < 14) return;
+    walking = true;
+    const steps = Math.max(2, Math.round(Math.abs(d) / 24)), n = steps * 2;
+    const ms = Math.abs(d) / 90 * 1000, dir = d > 0 ? 1 : -1;
+    const wk = [], bounce = [];
+    for (let k = 0; k <= n; k++) {
+      wk.push(T('translateX(' + (from + d * k / n) + 'px) ' + R(k % 2 ? (k % 4 === 1 ? 6 : -6) : 0)));
+      bounce.push(T('translateY(' + (k % 2 ? -6 : 0) + 'px)'));
+    }
+    const w = A('walker', wk, ms, { easing: 'linear', fill: 'forwards' }, true);
+    await Promise.all([w, A('air', bounce, ms, { easing: 'linear' }), A('head', [T(R(0)), T(R(5 * dir)), T(R(0))], ms), feetTap(ms, steps)]);
+    setX(to);
+    try { w.anim.cancel(); } catch (e) {}
+    walking = false;
+  }
+  const walkR = () => { const dir = posX > 30 ? -1 : posX < -30 ? 1 : sgn(); return mWalk(dir * rnd(40, 90)); };
+  const walkHome = () => mWalk(-posX);
+
+  function pick(list) {
+    let r = Math.random() * list.reduce((t, x) => t + x[0], 0);
+    for (const [w, f] of list) { if ((r -= w) <= 0) return f; }
+    return list[0][1];
+  }
+  function pickMove() {
+    const st = stage.dataset.state, mood = stage.dataset.mood;
+    if (wantHome) { wantHome = false; if (Math.abs(posX) > 15) return walkHome; }
+    const wk = walking ? mSway : walkR;
+    if (!startEl.hidden) return pick([[3, mHopWave], [2, mSway], [2, wk], [1, mLook]]);   // waiting for someone to tap
+    if (st === 'speaking') {
+      if (mood === 'excited') return pick([[3, mHopWave], [2, mDance], [2, mHop], [2, wk], [1, mSway]]);
+      if (mood === 'oops') return pick([[3, mShake], [2, mNod], [1, mLook]]);
+      return pick([[3, mSway], [2, mNod], [2, mWave], [2, wk], [1, mDance]]);
+    }
+    if (st === 'listening') return pick([[3, mCurious], [2, mLook], [1, mNod]]);
+    if (st === 'thinking') return pick([[3, mThink], [2, mLook]]);
+    return pick([[3, mSway], [2, mLook], [2, wk], [1, mHopWave], [1, mTurn]]);
+  }
+  function gap() {
+    if (!startEl.hidden) return rnd(1600, 3800);
+    const st = stage.dataset.state;
+    if (st === 'speaking') return rnd(60, 260);
+    if (st === 'listening' || st === 'thinking') return rnd(150, 500);
+    return rnd(2200, 5200);
+  }
+  async function director() {
+    for (;;) {
+      const mv = calm ? null : pickMove();
+      if (mv) { try { await Promise.race([mv(), wake()]); } catch (e) {} }
+      await Promise.race([sleep(gap()), wake()]);
+    }
+  }
+  function hop() { kick(); }
   setState('idle');
 
   /* ---------- speech out (TTS) ---------- */
@@ -516,6 +659,8 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') keepAwake(); });
   function beginSession(level) {
     keepAwake();
+    wantHome = true;                                   // walk back to the middle to say hello
+    openMic().catch(() => {});                         // ask for the mic during the tap, while the greeting plays
     settings.level = level;            // this visit only; not saved, so the next child picks again
     sid = newSid(); round = 0; renderDots(); emptyListens = 0;
     GREETING = GREETINGS[Math.floor(Math.random() * GREETINGS.length)];
@@ -526,6 +671,7 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
   }
   function resetToStart() {
     recAbort = true;
+    listenToken++; if (vadStop) vadStop(); closeMic(); kick();
     cancelSpeech();
     if (ctl) { try { ctl.abort(); } catch (e) {} }
     if (nativeRec) { try { nativeRec.abort(); } catch (e) {} nativeRec = null; }
@@ -569,7 +715,7 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           turns: turns.slice(-9), level: settings.level,
-          meta: { sid, n: round + 1, src: src || 'type', conf: typeof conf === 'number' && conf > 0 ? conf : undefined }
+          meta: { sid, n: round + 1, src: src || 'type', conf: typeof conf === 'number' && conf > 0 ? conf : undefined, lang: detectLang(text) }
         }),
         signal: ctl.signal
       });
@@ -591,6 +737,7 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
 
   /* ---------- speech in: record, then Whisper through the Worker ---------- */
   let mediaRec = null, recTimer = null, recStart = 0;
+  let vadStop = null, listenToken = 0, vadOff = false, vadFail = 0, nativeLang = 'en-US', roomFloor = 0.008, mic = null;
   function openType() { typebox.hidden = false; }
   function noMic(msg) {
     heardEl.textContent = msg;
@@ -661,6 +808,7 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
     }
   }
   function stopListening() {
+    if (vadStop) { vadStop(); return; }
     if (nativeRec) { try { nativeRec.stop(); } catch (e) {} return; }
     if (mediaRec && mediaRec.state !== 'inactive') { try { mediaRec.stop(); } catch (e) {} }
   }
@@ -673,7 +821,7 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
     cancelSpeech();
     const r = new SR();
     nativeRec = r;
-    r.lang = settings.lang || 'en-US';
+    r.lang = nativeLang;
     r.interimResults = true;
     r.continuous = false;
     let text = '', err = '', conf = 0;
@@ -691,10 +839,11 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
       clearTimeout(timer);
       if (nativeRec === r) nativeRec = null;
       if (state !== 'listening') return;
-      if (text) { emptyListens = 0; setState('idle'); ask(text, 'voice', conf); return; }
+      if (text) { emptyListens = 0; nativeLang = detectLang(text) === 'zh' ? 'zh-TW' : 'en-US'; setState('idle'); ask(text, 'voice', conf); return; }
       setState('idle');
       if (!err || err === 'no-speech' || err === 'aborted') {
         heardEl.textContent = emptyListens >= 2 ? '點一下麥克風，再跟我說話。' : '沒聽清楚，靠近一點再說一次。';
+        nativeLang = nativeLang === 'en-US' ? 'zh-TW' : 'en-US';
         emptyListens++; autoListen();
       } else if (err === 'audio-capture') {
         heardEl.textContent = '找不到麥克風。';
@@ -709,10 +858,188 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
     setState('listening');
     heardEl.textContent = '🎤 請說話…';
   }
+  /* ---------- door microphone ----------
+     Always-on listening with its own volume gate: it learns the room's noise level, starts when someone talks,
+     stops when they pause, boosts quiet voices, and sends the clip to Whisper (which picks Chinese or English by itself).
+     If the mic path fails twice, it falls back to the browser's own recognizer. */
+  const SENS = Math.min(3, Math.max(0.4, Number(Q.get('sens')) || 1));   // ?sens=2 listens harder, ?sens=0.6 ignores more noise
+  const STT_URL = WORKER_URL.replace(/\/chat$/, '/stt');
+  const CJK = /[㐀-鿿豈-﫿]/g;
+  function detectLang(t) {
+    t = String(t || '');
+    const z = (t.match(CJK) || []).length, l = (t.match(/[A-Za-z]/g) || []).length;
+    return z > 0 && z * 2 >= l ? 'zh' : 'en';
+  }
+  async function openMic() {
+    if (mic && mic.stream.active) return mic;
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new Error('nomic');
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true, channelCount: 1 } });
+    const AC = window.AudioContext || window.webkitAudioContext;
+    const ctx = new AC();
+    if (ctx.state === 'suspended') { try { await ctx.resume(); } catch (e) {} }
+    const src = ctx.createMediaStreamSource(stream);
+    const proc = ctx.createScriptProcessor(2048, 1, 1);
+    const sink = ctx.createGain(); sink.gain.value = 0;      // keeps the graph running without playing the mic out loud
+    src.connect(proc); proc.connect(sink); sink.connect(ctx.destination);
+    const m = { stream, ctx, src, proc, sink, rate: ctx.sampleRate, onchunk: null };
+    proc.onaudioprocess = e => { if (m.onchunk) m.onchunk(new Float32Array(e.inputBuffer.getChannelData(0))); };
+    mic = m;
+    return m;
+  }
+  function closeMic() {
+    const m = mic; mic = null;
+    if (!m) return;
+    try { m.onchunk = null; m.proc.onaudioprocess = null; m.src.disconnect(); m.proc.disconnect(); m.stream.getTracks().forEach(t => t.stop()); m.ctx.close(); } catch (e) {}
+  }
+  function meter(v) { micBtn.style.setProperty('--lvl', Math.max(0, Math.min(1, v)).toFixed(2)); }
+
+  // Resolves with { chunks, rate, dur, ratio } when someone has spoken and paused, or null if nobody spoke for 9 seconds.
+  function listenVad() {
+    return new Promise((resolve, reject) => {
+      openMic().then(m => {
+        const rate = m.rate, preMax = Math.ceil(rate * 0.6);
+        let pre = [], preLen = 0, chunks = [], total = 0;
+        let phase = 'wait', warm = [], floor = roomFloor, loudRun = 0, loudChunks = 0, peak = 0, lastLoud = 0, speechAt = 0, done = false;
+        const t0 = performance.now(), deadline = t0 + 9000;
+        const pack = () => ({ chunks, rate, dur: total / rate, ratio: peak / Math.max(floor, 0.002) });
+        const end = res => { if (done) return; done = true; m.onchunk = null; vadStop = null; meter(0); resolve(res); };
+        vadStop = () => end(phase === 'speech' ? pack() : null);
+        const remember = f => { pre.push(f); preLen += f.length; while (pre.length > 1 && preLen - pre[0].length >= preMax) preLen -= pre.shift().length; };
+        m.onchunk = f => {
+          const now = performance.now();
+          let sum = 0; for (let i = 0; i < f.length; i++) sum += f[i] * f[i];
+          const rms = Math.sqrt(sum / f.length);
+          if (now - t0 < 450) {                                   // first, listen to the room (a quiet quarter of it = the noise floor)
+            warm.push(rms); remember(f);
+            const w = warm.slice().sort((a, b) => a - b);
+            floor = Math.max(0.003, w[Math.floor(w.length * 0.25)]);
+            meter(rms / 0.08);
+            return;
+          }
+          const thr = Math.max(floor * 2.4, floor + 0.01) / SENS;
+          meter(rms / (thr * 3));
+          if (phase === 'wait') {
+            if (rms < thr) { floor = floor * 0.95 + rms * 0.05; roomFloor = floor; }
+            remember(f);
+            loudRun = rms > thr ? loudRun + 1 : 0;
+            if (loudRun >= 3) {
+              phase = 'speech'; speechAt = lastLoud = now; chunks = pre.slice(); total = preLen; peak = rms; loudChunks = loudRun;
+              heardEl.textContent = '🎤 收到聲音了…';
+            } else if (now > deadline) end(null);
+          } else {
+            chunks.push(f); total += f.length; peak = Math.max(peak, rms);
+            if (rms > thr * 0.55) { lastLoud = now; loudChunks++; }
+            const len = now - speechAt;
+            if (now - lastLoud > 1000 || len > 10000) {
+              if (loudChunks < 8 && len <= 10000) {               // only a bump or a click: keep waiting
+                phase = 'wait'; chunks = []; total = 0; loudRun = 0; loudChunks = 0; peak = 0; pre = []; preLen = 0;
+                heardEl.textContent = '🎤 請說話…';
+              } else end(pack());
+            }
+          }
+        };
+      }, reject);
+    });
+  }
+  // 16 kHz mono WAV: cut the low rumble, lift quiet voices toward a normal level (never loud ones), resample.
+  function encodeWav(chunks, rate) {
+    let n = 0; chunks.forEach(c => { n += c.length; });
+    const all = new Float32Array(n); let o = 0; chunks.forEach(c => { all.set(c, o); o += c.length; });
+    const a = Math.exp(-2 * Math.PI * 80 / rate);
+    let px = 0, py = 0, pk = 0, sq = 0;
+    for (let i = 0; i < n; i++) { const x = all[i], y = a * (py + x - px); px = x; py = y; all[i] = y; pk = Math.max(pk, Math.abs(y)); sq += y * y; }
+    const rms = Math.sqrt(sq / Math.max(1, n));
+    const g = pk > 0 ? Math.max(1, Math.min(14, 0.12 / Math.max(rms, 1e-4), 0.95 / pk)) : 1;
+    const ratio = rate / 16000, m = Math.floor(n / ratio), out = new Int16Array(m);
+    for (let i = 0; i < m; i++) {
+      const s0 = Math.floor(i * ratio), e0 = Math.min(n, Math.max(s0 + 1, Math.floor((i + 1) * ratio)));
+      let acc = 0; for (let j = s0; j < e0; j++) acc += all[j];
+      const v = Math.max(-1, Math.min(1, acc / (e0 - s0) * g));
+      out[i] = v < 0 ? v * 0x8000 : v * 0x7fff;
+    }
+    const buf = new ArrayBuffer(44 + m * 2), view = new DataView(buf);
+    const str = (p, t) => { for (let i = 0; i < t.length; i++) view.setUint8(p + i, t.charCodeAt(i)); };
+    str(0, 'RIFF'); view.setUint32(4, 36 + m * 2, true); str(8, 'WAVE'); str(12, 'fmt ');
+    view.setUint32(16, 16, true); view.setUint16(20, 1, true); view.setUint16(22, 1, true);
+    view.setUint32(24, 16000, true); view.setUint32(28, 32000, true); view.setUint16(32, 2, true); view.setUint16(34, 16, true);
+    str(36, 'data'); view.setUint32(40, m * 2, true);
+    new Int16Array(buf, 44).set(out);
+    return buf;
+  }
+  // Whisper makes up "Thank you." / subtitles out of near-silence. Only throw those away when the clip was short or barely above the noise.
+  const ARTIFACT = /^(thank you( so much)?( for watching)?|thanks( for watching)?|you|bye|okay|ok|\.+|字幕[\s\S]*|謝謝(觀看|收看|大家)?|請訂閱[\s\S]*|訂閱[\s\S]*|subtitles[\s\S]*)[\s.!。！,，]*$/i;
+  const isArtifact = (t, r) => ARTIFACT.test(String(t).replace(/\s+/g, ' ').trim()) && (r.dur < 1.3 || r.ratio < 2.2);
+
+  async function startVad() {
+    cancelSpeech();
+    const token = ++listenToken;
+    stage.dataset.mood = 'happy';
+    STATUS.listening = '我在聽… 直接說就可以';
+    setState('listening');
+    heardEl.textContent = '🎤 請說話…';
+    let res;
+    try { res = await listenVad(); }
+    catch (e) {                                              // mic refused or missing: use the browser's recognizer instead
+      vadOff = true;
+      if (token !== listenToken) return;
+      if (SR && !nativeOff) startNative(); else noMic(e && e.name === 'NotAllowedError' ? '麥克風被擋住了，請到瀏覽器設定允許麥克風。' : '找不到麥克風。');
+      return;
+    }
+    if (token !== listenToken || state !== 'listening') return;
+    if (!res) {
+      setState('idle');
+      emptyListens++;
+      heardEl.textContent = emptyListens >= 3 ? '點一下麥克風，再跟我說話。' : '我在這裡，說說看吧！';
+      autoListen();
+      return;
+    }
+    transcribeVad(res);
+  }
+  async function transcribeVad(res) {
+    setState('thinking');
+    show('…', '');
+    heardEl.textContent = '辨識中…';
+    ctl = new AbortController();
+    try {
+      const wav = encodeWav(res.chunks, res.rate);
+      const r = await fetch(STT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ audio: b64FromBuffer(wav), lang: 'auto' }),
+        signal: ctl.signal
+      });
+      if (!r.ok) throw { code: r.status === 429 ? 'rate_limited' : 'http' };
+      const data = await r.json();
+      let text = (data.text || '').trim();
+      if (text && isArtifact(text, res)) text = '';
+      vadFail = 0;
+      if (!text) {
+        show(lastEn === '…' ? '' : lastEn, lastZh);
+        heardEl.textContent = emptyListens >= 2 ? '點一下麥克風，再跟我說話。' : '沒聽清楚，靠近一點再說一次。';
+        setState('idle');
+        emptyListens++; autoListen();
+        return;
+      }
+      emptyListens = 0;
+      setState('idle');
+      ask(text, 'voice');
+    } catch (e) {
+      if (e && e.name === 'AbortError') { show(lastEn === '…' ? '' : lastEn, lastZh); setState('idle'); return; }
+      vadFail++;
+      if (vadFail >= 2) vadOff = true;                      // the Whisper route keeps failing: switch to the browser recognizer
+      const m = ERR[e && e.code] || ERR.http;
+      show(m[0], m[1]);
+      heardEl.textContent = '辨識失敗：' + (e && (e.code || e.name || e.message) || 'error');
+      setState('idle');
+      autoListen();
+    }
+  }
+
   function startListening() {
     if (round >= MAX_ROUNDS || startEl.hidden === false) return;
     recAbort = false;
-    if (SR && !nativeOff) startNative(); else startRecorder();
+    if (Q.get('stt') === 'native' || vadOff) { if (SR && !nativeOff) startNative(); else startRecorder(); return; }
+    startVad();
   }
 
   async function startRecorder() {
@@ -809,6 +1136,7 @@ svg.penguin{position:absolute;left:50%;bottom:3.5%;height:96%;aspect-ratio:320/4
 
   /* ---------- start (a tap unlocks speech on phones) ---------- */
   $('#hello').onclick = () => beginSession(DOOR_LEVEL);
+  director();
 })();
 </script>
 </body>
