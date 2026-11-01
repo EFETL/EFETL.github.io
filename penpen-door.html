@@ -651,7 +651,16 @@ svg.penguin{--pg-body:#27518f;--pg-wing:#1f4380;--cap:#3a6fc4;--ol:#4a2b2e}
 
   /* ---------- Claude (through your Cloudflare Worker) ---------- */
   // After deploying the Worker, put its address here (deploy.sh does this for you).
-  const WORKER_URL = 'https://penpen.horseturn.workers.dev/chat';
+  const WORKER_BASE = (() => {
+    const DEFAULT = 'https://penpen.horseturn.workers.dev';
+    try {
+      const w = new URLSearchParams(location.search).get('worker');
+      if (w === 'reset') localStorage.removeItem('penpenWorker');
+      else if (w && /^https:\/\/[a-z0-9-]+(\.[a-z0-9-]+)*\.(workers\.dev|efetl\.com)\/?$/i.test(w)) localStorage.setItem('penpenWorker', w.replace(/\/$/, ''));
+      return localStorage.getItem('penpenWorker') || DEFAULT;
+    } catch (e) { return DEFAULT; }
+  })();
+  const WORKER_URL = WORKER_BASE + '/chat';
   let ctl = null;
   function parse(t) {
     const m = String(t).match(/\{[\s\S]*\}/);
@@ -712,7 +721,28 @@ svg.penguin{--pg-body:#27518f;--pg-wing:#1f4380;--cap:#3a6fc4;--ol:#4a2b2e}
   }
   const HINT = { en: "Hi! I'm Pen-Pen. Say hello!", zh: '嗨！我是 Pen-Pen，跟我打招呼吧！' };
   let lastTalk = Date.now();
+  // Target words for this visit (國小 1200 → 國中 2000 → 英檢初級 → 中級), sent to the Worker so Pen-Pen can work them in.
+  let vocab = null, visitWords = [];
+  fetch('penpen-vocab.json').then(r => r.json()).then(v => { vocab = v; }).catch(() => {});
+  function pickWords(level, n) {
+    if (!vocab) return [];
+    const weights = level === 0 ? { A: 1 } : level === 1 ? { A: .7, B: .3 } : { B: .45, C: .45, D: .1 };
+    let seen = []; try { seen = JSON.parse(localStorage.getItem('penpenSeen') || '[]'); } catch (e) {}
+    const out = [];
+    for (let guard = 0; out.length < n && guard < 60; guard++) {
+      const keys = Object.keys(weights).filter(k => vocab[k] && vocab[k].length);
+      if (!keys.length) break;
+      let r = Math.random() * keys.reduce((t, k) => t + weights[k], 0), pool = keys[0];
+      for (const k of keys) { if ((r -= weights[k]) <= 0) { pool = k; break; } }
+      const w = vocab[pool][Math.floor(Math.random() * vocab[pool].length)];
+      if (!out.includes(w) && !seen.includes(w)) out.push(w);
+    }
+    try { localStorage.setItem('penpenSeen', JSON.stringify(seen.concat(out).slice(-120))); } catch (e) {}
+    return out;
+  }
   function newVisit() {
+    settings.level = DOOR_LEVEL;                       // ?level=0/1/2 (default 1)
+    visitWords = pickWords(DOOR_LEVEL, 3);
     sid = newSid(); round = 0; emptyListens = 0; lastTalk = Date.now();
     GREETING = GREETINGS[Math.floor(Math.random() * GREETINGS.length)];
     turns.length = 0;
@@ -776,7 +806,7 @@ svg.penguin{--pg-body:#27518f;--pg-wing:#1f4380;--cap:#3a6fc4;--ol:#4a2b2e}
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           turns: turns.slice(-9), level: settings.level,
-          meta: { sid, n: round + 1, src: src || 'type', conf: typeof conf === 'number' && conf > 0 ? conf : undefined, lang: forceLang || detectLang(text) }
+          meta: { sid, n: round + 1, src: src || 'type', conf: typeof conf === 'number' && conf > 0 ? conf : undefined, lang: forceLang || detectLang(text), words: visitWords }
         }),
         signal: ctl.signal
       });
