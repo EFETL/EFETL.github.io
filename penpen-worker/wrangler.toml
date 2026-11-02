@@ -1,0 +1,23 @@
+# 給會用命令列的人（用 wrangler 部署）。不用命令列的話，請照 README.md 在 Cloudflare 網頁上點選設定。
+name = "penpen2"
+main = "worker.js"
+compatibility_date = "2025-09-01"
+
+[ai]
+binding = "AI"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "penpen2"
+database_id = "把 D1 的 database_id 貼在這裡"
+
+[triggers]
+crons = ["17 19 * * *"]     # 每天台灣時間 03:17 清掉過期的對話
+
+[vars]
+KEEP_DAYS = "90"            # 對話原文保留天數；每日總數會留更久
+
+# 機密不要寫在這個檔案，用這些指令設定：
+#   npx wrangler secret put ANTHROPIC_API_KEY
+#   npx wrangler secret put STATS_PASSWORD
+#   npx wrangler secret put AZURE_SPEECH_KEY        （選用：微軟 Aria 語音）
