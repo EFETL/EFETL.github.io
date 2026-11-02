@@ -5,6 +5,20 @@
 
 舊的 `penpen` Worker 不用動。新的用新名字 `penpen2`，確認可以用再切換，出問題隨時切回去。
 
+## 最快的方法：一行指令（Mac / Linux）
+
+打開「終端機」，貼上這一行，按 Enter：
+
+```
+bash <(curl -fsSL https://raw.githubusercontent.com/EFETL/EFETL.github.io/main/penpen-worker/deploy.sh)
+```
+
+它會自動：下載程式、登入 Cloudflare、建立資料庫、上傳 Worker、設定金鑰，最後顯示檢查網址。
+你只要做三件事：在跳出的瀏覽器按 **Allow**、貼上 Claude 金鑰、自己訂一組統計頁密碼。
+（電腦要先裝 Node.js：https://nodejs.org 下載 LTS 版。）
+
+不想用終端機的話，照下面在 Cloudflare 網頁上點選也可以。
+
 ## 一、先準備
 
 1. **Cloudflare 帳號**（舊 Worker 用的那個）。
