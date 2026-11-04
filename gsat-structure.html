@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>學測篇章結構練習</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", sans-serif; background: linear-gradient(135deg, #e8f0fe 0%, #f0f4f8 60%, #faf5ff 100%); min-height: 100vh; padding: 64px 16px 80px; color: #1a202c; font-size: 17px; line-height: 1.75; }
+.wrap { max-width: 760px; margin: 0 auto; }
+.hero { text-align: center; margin-bottom: 28px; }
+.hero h1 { font-size: 1.9rem; font-weight: 800; color: #2b4c8c; margin-bottom: 8px; }
+.hero p { color: #718096; font-size: 0.95rem; }
+.rounds { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 20px; }
+.rounds button { border: 2px solid #93c5fd; background: #eff6ff; color: #1d4ed8; font: inherit; font-size: 0.9rem; font-weight: 600; padding: 6px 16px; border-radius: 10px; cursor: pointer; }
+.rounds button.on { background: linear-gradient(135deg, #3b82f6, #6366f1); border-color: transparent; color: #fff; }
+.card { background: #fff; border-radius: 16px; box-shadow: 0 2px 16px rgba(0,0,0,0.08); padding: 24px 28px; margin-bottom: 22px; }
+.card h2 { font-size: 1.15rem; color: #2d3748; margin-bottom: 4px; }
+.card .sub { font-size: 0.85rem; color: #718096; margin-bottom: 14px; }
+.passage p { margin-bottom: 14px; text-align: justify; }
+.slot { display: inline-block; min-width: 56px; padding: 0 10px; margin: 0 3px; border: 2px dashed #93c5fd; background: #eff6ff; color: #1d4ed8; border-radius: 8px; font-weight: 700; cursor: pointer; line-height: 1.5; vertical-align: baseline; }
+.slot.active { border-style: solid; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.25); }
+.slot.filled { border-style: solid; background: #e0e7ff; }
+.slot.ok { background: #d4edda; border-color: #28a745; color: #155724; }
+.slot.bad { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+.hint { font-size: 0.85rem; color: #718096; margin-bottom: 12px; }
+.opts { display: flex; flex-direction: column; gap: 10px; }
+.opt { display: flex; gap: 10px; padding: 12px 14px; border: 2px solid #e2e8f0; border-radius: 12px; background: #f7fafc; cursor: pointer; transition: all 0.15s; }
+.opt:hover { border-color: #93c5fd; background: #eff6ff; }
+.opt .k { font-weight: 800; color: #2b4c8c; flex: none; }
+.opt .tag { margin-left: auto; flex: none; align-self: flex-start; font-size: 0.8rem; font-weight: 700; color: #fff; background: #6366f1; border-radius: 8px; padding: 0 8px; }
+.opt.used { opacity: 0.45; }
+.bar { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 6px 0 22px; }
+.btn { border: none; border-radius: 10px; font: inherit; font-weight: 700; padding: 11px 26px; cursor: pointer; }
+.btn.main { background: linear-gradient(135deg, #3b82f6, #6366f1); color: #fff; }
+.btn.sub { background: #fff; color: #4a5568; border: 2px solid #e2e8f0; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+#result { display: none; }
+#result.show { display: block; }
+.score { font-size: 1.15rem; font-weight: 800; color: #2b4c8c; margin-bottom: 14px; }
+.ana { border-left: 4px solid #6366f1; background: #f0f4ff; border-radius: 6px; padding: 10px 14px; margin-bottom: 12px; font-size: 0.95rem; }
+.ana b { color: #2b4c8c; }
+.ana.wrong { border-left-color: #dc3545; background: #fff5f5; }
+.trap { border-left: 4px solid #f59e0b; background: #fffbeb; border-radius: 6px; padding: 10px 14px; font-size: 0.95rem; }
+.back { position: fixed; top: 14px; left: 14px; background: #2b4c8c; color: #fff; padding: 7px 16px; border-radius: 8px; text-decoration: none; font-size: 0.9rem; font-weight: 600; z-index: 999; box-shadow: 0 2px 8px rgba(0,0,0,0.18); }
+@media (max-width: 480px) { .hero h1 { font-size: 1.5rem; } .card { padding: 18px 16px; } body { font-size: 16px; } }
+</style>
+<!-- EFETL-PWA -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#7C4DFF">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="EFETL">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}</script>
+<!-- /EFETL-PWA -->
+</head>
+<body>
+<a class="back" href="gsat.html">← 回學測</a>
+<div class="wrap">
+<div class="hero">
+<h1>學測篇章結構練習</h1>
+<p>四個空格、五個句子選項（其中一個是干擾選項）‧ 每個選項只能用一次</p>
+</div>
+<div class="rounds" id="rounds"></div>
+
+<div class="card passage">
+<h2 id="title"></h2>
+<div class="sub" id="sub"></div>
+<div id="passage"></div>
+</div>
+
+<div class="card">
+<h2>選項</h2>
+<div class="hint">先點文章中的空格，再點選項填入；點已填入的空格可清除。</div>
+<div class="opts" id="opts"></div>
+</div>
+
+<div class="bar">
+<button class="btn main" id="check" disabled>檢查答案</button>
+<button class="btn sub" id="reset">重做</button>
+</div>
+
+<div class="card" id="result">
+<div class="score" id="score"></div>
+<div id="ana"></div>
+<div class="trap" id="trap"></div>
+</div>
+</div>
+
+<script>
+// 每回資料：p＝段落（{n} 代表空格）、o＝選項、a＝答案、e＝各空格解析、t＝干擾選項說明
+var ROUNDS = [
+{
+id: 1,
+title: 'Why Airports Make Us Feel Disoriented',
+draft: true,
+p: [
+'Airports are designed to move large numbers of people through a limited area, yet travelers often describe them as places where ordinary time seems to disappear. A person may arrive before sunrise, walk across several terminals, and still feel unsure whether an hour or an entire morning has passed. This feeling is not simply the result of being tired. {1}',
+'In daily life, people use familiar events to mark time: meals, daylight, and the actions of people around them. Airports weaken many of these signals. Windows may be absent, clocks are not always easy to notice, and shops may remain open at all hours, long after nearby streets have gone quiet. {2} The building can therefore feel detached from the area outside it, even though airplanes are constantly connecting that place to destinations abroad.',
+'There is another reason travelers lose their sense of direction. Signs must answer urgent questions quickly, often for people who do not speak the local language. Designers therefore rely on repeated symbols, colors, and routes. {3} A passenger who misses one turn may find that the next sign assumes the earlier instruction was understood. The problem is not necessarily a lack of ability on the passenger’s part; the system may offer too many choices before explaining which one matters most.',
+'Some airports have tried to make navigation more human. Staff members ask whether passengers need help, while maps identify quiet areas where families can sit together. Such changes may appear small, but they recognize that movement is not the only need people bring with them. {4} When a building acknowledges both, it can make a long journey feel less like a sequence of obstacles and more like a route a person can understand.'
+],
+o: {
+A: 'This strategy works only if each sign prepares travelers for the decision that comes next.',
+B: 'Instead, the environment removes the cues people normally use to judge time and place.',
+C: 'A well-designed terminal must guide bodies through space while also helping people feel oriented within it.',
+D: 'Although such design choices are meant to make waiting convenient, they can also blur the boundary between day and night.',
+E: 'To make long layovers more comfortable, some terminals offer paid lounges with showers and reclining chairs.'
+},
+a: { 1: 'B', 2: 'D', 3: 'A', 4: 'C' },
+e: {
+1: '前文否定「只是疲倦」，後文開始列舉機場削弱的時間線索。B 的 <b>Instead</b> 承接否定，概括環境因素，並引出後文的細節。',
+2: '前文列出缺少窗戶、時鐘不易注意、商店全天營業；D 的 <b>such design choices</b> 概括前述室內設計與營運安排，並指出它們讓日夜界線模糊。後句再從時間感轉到機場與外界的空間感。',
+3: '前文說設計者依賴重複符號、顏色和路線；A 的 <b>This strategy</b> 回指這種設計方法，並提出成立條件。後文用錯過轉彎的情況說明標示若未逐步引導會造成問題。',
+4: '前文指出旅客需求不只在移動；C 將「引導身體移動」與「協助找到方向感」並列，後句 <b>both</b> 回指這兩項需求。'
+},
+t: '描述候機休息設施，雖符合機場情境，卻轉離本段的導引標示與旅客方向感，也無法銜接後文「錯過轉彎」的例子。'
+}
+];
+
+var cur = null, fill = {}, active = 1, checked = false;
+var $ = function (id) { return document.getElementById(id); };
+
+function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+
+function load(id) {
+  cur = ROUNDS.filter(function (r) { return r.id === id; })[0] || ROUNDS[0];
+  fill = {}; active = 1; checked = false;
+  $('title').textContent = '第 ' + cur.id + ' 回｜' + cur.title;
+  $('sub').textContent = cur.draft ? '樣稿 ‧ 共 4 題' : '共 4 題';
+  $('passage').innerHTML = cur.p.map(function (para) {
+    return '<p>' + esc(para).replace(/\{(\d)\}/g, function (_, n) {
+      return '<span class="slot" data-n="' + n + '"></span>';
+    }) + '</p>';
+  }).join('');
+  $('opts').innerHTML = Object.keys(cur.o).map(function (k) {
+    return '<div class="opt" data-k="' + k + '"><span class="k">(' + k + ')</span><span>' + esc(cur.o[k]) + '</span></div>';
+  }).join('');
+  $('result').className = 'card';
+  $('rounds').innerHTML = ROUNDS.length > 1 ? ROUNDS.map(function (r) {
+    return '<button data-id="' + r.id + '"' + (r.id === cur.id ? ' class="on"' : '') + '>第 ' + r.id + ' 回</button>';
+  }).join('') : '';
+  render();
+}
+
+function render() {
+  var used = {};
+  Object.keys(fill).forEach(function (n) { used[fill[n]] = n; });
+  document.querySelectorAll('.slot').forEach(function (s) {
+    var n = s.dataset.n, k = fill[n];
+    s.textContent = k ? '[' + n + '] ' + k : '[' + n + ']';
+    s.className = 'slot' + (k ? ' filled' : '') + (!checked && +n === active ? ' active' : '');
+    if (checked) s.className += k === cur.a[n] ? ' ok' : ' bad';
+  });
+  document.querySelectorAll('.opt').forEach(function (o) {
+    var k = o.dataset.k;
+    o.className = 'opt' + (used[k] ? ' used' : '');
+    var old = o.querySelector('.tag'); if (old) old.remove();
+    if (used[k]) { var t = document.createElement('span'); t.className = 'tag'; t.textContent = '空格 ' + used[k]; o.appendChild(t); }
+  });
+  $('check').disabled = Object.keys(fill).length < 4 || checked;
+}
+
+function nextEmpty(from) {
+  for (var i = 0; i < 4; i++) { var n = ((from - 1 + i) % 4) + 1; if (!fill[n]) return n; }
+  return from;
+}
+
+$('passage').addEventListener('click', function (e) {
+  var s = e.target.closest('.slot'); if (!s || checked) return;
+  var n = +s.dataset.n;
+  if (fill[n]) { delete fill[n]; }
+  active = n; render();
+});
+
+$('opts').addEventListener('click', function (e) {
+  var o = e.target.closest('.opt'); if (!o || checked) return;
+  var k = o.dataset.k;
+  Object.keys(fill).forEach(function (n) { if (fill[n] === k) delete fill[n]; });
+  fill[active] = k;
+  active = nextEmpty(active % 4 + 1);
+  render();
+});
+
+$('check').addEventListener('click', function () {
+  checked = true; render();
+  var ok = 0;
+  var html = [1, 2, 3, 4].map(function (n) {
+    var right = fill[n] === cur.a[n]; if (right) ok++;
+    return '<div class="ana' + (right ? '' : ' wrong') + '"><b>第 ' + (30 + n) + ' 題（空格 ' + n + '）' + (right ? '✔' : '✘ 你選 ' + fill[n]) + '，正解 (' + cur.a[n] + ')</b><br>' + cur.e[n] + '</div>';
+  }).join('');
+  $('score').textContent = '答對 ' + ok + ' / 4 題';
+  $('ana').innerHTML = html;
+  var distract = Object.keys(cur.o).filter(function (k) { return Object.keys(cur.a).every(function (n) { return cur.a[n] !== k; }); })[0];
+  $('trap').innerHTML = '<b>干擾選項 (' + distract + ')</b>：' + esc(cur.t);
+  $('result').className = 'card show';
+  $('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+$('reset').addEventListener('click', function () { load(cur.id); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+$('rounds').addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) load(+b.dataset.id); });
+
+var q = /[?&]r=(\d+)/.exec(location.search);
+load(q ? +q[1] : 1);
+</script>
+</body>
+</html>
