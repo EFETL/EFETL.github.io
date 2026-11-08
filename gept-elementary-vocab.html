@@ -160,6 +160,22 @@ footer{text-align:center;color:var(--muted);font-size:.72rem;padding:26px 0 10px
 </head>
 <body>
 <div class="wrap">
+  <!-- 回上一頁：只在 quiz／elementary 顯示（藍鯨分校自己有導覽，維持隱藏）。從站內某頁（如聽力、閱讀的「本回單字」）進來就回那一頁，書籤／QR 直接進來就回入口頁 -->
+  <a class="back" id="backBtn" href="gept-hub.html" style="display:none;text-decoration:none">‹ 回上一頁</a>
+  <script>
+  (function(){
+    var h=location.hostname;
+    if(!/(^|\.)(quiz|elementary)\.efetl\.com$/.test(h)&&h!=='localhost')return;
+    var b=document.getElementById('backBtn');b.style.display='flex';
+    b.addEventListener('click',function(e){
+      try{
+        var r=document.referrer;
+        if(r){var u=new URL(r);
+          if(u.origin===location.origin&&u.pathname!==location.pathname){e.preventDefault();location.href=r;}}
+      }catch(_){}
+    });
+  })();
+  </script>
   <header class="top">
     <div class="brand">
       <span class="en">GEPT Elementary Vocabulary</span>
