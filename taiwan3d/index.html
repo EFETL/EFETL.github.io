@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>臺灣 3D 地形教室｜五大地形・雨量・景點</title>
+<meta name="description" content="可以轉動的臺灣 3D 地形圖：山地、丘陵、台地、盆地、平原五大地形，北中南東分區，外島，每月雨量與淹水模擬，地形附近的景點。適合國小三、四年級到國中地理。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%F0%9F%97%BA%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<style>
+:root{--ink:#1f2d3d;--muted:#5f7183;--card:#ffffffee;--pri:#2f6fd6;--line:#dde6ee}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;color:var(--ink);overflow:hidden}
+#scene{position:fixed;inset:0}
+.labels{position:absolute;inset:0;pointer-events:none}
+header.top{position:fixed;top:0;left:0;right:0;height:52px;display:flex;align-items:center;gap:10px;padding:0 12px;background:#ffffffe6;backdrop-filter:blur(6px);border-bottom:1px solid var(--line);z-index:20}
+header.top h1{font-size:18px;margin:0;white-space:nowrap}
+header.top a.home{text-decoration:none;color:var(--pri);font-weight:700;font-size:14px;white-space:nowrap}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:#fff}
+.seg button{border:0;background:none;padding:6px 12px;font:inherit;font-size:14px;cursor:pointer;color:var(--muted)}
+.seg button.on{background:var(--pri);color:#fff;font-weight:700}
+.spacer{flex:1}
+/* 面板 */
+#panel{position:fixed;top:62px;left:10px;width:350px;max-height:calc(100% - 72px);overflow:auto;background:var(--card);border-radius:16px;box-shadow:0 6px 24px #0002;z-index:15;padding:12px 14px}
+body.panel-min #panel .pane, body.panel-min #panel .tabs~*{display:none}
+.tabs{display:flex;gap:6px;margin-bottom:10px;align-items:center}
+.tabs button{flex:1;border:2px solid var(--line);background:#fff;border-radius:12px;padding:8px 4px;font:inherit;font-weight:700;font-size:15px;cursor:pointer}
+.tabs button.on{border-color:var(--pri);background:#eaf2ff;color:var(--pri)}
+#panelToggle{flex:0 0 34px;font-size:14px}
+h3{margin:6px 0 4px;font-size:18px} h4{margin:12px 0 4px;font-size:15px}
+p{margin:6px 0;line-height:1.6;font-size:14.5px}
+.muted{color:var(--muted);font-size:13px}
+.row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:6px 0}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 10px;font:inherit;font-size:13.5px;cursor:pointer}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.legend button{display:flex;align-items:center;gap:8px;width:100%;text-align:left;border:1px solid var(--line);background:#fff;border-radius:10px;padding:7px 10px;margin:4px 0;font:inherit;font-size:15px;cursor:pointer}
+.legend button.on{outline:3px solid var(--pri)}
+.dot{display:inline-block;width:16px;height:16px;border-radius:5px;flex:0 0 16px;border:1px solid #0002}
+.rg{display:grid;grid-template-columns:18px 48px 1fr;gap:6px;align-items:center;margin:5px 0;font-size:14px}
+.rg small{color:var(--muted)}
+.hyp{display:flex;border-radius:8px;overflow:hidden}
+.hyp span{flex:1;font-size:10px;text-align:center;padding:10px 0 2px;color:#222}
+.toggles label{display:inline-flex;gap:4px;align-items:center;font-size:13.5px;margin-right:10px;cursor:pointer}
+input[type=range]{width:100%}
+.isl{display:flex;flex-wrap:wrap;gap:5px}
+.isl button{border:1px solid #f3b7c9;background:#fff3f7;border-radius:8px;padding:5px 8px;font:inherit;font-size:13px;cursor:pointer}
+select{font:inherit;font-size:14px;padding:5px;border-radius:8px;border:1px solid var(--line)}
+.bigbtn{width:100%;border:0;border-radius:12px;padding:11px;font:inherit;font-size:16px;font-weight:700;background:#1565c0;color:#fff;cursor:pointer;margin:8px 0 4px}
+.btn-sm{border:1px solid var(--pri);color:var(--pri);background:#fff;border-radius:8px;padding:6px 10px;font:inherit;font-size:13.5px;cursor:pointer}
+#seasonBox{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin:6px 0}
+.sea{border-radius:10px;padding:6px 4px;text-align:center;font-size:12px;display:flex;flex-direction:column}
+.sea b{font-size:16px}.sea em{font-style:normal;font-weight:700}.sea i{font-style:normal;color:#0008}
+.tag{display:inline-block;font-size:11px;border-radius:6px;padding:1px 6px;margin-left:6px;vertical-align:middle}
+.tag.book{background:#e3f6e8;color:#1e7b3a}.tag.cwa{background:#fff2d9;color:#9a6400}
+#floodVal{font-size:26px;font-weight:800;color:#1565c0;text-align:center}
+#floodVal small{font-size:14px}
+.fl-row{display:grid;grid-template-columns:18px 44px 1fr 40px;gap:6px;align-items:center;font-size:13.5px;margin:3px 0}
+.fl-row .bar{height:10px;background:#e8eef3;border-radius:6px;overflow:hidden}.fl-row .bar i{display:block;height:100%;background:#2f7fe0}
+.fl-sum{font-size:13px}
+.note{background:#fff8e1;border-radius:10px;padding:8px 10px;font-size:12.5px;line-height:1.55;color:#6b5200}
+#spotList ul{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:5px}
+#spotList li,.spot-list li{border:1px solid var(--line);border-radius:8px;padding:5px 8px;font-size:13.5px;cursor:pointer;background:#fff}
+.spot-list{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:5px}
+/* 資訊卡 */
+#info{position:fixed;right:10px;top:62px;width:330px;max-height:calc(100% - 72px);overflow:auto;background:#fff;border-radius:16px;box-shadow:0 6px 24px #0003;padding:14px 16px;z-index:16;transform:translateX(120%);transition:transform .25s}
+#info.show{transform:none}
+#info .x{position:absolute;right:10px;top:8px;border:0;background:none;font-size:18px;cursor:pointer}
+.tag-lf{display:inline-block;border-radius:8px;padding:3px 10px;font-weight:700;font-size:13px;color:#222}
+/* 3D 標籤 */
+.lb{font-size:12px;white-space:nowrap;transform:translateY(-50%);user-select:none}
+.lb.clickable{pointer-events:auto;cursor:pointer}
+.lb.lf{font-weight:800;font-size:14px;padding:2px 8px;border-radius:8px;color:#222;background:#ffffffd0;border:2px solid #0002}
+.lf-mountain{border-color:#9c6b4a!important}.lf-hill{border-color:#e0b02c!important}.lf-tableland{border-color:#f2994a!important}.lf-basin{border-color:#2fa6d8!important}.lf-plain{border-color:#3fae6e!important}
+.lb.peak{color:#5a2d0c;font-weight:700;text-shadow:0 0 3px #fff,0 0 3px #fff}
+.lb.peak small{display:block;font-weight:600;font-size:11px}
+.lb.island{font-weight:800;font-size:13px;background:#ffe3ec;border:2px solid #eb5f8a;border-radius:8px;padding:2px 6px}
+.lb.spot{display:flex;align-items:center;gap:2px}
+.lb.spot .pin{font-size:18px;filter:drop-shadow(0 1px 2px #0006)}
+.lb.spot .nm{background:#ffffffd8;border-radius:6px;padding:1px 5px;font-size:11.5px}
+.lb.spot.flooded .pin::after{content:"🌊"}
+.lb.spot.flooded .nm{background:#bcdcff;color:#0b3d78}
+body.far .lb.spot .nm, body.far .lb.peak small, body.far .lb.ruler-h{display:none}
+.lb.hid{visibility:hidden!important}
+.lb.ruler{font-size:12px;font-weight:700;color:#111;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff}
+.lb.ruler small{display:block;font-size:10.5px;color:#b22}
+.lb.ruler-hl{color:#a0410d}
+.lb.ruler-km{transform:translate(-50%,30%)}
+.lb.city{font-weight:700;background:#e3f0ff;border:1px solid #5a9de0;border-radius:6px;padding:1px 5px}
+body[data-level=elem] .junior-only{display:none}
+#loading{position:fixed;inset:0;display:grid;place-items:center;background:#bfe3f7;font-size:20px;z-index:50}
+.viewbar{position:fixed;bottom:12px;right:12px;display:flex;gap:6px;z-index:15}
+.viewbar button{border:0;background:#fff;border-radius:10px;padding:9px 12px;font:inherit;font-size:14px;font-weight:700;box-shadow:0 3px 12px #0002;cursor:pointer}
+@media (max-width:760px){
+  header.top h1{font-size:15px}
+  #panel{top:auto;bottom:0;left:0;right:0;width:auto;max-height:46%;border-radius:16px 16px 0 0}
+  #info{left:8px;right:8px;width:auto;top:60px;max-height:45%}
+  .viewbar{bottom:auto;top:60px;right:8px;flex-direction:column}
+  .viewbar button{padding:6px 8px;font-size:12px}
+  .lb.lf{font-size:12px}
+}
+@media print{#panel,.viewbar,header.top{display:none}}
+</style>
+</head>
+<body data-level="elem">
+<div id="loading">⛰️ 正在堆出臺灣的山脈…</div>
+<div id="scene"></div>
+
+<header class="top">
+  <a class="home" href="../index.html">← 首頁</a>
+  <h1>🗺️ 臺灣 3D 地形教室</h1>
+  <span class="spacer"></span>
+  <div class="seg" role="group" aria-label="程度">
+    <button data-level="elem">國小</button><button data-level="junior">國中</button>
+  </div>
+</header>
+
+<aside id="panel">
+  <div class="tabs">
+    <button data-mode="terrain">⛰️ 地形</button>
+    <button data-mode="rain">🌧️ 雨量</button>
+    <button data-mode="spots">📍 景點</button>
+    <button id="panelToggle" title="收合面板">☰</button>
+  </div>
+
+  <!-- 地形 -->
+  <section class="pane" data-pane="terrain">
+    <div class="row">
+      <button class="chip" data-color="landform">五大地形</button>
+      <button class="chip" data-color="region">北中南東</button>
+      <button class="chip" data-color="height">高度分層設色</button>
+    </div>
+    <div id="legend" class="legend"></div>
+    <p class="muted">點一種地形，地圖上只會亮起那種地形；再點一次恢復。拖曳可以轉動，滾輪或兩指可以放大縮小。</p>
+    <h4>外島</h4>
+    <div class="isl" id="islandBtns"></div>
+    <h4>顯示</h4>
+    <div class="toggles">
+      <label><input type="checkbox" id="tgLf" checked>地形名稱</label>
+      <label><input type="checkbox" id="tgPeak" checked>山峰高度</label>
+      <label><input type="checkbox" id="tgSpot" checked>景點</label>
+      <label><input type="checkbox" id="tgIsland" checked>外島</label>
+      <label><input type="checkbox" id="tgRuler" checked>公尺／公里尺</label>
+    </div>
+    <h4>高度放大 <span id="exagVal">×6</span></h4>
+    <input type="range" id="exag" min="1" max="15" step="1" value="6">
+    <p class="muted">真實的臺灣「很長但不算高」：南北約 394 公里，最高才 3.952 公里。把高度放大，才看得清楚山脈。</p>
+  </section>
+
+  <!-- 雨量 -->
+  <section class="pane" data-pane="rain" hidden>
+    <div class="row">
+      <label>地點 <select id="city"></select></label>
+      <label>月份 <select id="monthSel"></select></label>
+    </div>
+    <p id="rainTotal"></p>
+    <div id="rainChart"></div>
+    <p class="muted">點長條可以換月份。紅色虛線：課本的雨量分級（一天下 80 mm 是大雨、200 mm 是豪雨、350 mm 是大豪雨）。</p>
+    <div id="seasonBox"></div>
+    <div id="monthInfo"></div>
+    <button class="bigbtn" id="btnRain">🌧️ 開始下雨（水位上升）</button>
+    <div id="floodVal"></div>
+    <input type="range" id="floodSlider" min="0" max="4000" step="10" value="0" aria-label="水位（公尺）">
+    <div class="row">
+      <button class="chip" data-flood="100">100 公尺</button>
+      <button class="chip" data-flood="500">500 公尺</button>
+      <button class="chip" data-flood="1000">1 公里</button>
+      <button class="chip" data-flood="3000">3 公里</button>
+      <button class="chip" id="btnDrain">💧 退水</button>
+    </div>
+    <p id="floodHint"><b></b></p>
+    <div id="floodStats"></div>
+    <p class="note">🔎 這是「想像實驗」：真正的雨水會流進河川、流回大海，不會把山淹掉。我們用「水越積越高」來比一比：平原、盆地、台地、丘陵、山地，哪一種地形最低、哪一種最高。</p>
+  </section>
+
+  <!-- 景點 -->
+  <section class="pane" data-pane="spots" hidden>
+    <p class="muted">每一種地形附近都有特別的景點。點一下就會飛過去。</p>
+    <div id="spotList"></div>
+  </section>
+</aside>
+
+<aside id="info"></aside>
+
+<div class="viewbar">
+  <button id="btnHome">🎥 3D 斜看</button>
+  <button id="btnTop">🗺️ 平面圖</button>
+  <button id="btnAll">🌏 含外島全圖</button>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
